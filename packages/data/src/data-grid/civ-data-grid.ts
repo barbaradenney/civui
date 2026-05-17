@@ -1,6 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, t, generateId } from '@civui/core';
+import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
 import '@civui/overlays/menu';
 import './civ-data-grid.types.js';
@@ -58,10 +58,12 @@ export type {
  * @prop {string} emptyMessage - Override the default "No data" empty-state message.
  * @prop {boolean} striped - Apply zebra striping to body rows.
  * @prop {boolean} bordered - Apply borders between cells.
+ * @prop {boolean} interactive - When true, clicking a row (outside the select / actions cells) fires `civ-row-activate`. Use to wire a master-detail drawer or a navigate-to-record flow.
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
+ * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -101,6 +103,7 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: String, attribute: 'empty-message' }) emptyMessage = '';
   @property({ type: Boolean }) striped = false;
   @property({ type: Boolean }) bordered = false;
+  @property({ type: Boolean }) interactive = false;
 
   @state() private _instanceId = generateId('civ-data-grid');
 
@@ -256,19 +259,76 @@ export class CivDataGrid extends CivBaseElement {
       'civ-data-grid__tr',
       isSelected ? 'civ-data-grid__tr--selected' : '',
       row.disabled ? 'civ-data-grid__tr--disabled' : '',
+      this.interactive && !row.disabled ? 'civ-data-grid__tr--interactive' : '',
     ].filter(Boolean).join(' ');
+
+    const onRowClick = this.interactive && !row.disabled
+      ? (e: Event) => this._onRowActivate(e, row)
+      : undefined;
 
     return html`
       <tr
         class="${rowClass}"
         data-row-id="${row.id}"
         aria-selected="${this.selectable !== 'none' ? String(isSelected) : ''}"
+        @click="${onRowClick}"
       >
         ${this.selectable !== 'none' ? this._renderSelectCell(row, isSelected) : nothing}
         ${this._visibleColumns.map((col) => this._renderBodyCell(col, row, rowIndex))}
         ${this._hasAnyRowActions() ? this._renderActionsCell(row) : nothing}
       </tr>
     `;
+  }
+
+  private _onRowActivate(e: Event, row: GridRow): void {
+    const target = e.target as HTMLElement;
+    // Two fences, both required:
+    // 1) Cell-class check — covers everything inside the select cell
+    //    (checkbox/radio) and the actions cell (whose kebab trigger
+    //    is a `<civ-action-button>` host that wraps a native button).
+    //    `closest('button')` would also find the inner button, but
+    //    the cell-class check is a clearer signal of intent.
+    // 2) Interactive-descendant check — covers anchors and form
+    //    controls a consumer's cell formatter might render
+    //    (a `<civ-tag>` wrapping a link, a `<select>` inside a cell, etc).
+    if (target.closest('.civ-data-grid__td--select, .civ-data-grid__td--actions')) {
+      return;
+    }
+    if (target.closest('a, button, input, select, textarea, [role="button"]')) {
+      return;
+    }
+    dispatch(this, 'civ-row-activate', { rowId: row.id, row });
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated?.(changed);
+    if (changed.has('interactive') || changed.has('rows')) {
+      this._maybeWarnInteractiveWithoutActions();
+    }
+  }
+
+  /** Per-instance dedupe so the interactive/actions warning only fires once per grid. */
+  private _warnedInteractiveWithoutActions = false;
+
+  /**
+   * Mouse-only affordances are an a11y anti-pattern. When `interactive=true`
+   * the row body click fires `civ-row-activate`, but there's no keyboard
+   * equivalent at the row level (we deliberately don't override `<tr>`
+   * with `role="button"`). Consumers need to add a per-row "View details"
+   * action so keyboard / switch-control users can reach the same flow.
+   * This warning fires once per instance when interactive is on and no
+   * row has actions yet — silenced once any row has actions wired.
+   */
+  private _maybeWarnInteractiveWithoutActions(): void {
+    if (this._warnedInteractiveWithoutActions) return;
+    if (!this.interactive) return;
+    if (!this.rows || this.rows.length === 0) return;
+    if (this._hasAnyRowActions()) return;
+    this._warnedInteractiveWithoutActions = true;
+    devWarn(
+      'civ-data-grid',
+      'interactive=true without any row.actions creates a mouse-only affordance. Add a "View details" action (or similar) so keyboard / switch-control users can reach the same destination as the row click.',
+    );
   }
 
   private _renderBodyCell(col: GridColumn, row: GridRow, rowIndex: number): TemplateResult {

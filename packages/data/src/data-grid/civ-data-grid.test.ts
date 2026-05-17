@@ -28,6 +28,7 @@ async function mountGrid(opts: Partial<{
   loading: boolean;
   errorMessage: string;
   emptyMessage: string;
+  interactive: boolean;
 }> = {}): Promise<any> {
   const el = await fixture('<civ-data-grid></civ-data-grid>') as any;
   el.caption = opts.caption ?? 'Records';
@@ -40,6 +41,7 @@ async function mountGrid(opts: Partial<{
   if (opts.loading !== undefined) el.loading = opts.loading;
   if (opts.errorMessage !== undefined) el.errorMessage = opts.errorMessage;
   if (opts.emptyMessage !== undefined) el.emptyMessage = opts.emptyMessage;
+  if (opts.interactive !== undefined) el.interactive = opts.interactive;
   await elementUpdated(el);
   return el;
 }
@@ -372,5 +374,173 @@ describe('civ-data-grid — accessibility', () => {
     await elementUpdated(el);
     const caption = el.querySelector('caption');
     expect(caption?.textContent?.trim().length).toBeGreaterThan(0);
+  });
+});
+
+describe('civ-data-grid — interactive row activation (master-detail)', () => {
+  it('does not fire civ-row-activate by default (interactive=false)', async () => {
+    const el = await mountGrid({ rows: [{ id: '1', cells: { name: 'A' } }] });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    row.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('fires civ-row-activate when an interactive row body is clicked', async () => {
+    const rows: GridRow[] = [{ id: '42', cells: { name: 'Smith' } }];
+    const el = await mountGrid({ rows, interactive: true });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    // Click the body cell, not the row element directly — matches a real user click.
+    const cell = el.querySelector('tbody tr .civ-data-grid__td') as HTMLElement;
+    cell.click();
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.rowId).toBe('42');
+    expect(detail.row.id).toBe('42');
+  });
+
+  it('adds the interactive class to interactive rows', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' } }],
+      interactive: true,
+    });
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    expect(row.classList.contains('civ-data-grid__tr--interactive')).toBe(true);
+  });
+
+  it('does not add the interactive class to disabled rows', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, disabled: true }],
+      interactive: true,
+    });
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    expect(row.classList.contains('civ-data-grid__tr--interactive')).toBe(false);
+  });
+
+  it('does not fire civ-row-activate on disabled rows', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, disabled: true }],
+      interactive: true,
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const cell = el.querySelector('tbody tr .civ-data-grid__td') as HTMLElement;
+    cell.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('does not fire civ-row-activate when the select-cell checkbox is clicked', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' } }],
+      interactive: true,
+      selectable: 'multiple',
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const checkbox = el.querySelector(
+      'tbody tr .civ-data-grid__td--select input',
+    ) as HTMLInputElement;
+    checkbox.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('does not fire civ-row-activate when the actions kebab trigger is clicked', async () => {
+    const el = await mountGrid({
+      rows: [
+        {
+          id: '1',
+          cells: { name: 'A' },
+          actions: [{ id: 'edit', label: 'Edit' }],
+        },
+      ],
+      interactive: true,
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const trigger = el.querySelector(
+      'tbody tr .civ-data-grid__td--actions civ-action-button',
+    ) as HTMLElement;
+    trigger.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('warns in dev mode when interactive=true and no row has actions (mouse-only affordance)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' } }],
+      interactive: true,
+    });
+    // Confirm the diagnostic surfaced for this consumer.
+    expect(warn).toHaveBeenCalled();
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).toMatch(/civ-data-grid/);
+    expect(message).toMatch(/mouse-only/);
+
+    // Per-instance dedupe — second update doesn't re-fire.
+    warn.mockClear();
+    el.rows = [{ id: '2', cells: { name: 'B' } }];
+    await elementUpdated(el);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it('does not warn when interactive=true and at least one row has actions', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      rows: [
+        { id: '1', cells: { name: 'A' }, actions: [{ id: 'view', label: 'View details' }] },
+      ],
+      interactive: true,
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).not.toMatch(/mouse-only/);
+    warn.mockRestore();
+  });
+
+  it('does not fire civ-row-activate on Enter or Space keypress (keyboard activation deferred to v2)', async () => {
+    // The deliberate v1 gap: row-level keyboard activation would require
+    // overriding <tr> with role="button", which the WAI-ARIA Authoring
+    // Practices guidance for <table>-based grids discourages. Keyboard
+    // users reach the same destination via a per-row action button.
+    // If a future change adds row keyboard activation, this test will
+    // catch it so the tradeoff gets a deliberate revisit.
+    const rows: GridRow[] = [{ id: '1', cells: { name: 'A' } }];
+    const el = await mountGrid({ rows, interactive: true });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    row.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    row.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('does not fire civ-row-activate when an interactive descendant in a cell formatter is clicked', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' } }],
+      interactive: true,
+      columns: [
+        {
+          key: 'name',
+          header: 'Name',
+          formatter: () => {
+            // Insert a real <a> via the formatter (Lit will render it).
+            const el = document.createElement('a');
+            el.setAttribute('href', '#');
+            el.setAttribute('data-testid', 'cell-link');
+            el.textContent = 'Open';
+            return el as unknown as string;
+          },
+        },
+      ],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    const link = el.querySelector('[data-testid="cell-link"]') as HTMLElement;
+    // jsdom won't navigate; preventDefault would normally happen but we
+    // only care that the row-activate skips when the click target is a link.
+    link?.click();
+    expect(handler).not.toHaveBeenCalled();
   });
 });

@@ -2147,6 +2147,23 @@
     opacity: var(--civ-opacity-disabled);
   }
 
+  /* Interactive (clickable) rows — master-detail trigger via the
+     `interactive` prop. Cursor + hover state so the row reads as
+     clickable; selection / actions cells keep their own interactive
+     affordances because the row-click handler short-circuits when
+     the event target is inside those cells. */
+  .civ-data-grid__tr--interactive {
+    cursor: pointer;
+  }
+
+  .civ-data-grid__tr--interactive:hover {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__tr--interactive.civ-data-grid__tr--selected:hover {
+    background-color: var(--civ-color-primary-lighter);
+  }
+
   .civ-data-grid__select-wrap {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     cursor: pointer;

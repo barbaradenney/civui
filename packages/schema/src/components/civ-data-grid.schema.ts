@@ -93,6 +93,11 @@ const schema: ComponentSchema = {
       description: 'Apply borders between cells (in addition to the default row-bottom borders)',
       default: false,
     },
+    interactive: {
+      type: 'boolean',
+      description: 'When true, clicking a row body fires `civ-row-activate`. Use to wire a master-detail drawer or navigate-to-record flow. Clicks that originate inside the selection checkbox cell, the row-actions cell, or any inner `<a>`/`<button>`/`<input>`/`<select>`/`<textarea>`/`[role="button"]` are ignored so those affordances retain their own behavior. Disabled rows (`row.disabled`) are not interactive even when this prop is set',
+      default: false,
+    },
   },
 
   events: {
@@ -115,6 +120,13 @@ const schema: ComponentSchema = {
         rowId: { type: 'string', description: 'The activated row\'s `id`' },
         action: { type: 'string', description: 'The activated action\'s `id`' },
         row: { type: 'object', description: 'The full row object for convenience' },
+      },
+    },
+    'civ-row-activate': {
+      description: 'Fires when the user clicks a row body and `interactive` is set. The master-detail trigger. Suppressed when the click originates inside the select cell, the actions cell, or any interactive descendant (`<a>`, `<button>`, `<input>`, `<select>`, `<textarea>`, `[role="button"]`) so those affordances retain their own behavior',
+      detail: {
+        rowId: { type: 'string', description: 'The activated row\'s `id`' },
+        row: { type: 'object', description: 'The full row object' },
       },
     },
   },

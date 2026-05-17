@@ -156,12 +156,37 @@ the kebab menu doesn't activate the row.
 **Disabled rows** (`row.disabled: true`) skip activation entirely — they
 get neither the interactive class nor the click handler.
 
+**Selection and activation are independent.** When `selectable` is set,
+clicking the row body fires `civ-row-activate` but does NOT toggle the
+row's selection. Selection lives on the checkbox in the select cell.
+
 **Keyboard** is intentionally not supported at the row level in v1. The
 WAI-ARIA Authoring Practices guidance for `<table>`-based grids
 discourages overriding `<tr>` with `role="button"` since it confuses the
-row semantic. If your flow needs keyboard activation, add an explicit
-per-row "View" action via the existing actions API so keyboard users
-have a clear, focusable affordance.
+row semantic. The component **warns in dev mode** when `interactive=true`
+has no row actions, because the result is a mouse-only affordance. Wire
+a "View details" action that fires the same destination so keyboard /
+switch-control users have a focusable equivalent:
+
+```ts
+function toRows(records): GridRow[] {
+  return records.map((r) => ({
+    id: r.id,
+    cells: { … },
+    actions: [
+      // The keyboard equivalent of clicking the row body. Both paths
+      // dispatch through the consumer's openDetail() routine.
+      { id: 'view', label: `View details for ${r.id}` },
+      // … other actions
+    ],
+  }));
+}
+
+grid.addEventListener('civ-row-activate', (e) => openDetail(e.detail.row));
+grid.addEventListener('civ-row-action', (e) => {
+  if (e.detail.action === 'view') openDetail(e.detail.row);
+});
+```
 
 ## Responsive behavior
 

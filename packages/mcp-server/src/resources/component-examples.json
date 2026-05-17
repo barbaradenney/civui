@@ -275,39 +275,46 @@
       "story": "CustomClearLabel",
       "category": "Layout/Bulk Actions",
       "html": "<civ-bulk-actions count=\"4\" item-name=\"row\" clear-label=\"Deselect all\">\n      <civ-action-button variant=\"secondary\" label=\"Approve\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Reject\"></civ-action-button>\n    </civ-bulk-actions>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     },
     {
       "story": "CustomPlural",
       "name": "Custom Plural (entries)",
       "category": "Layout/Bulk Actions",
       "html": "<civ-bulk-actions count=\"3\" item-name=\"entry\" item-name-plural=\"entries\">\n      <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n    </civ-bulk-actions>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
+    },
+    {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Layout/Bulk Actions",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n    </div>",
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     },
     {
       "story": "Hidden",
       "name": "Hidden (count=0)",
       "category": "Layout/Bulk Actions",
       "html": "<div>\n      <p>Bar is hidden because count is 0 — but the buttons still exist in the DOM:</p>\n      <civ-bulk-actions count=\"0\">\n        <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n      </civ-bulk-actions>\n    </div>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     },
     {
       "story": "Interactive",
       "category": "Layout/Bulk Actions",
       "html": "<div>\n      <p>\n        <button id=\"bulk-add\" type=\"button\">Increment count</button>\n        <button id=\"bulk-reset\" type=\"button\">Reset count</button>\n      </p>\n      <civ-bulk-actions id=\"bulk-bar\" count=\"0\" item-name=\"row\">\n        <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n        <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n      </civ-bulk-actions>\n      <script>\n        (function () {\n          const bar = document.getElementById('bulk-bar');\n          if (!bar || bar.__wired) return;\n          bar.__wired = true;\n          document.getElementById('bulk-add').addEventListener('click', () => {\n            bar.count = (bar.count || 0) + 1;\n          });\n          document.getElementById('bulk-reset').addEventListener('click', () => {\n            bar.count = 0;\n          });\n          bar.addEventListener('civ-clear-selection', () => {\n            bar.count = 0;\n          });\n        })();\n      </script>\n    </div>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     },
     {
       "story": "MultipleSelection",
       "category": "Layout/Bulk Actions",
       "html": "<civ-bulk-actions count=\"7\" item-name=\"application\">\n      <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" icon-start=\"email\" label=\"Notify\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n    </civ-bulk-actions>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     },
     {
       "story": "SingleSelection",
       "category": "Layout/Bulk Actions",
       "html": "<civ-bulk-actions count=\"1\" item-name=\"application\">\n      <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n      <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n    </civ-bulk-actions>",
-      "source": "packages/layout/src/bulk-actions/civ-bulk-actions.stories.ts"
+      "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
     }
   ],
   "civ-button": [
@@ -1065,69 +1072,76 @@
       "story": "Default",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-default\" caption=\"Veterans benefits applications\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Layout/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n        <div data-civ-scale=\"dense\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n          <civ-data-grid class=\"story-density-dense\" caption=\"Applications (dense)\"></civ-data-grid>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n          <civ-data-grid class=\"story-density-default\" caption=\"Applications (default)\"></civ-data-grid>\n        </div>\n        <div data-civ-scale=\"spacious\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n          <civ-data-grid class=\"story-density-spacious\" caption=\"Applications (spacious)\"></civ-data-grid>\n        </div>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "Empty",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid empty-message=\"No applications match your filters.\" caption=\"Filtered applications\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "ErrorState",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid\n      caption=\"Applications\"\n      error-message=\"Couldn't load applications. Try again.\"\n    ></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "Loading",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid loading caption=\"Loading applications\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "MultipleSelection",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-multi-sel\" caption=\"Applications (multi-select)\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "RowActions",
       "name": "Row Actions (kebab menu)",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-actions\" caption=\"Applications with row actions\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "ScrollResponsive",
       "name": "Scroll Responsive (mobile preserves columns)",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-scroll\" caption=\"Scroll-responsive table\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "SingleSelection",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-single-sel\" caption=\"Applications (single-select)\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "Sortable",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-sortable\" caption=\"Applications (sortable)\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "Striped",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-striped\" caption=\"Striped rows\"></civ-data-grid>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "WithPagination",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-paginated\" caption=\"Applications\"></civ-data-grid>\n      <civ-pagination\n        class=\"story-paginated\"\n        item-name=\"application\"\n      ></civ-pagination>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     }
   ],
   "civ-date-picker": [
@@ -1877,35 +1891,35 @@
       "name": "Glossary (A-Z)",
       "category": "Layout/Filterable List",
       "html": "<civ-filterable-list label=\"Glossary of terms\" no-results-message=\"No terms match your search. Try a different keyword or letter.\">\n      <div data-filterable-list-filters style=\"display: grid; gap: 0.75rem;\">\n        <civ-text-input label=\"Search terms\" data-filterable-list-search type=\"search\" clearable leading-icon=\"search\" placeholder=\"Search by keyword\"></civ-text-input>\n        <civ-filter-chip-group mode=\"single\" label=\"Filter by letter\">\n          <civ-filter-chip label=\"All\" value=\"\" selected spacing=\"sm\"></civ-filter-chip>\n          ${LETTERS.map(l => html",
-      "source": "packages/layout/src/filterable-list/civ-filterable-list.stories.ts"
+      "source": "packages/data/src/filterable-list/civ-filterable-list.stories.ts"
     },
     {
       "story": "MedicationLookup",
       "name": "Medication lookup",
       "category": "Layout/Filterable List",
       "html": "<civ-filterable-list label=\"Find a medication\" no-results-message=\"No medications match. Try a different spelling or brand name.\">\n      <div data-filterable-list-filters>\n        <civ-text-input label=\"Search medications\" hint=\"Search by drug name, brand name, or condition\" data-filterable-list-search type=\"search\" clearable leading-icon=\"search\" placeholder=\"Type a medication name\"></civ-text-input>\n      </div>\n      <civ-list dividers>\n        <civ-list-item data-filter=\"Acetaminophen Tylenol pain fever headache\" heading=\"Acetaminophen\"\n          description=\"Brand: Tylenol. Used for pain relief and fever reduction.\"></civ-list-item>\n        <civ-list-item data-filter=\"Amlodipine Norvasc blood pressure hypertension\" heading=\"Amlodipine\"\n          description=\"Brand: Norvasc. Calcium channel blocker for high blood pressure.\"></civ-list-item>\n        <civ-list-item data-filter=\"Atorvastatin Lipitor cholesterol\" heading=\"Atorvastatin\"\n          description=\"Brand: Lipitor. Statin for lowering cholesterol.\"></civ-list-item>\n        <civ-list-item data-filter=\"Gabapentin Neurontin nerve pain seizures neuropathy\" heading=\"Gabapentin\"\n          description=\"Brand: Neurontin. Used for nerve pain and seizures.\"></civ-list-item>\n        <civ-list-item data-filter=\"Ibuprofen Advil Motrin pain inflammation\" heading=\"Ibuprofen\"\n          description=\"Brand: Advil, Motrin. NSAID for pain and inflammation.\"></civ-list-item>\n        <civ-list-item data-filter=\"Levothyroxine Synthroid thyroid hypothyroidism\" heading=\"Levothyroxine\"\n          description=\"Brand: Synthroid. Thyroid hormone replacement.\"></civ-list-item>\n        <civ-list-item data-filter=\"Lisinopril Zestril blood pressure heart failure\" heading=\"Lisinopril\"\n          description=\"Brand: Zestril. ACE inhibitor for blood pressure and heart failure.\"></civ-list-item>\n        <civ-list-item data-filter=\"Losartan Cozaar blood pressure hypertension\" heading=\"Losartan\"\n          description=\"Brand: Cozaar. ARB for high blood pressure.\"></civ-list-item>\n        <civ-list-item data-filter=\"Metformin Glucophage diabetes blood sugar type 2\" heading=\"Metformin\"\n          description=\"Brand: Glucophage. First-line treatment for type 2 diabetes.\"></civ-list-item>\n        <civ-list-item data-filter=\"Metoprolol Lopressor heart rate blood pressure beta blocker\" heading=\"Metoprolol\"\n          description=\"Brand: Lopressor. Beta blocker for heart rate and blood pressure.\"></civ-list-item>\n        <civ-list-item data-filter=\"Omeprazole Prilosec acid reflux GERD stomach\" heading=\"Omeprazole\"\n          description=\"Brand: Prilosec. Proton pump inhibitor for acid reflux.\"></civ-list-item>\n        <civ-list-item data-filter=\"Sertraline Zoloft depression anxiety SSRI\" heading=\"Sertraline\"\n          description=\"Brand: Zoloft. SSRI antidepressant for depression and anxiety.\"></civ-list-item>\n      </civ-list>\n    </civ-filterable-list>",
-      "source": "packages/layout/src/filterable-list/civ-filterable-list.stories.ts"
+      "source": "packages/data/src/filterable-list/civ-filterable-list.stories.ts"
     },
     {
       "story": "OrganizationDirectory",
       "name": "Organization directory",
       "category": "Layout/Filterable List",
       "html": "<civ-filterable-list label=\"Government organizations\">\n      <div data-filterable-list-filters style=\"display: grid; gap: 0.75rem;\">\n        <civ-text-input label=\"Search organizations\" data-filterable-list-search type=\"search\" clearable leading-icon=\"search\" placeholder=\"Search by name\"></civ-text-input>\n        <civ-filter-chip-group mode=\"multi\" label=\"Filter by type\">\n          <civ-filter-chip label=\"Department\" value=\"department\"></civ-filter-chip>\n          <civ-filter-chip label=\"Agency\" value=\"agency\"></civ-filter-chip>\n          <civ-filter-chip label=\"Commission\" value=\"commission\"></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n      <civ-list dividers>\n        <civ-list-item data-filter=\"Department of Veterans Affairs\" data-filter-type=\"department\"\n          heading=\"Department of Veterans Affairs\" description=\"Provides healthcare, benefits, and memorial services to veterans and their families.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Department of Health and Human Services\" data-filter-type=\"department\"\n          heading=\"Department of Health and Human Services\" description=\"Protects the health of all Americans and provides essential human services.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Department of Education\" data-filter-type=\"department\"\n          heading=\"Department of Education\" description=\"Promotes student achievement and preparation for global competitiveness.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Social Security Administration\" data-filter-type=\"agency\"\n          heading=\"Social Security Administration\" description=\"Administers Social Security retirement, disability, and survivor benefits.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Centers for Medicare and Medicaid Services\" data-filter-type=\"agency\"\n          heading=\"Centers for Medicare & Medicaid Services\" description=\"Administers Medicare, Medicaid, and the Children's Health Insurance Program.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Food and Drug Administration\" data-filter-type=\"agency\"\n          heading=\"Food and Drug Administration\" description=\"Responsible for protecting public health through regulation of food, drugs, and medical devices.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Equal Employment Opportunity Commission\" data-filter-type=\"commission\"\n          heading=\"Equal Employment Opportunity Commission\" description=\"Enforces federal laws prohibiting employment discrimination.\"\n          href=\"#\"></civ-list-item>\n        <civ-list-item data-filter=\"Federal Communications Commission\" data-filter-type=\"commission\"\n          heading=\"Federal Communications Commission\" description=\"Regulates interstate and international communications.\"\n          href=\"#\"></civ-list-item>\n      </civ-list>\n    </civ-filterable-list>",
-      "source": "packages/layout/src/filterable-list/civ-filterable-list.stories.ts"
+      "source": "packages/data/src/filterable-list/civ-filterable-list.stories.ts"
     },
     {
       "story": "PeopleDirectory",
       "name": "People directory",
       "category": "Layout/Filterable List",
       "html": "<civ-filterable-list label=\"Staff directory\">\n      <div data-filterable-list-filters style=\"display: grid; gap: 0.75rem;\">\n        <civ-text-input label=\"Search staff\" data-filterable-list-search type=\"search\" clearable leading-icon=\"search\" placeholder=\"Search by name or role\"></civ-text-input>\n        <civ-filter-chip-group mode=\"single\" label=\"Filter by department\">\n          <civ-filter-chip label=\"All\" value=\"\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Engineering\" value=\"engineering\"></civ-filter-chip>\n          <civ-filter-chip label=\"Design\" value=\"design\"></civ-filter-chip>\n          <civ-filter-chip label=\"Product\" value=\"product\"></civ-filter-chip>\n          <civ-filter-chip label=\"Operations\" value=\"operations\"></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n      <civ-list dividers>\n        <civ-list-item data-filter=\"Maria Chen Engineering Lead\" data-filter-dept=\"engineering\" heading=\"Maria Chen\" description=\"Engineering Lead — Platform team\"></civ-list-item>\n        <civ-list-item data-filter=\"Robert Johnson Engineering Senior\" data-filter-dept=\"engineering\" heading=\"Robert Johnson\" description=\"Senior Engineer — API team\"></civ-list-item>\n        <civ-list-item data-filter=\"Sarah Williams Design Director\" data-filter-dept=\"design\" heading=\"Sarah Williams\" description=\"Design Director — Design systems\"></civ-list-item>\n        <civ-list-item data-filter=\"Anita Patel Design Senior\" data-filter-dept=\"design\" heading=\"Anita Patel\" description=\"Senior Designer — Accessibility\"></civ-list-item>\n        <civ-list-item data-filter=\"Carlos Garcia Product Manager\" data-filter-dept=\"product\" heading=\"Carlos Garcia\" description=\"Product Manager — Forms platform\"></civ-list-item>\n        <civ-list-item data-filter=\"Lisa Thompson Product Analyst\" data-filter-dept=\"product\" heading=\"Lisa Thompson\" description=\"Product Analyst — User research\"></civ-list-item>\n        <civ-list-item data-filter=\"James Kim Operations Program\" data-filter-dept=\"operations\" heading=\"James Kim\" description=\"Program Manager — Delivery\"></civ-list-item>\n        <civ-list-item data-filter=\"David Lee Operations Support\" data-filter-dept=\"operations\" heading=\"David Lee\" description=\"Operations Support — Infrastructure\"></civ-list-item>\n      </civ-list>\n    </civ-filterable-list>",
-      "source": "packages/layout/src/filterable-list/civ-filterable-list.stories.ts"
+      "source": "packages/data/src/filterable-list/civ-filterable-list.stories.ts"
     },
     {
       "story": "SearchOnly",
       "name": "Search only (minimal)",
       "category": "Layout/Filterable List",
       "html": "<civ-filterable-list label=\"FAQ\">\n      <div data-filterable-list-filters>\n        <civ-text-input label=\"Search frequently asked questions\" data-filterable-list-search type=\"search\" clearable leading-icon=\"search\" placeholder=\"Type a keyword\"></civ-text-input>\n      </div>\n      <civ-list dividers>\n        <civ-list-item data-filter=\"How do I apply for benefits\" heading=\"How do I apply for benefits?\" description=\"You can apply online, by mail, or in person at your local regional office.\"></civ-list-item>\n        <civ-list-item data-filter=\"What is my disability rating\" heading=\"What is my disability rating?\" description=\"Your disability rating is a percentage that represents the severity of your service-connected condition.\"></civ-list-item>\n        <civ-list-item data-filter=\"How long does a claim take\" heading=\"How long does a claim take?\" description=\"Most claims are processed within 125 days, but complex cases may take longer.\"></civ-list-item>\n        <civ-list-item data-filter=\"Can I check my claim status online\" heading=\"Can I check my claim status online?\" description=\"Yes, sign in to your account to view the status of your pending claims.\"></civ-list-item>\n        <civ-list-item data-filter=\"How do I update my address\" heading=\"How do I update my address?\" description=\"You can update your address online, by phone, or by submitting a change of address form.\"></civ-list-item>\n        <civ-list-item data-filter=\"What documents do I need to file a claim\" heading=\"What documents do I need to file a claim?\" description=\"You'll need your DD214, medical records, and any supporting evidence related to your condition.\"></civ-list-item>\n      </civ-list>\n    </civ-filterable-list>",
-      "source": "packages/layout/src/filterable-list/civ-filterable-list.stories.ts"
+      "source": "packages/data/src/filterable-list/civ-filterable-list.stories.ts"
     }
   ],
   "civ-form": [
@@ -2965,6 +2979,13 @@
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
     },
     {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Overlays/Menu",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"min-height: 480px;\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
       "story": "LinkItems",
       "category": "Overlays/Menu",
       "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Profile menu\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Profile\"></civ-button>\n        <civ-menu-item href=\"/account\">Account settings</civ-menu-item>\n        <civ-menu-item href=\"/security\">Security</civ-menu-item>\n        <civ-menu-item href=\"/sign-out\">Sign out</civ-menu-item>\n      </civ-menu>\n    </div>",
@@ -3212,53 +3233,60 @@
       "story": "CustomItemName",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "Default",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"100\" page-size=\"25\" page=\"2\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Layout/Pagination",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n    </div>",
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "Empty",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"0\" page-size=\"25\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "FewPages",
       "name": "Few Pages (no truncation)",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"50\" page-size=\"10\" page=\"3\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "Interactive",
       "category": "Layout/Pagination",
       "html": "<div>\n        <p id=\"interactive-status\" class=\"civ-mb-3\">Page 1 of ${Math.ceil(total / pageSize)}</p>\n        <civ-pagination\n          total-items=\"${total}\"\n          page-size=\"${pageSize}\"\n          page=\"${page}\"\n          @civ-page-change=\"${onPageChange}\"\n        ></civ-pagination>\n      </div>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "ManyPages",
       "name": "Many Pages (truncated)",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"6\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "NearEnd",
       "name": "Near End (right side full)",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"33\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     },
     {
       "story": "NearStart",
       "name": "Near Start (left side full)",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"2\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+      "source": "packages/data/src/pagination/civ-pagination.stories.ts"
     }
   ],
   "civ-partnership-history": [
@@ -4785,7 +4813,7 @@
       "name": "With Cell Formatter",
       "category": "Layout/Data Grid",
       "html": "<civ-tag variant=\"${variant}\">${v}</civ-tag>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "WithIcons",
@@ -5232,39 +5260,46 @@
       "story": "ActionsOnly",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Quick actions\">\n      <civ-button data-civ-toolbar-end variant=\"tertiary\" icon-start=\"download\" label=\"Export\"></civ-button>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add new\"></civ-button>\n    </civ-toolbar>",
-      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     },
     {
       "story": "Default",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Applications toolbar\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n    </civ-toolbar>",
-      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
+    },
+    {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Layout/Toolbar",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-toolbar label=\"Applications toolbar (dense)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-toolbar label=\"Applications toolbar (default)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-toolbar label=\"Applications toolbar (spacious)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n    </div>",
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     },
     {
       "story": "Empty",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Empty toolbar\"></civ-toolbar>",
-      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     },
     {
       "story": "FullAdminLayout",
       "name": "Full Admin Layout (toolbar + bulk actions)",
       "category": "Layout/Data Grid",
       "html": "<div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n        </civ-toolbar>\n        <civ-bulk-actions class=\"story-full\" count=\"0\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n        <civ-data-grid class=\"story-full\" caption=\"Applications\"></civ-data-grid>\n      </div>",
-      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "StartOnly",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Search only\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n    </civ-toolbar>",
-      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     },
     {
       "story": "WithFilters",
       "name": "With Filter Chips",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Filtered applications\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n      <civ-filter-chip-group label=\"Status filters\">\n        <civ-filter-chip label=\"In review\"></civ-filter-chip>\n        <civ-filter-chip label=\"Approved\" selected></civ-filter-chip>\n        <civ-filter-chip label=\"Denied\"></civ-filter-chip>\n      </civ-filter-chip-group>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n    </civ-toolbar>",
-      "source": "packages/layout/src/toolbar/civ-toolbar.stories.ts"
+      "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     }
   ],
   "civ-va-file-number": [

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-filterable-list.js';
-import '../list/civ-list.js';
-import '../list/civ-list-item.js';
+import '@civui/layout/list';
 import '@civui/inputs/text-input';
 import '@civui/actions/filter-chip';
 import '@civui/actions/filter-chip-group';

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 fun CivDisclosure(
     label: String = "",
     open: Boolean = false,
-    icon: String = "info",
+    icon: String = "chevron-right",
     size: String = "default",
     modifier: Modifier = Modifier,
     onToggle: ((Boolean) -> Unit)? = null,

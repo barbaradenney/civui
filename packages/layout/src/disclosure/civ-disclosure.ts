@@ -41,10 +41,13 @@ export class CivDisclosure extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
 
   /**
-   * Icon name from the civ-icon library. Pass an empty string to
-   * suppress the icon (text-only trigger).
+   * Icon name from the civ-icon library. Default `chevron-right`
+   * mirrors the native `<details>` disclosure-triangle pattern —
+   * caret points right when collapsed, rotates 90° to point down
+   * when expanded. Pass an empty string to suppress the icon
+   * (text-only trigger); pass another icon name to customize.
    */
-  @property({ type: String }) icon = 'info';
+  @property({ type: String }) icon = 'chevron-right';
 
   /** Trigger size: 'default' or 'sm'. */
   @property({ type: String }) size: 'default' | 'sm' = 'default';

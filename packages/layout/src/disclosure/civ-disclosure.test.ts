@@ -32,11 +32,11 @@ describe('civ-disclosure', () => {
     expect(summary.textContent).toContain('What is this?');
   });
 
-  it('renders the info icon by default', async () => {
+  it('renders the chevron-right icon by default', async () => {
     const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
-    expect(icon!.getAttribute('name')).toBe('info');
+    expect(icon!.getAttribute('name')).toBe('chevron-right');
   });
 
   it('renders no icon when icon attribute is empty', async () => {

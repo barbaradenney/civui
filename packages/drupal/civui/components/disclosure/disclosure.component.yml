@@ -16,14 +16,6 @@ props:
       type: boolean
       default: false
       description: 'Whether the disclosure is expanded'
-    icon:
-      title: Icon
-      type: string
-      description: 'Icon name from civ-icon library'
-    size:
-      title: Size
-      type: string
-      description: 'Trigger size variant'
 
 slots:
   content:

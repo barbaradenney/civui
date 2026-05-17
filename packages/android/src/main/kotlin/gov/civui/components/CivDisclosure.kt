@@ -3,7 +3,7 @@
 //
 // Placeholder body — the prop surface satisfies schema parity. The
 // implementation should wire a Compose AnimatedVisibility / expandable
-// card with the label/icon/size affordances. See audit-debt.md.
+// card with the label affordance. See audit-debt.md.
 
 package gov.civui.components
 
@@ -19,8 +19,6 @@ import androidx.compose.ui.Modifier
 fun CivDisclosure(
     label: String = "",
     open: Boolean = false,
-    icon: String = "chevron-right",
-    size: String = "default",
     modifier: Modifier = Modifier,
     onToggle: ((Boolean) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

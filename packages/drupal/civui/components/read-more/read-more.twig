@@ -1,0 +1,10 @@
+<civ-read-more
+  {% if expanded %}expanded{% endif %}
+  {% if more_label %}more-label="{{ more_label }}"{% endif %}
+  {% if less_label %}less-label="{{ less_label }}"{% endif %}
+  {% if icon %}icon="{{ icon }}"{% endif %}
+  {% if size %}size="{{ size }}"{% endif %}
+>
+  {% block teaser %}{{ teaser }}{% endblock %}
+  {% block rest %}{{ rest }}{% endblock %}
+</civ-read-more>

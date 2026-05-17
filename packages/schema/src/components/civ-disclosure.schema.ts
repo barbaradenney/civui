@@ -20,17 +20,6 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
-    icon: {
-      type: 'string',
-      description: 'Icon name from the civ-icon library shown before the label. Default `chevron-right` mirrors the native `<details>` disclosure-triangle pattern — caret points right when collapsed, rotates 90° to point down when expanded. Pass an empty string to suppress.',
-      default: 'chevron-right',
-    },
-    size: {
-      type: 'enum',
-      description: 'Trigger text size',
-      default: 'default',
-      values: ['default', 'sm'],
-    },
   },
 
   events: {

@@ -32,17 +32,14 @@ describe('civ-disclosure', () => {
     expect(summary.textContent).toContain('What is this?');
   });
 
-  it('renders the chevron-right icon by default', async () => {
+  it('always renders the chevron-right caret', async () => {
+    // Visual contract: every disclosure on a page reads as the same
+    // affordance. The component intentionally exposes no `icon` prop
+    // so the caret cannot be swapped or suppressed.
     const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
     expect(icon!.getAttribute('name')).toBe('chevron-right');
-  });
-
-  it('renders no icon when icon attribute is empty', async () => {
-    const el = await fixture<CivDisclosure>('<civ-disclosure icon="">Text</civ-disclosure>');
-    const icon = el.querySelector('civ-icon');
-    expect(icon).toBeNull();
   });
 
   it('opens when the open attribute is set', async () => {
@@ -116,12 +113,6 @@ describe('civ-disclosure', () => {
     const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
     const summary = el.querySelector('summary')!;
     expect(summary.hasAttribute('aria-controls')).toBe(false);
-  });
-
-  it('applies sm size class', async () => {
-    const el = await fixture<CivDisclosure>('<civ-disclosure size="sm">Text</civ-disclosure>');
-    const trigger = el.querySelector('.civ-disclosure__trigger')!;
-    expect(trigger.classList.contains('civ-toggle-btn--sm')).toBe(true);
   });
 
   it('composes the shared civ-toggle-btn class on the trigger', async () => {

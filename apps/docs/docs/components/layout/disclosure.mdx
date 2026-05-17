@@ -26,6 +26,10 @@ Built on the native `<details>` / `<summary>` elements so it works without
 JavaScript and is announced as a disclosure widget by assistive tech.
 Content is passed via the default slot.
 
+The visual contract is fixed — chevron caret beside the label, 90° rotation on
+open, single button-like trigger size — so every disclosure on a page reads as
+the same affordance.
+
 ## Examples
 
 ### Default
@@ -40,21 +44,9 @@ Content is passed via the default slot.
 
 <StoryEmbed id="layout-disclosure--custom-label" />
 
-### Chevron variant (rotates on open)
-
-<StoryEmbed id="layout-disclosure--chevron-variant" />
-
-### No icon
-
-<StoryEmbed id="layout-disclosure--no-icon" />
-
 ### Open by default
 
 <StoryEmbed id="layout-disclosure--open-by-default" />
-
-### Small size
-
-<StoryEmbed id="layout-disclosure--small" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-disclosure--default)
 
@@ -84,7 +76,7 @@ opt in to extra detail.
 ## Usage
 
 ```html
-<!-- "Why we ask?" with default info icon -->
+<!-- "Why we ask?" default label, chevron caret -->
 <civ-ssn label="Social Security number" name="ssn" required></civ-ssn>
 <civ-disclosure>
   <p>
@@ -102,17 +94,9 @@ opt in to extra detail.
   </p>
 </civ-disclosure>
 
-<!-- Chevron variant — rotates on open -->
-<civ-disclosure icon="chevron-down" label="See additional eligibility requirements">
-  <ul>
-    <li>You must have served at least 24 months of active duty</li>
-    <li>You must have been discharged under conditions other than dishonorable</li>
-  </ul>
-</civ-disclosure>
-
-<!-- No icon -->
-<civ-disclosure icon="" label="Read about our verification process">
-  <p>Our verification process takes 3–5 business days...</p>
+<!-- Opened by default — use sparingly -->
+<civ-disclosure open label="About this question">
+  <p>This will be visible on first load. Most disclosures should stay closed.</p>
 </civ-disclosure>
 ```
 

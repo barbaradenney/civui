@@ -19,6 +19,10 @@ text that doesn't need to be visible by default.
 Built on the native \`<details>\`/\`<summary>\` elements so it works without
 JavaScript and is announced as a disclosure widget by assistive tech. Content
 is passed via the default slot.
+
+The visual contract is fixed — chevron caret beside the label, 90° rotation on
+open, single button-like trigger size — so every disclosure on a page reads
+as the same affordance.
         `,
       },
     },
@@ -26,8 +30,6 @@ is passed via the default slot.
   argTypes: {
     label: { control: 'text' },
     open: { control: 'boolean' },
-    icon: { control: 'text' },
-    size: { control: 'select', options: ['default', 'sm'] },
   },
 };
 
@@ -72,31 +74,6 @@ export const CustomLabel: Story = {
   `,
 };
 
-export const ChevronVariant: Story = {
-  name: 'Chevron variant (rotates on open)',
-  render: () => html`
-    <civ-disclosure icon="chevron-down" label="See additional eligibility requirements">
-      <ul class="civ-m-0 civ-ps-6">
-        <li>You must have served at least 24 months of active duty</li>
-        <li>You must have been discharged under conditions other than dishonorable</li>
-        <li>You must have a valid VA file number</li>
-      </ul>
-    </civ-disclosure>
-  `,
-};
-
-export const NoIcon: Story = {
-  name: 'No icon',
-  render: () => html`
-    <civ-disclosure icon="" label="Read about our verification process">
-      <p>
-        Our verification process takes 3–5 business days. You'll receive an
-        email when your application is reviewed.
-      </p>
-    </civ-disclosure>
-  `,
-};
-
 export const OpenByDefault: Story = {
   name: 'Open by default',
   render: () => html`
@@ -105,19 +82,6 @@ export const OpenByDefault: Story = {
         This disclosure was opened by default — most consumers should leave
         it closed so the page stays scannable. Use the open state only for
         announcements that need to be visible on first load.
-      </p>
-    </civ-disclosure>
-  `,
-};
-
-export const Small: Story = {
-  name: 'Small size',
-  render: () => html`
-    <civ-text-input label="Routing number" name="routing"></civ-text-input>
-    <civ-disclosure size="sm" label="Where do I find this?">
-      <p class="civ-text-sm">
-        The routing number is the 9-digit number on the bottom left of your
-        check, before your account number.
       </p>
     </civ-disclosure>
   `,

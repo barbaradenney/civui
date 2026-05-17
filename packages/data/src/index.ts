@@ -4,6 +4,7 @@ import './data-grid/civ-data-grid.js';
 import './toolbar/civ-toolbar.js';
 import './bulk-actions/civ-bulk-actions.js';
 import './filterable-list/civ-filterable-list.js';
+import './column-visibility/civ-column-visibility.js';
 
 // Pagination
 export { CivPagination } from './pagination/index.js';
@@ -28,3 +29,6 @@ export { CivBulkActions } from './bulk-actions/index.js';
 
 // Filterable List
 export { CivFilterableList } from './filterable-list/index.js';
+
+// Column Visibility
+export { CivColumnVisibility } from './column-visibility/index.js';

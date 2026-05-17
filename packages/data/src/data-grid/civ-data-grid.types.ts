@@ -31,6 +31,12 @@ export interface GridColumn {
   /** CSS width value applied to the column (e.g. `'12rem'`, `'25%'`). */
   width?: string;
   /**
+   * When true, the column is omitted from both header and body rendering.
+   * Compose with `civ-column-visibility` to give users a toggle, or set
+   * statically to hide a column based on user role / feature flags.
+   */
+  hidden?: boolean;
+  /**
    * Optional formatter that turns the raw cell value into displayable content.
    * Return a string, number, or Lit `TemplateResult` for richer output (e.g. badges, links).
    * The formatter receives `(value, row, rowIndex)`.

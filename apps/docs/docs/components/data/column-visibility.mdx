@@ -1,0 +1,125 @@
+---
+title: Column Visibility
+sidebar_position: 6
+sidebar_label: Column Visibility
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_column-visibility.props.mdx";
+import EventsTable from "./_column-visibility.events.mdx";
+
+# Column Visibility
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-column-visibility`](pathname:///civui/storybook/?path=/docs/contract-civ-column-visibility--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-column-visibility>`
+
+A popover that lets users toggle which columns of a `civ-data-grid` are visible. Renders a trigger button + checkbox panel. The consumer wires the panel's `civ-column-visibility-change` event back into the grid's `columns` array by flipping each entry's `hidden` flag.
+
+> **Why not `civ-menu`?** Menus are single-select with close-on-click semantics. A column-visibility panel is multi-select — the panel stays open while the user toggles several checkboxes. Different keyboard model (Space toggles, no Enter-to-select-and-close), so this component renders its own popover.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="data-column-visibility--default" minHeight={320} />
+
+### Pre-hidden columns
+
+<StoryEmbed id="data-column-visibility--some-hidden" minHeight={320} />
+
+### Wired to a data-grid
+
+<StoryEmbed id="data-column-visibility--with-data-grid" minHeight={400} />
+
+### Higher minVisible floor
+
+<StoryEmbed id="data-column-visibility--custom-min-visible" minHeight={320} />
+
+### Align start
+
+<StoryEmbed id="data-column-visibility--align-start" minHeight={320} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/data-column-visibility--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Composing with `civ-data-grid`
+
+The component lives as a sibling of the grid. Wire it up:
+
+```ts
+const cols = document.querySelector('civ-column-visibility')!;
+const grid = document.querySelector('civ-data-grid')!;
+
+const allColumns = [
+  { key: 'id', header: 'Application ID' },
+  { key: 'applicant', header: 'Applicant' },
+  { key: 'status', header: 'Status' },
+  { key: 'updated', header: 'Last updated', align: 'end' },
+];
+
+cols.columns = allColumns;
+cols.hiddenColumns = [];
+grid.columns = allColumns;
+grid.rows = rows;
+
+cols.addEventListener('civ-column-visibility-change', (e) => {
+  const hidden = e.detail.hiddenColumns;
+  cols.hiddenColumns = hidden;
+  grid.columns = allColumns.map((c) => ({ ...c, hidden: hidden.includes(c.key) }));
+});
+```
+
+The grid skips any column where `hidden === true` — both header and body cells. Sorting / row-actions / select-all all continue to work on the visible subset.
+
+## Persistence
+
+The component is purely presentational — it doesn't persist hidden state. Wire `civ-column-visibility-change` into your own storage:
+
+```ts
+cols.addEventListener('civ-column-visibility-change', (e) => {
+  localStorage.setItem('applications-grid:hidden-columns', JSON.stringify(e.detail.hiddenColumns));
+  // … plus the grid update from the example above
+});
+
+// On load:
+const saved = JSON.parse(localStorage.getItem('applications-grid:hidden-columns') ?? '[]');
+cols.hiddenColumns = saved;
+grid.columns = allColumns.map((c) => ({ ...c, hidden: saved.includes(c.key) }));
+```
+
+## `minVisible` floor
+
+By default `minVisible="1"` — the component refuses to hide every column. Set higher when columns are essential context:
+
+```html
+<civ-column-visibility min-visible="3"></civ-column-visibility>
+```
+
+The refusal is silent — the checkbox snaps back to checked without dispatching. Consider pairing with a hint above the checkbox list when the floor is non-default.
+
+## Accessibility
+
+- Trigger button gets `aria-haspopup="true"`, `aria-expanded`, and `aria-controls` pointing at the panel.
+- Panel is a `role="group"` with `aria-label` from the i18n `columnVisibilityPanelLabel` string ("Toggle column visibility").
+- Each checkbox is a native `<input type="checkbox">` wrapped in a `<label>` so the label text becomes the accessible name automatically.
+- Escape closes the panel and (with `returnFocus`) puts focus back on the trigger.
+- Click outside closes the panel via the shared `clickOutside` utility.
+- Mobile (≤480px) renders the panel as a bottom sheet via the project-wide `civ-bottom-sheet` rule.
+
+## When not to use this
+
+- If the user role determines which columns to show, set `column.hidden` statically — don't expose a toggle UI they'd never use.
+- If there are only 2-3 columns total, hiding them isn't useful; trim the column set instead.
+- If columns are essential to interpretation (a transactions table where amount + date must always be visible), bake them into the grid rather than allowing toggle.

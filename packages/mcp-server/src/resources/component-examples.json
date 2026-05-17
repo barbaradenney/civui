@@ -777,6 +777,49 @@
       "source": "packages/form-patterns/src/patterns/healthcare-examples.stories.ts"
     }
   ],
+  "civ-column-visibility": [
+    {
+      "story": "AlignStart",
+      "name": "Align Start (left)",
+      "category": "Data/Column Visibility",
+      "html": "<div style=\"min-height: 320px;\">\n        <civ-column-visibility class=\"story-align\" align=\"start\"></civ-column-visibility>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    },
+    {
+      "story": "CustomMinVisible",
+      "name": "Higher minVisible Floor",
+      "category": "Data/Column Visibility",
+      "html": "<div style=\"min-height: 320px;\">\n        <p class=\"civ-mb-2\">Try hiding columns — the component refuses to drop below 3 visible.</p>\n        <civ-column-visibility class=\"story-min\"></civ-column-visibility>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Data/Column Visibility",
+      "html": "<div style=\"min-height: 320px;\">\n        <civ-column-visibility class=\"story-default\"></civ-column-visibility>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    },
+    {
+      "story": "DensityScale",
+      "name": "Density Scale",
+      "category": "Data/Column Visibility",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"min-height: 600px;\">\n        <div data-civ-scale=\"dense\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n          <civ-column-visibility class=\"story-density-dense\"></civ-column-visibility>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n          <civ-column-visibility class=\"story-density-default\"></civ-column-visibility>\n        </div>\n        <div data-civ-scale=\"spacious\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n          <civ-column-visibility class=\"story-density-spacious\"></civ-column-visibility>\n        </div>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    },
+    {
+      "story": "SomeHidden",
+      "name": "Pre-hidden Columns",
+      "category": "Data/Column Visibility",
+      "html": "<div style=\"min-height: 320px;\">\n        <civ-column-visibility class=\"story-pre\"></civ-column-visibility>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    },
+    {
+      "story": "WithDataGrid",
+      "name": "Wired to a civ-data-grid",
+      "category": "Data/Column Visibility",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <div style=\"display: flex; justify-content: flex-end;\">\n          <civ-column-visibility class=\"story-grid\"></civ-column-visibility>\n        </div>\n        <civ-data-grid class=\"story-grid\" caption=\"Applications\"></civ-data-grid>\n      </div>",
+      "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
+    }
+  ],
   "civ-combobox": [
     {
       "story": "AllStates",
@@ -1775,10 +1818,24 @@
   ],
   "civ-filter-chip": [
     {
+      "story": "BareScrollbar",
+      "name": "Bare Scrollbar (native, hidden on Safari)",
+      "category": "Foundations/Horizontal Scroll",
+      "html": "<div style=\"${wrapperStyle}\">\n      <div class=\"civ-scroll-x civ-scroll-x--bare-scrollbar\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip label=\"In review\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Approved\"></civ-filter-chip>\n          <civ-filter-chip label=\"Denied\"></civ-filter-chip>\n          <civ-filter-chip label=\"Pending\"></civ-filter-chip>\n          <civ-filter-chip label=\"Returned\"></civ-filter-chip>\n          <civ-filter-chip label=\"Archived\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/horizontal-scroll.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Actions/Filter Chip",
       "html": "<civ-filter-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      chip-style=\"${args.chipStyle || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?selected=\"${args.selected}\"\n      ?removable=\"${args.removable}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-filter-chip>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
+    },
+    {
+      "story": "Default",
+      "name": "Default (filter chip overflow)",
+      "category": "Foundations/Horizontal Scroll",
+      "html": "<div style=\"${wrapperStyle}\">\n      <div class=\"civ-scroll-x\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip label=\"In review\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Approved\"></civ-filter-chip>\n          <civ-filter-chip label=\"Denied\"></civ-filter-chip>\n          <civ-filter-chip label=\"Pending\"></civ-filter-chip>\n          <civ-filter-chip label=\"Returned\"></civ-filter-chip>\n          <civ-filter-chip label=\"Archived\"></civ-filter-chip>\n          <civ-filter-chip label=\"Withdrawn\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/horizontal-scroll.stories.ts"
     },
     {
       "story": "FilterRow",
@@ -1797,6 +1854,13 @@
       "category": "Actions/Filter Chip",
       "html": "<div style=\"display: grid; gap: 0.5rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Applied filters:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n        <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"Disability\" value=\"disability\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"VA Form 21-526EZ\" value=\"form-21-526ez\" selected removable></civ-filter-chip>\n      </div>\n    </div>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
+    },
+    {
+      "story": "SnapAndFade",
+      "name": "Snap + Fade",
+      "category": "Foundations/Horizontal Scroll",
+      "html": "<div style=\"${wrapperStyle}\">\n      <div class=\"civ-scroll-x civ-scroll-x--snap civ-scroll-x--fade\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"In review\" selected></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Approved\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Denied\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Pending\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Returned\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Archived\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/horizontal-scroll.stories.ts"
     },
     {
       "story": "Spacing",
@@ -1831,11 +1895,25 @@
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
+      "story": "WithFade",
+      "name": "With Edge Fade",
+      "category": "Foundations/Horizontal Scroll",
+      "html": "<div style=\"${wrapperStyle}\">\n      <div class=\"civ-scroll-x civ-scroll-x--fade\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip label=\"In review\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Approved\"></civ-filter-chip>\n          <civ-filter-chip label=\"Denied\"></civ-filter-chip>\n          <civ-filter-chip label=\"Pending\"></civ-filter-chip>\n          <civ-filter-chip label=\"Returned\"></civ-filter-chip>\n          <civ-filter-chip label=\"Archived\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/horizontal-scroll.stories.ts"
+    },
+    {
       "story": "WithIcons",
       "name": "With Icons",
       "category": "Actions/Filter Chip",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-filter-chip label=\"Personal\" value=\"personal\" icon-start=\"person\"></civ-filter-chip>\n      <civ-filter-chip label=\"Important\" value=\"important\" icon-start=\"star\" selected></civ-filter-chip>\n      <civ-filter-chip label=\"Mailed\" value=\"mail\" icon-start=\"mail\"></civ-filter-chip>\n      <civ-filter-chip label=\"Recent\" value=\"recent\" icon-start=\"calendar\"></civ-filter-chip>\n    </div>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
+    },
+    {
+      "story": "WithSnap",
+      "name": "With Scroll-Snap",
+      "category": "Foundations/Horizontal Scroll",
+      "html": "<div style=\"${wrapperStyle}\">\n      <div class=\"civ-scroll-x civ-scroll-x--snap\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"In review\" selected></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Approved\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Denied\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Pending\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Returned\"></civ-filter-chip>\n          <civ-filter-chip class=\"civ-scroll-x__item\" label=\"Archived\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/horizontal-scroll.stories.ts"
     }
   ],
   "civ-filter-chip-group": [

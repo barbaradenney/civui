@@ -81,6 +81,10 @@ export interface CivLocaleStrings {
   bulkActionsSelectedLabel: string; // "{count} {itemName} selected"
   bulkActionsClearLabel: string;    // "Clear"
 
+  // Column visibility — civ-column-visibility column-toggle popover.
+  columnVisibilityLabel: string;          // "Columns" (trigger button text)
+  columnVisibilityPanelLabel: string;     // "Toggle column visibility" (panel aria-label)
+
   // Country picker — fallback label for civ-country when no label prop
   // is provided. Other locale strings live in the consumer's locale
   // override.
@@ -791,6 +795,9 @@ const defaultStrings: CivLocaleStrings = {
   dataGridSelectionStatus: '{count} of {total} selected',
   bulkActionsSelectedLabel: '{count} {itemName} selected',
   bulkActionsClearLabel: 'Clear',
+
+  columnVisibilityLabel: 'Columns',
+  columnVisibilityPanelLabel: 'Toggle column visibility',
 
   countryLabel: 'Country',
 

@@ -2982,8 +2982,17 @@
     transform: rotate(180deg);
   }
 
+  /*
+   * Indent rail. A leading-edge border anchored under the trigger
+   * visually connects the disclosed content to the toggle above —
+   * the eye reads "this paragraph belongs to that button". Uses
+   * `border-inline-start` so RTL flips it to the right side.
+   * Color matches the trigger's `primary-light` active state so
+   * the rail reads as part of the same affordance family.
+   */
   .civ-disclosure__content {
-    @apply civ-mt-2 civ-ps-6;
+    @apply civ-mt-2 civ-ps-3;
+    border-inline-start: 2px solid var(--civ-color-primary-light);
   }
 
   /* ── Data Field ──────────────────────────────────────────── */

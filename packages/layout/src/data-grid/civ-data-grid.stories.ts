@@ -321,3 +321,33 @@ export const FullAdminLayout: Story = {
     `;
   },
 };
+
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => {
+    setTimeout(() => {
+      ['dense', 'default', 'spacious'].forEach((scale) => {
+        const grid = document.querySelector(`civ-data-grid.story-density-${scale}`) as any;
+        if (!grid) return;
+        grid.columns = defaultColumns;
+        grid.rows = toRows(SAMPLE_DATA.slice(0, 3));
+      });
+    }, 0);
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-6">
+        <div data-civ-scale="dense">
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+          <civ-data-grid class="story-density-dense" caption="Applications (dense)"></civ-data-grid>
+        </div>
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+          <civ-data-grid class="story-density-default" caption="Applications (default)"></civ-data-grid>
+        </div>
+        <div data-civ-scale="spacious">
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+          <civ-data-grid class="story-density-spacious" caption="Applications (spacious)"></civ-data-grid>
+        </div>
+      </div>
+    `;
+  },
+};

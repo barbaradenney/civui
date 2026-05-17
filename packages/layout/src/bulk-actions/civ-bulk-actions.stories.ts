@@ -69,6 +69,35 @@ export const Hidden: Story = {
   `,
 };
 
+export const DensityScale: Story = {
+  name: 'Density Scale',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div data-civ-scale="dense">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
+        <civ-bulk-actions count="3" item-name="application">
+          <civ-action-button variant="secondary" label="Archive"></civ-action-button>
+          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+        </civ-bulk-actions>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
+        <civ-bulk-actions count="3" item-name="application">
+          <civ-action-button variant="secondary" label="Archive"></civ-action-button>
+          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+        </civ-bulk-actions>
+      </div>
+      <div data-civ-scale="spacious">
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
+        <civ-bulk-actions count="3" item-name="application">
+          <civ-action-button variant="secondary" label="Archive"></civ-action-button>
+          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+        </civ-bulk-actions>
+      </div>
+    </div>
+  `,
+};
+
 export const Interactive: Story = {
   render: () => html`
     <div>

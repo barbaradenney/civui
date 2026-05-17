@@ -89,6 +89,7 @@
   civ-race-ethnicity,
   civ-radio,
   civ-radio-group,
+  civ-read-more,
   civ-relationship,
   civ-repeater,
   civ-routing-number,
@@ -2993,6 +2994,50 @@
   .civ-disclosure__content {
     @apply civ-mt-2 civ-ps-3;
     border-inline-start: 2px solid var(--civ-color-primary-light);
+  }
+
+  /* ── Read More ─────────────────────────────────────────────── */
+
+  /*
+   * Two-stage disclosure. Teaser is always visible; rest is
+   * `hidden` until expanded; trigger is a secondary-palette button
+   * styled identically to `.civ-disclosure__trigger` so the two
+   * disclosure-family widgets read as siblings.
+   */
+  .civ-read-more__rest {
+    @apply civ-mt-2;
+  }
+
+  .civ-read-more__trigger {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-cursor-pointer
+           civ-mt-2 civ-px-2 civ-py-1 civ-rounded civ-text-sm
+           civ-font-semibold civ-border-0;
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+  }
+
+  .civ-read-more__trigger--sm {
+    @apply civ-px-1 civ-text-xs;
+  }
+
+  .civ-read-more__trigger:hover {
+    background-color: var(--civ-color-primary-lighter);
+  }
+
+  .civ-read-more__trigger:active {
+    background-color: var(--civ-color-primary-light);
+  }
+
+  /*
+   * Optional chevron icon: rotates 180° on expand (down → up). Mirrors
+   * the legacy disclosure rule so a `chevron-down` consumer choice
+   * carries through to both components consistently.
+   */
+  .civ-read-more__trigger > civ-icon[name='chevron-down'] {
+    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+  .civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
+    transform: rotate(180deg);
   }
 
   /* ── Data Field ──────────────────────────────────────────── */

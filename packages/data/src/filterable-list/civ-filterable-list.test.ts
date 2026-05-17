@@ -1,8 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-filterable-list.js';
-import '../list/civ-list.js';
-import '../list/civ-list-item.js';
+import '@civui/layout/list';
 
 afterEach(cleanupFixtures);
 

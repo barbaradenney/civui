@@ -116,11 +116,14 @@ const config: StorybookConfig = {
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
-      '@civui/layout/pagination': resolve(root, 'packages/layout/src/pagination/index.ts'),
-      '@civui/layout/data-grid': resolve(root, 'packages/layout/src/data-grid/index.ts'),
-      '@civui/layout/toolbar': resolve(root, 'packages/layout/src/toolbar/index.ts'),
-      '@civui/layout/bulk-actions': resolve(root, 'packages/layout/src/bulk-actions/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
+      // Data — admin / collection-display family
+      '@civui/data/data-grid': resolve(root, 'packages/data/src/data-grid/index.ts'),
+      '@civui/data/pagination': resolve(root, 'packages/data/src/pagination/index.ts'),
+      '@civui/data/toolbar': resolve(root, 'packages/data/src/toolbar/index.ts'),
+      '@civui/data/bulk-actions': resolve(root, 'packages/data/src/bulk-actions/index.ts'),
+      '@civui/data/filterable-list': resolve(root, 'packages/data/src/filterable-list/index.ts'),
+      '@civui/data': resolve(root, 'packages/data/src/index.ts'),
       // Storybook utilities — used by stories that wrap demos in
       // `<civ-demo-frame>`. Resolve to source so the storybook build
       // works without a prebuilt @civui/storybook-utils dist (the

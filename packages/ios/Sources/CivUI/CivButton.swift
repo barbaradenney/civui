@@ -41,6 +41,9 @@ public struct CivButton: View {
     /// Icon name rendered after the label text.
     public var iconEnd: String
 
+    /// When true, the label is treated as accessible name only; the button shows just the icon.
+    public var isIconOnly: Bool
+
     /// When set, the button functions as a link action opening this URL.
     public var href: String?
 
@@ -68,6 +71,7 @@ public struct CivButton: View {
         isDisabled: Bool = false,
         iconStart: String = "",
         iconEnd: String = "",
+        isIconOnly: Bool = false,
         href: String? = nil,
         onClick: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
@@ -79,6 +83,7 @@ public struct CivButton: View {
         self.isDisabled = isDisabled
         self.iconStart = iconStart
         self.iconEnd = iconEnd
+        self.isIconOnly = isIconOnly
         self.href = href
         self.onClick = onClick
         self.onAnalytics = onAnalytics

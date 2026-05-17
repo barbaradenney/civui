@@ -74,6 +74,7 @@ export interface CivLocaleStrings {
   dataGridRowActions: string;     // "Actions for row {row}"
   dataGridExpandRow: string;      // "Expand row {row}"
   dataGridCollapseRow: string;    // "Collapse row {row}"
+  dataGridEditCell: string;       // "Edit {column}"
   dataGridEmpty: string;          // "No data to display"
   dataGridLoading: string;        // "Loading…"
   dataGridErrorLabel: string;     // "Failed to load data"
@@ -793,6 +794,7 @@ const defaultStrings: CivLocaleStrings = {
   dataGridRowActions: 'Actions for row {row}',
   dataGridExpandRow: 'Expand row {row}',
   dataGridCollapseRow: 'Collapse row {row}',
+  dataGridEditCell: 'Edit {column}',
   dataGridEmpty: 'No data to display',
   dataGridLoading: 'Loading…',
   dataGridErrorLabel: 'Failed to load data',

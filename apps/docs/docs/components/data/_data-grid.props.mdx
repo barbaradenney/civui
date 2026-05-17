@@ -5,7 +5,7 @@
 |-----------|------|---------|-------------|
 | `caption` | `string` | `''` | Accessible name for the table, rendered as `<caption>`. Strongly recommended — the caption serves as the table's accessible name for screen readers |
 | `caption-hidden` | `boolean` | `false` | Visually hide the caption while keeping it in the accessibility tree. Use when an external heading already names the table |
-| `columns` | `array` | — | Column definitions: `{ key, header, sortable?, align?, width?, formatter? }`. The formatter callback is web-only; native platforms render values through their own type-mapping logic |
+| `columns` | `array` | — | Column definitions: `{ key, header, sortable?, align?, width?, hidden?, formatter?, editable?, inputType?, options?, validate? }`. Set `editable: true` + `inputType: 'text' \| 'number' \| 'select'` to make cells in this column click-to-edit; provide `validate(value, row) => string \| null` to block invalid commits. The formatter / validate callbacks are web-only; native platforms render and validate values through their own type-mapping logic |
 | `rows` | `array` | — | Row data: `{ id, cells, disabled?, actions? }`. Each row's `cells` keys map to the columns' `key` values. `actions` triggers the per-row kebab menu |
 | `sort-by` | `string` | `''` | Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort` |
 | `sort-direction` | `'asc'` \| `'desc'` \| `'none'` | `'none'` | Current sort direction. `none` clears the sort indicator |

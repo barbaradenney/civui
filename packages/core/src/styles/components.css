@@ -2202,6 +2202,72 @@
     background: transparent;
   }
 
+  /* Editable cells — the cell's content lives inside a real <button>
+     when in display mode so the cell is a keyboard focus stop.
+     The td gets the hover hint; the button is full-width / transparent /
+     inherits font so it visually reads as the cell content. */
+  .civ-data-grid__td--editable {
+    cursor: text;
+    padding: 0;
+  }
+
+  .civ-data-grid__td--editable:hover {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__edit-cell-trigger {
+    @apply civ-block civ-w-full civ-text-start civ-bg-transparent civ-border-0
+           civ-cursor-text;
+    color: inherit;
+    font: inherit;
+    /* Match the standard td padding so the button content sits where the
+       cell text would. Cells use civ-px-3 civ-py-2 via .civ-data-grid__td. */
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+  }
+
+  /* End-aligned + numeric columns: button content right-aligns the same
+     way the cell value would. */
+  .civ-data-grid__td--align-end .civ-data-grid__edit-cell-trigger,
+  .civ-data-grid__td--align-numeric .civ-data-grid__edit-cell-trigger {
+    text-align: end;
+  }
+
+  .civ-data-grid__td--align-center .civ-data-grid__edit-cell-trigger {
+    text-align: center;
+  }
+
+  .civ-data-grid__td--editing {
+    padding: var(--civ-spacing-1);
+    background-color: var(--civ-color-primary-lightest);
+  }
+
+  .civ-data-grid__td--edit-error {
+    background-color: var(--civ-color-error-lightest);
+  }
+
+  .civ-data-grid__edit-input {
+    @apply civ-w-full civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    border-color: var(--civ-color-base-light);
+    font: inherit;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-data-grid__edit-input:focus {
+    outline: none;
+    border-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-data-grid__edit-input[aria-invalid="true"] {
+    border-color: var(--civ-color-error-DEFAULT);
+  }
+
+  .civ-data-grid__edit-error {
+    @apply civ-m-0 civ-mt-1;
+    color: var(--civ-color-error-dark);
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
   .civ-data-grid__select-wrap {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     cursor: pointer;

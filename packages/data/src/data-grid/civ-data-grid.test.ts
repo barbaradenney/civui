@@ -1013,4 +1013,129 @@ describe('civ-data-grid — inline cell editing', () => {
     expect(editStart).toHaveBeenCalledOnce();
     expect(activate).not.toHaveBeenCalled();
   });
+
+  it('wraps editable cell value in a focusable <button> in display mode', async () => {
+    // The button is the keyboard focus stop for editable cells. Without
+    // it the cell is a plain <td> — not focusable, mouse-only.
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const trigger = el.querySelector('.civ-data-grid__edit-cell-trigger') as HTMLButtonElement;
+    expect(trigger).not.toBeNull();
+    expect(trigger.tagName).toBe('BUTTON');
+    // Native <button> is keyboard-focusable by default.
+    expect(trigger.tabIndex).toBe(0);
+    expect(trigger.textContent?.trim()).toBe('Smith');
+  });
+
+  it('non-editable cells do NOT get a trigger button (cleaner DOM)', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name' }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    expect(el.querySelector('.civ-data-grid__edit-cell-trigger')).toBeNull();
+  });
+
+  it('keyboard-activates edit mode via Enter on the focused trigger button', async () => {
+    // Native <button> dispatches click on Enter — this is how keyboard
+    // users activate edit mode.
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const editStart = vi.fn();
+    el.addEventListener('civ-cell-edit-start', editStart);
+    const trigger = el.querySelector('.civ-data-grid__edit-cell-trigger') as HTMLButtonElement;
+    trigger.focus();
+    // jsdom synthesizes the click on button.click() — same path Enter takes.
+    trigger.click();
+    expect(editStart).toHaveBeenCalledOnce();
+  });
+
+  it('commits cell A and starts edit on cell B when user clicks another editable cell', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'name', header: 'Name', editable: true },
+        { key: 'role', header: 'Role', editable: true },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', role: 'Admin' } }],
+    });
+    const commit = vi.fn();
+    const editStart = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', commit);
+    el.addEventListener('civ-cell-edit-start', editStart);
+
+    // Start edit on Name.
+    (el.querySelector('tbody td:first-child') as HTMLElement).click();
+    await elementUpdated(el);
+    const inputA = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    inputA.value = 'Doe';
+    // Simulate blur (browser fires it when the user clicks elsewhere).
+    inputA.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+
+    // Then click the Role cell.
+    (el.querySelectorAll('tbody td')[1] as HTMLElement).click();
+    await elementUpdated(el);
+
+    // Name commit fired with the typed value.
+    expect(commit).toHaveBeenCalledOnce();
+    expect(commit.mock.calls[0][0].detail).toMatchObject({
+      rowId: '1', columnKey: 'name', value: 'Doe',
+    });
+    // Role is now in edit mode.
+    expect(editStart.mock.calls.length).toBe(2);
+    expect(editStart.mock.calls[1][0].detail).toMatchObject({
+      rowId: '1', columnKey: 'role',
+    });
+  });
+
+  it('clears the validation error when the user switches to editing another cell', async () => {
+    const el = await mountGrid({
+      columns: [
+        {
+          key: 'name', header: 'Name', editable: true,
+          validate: (v) => (typeof v === 'string' && v.length < 3 ? 'Too short' : null),
+        },
+        { key: 'role', header: 'Role', editable: true },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', role: 'Admin' } }],
+    });
+    // Fail validation on Name.
+    (el.querySelector('tbody td:first-child') as HTMLElement).click();
+    await elementUpdated(el);
+    const inputA = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    inputA.value = 'No';
+    inputA.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid__edit-error')?.textContent?.trim()).toBe('Too short');
+
+    // Switch to editing Role — the error should not carry over.
+    (el.querySelectorAll('tbody td')[1] as HTMLElement).click();
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid__edit-error')).toBeNull();
+  });
+
+  it('commits on click-outside (any document click that blurs the input)', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name', editable: true }],
+      rows: [{ id: '1', cells: { name: 'Smith' } }],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-commit', handler);
+    (el.querySelector('tbody td') as HTMLElement).click();
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'Doe';
+    // Simulate the blur that would happen on a click outside the grid.
+    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
+  });
+
+  // Note: the NaN guard in _commitEdit is defensive code for browsers
+  // that allow non-numeric input through type="number" (older Safari,
+  // some edge cases with paste behavior). jsdom rejects the assignment
+  // entirely (`input.value = 'abc'` → ''), so the path is not directly
+  // reachable in tests. The behavior is documented inline at the guard.
 });

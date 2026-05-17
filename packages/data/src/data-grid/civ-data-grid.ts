@@ -490,11 +490,33 @@ export class CivDataGrid extends CivBaseElement {
       : undefined;
     // The mobile stacked pattern uses a data-label attribute so CSS can
     // render the column header next to the value in narrow viewports.
+    //
+    // For editable cells we wrap the value in a real <button> so the cell
+    // is a keyboard focus stop. Native button semantics (Enter / Space
+    // activate, role="button" announced) replace the "click a div" anti-
+    // pattern we'd have with just a clickable <td>. The button bubbles
+    // its click to the td's @click handler — same code path as a direct
+    // mouse click on the cell.
+    if (isEditable) {
+      const editLabel = t('dataGridEditCell').replace('{column}', col.header);
+      return html`
+        <td
+          class="civ-data-grid__td ${alignClass} ${editableClass}"
+          data-label="${col.header}"
+          @click="${onClick}"
+        >
+          <button
+            type="button"
+            class="civ-data-grid__edit-cell-trigger"
+            aria-label="${editLabel}"
+          >${value as unknown as TemplateResult}</button>
+        </td>
+      `;
+    }
     return html`
       <td
-        class="civ-data-grid__td ${alignClass} ${editableClass}"
+        class="civ-data-grid__td ${alignClass}"
         data-label="${col.header}"
-        @click="${onClick}"
       >${value as unknown as TemplateResult}</td>
     `;
   }
@@ -627,9 +649,25 @@ export class CivDataGrid extends CivBaseElement {
   ): void {
     if (!this._isEditing(row.id, col.key)) return;
     const rawValue = input.value;
-    const value: unknown = col.inputType === 'number'
-      ? (rawValue === '' ? '' : Number(rawValue))
-      : rawValue;
+    let value: unknown;
+    if (col.inputType === 'number') {
+      if (rawValue === '') {
+        value = '';
+      } else {
+        const parsed = Number(rawValue);
+        if (Number.isNaN(parsed)) {
+          // jsdom / older browsers may admit non-numeric input despite the
+          // type="number" hint. Treat as a validation failure so the
+          // consumer never sees `NaN` on the committed event detail.
+          this._editError = 'Please enter a valid number';
+          queueMicrotask(() => input.isConnected && input.focus());
+          return;
+        }
+        value = parsed;
+      }
+    } else {
+      value = rawValue;
+    }
     if (col.validate) {
       const error = col.validate(value, row);
       if (error) {

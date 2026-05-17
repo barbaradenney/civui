@@ -31,6 +31,9 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  * @prop {ButtonType} type - Button type attribute
+ * @prop {string} iconStart - Leading icon name
+ * @prop {string} iconEnd - Trailing icon name
+ * @prop {boolean} iconOnly - Render the `label` visually hidden so the button shows only its icon; the label still serves as the accessible name. Use for kebab triggers and similar square icon-buttons.
  * @prop {string} href - When set, renders as `<a href>` instead of `<button>`
  * @prop {string} target - Anchor target (link mode only)
  * @prop {string} rel - Anchor rel (link mode only)
@@ -48,6 +51,13 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
+  /**
+   * When true, the label is rendered visually hidden and used as the
+   * accessible name only. Use with `icon-start` or `icon-end` to render
+   * a square icon button (kebab triggers, close buttons, etc.). Requires
+   * `label` to be set.
+   */
+  @property({ type: Boolean, attribute: 'icon-only', reflect: true }) iconOnly = false;
   @property({ type: String }) href = '';
   @property({ type: String }) target = '';
   @property({ type: String }) rel = '';
@@ -76,6 +86,7 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
       // Link mode adds an underline so the navigation affordance reads
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-btn--link' : '',
+      this.iconOnly ? 'civ-btn--icon-only' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
     ]
       .filter(Boolean)
@@ -100,7 +111,13 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
       this._warnedNoAccessibleName = true;
     }
 
-    const inner = html`${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${this._text}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
+    // In icon-only mode the label provides the accessible name only;
+    // it's rendered via .civ-sr-only so AT picks it up while sighted
+    // users see just the icon.
+    const visibleText = this.iconOnly
+      ? html`<span class="civ-sr-only">${this._text}</span>`
+      : this._text;
+    const inner = html`${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${visibleText}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
 
     if (this._isLink) {
       if (this.disabled) {

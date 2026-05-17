@@ -44,6 +44,13 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'icon-end',
     },
+    iconOnly: {
+      type: 'boolean',
+      description: 'Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconStart` / `iconEnd` to be set',
+      default: false,
+      attribute: 'icon-only',
+      reflect: true,
+    },
     href: {
       type: 'string',
       description: 'When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other action buttons (e.g. an Edit link next to a Remove button in a list row). The label gets underlined so the link identity stays visible',

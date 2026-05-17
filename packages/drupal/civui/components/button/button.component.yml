@@ -43,6 +43,11 @@ props:
       title: Href
       type: string
       description: 'When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other buttons (e.g. an "Add another" link styled as a secondary button). The label is underlined so the link identity stays visible'
+    icon_only:
+      title: Icon only
+      type: boolean
+      default: false
+      description: 'Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconSt...'
 
 slots:
   default:

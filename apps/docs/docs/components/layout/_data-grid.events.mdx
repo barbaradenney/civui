@@ -1,0 +1,8 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-sort` | `{ column: string, direction: string }` | Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` accordingly (and re-fetch / re-sort data) |
+| `civ-selection-change` | `{ selectedRowIds: string[] }` | Fires when the user toggles a row's selection or activates the select-all checkbox. Detail carries the new selection set; update `selectedRowIds` to reflect it |
+| `civ-row-action` | `{ rowId: string, action: string, row: object }` | Fires when the user activates a row-action menu item |

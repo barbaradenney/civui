@@ -1,0 +1,12 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `total-items` | `number` | `0` | Total item count across all pages. Drives the totalPages computation. When 0, the component renders an empty-state message |
+| `page-size` | `number` | `25` | Items per page. Determines how the totalItems split into pages and the status range |
+| `page` | `number` | `1` | 1-based current page. Clamped to `[1, totalPages]`. The consumer is expected to update this prop in response to `civ-page-change` |
+| `page-size-options` | `string` | `'10,25,50,100'` | Comma-separated list of page-size choices offered in the selector. Invalid or non-positive values are dropped |
+| `sibling-count` | `number` | `1` | Page-number buttons rendered on each side of the current page before truncation kicks in. Higher values show more pages at once |
+| `label` | `string` | `''` | Accessible name for the `<nav>` landmark. Falls back to the i18n "Pagination" string when omitted |
+| `item-name` | `string` | `'item'` | Singular noun used in status text (e.g. "row", "application"). Surface-level — meaningful labels improve clarity for assistive tech |

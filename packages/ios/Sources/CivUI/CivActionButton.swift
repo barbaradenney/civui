@@ -57,6 +57,9 @@ public struct CivActionButton: View {
     /// Icon name rendered after the label text.
     public var iconEnd: String
 
+    /// When true, the label is treated as accessible name only; the button shows just the icon.
+    public var isIconOnly: Bool
+
     /// When non-empty, the button acts as a navigation link instead of an in-place
     /// action. On native iOS we resolve URLs through the standard environment
     /// `openURL` action rather than rendering an `<a>` element.
@@ -79,6 +82,7 @@ public struct CivActionButton: View {
         type: String = "button",
         iconStart: String = "",
         iconEnd: String = "",
+        isIconOnly: Bool = false,
         href: String = ""
     ) {
         self.label = label
@@ -91,6 +95,7 @@ public struct CivActionButton: View {
         self.type = type
         self.iconStart = iconStart
         self.iconEnd = iconEnd
+        self.isIconOnly = isIconOnly
         self.href = href
     }
 

@@ -1,0 +1,173 @@
+---
+title: Data Grid
+sidebar_position: 11
+sidebar_label: Data Grid
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_data-grid.props.mdx";
+import EventsTable from "./_data-grid.events.mdx";
+
+# Data Grid
+
+`<civ-data-grid>`
+
+Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Compose with a sibling `<civ-pagination>` for paged data. On mobile (≤480px), rows collapse to vertical label/value blocks via CSS — no JavaScript re-template.
+
+The grid is **controlled** — the consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, and `civ-row-action`; the consumer listens for `civ-page-change` directly on the pagination element.
+
+## Accessibility foundation: semantic `<table>`, not `role="grid"`
+
+The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role="grid"` for predominantly readable tabular data — even when columns are sortable. `role="grid"` requires full 2D arrow-key navigation that's worse for screen reader users on data display. CivUI's data grid follows this guidance:
+
+- Native `<table>` + `<caption>` for the accessible name
+- `<th scope="col">` for column headers
+- `aria-sort="ascending|descending|none"` on sortable headers
+- Real `<button>` inside each sortable `<th>` (the focusable affordance)
+- Row-action menus use `<civ-menu>` (WAI-ARIA Menu Button pattern)
+- Empty / loading / error states use `aria-live` / `role="alert"` so screen readers hear them
+
+If you need spreadsheet-style 2D arrow-key navigation, the right answer is a separate component layered on `role="grid"` — don't promote the data grid in place.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-data-grid--default" minHeight={400} />
+
+### Sortable
+
+<StoryEmbed id="layout-data-grid--sortable" minHeight={400} />
+
+### Multiple selection
+
+<StoryEmbed id="layout-data-grid--multiple-selection" minHeight={400} />
+
+### Row actions
+
+<StoryEmbed id="layout-data-grid--row-actions" minHeight={400} />
+
+### With pagination
+
+<StoryEmbed id="layout-data-grid--with-pagination" minHeight={500} />
+
+### With formatted cells
+
+<StoryEmbed id="layout-data-grid--with-formatter" minHeight={400} />
+
+### Loading / Empty / Error
+
+<StoryEmbed id="layout-data-grid--loading" minHeight={200} />
+
+<StoryEmbed id="layout-data-grid--empty" minHeight={200} />
+
+<StoryEmbed id="layout-data-grid--error-state" minHeight={200} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Column definition
+
+The `columns` JS property accepts an array of `GridColumn` objects:
+
+```ts
+interface GridColumn {
+  /** Stable identifier — keys into row.cells and identifies the column in sort events. */
+  key: string;
+  /** Header text rendered in <th>. */
+  header: string;
+  /** Becomes a sort button and dispatches civ-sort on click. */
+  sortable?: boolean;
+  /** Horizontal alignment. Use 'numeric' to enable tabular-nums for number columns. */
+  align?: 'start' | 'center' | 'end' | 'numeric';
+  /** CSS width (e.g. '12rem', '25%'). */
+  width?: string;
+  /** Optional formatter — return a string, number, or Lit TemplateResult for badges, links, etc. */
+  formatter?: (value: unknown, row: GridRow, rowIndex: number) => string | number | TemplateResult;
+}
+```
+
+## Row definition
+
+```ts
+interface GridRow {
+  /** Stable identifier — required for selection and row-action correlation. */
+  id: string;
+  /** Cell values keyed by column.key. The raw value passed to a column's formatter. */
+  cells: Record<string, unknown>;
+  /** When true, the row is non-interactive. */
+  disabled?: boolean;
+  /** Row-action menu entries. Omit or pass an empty array to suppress the actions column. */
+  actions?: GridRowAction[];
+}
+
+interface GridRowAction {
+  id: string;
+  label: string;
+  destructive?: boolean;  // red styling for delete-style actions
+  disabled?: boolean;
+  href?: string;          // renders as <a> instead of <button>
+}
+```
+
+## Responsive behavior
+
+Two modes via the `responsive` prop:
+
+- **`stacked` (default)** — On ≤480px, each row collapses into a vertical block. Each `<td>` renders its column header (from `data-label`) inline next to the value. The USWDS stacked table pattern.
+- **`scroll`** — Wraps the table in a horizontally-scrollable region. Rows stay tabular at all viewport widths. Use when columns must stay in row order on small screens.
+
+Both modes preserve the same DOM — CSS does the work, so screen readers always see a proper `<table>`.
+
+## Server-side data
+
+The grid is controlled, so server-side sorting and pagination are natural:
+
+```ts
+const grid = document.querySelector('civ-data-grid')!;
+const pager = document.querySelector('civ-pagination')!;
+
+let state = { page: 1, pageSize: 25, sortBy: '', sortDirection: 'none' as const };
+
+async function fetchAndRender() {
+  grid.loading = true;
+  try {
+    const { rows, total } = await api.search(state);
+    grid.rows = rows;
+    pager.totalItems = total;
+    pager.page = state.page;
+    grid.loading = false;
+  } catch (err) {
+    grid.errorMessage = err instanceof Error ? err.message : 'Failed to load';
+    grid.loading = false;
+  }
+}
+
+grid.addEventListener('civ-sort', (e) => {
+  state.sortBy = e.detail.column;
+  state.sortDirection = e.detail.direction;
+  state.page = 1; // reset paging when sort changes
+  fetchAndRender();
+});
+
+pager.addEventListener('civ-page-change', (e) => {
+  state.page = e.detail.page;
+  state.pageSize = e.detail.pageSize;
+  fetchAndRender();
+});
+```
+
+## Coming in follow-up work
+
+- **Inline editing** — column-level `editable: true` + per-cell click-to-edit
+- **Nested rows** — expand a row to reveal a child `<civ-data-grid>` or detail panel
+- **Native iOS / Android implementations** — schema is in place; native bodies are placeholders until a dedicated implementation pass
+
+See `.claude/rules/audit-debt.md` for the implementation backlog.

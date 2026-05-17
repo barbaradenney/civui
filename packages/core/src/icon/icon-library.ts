@@ -74,6 +74,24 @@ export const icons: Record<string, IconDef> = {
     ios: 'chevron.right',
     android: 'chevron_right',
   },
+  'chevron-up': {
+    label: 'Collapse',
+    path: 'M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z',
+    ios: 'chevron.up',
+    android: 'expand_less',
+  },
+  'more-vert': {
+    label: 'More actions',
+    path: 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
+    ios: 'ellipsis',
+    android: 'more_vert',
+  },
+  'unfold-more': {
+    label: 'Sort',
+    path: 'M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z',
+    ios: 'arrow.up.arrow.down',
+    android: 'unfold_more',
+  },
   search: {
     label: 'Search',
     path: 'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',

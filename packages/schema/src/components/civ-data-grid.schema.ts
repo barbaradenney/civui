@@ -1,0 +1,144 @@
+import type { ComponentSchema } from '../schema.types.js';
+
+const schema: ComponentSchema = {
+  $schema: '1.0',
+  name: 'civ-data-grid',
+  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Uses native `<table>` semantics (not `role="grid"`) per WAI-ARIA APG recommendation for predominantly readable tabular data.',
+  category: 'ui',
+  extends: 'CivBaseElement',
+  isGroup: false,
+
+  props: {
+    caption: {
+      type: 'string',
+      description: 'Accessible name for the table, rendered as `<caption>`. Strongly recommended — the caption serves as the table\'s accessible name for screen readers',
+      default: '',
+    },
+    captionHidden: {
+      type: 'boolean',
+      description: 'Visually hide the caption while keeping it in the accessibility tree. Use when an external heading already names the table',
+      default: false,
+      attribute: 'caption-hidden',
+    },
+    columns: {
+      type: 'array',
+      description: 'Column definitions: `{ key, header, sortable?, align?, width?, formatter? }`. The formatter callback is web-only; native platforms render values through their own type-mapping logic',
+      webOnly: true,
+    },
+    rows: {
+      type: 'array',
+      description: 'Row data: `{ id, cells, disabled?, actions? }`. Each row\'s `cells` keys map to the columns\' `key` values. `actions` triggers the per-row kebab menu',
+      webOnly: true,
+    },
+    sortBy: {
+      type: 'string',
+      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`',
+      default: '',
+      attribute: 'sort-by',
+    },
+    sortDirection: {
+      type: 'enum',
+      description: 'Current sort direction. `none` clears the sort indicator',
+      values: ['asc', 'desc', 'none'],
+      default: 'none',
+      attribute: 'sort-direction',
+    },
+    responsive: {
+      type: 'enum',
+      description: 'Mobile responsive behavior. `stacked` (default) collapses each row to a vertical label/value block on ≤480px (USWDS stacked pattern). `scroll` wraps the table in a horizontally-scrollable region; rows stay tabular',
+      values: ['stacked', 'scroll'],
+      default: 'stacked',
+    },
+    stickyHeader: {
+      type: 'boolean',
+      description: 'Stick the header row to the top while the table body scrolls vertically. Requires the table to be inside a scrollable container with a constrained height',
+      default: false,
+      attribute: 'sticky-header',
+    },
+    selectable: {
+      type: 'enum',
+      description: 'Row-selection mode. `multiple` shows a checkbox column with a select-all header; `single` shows radio inputs; `none` (default) hides selection UI',
+      values: ['none', 'single', 'multiple'],
+      default: 'none',
+    },
+    selectedRowIds: {
+      type: 'array',
+      description: 'IDs of currently-selected rows. Controlled — update in response to `civ-selection-change`',
+      webOnly: true,
+    },
+    loading: {
+      type: 'boolean',
+      description: 'Show a loading state in place of rows. Announced via `aria-live="polite"`',
+      default: false,
+    },
+    errorMessage: {
+      type: 'string',
+      description: 'When set, render an error state with this message instead of rows. Announced via `role="alert"`',
+      default: '',
+      attribute: 'error-message',
+    },
+    emptyMessage: {
+      type: 'string',
+      description: 'Override the default "No data to display" message shown when `rows` is empty',
+      default: '',
+      attribute: 'empty-message',
+    },
+    striped: {
+      type: 'boolean',
+      description: 'Apply zebra striping to body rows for visual row separation',
+      default: false,
+    },
+    bordered: {
+      type: 'boolean',
+      description: 'Apply borders between cells (in addition to the default row-bottom borders)',
+      default: false,
+    },
+  },
+
+  events: {
+    'civ-sort': {
+      description: 'Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` accordingly (and re-fetch / re-sort data)',
+      detail: {
+        column: { type: 'string', description: 'The new column key being sorted by (empty string when sort was cleared)' },
+        direction: { type: 'string', description: 'The new direction: `asc`, `desc`, or `none`' },
+      },
+    },
+    'civ-selection-change': {
+      description: 'Fires when the user toggles a row\'s selection or activates the select-all checkbox. Detail carries the new selection set; update `selectedRowIds` to reflect it',
+      detail: {
+        selectedRowIds: { type: 'string[]', description: 'IDs of all currently-selected rows after the change' },
+      },
+    },
+    'civ-row-action': {
+      description: 'Fires when the user activates a row-action menu item',
+      detail: {
+        rowId: { type: 'string', description: 'The activated row\'s `id`' },
+        action: { type: 'string', description: 'The activated action\'s `id`' },
+        row: { type: 'object', description: 'The full row object for convenience' },
+      },
+    },
+  },
+
+  a11y: {
+    role: 'table',
+    requiredIndicator: 'none',
+    errorAnnouncement: 'assertive',
+  },
+
+  renderOrder: [
+    {
+      type: 'container',
+      children: [
+        { type: 'container', bindings: { tag: 'table' } },
+      ],
+    },
+  ],
+
+  form: {
+    valueMode: 'string',
+    formAssociated: false,
+    resetBehavior: 'restore-default-value',
+  },
+};
+
+export default schema;

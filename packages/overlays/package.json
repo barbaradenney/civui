@@ -1,7 +1,7 @@
 {
   "name": "@civui/overlays",
   "version": "0.1.0",
-  "description": "CivUI overlay components — Modal, ActionSheet, Drawer",
+  "description": "CivUI overlay components — Modal, ActionSheet, Drawer, Menu",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -10,7 +10,8 @@
     ".": "./dist/index.js",
     "./modal": "./dist/modal/index.js",
     "./action-sheet": "./dist/action-sheet/index.js",
-    "./drawer": "./dist/drawer/index.js"
+    "./drawer": "./dist/drawer/index.js",
+    "./menu": "./dist/menu/index.js"
   },
   "files": [
     "dist"

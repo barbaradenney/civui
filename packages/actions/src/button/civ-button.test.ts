@@ -194,3 +194,31 @@ describe('civ-button', () => {
     expect(icon).toBeNull();
   });
 });
+
+describe('CivButton icon-only mode', () => {
+  it('wraps the label in .civ-sr-only when icon-only is set', async () => {
+    const el = await fixture('<civ-button icon-only icon-start="more-vert" label="Row actions"></civ-button>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    const sr = btn.querySelector('.civ-sr-only') as HTMLElement;
+    expect(sr).not.toBeNull();
+    expect(sr.textContent?.trim()).toBe('Row actions');
+  });
+
+  it('keeps the icon visible in icon-only mode', async () => {
+    const el = await fixture('<civ-button icon-only icon-start="more-vert" label="More"></civ-button>');
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon?.getAttribute('name')).toBe('more-vert');
+  });
+
+  it('applies the civ-btn--icon-only class', async () => {
+    const el = await fixture('<civ-button icon-only icon-start="more-vert" label="Close"></civ-button>');
+    const btn = el.querySelector('button.civ-btn--icon-only');
+    expect(btn).not.toBeNull();
+  });
+
+  it('reflects the icon-only attribute to the host', async () => {
+    const el = await fixture('<civ-button icon-only icon-start="more-vert" label="More"></civ-button>') as any;
+    expect(el.hasAttribute('icon-only')).toBe(true);
+  });
+});

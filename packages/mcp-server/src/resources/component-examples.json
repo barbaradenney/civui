@@ -1020,6 +1020,76 @@
       "source": "packages/form-patterns/src/data-field/civ-data-field.stories.ts"
     }
   ],
+  "civ-data-grid": [
+    {
+      "story": "Default",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-default\" caption=\"Veterans benefits applications\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "Empty",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid empty-message=\"No applications match your filters.\" caption=\"Filtered applications\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "ErrorState",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid\n      caption=\"Applications\"\n      error-message=\"Couldn't load applications. Try again.\"\n    ></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "Loading",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid loading caption=\"Loading applications\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "MultipleSelection",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-multi-sel\" caption=\"Applications (multi-select)\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "RowActions",
+      "name": "Row Actions (kebab menu)",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-actions\" caption=\"Applications with row actions\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "ScrollResponsive",
+      "name": "Scroll Responsive (mobile preserves columns)",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-scroll\" caption=\"Scroll-responsive table\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "SingleSelection",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-single-sel\" caption=\"Applications (single-select)\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "Sortable",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-sortable\" caption=\"Applications (sortable)\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "Striped",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-striped\" caption=\"Striped rows\"></civ-data-grid>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "WithPagination",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-paginated\" caption=\"Applications\"></civ-data-grid>\n      <civ-pagination\n        class=\"story-paginated\"\n        item-name=\"application\"\n      ></civ-pagination>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
+    }
+  ],
   "civ-date-picker": [
     {
       "story": "AllStates",
@@ -2840,6 +2910,45 @@
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
     }
   ],
+  "civ-menu": [
+    {
+      "story": "AlignStart",
+      "name": "Align Start (Left)",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Sort options\" align=\"start\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Sort\"></civ-button>\n        <civ-menu-item value=\"recent\">Most recent</civ-menu-item>\n        <civ-menu-item value=\"oldest\">Oldest first</civ-menu-item>\n        <civ-menu-item value=\"name-az\">Name (A–Z)</civ-menu-item>\n        <civ-menu-item value=\"name-za\">Name (Z–A)</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 240px;\">\n      <civ-menu label=\"Row actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n        <civ-menu-item value=\"edit\">Edit</civ-menu-item>\n        <civ-menu-item value=\"duplicate\">Duplicate</civ-menu-item>\n        <civ-menu-item value=\"archive\">Archive</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
+      "story": "LinkItems",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Profile menu\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Profile\"></civ-button>\n        <civ-menu-item href=\"/account\">Account settings</civ-menu-item>\n        <civ-menu-item href=\"/security\">Security</civ-menu-item>\n        <civ-menu-item href=\"/sign-out\">Sign out</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
+      "story": "WithDestructiveAction",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Record actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Manage\"></civ-button>\n        <civ-menu-item value=\"edit\">Edit</civ-menu-item>\n        <civ-menu-item value=\"duplicate\">Duplicate</civ-menu-item>\n        <civ-menu-item value=\"delete\" destructive>Delete</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
+      "story": "WithDisabledItems",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Row actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n        <civ-menu-item value=\"edit\">Edit</civ-menu-item>\n        <civ-menu-item value=\"duplicate\" disabled>Duplicate (unavailable)</civ-menu-item>\n        <civ-menu-item value=\"archive\">Archive</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    },
+    {
+      "story": "WithIcons",
+      "category": "Overlays/Menu",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"File actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"File actions\"></civ-button>\n        <civ-menu-item value=\"open\" icon=\"open\">Open</civ-menu-item>\n        <civ-menu-item value=\"download\" icon=\"download\">Download</civ-menu-item>\n        <civ-menu-item value=\"share\" icon=\"share\">Share</civ-menu-item>\n      </civ-menu>\n    </div>",
+      "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    }
+  ],
   "civ-name": [
     {
       "story": "AllStates",
@@ -3056,6 +3165,60 @@
       "category": "Layout/Page Header",
       "html": "<civ-page-header>\n      <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n      <span data-subheading>VA Form 21-526EZ</span>\n    </civ-page-header>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
+    }
+  ],
+  "civ-pagination": [
+    {
+      "story": "CustomItemName",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"100\" page-size=\"25\" page=\"2\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "Empty",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"0\" page-size=\"25\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "FewPages",
+      "name": "Few Pages (no truncation)",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"50\" page-size=\"10\" page=\"3\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "Interactive",
+      "category": "Layout/Pagination",
+      "html": "<div>\n        <p id=\"interactive-status\" class=\"civ-mb-3\">Page 1 of ${Math.ceil(total / pageSize)}</p>\n        <civ-pagination\n          total-items=\"${total}\"\n          page-size=\"${pageSize}\"\n          page=\"${page}\"\n          @civ-page-change=\"${onPageChange}\"\n        ></civ-pagination>\n      </div>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "ManyPages",
+      "name": "Many Pages (truncated)",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"6\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "NearEnd",
+      "name": "Near End (right side full)",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"33\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
+    },
+    {
+      "story": "NearStart",
+      "name": "Near Start (left side full)",
+      "category": "Layout/Pagination",
+      "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"2\"></civ-pagination>",
+      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
     }
   ],
   "civ-partnership-history": [
@@ -4576,6 +4739,13 @@
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-gap-2 civ-flex-wrap civ-items-center\">\n      <civ-tag label=\"Healthcare\" variant=\"blue\"></civ-tag>\n      <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n      <civ-tag label=\"Disability\" variant=\"purple\"></civ-tag>\n      <civ-tag label=\"Archived\" variant=\"gray\"></civ-tag>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
+    },
+    {
+      "story": "WithFormatter",
+      "name": "With Cell Formatter",
+      "category": "Layout/Data Grid",
+      "html": "<civ-tag variant=\"${variant}\">${v}</civ-tag>",
+      "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "WithIcons",

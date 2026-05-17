@@ -54,6 +54,7 @@ fun CivActionButton(
     type: String = "button",
     iconStart: String = "",
     iconEnd: String = "",
+    iconOnly: Boolean = false,
     danger: Boolean = false,
     disabled: Boolean = false,
     pressed: Boolean = false,

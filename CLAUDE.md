@@ -21,8 +21,8 @@ Build order: `tokens → core → layout → actions, overlays → inputs → co
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
 | `@civui/actions` | `packages/actions/` | Action + navigation affordances (button, action-button, button-group, filter-chip, link, link-card, skip-link). Polymorphism — buttons accept `href`, links accept `type` for device actions — means the boundary between "action" and "navigation" is a render-time detail, not a package split |
-| `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet) |
-| `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, list, page-header, tag) |
+| `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet, drawer, menu) |
+| `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, list, page-header, tag, pagination, data-grid) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |

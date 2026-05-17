@@ -9,6 +9,7 @@
 | `type` | `'button'` \| `'submit'` \| `'reset'` | `'button'` | HTML button type |
 | `icon-start` | `string` | `''` | Leading icon name |
 | `icon-end` | `string` | `''` | Trailing icon name |
+| `icon-only` | `boolean` | `false` | Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconStart` / `iconEnd` to be set |
 | `href` | `string` | `''` | When set, renders as `<a href>` instead of `<button>` — for navigation affordances that visually belong with other action buttons (e.g. an Edit link next to a Remove button in a list row). The label gets underlined so the link identity stays visible |
 | `target` | `string` | `''` | HTML `target` attribute (link mode only). Web-only — use `new-tab` for the common "open in new tab" case |
 | `rel` | `string` | `''` | HTML `rel` attribute (link mode only). Web-only — `new-tab` automatically sets `rel="noopener noreferrer"` |

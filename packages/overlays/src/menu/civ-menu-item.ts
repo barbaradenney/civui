@@ -1,50 +1,61 @@
-import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { html, nothing } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, isSafeHref } from '@civui/core';
 
 /**
  * CivUI Menu Item
  *
  * Individual item inside a `<civ-menu>`. Renders as a `<button>` by default,
- * or as an `<a>` when `href` is set. The host listens for clicks at the
- * panel level and dispatches `civ-menu-select`, so consumers do not need
- * to wire per-item handlers — but a native `click` event still fires on
- * the item if a more granular listener is desired.
+ * or as an `<a>` when `href` is set. The parent `<civ-menu>` listens for
+ * clicks at the panel level and dispatches `civ-menu-select`, so consumers
+ * do not need to wire per-item handlers.
+ *
+ * **Label.** Set the visible text via the `label` attribute. The item also
+ * accepts text content (`<civ-menu-item>Edit</civ-menu-item>`) as a
+ * convenience — the text is captured on first connect and used when
+ * `label` is not set.
+ *
+ * **Icon.** Pass `icon="<name>"` to render a leading icon from the global
+ * icon library. The icon slot from the previous draft was removed because
+ * `<slot>` elements don't project content in Light DOM.
  *
  * @element civ-menu-item
  *
+ * @prop {string} label - Visible item label. Takes precedence over text content.
  * @prop {boolean} disabled - When true, the item is non-interactive and skipped during keyboard navigation.
  * @prop {boolean} destructive - Apply destructive (red) styling for delete-style actions.
  * @prop {string} href - When set, the item renders as an `<a>` link instead of a `<button>`.
  * @prop {string} value - Stable identifier surfaced in the parent menu's `civ-menu-select` event detail.
- *
- * @slot icon - Optional leading icon (e.g. `<civ-icon name="edit">`).
- * @slot - The item label.
+ * @prop {string} icon - Optional leading icon name (resolved via the global icon library).
  *
  * @example
  * ```html
- * <civ-menu-item value="edit">
- *   <civ-icon name="edit" slot="icon"></civ-icon>
- *   Edit
- * </civ-menu-item>
+ * <civ-menu-item value="edit" icon="edit">Edit</civ-menu-item>
+ * <civ-menu-item value="delete" icon="delete" destructive label="Delete"></civ-menu-item>
  * ```
  */
 @customElement('civ-menu-item')
 export class CivMenuItem extends CivBaseElement {
+  @property({ type: String }) label = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) destructive = false;
   @property({ type: String }) href = '';
   @property({ type: String }) value = '';
+  @property({ type: String }) icon = '';
 
-  override createRenderRoot() {
-    return this;
-  }
+  @state() private _capturedText = '';
 
   override connectedCallback(): void {
+    // Capture authored text content BEFORE Lit's first render replaces
+    // the host's children. Light DOM means render() output overwrites
+    // the host's children, so any consumer-provided text would otherwise
+    // be lost.
+    if (!this._capturedText) {
+      const text = this.textContent?.trim() ?? '';
+      if (text) this._capturedText = text;
+    }
     super.connectedCallback();
     this.setAttribute('role', 'menuitem');
-    // Roving tabindex — arrow-key navigation moves focus; only the active
-    // item is reachable via Tab from outside the menu.
     if (!this.hasAttribute('tabindex')) {
       this.setAttribute('tabindex', '-1');
     }
@@ -63,24 +74,26 @@ export class CivMenuItem extends CivBaseElement {
   }
 
   override focus(options?: FocusOptions): void {
-    // Forward focus to the inner button/anchor so native focus styling
-    // and keyboard activation work without a custom focus ring on the host.
-    const inner = this.querySelector<HTMLElement>(
-      '.civ-menu-item__inner',
-    );
+    const inner = this.querySelector<HTMLElement>('.civ-menu-item__inner');
     inner?.focus(options);
   }
 
-  override render() {
-    const inner = this._renderInner();
-    return inner;
+  private get _displayLabel(): string {
+    return this.label || this._capturedText;
   }
 
-  private _renderInner() {
+  override render() {
     const classes = [
       'civ-menu-item__inner',
       this.destructive ? 'civ-menu-item__inner--destructive' : '',
-    ].filter(Boolean).join(' ');
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const iconNode = this.icon
+      ? html`<civ-icon name="${this.icon}" aria-hidden="true" class="civ-menu-item__icon"></civ-icon>`
+      : nothing;
+    const labelNode = html`<span class="civ-menu-item__label">${this._displayLabel}</span>`;
 
     if (this.href) {
       const safeHref = isSafeHref(this.href) ? this.href : '#';
@@ -91,10 +104,7 @@ export class CivMenuItem extends CivBaseElement {
           ?aria-disabled="${this.disabled}"
           tabindex="-1"
           @click="${this._onActivate}"
-        >
-          <span class="civ-menu-item__icon"><slot name="icon"></slot></span>
-          <span class="civ-menu-item__label"><slot></slot></span>
-        </a>
+        >${iconNode}${labelNode}</a>
       `;
     }
     return html`
@@ -104,10 +114,7 @@ export class CivMenuItem extends CivBaseElement {
         ?disabled="${this.disabled}"
         tabindex="-1"
         @click="${this._onActivate}"
-      >
-        <span class="civ-menu-item__icon"><slot name="icon"></slot></span>
-        <span class="civ-menu-item__label"><slot></slot></span>
-      </button>
+      >${iconNode}${labelNode}</button>
     `;
   }
 
@@ -115,9 +122,8 @@ export class CivMenuItem extends CivBaseElement {
     if (this.disabled) {
       e.preventDefault();
       e.stopPropagation();
-      return;
     }
-    // Click bubbles up to civ-menu which handles selection + close.
+    // Otherwise click bubbles to civ-menu which handles selection + close.
   }
 }
 

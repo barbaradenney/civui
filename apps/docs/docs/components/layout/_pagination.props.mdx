@@ -8,7 +8,5 @@
 | `page` | `number` | `1` | 1-based current page. Clamped to `[1, totalPages]`. The consumer is expected to update this prop in response to `civ-page-change` |
 | `page-size-options` | `string` | `'10,25,50,100'` | Comma-separated list of page-size choices offered in the selector. Invalid or non-positive values are dropped |
 | `sibling-count` | `number` | `1` | Page-number buttons rendered on each side of the current page before truncation kicks in. Higher values show more pages at once |
-| `show-status` | `boolean` | `true` | Show the "Showing X–Y of Z" range text (announced via `aria-live="polite"`) |
-| `show-page-size` | `boolean` | `true` | Show the page-size selector. Disable when the consumer wants a fixed page size |
 | `label` | `string` | `''` | Accessible name for the `<nav>` landmark. Falls back to the i18n "Pagination" string when omitted |
 | `item-name` | `string` | `'item'` | Singular noun used in status text (e.g. "row", "application"). Surface-level — meaningful labels improve clarity for assistive tech |

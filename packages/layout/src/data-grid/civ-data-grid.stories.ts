@@ -271,13 +271,11 @@ export const WithPagination: Story = {
     }, 0);
 
     return html`
-      <civ-data-grid class="story-paginated" caption="Applications">
-        <civ-pagination
-          class="story-paginated"
-          slot="pagination"
-          item-name="application"
-        ></civ-pagination>
-      </civ-data-grid>
+      <civ-data-grid class="story-paginated" caption="Applications"></civ-data-grid>
+      <civ-pagination
+        class="story-paginated"
+        item-name="application"
+      ></civ-pagination>
     `;
   },
 };

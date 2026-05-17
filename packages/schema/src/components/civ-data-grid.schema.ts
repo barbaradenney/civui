@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-data-grid',
-  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, per-row action menus, and integrates with `civ-pagination`. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Uses native `<table>` semantics (not `role="grid"`) per WAI-ARIA APG recommendation for predominantly readable tabular data.',
+  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Uses native `<table>` semantics (not `role="grid"`) per WAI-ARIA APG recommendation for predominantly readable tabular data.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -129,9 +129,7 @@ const schema: ComponentSchema = {
     {
       type: 'container',
       children: [
-        { type: 'slot', bindings: { name: 'toolbar' } },
         { type: 'container', bindings: { tag: 'table' } },
-        { type: 'slot', bindings: { name: 'pagination' } },
       ],
     },
   ],

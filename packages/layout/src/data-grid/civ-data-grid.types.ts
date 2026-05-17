@@ -56,6 +56,8 @@ export interface GridRowAction {
    * underlying anchor click for SPA routing.
    */
   href?: string;
+  /** Optional leading icon name (resolved via the global icon library). */
+  icon?: string;
 }
 
 /**

@@ -1897,14 +1897,6 @@
     width: 100%;
   }
 
-  .civ-data-grid__toolbar {
-    @apply civ-flex civ-items-center civ-gap-2 civ-flex-wrap;
-  }
-
-  .civ-data-grid__toolbar:empty {
-    display: none;
-  }
-
   .civ-data-grid__selection-status {
     @apply civ-m-0 civ-text-sm;
     color: var(--civ-color-base-dark);

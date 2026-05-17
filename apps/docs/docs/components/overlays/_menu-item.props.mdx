@@ -3,7 +3,9 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible item label. Takes precedence over text content. Use this when constructing the item via a Lit template or programmatically — text content captured at connect time is a convenience for static authored markup |
 | `disabled` | `boolean` | `false` | When true, the item is non-interactive and skipped during keyboard navigation. The host receives `aria-disabled="true"` and the inner button gets the `disabled` attribute |
 | `destructive` | `boolean` | `false` | Apply destructive (red) styling for delete-style actions. Use for items whose effect cannot be easily undone |
 | `href` | `string` | `''` | When set, the item renders as an `<a>` link instead of a `<button>`. The href is sanitized — unsafe schemes (`javascript:`, `data:` text payloads) are replaced with `#` |
 | `value` | `string` | `''` | Stable identifier surfaced in the parent menu's `civ-menu-select` event detail. Use to identify which item was activated when handling selection at the menu level |
+| `icon` | `string` | `''` | Optional leading icon name. Resolved against the global icon library (see `@civui/core` icon registry). |

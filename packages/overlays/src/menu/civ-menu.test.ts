@@ -206,6 +206,25 @@ describe('civ-menu-item', () => {
     expect(el.querySelector('button.civ-menu-item__inner')).not.toBeNull();
   });
 
+  it('renders the authored text content inside the inner button', async () => {
+    const el = await fixture('<civ-menu-item>Edit</civ-menu-item>');
+    const label = el.querySelector('.civ-menu-item__label') as HTMLElement;
+    expect(label.textContent?.trim()).toBe('Edit');
+  });
+
+  it('renders the label prop when set (takes precedence over text content)', async () => {
+    const el = await fixture('<civ-menu-item label="From prop">From child</civ-menu-item>');
+    const label = el.querySelector('.civ-menu-item__label') as HTMLElement;
+    expect(label.textContent?.trim()).toBe('From prop');
+  });
+
+  it('renders a leading icon when icon prop is set', async () => {
+    const el = await fixture('<civ-menu-item icon="edit" label="Edit"></civ-menu-item>');
+    const icon = el.querySelector('civ-icon.civ-menu-item__icon');
+    expect(icon).not.toBeNull();
+    expect(icon?.getAttribute('name')).toBe('edit');
+  });
+
   it('renders as an anchor when href is set', async () => {
     const el = await fixture('<civ-menu-item href="/profile">Profile</civ-menu-item>');
     const a = el.querySelector('a.civ-menu-item__inner') as HTMLAnchorElement;

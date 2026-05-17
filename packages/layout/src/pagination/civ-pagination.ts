@@ -7,14 +7,14 @@ import { CivBaseElement, dispatch, t } from '@civui/core';
  *
  * USWDS-style pagination control. Renders:
  * - "Showing X–Y of Z items" status (aria-live="polite")
- * - Optional page-size selector ("Show 25 per page")
+ * - Page-size selector ("Show 25 per page")
  * - Previous / Next buttons
  * - Page-number buttons with truncation (1 2 … 5 [6] 7 … 10)
  *
  * The component is controlled by default — the consumer sets `total-items`,
- * `page-size`, and `page`, and listens for `civ-page-change` /
- * `civ-page-size-change` to update its own state. The component never
- * mutates its own page/pageSize without dispatching an event first.
+ * `page-size`, and `page`, and listens for `civ-page-change` to update its
+ * own state. The component never mutates its own page/pageSize without
+ * dispatching an event first.
  *
  * On viewports ≤480px the page-number row is hidden and only Previous,
  * Next, and the page-size selector remain visible. The current-page-of-N
@@ -27,13 +27,10 @@ import { CivBaseElement, dispatch, t } from '@civui/core';
  * @prop {number} page - 1-based current page. Defaults to 1.
  * @prop {string} pageSizeOptions - Comma-separated list of page-size choices. Defaults to '10,25,50,100'.
  * @prop {number} siblingCount - Page numbers shown on each side of current. Defaults to 1.
- * @prop {boolean} showStatus - Show "Showing X–Y of Z" range. Defaults to true.
- * @prop {boolean} showPageSize - Show page-size selector. Defaults to true.
  * @prop {string} label - Accessible name for the nav landmark. Defaults to i18n 'Pagination'.
  * @prop {string} itemName - Singular noun used in status text (e.g. "row", "application"). Defaults to "item".
  *
- * @fires civ-page-change - { page, pageSize, offset } — user navigated to a page
- * @fires civ-page-size-change - { pageSize } — user changed page size (page resets to 1)
+ * @fires civ-page-change - { page, pageSize, offset } — user navigated to a page or changed page size
  *
  * @example
  * ```html
@@ -52,8 +49,6 @@ export class CivPagination extends CivBaseElement {
   @property({ type: Number }) page = 1;
   @property({ type: String, attribute: 'page-size-options' }) pageSizeOptions = '10,25,50,100';
   @property({ type: Number, attribute: 'sibling-count' }) siblingCount = 1;
-  @property({ type: Boolean, attribute: 'show-status' }) showStatus = true;
-  @property({ type: Boolean, attribute: 'show-page-size' }) showPageSize = true;
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'item-name' }) itemName = 'item';
 
@@ -109,11 +104,9 @@ export class CivPagination extends CivBaseElement {
 
     return html`
       <nav class="civ-pagination" aria-label="${label}">
-        ${this.showStatus
-          ? html`<p class="civ-pagination__status" aria-live="polite">${rangeText}</p>`
-          : nothing}
+        <p class="civ-pagination__status" aria-live="polite">${rangeText}</p>
 
-        ${this.showPageSize && sizeOptions.length > 0
+        ${sizeOptions.length > 0
           ? html`
               <div class="civ-pagination__page-size">
                 <label class="civ-pagination__page-size-label">
@@ -253,7 +246,6 @@ export class CivPagination extends CivBaseElement {
     const select = e.target as HTMLSelectElement;
     const newSize = parseInt(select.value, 10);
     if (!Number.isFinite(newSize) || newSize <= 0 || newSize === this.pageSize) return;
-    dispatch(this, 'civ-page-size-change', { pageSize: newSize });
     dispatch(this, 'civ-page-change', { page: 1, pageSize: newSize, offset: 0 });
   };
 

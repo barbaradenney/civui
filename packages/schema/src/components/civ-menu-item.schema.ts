@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible item label. Takes precedence over text content. Use this when constructing the item via a Lit template or programmatically — text content captured at connect time is a convenience for static authored markup',
+      default: '',
+    },
     disabled: {
       type: 'boolean',
       description: 'When true, the item is non-interactive and skipped during keyboard navigation. The host receives `aria-disabled="true"` and the inner button gets the `disabled` attribute',
@@ -31,6 +36,11 @@ const schema: ComponentSchema = {
       description: 'Stable identifier surfaced in the parent menu\'s `civ-menu-select` event detail. Use to identify which item was activated when handling selection at the menu level',
       default: '',
     },
+    icon: {
+      type: 'string',
+      description: 'Optional leading icon name. Resolved against the global icon library (see `@civui/core` icon registry).',
+      default: '',
+    },
   },
 
   events: {},
@@ -46,8 +56,7 @@ const schema: ComponentSchema = {
       type: 'container',
       bindings: { tag: 'button' },
       children: [
-        { type: 'slot', bindings: { name: 'icon' } },
-        { type: 'slot', bindings: { name: 'default' } },
+        { type: 'label' },
       ],
     },
   ],

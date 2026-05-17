@@ -15,6 +15,8 @@ export default defineConfig({
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       '@civui/feedback/badge': resolve(__dirname, '../feedback/src/badge/index.ts'),
       '@civui/feedback': resolve(__dirname, '../feedback/src/index.ts'),
+      '@civui/overlays/menu': resolve(__dirname, '../overlays/src/menu/index.ts'),
+      '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
     },
   },
 });

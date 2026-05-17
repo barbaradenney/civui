@@ -12,9 +12,9 @@ import EventsTable from "./_data-grid.events.mdx";
 
 `<civ-data-grid>`
 
-Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, per-row action menus, and integrates with `<civ-pagination>`. On mobile (≤480px), rows collapse to vertical label/value blocks via CSS — no JavaScript re-template.
+Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Compose with a sibling `<civ-pagination>` for paged data. On mobile (≤480px), rows collapse to vertical label/value blocks via CSS — no JavaScript re-template.
 
-The grid is **controlled** — the consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, `civ-row-action`, and `civ-page-change` (via the slotted pagination); the consumer updates state and the grid re-renders.
+The grid is **controlled** — the consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, and `civ-row-action`; the consumer listens for `civ-page-change` directly on the pagination element.
 
 ## Accessibility foundation: semantic `<table>`, not `role="grid"`
 
@@ -132,7 +132,7 @@ The grid is controlled, so server-side sorting and pagination are natural:
 
 ```ts
 const grid = document.querySelector('civ-data-grid')!;
-const pager = grid.querySelector('civ-pagination')!;
+const pager = document.querySelector('civ-pagination')!;
 
 let state = { page: 1, pageSize: 25, sortBy: '', sortDirection: 'none' as const };
 

@@ -62,9 +62,8 @@ export type {
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
  *
- * @slot pagination - Optional `<civ-pagination>` placed below the table.
- * @slot toolbar - Optional toolbar slot rendered above the table (e.g. bulk-action buttons).
- * @slot empty - Override the empty-state content.
+ * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
+ * and wire its `civ-page-change` event to update the grid's `rows`.
  *
  * @example
  * ```ts
@@ -119,14 +118,8 @@ export class CivDataGrid extends CivBaseElement {
 
     return html`
       <div class="${wrapperClasses}">
-        <div class="civ-data-grid__toolbar" data-civ-data-grid-toolbar>
-          <slot name="toolbar"></slot>
-          ${this._renderSelectionStatus()}
-        </div>
+        ${this._renderSelectionStatus()}
         ${this._renderTable()}
-        <div class="civ-data-grid__pagination" data-civ-data-grid-pagination>
-          <slot name="pagination"></slot>
-        </div>
       </div>
     `;
   }
@@ -247,7 +240,7 @@ export class CivDataGrid extends CivBaseElement {
       return html`
         <tr>
           <td colspan="${colCount}" class="civ-data-grid__state civ-data-grid__state--empty">
-            <slot name="empty">${this.emptyMessage || t('dataGridEmpty')}</slot>
+            ${this.emptyMessage || t('dataGridEmpty')}
           </td>
         </tr>
       `;
@@ -363,10 +356,12 @@ export class CivDataGrid extends CivBaseElement {
           ${actions.map((action) => html`
             <civ-menu-item
               value="${action.id}"
+              label="${action.label}"
+              icon="${action.icon ?? ''}"
               ?disabled="${action.disabled}"
               ?destructive="${action.destructive}"
               href="${action.href ?? ''}"
-            >${action.label}</civ-menu-item>
+            ></civ-menu-item>
           `)}
         </civ-menu>
       </td>

@@ -1035,7 +1035,6 @@
     },
     {
       "story": "ErrorState",
-      "name": "Error State",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid\n      caption=\"Applications\"\n      error-message=\"Couldn't load applications. Try again.\"\n    ></civ-data-grid>",
       "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
@@ -1048,7 +1047,6 @@
     },
     {
       "story": "MultipleSelection",
-      "name": "Multiple Selection",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-multi-sel\" caption=\"Applications (multi-select)\"></civ-data-grid>",
       "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
@@ -1069,7 +1067,6 @@
     },
     {
       "story": "SingleSelection",
-      "name": "Single Selection",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-single-sel\" caption=\"Applications (single-select)\"></civ-data-grid>",
       "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
@@ -1088,9 +1085,8 @@
     },
     {
       "story": "WithPagination",
-      "name": "With Pagination",
       "category": "Layout/Data Grid",
-      "html": "<civ-data-grid class=\"story-paginated\" caption=\"Applications\">\n        <civ-pagination\n          class=\"story-paginated\"\n          slot=\"pagination\"\n          item-name=\"application\"\n        ></civ-pagination>\n      </civ-data-grid>",
+      "html": "<civ-data-grid class=\"story-paginated\" caption=\"Applications\"></civ-data-grid>\n      <civ-pagination\n        class=\"story-paginated\"\n        item-name=\"application\"\n      ></civ-pagination>",
       "source": "packages/layout/src/data-grid/civ-data-grid.stories.ts"
     }
   ],
@@ -2930,30 +2926,26 @@
     },
     {
       "story": "LinkItems",
-      "name": "Link Items",
       "category": "Overlays/Menu",
       "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Profile menu\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Profile\"></civ-button>\n        <civ-menu-item href=\"/account\">Account settings</civ-menu-item>\n        <civ-menu-item href=\"/security\">Security</civ-menu-item>\n        <civ-menu-item href=\"/sign-out\">Sign out</civ-menu-item>\n      </civ-menu>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
     },
     {
       "story": "WithDestructiveAction",
-      "name": "With Destructive Action",
       "category": "Overlays/Menu",
       "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Record actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"Manage\"></civ-button>\n        <civ-menu-item value=\"edit\">Edit</civ-menu-item>\n        <civ-menu-item value=\"duplicate\">Duplicate</civ-menu-item>\n        <civ-menu-item value=\"delete\" destructive>Delete</civ-menu-item>\n      </civ-menu>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
     },
     {
       "story": "WithDisabledItems",
-      "name": "With Disabled Items",
       "category": "Overlays/Menu",
       "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"Row actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n        <civ-menu-item value=\"edit\">Edit</civ-menu-item>\n        <civ-menu-item value=\"duplicate\" disabled>Duplicate (unavailable)</civ-menu-item>\n        <civ-menu-item value=\"archive\">Archive</civ-menu-item>\n      </civ-menu>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
     },
     {
       "story": "WithIcons",
-      "name": "With Icons",
       "category": "Overlays/Menu",
-      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"File actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"File actions\"></civ-button>\n        <civ-menu-item value=\"open\">\n          <civ-icon name=\"open\" slot=\"icon\" aria-hidden=\"true\"></civ-icon>\n          Open\n        </civ-menu-item>\n        <civ-menu-item value=\"download\">\n          <civ-icon name=\"download\" slot=\"icon\" aria-hidden=\"true\"></civ-icon>\n          Download\n        </civ-menu-item>\n        <civ-menu-item value=\"share\">\n          <civ-icon name=\"share\" slot=\"icon\" aria-hidden=\"true\"></civ-icon>\n          Share\n        </civ-menu-item>\n      </civ-menu>\n    </div>",
+      "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"File actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"File actions\"></civ-button>\n        <civ-menu-item value=\"open\" icon=\"open\">Open</civ-menu-item>\n        <civ-menu-item value=\"download\" icon=\"download\">Download</civ-menu-item>\n        <civ-menu-item value=\"share\" icon=\"share\">Share</civ-menu-item>\n      </civ-menu>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
     }
   ],
@@ -3178,7 +3170,6 @@
   "civ-pagination": [
     {
       "story": "CustomItemName",
-      "name": "Custom Item Name",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>",
       "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
@@ -3205,7 +3196,7 @@
     {
       "story": "Interactive",
       "category": "Layout/Pagination",
-      "html": "<div>\n        <p id=\"interactive-status\" class=\"civ-mb-3\">Page 1 of ${Math.ceil(total / pageSize)}</p>\n        <civ-pagination\n          total-items=\"${total}\"\n          page-size=\"${pageSize}\"\n          page=\"${page}\"\n          @civ-page-change=\"${onPageChange}\"\n          @civ-page-size-change=\"${onPageSizeChange}\"\n        ></civ-pagination>\n      </div>",
+      "html": "<div>\n        <p id=\"interactive-status\" class=\"civ-mb-3\">Page 1 of ${Math.ceil(total / pageSize)}</p>\n        <civ-pagination\n          total-items=\"${total}\"\n          page-size=\"${pageSize}\"\n          page=\"${page}\"\n          @civ-page-change=\"${onPageChange}\"\n        ></civ-pagination>\n      </div>",
       "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
     },
     {
@@ -3227,13 +3218,6 @@
       "name": "Near Start (left side full)",
       "category": "Layout/Pagination",
       "html": "<civ-pagination total-items=\"847\" page-size=\"25\" page=\"2\"></civ-pagination>",
-      "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
-    },
-    {
-      "story": "StatusOnly",
-      "name": "Status-only (no page-size selector)",
-      "category": "Layout/Pagination",
-      "html": "<civ-pagination total-items=\"100\" page-size=\"25\" page=\"1\" .showPageSize=\"${false}\"></civ-pagination>",
       "source": "packages/layout/src/pagination/civ-pagination.stories.ts"
     }
   ],

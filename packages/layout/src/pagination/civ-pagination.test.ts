@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-pagination.js';
 
 afterEach(cleanupFixtures);
@@ -124,19 +124,15 @@ describe('civ-pagination', () => {
     expect(pageBtns.length).toBe(4); // 100/25 = 4 pages
   });
 
-  it('fires civ-page-size-change and resets to page 1 when page-size changes', async () => {
+  it('fires civ-page-change resetting to page 1 when page-size changes', async () => {
     const el = await fixture('<civ-pagination total-items="100" page-size="25" page="3"></civ-pagination>');
-    const sizeHandler = vi.fn();
     const pageHandler = vi.fn();
-    el.addEventListener('civ-page-size-change', sizeHandler);
     el.addEventListener('civ-page-change', pageHandler);
 
     const select = el.querySelector('.civ-pagination__page-size-select') as HTMLSelectElement;
     select.value = '50';
     select.dispatchEvent(new Event('change', { bubbles: true }));
 
-    expect(sizeHandler).toHaveBeenCalledOnce();
-    expect(sizeHandler.mock.calls[0][0].detail).toEqual({ pageSize: 50 });
     expect(pageHandler).toHaveBeenCalledOnce();
     expect(pageHandler.mock.calls[0][0].detail).toEqual({ page: 1, pageSize: 50, offset: 0 });
   });
@@ -146,20 +142,6 @@ describe('civ-pagination', () => {
     const options = el.querySelectorAll('.civ-pagination__page-size-select option');
     expect(options.length).toBe(4);
     expect(Array.from(options).map((o) => (o as HTMLOptionElement).value)).toEqual(['5', '10', '25', '50']);
-  });
-
-  it('hides the page-size selector when show-page-size is false', async () => {
-    const el = await fixture('<civ-pagination total-items="100" page-size="25" .showPageSize="${false}"></civ-pagination>') as any;
-    el.showPageSize = false;
-    await elementUpdated(el);
-    expect(el.querySelector('.civ-pagination__page-size')).toBeNull();
-  });
-
-  it('hides the status when show-status is false', async () => {
-    const el = await fixture('<civ-pagination total-items="100" page-size="25"></civ-pagination>') as any;
-    el.showStatus = false;
-    await elementUpdated(el);
-    expect(el.querySelector('.civ-pagination__status')).toBeNull();
   });
 
   it('exposes role="navigation" via <nav> with an aria-label', async () => {

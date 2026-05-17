@@ -38,18 +38,9 @@ export const WithIcons: Story = {
     <div style="min-height: 280px;">
       <civ-menu label="File actions">
         <civ-button data-civ-menu-trigger variant="tertiary" label="File actions"></civ-button>
-        <civ-menu-item value="open">
-          <civ-icon name="open" slot="icon" aria-hidden="true"></civ-icon>
-          Open
-        </civ-menu-item>
-        <civ-menu-item value="download">
-          <civ-icon name="download" slot="icon" aria-hidden="true"></civ-icon>
-          Download
-        </civ-menu-item>
-        <civ-menu-item value="share">
-          <civ-icon name="share" slot="icon" aria-hidden="true"></civ-icon>
-          Share
-        </civ-menu-item>
+        <civ-menu-item value="open" icon="open">Open</civ-menu-item>
+        <civ-menu-item value="download" icon="download">Download</civ-menu-item>
+        <civ-menu-item value="share" icon="share">Share</civ-menu-item>
       </civ-menu>
     </div>
   `,

@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-pagination',
-  description: 'USWDS-style pagination control. Renders a status range (Showing X–Y of Z), an optional page-size selector, Previous/Next buttons, and a truncated list of page-number buttons. The component is controlled — listen for `civ-page-change` and `civ-page-size-change` to drive the consumer\'s data fetch. On viewports ≤480px, page-number buttons collapse to leave only Prev/Next + page-size visible.',
+  description: 'USWDS-style pagination control. Renders a status range (Showing X–Y of Z), a page-size selector, Previous/Next buttons, and a truncated list of page-number buttons. The component is controlled — listen for `civ-page-change` to drive the consumer\'s data fetch. On viewports ≤480px, page-number buttons collapse to leave only Prev/Next + page-size visible.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -38,18 +38,6 @@ const schema: ComponentSchema = {
       default: 1,
       attribute: 'sibling-count',
     },
-    showStatus: {
-      type: 'boolean',
-      description: 'Show the "Showing X–Y of Z" range text (announced via `aria-live="polite"`)',
-      default: true,
-      attribute: 'show-status',
-    },
-    showPageSize: {
-      type: 'boolean',
-      description: 'Show the page-size selector. Disable when the consumer wants a fixed page size',
-      default: true,
-      attribute: 'show-page-size',
-    },
     label: {
       type: 'string',
       description: 'Accessible name for the `<nav>` landmark. Falls back to the i18n "Pagination" string when omitted',
@@ -65,17 +53,11 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-page-change': {
-      description: 'Fires when the user navigates to a different page (via Previous, Next, a numbered button, or after a page-size change). The consumer should update its `page` prop in response',
+      description: 'Fires when the user navigates to a different page — via Previous, Next, a numbered button, or by picking a different page size (in which case `page` resets to 1). The consumer should update its `page` and `pageSize` props in response',
       detail: {
         page: { type: 'number', description: 'The new 1-based page' },
         pageSize: { type: 'number', description: 'The page size in effect at the time of the change' },
         offset: { type: 'number', description: 'Zero-based offset of the first item on the new page — useful for server-side slicing' },
-      },
-    },
-    'civ-page-size-change': {
-      description: 'Fires when the user picks a different page size. Always followed by `civ-page-change` with `page=1`',
-      detail: {
-        pageSize: { type: 'number', description: 'The newly chosen page size' },
       },
     },
   },
@@ -91,8 +73,8 @@ const schema: ComponentSchema = {
       type: 'container',
       bindings: { tag: 'nav' },
       children: [
-        { type: 'label', condition: 'showStatus' },
-        { type: 'select', condition: 'showPageSize' },
+        { type: 'label' },
+        { type: 'select' },
         { type: 'button' },
         { type: 'container' },
         { type: 'button' },

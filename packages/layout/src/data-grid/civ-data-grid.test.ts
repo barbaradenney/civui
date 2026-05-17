@@ -268,6 +268,26 @@ describe('civ-data-grid — row actions', () => {
     expect(el.querySelectorAll('.civ-data-grid__action-trigger').length).toBe(1);
   });
 
+  it('renders each action menu item with its label visible', async () => {
+    const rows: GridRow[] = [
+      {
+        id: '1',
+        cells: { name: 'A' },
+        actions: [
+          { id: 'edit', label: 'Edit' },
+          { id: 'delete', label: 'Delete', destructive: true },
+        ],
+      },
+    ];
+    const el = await mountGrid({ rows, columns: [{ key: 'name', header: 'Name' }] });
+    const menu = el.querySelector('civ-menu') as any;
+    menu.open = true;
+    await elementUpdated(menu);
+    const labels = Array.from(el.querySelectorAll('civ-menu-item .civ-menu-item__label'))
+      .map((n) => (n.textContent ?? '').trim());
+    expect(labels).toEqual(['Edit', 'Delete']);
+  });
+
   it('fires civ-row-action when an action item is selected', async () => {
     const rows: GridRow[] = [
       {

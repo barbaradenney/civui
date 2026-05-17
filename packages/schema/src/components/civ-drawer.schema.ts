@@ -61,6 +61,18 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'no-escape-close',
     },
+    noStickyHeader: {
+      type: 'boolean',
+      description: 'When true, the header scrolls with the body content instead of sticking to the top of the drawer. Default is sticky — keeps the heading and close affordance visible while the user scrolls long content.',
+      default: false,
+      attribute: 'no-sticky-header',
+    },
+    noStickyFooter: {
+      type: 'boolean',
+      description: 'When true, the footer scrolls with the body content instead of sticking to the bottom of the drawer. Default is sticky — keeps action buttons (Apply, Save, Cancel) visible while the user scrolls long content.',
+      default: false,
+      attribute: 'no-sticky-footer',
+    },
   },
 
   events: {

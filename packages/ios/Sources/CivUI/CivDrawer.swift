@@ -46,6 +46,12 @@ public struct CivDrawer<Content: View>: View {
     /// Whether to prevent closing with the Escape key.
     public var noEscapeClose: Bool
 
+    /// When true, header scrolls with the body instead of sticking to the top.
+    public var noStickyHeader: Bool
+
+    /// When true, footer scrolls with the body instead of sticking to the bottom.
+    public var noStickyFooter: Bool
+
     /// Called when the drawer is closed (parallels `civ-drawer-close` event).
     public var onClose: (() -> Void)?
 
@@ -67,6 +73,8 @@ public struct CivDrawer<Content: View>: View {
         noCloseButton: Bool = false,
         noBackdropClose: Bool = false,
         noEscapeClose: Bool = false,
+        noStickyHeader: Bool = false,
+        noStickyFooter: Bool = false,
         onClose: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
@@ -78,6 +86,8 @@ public struct CivDrawer<Content: View>: View {
         self.noCloseButton = noCloseButton
         self.noBackdropClose = noBackdropClose
         self.noEscapeClose = noEscapeClose
+        self.noStickyHeader = noStickyHeader
+        self.noStickyFooter = noStickyFooter
         self.onClose = onClose
         self.content = content()
     }

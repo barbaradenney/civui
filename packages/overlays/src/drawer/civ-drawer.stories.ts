@@ -40,6 +40,73 @@ export const Default: Story = {
   `,
 };
 
+export const StickyFooter: Story = {
+  name: 'Sticky footer with action buttons',
+  render: () => html`
+    <div class="drawer-demo">
+      <civ-button
+        label="Open drawer"
+        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}
+      ></civ-button>
+      <civ-drawer
+        heading="Filter results"
+        position="end"
+        width="380px"
+        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+      >
+        <p class="civ-text-body">Long content scrolls behind the sticky header and footer. Try scrolling — the action buttons stay pinned at the bottom.</p>
+        ${Array.from({ length: 25 }, (_, i) => html`
+          <civ-checkbox label="Category ${i + 1}"></civ-checkbox>
+        `)}
+
+        <div data-drawer-footer>
+          <civ-button
+            variant="secondary"
+            label="Reset"
+            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+          ></civ-button>
+          <civ-button
+            label="Apply"
+            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+          ></civ-button>
+        </div>
+      </civ-drawer>
+    </div>
+  `,
+};
+
+export const NonStickyHeaderAndFooter: Story = {
+  name: 'Non-sticky header and footer (scroll with content)',
+  render: () => html`
+    <div class="drawer-demo">
+      <civ-button
+        label="Open drawer"
+        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}
+      ></civ-button>
+      <civ-drawer
+        heading="Article preview"
+        position="end"
+        width="400px"
+        no-sticky-header
+        no-sticky-footer
+        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+      >
+        <p class="civ-text-body">Both header and footer scroll away with body content — useful for reading-mode drawers where you want the full viewport for content as the user reads.</p>
+        ${Array.from({ length: 15 }, (_, i) => html`
+          <p class="civ-text-body">Paragraph ${i + 1}. Long-form content that fills the drawer and demonstrates the non-sticky scroll behavior.</p>
+        `)}
+
+        <div data-drawer-footer>
+          <civ-button
+            label="Done reading"
+            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+          ></civ-button>
+        </div>
+      </civ-drawer>
+    </div>
+  `,
+};
+
 export const EndAnchored: Story = {
   name: 'End-anchored (settings panel)',
   render: () => html`
@@ -105,8 +172,9 @@ export const NoCloseAffordance: Story = {
         no-close-button
         @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
-        <p class="civ-text-body">Drawer renders no built-in close button — consumer footer provides the dismiss action.</p>
-        <div class="civ-flex civ-gap-2 civ-mt-4">
+        <p class="civ-text-body">Drawer renders no built-in close button — the sticky footer provides the dismiss action.</p>
+
+        <div data-drawer-footer>
           <civ-button
             variant="secondary"
             label="Cancel"

@@ -225,15 +225,91 @@ describe('civ-drawer body scroll lock', () => {
 });
 
 describe('civ-drawer slots', () => {
-  it('renders slotted content into the body container', async () => {
+  it('renders default-slot content into the content container', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p class="payload">Body</p></civ-drawer>');
     await elementUpdated(el);
-    const body = el.querySelector('[data-civ-drawer-body]')!;
-    expect(body.querySelector('.payload')).not.toBeNull();
+    const content = el.querySelector('[data-civ-drawer-content]')!;
+    expect(content.querySelector('.payload')).not.toBeNull();
+  });
+
+  it('renders footer slot content into the footer container', async () => {
+    const el = await fixture(`
+      <civ-drawer heading="Test" open>
+        <p>Body</p>
+        <div data-drawer-footer>
+          <button class="apply">Apply</button>
+        </div>
+      </civ-drawer>
+    `);
+    await elementUpdated(el);
+    const footer = el.querySelector('[data-civ-drawer-footer]')!;
+    expect(footer).not.toBeNull();
+    expect(footer.querySelector('.apply')).not.toBeNull();
+  });
+
+  it('does not render footer container when no footer slot content is supplied', async () => {
+    const el = await fixture('<civ-drawer heading="Test" open><p>Body</p></civ-drawer>');
+    await elementUpdated(el);
+    expect(el.querySelector('[data-civ-drawer-footer]')).toBeNull();
   });
 
   it('uses Light DOM', async () => {
     const el = await fixture('<civ-drawer heading="Test"><p>Content</p></civ-drawer>');
     expect(el.shadowRoot).toBeNull();
+  });
+});
+
+describe('civ-drawer sticky header & footer', () => {
+  it('header is sticky by default', async () => {
+    const el = await fixture('<civ-drawer heading="Test" open><p>Body</p></civ-drawer>');
+    await elementUpdated(el);
+    const header = el.querySelector('.civ-drawer__header')!;
+    expect(header.classList.contains('civ-drawer__header--sticky')).toBe(true);
+  });
+
+  it('header is not sticky when no-sticky-header is set', async () => {
+    const el = await fixture('<civ-drawer heading="Test" open no-sticky-header><p>Body</p></civ-drawer>');
+    await elementUpdated(el);
+    const header = el.querySelector('.civ-drawer__header')!;
+    expect(header.classList.contains('civ-drawer__header--sticky')).toBe(false);
+  });
+
+  it('footer is sticky by default when slot is filled', async () => {
+    const el = await fixture(`
+      <civ-drawer heading="Test" open>
+        <p>Body</p>
+        <div data-drawer-footer><button>Apply</button></div>
+      </civ-drawer>
+    `);
+    await elementUpdated(el);
+    const footer = el.querySelector('.civ-drawer__footer')!;
+    expect(footer.classList.contains('civ-drawer__footer--sticky')).toBe(true);
+  });
+
+  it('footer is not sticky when no-sticky-footer is set', async () => {
+    const el = await fixture(`
+      <civ-drawer heading="Test" open no-sticky-footer>
+        <p>Body</p>
+        <div data-drawer-footer><button>Apply</button></div>
+      </civ-drawer>
+    `);
+    await elementUpdated(el);
+    const footer = el.querySelector('.civ-drawer__footer')!;
+    expect(footer.classList.contains('civ-drawer__footer--sticky')).toBe(false);
+  });
+
+  it('renders header and footer inside the scrollable body container', async () => {
+    // Body is the scroll container; sticky positioning requires both
+    // header and footer to live inside it.
+    const el = await fixture(`
+      <civ-drawer heading="Test" open>
+        <p>Body</p>
+        <div data-drawer-footer><button>Apply</button></div>
+      </civ-drawer>
+    `);
+    await elementUpdated(el);
+    const body = el.querySelector('[data-civ-drawer-body]')!;
+    expect(body.querySelector('.civ-drawer__header')).not.toBeNull();
+    expect(body.querySelector('.civ-drawer__footer')).not.toBeNull();
   });
 });

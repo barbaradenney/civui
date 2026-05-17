@@ -1587,6 +1587,11 @@
   /* ── Drawer (side-anchored native <dialog>) ──────────────── */
 
   dialog.civ-drawer {
+    /* `--civ-drawer-bg` paints sticky header/footer so body content
+       doesn't bleed through. Light-mode default; dark-mode overrides
+       further down. */
+    --civ-drawer-bg: var(--civ-color-white-DEFAULT);
+
     position: fixed;
     top: 0;
     bottom: 0;
@@ -1599,7 +1604,8 @@
     border: none;
     display: flex;
     flex-direction: column;
-    @apply civ-bg-white civ-shadow-lg;
+    background-color: var(--civ-drawer-bg);
+    @apply civ-shadow-lg;
     color: var(--civ-color-base-darkest);
     transition: transform var(--civ-motion-duration-normal) var(--civ-motion-easing-ease-out);
   }
@@ -1635,20 +1641,43 @@
     transform: translateX(0);
   }
 
+  /* The body is the scroll container. Header and footer sit inside it
+     and are made sticky via CSS (default) — toggling `no-sticky-*`
+     just drops the position rule, so they scroll with content. */
+  .civ-drawer__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
   .civ-drawer__header {
     @apply civ-flex civ-items-start civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
-    flex-shrink: 0;
+    background-color: var(--civ-drawer-bg);
+  }
+
+  .civ-drawer__header--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .civ-drawer__close {
     @apply civ-ms-4 civ-flex-shrink-0;
   }
 
-  .civ-drawer__body {
+  .civ-drawer__content {
     @apply civ-p-4;
-    flex: 1 1 auto;
-    overflow-y: auto;
-    min-height: 0;
+  }
+
+  .civ-drawer__footer {
+    @apply civ-flex civ-gap-4 civ-justify-end civ-p-4 civ-border-t civ-border-base-light;
+    background-color: var(--civ-drawer-bg);
+  }
+
+  .civ-drawer__footer--sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
   }
 
   /* ── Action Sheet ─────────────────────────────────────────── */
@@ -3194,7 +3223,7 @@
     }
 
     dialog.civ-drawer {
-      background-color: var(--civ-color-base-darkest);
+      --civ-drawer-bg: var(--civ-color-base-darkest);
       color: var(--civ-color-base-lightest);
     }
 
@@ -3246,7 +3275,7 @@
   }
 
   :root[data-civ-theme="dark"] dialog.civ-drawer {
-    background-color: var(--civ-color-white-DEFAULT);
+    --civ-drawer-bg: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
   }
 

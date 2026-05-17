@@ -42,6 +42,14 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 
 <StoryEmbed id="overlays-drawer--main-menu" minHeight={500} />
 
+### Sticky footer with action buttons
+
+<StoryEmbed id="overlays-drawer--sticky-footer" minHeight={500} />
+
+### Non-sticky header and footer
+
+<StoryEmbed id="overlays-drawer--non-sticky-header-and-footer" minHeight={500} />
+
 ### Custom dismiss (no built-in close)
 
 <StoryEmbed id="overlays-drawer--no-close-affordance" minHeight={500} />
@@ -56,7 +64,8 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 
 | Slot | Description |
 |------|-------------|
-| default | Drawer content |
+| default | Drawer body content |
+| `data-drawer-footer` | Footer area for action buttons (Apply / Cancel / Save). Sticks to the bottom by default; opt out with `no-sticky-footer` |
 
 ## Events
 
@@ -67,6 +76,7 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 - **Position:** `start` slides in from the leading edge (left in LTR, right in RTL), `end` from the trailing edge. Uses CSS logical properties so RTL layouts mirror automatically.
 - **Height:** Spans the full viewport height regardless of content. Body region scrolls when content overflows.
 - **Width:** Controlled by the `width` prop (CSS length). Capped to `100vw` so it never overflows offscreen.
+- **Sticky header & footer (default):** Header and footer stick to the top and bottom of the drawer, respectively — content scrolls between them. Use `no-sticky-header` or `no-sticky-footer` to make either region scroll with the body content instead (e.g. for reading-mode drawers).
 - **Focus trap:** Native `<dialog>` behavior — focus is trapped inside and restored to the trigger on close.
 - **Body scroll:** Locked when open, restored on close (preserves the host page's prior `overflow` value rather than clearing it).
 - **Mobile (≤480px):** Drawer keeps its side-anchored layout rather than collapsing to a bottom sheet. The bottom-sheet rule applies to trigger-anchored popups (action sheet, combobox-style listboxes); a slide-in nav needs the full viewport height the soft keyboard can't crush.
@@ -86,10 +96,25 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
   </nav>
 </civ-drawer>
 
-<!-- End-anchored settings panel -->
-<civ-drawer ?open="${this.settingsOpen}" position="end" heading="Display settings" width="360px"
-  @civ-drawer-close="${() => this.settingsOpen = false}">
-  <civ-toggle label="Dark mode"></civ-toggle>
-  <civ-toggle label="Reduce motion"></civ-toggle>
+<!-- Filter panel with sticky footer action buttons -->
+<civ-drawer ?open="${this.filtersOpen}" position="end" heading="Filter results" width="380px"
+  @civ-drawer-close="${() => this.filtersOpen = false}">
+  <!-- Long list of filter checkboxes scrolls between sticky header and footer -->
+  <civ-checkbox label="Category A"></civ-checkbox>
+  <civ-checkbox label="Category B"></civ-checkbox>
+
+  <div data-drawer-footer>
+    <civ-button variant="secondary" label="Reset"></civ-button>
+    <civ-button label="Apply"></civ-button>
+  </div>
+</civ-drawer>
+
+<!-- Reading-mode drawer — header scrolls away with content -->
+<civ-drawer ?open="${this.articleOpen}" position="end" heading="Article" width="400px"
+  no-sticky-header no-sticky-footer>
+  <p>Long-form content…</p>
+  <div data-drawer-footer>
+    <civ-button label="Done"></civ-button>
+  </div>
 </civ-drawer>
 ```

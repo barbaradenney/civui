@@ -58,10 +58,12 @@ export type {
  * @prop {string} emptyMessage - Override the default "No data" empty-state message.
  * @prop {boolean} striped - Apply zebra striping to body rows.
  * @prop {boolean} bordered - Apply borders between cells.
+ * @prop {boolean} interactive - When true, clicking a row (outside the select / actions cells) fires `civ-row-activate`. Use to wire a master-detail drawer or a navigate-to-record flow.
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
+ * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -101,6 +103,7 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: String, attribute: 'empty-message' }) emptyMessage = '';
   @property({ type: Boolean }) striped = false;
   @property({ type: Boolean }) bordered = false;
+  @property({ type: Boolean }) interactive = false;
 
   @state() private _instanceId = generateId('civ-data-grid');
 
@@ -256,19 +259,40 @@ export class CivDataGrid extends CivBaseElement {
       'civ-data-grid__tr',
       isSelected ? 'civ-data-grid__tr--selected' : '',
       row.disabled ? 'civ-data-grid__tr--disabled' : '',
+      this.interactive && !row.disabled ? 'civ-data-grid__tr--interactive' : '',
     ].filter(Boolean).join(' ');
+
+    const onRowClick = this.interactive && !row.disabled
+      ? (e: Event) => this._onRowActivate(e, row)
+      : undefined;
 
     return html`
       <tr
         class="${rowClass}"
         data-row-id="${row.id}"
         aria-selected="${this.selectable !== 'none' ? String(isSelected) : ''}"
+        @click="${onRowClick}"
       >
         ${this.selectable !== 'none' ? this._renderSelectCell(row, isSelected) : nothing}
         ${this._visibleColumns.map((col) => this._renderBodyCell(col, row, rowIndex))}
         ${this._hasAnyRowActions() ? this._renderActionsCell(row) : nothing}
       </tr>
     `;
+  }
+
+  private _onRowActivate(e: Event, row: GridRow): void {
+    const target = e.target as HTMLElement;
+    // Don't activate when the click originated inside an interactive
+    // cell control — the row-level click is the *default* affordance,
+    // but clicking a checkbox, kebab menu, link, or formatter button
+    // should retain its own semantics.
+    if (target.closest('.civ-data-grid__td--select, .civ-data-grid__td--actions')) {
+      return;
+    }
+    if (target.closest('a, button, input, select, textarea, [role="button"]')) {
+      return;
+    }
+    dispatch(this, 'civ-row-activate', { rowId: row.id, row });
   }
 
   private _renderBodyCell(col: GridColumn, row: GridRow, rowIndex: number): TemplateResult {

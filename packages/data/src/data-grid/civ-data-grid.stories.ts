@@ -7,6 +7,7 @@ import '../bulk-actions/civ-bulk-actions.js';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
+import '@civui/overlays/drawer';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 
 const meta: Meta = {
@@ -347,6 +348,47 @@ export const DensityScale: Story = {
           <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
           <civ-data-grid class="story-density-spacious" caption="Applications (spacious)"></civ-data-grid>
         </div>
+      </div>
+    `;
+  },
+};
+
+export const MasterDetailDrawer: Story = {
+  name: 'Master-Detail (row → civ-drawer)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-detail') as any;
+      const drawer = document.querySelector('civ-drawer.story-detail') as any;
+      const fields = document.querySelector('#story-detail-fields') as HTMLElement;
+      if (!grid || !drawer || !fields) return;
+      grid.columns = defaultColumns;
+      grid.rows = toRows(SAMPLE_DATA);
+      grid.interactive = true;
+      grid.addEventListener('civ-row-activate', (e: Event) => {
+        const row = (e as CustomEvent).detail.row;
+        drawer.heading = `Application ${row.id}`;
+        fields.innerHTML = '';
+        for (const col of defaultColumns) {
+          const dt = document.createElement('dt');
+          dt.textContent = col.header;
+          dt.style.fontWeight = '600';
+          dt.style.marginTop = 'var(--civ-spacing-3)';
+          const dd = document.createElement('dd');
+          dd.textContent = String(row.cells[col.key] ?? '—');
+          dd.style.margin = '0';
+          fields.appendChild(dt);
+          fields.appendChild(dd);
+        }
+        drawer.open = true;
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">Click any row to view its detail.</p>
+        <civ-data-grid class="story-detail" caption="Applications"></civ-data-grid>
+        <civ-drawer class="story-detail" position="end" heading="Application details">
+          <dl id="story-detail-fields" style="margin: 0;"></dl>
+        </civ-drawer>
       </div>
     `;
   },

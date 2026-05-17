@@ -13,12 +13,12 @@ import type { SlotConfig } from '@civui/core';
  * teaser visible so the user can decide whether to expand.
  *
  * **Two-slot API** — author the teaser as the default children, and
- * mark the expandable rest with `data-civ-read-more-rest`:
+ * mark the expandable rest with `data-rest`:
  *
  * ```html
  * <civ-read-more>
  *   <p>This is the teaser that's always visible.</p>
- *   <div data-civ-read-more-rest>
+ *   <div data-rest>
  *     <p>Hidden until the user expands.</p>
  *     <p>More paragraphs here.</p>
  *   </div>
@@ -45,7 +45,7 @@ import type { SlotConfig } from '@civui/core';
  * @fires civ-analytics - Analytics tracking on toggle
  *
  * @slot - Always-visible teaser content (default slot)
- * @slot data-civ-read-more-rest - Content revealed when expanded
+ * @slot data-rest - Content revealed when expanded
  */
 @customElement('civ-read-more')
 export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
@@ -72,7 +72,7 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
 
   override _getSlotConfig(): SlotConfig {
     return {
-      'data-civ-read-more-rest': '[data-civ-read-more-rest-slot]',
+      'data-rest': '[data-civ-read-more-rest]',
       default: '[data-civ-read-more-teaser]',
     };
   }
@@ -85,18 +85,18 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
     const moreText = this.moreLabel || t('readMoreButton');
     const lessText = this.lessLabel || t('readLessButton');
     const buttonText = this.expanded ? lessText : moreText;
-    const sizeClass = this.size === 'sm' ? 'civ-read-more__trigger--sm' : '';
+    const sizeClass = this.size === 'sm' ? 'civ-toggle-btn--sm' : '';
     return html`
       <div class="civ-read-more__teaser" data-civ-read-more-teaser></div>
       <div
         class="civ-read-more__rest"
         id="${this._restId}"
-        data-civ-read-more-rest-slot
+        data-civ-read-more-rest
         ?hidden="${!this.expanded}"
       ></div>
       <button
         type="button"
-        class="civ-read-more__trigger ${sizeClass}"
+        class="civ-toggle-btn civ-read-more__trigger ${sizeClass}"
         aria-expanded="${this.expanded ? 'true' : 'false'}"
         aria-controls="${this._restId}"
         @click="${this._onToggle}"
@@ -104,7 +104,7 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
         ${this.icon
           ? html`<civ-icon name="${this.icon}" class="civ-read-more__icon" aria-hidden="true"></civ-icon>`
           : nothing}
-        <span>${buttonText}</span>
+        ${buttonText}
       </button>
     `;
   }

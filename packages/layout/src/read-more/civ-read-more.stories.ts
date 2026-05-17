@@ -42,7 +42,7 @@ export const Default: Story = {
         You may be eligible for a benefit if you meet certain service and
         discharge criteria.
       </p>
-      <div data-civ-read-more-rest>
+      <div data-rest>
         <p>
           Specifically, you must have served at least 24 months of active duty
           and been discharged under conditions other than dishonorable. Some
@@ -66,7 +66,7 @@ export const CustomLabels: Story = {
         A <strong>dependent</strong> is a spouse, child, or parent who relies
         on you for financial support.
       </p>
-      <div data-civ-read-more-rest>
+      <div data-rest>
         <p>
           More specifically: a spouse you are legally married to; an unmarried
           child under 18 (or under 23 if enrolled full-time in school); a
@@ -87,7 +87,7 @@ export const WithChevron: Story = {
         We use the income information you provide to determine your benefit
         amount and verify eligibility.
       </p>
-      <div data-civ-read-more-rest>
+      <div data-rest>
         <p>
           Specifically, gross monthly income is compared against the income
           limit for your household size. Net worth (assets minus debts,
@@ -106,7 +106,7 @@ export const ExpandedByDefault: Story = {
       <p>
         Today is the last day of open enrollment.
       </p>
-      <div data-civ-read-more-rest>
+      <div data-rest>
         <p>
           Your selections must be submitted by 11:59 PM Eastern. Late
           submissions cannot be accepted; you will need to wait until the
@@ -124,7 +124,7 @@ export const SmallSize: Story = {
       <p class="civ-text-sm">
         Your application has been received and is in review.
       </p>
-      <div data-civ-read-more-rest>
+      <div data-rest>
         <p class="civ-text-sm">
           The average review time is 3–5 business days. You will receive an
           email with the decision and any next steps.

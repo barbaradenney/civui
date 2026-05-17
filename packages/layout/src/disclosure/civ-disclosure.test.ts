@@ -121,7 +121,33 @@ describe('civ-disclosure', () => {
   it('applies sm size class', async () => {
     const el = await fixture<CivDisclosure>('<civ-disclosure size="sm">Text</civ-disclosure>');
     const trigger = el.querySelector('.civ-disclosure__trigger')!;
-    expect(trigger.classList.contains('civ-disclosure__trigger--sm')).toBe(true);
+    expect(trigger.classList.contains('civ-toggle-btn--sm')).toBe(true);
+  });
+
+  it('composes the shared civ-toggle-btn class on the trigger', async () => {
+    // The disclosure family (civ-disclosure, civ-read-more, future
+    // siblings) all share the same secondary-button palette via the
+    // `civ-toggle-btn` utility. Asserting the class is present locks
+    // the composition — a refactor that removed it would silently
+    // strip the palette.
+    const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
+    const trigger = el.querySelector('.civ-disclosure__trigger')!;
+    expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
+  });
+
+  it('default chevron icon matches the open-state rotation selector', async () => {
+    // Locks the CSS contract: the rule
+    // `.civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name='chevron-right']`
+    // depends on (1) the host carrying the `open` attribute via
+    // reflection, (2) the trigger being a direct child of the host,
+    // and (3) the icon being a direct child of the trigger with the
+    // exact name. If any of those drift, the selector silently stops
+    // matching and the caret freezes.
+    const el = await fixture<CivDisclosure>('<civ-disclosure open>Text</civ-disclosure>');
+    const icon = el.querySelector('civ-icon')!;
+    expect(icon.matches(
+      '.civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name="chevron-right"]'
+    )).toBe(true);
   });
 
   it('falls back to the locale-aware default when label is cleared', async () => {

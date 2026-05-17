@@ -10,7 +10,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p data-test="teaser">Teaser</p>
-        <div data-civ-read-more-rest>
+        <div data-rest>
           <p data-test="rest">Hidden rest</p>
         </div>
       </civ-read-more>
@@ -24,7 +24,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p data-test="teaser">Teaser</p>
-        <div data-civ-read-more-rest>
+        <div data-rest>
           <p data-test="rest">Rest</p>
         </div>
       </civ-read-more>
@@ -39,7 +39,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p>Teaser</p>
-        <div data-civ-read-more-rest><p>Rest</p></div>
+        <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
     expect(el.expanded).toBe(false);
@@ -51,7 +51,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p>Teaser</p>
-        <div data-civ-read-more-rest><p>Rest</p></div>
+        <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
     const button = el.querySelector('button')!;
@@ -67,7 +67,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p>Teaser</p>
-        <div data-civ-read-more-rest><p>Rest</p></div>
+        <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
     const button = el.querySelector('button')!;
@@ -82,7 +82,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more>
         <p>Teaser</p>
-        <div data-civ-read-more-rest><p>Rest</p></div>
+        <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
     const button = el.querySelector('button')!;
@@ -174,7 +174,7 @@ describe('civ-read-more', () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more expanded>
         <p>Teaser</p>
-        <div data-civ-read-more-rest><p>Rest</p></div>
+        <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
     expect(el.expanded).toBe(true);
@@ -192,12 +192,45 @@ describe('civ-read-more', () => {
     expect(el.hasAttribute('expanded')).toBe(true);
   });
 
-  it('applies the sm size class', async () => {
+  it('applies the shared toggle-button sm size class', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more size="sm"><p>Teaser</p></civ-read-more>
     `);
     const trigger = el.querySelector('.civ-read-more__trigger')!;
-    expect(trigger.classList.contains('civ-read-more__trigger--sm')).toBe(true);
+    expect(trigger.classList.contains('civ-toggle-btn--sm')).toBe(true);
+  });
+
+  it('composes the shared civ-toggle-btn class on the trigger', async () => {
+    // The disclosure family (civ-disclosure, civ-read-more, future
+    // siblings) all share the same secondary-button palette via the
+    // `civ-toggle-btn` utility. Asserting the class is present locks
+    // the composition — a refactor that removed it would silently
+    // strip the palette.
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more><p>Teaser</p></civ-read-more>
+    `);
+    const trigger = el.querySelector('.civ-read-more__trigger')!;
+    expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
+  });
+
+  it('chevron icon matches the expanded-state rotation selector', async () => {
+    // Locks the CSS contract: the rule
+    // `civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down']`
+    // depends on (1) the host carrying the `expanded` attribute via
+    // reflection, (2) the trigger being a direct child of the host,
+    // and (3) the icon being a direct child of the trigger with the
+    // exact name. If any of those drift, the selector silently stops
+    // matching and the chevron freezes. (The host is selected by
+    // tag, not class — unlike civ-disclosure, the host itself is
+    // the structural wrapper, so there's no nested element to carry
+    // a `.civ-read-more` class.)
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more icon="chevron-down" expanded><p>Teaser</p></civ-read-more>
+    `);
+    const icon = el.querySelector('civ-icon')!;
+    expect(icon.matches(
+      'civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name="chevron-down"]'
+    )).toBe(true);
   });
 
   it('renders in light DOM (no shadow root)', async () => {

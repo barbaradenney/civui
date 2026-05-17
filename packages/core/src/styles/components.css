@@ -2976,21 +2976,16 @@
   }
 
   /*
-   * Caret rotation mirrors the native `<details>` disclosure
-   * triangle. Default `chevron-right` rotates 90° clockwise to
-   * point down on open. Consumers passing `chevron-down` get the
-   * legacy 180° flip (down → up) so the icon still moves on
-   * toggle.
+   * Caret rotation. `chevron-right` rotates 90° clockwise to point
+   * down on open — fixed visual contract; the component intentionally
+   * exposes no `icon` override so every disclosure on a page reads
+   * as the same affordance.
    */
-  .civ-disclosure__trigger > civ-icon[name='chevron-right'],
-  .civ-disclosure__trigger > civ-icon[name='chevron-down'] {
+  .civ-disclosure__trigger > civ-icon[name='chevron-right'] {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   .civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name='chevron-right'] {
     transform: rotate(90deg);
-  }
-  .civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name='chevron-down'] {
-    transform: rotate(180deg);
   }
 
   /*

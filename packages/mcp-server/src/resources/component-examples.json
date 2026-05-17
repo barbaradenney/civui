@@ -866,6 +866,13 @@
   ],
   "civ-currency": [
     {
+      "story": "AllowNegative",
+      "name": "Allow negative (refunds / adjustments)",
+      "category": "Forms/Inputs/Currency",
+      "html": "<civ-currency\n      name=\"adjustment\"\n      label=\"Adjustment to prior return\"\n      hint=\"Use a minus sign for refunds (e.g. -125.00)\"\n      allow-negative\n    ></civ-currency>",
+      "source": "packages/inputs/src/currency/civ-currency.stories.ts"
+    },
+    {
       "story": "AllStates",
       "name": "All States",
       "category": "Forms/Inputs/Currency",
@@ -906,6 +913,13 @@
       "source": "packages/inputs/src/currency/civ-currency.stories.ts"
     },
     {
+      "story": "WholeDollars",
+      "name": "Whole dollars (decimals=",
+      "category": "Forms/Inputs/Currency",
+      "html": "<civ-currency\n      name=\"extra-withholding\"\n      label=\"Extra withholding per pay period\"\n      hint=\"Whole dollar amount, no cents\"\n      decimals=\"0\"\n    ></civ-currency>",
+      "source": "packages/inputs/src/currency/civ-currency.stories.ts"
+    },
+    {
       "story": "WithError",
       "category": "Forms/Inputs/Currency",
       "html": "<civ-currency name=\"amount\" error=\"Enter a valid dollar amount\"></civ-currency>",
@@ -915,6 +929,13 @@
       "story": "WithHint",
       "category": "Forms/Inputs/Currency",
       "html": "<civ-currency name=\"amount\" hint=\"Enter the total before taxes\"></civ-currency>",
+      "source": "packages/inputs/src/currency/civ-currency.stories.ts"
+    },
+    {
+      "story": "WithMinMax",
+      "name": "With min / max bounds",
+      "category": "Forms/Inputs/Currency",
+      "html": "<civ-currency\n      name=\"annual-contribution\"\n      label=\"Annual FSA contribution\"\n      hint=\"Federal limit: $500 – $3,300\"\n      min=\"500\"\n      max=\"3300\"\n      required\n    ></civ-currency>",
       "source": "packages/inputs/src/currency/civ-currency.stories.ts"
     }
   ],
@@ -1210,13 +1231,6 @@
   ],
   "civ-disclosure": [
     {
-      "story": "ChevronVariant",
-      "name": "Chevron variant (rotates on open)",
-      "category": "Layout/Disclosure",
-      "html": "<civ-disclosure icon=\"chevron-down\" label=\"See additional eligibility requirements\">\n      <ul class=\"civ-m-0 civ-ps-6\">\n        <li>You must have served at least 24 months of active duty</li>\n        <li>You must have been discharged under conditions other than dishonorable</li>\n        <li>You must have a valid VA file number</li>\n      </ul>\n    </civ-disclosure>",
-      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
-    },
-    {
       "story": "CustomLabel",
       "name": "Custom label",
       "category": "Layout/Disclosure",
@@ -1227,13 +1241,6 @@
       "story": "Default",
       "category": "Layout/Disclosure",
       "html": "<civ-disclosure>\n      <p>\n        We use your Social Security number to verify your identity and\n        match your records with our system. We never share it with third\n        parties without your consent.\n      </p>\n    </civ-disclosure>",
-      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
-    },
-    {
-      "story": "NoIcon",
-      "name": "No icon",
-      "category": "Layout/Disclosure",
-      "html": "<civ-disclosure icon=\"\" label=\"Read about our verification process\">\n      <p>\n        Our verification process takes 3–5 business days. You'll receive an\n        email when your application is reviewed.\n      </p>\n    </civ-disclosure>",
       "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
     },
     {
@@ -1781,7 +1788,7 @@
     },
     {
       "story": "Default",
-      "category": "Form Patterns/Form Autosave",
+      "category": "Forms/Form/Form Autosave",
       "html": "<p class=\"civ-mb-4\">\n      Type in any field below, then refresh the page — your draft will resume.\n    </p>\n    <civ-form>\n      <civ-form-autosave storage-key=\"civui-autosave-demo\" debounce-ms=\"500\"></civ-form-autosave>\n      <civ-text-input label=\"First name\" name=\"first-name\"></civ-text-input>\n      <civ-text-input label=\"Last name\" name=\"last-name\"></civ-text-input>\n      <civ-text-input label=\"Email\" name=\"email\" type=\"email\" validate=\"email\"></civ-text-input>\n      <civ-button type=\"submit\">Submit application</civ-button>\n    </civ-form>",
       "source": "packages/form-patterns/src/autosave/civ-form-autosave.stories.ts"
     },
@@ -1898,7 +1905,7 @@
     {
       "story": "WithSavedIndicator",
       "name": "With ",
-      "category": "Form Patterns/Form Autosave",
+      "category": "Forms/Form/Form Autosave",
       "html": "<p class=\"civ-mb-4\">\n      Hook into <code>civ-autosave-saved</code> to show a \"Saved a moment ago\"\n      indicator. The element exposes <code>describeLastSave()</code> for\n      localized strings.\n    </p>\n    <civ-form id=\"indicator-form\">\n      <civ-form-autosave id=\"autosave-indicator\" storage-key=\"indicator-demo\" debounce-ms=\"500\"></civ-form-autosave>\n      <civ-text-input label=\"What brings you here today?\" name=\"reason\"></civ-text-input>\n      <div id=\"saved-indicator\" class=\"civ-text-sm civ-mt-2 civ-text-muted\">Not yet saved.</div>\n    </civ-form>\n    <script>\n      const autosave = document.getElementById('autosave-indicator');\n      const indicator = document.getElementById('saved-indicator');\n      autosave.addEventListener('civ-autosave-saved', () => {\n        indicator.textContent = autosave.describeLastSave();\n      });\n      autosave.addEventListener('civ-autosave-loaded', () => {\n        indicator.textContent = autosave.describeLastSave();\n      });\n    </script>",
       "source": "packages/form-patterns/src/autosave/civ-form-autosave.stories.ts"
     },
@@ -2189,35 +2196,35 @@
   "civ-income": [
     {
       "story": "Default",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-income legend=\"Wages from employment\" name=\"wages\"></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     },
     {
       "story": "Prefilled",
       "name": "Prefilled value",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-income\n      legend=\"Wages\"\n      name=\"wages\"\n      value='{\"amount\":\"3250.00\",\"frequency\":\"biweekly\"}'\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     },
     {
       "story": "Required",
       "name": "Required (means-tested benefit)",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-income\n      legend=\"Gross household income\"\n      name=\"household_income\"\n      hint=\"Include all wages, self-employment, retirement, and other regular income before taxes.\"\n      required\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     },
     {
       "story": "RestrictedFrequencies",
       "name": "Restricted frequency list",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-income\n      legend=\"Mortgage payment\"\n      name=\"mortgage\"\n      .frequencies=\"${['monthly', 'biweekly']}\"\n      hint=\"Most mortgages are paid monthly; some borrowers pay biweekly.\"\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     },
     {
       "story": "WithErrors",
       "name": "With sub-field errors",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-income\n      legend=\"Monthly rent payment\"\n      name=\"rent\"\n      amount-error=\"Enter an amount greater than $0\"\n      frequency-error=\"Pick a frequency\"\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     }
@@ -2886,55 +2893,55 @@
     {
       "story": "Decimal",
       "name": "Decimal values",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Weight (kg)\"\n      name=\"weight\"\n      allow-decimal\n      min=\"0\"\n      hint=\"Decimal values allowed\"\n      width=\"small\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "Default",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number label=\"Number of dependents\" name=\"dependents\"></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "HouseholdSize",
       "name": "Government form example — household size",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"How many people live in your household?\"\n      name=\"household_size\"\n      hint=\"Include yourself, your spouse or partner, and any dependents.\"\n      min=\"1\"\n      max=\"20\"\n      required\n      width=\"small\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "Negative",
       "name": "Allows negative values",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Temperature (°C)\"\n      name=\"temp\"\n      allow-decimal\n      allow-negative\n      hint=\"Negative values allowed\"\n      width=\"small\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "WithError",
       "name": "With error",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Age\"\n      name=\"age\"\n      value=\"200\"\n      min=\"0\"\n      max=\"120\"\n      error=\"Age must be between 0 and 120\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "WithPrefix",
       "name": "With prefix",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Item code\"\n      name=\"item\"\n      prefix=\"#\"\n      width=\"small\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "WithRange",
       "name": "With min/max range",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Age\"\n      name=\"age\"\n      min=\"0\"\n      max=\"120\"\n      hint=\"Enter a whole number between 0 and 120\"\n      required\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
       "story": "WithSuffix",
       "name": "With suffix unit",
-      "category": "Inputs/Number",
+      "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Discount applied\"\n      name=\"discount\"\n      suffix=\"%\"\n      min=\"0\"\n      max=\"100\"\n      width=\"small\"\n    ></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     }
@@ -2977,7 +2984,7 @@
     {
       "story": "FormExample",
       "name": "In a real form — household income",
-      "category": "Compound/Income",
+      "category": "Forms/Compound/Income",
       "html": "<civ-page-header>\n      <h2 slot=\"heading\">Household income</h2>\n    </civ-page-header>\n    <civ-income\n      legend=\"Wages from employment\"\n      name=\"wages\"\n      hint=\"Pay before taxes and deductions\"\n      required\n    ></civ-income>\n    <civ-income\n      legend=\"Self-employment income\"\n      name=\"self_employment\"\n      hint=\"Net income (after business expenses)\"\n    ></civ-income>\n    <civ-income\n      legend=\"Social Security or other retirement income\"\n      name=\"retirement\"\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
     },
@@ -3427,6 +3434,49 @@
       "category": "Forms/Controls/Radio",
       "html": "<civ-radio-group legend=\"Do you identify as Hispanic or Latino?\" hint=\"This information is optional and used only for program reporting.\" name=\"ethnicity\" skip-label=\"Prefer not to answer\" skip-value=\"prefer_not_to_say\">\n      <civ-radio label=\"Yes\" value=\"yes\"></civ-radio>\n      <civ-radio label=\"No\" value=\"no\"></civ-radio>\n    </civ-radio-group>",
       "source": "packages/controls/src/radio/civ-radio.stories.ts"
+    }
+  ],
+  "civ-read-more": [
+    {
+      "story": "CustomLabels",
+      "name": "Custom labels",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more more-label=\"Show full definition\" less-label=\"Hide definition\">\n      <p>\n        A <strong>dependent</strong> is a spouse, child, or parent who relies\n        on you for financial support.\n      </p>\n      <div data-rest>\n        <p>\n          More specifically: a spouse you are legally married to; an unmarried\n          child under 18 (or under 23 if enrolled full-time in school); a\n          permanently incapacitated child of any age whose disability began\n          before age 18; or a parent whose income falls below the federally\n          set threshold.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more>\n      <p>\n        You may be eligible for a benefit if you meet certain service and\n        discharge criteria.\n      </p>\n      <div data-rest>\n        <p>\n          Specifically, you must have served at least 24 months of active duty\n          and been discharged under conditions other than dishonorable. Some\n          benefits also require a documented service-connected disability.\n        </p>\n        <p>\n          If you separated before the 24-month requirement due to a\n          service-connected disability or a hardship discharge, you may still\n          be eligible. Contact a Veterans Service Officer to confirm.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "ExpandedByDefault",
+      "name": "Expanded by default",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more expanded>\n      <p>\n        Today is the last day of open enrollment.\n      </p>\n      <div data-rest>\n        <p>\n          Your selections must be submitted by 11:59 PM Eastern. Late\n          submissions cannot be accepted; you will need to wait until the\n          next enrollment window in November.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "NoRestContent",
+      "name": "Graceful with no rest content",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more>\n      <p>\n        This is the entire message. The \"Read more\" button still renders but\n        clicking it reveals an empty region — useful when you author the rest\n        content conditionally and don't yet have something to show.\n      </p>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "SmallSize",
+      "name": "Small size",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more size=\"sm\">\n      <p class=\"civ-text-sm\">\n        Your application has been received and is in review.\n      </p>\n      <div data-rest>\n        <p class=\"civ-text-sm\">\n          The average review time is 3–5 business days. You will receive an\n          email with the decision and any next steps.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
+      "story": "WithChevron",
+      "name": "With chevron icon",
+      "category": "Layout/Read More",
+      "html": "<civ-read-more icon=\"chevron-down\">\n      <p>\n        We use the income information you provide to determine your benefit\n        amount and verify eligibility.\n      </p>\n      <div data-rest>\n        <p>\n          Specifically, gross monthly income is compared against the income\n          limit for your household size. Net worth (assets minus debts,\n          excluding your primary residence and one vehicle) is also reviewed\n          against the applicable cap.\n        </p>\n      </div>\n    </civ-read-more>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     }
   ],
   "civ-relationship": [
@@ -4612,13 +4662,6 @@
       "source": "packages/core/src/foundations/density-examples.stories.ts"
     },
     {
-      "story": "Small",
-      "name": "Small size",
-      "category": "Layout/Disclosure",
-      "html": "<civ-text-input label=\"Routing number\" name=\"routing\"></civ-text-input>\n    <civ-disclosure size=\"sm\" label=\"Where do I find this?\">\n      <p class=\"civ-text-sm\">\n        The routing number is the 9-digit number on the bottom left of your\n        check, before your account number.\n      </p>\n    </civ-disclosure>",
-      "source": "packages/layout/src/disclosure/civ-disclosure.stories.ts"
-    },
-    {
       "story": "SpacousScale",
       "name": "Spacious Scale",
       "category": "Foundations/Density Examples",
@@ -4754,44 +4797,101 @@
   ],
   "civ-time-picker": [
     {
-      "story": "Default",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"Appointment time\"\n      name=\"appt_time\"\n      hint=\"Choose a 30-minute slot during business hours\"\n      minute-step=\"30\"\n    ></civ-time-picker>",
+      "story": "BookedSlots",
+      "name": "Booked slots (disabled-slots)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt_time\"\n      min=\"09:00\"\n      max=\"12:00\"\n      minute-step=\"30\"\n      .disabledSlots=${['09:00', '09:30', '11:00']}\n      hint=\"Greyed times are already booked. Type to filter or pick from the list.\"\n      required\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
-      "story": "FineGrained",
-      "name": "Fine-grained (minute step = 1)",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"Exact time of incident\"\n      name=\"incident_time\"\n      minute-step=\"1\"\n    ></civ-time-picker>",
+      "story": "BusinessHours",
+      "name": "Business hours (min / max + 30-min step)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Schedule your appointment\"\n      name=\"appt\"\n      min=\"09:00\"\n      max=\"17:00\"\n      minute-step=\"30\"\n      hint=\"Available Monday–Friday, 9:00 AM to 5:00 PM\"\n      required\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "Default",
+      "name": "Default (combo mode)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt_time\"\n      hint=\"Choose any 15-minute slot during the day\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "MinNow",
+      "name": "min=",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Callback time\"\n      name=\"callback_time\"\n      min=\"now\"\n      minute-step=\"30\"\n      hint=\"Only future times are offered. The list updates relative to your device clock.\"\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
       "story": "Prefilled",
       "name": "Prefilled value",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"Departure time\"\n      name=\"departure\"\n      value=\"14:30\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Departure time\"\n      name=\"departure\"\n      value=\"14:30\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
-      "story": "Required",
-      "name": "Required field",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"When would you like to be contacted?\"\n      name=\"contact_time\"\n      hint=\"Required — we'll call within 1 hour of this time\"\n      minute-step=\"30\"\n      required\n    ></civ-time-picker>",
+      "story": "SelectMode",
+      "name": "Select mode (three dropdowns)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"select\"\n      legend=\"Appointment time\"\n      name=\"appt_time\"\n      hint=\"Use the three dropdowns to pick a time\"\n      minute-step=\"30\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "SelectModeFineGrained",
+      "name": "Select mode — fine-grained (minute step = 1)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"select\"\n      legend=\"Exact time of incident\"\n      name=\"incident_time\"\n      minute-step=\"1\"\n      hint=\"Three dropdowns make minute-level precision more manageable than a 1,440-slot combobox\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "SelectModeRequired",
+      "name": "Select mode — required",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"select\"\n      legend=\"When would you like to be contacted?\"\n      name=\"contact_time\"\n      hint=\"Required — we will call within 1 hour of this time\"\n      minute-step=\"30\"\n      required\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "TextMode",
+      "name": "Text mode (free-form HH:MM)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"text\"\n      label=\"Time of incident\"\n      name=\"incident_time\"\n      hint=\"Type the time as accurately as you remember (e.g. 2:34)\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "TextMode24Hour",
+      "name": "Text mode — 24-hour (no AM/PM)",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"text\"\n      label=\"Event timestamp\"\n      name=\"event_time\"\n      format=\"24\"\n      hint=\"Enter the time in 24-hour format (e.g. 14:34)\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "TextModeRequired",
+      "name": "Text mode — required",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      mode=\"text\"\n      label=\"Exact time of fall\"\n      name=\"fall_time\"\n      hint=\"Required — used to calculate symptom onset\"\n      required\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
       "story": "TwentyFourHour",
       "name": "24-hour format",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"Hearing time\"\n      name=\"hearing_time\"\n      format=\"24\"\n      hint=\"Times shown in 24-hour format (military time)\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Hearing time\"\n      name=\"hearing_time\"\n      format=\"24\"\n      min=\"08:00\"\n      max=\"18:00\"\n      minute-step=\"15\"\n      hint=\"Times shown in 24-hour format (military time)\"\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
       "story": "WithError",
       "name": "With error",
-      "category": "Inputs/Time Picker",
-      "html": "<civ-time-picker\n      legend=\"Appointment time\"\n      name=\"appt\"\n      error=\"Please select a time during business hours (9 AM – 5 PM)\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt\"\n      error=\"Please select a time during business hours (9 AM – 5 PM)\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "WithNowButton",
+      "name": "With ",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"When did the incident occur?\"\n      name=\"incident_time\"\n      mode=\"text\"\n      hint=\"Tap Now to anchor to the current time, then adjust as needed.\"\n      show-now-button\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     }
   ],

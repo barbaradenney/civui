@@ -1965,6 +1965,14 @@
     flex-shrink: 0;
   }
 
+  /* The Clear button is a tertiary (outlined) civ-button sitting on the
+     bar's primary-lightest tint, where a transparent fill makes the border
+     read as faint blue-on-blue. Force a white surface so the border has
+     contrast — same approach the data-grid kebab trigger relies on. */
+  .civ-bulk-actions__clear button {
+    background-color: var(--civ-color-white-DEFAULT);
+  }
+
   @media (max-width: 480px) {
     .civ-bulk-actions {
       flex-direction: column;

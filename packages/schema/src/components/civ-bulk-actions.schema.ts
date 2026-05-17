@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-bulk-actions',
-  description: 'Selection-aware action bar that appears above or below a data-grid / list when one or more rows are selected. Shows "{count} {itemName(s)} selected" on the leading edge, action buttons in the default slot, and a Clear button on the trailing edge. Hidden via `display: none` when `count === 0` so consumer-supplied action buttons stay in the DOM across selection changes. Wired to a sibling `civ-data-grid` (or other selection-capable component) via the consumer: listen for `civ-selection-change` on the grid, update `count`, and listen for `civ-clear-selection` on the bar to reset the grid\'s `selectedRowIds`.',
+  description: 'Selection-aware action bar that appears above or below a data-grid / list when one or more rows are selected. Shows "{count} {itemName(s)} selected" on the leading edge, action buttons in the default slot, and a Clear button on the trailing edge (suppressible via `hideClear`). Hidden via `display: none` when `count === 0` so consumer-supplied action buttons stay in the DOM across selection changes. The status text is wrapped in an `aria-live="polite"` region so screen readers announce *only* the count when it changes — not the Clear button label or action labels. Wired to a sibling `civ-data-grid` (or other selection-capable component) via the consumer: listen for `civ-selection-change` on the grid, update `count`, and listen for `civ-clear-selection` on the bar to reset the grid\'s `selectedRowIds`.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -32,6 +32,12 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'clear-label',
     },
+    hideClear: {
+      type: 'boolean',
+      description: 'Suppress the trailing Clear button. Use when consumer-supplied actions inherently clear selection (e.g., "Approve all selected" then resets), so a separate Clear affordance would be redundant',
+      default: false,
+      attribute: 'hide-clear',
+    },
   },
 
   events: {
@@ -42,7 +48,7 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'region',
+    role: 'none',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },

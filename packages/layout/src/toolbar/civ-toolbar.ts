@@ -17,22 +17,30 @@ import type { SlotConfig } from '@civui/core';
  * On viewports ≤480px the start and end groups stack vertically so the
  * controls stay reachable on mobile.
  *
+ * **Role.** Renders as `<div role="group">` with the `label` prop as
+ * `aria-label`. The toolbar is a flex layout primitive only — it does
+ * not implement WAI-ARIA Toolbar Pattern arrow-key navigation, so
+ * `role="toolbar"` would mislead AT into expecting keyboard semantics
+ * the component does not provide. `role="group"` communicates the
+ * grouping without that contract; children keep their own Tab-stop
+ * semantics.
+ *
  * @element civ-toolbar
  *
- * @prop {string} caption - Accessible name applied as aria-label on the toolbar landmark.
+ * @prop {string} label - Accessible name applied as aria-label on the group wrapper.
  *
  * @example
  * ```html
- * <civ-toolbar caption="Applications toolbar">
- *   <civ-text-input placeholder="Search applications"></civ-text-input>
+ * <civ-toolbar label="Applications toolbar">
+ *   <civ-text-input label="Search" type="search"></civ-text-input>
  *   <civ-filter-chip-group></civ-filter-chip-group>
- *   <civ-button data-civ-toolbar-end variant="primary">Add new</civ-button>
+ *   <civ-button data-civ-toolbar-end variant="primary" label="Add new"></civ-button>
  * </civ-toolbar>
  * ```
  */
 @customElement('civ-toolbar')
 export class CivToolbar extends LightDomSlotMixin(CivBaseElement) {
-  @property({ type: String }) caption = '';
+  @property({ type: String }) label = '';
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -50,8 +58,8 @@ export class CivToolbar extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <div
         class="civ-toolbar"
-        role="toolbar"
-        aria-label="${this.caption || nothing}"
+        role="group"
+        aria-label="${this.label || nothing}"
       >
         <div class="civ-toolbar__start" data-civ-toolbar-start-content></div>
         ${hasEnd

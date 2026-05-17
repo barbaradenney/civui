@@ -20,7 +20,9 @@ import EventsTable from "./_toolbar.events.mdx";
 
 Horizontal layout container for the row of controls above a list, grid, or filtered collection — search input, filter chips, density toggle, "Add new" button. Children land on the leading edge by default; add `data-civ-toolbar-end` on a child to align it to the trailing edge.
 
-Renders as `<div role="toolbar">` so assistive tech announces it as a discrete group. Stacks vertically on viewports ≤480px so the controls stay reachable on mobile.
+Renders as `<div role="group">` with the `label` prop applied as `aria-label`. Stacks vertically on viewports ≤480px so the controls stay reachable on mobile.
+
+> **Why not `role="toolbar"`?** The WAI-ARIA Toolbar Pattern requires arrow-key navigation across children with a single Tab stop into the toolbar. `civ-toolbar` is a layout primitive only and deliberately doesn't implement that, so claiming `role="toolbar"` would mislead screen-reader users. `role="group"` communicates the grouping without the keyboard contract.
 
 ## Examples
 
@@ -55,7 +57,7 @@ Renders as `<div role="toolbar">` so assistive tech announces it as a discrete g
 The toolbar is purely a layout primitive — it doesn't introduce any built-in controls. Compose with whatever children fit the use case:
 
 ```html
-<civ-toolbar caption="Applications toolbar">
+<civ-toolbar label="Applications toolbar">
   <civ-text-input label="Search" type="search"></civ-text-input>
   <civ-filter-chip-group label="Status">
     <civ-filter-chip label="In review"></civ-filter-chip>
@@ -83,10 +85,10 @@ search.addEventListener('civ-input', (e) => {
 
 ## Accessibility
 
-- `role="toolbar"` is applied to the wrapper so AT announces the group.
-- `caption` is rendered as `aria-label` on the toolbar. Set it whenever
+- `role="group"` is applied to the wrapper so AT announces the grouping
+  without implying the arrow-key navigation contract of `role="toolbar"`.
+- `label` is rendered as `aria-label` on the group. Set it whenever
   the toolbar contains more than one or two controls — without it, screen
-  readers announce only "toolbar".
-- Children inside the toolbar keep their own ARIA semantics. The toolbar
-  doesn't intercept focus or keyboard handling — each control's native
-  keyboard behavior applies.
+  readers announce only an unnamed group.
+- Children inside the toolbar keep their own ARIA semantics and Tab-stop
+  behavior. The toolbar doesn't intercept focus or keyboard handling.

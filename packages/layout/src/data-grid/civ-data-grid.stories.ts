@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-data-grid.js';
 import '../pagination/civ-pagination.js';
+import '../toolbar/civ-toolbar.js';
+import '../bulk-actions/civ-bulk-actions.js';
+import '@civui/actions/button';
+import '@civui/inputs/text-input';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 
 const meta: Meta = {
@@ -276,6 +280,43 @@ export const WithPagination: Story = {
         class="story-paginated"
         item-name="application"
       ></civ-pagination>
+    `;
+  },
+};
+
+export const FullAdminLayout: Story = {
+  name: 'Full Admin Layout (toolbar + bulk actions)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-full') as any;
+      const bulk = document.querySelector('civ-bulk-actions.story-full') as any;
+      if (!grid || !bulk) return;
+      grid.columns = defaultColumns;
+      grid.rows = toRows(SAMPLE_DATA);
+      grid.selectable = 'multiple';
+      grid.selectedRowIds = [];
+      grid.addEventListener('civ-selection-change', (e: Event) => {
+        const ids = (e as CustomEvent).detail.selectedRowIds;
+        grid.selectedRowIds = ids;
+        bulk.count = ids.length;
+      });
+      bulk.addEventListener('civ-clear-selection', () => {
+        grid.selectedRowIds = [];
+        bulk.count = 0;
+      });
+    }, 0);
+    return html`
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <civ-toolbar label="Applications toolbar">
+          <civ-text-input label="Search" type="search"></civ-text-input>
+          <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+        </civ-toolbar>
+        <civ-bulk-actions class="story-full" count="0" item-name="application">
+          <civ-button variant="secondary" icon-start="download" label="Export"></civ-button>
+          <civ-button variant="secondary" danger label="Delete"></civ-button>
+        </civ-bulk-actions>
+        <civ-data-grid class="story-full" caption="Applications"></civ-data-grid>
+      </div>
     `;
   },
 };

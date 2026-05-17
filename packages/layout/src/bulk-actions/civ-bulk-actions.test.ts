@@ -108,10 +108,41 @@ describe('civ-bulk-actions', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('exposes role="region" with aria-live="polite"', async () => {
+  it('scopes aria-live="polite" to the status text only — not to the whole bar', async () => {
+    // The whole-bar approach over-announces: every Lit re-render also re-reads
+    // the Clear button label and every slotted action label. Scoping the live
+    // region to <p> means the status count is the only thing that announces.
     const el = await fixture('<civ-bulk-actions count="2"></civ-bulk-actions>');
     const bar = el.querySelector('.civ-bulk-actions') as HTMLElement;
-    expect(bar.getAttribute('role')).toBe('region');
-    expect(bar.getAttribute('aria-live')).toBe('polite');
+    const status = el.querySelector('.civ-bulk-actions__status') as HTMLElement;
+    expect(bar.hasAttribute('aria-live')).toBe(false);
+    expect(status.getAttribute('aria-live')).toBe('polite');
+  });
+
+  it('does not declare a landmark role on the bar', async () => {
+    // role="region" without an accessible name pollutes the landmark list.
+    // The bar isn't a landmark — its purpose is the live status text.
+    const el = await fixture('<civ-bulk-actions count="2"></civ-bulk-actions>');
+    const bar = el.querySelector('.civ-bulk-actions') as HTMLElement;
+    expect(bar.hasAttribute('role')).toBe(false);
+  });
+
+  it('renders a Clear button by default', async () => {
+    const el = await fixture('<civ-bulk-actions count="2"></civ-bulk-actions>');
+    expect(el.querySelector('.civ-bulk-actions__clear')).not.toBeNull();
+  });
+
+  it('suppresses the Clear button when hide-clear is set', async () => {
+    const el = await fixture('<civ-bulk-actions count="2" hide-clear></civ-bulk-actions>');
+    expect(el.querySelector('.civ-bulk-actions__clear')).toBeNull();
+  });
+
+  it('still fires no event when hide-clear suppresses the Clear button', async () => {
+    const el = await fixture('<civ-bulk-actions count="2" hide-clear></civ-bulk-actions>');
+    const handler = vi.fn();
+    el.addEventListener('civ-clear-selection', handler);
+    // No button to click — no event possible. Asserts the suppression is real.
+    expect(el.querySelector('.civ-bulk-actions__clear')).toBeNull();
+    expect(handler).not.toHaveBeenCalled();
   });
 });

@@ -25,7 +25,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => html`
-    <civ-toolbar caption="Applications toolbar">
+    <civ-toolbar label="Applications toolbar">
       <civ-text-input label="Search" type="search"></civ-text-input>
       <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
     </civ-toolbar>
@@ -35,7 +35,7 @@ export const Default: Story = {
 export const WithFilters: Story = {
   name: 'With Filter Chips',
   render: () => html`
-    <civ-toolbar caption="Filtered applications">
+    <civ-toolbar label="Filtered applications">
       <civ-text-input label="Search" type="search"></civ-text-input>
       <civ-filter-chip-group label="Status filters">
         <civ-filter-chip label="In review"></civ-filter-chip>
@@ -49,7 +49,7 @@ export const WithFilters: Story = {
 
 export const ActionsOnly: Story = {
   render: () => html`
-    <civ-toolbar caption="Quick actions">
+    <civ-toolbar label="Quick actions">
       <civ-button data-civ-toolbar-end variant="tertiary" icon-start="download" label="Export"></civ-button>
       <civ-button data-civ-toolbar-end variant="primary" label="Add new"></civ-button>
     </civ-toolbar>
@@ -58,12 +58,12 @@ export const ActionsOnly: Story = {
 
 export const StartOnly: Story = {
   render: () => html`
-    <civ-toolbar caption="Search only">
+    <civ-toolbar label="Search only">
       <civ-text-input label="Search" type="search"></civ-text-input>
     </civ-toolbar>
   `,
 };
 
 export const Empty: Story = {
-  render: () => html`<civ-toolbar caption="Empty toolbar"></civ-toolbar>`,
+  render: () => html`<civ-toolbar label="Empty toolbar"></civ-toolbar>`,
 };

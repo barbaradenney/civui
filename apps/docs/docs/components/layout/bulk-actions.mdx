@@ -98,10 +98,18 @@ The component appends `"s"` to `itemName` when `count !== 1`. For nouns that don
 
 ## Accessibility
 
-- The bar is `role="region"` with `aria-live="polite"` so the selection
-  count is announced when it changes — but only on transitions from
-  hidden→visible (since `display: none` content is not announced).
+- The status `<p>` is the `aria-live="polite"` region — **not** the whole
+  bar. Scoping the live region to the status text means screen readers
+  announce only the count when it changes, not the Clear button label or
+  any slotted action labels.
+- The bar wrapper has **no landmark role**. `role="region"` was considered
+  but every landmark needs a unique accessible name, and the status text
+  itself is the right place to read that.
+- Default `display: none` while `count === 0` means AT won't announce the
+  initial state. The first announcement fires when count transitions to a
+  nonzero value.
 - Action buttons inside the default slot keep their own ARIA semantics
   (use `civ-button` with descriptive labels — "Delete application", not
   just "Delete", per the row-action label guideline).
-- The Clear button uses the global focus ring (no extra styling needed).
+- Use `hide-clear` when the consumer's actions inherently clear selection,
+  so the trailing Clear button doesn't duplicate that affordance.

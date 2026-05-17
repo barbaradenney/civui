@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
@@ -16,6 +16,12 @@ import '@civui/actions/button';
  * Hidden via `display: none` when `count === 0` so default-slot action
  * buttons stay in the DOM across selection changes (don't get destroyed
  * when the bar appears/disappears).
+ *
+ * **A11y.** The status text is wrapped in an `aria-live="polite"` region
+ * so screen readers announce *only* the count when it changes — not the
+ * Clear button label or the action-button labels. The bar itself has no
+ * landmark role to avoid polluting the landmark list with an anonymous
+ * entry.
  *
  * **Wiring with civ-data-grid:**
  *
@@ -36,6 +42,7 @@ import '@civui/actions/button';
  * @prop {string} itemName - Singular noun used in status text (e.g. "row", "application").
  * @prop {string} itemNamePlural - Override the simple "+s" plural when the noun pluralizes differently.
  * @prop {string} clearLabel - Override the Clear button text.
+ * @prop {boolean} hideClear - When true, the trailing Clear button is suppressed. Use when consumer-supplied actions inherently clear selection.
  *
  * @fires civ-clear-selection - User clicked the Clear button.
  *
@@ -53,6 +60,7 @@ export class CivBulkActions extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String, attribute: 'item-name' }) itemName = 'item';
   @property({ type: String, attribute: 'item-name-plural' }) itemNamePlural = '';
   @property({ type: String, attribute: 'clear-label' }) clearLabel = '';
+  @property({ type: Boolean, attribute: 'hide-clear' }) hideClear = false;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -78,18 +86,20 @@ export class CivBulkActions extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <div
         class="civ-bulk-actions"
-        role="region"
-        aria-live="polite"
         ?hidden="${hidden}"
       >
-        <p class="civ-bulk-actions__status">${this._statusText}</p>
+        <p class="civ-bulk-actions__status" aria-live="polite">${this._statusText}</p>
         <div class="civ-bulk-actions__actions" data-civ-bulk-actions-content></div>
-        <civ-button
-          class="civ-bulk-actions__clear"
-          variant="tertiary"
-          label="${this.clearLabel || t('bulkActionsClearLabel')}"
-          @click="${this._onClear}"
-        ></civ-button>
+        ${this.hideClear
+          ? nothing
+          : html`
+              <civ-button
+                class="civ-bulk-actions__clear"
+                variant="tertiary"
+                label="${this.clearLabel || t('bulkActionsClearLabel')}"
+                @click="${this._onClear}"
+              ></civ-button>
+            `}
       </div>
     `;
   }

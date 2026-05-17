@@ -1,0 +1,11 @@
+<civ-drawer
+  {% if open %}open{% endif %}
+  {% if position %}position="{{ position }}"{% endif %}
+  {% if width %}width="{{ width }}"{% endif %}
+  {% if heading %}heading="{{ heading }}"{% endif %}
+  {% if no_close_button %}no-close-button{% endif %}
+  {% if no_backdrop_close %}no-backdrop-close{% endif %}
+  {% if no_escape_close %}no-escape-close{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-drawer>

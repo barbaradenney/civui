@@ -53,6 +53,7 @@ const COMPONENTS = [
   'civ-summary',
   'civ-modal',
   'civ-action-sheet',
+  'civ-drawer',
   'civ-alert',
   'civ-badge',
   'civ-count',

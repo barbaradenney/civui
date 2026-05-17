@@ -1,0 +1,95 @@
+---
+title: Drawer
+sidebar_position: 12
+sidebar_label: Drawer
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_drawer.props.mdx";
+import EventsTable from "./_drawer.events.mdx";
+
+# Drawer
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-drawer`](pathname:///civui/storybook/?path=/docs/contract-civ-drawer--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-drawer>`
+
+A side-anchored full-viewport-height dialog that slides in from the leading (`start`) or trailing (`end`) edge. Built on the native `<dialog>` element — inherits native focus trap, Escape-to-close, and top-layer stacking. Use for navigation menus, settings panels, filter trays, and any secondary content where a centered modal or bottom sheet would feel wrong.
+
+## When to use which overlay
+
+| Pattern | Use |
+|---------|-----|
+| Centered confirmation, address-verification, required decision | `civ-modal` |
+| Trigger-anchored popup (filter chip, "more options" on a row) | `civ-action-sheet` |
+| Slide-in nav menu, settings panel, side filter tray | `civ-drawer` |
+
+## Examples
+
+### Default
+
+<StoryEmbed id="overlays-drawer--default" minHeight={500} />
+
+### End-anchored (settings panel)
+
+<StoryEmbed id="overlays-drawer--end-anchored" minHeight={500} />
+
+### Mobile main menu
+
+<StoryEmbed id="overlays-drawer--main-menu" minHeight={500} />
+
+### Custom dismiss (no built-in close)
+
+<StoryEmbed id="overlays-drawer--no-close-affordance" minHeight={500} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/overlays-drawer--default)
+
+## Props
+
+<PropsTable />
+
+## Slots
+
+| Slot | Description |
+|------|-------------|
+| default | Drawer content |
+
+## Events
+
+<EventsTable />
+
+## Behavior
+
+- **Position:** `start` slides in from the leading edge (left in LTR, right in RTL), `end` from the trailing edge. Uses CSS logical properties so RTL layouts mirror automatically.
+- **Height:** Spans the full viewport height regardless of content. Body region scrolls when content overflows.
+- **Width:** Controlled by the `width` prop (CSS length). Capped to `100vw` so it never overflows offscreen.
+- **Focus trap:** Native `<dialog>` behavior — focus is trapped inside and restored to the trigger on close.
+- **Body scroll:** Locked when open, restored on close (preserves the host page's prior `overflow` value rather than clearing it).
+- **Mobile (≤480px):** Drawer keeps its side-anchored layout rather than collapsing to a bottom sheet. The bottom-sheet rule applies to trigger-anchored popups (action sheet, combobox-style listboxes); a slide-in nav needs the full viewport height the soft keyboard can't crush.
+- **Escape:** Closes by default — use `no-escape-close` to prevent.
+- **Backdrop click:** Closes by default — use `no-backdrop-close` to prevent.
+
+## Usage
+
+```html
+<!-- Slide-in main navigation (mobile) -->
+<civ-drawer ?open="${this.navOpen}" position="start" label="Main menu"
+  @civ-drawer-close="${() => this.navOpen = false}">
+  <nav aria-label="Main">
+    <civ-link href="/">Home</civ-link>
+    <civ-link href="/benefits">Benefits</civ-link>
+    <civ-link href="/claims">Claims</civ-link>
+  </nav>
+</civ-drawer>
+
+<!-- End-anchored settings panel -->
+<civ-drawer ?open="${this.settingsOpen}" position="end" heading="Display settings" width="360px"
+  @civ-drawer-close="${() => this.settingsOpen = false}">
+  <civ-toggle label="Dark mode"></civ-toggle>
+  <civ-toggle label="Reduce motion"></civ-toggle>
+</civ-drawer>
+```

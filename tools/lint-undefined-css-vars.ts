@@ -54,6 +54,12 @@ const RUNTIME_DEFINED_VARS = new Set<string>([
   // overlay height via `--civ-action-sheet-max-height: ...` on a
   // wrapper.
   '--civ-action-sheet-max-height',
+  // Set by civ-drawer at render time via inline style — the prop
+  // `width` is forwarded as `style="--civ-drawer-width: ${width}"`.
+  // The CSS reference has a `min(320px, 90vw)` fallback so the
+  // unstyled state still renders. Width is a per-instance API
+  // surface, not a global design token.
+  '--civ-drawer-width',
   // Mentioned only inside a string literal in civ-icon-editor's
   // SVG-pattern detector — not a real CSS reference, just a token
   // that the editor scans for when matching icon shapes.

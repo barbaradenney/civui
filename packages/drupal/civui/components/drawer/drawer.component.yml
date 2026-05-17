@@ -1,0 +1,53 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Drawer
+status: stable
+group: CivUI Overlays
+description: 'Side-anchored full-height drawer dialog. Used for navigation menus, settings panels, and secondary content.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Whether the drawer is currently visible. Reflects to the host attribute'
+    position:
+      title: Position
+      type: string
+      enum: ['start', 'end']
+      default: 'start'
+      description: 'Which viewport edge the drawer slides in from. `start` = left in LTR, right in RTL; `end` = right in LTR, left in RTL. Uses logical properties so layouts mirror automatically.'
+    width:
+      title: Width
+      type: string
+      default: 'min(320px, 90vw)'
+      description: 'Drawer width as a CSS length (e.g. `320px`, `min(360px, 90vw)`). Mobile (≤480px) caps to the viewport width regardless of this value so content never overflows offscreen.'
+    heading:
+      title: Heading
+      type: string
+      description: 'Visible heading rendered inside the drawer header'
+    no_close_button:
+      title: No close button
+      type: boolean
+      default: false
+      description: 'Suppress the built-in close (×) button. Use when the consumer renders its own dismiss affordance'
+    no_backdrop_close:
+      title: No backdrop close
+      type: boolean
+      default: false
+      description: 'Disable click-outside-to-close. Useful when the drawer contains required-action affordances'
+    no_escape_close:
+      title: No escape close
+      type: boolean
+      default: false
+      description: 'Disable Escape-key close. Pair with `noBackdropClose` to force users to the explicit affordance'
+
+slots:
+  default:
+    title: Default
+    description: 'Drawer content'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

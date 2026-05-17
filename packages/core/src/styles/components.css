@@ -1601,7 +1601,7 @@
     flex-direction: column;
     @apply civ-bg-white civ-shadow-lg;
     color: var(--civ-color-base-darkest);
-    transition: transform var(--civ-motion-duration-normal) var(--civ-motion-easing-standard, ease);
+    transition: transform var(--civ-motion-duration-normal) var(--civ-motion-easing-ease-out);
   }
 
   dialog.civ-drawer::backdrop {

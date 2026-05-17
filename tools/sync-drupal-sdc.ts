@@ -67,6 +67,7 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-summary', drupal: 'summary' },
   { schema: 'civ-modal', drupal: 'modal' },
   { schema: 'civ-action-sheet', drupal: 'action-sheet' },
+  { schema: 'civ-drawer', drupal: 'drawer' },
   { schema: 'civ-alert', drupal: 'alert' },
   { schema: 'civ-badge', drupal: 'badge' },
   { schema: 'civ-count', drupal: 'count' },

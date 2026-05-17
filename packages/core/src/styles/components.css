@@ -61,6 +61,7 @@
   civ-direct-deposit,
   civ-disclosure,
   civ-divider,
+  civ-drawer,
   civ-ein,
   civ-email,
   civ-fieldset,
@@ -1581,6 +1582,73 @@
       max-height: 85vh;
       border-radius: var(--civ-border-radius-lg, 12px) var(--civ-border-radius-lg, 12px) 0 0;
     }
+  }
+
+  /* ── Drawer (side-anchored native <dialog>) ──────────────── */
+
+  dialog.civ-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    width: var(--civ-drawer-width, min(320px, 90vw));
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    @apply civ-bg-white civ-shadow-lg;
+    color: var(--civ-color-base-darkest);
+    transition: transform var(--civ-motion-duration-normal) var(--civ-motion-easing-ease-out);
+  }
+
+  dialog.civ-drawer::backdrop {
+    background: var(--civ-backdrop-color);
+  }
+
+  /* Position + slide direction. Physical translateX is paired with a
+     [dir="rtl"] flip below so `start` always means the logical leading
+     edge (left in LTR, right in RTL). */
+  dialog.civ-drawer--start {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    transform: translateX(-100%);
+  }
+
+  dialog.civ-drawer--end {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] dialog.civ-drawer--start {
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] dialog.civ-drawer--end {
+    transform: translateX(-100%);
+  }
+
+  dialog.civ-drawer[open] {
+    transform: translateX(0);
+  }
+
+  .civ-drawer__header {
+    @apply civ-flex civ-items-start civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
+    flex-shrink: 0;
+  }
+
+  .civ-drawer__close {
+    @apply civ-ms-4 civ-flex-shrink-0;
+  }
+
+  .civ-drawer__body {
+    @apply civ-p-4;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   /* ── Action Sheet ─────────────────────────────────────────── */
@@ -3125,6 +3193,11 @@
       color: var(--civ-color-base-lightest);
     }
 
+    dialog.civ-drawer {
+      background-color: var(--civ-color-base-darkest);
+      color: var(--civ-color-base-lightest);
+    }
+
     .civ-action-sheet {
       background-color: var(--civ-color-base-darkest);
       border-color: var(--civ-color-base-dark);
@@ -3168,6 +3241,11 @@
   }
 
   :root[data-civ-theme="dark"] dialog.civ-modal {
+    background-color: var(--civ-color-white-DEFAULT);
+    color: var(--civ-color-base-darkest);
+  }
+
+  :root[data-civ-theme="dark"] dialog.civ-drawer {
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
   }

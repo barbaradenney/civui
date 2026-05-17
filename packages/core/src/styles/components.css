@@ -3472,6 +3472,49 @@
     /* Reserve scrollbar gutter so adding/removing the scrollbar
        doesn't reflow content underneath. */
     scrollbar-gutter: stable;
+    /* Force a thin always-visible scrollbar. Safari (macOS + iOS)
+       hides scrollbars by default, which is fine for page scroll
+       but hides the affordance for *horizontal* scroll regions —
+       users miss off-screen content. Once the consumer opted into
+       .civ-scroll-x they signaled they want this discoverable, so
+       we override the system default here. Firefox uses the
+       scrollbar-* properties; WebKit/Blink uses ::-webkit-scrollbar. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--civ-color-base-light) transparent;
+  }
+
+  .civ-scroll-x::-webkit-scrollbar {
+    height: 6px;
+    -webkit-appearance: none;
+  }
+
+  .civ-scroll-x::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .civ-scroll-x::-webkit-scrollbar-thumb {
+    background-color: var(--civ-color-base-light);
+    border-radius: 3px;
+  }
+
+  .civ-scroll-x::-webkit-scrollbar-thumb:hover {
+    background-color: var(--civ-color-base-DEFAULT);
+  }
+
+  /* Escape hatch for the rare case where a consumer wants the native
+     hidden-on-Safari behavior back — apply alongside .civ-scroll-x. */
+  .civ-scroll-x--bare-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+
+  .civ-scroll-x--bare-scrollbar::-webkit-scrollbar {
+    height: auto;
+    -webkit-appearance: auto;
+  }
+
+  .civ-scroll-x--bare-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
   }
 
   /* Snap-stop variant — line up children with the start edge on each

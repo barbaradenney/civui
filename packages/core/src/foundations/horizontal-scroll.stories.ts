@@ -95,6 +95,24 @@ export const SnapAndFade: Story = {
   `,
 };
 
+export const BareScrollbar: Story = {
+  name: 'Bare Scrollbar (native, hidden on Safari)',
+  render: () => html`
+    <div style="${wrapperStyle}">
+      <div class="civ-scroll-x civ-scroll-x--bare-scrollbar">
+        <div class="civ-flex civ-gap-2" style="flex-wrap: nowrap;">
+          <civ-filter-chip label="In review" selected></civ-filter-chip>
+          <civ-filter-chip label="Approved"></civ-filter-chip>
+          <civ-filter-chip label="Denied"></civ-filter-chip>
+          <civ-filter-chip label="Pending"></civ-filter-chip>
+          <civ-filter-chip label="Returned"></civ-filter-chip>
+          <civ-filter-chip label="Archived"></civ-filter-chip>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
 export const TableScrollPattern: Story = {
   name: 'Pattern A — Wide Table (role=region, tabindex)',
   render: () => html`

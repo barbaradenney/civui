@@ -38,6 +38,18 @@ Components that need horizontal scrolling for their built-in chrome — `civ-dat
 </div>
 ```
 
+## Scrollbar discoverability
+
+By default `.civ-scroll-x` forces a **thin always-visible scrollbar** (6px high on WebKit; `scrollbar-width: thin` on Firefox). This overrides the iOS / macOS Safari behavior of hiding scrollbars until the user is already scrolling — fine for page scroll where the user knows to scroll, but a problem for horizontal scroll regions where users routinely miss off-screen content because there's no affordance.
+
+The thumb uses `--civ-color-base-light`; hover darkens to `--civ-color-base`. The track is transparent so the scroller blends with whatever surface it sits on.
+
+If you genuinely need the native hidden-on-Safari behavior back (rare — usually only when the scroll region's edges are otherwise obvious), add `.civ-scroll-x--bare-scrollbar`:
+
+```html
+<div class="civ-scroll-x civ-scroll-x--bare-scrollbar">…</div>
+```
+
 ## Modifiers
 
 ### `.civ-scroll-x--snap` + `.civ-scroll-x__item`

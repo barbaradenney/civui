@@ -1,0 +1,128 @@
+---
+title: Horizontal Scroll
+sidebar_position: 17
+sidebar_label: Horizontal Scroll
+---
+
+# Horizontal Scroll
+
+A utility class — `.civ-scroll-x` — for content that needs to scroll horizontally on viewports too narrow to show it all: tab strips, filter chips, toolbar overflow, wide tables. The class adds the scroll behavior + visual affordances; the consumer is responsible for the inner flex layout and any keyboard / a11y wiring that the contained content needs.
+
+## Why a utility, not a component
+
+The contained content varies too much to wrap in a single generic component:
+
+| Pattern | Has its own ARIA / keyboard model |
+|---|---|
+| Wide table | `<table>` + `role="region"` + `tabindex="0"` on the scroll wrapper |
+| Tab strip | `role="tablist"` with arrow-key navigation among tabs |
+| Filter-chip row | Group of toggle buttons |
+| Button group | Connected button row |
+
+A generic wrapper component would either flatten those differences in ways that hurt accessibility, or grow into a configuration grab-bag. A utility class adds the visual + scroll behavior consistently while leaving each consumer responsible for their own keyboard semantics.
+
+Components that need horizontal scrolling for their built-in chrome — `civ-data-grid` — have their own scroll wrapper rather than composing this utility, so they can wire the keyboard / `role="region"` behavior in one place.
+
+## Usage
+
+```html
+<div class="civ-scroll-x">
+  <div class="civ-flex civ-gap-2" style="flex-wrap: nowrap;">
+    <civ-filter-chip label="In review" selected></civ-filter-chip>
+    <civ-filter-chip label="Approved"></civ-filter-chip>
+    <civ-filter-chip label="Denied"></civ-filter-chip>
+    <civ-filter-chip label="Pending"></civ-filter-chip>
+    <civ-filter-chip label="Returned"></civ-filter-chip>
+    <civ-filter-chip label="Archived"></civ-filter-chip>
+  </div>
+</div>
+```
+
+## Modifiers
+
+### `.civ-scroll-x--snap` + `.civ-scroll-x__item`
+
+Add scroll-snap behavior so children align to the leading edge of the scroller after each scroll gesture. Useful for tab strips and chip rows where each item should snap cleanly into view:
+
+```html
+<div class="civ-scroll-x civ-scroll-x--snap">
+  <div class="civ-flex civ-gap-2" style="flex-wrap: nowrap;">
+    <civ-filter-chip class="civ-scroll-x__item" label="In review" selected></civ-filter-chip>
+    <civ-filter-chip class="civ-scroll-x__item" label="Approved"></civ-filter-chip>
+    <civ-filter-chip class="civ-scroll-x__item" label="Denied"></civ-filter-chip>
+  </div>
+</div>
+```
+
+The `--snap` variant uses `scroll-snap-type: x proximity`, which is the gentler option — `mandatory` can be jarring on touch devices.
+
+### `.civ-scroll-x--fade`
+
+Apply a CSS mask so the leading and trailing edges fade out, signalling that there's more content off-screen. The fade width comes from `--civ-spacing-6` so it scales with the density system:
+
+```html
+<div class="civ-scroll-x civ-scroll-x--fade">…</div>
+```
+
+Override the fade width inline if needed:
+
+```html
+<div
+  class="civ-scroll-x civ-scroll-x--fade"
+  style="--civ-scroll-x-fade: 2rem;"
+>…</div>
+```
+
+## Accessibility
+
+The utility class itself does not add ARIA — the right roles depend on what's inside the scroller. Three patterns:
+
+### Pattern A: The contained content is a table
+
+```html
+<div
+  class="civ-scroll-x"
+  role="region"
+  aria-label="Applications table"
+  tabindex="0"
+>
+  <table>…</table>
+</div>
+```
+
+`tabindex="0"` makes the region focusable so keyboard users can use arrow keys / Home / End to scroll. The `aria-label` gives the landmark a name. This is exactly what `civ-data-grid` does internally when `responsive="scroll"`.
+
+### Pattern B: The contained content has its own keyboard model
+
+When the inner content is itself a widget with its own keyboard navigation (a tablist with arrow-key navigation, a roving-tabindex toolbar), don't add `role="region"` or `tabindex` to the scroll wrapper — let the widget own its semantics. The scroll wrapper is purely visual, and browsers automatically scroll the focused descendant into view.
+
+### Pattern C: The contained content is a group of independent controls
+
+Filter chips, button groups. Tab moves through each child normally. The scroll wrapper is visual, no extra ARIA needed:
+
+```html
+<div class="civ-scroll-x">
+  <civ-filter-chip-group label="Status">…</civ-filter-chip-group>
+</div>
+```
+
+## When NOT to use this
+
+Horizontal scroll is the lowest-priority responsive pattern. Prefer:
+
+1. **Stacking** — collapse the row into a column (most filter-chip groups and toolbars).
+2. **Truncation** — show the first N items + "More…" affordance.
+3. **Pagination** — for tabular data with many columns, consider a column-visibility menu instead of scrolling.
+
+Horizontal scroll is the right answer when:
+- Items must stay in horizontal order (a calendar week, a timeline).
+- Stacking would lose context (a wide table where the row identity is in the first column).
+- Truncation isn't acceptable because every item is equally important.
+
+## Density
+
+The fade width (`.civ-scroll-x--fade`) uses `--civ-spacing-6`, which scales with `[data-civ-scale="dense"]` and `[data-civ-scale="spacious"]`. Other scroll behavior (snap, overflow) is unchanged across scales.
+
+## Reduced motion
+
+`@media (prefers-reduced-motion: reduce)` switches `scroll-behavior` to `auto` so programmatic scrolls don't animate. The default scroll-snap behavior is `proximity` (not `mandatory`), so it doesn't fight reduced-motion preferences.

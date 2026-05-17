@@ -3450,6 +3450,69 @@
     color: var(--civ-color-base-dark);
   }
 
+  /* ── Horizontal scroll utility ──────────────────────────────
+     A utility class for content that needs to scroll horizontally on
+     viewports too narrow to show it all: tab strips, filter chips,
+     toolbar overflow, wide tables. Adds the scroll behavior + visual
+     affordances; the consumer is responsible for the inner flex
+     layout and any keyboard / a11y wiring (role="region", tabindex,
+     aria-label) when the contained content needs them.
+
+     Why a utility and not a component: the contained content varies
+     too much (table, tablist, button group, filter chips) and each
+     of those owns its own ARIA + keyboard model. Components that
+     need horizontal scrolling for built-in chrome (civ-data-grid)
+     have their own scroll wrapper rather than composing this. */
+
+  .civ-scroll-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    /* Reserve scrollbar gutter so adding/removing the scrollbar
+       doesn't reflow content underneath. */
+    scrollbar-gutter: stable;
+  }
+
+  /* Snap-stop variant — line up children with the start edge on each
+     scroll. Useful for tab strips and chip rows where each item
+     should align cleanly. Children opt in via `.civ-scroll-x__item`. */
+  .civ-scroll-x--snap {
+    scroll-snap-type: x proximity;
+  }
+
+  .civ-scroll-x__item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  /* Edge-fade variant — fade the leading and trailing edges with a
+     CSS mask so users see there's more content off-screen. The fade
+     width tracks the spacing scale so it scales with density. */
+  .civ-scroll-x--fade {
+    --civ-scroll-x-fade: var(--civ-spacing-6);
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--civ-scroll-x-fade),
+      black calc(100% - var(--civ-scroll-x-fade)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--civ-scroll-x-fade),
+      black calc(100% - var(--civ-scroll-x-fade)),
+      transparent 100%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .civ-scroll-x {
+      scroll-behavior: auto;
+    }
+  }
+
   /* ── Divider ──────────────────────────────────────────────── */
 
   .civ-divider {

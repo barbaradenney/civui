@@ -166,6 +166,10 @@ export interface CivLocaleStrings {
   // Disclosure
   disclosureDefaultLabel: string; // "Why we ask?"
 
+  // Read More
+  readMoreButton: string; // "Read more" toggle label (collapsed)
+  readLessButton: string; // "Read less" toggle label (expanded)
+
   // Time Picker
   timePickerDefaultLegend: string;
   timePickerHourLabel: string;
@@ -835,6 +839,9 @@ const defaultStrings: CivLocaleStrings = {
   numberPasteFiltered: 'Non-numeric characters were removed from the pasted value.',
 
   disclosureDefaultLabel: 'Why we ask?',
+
+  readMoreButton: 'Read more',
+  readLessButton: 'Read less',
 
   timePickerDefaultLegend: 'Time',
   timePickerHourLabel: 'Hour',

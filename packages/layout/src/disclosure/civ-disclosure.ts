@@ -58,14 +58,14 @@ export class CivDisclosure extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const labelText = this.label || t('disclosureDefaultLabel');
-    const sizeClass = this.size === 'sm' ? 'civ-disclosure__trigger--sm' : '';
+    const sizeClass = this.size === 'sm' ? 'civ-toggle-btn--sm' : '';
     return html`
       <details
         class="civ-disclosure"
         ?open="${this.open}"
         @toggle="${this._onToggle}"
       >
-        <summary class="civ-disclosure__trigger ${sizeClass}">
+        <summary class="civ-toggle-btn civ-disclosure__trigger ${sizeClass}">
           ${this.icon
             ? html`<civ-icon name="${this.icon}" class="civ-disclosure__icon" aria-hidden="true"></civ-icon>`
             : nothing}

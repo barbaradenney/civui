@@ -1,6 +1,7 @@
 // Side-effect imports ensure custom elements are registered.
 import './card/civ-card.js';
 import './disclosure/civ-disclosure.js';
+import './read-more/civ-read-more.js';
 import './divider/civ-divider.js';
 import './input-group/civ-input-group.js';
 import './list/civ-list.js';
@@ -17,6 +18,9 @@ export type { CardColor, CardStyle } from './card/index.js';
 
 // Disclosure
 export { CivDisclosure } from './disclosure/index.js';
+
+// Read More
+export { CivReadMore } from './read-more/index.js';
 
 // Divider
 export { CivDivider } from './divider/index.js';

@@ -38,6 +38,8 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noCloseButton - Hide the X close button
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
  * @prop {boolean} noEscapeClose - Disable closing via Escape key
+ * @prop {boolean} noStickyHeader - Header scrolls with body content instead of sticking to the top
+ * @prop {boolean} noStickyFooter - Footer scrolls with body content instead of sticking to the bottom
  *
  * @fires civ-drawer-close - When the user tries to close the drawer
  *
@@ -70,13 +72,18 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, attribute: 'no-close-button' }) noCloseButton = false;
   @property({ type: Boolean, attribute: 'no-backdrop-close' }) noBackdropClose = false;
   @property({ type: Boolean, attribute: 'no-escape-close' }) noEscapeClose = false;
+  @property({ type: Boolean, attribute: 'no-sticky-header' }) noStickyHeader = false;
+  @property({ type: Boolean, attribute: 'no-sticky-footer' }) noStickyFooter = false;
 
   private _previouslyFocused: Element | null = null;
   private _priorBodyOverflow = '';
   private _headingId = this.generateId('heading');
 
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-drawer-body]' };
+    return {
+      'data-drawer-footer': '[data-civ-drawer-footer]',
+      default: '[data-civ-drawer-content]',
+    };
   }
 
   override firstUpdated(): void {
@@ -95,6 +102,11 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const hasHeader = this.heading || !this.noCloseButton;
+    const headerClasses = `civ-drawer__header${this.noStickyHeader ? '' : ' civ-drawer__header--sticky'}`;
+    const footerClasses = `civ-drawer__footer${this.noStickyFooter ? '' : ' civ-drawer__footer--sticky'}`;
+    const hasFooter = this._hasSlottedChildren('data-drawer-footer');
+
     return html`
       <dialog
         class="civ-drawer civ-drawer--${this.position}"
@@ -105,22 +117,27 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
         @close="${this._onNativeClose}"
         @click="${this._onDialogClick}"
       >
-        ${this.heading || !this.noCloseButton ? html`
-          <div class="civ-drawer__header">
-            ${this.heading ? html`
-              <span id="${this._headingId}" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
-            ` : nothing}
-            ${!this.noCloseButton ? html`
-              <button
-                type="button"
-                class="civ-close-btn civ-drawer__close"
-                aria-label="${t('closeLabel')}"
-                @click="${this._requestClose}"
-              ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-            ` : nothing}
-          </div>
-        ` : nothing}
-        <div class="civ-drawer__body" data-civ-drawer-body></div>
+        <div class="civ-drawer__body" data-civ-drawer-body>
+          ${hasHeader ? html`
+            <div class="${headerClasses}">
+              ${this.heading ? html`
+                <span id="${this._headingId}" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
+              ` : nothing}
+              ${!this.noCloseButton ? html`
+                <button
+                  type="button"
+                  class="civ-close-btn civ-drawer__close"
+                  aria-label="${t('closeLabel')}"
+                  @click="${this._requestClose}"
+                ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
+              ` : nothing}
+            </div>
+          ` : nothing}
+          <div class="civ-drawer__content" data-civ-drawer-content></div>
+          ${hasFooter ? html`
+            <div class="${footerClasses}" data-civ-drawer-footer></div>
+          ` : nothing}
+        </div>
       </dialog>
     `;
   }

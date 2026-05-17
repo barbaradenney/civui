@@ -33,6 +33,11 @@ props:
       type: boolean
       default: false
       description: 'Render inline so the trigger flows as the last words of the teaser'
+    no_fade_trigger:
+      title: No fade trigger
+      type: boolean
+      default: false
+      description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the...'
 
 slots:
   teaser:

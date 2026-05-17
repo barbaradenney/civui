@@ -1587,6 +1587,11 @@
   /* ── Drawer (side-anchored native <dialog>) ──────────────── */
 
   dialog.civ-drawer {
+    /* `--civ-drawer-bg` paints sticky header/footer so body content
+       doesn't bleed through. Light-mode default; dark-mode overrides
+       further down. */
+    --civ-drawer-bg: var(--civ-color-white-DEFAULT);
+
     position: fixed;
     top: 0;
     bottom: 0;
@@ -1599,7 +1604,8 @@
     border: none;
     display: flex;
     flex-direction: column;
-    @apply civ-bg-white civ-shadow-lg;
+    background-color: var(--civ-drawer-bg);
+    @apply civ-shadow-lg;
     color: var(--civ-color-base-darkest);
     transition: transform var(--civ-motion-duration-normal) var(--civ-motion-easing-ease-out);
   }
@@ -1635,20 +1641,43 @@
     transform: translateX(0);
   }
 
+  /* The body is the scroll container. Header and footer sit inside it
+     and are made sticky via CSS (default) — toggling `no-sticky-*`
+     just drops the position rule, so they scroll with content. */
+  .civ-drawer__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
   .civ-drawer__header {
     @apply civ-flex civ-items-start civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
-    flex-shrink: 0;
+    background-color: var(--civ-drawer-bg);
+  }
+
+  .civ-drawer__header--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .civ-drawer__close {
     @apply civ-ms-4 civ-flex-shrink-0;
   }
 
-  .civ-drawer__body {
+  .civ-drawer__content {
     @apply civ-p-4;
-    flex: 1 1 auto;
-    overflow-y: auto;
-    min-height: 0;
+  }
+
+  .civ-drawer__footer {
+    @apply civ-flex civ-gap-4 civ-justify-end civ-p-4 civ-border-t civ-border-base-light;
+    background-color: var(--civ-drawer-bg);
+  }
+
+  .civ-drawer__footer--sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
   }
 
   /* ── Action Sheet ─────────────────────────────────────────── */
@@ -3076,6 +3105,11 @@
    * `.civ-toggle-btn` palette (see disclosure section above) plus a
    * top margin to space it from the content above; only the chevron
    * rotation is component-specific.
+   *
+   * In block mode, the DEFAULT presentation overlays the trigger on
+   * a gradient fade at the bottom of the teaser (rules further down).
+   * Authors who want the older stacked layout opt out with
+   * `no-fade-trigger`.
    */
   .civ-read-more__rest {
     @apply civ-mt-2;
@@ -3083,6 +3117,58 @@
 
   .civ-read-more__trigger {
     @apply civ-mt-2;
+  }
+
+  /*
+   * Block-mode default — fade-and-overlay trigger.
+   *
+   * Applies only when the component is COLLAPSED (no `[expanded]`),
+   * in BLOCK mode (no `[inline]`), and the consumer hasn't opted out
+   * (no `[no-fade-trigger]`). The host becomes a positioning context,
+   * the teaser's bottom edge fades into `--civ-read-more-bg`, and the
+   * trigger sits absolutely-centered at the bottom edge, visually
+   * integrating the affordance with the truncated text.
+   *
+   * `--civ-read-more-bg` defaults to white so the fade is invisible
+   * on a white page background; override it on a colored card via
+   * inline style or a wrapper rule to match the surrounding fill.
+   *
+   * `pointer-events: none` on the fade is critical — without it the
+   * gradient overlay would swallow clicks on the trigger sitting on
+   * top of it.
+   */
+  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+    --civ-read-more-bg: var(--civ-color-white-DEFAULT);
+    --civ-read-more-fade-height: 5em;
+    position: relative;
+    display: block;
+  }
+
+  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
+    position: relative;
+  }
+
+  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--civ-read-more-fade-height);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--civ-read-more-bg) 90%
+    );
+    pointer-events: none;
+  }
+
+  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    z-index: 1;
   }
 
   /*
@@ -3119,11 +3205,27 @@
   civ-read-more[inline] .civ-read-more__rest {
     display: inline;
   }
+  /*
+   * Inline trigger composes the shared `.civ-toggle-btn` palette
+   * (filled background, semibold, rounded — so it reads as a button,
+   * not an underlined link) and overrides only what the inline flow
+   * needs:
+   *
+   * - `margin-top: 0` cancels `.civ-read-more__trigger`'s `civ-mt-2`.
+   *   Without this, the button is `display: inline-block` (browser
+   *   default), inherits 0.5rem of top margin, and gets pushed off
+   *   the text baseline — the "inline mode doesn't work" symptom.
+   * - Compact horizontal/vertical padding keeps the button from
+   *   towering over the surrounding text.
+   * - `margin-inline-start: 0.25em` separates the button from the
+   *   preceding word with a single-character gap so it doesn't weld
+   *   to punctuation.
+   */
   .civ-read-more__trigger--inline {
-    @apply civ-cursor-pointer civ-bg-transparent civ-border-0 civ-p-0
-           civ-font-semibold civ-underline;
-    color: inherit;
+    margin-top: 0;
     margin-inline-start: 0.25em;
+    padding-block: 0;
+    padding-inline: 0.5em;
   }
 
   /* ── Data Field ──────────────────────────────────────────── */
@@ -3194,8 +3296,12 @@
     }
 
     dialog.civ-drawer {
-      background-color: var(--civ-color-base-darkest);
+      --civ-drawer-bg: var(--civ-color-base-darkest);
       color: var(--civ-color-base-lightest);
+    }
+
+    civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+      --civ-read-more-bg: var(--civ-color-base-darkest);
     }
 
     .civ-action-sheet {
@@ -3246,8 +3352,14 @@
   }
 
   :root[data-civ-theme="dark"] dialog.civ-drawer {
-    background-color: var(--civ-color-white-DEFAULT);
+    --civ-drawer-bg: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
+  }
+
+  /* Dark-theme toolbar pairs with the @media rule above; in dark mode
+     the page is dark, so the fade should resolve to the dark token. */
+  :root[data-civ-theme="dark"] civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+    --civ-read-more-bg: var(--civ-color-base-darkest);
   }
 
   :root[data-civ-theme="dark"] .civ-action-sheet {

@@ -40,6 +40,8 @@ import type { SlotConfig } from '@civui/core';
  * @prop {string} lessLabel - Override the "Read less" trigger text
  * @prop {string} icon - Optional icon name shown before the label; empty = no icon
  * @prop {string} size - Trigger size: 'default' or 'sm'
+ * @prop {boolean} inline - Render teaser, rest, and trigger inline
+ * @prop {boolean} noFadeTrigger - Opt out of the default block-mode fade overlay: the trigger sits below the teaser as a plain button instead of floating over a gradient at the bottom of the text
  *
  * @fires civ-toggle - When the expanded state changes, detail: { expanded }
  * @fires civ-analytics - Analytics tracking on toggle
@@ -81,6 +83,19 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
    */
   @property({ type: Boolean, reflect: true }) inline = false;
 
+  /**
+   * Opt out of the default fade-and-overlay treatment in block mode.
+   *
+   * By default (block mode, collapsed), the teaser's bottom edge fades
+   * into `--civ-read-more-bg` and the trigger sits centered over the
+   * fade, visually integrating the affordance with the truncated text.
+   * Setting this attribute reverts to the older layout — plain button
+   * stacked below the teaser. Inline mode and the expanded state are
+   * unaffected either way; the fade only renders when there's
+   * collapsed block content to fade FROM.
+   */
+  @property({ type: Boolean, reflect: true, attribute: 'no-fade-trigger' }) noFadeTrigger = false;
+
   private readonly _restId = generateId('civ-read-more-rest');
 
   override _getSlotConfig(): SlotConfig {
@@ -99,11 +114,15 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
     const lessText = this.lessLabel || t('readLessButton');
     const buttonText = this.expanded ? lessText : moreText;
     const sizeClass = this.size === 'sm' ? 'civ-toggle-btn--sm' : '';
-    // Inline mode drops the button chrome (no `civ-toggle-btn`
-    // palette, no icon) so the trigger reads as a continuation of
-    // the surrounding text rather than a separate affordance.
+    // Inline mode still uses the shared `civ-toggle-btn` palette so the
+    // affordance reads as a button (filled background, rounded, semibold)
+    // rather than as an underlined link. The `--inline` modifier trims
+    // padding and zeroes the trigger's top margin so it sits on the
+    // text baseline instead of being pushed off it by the block-mode
+    // `civ-mt-2` rule. Chevron icon is still suppressed inline — it
+    // breaks the text flow.
     const triggerClasses = this.inline
-      ? 'civ-read-more__trigger civ-read-more__trigger--inline'
+      ? 'civ-toggle-btn civ-read-more__trigger civ-read-more__trigger--inline'
       : `civ-toggle-btn civ-read-more__trigger ${sizeClass}`;
     return html`
       <div class="civ-read-more__teaser" data-civ-read-more-teaser></div>

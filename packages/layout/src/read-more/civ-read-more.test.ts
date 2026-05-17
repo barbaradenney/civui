@@ -114,6 +114,24 @@ describe('civ-read-more', () => {
     expect(button.textContent).toContain('Read less');
   });
 
+  it('default "Read more" label carries a U+2026 ellipsis (continuation hint)', async () => {
+    // Typographic ellipsis (single character `…`, not three dots)
+    // signals "more content follows" — a recognized convention. The
+    // "Read less" label gets none, because collapsing reveals nothing
+    // further. Consumers override either via `more-label` /
+    // `less-label`.
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more><p>Teaser</p></civ-read-more>
+    `);
+    const button = el.querySelector('button')!;
+    expect(button.textContent).toContain('Read more…');
+    expect(button.textContent).not.toContain('Read more...');
+
+    el.expanded = true;
+    await elementUpdated(el);
+    expect(button.textContent).not.toContain('…');
+  });
+
   it('honors custom moreLabel / lessLabel overrides', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more more-label="Show details" less-label="Hide details">
@@ -242,15 +260,18 @@ describe('civ-read-more', () => {
       expect(el.hasAttribute('inline')).toBe(true);
     });
 
-    it('swaps the button chrome for the inline trigger class', async () => {
-      // Inline drops the `civ-toggle-btn` palette and adds the
-      // `--inline` modifier so CSS can collapse padding/background
-      // and turn the trigger into underlined inline emphasis.
+    it('composes the toggle-btn palette and adds the --inline modifier', async () => {
+      // Inline mode keeps the `civ-toggle-btn` palette (filled
+      // background, semibold, rounded — the affordance reads as a
+      // button, not an underlined link) and adds the `--inline`
+      // modifier so CSS can trim padding and zero out the top margin
+      // that otherwise pushes the inline-block button off the text
+      // baseline.
       const el = await fixture<CivReadMore>(`
         <civ-read-more inline>Teaser text.</civ-read-more>
       `);
       const trigger = el.querySelector('.civ-read-more__trigger')!;
-      expect(trigger.classList.contains('civ-toggle-btn')).toBe(false);
+      expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
       expect(trigger.classList.contains('civ-read-more__trigger--inline')).toBe(true);
     });
 
@@ -283,6 +304,60 @@ describe('civ-read-more', () => {
       expect(button.getAttribute('aria-controls')).toBeTruthy();
       const rest = el.querySelector('.civ-read-more__rest') as HTMLElement;
       expect(rest.hasAttribute('hidden')).toBe(true);
+    });
+  });
+
+  describe('fade-and-overlay trigger (block-mode default)', () => {
+    it('does NOT carry the no-fade-trigger attribute by default', async () => {
+      // The block-mode default is fade + overlay button; the CSS rule
+      // is gated by `:not([no-fade-trigger])`. Locks that the
+      // attribute stays absent without an explicit opt-out.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more>
+          <p>Teaser</p>
+          <div data-rest><p>Rest</p></div>
+        </civ-read-more>
+      `);
+      expect(el.noFadeTrigger).toBe(false);
+      expect(el.hasAttribute('no-fade-trigger')).toBe(false);
+    });
+
+    it('reflects no-fade-trigger to the host attribute when set', async () => {
+      // The CSS selector that drives the fade is
+      // `civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger])`
+      // — that's a host-attribute selector, so the property MUST
+      // reflect or the CSS won't pick up the opt-out.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more no-fade-trigger>
+          <p>Teaser</p>
+          <div data-rest><p>Rest</p></div>
+        </civ-read-more>
+      `);
+      expect(el.noFadeTrigger).toBe(true);
+      expect(el.hasAttribute('no-fade-trigger')).toBe(true);
+
+      el.noFadeTrigger = false;
+      await elementUpdated(el);
+      expect(el.hasAttribute('no-fade-trigger')).toBe(false);
+    });
+
+    it('default rendering still matches the existing structural contract', async () => {
+      // The fade visual is pure CSS — the rendered DOM is identical
+      // whether or not the fade-and-overlay treatment is active.
+      // Asserting that locks in: the new default doesn't add stray
+      // elements or change slot-routing.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more>
+          <p>Teaser</p>
+          <div data-rest><p>Rest</p></div>
+        </civ-read-more>
+      `);
+      expect(el.querySelector('.civ-read-more__teaser')).not.toBeNull();
+      expect(el.querySelector('.civ-read-more__rest')).not.toBeNull();
+      expect(el.querySelector('.civ-read-more__trigger')).not.toBeNull();
+      // No extra wrapper elements introduced by the fade default
+      expect(el.querySelectorAll('.civ-read-more__teaser').length).toBe(1);
+      expect(el.querySelectorAll('.civ-read-more__trigger').length).toBe(1);
     });
   });
 

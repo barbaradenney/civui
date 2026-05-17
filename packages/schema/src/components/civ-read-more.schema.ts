@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
     },
     moreLabel: {
       type: 'string',
-      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more").',
+      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…" — typographic ellipsis as a continuation hint).',
       default: '',
       attribute: 'more-label',
     },
@@ -43,6 +43,13 @@ const schema: ComponentSchema = {
       description: 'Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron) — the trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout.',
       default: false,
       reflect: true,
+    },
+    noFadeTrigger: {
+      type: 'boolean',
+      description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout — plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way.',
+      default: false,
+      reflect: true,
+      attribute: 'no-fade-trigger',
     },
   },
 

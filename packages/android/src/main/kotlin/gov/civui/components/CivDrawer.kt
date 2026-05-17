@@ -18,6 +18,8 @@ fun CivDrawer(
     noCloseButton: Boolean = false,
     noBackdropClose: Boolean = false,
     noEscapeClose: Boolean = false,
+    noStickyHeader: Boolean = false,
+    noStickyFooter: Boolean = false,
     onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},

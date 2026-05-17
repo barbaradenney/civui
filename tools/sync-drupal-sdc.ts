@@ -86,6 +86,8 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-icon', drupal: 'icon' },
   { schema: 'civ-filter-chip', drupal: 'filter-chip' },
   { schema: 'civ-filter-chip-group', drupal: 'filter-chip-group' },
+  { schema: 'civ-disclosure', drupal: 'disclosure' },
+  { schema: 'civ-read-more', drupal: 'read-more' },
   { schema: 'civ-time-picker', drupal: 'time-picker' },
 ];
 

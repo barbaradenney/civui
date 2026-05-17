@@ -26,6 +26,9 @@ public struct CivReadMore: View {
     /// Trigger size: "default" or "sm".
     public var size: String
 
+    /// Render inline so the trigger flows as the last words of the teaser.
+    public var isInline: Bool
+
     /// Called when the expanded state changes.
     public var onToggle: ((Bool) -> Void)?
 
@@ -38,6 +41,7 @@ public struct CivReadMore: View {
         lessLabel: String = "",
         icon: String = "",
         size: String = "default",
+        isInline: Bool = false,
         onToggle: ((Bool) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -46,6 +50,7 @@ public struct CivReadMore: View {
         self.lessLabel = lessLabel
         self.icon = icon
         self.size = size
+        self.isInline = isInline
         self.onToggle = onToggle
         self.onAnalytics = onAnalytics
     }

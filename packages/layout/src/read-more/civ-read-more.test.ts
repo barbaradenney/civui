@@ -233,6 +233,59 @@ describe('civ-read-more', () => {
     )).toBe(true);
   });
 
+  describe('inline mode', () => {
+    it('reflects the inline property to the host attribute', async () => {
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more inline>Teaser text.</civ-read-more>
+      `);
+      expect(el.inline).toBe(true);
+      expect(el.hasAttribute('inline')).toBe(true);
+    });
+
+    it('swaps the button chrome for the inline trigger class', async () => {
+      // Inline drops the `civ-toggle-btn` palette and adds the
+      // `--inline` modifier so CSS can collapse padding/background
+      // and turn the trigger into underlined inline emphasis.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more inline>Teaser text.</civ-read-more>
+      `);
+      const trigger = el.querySelector('.civ-read-more__trigger')!;
+      expect(trigger.classList.contains('civ-toggle-btn')).toBe(false);
+      expect(trigger.classList.contains('civ-read-more__trigger--inline')).toBe(true);
+    });
+
+    it('suppresses the chevron icon in inline mode', async () => {
+      // The chevron is awkward inline — it breaks the text flow.
+      // Setting `icon` while `inline` is active should be a no-op
+      // rather than rendering a stray glyph between words.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more inline icon="chevron-down">Teaser text.</civ-read-more>
+      `);
+      expect(el.querySelector('civ-icon')).toBeNull();
+    });
+
+    it('keeps the same aria wiring in inline mode', async () => {
+      // Inline only changes presentation. The button still carries
+      // type="button", aria-expanded, and aria-controls; the rest
+      // region still uses `hidden`. Locks that the swap stays a
+      // CSS-only concern. Authors should use a `<span data-rest>`
+      // wrapper in inline mode so the HTML stays valid inside a
+      // `<p>`; the test mirrors that convention.
+      const el = await fixture<CivReadMore>(`
+        <civ-read-more inline>
+          Teaser text.
+          <span data-rest>Rest content.</span>
+        </civ-read-more>
+      `);
+      const button = el.querySelector('button')!;
+      expect(button.getAttribute('type')).toBe('button');
+      expect(button.getAttribute('aria-expanded')).toBe('false');
+      expect(button.getAttribute('aria-controls')).toBeTruthy();
+      const rest = el.querySelector('.civ-read-more__rest') as HTMLElement;
+      expect(rest.hasAttribute('hidden')).toBe(true);
+    });
+  });
+
   it('renders in light DOM (no shadow root)', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more><p>Teaser</p></civ-read-more>

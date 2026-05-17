@@ -2932,11 +2932,10 @@
   /*
    * Shared toggle-button styling for the disclosure family
    * (`.civ-disclosure__trigger`, `.civ-read-more__trigger`, and any
-   * future siblings). Secondary-button palette — a button-like
-   * affordance smaller than a primary action: `primary-lightest`
-   * background tint, `primary-dark` text, light-tint hover.
-   * Distinct from a true link (no underline) so the user reads it
-   * as a toggle, not navigation away.
+   * future siblings). Neutral-gray palette — a button-like
+   * affordance that doesn't compete with a true primary action.
+   * The text color inherits from the page (`base-darkest`); the
+   * button reads as a quiet toggle, not a CTA.
    *
    * Compose by adding `civ-toggle-btn` to the component-specific
    * class on the trigger element. Per-component triggers keep their
@@ -2947,8 +2946,8 @@
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-cursor-pointer
            civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
            civ-border-0;
-    background-color: var(--civ-color-primary-lightest);
-    color: var(--civ-color-primary-dark);
+    background-color: var(--civ-color-base-lightest);
+    color: inherit;
   }
 
   .civ-toggle-btn--sm {
@@ -2956,11 +2955,11 @@
   }
 
   .civ-toggle-btn:hover {
-    background-color: var(--civ-color-primary-lighter);
+    background-color: var(--civ-color-base-lighter);
   }
 
   .civ-toggle-btn:active {
-    background-color: var(--civ-color-primary-light);
+    background-color: var(--civ-color-base-light);
   }
 
   .civ-disclosure__trigger {
@@ -2992,13 +2991,13 @@
    * Indent rail. A leading-edge border anchored under the trigger
    * visually connects the disclosed content to the toggle above —
    * the eye reads "this paragraph belongs to that button". Uses
-   * `border-inline-start` so RTL flips it to the right side.
-   * Color matches the trigger's `primary-light` active state so
-   * the rail reads as part of the same affordance family.
+   * `border-inline-start` so RTL flips it to the right side. Color
+   * matches the trigger's `base-light` active state so the rail
+   * reads as part of the same neutral affordance family.
    */
   .civ-disclosure__content {
     @apply civ-mt-2 civ-ps-3;
-    border-inline-start: 2px solid var(--civ-color-primary-light);
+    border-inline-start: 2px solid var(--civ-color-base-light);
   }
 
   /* ── Read More ─────────────────────────────────────────────── */
@@ -3033,6 +3032,30 @@
   }
   civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transform: rotate(180deg);
+  }
+
+  /*
+   * Inline mode. Host, teaser, and rest containers all collapse to
+   * inline display so the trigger flows as the last words of the
+   * teaser text. The trigger sheds its button chrome (no background,
+   * no padding, no top margin) and reads as an underlined inline
+   * affordance — the inter-word space keeps it from welding to the
+   * preceding punctuation. Authors should use plain text (no `<p>`
+   * wrapper) for the teaser; block elements inside an inline
+   * container defeat the layout.
+   */
+  civ-read-more[inline] {
+    display: inline;
+  }
+  civ-read-more[inline] .civ-read-more__teaser,
+  civ-read-more[inline] .civ-read-more__rest {
+    display: inline;
+  }
+  .civ-read-more__trigger--inline {
+    @apply civ-cursor-pointer civ-bg-transparent civ-border-0 civ-p-0
+           civ-font-semibold civ-underline;
+    color: inherit;
+    margin-inline-start: 0.25em;
   }
 
   /* ── Data Field ──────────────────────────────────────────── */

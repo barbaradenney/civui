@@ -1,4 +1,6 @@
 <civ-disclosure
   {% if label %}label="{{ label }}"{% endif %}
   {% if open %}open{% endif %}
->{% block content %}{% endblock %}</civ-disclosure>
+>
+  {% block content %}{{ content }}{% endblock %}
+</civ-disclosure>

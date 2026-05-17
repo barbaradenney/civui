@@ -50,6 +50,10 @@ name always describes the action that will result from activating it.
 
 <StoryEmbed id="layout-read-more--small-size" />
 
+### Inline (last words of the paragraph)
+
+<StoryEmbed id="layout-read-more--inline" />
+
 ### No rest content (graceful)
 
 <StoryEmbed id="layout-read-more--no-rest-content" />
@@ -100,6 +104,26 @@ reach for `civ-disclosure` instead.
 
 The teaser is the default slot. Anything marked with `data-rest` is routed
 into the hidden region and revealed on toggle.
+
+### Inline mode
+
+For "...read more" patterns where the trigger should flow as the last words
+of a paragraph, set the `inline` attribute. The trigger sheds its button
+chrome (no background, no top margin, no chevron) and reads as underlined
+inline emphasis. Author the teaser as plain text — block elements inside an
+inline container defeat the layout — and wrap the rest content in
+`<span data-rest>` so the HTML stays valid inside the surrounding `<p>`:
+
+```html
+<p>
+  <civ-read-more inline>
+    We use this information to verify your identity.
+    <span data-rest>
+      Specifically, we hash it with a salt and store only the hash.
+    </span>
+  </civ-read-more>
+</p>
+```
 
 ## Accessibility
 

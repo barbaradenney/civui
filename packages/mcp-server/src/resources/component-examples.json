@@ -3458,6 +3458,13 @@
       "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     },
     {
+      "story": "Inline",
+      "name": "Inline (last words of the paragraph)",
+      "category": "Layout/Read More",
+      "html": "<p class=\"civ-m-0\">\n      <civ-read-more inline>\n        We use the income information you provide to determine your benefit\n        amount and verify eligibility.\n        <span data-rest>\n          Specifically, gross monthly income is compared against the income\n          limit for your household size; net worth is also reviewed against\n          the applicable cap.\n        </span>\n      </civ-read-more>\n    </p>",
+      "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
+    },
+    {
       "story": "NoRestContent",
       "name": "Graceful with no rest content",
       "category": "Layout/Read More",

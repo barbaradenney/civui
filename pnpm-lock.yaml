@@ -454,6 +454,9 @@ importers:
 
   packages/layout:
     dependencies:
+      '@civui/actions':
+        specifier: workspace:*
+        version: link:../actions
       '@civui/core':
         specifier: workspace:*
         version: link:../core

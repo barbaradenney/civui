@@ -1,7 +1,7 @@
 {
   "name": "@civui/layout",
   "version": "0.1.0",
-  "description": "CivUI layout components — Card, Divider, InputGroup, PageHeader, Tag, Pagination, DataGrid",
+  "description": "CivUI layout components — Card, Divider, InputGroup, PageHeader, Tag, Pagination, DataGrid, Toolbar, BulkActions",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -19,7 +19,9 @@
     "./image-preview": "./dist/image-preview/index.js",
     "./filterable-list": "./dist/filterable-list/index.js",
     "./pagination": "./dist/pagination/index.js",
-    "./data-grid": "./dist/data-grid/index.js"
+    "./data-grid": "./dist/data-grid/index.js",
+    "./toolbar": "./dist/toolbar/index.js",
+    "./bulk-actions": "./dist/bulk-actions/index.js"
   },
   "files": [
     "dist"

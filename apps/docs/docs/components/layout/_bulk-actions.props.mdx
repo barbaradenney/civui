@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `count` | `number` | `0` | How many items are currently selected. When `0`, the bar is hidden (display:none) but stays in the DOM so default-slot action buttons survive selection toggling |
+| `item-name` | `string` | `'item'` | Singular noun used in the status text ("row", "application", "user"). The bar pluralizes by appending "s" — pass an already-plural fallback in `itemNamePlural` if your word doesn't pluralize that way |
+| `item-name-plural` | `string` | `''` | Override for the pluralized noun when simple "+s" pluralization is wrong ("entries", "people", "children"). Defaults to `itemName + "s"` when omitted |
+| `clear-label` | `string` | `''` | Override the Clear button text. Defaults to the i18n "Clear" string. Use to localize or to be more specific ("Clear selection", "Deselect all") |

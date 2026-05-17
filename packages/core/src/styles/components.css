@@ -48,6 +48,7 @@
   civ-action-sheet,
   civ-address,
   civ-alert,
+  civ-bulk-actions,
   civ-button-group,
   civ-card,
   civ-checkbox,
@@ -111,6 +112,7 @@
   civ-textarea,
   civ-time-picker,
   civ-toggle,
+  civ-toolbar,
   civ-va-file-number,
   civ-yes-no,
   civ-zip {
@@ -1905,6 +1907,72 @@
 
   .civ-menu-item__label {
     @apply civ-flex-1;
+  }
+
+  /* ── Toolbar ───────────────────────────────────────────────── */
+
+  .civ-toolbar {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-3 civ-justify-between;
+    width: 100%;
+  }
+
+  .civ-toolbar__start,
+  .civ-toolbar__end {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-2;
+  }
+
+  .civ-toolbar__end {
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 480px) {
+    .civ-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .civ-toolbar__start,
+    .civ-toolbar__end {
+      width: 100%;
+    }
+  }
+
+  /* ── Bulk Actions ──────────────────────────────────────────── */
+
+  .civ-bulk-actions {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-3 civ-rounded;
+    background-color: var(--civ-color-primary-lightest);
+    border: 1px solid var(--civ-color-primary-light);
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    width: 100%;
+  }
+
+  .civ-bulk-actions[hidden] {
+    display: none;
+  }
+
+  .civ-bulk-actions__status {
+    @apply civ-m-0 civ-font-bold;
+    color: var(--civ-color-primary-dark);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .civ-bulk-actions__actions {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-2;
+  }
+
+  .civ-bulk-actions__clear {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .civ-bulk-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .civ-bulk-actions__actions {
+      justify-content: flex-start;
+    }
   }
 
   /* ── Data Grid ─────────────────────────────────────────────── */

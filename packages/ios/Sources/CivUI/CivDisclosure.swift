@@ -31,7 +31,7 @@ public struct CivDisclosure: View {
     public init(
         label: String = "",
         open: Binding<Bool> = .constant(false),
-        icon: String = "info",
+        icon: String = "chevron-right",
         size: String = "default",
         onToggle: ((Bool) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil

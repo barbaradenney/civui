@@ -22,8 +22,8 @@ const schema: ComponentSchema = {
     },
     icon: {
       type: 'string',
-      description: 'Icon name from the civ-icon library shown before the label. Pass an empty string to suppress.',
-      default: 'info',
+      description: 'Icon name from the civ-icon library shown before the label. Default `chevron-right` mirrors the native `<details>` disclosure-triangle pattern — caret points right when collapsed, rotates 90° to point down when expanded. Pass an empty string to suppress.',
+      default: 'chevron-right',
     },
     size: {
       type: 'enum',

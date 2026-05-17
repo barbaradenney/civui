@@ -1,0 +1,126 @@
+---
+title: Read More
+sidebar_position: 10
+sidebar_label: Read More
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_read-more.props.mdx";
+import EventsTable from "./_read-more.events.mdx";
+
+# Read More
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-read-more`](pathname:///civui/storybook/?path=/docs/contract-civ-read-more--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-read-more>`
+
+Two-stage content disclosure: a teaser paragraph stays visible at all times,
+and a "Read more" button reveals the rest of the content. Use it when the user
+needs enough context to decide whether to read on — eligibility fine print,
+optional definitions, secondary explanations.
+
+The rest region stays in the DOM but carries the `hidden` attribute when
+collapsed, so screen readers skip it entirely until the user expands. The
+button label toggles between "Read more" and "Read less" so the accessible
+name always describes the action that will result from activating it.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-read-more--default" />
+
+### Custom labels
+
+<StoryEmbed id="layout-read-more--custom-labels" />
+
+### With chevron icon
+
+<StoryEmbed id="layout-read-more--with-chevron" />
+
+### Expanded by default
+
+<StoryEmbed id="layout-read-more--expanded-by-default" />
+
+### Small size
+
+<StoryEmbed id="layout-read-more--small-size" />
+
+### No rest content (graceful)
+
+<StoryEmbed id="layout-read-more--no-rest-content" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-read-more--default)
+
+## Component-Specific Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## When to Use Read More vs Disclosure
+
+| Pattern | Use it when |
+| --- | --- |
+| **Read More** (`civ-read-more`) | You have a useful **teaser** the user should see at a glance, with extra detail behind a toggle. The user makes an informed choice about whether to expand. |
+| **Disclosure** (`civ-disclosure`) | The content is **entirely optional** — there's nothing useful to show by default. The button label alone tells the user what's behind it. |
+
+If you find yourself authoring an empty teaser just to use `civ-read-more`,
+reach for `civ-disclosure` instead.
+
+## Usage
+
+```html
+<civ-read-more>
+  <p>You may be eligible for a benefit if you meet certain criteria.</p>
+  <div data-rest>
+    <p>
+      Specifically, you must have served at least 24 months of active duty and
+      been discharged under conditions other than dishonorable. Some benefits
+      also require a documented service-connected disability.
+    </p>
+  </div>
+</civ-read-more>
+
+<!-- Custom labels and chevron icon -->
+<civ-read-more more-label="Show details" less-label="Hide details" icon="chevron-down">
+  <p>A dependent is a spouse, child, or parent who relies on you financially.</p>
+  <div data-rest>
+    <p>More specifically: a spouse you are legally married to; an unmarried
+       child under 18 (or under 23 if enrolled full-time in school)…</p>
+  </div>
+</civ-read-more>
+```
+
+The teaser is the default slot. Anything marked with `data-rest` is routed
+into the hidden region and revealed on toggle.
+
+## Accessibility
+
+- **Real `<button type="button">` trigger.** The button explicitly carries
+  `type="button"` so a read-more inside a `<form>` doesn't accidentally
+  submit the form when clicked.
+- **`aria-expanded` reflects state.** Flips between `"true"` and `"false"`
+  on toggle so screen readers announce the new state on the next
+  interaction.
+- **`aria-controls` points at the rest region.** Generated `id` ensures
+  the association is stable across re-renders.
+- **`hidden` on the rest region.** When collapsed, the rest region carries
+  the native `hidden` attribute so screen readers skip it entirely —
+  better than `aria-hidden`, which keeps the content reachable by
+  keyboard.
+- **Button label toggles.** The accessible name on the button reads
+  "Read more" when collapsed and "Read less" when expanded, so the user
+  hears what activating it will do, not what state it's currently in.
+- **Locale-aware defaults.** The "Read more" / "Read less" strings come
+  from `t('readMoreButton')` and `t('readLessButton')` — override via the
+  locale registry or pass `more-label` / `less-label` directly.
+- **`civ-toggle` event is local.** Does NOT bubble or compose, so
+  `civ-form`'s form-level event listeners don't see read-more toggles as
+  form-field changes.

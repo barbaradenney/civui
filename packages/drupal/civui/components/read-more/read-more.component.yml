@@ -1,0 +1,42 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Read More
+status: stable
+group: CivUI Layout
+description: 'Two-stage content disclosure: always-visible teaser plus a Read more button that reveals additional content.'
+
+props:
+  type: object
+  properties:
+    expanded:
+      title: Expanded
+      type: boolean
+      default: false
+      description: 'Whether the rest region is currently visible'
+    more_label:
+      title: More label
+      type: string
+      description: 'Override the "Read more" trigger text'
+    less_label:
+      title: Less label
+      type: string
+      description: 'Override the "Read less" trigger text'
+    icon:
+      title: Icon
+      type: string
+      description: 'Optional icon name shown before the label'
+    size:
+      title: Size
+      type: string
+      description: 'Trigger size variant'
+
+slots:
+  teaser:
+    title: Teaser
+    description: 'Always-visible content shown above the toggle'
+  rest:
+    title: Rest
+    description: 'Content revealed when the user expands. Wrap the content in `<div data-rest>...</div>` so the web component routes it into the hidden rest region (otherwise it merges with the teaser).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

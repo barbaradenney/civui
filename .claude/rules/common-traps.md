@@ -439,6 +439,70 @@ drift-lints CI gate. To extend, add a fixture line to
 
 ---
 
+## Lockfile drift after editing a package.json
+
+Adding or removing a dep on any `packages/*/package.json` requires
+regenerating `pnpm-lock.yaml`. CI installs with
+`pnpm install --frozen-lockfile` which fails fast on any
+spec mismatch:
+
+```
+ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile"
+because pnpm-lock.yaml is not up to date with packages/<pkg>/package.json
+```
+
+A local `pnpm test` / `pnpm typecheck` won't catch this — they reuse
+the existing workspace symlinks. Only `--frozen-lockfile` (CI default)
+detects the drift, and when it does, **every** CI job fails inside
+~10 seconds during setup. That signature — all jobs red with sub-15s
+durations — is almost always this trap.
+
+After any package.json edit:
+
+```bash
+pnpm install                           # refreshes pnpm-lock.yaml
+pnpm install --frozen-lockfile         # local CI-mode dry run
+git add pnpm-lock.yaml
+```
+
+**Caught by:** CI failure across the board. There's no pre-commit
+lint for it; the discipline is "edit deps → install → commit
+lockfile in the same change".
+
+---
+
+## Storybook sub-path aliases must follow new package exports
+
+`.storybook/main.ts` aliases workspace packages to source files
+(`packages/overlays/src/index.ts`), not to directories. So when a
+new component adds a sub-path export like `@civui/overlays/menu`,
+Vite resolves the import as `<that-file>/menu` and dies with:
+
+```
+[vite:load-fallback] Could not load
+./packages/overlays/src/index.ts/menu: ENOTDIR: not a directory
+```
+
+Every existing sub-path (modal, action-sheet, card, divider, …)
+has its own explicit alias entry **listed above** the base-package
+alias so the longest-prefix match wins. Add a matching entry for
+the new sub-path:
+
+```ts
+'@civui/overlays/menu': resolve(root, 'packages/overlays/src/menu/index.ts'),
+'@civui/overlays': resolve(root, 'packages/overlays/src/index.ts'),
+```
+
+**Caught by:** `pnpm storybook:build` (also runs in
+`storybook-build` CI job and in the `pages.yml` deploy). Local
+`pnpm test` doesn't trigger it — Vitest packages have their own
+alias maps in `packages/*/vitest.config.ts` and don't go through
+the Storybook config. If you add a sub-path export, update **all
+three** alias maps: the workspace's `vitest.config.ts`, every
+*consumer* package's `vitest.config.ts`, and `.storybook/main.ts`.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

@@ -1,0 +1,125 @@
+---
+title: Menu
+sidebar_position: 13
+sidebar_label: Menu
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import MenuProps from "./_menu.props.mdx";
+import MenuEvents from "./_menu.events.mdx";
+import MenuItemProps from "./_menu-item.props.mdx";
+
+# Menu
+
+`<civ-menu>` / `<civ-menu-item>`
+
+Anchored on-page menu for row actions, overflow menus, and on-page action lists. Composes a slotted trigger element with a popup panel of `<civ-menu-item>` children.
+
+Renders as an anchored popover on desktop and as a bottom sheet on mobile (≤480px), consistent with the project-wide mobile-popup rule. Follows the WAI-ARIA Menu Button keyboard pattern.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="overlays-menu--default" minHeight={300} />
+
+### With icons
+
+<StoryEmbed id="overlays-menu--with-icons" minHeight={320} />
+
+### With destructive action
+
+<StoryEmbed id="overlays-menu--with-destructive-action" minHeight={320} />
+
+### Align start (left)
+
+<StoryEmbed id="overlays-menu--align-start" minHeight={320} />
+
+### With disabled items
+
+<StoryEmbed id="overlays-menu--with-disabled-items" minHeight={320} />
+
+### Link items
+
+<StoryEmbed id="overlays-menu--link-items" minHeight={320} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/overlays-menu--default)
+
+## Props (`civ-menu`)
+
+<MenuProps />
+
+## Events
+
+<MenuEvents />
+
+## Props (`civ-menu-item`)
+
+<MenuItemProps />
+
+## Trigger contract
+
+Mark the trigger element with `data-civ-menu-trigger`:
+
+```html
+<civ-menu label="Row actions">
+  <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+  <civ-menu-item value="edit">Edit</civ-menu-item>
+  <civ-menu-item value="delete" destructive>Delete</civ-menu-item>
+</civ-menu>
+```
+
+The trigger must be a focusable element — typically a `<civ-button>` or a native `<button>`. The menu wires it with `aria-haspopup="menu"` and toggles `aria-expanded` automatically.
+
+## Keyboard
+
+| Key | Effect |
+|-----|--------|
+| **Enter / Space / ArrowDown** on trigger | Open menu and focus the first item |
+| **ArrowUp** on trigger | Open menu and focus the last item |
+| **ArrowDown / ArrowUp** in panel | Move focus between items (wrapping) |
+| **Home / End** | Jump to first / last item |
+| **Escape** | Close menu and return focus to trigger |
+| **Tab** | Close menu (focus follows native tab order) |
+| **Enter / Space / Click** on item | Activate item, close menu, return focus to trigger |
+
+## Handling activation
+
+Two patterns:
+
+**Listen at the menu level** (recommended for row-action lists):
+
+```html
+<civ-menu @civ-menu-select="${(e) => handleAction(e.detail.value, e.detail.index)}">
+  <civ-button data-civ-menu-trigger label="More"></civ-button>
+  <civ-menu-item value="edit">Edit</civ-menu-item>
+  <civ-menu-item value="delete" destructive>Delete</civ-menu-item>
+</civ-menu>
+```
+
+**Listen on individual items** (for unrelated actions):
+
+```html
+<civ-menu>
+  <civ-button data-civ-menu-trigger label="Sort"></civ-button>
+  <civ-menu-item @click="${sortByName}">By name</civ-menu-item>
+  <civ-menu-item @click="${sortByDate}">By date</civ-menu-item>
+</civ-menu>
+```
+
+## Programmatic control
+
+The menu manages its own open state by default. For controlled scenarios, set the `open` attribute / property:
+
+```ts
+const menu = document.querySelector('civ-menu')!;
+menu.openMenu();   // programmatic open
+menu.closeMenu();  // programmatic close
+```
+
+## When NOT to use menu
+
+- **For a small set of always-visible actions** (≤3), use `<civ-button-group>` so they don't require an extra click
+- **For form-style selection of one option**, use `<civ-select>` or `<civ-radio-group>` (menus aren't form controls)
+- **For full-screen confirmation dialogs**, use `<civ-modal>`
+- **For mobile-only bottom-anchored action lists**, `<civ-action-sheet>` is dedicated to that pattern

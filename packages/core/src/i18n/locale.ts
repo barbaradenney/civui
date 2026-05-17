@@ -49,6 +49,34 @@ export interface CivLocaleStrings {
   // provide a more specific one. Announced by AT as the dialog name.
   actionSheetLabel: string;
 
+  // Menu — generic fallback aria-label for civ-menu when the consumer
+  // does not provide one. Announced by AT as the menu name.
+  menuLabel: string;
+
+  // Pagination — labels for civ-pagination controls. Use {start}, {end},
+  // {total}, {page}, {pageCount}, {size} interpolation tokens.
+  paginationLabel: string;       // "Pagination"
+  paginationPreviousLabel: string; // "Previous"
+  paginationNextLabel: string;   // "Next"
+  paginationPageLabel: string;   // "Page {page}"
+  paginationPageSizeLabel: string; // "Show per page"
+  paginationRangeLabel: string;  // "Showing {start}–{end} of {total}"
+  paginationCurrentPageLabel: string; // "Page {page} of {pageCount}, current page"
+  paginationEmptyLabel: string;  // "No items to show"
+
+  // Data grid — labels for civ-data-grid widget chrome.
+  dataGridLabel: string;          // "Data grid"
+  dataGridSortAscending: string;  // "Sort {column} ascending"
+  dataGridSortDescending: string; // "Sort {column} descending"
+  dataGridSortClear: string;      // "Clear sort on {column}"
+  dataGridSelectRow: string;      // "Select row {row}"
+  dataGridSelectAll: string;      // "Select all rows on this page"
+  dataGridRowActions: string;     // "Actions for row {row}"
+  dataGridEmpty: string;          // "No data to display"
+  dataGridLoading: string;        // "Loading…"
+  dataGridErrorLabel: string;     // "Failed to load data"
+  dataGridSelectionStatus: string; // "{count} of {total} selected"
+
   // Country picker — fallback label for civ-country when no label prop
   // is provided. Other locale strings live in the consumer's locale
   // override.
@@ -734,6 +762,29 @@ const defaultStrings: CivLocaleStrings = {
   closeLabel: 'Close',
 
   actionSheetLabel: 'Action sheet',
+
+  menuLabel: 'Menu',
+
+  paginationLabel: 'Pagination',
+  paginationPreviousLabel: 'Previous',
+  paginationNextLabel: 'Next',
+  paginationPageLabel: 'Page {page}',
+  paginationPageSizeLabel: 'Show per page',
+  paginationRangeLabel: 'Showing {start}–{end} of {total} {itemName}',
+  paginationCurrentPageLabel: 'Page {page} of {pageCount}, current page',
+  paginationEmptyLabel: 'No items to show',
+
+  dataGridLabel: 'Data grid',
+  dataGridSortAscending: 'Sort {column} ascending',
+  dataGridSortDescending: 'Sort {column} descending',
+  dataGridSortClear: 'Clear sort on {column}',
+  dataGridSelectRow: 'Select row {row}',
+  dataGridSelectAll: 'Select all rows on this page',
+  dataGridRowActions: 'Actions for row {row}',
+  dataGridEmpty: 'No data to display',
+  dataGridLoading: 'Loading…',
+  dataGridErrorLabel: 'Failed to load data',
+  dataGridSelectionStatus: '{count} of {total} selected',
 
   countryLabel: 'Country',
 

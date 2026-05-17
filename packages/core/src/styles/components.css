@@ -39,6 +39,7 @@
   civ-action-link,
   civ-button,
   civ-icon,
+  civ-menu,
   civ-segment {
     display: inline-block;
   }
@@ -56,6 +57,7 @@
   civ-country,
   civ-currency,
   civ-data-field,
+  civ-data-grid,
   civ-date-picker,
   civ-date-range-picker,
   civ-direct-deposit,
@@ -78,10 +80,12 @@
   civ-list,
   civ-list-item,
   civ-memorable-date,
+  civ-menu-item,
   civ-modal,
   civ-name,
   civ-number,
   civ-page-header,
+  civ-pagination,
   civ-partnership-history,
   civ-phone,
   civ-progress-header,
@@ -1788,6 +1792,409 @@
   .civ-action-btn--link {
     @apply civ-underline;
     text-decoration-color: currentColor;
+  }
+
+  /* ── Menu (anchored kebab / row-action menu) ────────────────── */
+
+  /* Host is `display: inline-block` + `position: relative` so the
+     absolutely-positioned panel anchors to the trigger. Set on the
+     element list above. */
+  civ-menu {
+    position: relative;
+  }
+
+  .civ-menu__trigger {
+    display: inline-flex;
+  }
+
+  .civ-menu__panel {
+    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
+           civ-rounded civ-shadow-lg civ-py-1;
+    top: calc(100% + var(--civ-spacing-1));
+    min-width: 12rem;
+    max-width: 18rem;
+    z-index: var(--civ-z-overlay);
+    display: none;
+  }
+
+  .civ-menu__panel--open {
+    display: block;
+  }
+
+  .civ-menu__panel--align-start {
+    inset-inline-start: 0;
+  }
+
+  .civ-menu__panel--align-end {
+    inset-inline-end: 0;
+  }
+
+  .civ-menu__backdrop {
+    display: none;
+  }
+
+  /* Mobile: bottom sheet pattern. Backdrop appears, panel fills
+     bottom-anchored fixed position via .civ-bottom-sheet shared rule. */
+  @media (max-width: 480px) {
+    .civ-menu__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: var(--civ-backdrop-color);
+      z-index: var(--civ-z-overlay-backdrop);
+    }
+
+    .civ-menu__panel {
+      max-width: none;
+      min-width: 0;
+    }
+  }
+
+  .civ-menu-item__inner {
+    @apply civ-flex civ-items-center civ-gap-2 civ-w-full
+           civ-px-3 civ-py-2 civ-text-start civ-bg-transparent
+           civ-border-0 civ-cursor-pointer civ-no-underline;
+    color: var(--civ-color-base-darkest);
+    font: inherit;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  .civ-menu-item__inner:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-menu-item__inner:disabled,
+  .civ-menu-item__inner[aria-disabled='true'] {
+    opacity: var(--civ-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  .civ-menu-item__inner--destructive {
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-menu-item__inner--destructive:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: var(--civ-color-error-lightest);
+  }
+
+  .civ-menu-item__icon {
+    @apply civ-inline-flex civ-items-center civ-justify-center;
+    flex-shrink: 0;
+  }
+
+  .civ-menu-item__icon:empty {
+    display: none;
+  }
+
+  .civ-menu-item__label {
+    @apply civ-flex-1;
+  }
+
+  /* ── Data Grid ─────────────────────────────────────────────── */
+
+  .civ-data-grid {
+    @apply civ-flex civ-flex-col civ-gap-3;
+    width: 100%;
+  }
+
+  .civ-data-grid__toolbar {
+    @apply civ-flex civ-items-center civ-gap-2 civ-flex-wrap;
+  }
+
+  .civ-data-grid__toolbar:empty {
+    display: none;
+  }
+
+  .civ-data-grid__selection-status {
+    @apply civ-m-0 civ-text-sm;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-data-grid__scroll {
+    /* Outer scroll wrapper so sticky-header + horizontal-scroll variant work. */
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .civ-data-grid__scroll:focus {
+    outline: 2px solid var(--civ-color-primary-DEFAULT);
+    outline-offset: 2px;
+  }
+
+  .civ-data-grid__table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Caption renders above the table by default. */
+    caption-side: top;
+  }
+
+  .civ-data-grid__caption {
+    @apply civ-text-start civ-pb-2;
+    font-weight: 600;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  .civ-data-grid__thead {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid--sticky .civ-data-grid__thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .civ-data-grid__th {
+    @apply civ-text-start civ-px-3 civ-py-2;
+    font-weight: 600;
+    font-size: var(--civ-typography-fontSize-sm);
+    color: var(--civ-color-base-darkest);
+    border-bottom: 2px solid var(--civ-color-base-light);
+    vertical-align: bottom;
+  }
+
+  .civ-data-grid__th--align-center { text-align: center; }
+  .civ-data-grid__th--align-end,
+  .civ-data-grid__th--align-numeric { text-align: end; }
+  .civ-data-grid__th--select { width: 2.5rem; text-align: center; }
+  .civ-data-grid__th--actions { width: 3rem; text-align: end; }
+
+  .civ-data-grid__sort-btn {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-bg-transparent
+           civ-border-0 civ-p-0 civ-cursor-pointer;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+  }
+
+  .civ-data-grid__sort-btn:hover {
+    color: var(--civ-color-primary-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .civ-data-grid__th--sortable[aria-sort='ascending'] .civ-data-grid__sort-btn,
+  .civ-data-grid__th--sortable[aria-sort='descending'] .civ-data-grid__sort-btn {
+    color: var(--civ-color-primary-dark);
+  }
+
+  .civ-data-grid__td {
+    @apply civ-px-3 civ-py-2;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+    vertical-align: top;
+  }
+
+  .civ-data-grid__td--align-center { text-align: center; }
+  .civ-data-grid__td--align-end,
+  .civ-data-grid__td--align-numeric {
+    text-align: end;
+    /* Tabular numerals so columns of numbers line up. */
+    font-variant-numeric: tabular-nums;
+  }
+  .civ-data-grid__td--select { text-align: center; }
+  .civ-data-grid__td--actions { text-align: end; }
+
+  .civ-data-grid--striped .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd) {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid--bordered .civ-data-grid__th,
+  .civ-data-grid--bordered .civ-data-grid__td {
+    border-inline-end: 1px solid var(--civ-color-base-lighter);
+  }
+
+  .civ-data-grid--bordered .civ-data-grid__th:last-child,
+  .civ-data-grid--bordered .civ-data-grid__td:last-child {
+    border-inline-end: 0;
+  }
+
+  .civ-data-grid__tr--selected {
+    background-color: var(--civ-color-primary-lightest);
+  }
+
+  .civ-data-grid__tr--disabled .civ-data-grid__td {
+    opacity: var(--civ-opacity-disabled);
+  }
+
+  .civ-data-grid__select-wrap {
+    @apply civ-inline-flex civ-items-center civ-justify-center;
+    cursor: pointer;
+  }
+
+  .civ-data-grid__action-trigger {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-rounded civ-cursor-pointer;
+    color: var(--civ-color-base-darkest);
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+  }
+
+  .civ-data-grid__action-trigger:hover {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__state {
+    @apply civ-text-center civ-py-6;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-data-grid__state--error {
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-data-grid__state civ-icon {
+    @apply civ-inline-block civ-me-2;
+    vertical-align: middle;
+  }
+
+  /* Mobile (≤480px) — stacked variant. Each <tr> becomes a vertical block;
+     each <td> renders its column header (via data-label) inline next to
+     the cell value. The actions / selection columns get full-width
+     treatment underneath the data cells. */
+  @media (max-width: 480px) {
+    .civ-data-grid--stacked .civ-data-grid__thead {
+      /* Visually hide but keep accessible (column headers are exposed
+         per-cell via data-label). */
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__tr {
+      display: block;
+      border-bottom: 2px solid var(--civ-color-base-light);
+      padding: var(--civ-spacing-2) 0;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--civ-spacing-3);
+      border-bottom: 0;
+      padding: var(--civ-spacing-1) var(--civ-spacing-3);
+      text-align: end;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td[data-label]::before {
+      content: attr(data-label);
+      font-weight: 600;
+      text-align: start;
+      flex: 0 0 auto;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td--select {
+      justify-content: flex-end;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td--select::before {
+      content: '';
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td--actions::before {
+      content: '';
+    }
+  }
+
+  /* ── Pagination ────────────────────────────────────────────── */
+
+  .civ-pagination {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-3;
+  }
+
+  .civ-pagination__status {
+    @apply civ-m-0 civ-text-sm;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .civ-pagination__empty {
+    @apply civ-m-0 civ-text-sm;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-pagination__page-size {
+    @apply civ-flex civ-items-center civ-gap-2;
+  }
+
+  .civ-pagination__page-size-label {
+    @apply civ-inline-flex civ-items-center civ-gap-2 civ-text-sm;
+  }
+
+  .civ-pagination__page-size-select {
+    @apply civ-border civ-border-base-light civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    font: inherit;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  .civ-pagination__list {
+    @apply civ-flex civ-items-center civ-gap-1 civ-list-none civ-m-0 civ-p-0;
+  }
+
+  .civ-pagination__list > li {
+    @apply civ-m-0 civ-p-0;
+  }
+
+  .civ-pagination__prev,
+  .civ-pagination__next,
+  .civ-pagination__page {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-1
+           civ-px-3 civ-py-2 civ-rounded civ-border civ-bg-white
+           civ-cursor-pointer;
+    border-color: var(--civ-color-base-light);
+    color: var(--civ-color-base-darkest);
+    font: inherit;
+    font-size: var(--civ-typography-fontSize-base);
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .civ-pagination__prev:hover:not(:disabled),
+  .civ-pagination__next:hover:not(:disabled),
+  .civ-pagination__page:hover:not([aria-current='page']) {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-pagination__prev:disabled,
+  .civ-pagination__next:disabled {
+    opacity: var(--civ-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  .civ-pagination__page--current,
+  .civ-pagination__page[aria-current='page'] {
+    background-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    border-color: var(--civ-color-primary-DEFAULT);
+    font-weight: 600;
+  }
+
+  .civ-pagination__gap {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-px-2;
+    color: var(--civ-color-base-dark);
+    user-select: none;
+  }
+
+  /* Mobile: hide page-number list, prev/next stay. */
+  @media (max-width: 480px) {
+    .civ-pagination__list > li:not(:first-child):not(:last-child) {
+      display: none;
+    }
+    .civ-pagination {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .civ-pagination__list {
+      justify-content: space-between;
+    }
   }
 
   /* ── Button Group ──────────────────────────────────────────── */

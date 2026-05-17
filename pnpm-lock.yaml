@@ -457,6 +457,9 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/overlays':
+        specifier: workspace:*
+        version: link:../overlays
       lit:
         specifier: ^3.2.0
         version: 3.3.2
@@ -11326,14 +11329,6 @@ snapshots:
     optionalDependencies:
       vite: 6.4.2(@types/node@22.19.15)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4)
 
-  '@vitest/mocker@2.1.9(vite@6.4.2(@types/node@25.5.0)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4))':
-    dependencies:
-      '@vitest/spy': 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 6.4.2(@types/node@25.5.0)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4)
-
   '@vitest/pretty-format@2.1.9':
     dependencies:
       tinyrainbow: 1.2.0
@@ -16655,7 +16650,7 @@ snapshots:
   vitest@2.1.9(@types/node@25.5.0)(jiti@1.21.7)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@6.4.2(@types/node@25.5.0)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4))
+      '@vitest/mocker': 2.1.9(vite@6.4.2(@types/node@22.19.15)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9

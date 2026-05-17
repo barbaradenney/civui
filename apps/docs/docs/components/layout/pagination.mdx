@@ -1,0 +1,93 @@
+---
+title: Pagination
+sidebar_position: 12
+sidebar_label: Pagination
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_pagination.props.mdx";
+import EventsTable from "./_pagination.events.mdx";
+
+# Pagination
+
+`<civ-pagination>`
+
+USWDS-style pagination control. Renders a status range (`Showing X–Y of Z`), a page-size selector, Previous/Next buttons, and a truncated list of numbered page buttons. The component is controlled — listen for `civ-page-change` and `civ-page-size-change` to drive your data fetch.
+
+On viewports ≤480px the numbered buttons hide, leaving only Previous, Next, and the page-size selector. The status range still announces.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-pagination--default" />
+
+### Few pages (no truncation)
+
+<StoryEmbed id="layout-pagination--few-pages" />
+
+### Many pages (truncated)
+
+<StoryEmbed id="layout-pagination--many-pages" />
+
+### Near start / Near end
+
+<StoryEmbed id="layout-pagination--near-start" />
+
+<StoryEmbed id="layout-pagination--near-end" />
+
+### Empty
+
+<StoryEmbed id="layout-pagination--empty" />
+
+### Status only
+
+<StoryEmbed id="layout-pagination--status-only" />
+
+### Interactive (full wiring)
+
+<StoryEmbed id="layout-pagination--interactive" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-pagination--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Usage
+
+The component is **controlled**: it dispatches events; the consumer updates props.
+
+```html
+<civ-pagination
+  id="results-pager"
+  total-items="847"
+  page-size="25"
+  page="3"
+  item-name="application"
+></civ-pagination>
+
+<script>
+  const pager = document.getElementById('results-pager');
+  pager.addEventListener('civ-page-change', (e) => {
+    const { page, pageSize, offset } = e.detail;
+    fetchResults({ offset, limit: pageSize }).then((data) => {
+      renderRows(data);
+      pager.page = page;     // confirm the page that's now active
+      pager.pageSize = pageSize;
+    });
+  });
+</script>
+```
+
+## Accessibility
+
+- Renders as `<nav aria-label="Pagination">` — a navigation landmark
+- "Showing X–Y of Z" is wrapped in an `aria-live="polite"` region so screen readers announce the new range when paging
+- The current page is marked with `aria-current="page"` and has a more descriptive `aria-label` ("Page 3 of 34, current page")
+- Disabled Previous/Next buttons use the native `disabled` attribute (not just CSS)
+- All controls are real `<button>` elements — focus ring applies automatically via the global focus rule

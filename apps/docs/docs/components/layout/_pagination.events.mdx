@@ -1,0 +1,7 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-page-change` | `{ page: number, pageSize: number, offset: number }` | Fires when the user navigates to a different page (via Previous, Next, a numbered button, or after a page-size change). The consumer should update its `page` prop in response |
+| `civ-page-size-change` | `{ pageSize: number }` | Fires when the user picks a different page size. Always followed by `civ-page-change` with `page=1` |

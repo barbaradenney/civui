@@ -24,6 +24,19 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Admin data-grid follow-ups
+
+- **Surfaced:** Admin data-grid landing, 2026-05-17. Branch `claude/admin-data-grid-component-Jg8Uk`.
+- **What landed:** Three new web components — `<civ-data-grid>` (semantic table, sort, selection, row-action menus, responsive stacked / scroll, empty/loading/error states), `<civ-pagination>` (USWDS-style), `<civ-menu>` + `<civ-menu-item>` (anchored kebab/overflow menu). Schemas, tests (94 new tests in total), Storybook stories, and Docusaurus pages all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Inline editing.** Cell-level click-to-edit + validation flow. The grid currently renders read-only cells; a `column.editable` flag plus per-cell input swap is a follow-up. ColumnDef and RowDef are already shaped to accept this without breaking changes.
+  2. **Nested / expandable rows.** Expand row → reveal child `<civ-data-grid>` or detail slot. Needs an `expandable`/`expanded` row flag and a child-row template slot. Currently not implemented.
+- **Native + Drupal stubs (parity coverage) deferred.** `civ-menu`, `civ-menu-item`, `civ-pagination`, and `civ-data-grid` schemas exist, validate cleanly, and produce documented Props/Events partials, but they are NOT registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register them, add: iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{Menu,MenuItem,Pagination,DataGrid}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{Menu,MenuItem,Pagination,DataGrid}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{menu,menu-item,pagination,data-grid}/{name}.component.yml`). Pattern: same shape as `civ-action-sheet` for menu, `civ-card` for data-grid. After registering, `pnpm parity:schema` will enforce prop surface across all platforms going forward.
+- **Why deferred:** Same rationale as the existing native-stubs entry — modal/menu presentation has platform quirks that need device verification, and the data-grid is a meaty Swift / Compose implementation that shouldn't be written blind. Schemas being in place keeps the contract stable for whoever picks this up.
+- **Architectural note:** `@civui/layout` now declares `@civui/overlays` as a workspace dependency so the data-grid can compose `civ-menu` for row-action menus. The CLAUDE.md "Build order" line is now approximate — turbo derives actual order from package.json. Update the docs sentence if it confuses anyone.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

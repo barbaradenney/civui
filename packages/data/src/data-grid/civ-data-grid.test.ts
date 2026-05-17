@@ -709,6 +709,7 @@ describe('civ-data-grid — expandable rows', () => {
   });
 
   it('renders an empty detail when expandTemplate is not provided', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const el = await mountGrid({
       rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
       expandedRowIds: ['1'],
@@ -717,5 +718,72 @@ describe('civ-data-grid — expandable rows', () => {
     const detail = el.querySelector('.civ-data-grid__td--detail') as HTMLElement;
     expect(detail).not.toBeNull();
     expect(detail.textContent?.trim()).toBe('');
+    warn.mockRestore();
+  });
+
+  it('ignores expandedRowIds entries for non-expandable rows (consumer-error case)', async () => {
+    // A consumer who flips row.expandable off while the row id is still
+    // in expandedRowIds shouldn't see a hybrid render — no detail row, no
+    // --expanded class on the data row.
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: false }],
+      expandedRowIds: ['1'],
+      expandTemplate: () => 'should not appear',
+    });
+    expect(el.querySelector('.civ-data-grid__td--detail')).toBeNull();
+    const dataRow = el.querySelector('tbody tr[data-row-id="1"]') as HTMLElement;
+    expect(dataRow.classList.contains('civ-data-grid__tr--expanded')).toBe(false);
+  });
+
+  it('toggles via the chevron button on Enter / Space keypress (keyboard activation)', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: [],
+    });
+    const handler = vi.fn();
+    el.addEventListener('civ-row-expand', handler);
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    // Native <button> elements fire `click` on Enter / Space — assert
+    // a real click reaches the handler since that's how keyboard users
+    // activate the chevron.
+    toggle.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('chevron aria-controls references the detail td id (a11y contract)', async () => {
+    const el = await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandedRowIds: ['1'],
+      expandTemplate: () => 'detail',
+    });
+    const toggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    const detailId = toggle.getAttribute('aria-controls');
+    expect(detailId).toBeTruthy();
+    const detail = document.getElementById(detailId!);
+    expect(detail).not.toBeNull();
+    expect(detail!.classList.contains('civ-data-grid__td--detail')).toBe(true);
+  });
+
+  it('warns in dev mode when expandable rows exist with no expandTemplate', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      // No expandTemplate.
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).toMatch(/civ-data-grid/);
+    expect(message).toMatch(/expandTemplate/);
+    warn.mockRestore();
+  });
+
+  it('does not warn when expandTemplate is set', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      rows: [{ id: '1', cells: { name: 'A' }, expandable: true }],
+      expandTemplate: () => 'detail',
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).not.toMatch(/expandTemplate/);
+    warn.mockRestore();
   });
 });

@@ -265,7 +265,10 @@ export class CivDataGrid extends CivBaseElement {
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
     const isSelected = this.selectedRowIds.includes(row.id);
-    const isExpanded = this._isExpanded(row.id);
+    // Gate isExpanded on row.expandable so a consumer-error case (id in
+    // expandedRowIds for a non-expandable row) doesn't apply the
+    // --expanded class to a row that can't actually expand.
+    const isExpanded = !!row.expandable && this._isExpanded(row.id);
     const showExpandColumn = this._hasAnyExpandable();
     const rowClass = [
       'civ-data-grid__tr',
@@ -295,7 +298,7 @@ export class CivDataGrid extends CivBaseElement {
       </tr>
     `;
 
-    if (!row.expandable || !isExpanded) {
+    if (!isExpanded) {
       return dataRow;
     }
 
@@ -346,7 +349,10 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _hasAnyExpandable(): boolean {
-    return this.rows.some((r) => r.expandable);
+    if (this._anyExpandableCache === undefined) {
+      this._anyExpandableCache = this.rows.some((r) => !!r.expandable);
+    }
+    return this._anyExpandableCache;
   }
 
   private _isExpanded(rowId: string): boolean {
@@ -385,10 +391,27 @@ export class CivDataGrid extends CivBaseElement {
     dispatch(this, 'civ-row-activate', { rowId: row.id, row });
   }
 
+  /** Memoization cache for the two row-set queries that the render path
+   *  hits repeatedly. Invalidated in `willUpdate` when `rows` changes
+   *  (which is the only reactive prop that affects them). */
+  private _anyExpandableCache?: boolean;
+  private _anyRowActionsCache?: boolean;
+
+  override willUpdate(changed: Map<string, unknown>): void {
+    super.willUpdate?.(changed);
+    if (changed.has('rows')) {
+      this._anyExpandableCache = undefined;
+      this._anyRowActionsCache = undefined;
+    }
+  }
+
   override updated(changed: Map<string, unknown>): void {
     super.updated?.(changed);
     if (changed.has('interactive') || changed.has('rows')) {
       this._maybeWarnInteractiveWithoutActions();
+    }
+    if (changed.has('rows') || changed.has('expandTemplate')) {
+      this._maybeWarnExpandableWithoutTemplate();
     }
   }
 
@@ -413,6 +436,27 @@ export class CivDataGrid extends CivBaseElement {
     devWarn(
       'civ-data-grid',
       'interactive=true without any row.actions creates a mouse-only affordance. Add a "View details" action (or similar) so keyboard / switch-control users can reach the same destination as the row click.',
+    );
+  }
+
+  /** Per-instance dedupe for the expandable-without-template warning. */
+  private _warnedExpandableWithoutTemplate = false;
+
+  /**
+   * When any row has `expandable: true` but `expandTemplate` is not set,
+   * expanding the row renders an empty `<td>`. The chevron functions
+   * (aria-expanded toggles, event fires) but the detail content is blank
+   * — confusing for consumers who forgot to wire the template. Warn once
+   * per instance until the template is provided.
+   */
+  private _maybeWarnExpandableWithoutTemplate(): void {
+    if (this._warnedExpandableWithoutTemplate) return;
+    if (!this._hasAnyExpandable()) return;
+    if (this.expandTemplate) return;
+    this._warnedExpandableWithoutTemplate = true;
+    devWarn(
+      'civ-data-grid',
+      'Rows with `expandable: true` are present but `expandTemplate` is not set. Expanded rows will render a blank detail cell. Set `grid.expandTemplate = (row) => …` to render the detail content.',
     );
   }
 
@@ -579,7 +623,12 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _hasAnyRowActions(): boolean {
-    return this.rows.some((r) => Array.isArray(r.actions) && r.actions.length > 0);
+    if (this._anyRowActionsCache === undefined) {
+      this._anyRowActionsCache = this.rows.some(
+        (r) => Array.isArray(r.actions) && r.actions.length > 0,
+      );
+    }
+    return this._anyRowActionsCache;
   }
 }
 

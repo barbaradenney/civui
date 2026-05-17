@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, clickOutside, dispatch, generateId, t } from '@civui/core';
-import '@civui/actions/action-button';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
 
 /**
@@ -38,6 +37,20 @@ import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
  * stays open while the user toggles several checkboxes. Different
  * keyboard model (Space toggles, no Enter-to-select-and-close), so this
  * component renders its own popover.
+ *
+ * **Why a native `<button>` trigger and not `civ-action-button`?**
+ * The trigger needs `aria-haspopup`, `aria-expanded`, and `aria-controls`
+ * on the focusable element. Putting them on the host (`<civ-action-button>`)
+ * leaves the focusable inner `<button>` without those ARIA attributes —
+ * screen readers reading the focused button would hear "Columns, button"
+ * with no popup affordance. Using a native `<button>` styled with the
+ * existing `.civ-action-btn` utility classes gives the same visual with
+ * the ARIA on the right element.
+ *
+ * **Empty columns array.** When `columns` is `[]` the trigger still
+ * renders and the panel opens to an empty group. Consumers are expected
+ * to populate `columns` before showing the component; an empty panel
+ * is a benign edge case rather than an error.
  *
  * @element civ-column-visibility
  *
@@ -150,17 +163,18 @@ export class CivColumnVisibility extends CivBaseElement {
     ].join(' ');
     const panelId = `${this._instanceId}-panel`;
     return html`
-      <civ-action-button
-        class="civ-column-visibility__trigger"
-        variant="tertiary"
-        icon-start="view-column"
-        icon-end="chevron-down"
-        label="${labelText}"
+      <button
+        type="button"
+        class="civ-action-btn civ-action-btn--tertiary civ-column-visibility__trigger"
         aria-haspopup="true"
         aria-expanded="${this.open ? 'true' : 'false'}"
         aria-controls="${panelId}"
         @click="${this._toggle}"
-      ></civ-action-button>
+      >
+        <civ-icon name="view-column" aria-hidden="true"></civ-icon>
+        <span class="civ-column-visibility__trigger-label">${labelText}</span>
+        <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
+      </button>
       ${this.open
         ? html`
             <div

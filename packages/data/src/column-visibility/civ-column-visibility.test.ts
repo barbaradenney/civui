@@ -22,17 +22,19 @@ async function mount(initial: { columns?: GridColumn[]; hiddenColumns?: string[]
 }
 
 describe('civ-column-visibility', () => {
-  it('renders the trigger button with the default i18n label', async () => {
+  it('renders the trigger as a native <button> with the default i18n label', async () => {
     const el = await mount();
-    const trigger = el.querySelector('.civ-column-visibility__trigger') as any;
+    const trigger = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
     expect(trigger).not.toBeNull();
-    expect(trigger.label).toBeTruthy();
+    expect(trigger.tagName).toBe('BUTTON');
+    const labelSpan = trigger.querySelector('.civ-column-visibility__trigger-label') as HTMLElement;
+    expect(labelSpan?.textContent?.trim()).toBeTruthy();
   });
 
   it('uses the custom label prop when set', async () => {
     const el = await fixture('<civ-column-visibility label="Show columns"></civ-column-visibility>') as any;
-    const trigger = el.querySelector('.civ-column-visibility__trigger') as any;
-    expect(trigger.label).toBe('Show columns');
+    const labelSpan = el.querySelector('.civ-column-visibility__trigger-label') as HTMLElement;
+    expect(labelSpan.textContent?.trim()).toBe('Show columns');
   });
 
   it('starts with the panel closed', async () => {
@@ -43,7 +45,7 @@ describe('civ-column-visibility', () => {
 
   it('opens the panel when the trigger is clicked', async () => {
     const el = await mount();
-    const triggerBtn = el.querySelector('.civ-column-visibility__trigger button') as HTMLButtonElement;
+    const triggerBtn = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
     triggerBtn.click();
     await elementUpdated(el);
     expect(el.open).toBe(true);
@@ -176,9 +178,13 @@ describe('civ-column-visibility', () => {
     expect(el.hasAttribute('open')).toBe(false);
   });
 
-  it('wires aria-expanded + aria-haspopup + aria-controls on the trigger', async () => {
+  it('wires aria-expanded + aria-haspopup + aria-controls on the focusable trigger button', async () => {
     const el = await mount();
-    const trigger = el.querySelector('.civ-column-visibility__trigger') as HTMLElement;
+    // ARIA must land on the *focusable* native <button>, not just the host
+    // — screen readers reading the focused button would otherwise miss the
+    // popup affordance.
+    const trigger = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
+    expect(trigger).not.toBeNull();
     expect(trigger.getAttribute('aria-haspopup')).toBe('true');
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(trigger.getAttribute('aria-controls')).toBeTruthy();
@@ -186,6 +192,50 @@ describe('civ-column-visibility', () => {
     el.open = true;
     await elementUpdated(el);
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('closes when a click happens outside the host', async () => {
+    // The host needs to be in the document for clickOutside to evaluate
+    // event targets relative to it.
+    const sibling = document.createElement('div');
+    sibling.setAttribute('data-testid', 'sibling');
+    document.body.appendChild(sibling);
+
+    const el = await mount();
+    el.open = true;
+    await elementUpdated(el);
+
+    sibling.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await elementUpdated(el);
+
+    expect(el.open).toBe(false);
+    sibling.remove();
+  });
+
+  it('re-renders the checkbox list when columns change after mount', async () => {
+    const el = await mount();
+    el.open = true;
+    await elementUpdated(el);
+    expect(
+      el.querySelectorAll('.civ-column-visibility__option input[type="checkbox"]').length,
+    ).toBe(COLUMNS.length);
+
+    el.columns = [...COLUMNS, { key: 'newcol', header: 'New column' }];
+    await elementUpdated(el);
+    const labels = Array.from(
+      el.querySelectorAll<HTMLElement>('.civ-column-visibility__option-label'),
+    ).map((n) => n.textContent?.trim());
+    expect(labels).toEqual(['Application ID', 'Applicant', 'Status', 'Last updated', 'New column']);
+  });
+
+  it('applies the align-start panel modifier when align="start"', async () => {
+    const el = (await fixture('<civ-column-visibility align="start"></civ-column-visibility>')) as any;
+    el.columns = COLUMNS;
+    el.open = true;
+    await elementUpdated(el);
+    const panel = el.querySelector('.civ-column-visibility__panel') as HTMLElement;
+    expect(panel.classList.contains('civ-column-visibility__panel--align-start')).toBe(true);
+    expect(panel.classList.contains('civ-column-visibility__panel--align-end')).toBe(false);
   });
 
   it('uses Light DOM', async () => {

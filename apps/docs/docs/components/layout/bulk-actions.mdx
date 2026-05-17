@@ -108,8 +108,10 @@ The component appends `"s"` to `itemName` when `count !== 1`. For nouns that don
 - Default `display: none` while `count === 0` means AT won't announce the
   initial state. The first announcement fires when count transitions to a
   nonzero value.
-- Action buttons inside the default slot keep their own ARIA semantics
-  (use `civ-button` with descriptive labels — "Delete application", not
-  just "Delete", per the row-action label guideline).
+- Action buttons inside the default slot keep their own ARIA semantics.
+  Idiomatic CivUI usage is `civ-action-button` (the same compact
+  toolbar-context primitive the Clear button is built on); descriptive
+  labels — "Delete application", not just "Delete", per the row-action
+  label guideline.
 - Use `hide-clear` when the consumer's actions inherently clear selection,
   so the trailing Clear button doesn't duplicate that affordance.

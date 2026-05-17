@@ -5,6 +5,7 @@ import '../pagination/civ-pagination.js';
 import '../toolbar/civ-toolbar.js';
 import '../bulk-actions/civ-bulk-actions.js';
 import '@civui/actions/button';
+import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 
@@ -312,8 +313,8 @@ export const FullAdminLayout: Story = {
           <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
         </civ-toolbar>
         <civ-bulk-actions class="story-full" count="0" item-name="application">
-          <civ-button variant="secondary" icon-start="download" label="Export"></civ-button>
-          <civ-button variant="secondary" danger label="Delete"></civ-button>
+          <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
+          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
         </civ-bulk-actions>
         <civ-data-grid class="story-full" caption="Applications"></civ-data-grid>
       </div>

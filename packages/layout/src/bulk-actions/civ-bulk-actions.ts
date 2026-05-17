@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
-import '@civui/actions/button';
+import '@civui/actions/action-button';
 
 /**
  * CivUI Bulk Actions
@@ -49,8 +49,8 @@ import '@civui/actions/button';
  * @example
  * ```html
  * <civ-bulk-actions count="3" item-name="application">
- *   <civ-button variant="secondary" icon-start="archive">Archive</civ-button>
- *   <civ-button variant="secondary" icon-start="delete" danger>Delete</civ-button>
+ *   <civ-action-button variant="secondary" icon-start="archive" label="Archive"></civ-action-button>
+ *   <civ-action-button variant="secondary" icon-start="delete" danger label="Delete"></civ-action-button>
  * </civ-bulk-actions>
  * ```
  */
@@ -93,12 +93,12 @@ export class CivBulkActions extends LightDomSlotMixin(CivBaseElement) {
         ${this.hideClear
           ? nothing
           : html`
-              <civ-button
+              <civ-action-button
                 class="civ-bulk-actions__clear"
                 variant="tertiary"
                 label="${this.clearLabel || t('bulkActionsClearLabel')}"
                 @click="${this._onClear}"
-              ></civ-button>
+              ></civ-action-button>
             `}
       </div>
     `;

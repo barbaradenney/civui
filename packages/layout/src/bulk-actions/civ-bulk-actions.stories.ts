@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-bulk-actions.js';
-import '@civui/actions/button';
+import '@civui/actions/action-button';
 
 const meta: Meta = {
   title: 'Layout/Bulk Actions',
@@ -23,8 +23,8 @@ type Story = StoryObj;
 export const SingleSelection: Story = {
   render: () => html`
     <civ-bulk-actions count="1" item-name="application">
-      <civ-button variant="secondary" icon-start="download" label="Export"></civ-button>
-      <civ-button variant="secondary" danger label="Delete"></civ-button>
+      <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
+      <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
     </civ-bulk-actions>
   `,
 };
@@ -32,9 +32,9 @@ export const SingleSelection: Story = {
 export const MultipleSelection: Story = {
   render: () => html`
     <civ-bulk-actions count="7" item-name="application">
-      <civ-button variant="secondary" icon-start="download" label="Export"></civ-button>
-      <civ-button variant="secondary" icon-start="email" label="Notify"></civ-button>
-      <civ-button variant="secondary" danger label="Delete"></civ-button>
+      <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
+      <civ-action-button variant="secondary" icon-start="email" label="Notify"></civ-action-button>
+      <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
     </civ-bulk-actions>
   `,
 };
@@ -43,7 +43,7 @@ export const CustomPlural: Story = {
   name: 'Custom Plural (entries)',
   render: () => html`
     <civ-bulk-actions count="3" item-name="entry" item-name-plural="entries">
-      <civ-button variant="secondary" label="Archive"></civ-button>
+      <civ-action-button variant="secondary" label="Archive"></civ-action-button>
     </civ-bulk-actions>
   `,
 };
@@ -51,8 +51,8 @@ export const CustomPlural: Story = {
 export const CustomClearLabel: Story = {
   render: () => html`
     <civ-bulk-actions count="4" item-name="row" clear-label="Deselect all">
-      <civ-button variant="secondary" label="Approve"></civ-button>
-      <civ-button variant="secondary" danger label="Reject"></civ-button>
+      <civ-action-button variant="secondary" label="Approve"></civ-action-button>
+      <civ-action-button variant="secondary" danger label="Reject"></civ-action-button>
     </civ-bulk-actions>
   `,
 };
@@ -63,7 +63,7 @@ export const Hidden: Story = {
     <div>
       <p>Bar is hidden because count is 0 — but the buttons still exist in the DOM:</p>
       <civ-bulk-actions count="0">
-        <civ-button variant="secondary" label="Archive"></civ-button>
+        <civ-action-button variant="secondary" label="Archive"></civ-action-button>
       </civ-bulk-actions>
     </div>
   `,
@@ -77,8 +77,8 @@ export const Interactive: Story = {
         <button id="bulk-reset" type="button">Reset count</button>
       </p>
       <civ-bulk-actions id="bulk-bar" count="0" item-name="row">
-        <civ-button variant="secondary" label="Archive"></civ-button>
-        <civ-button variant="secondary" danger label="Delete"></civ-button>
+        <civ-action-button variant="secondary" label="Archive"></civ-action-button>
+        <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
       </civ-bulk-actions>
       <script>
         (function () {

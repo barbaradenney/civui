@@ -265,7 +265,7 @@ describe('civ-data-grid — row actions', () => {
       { id: '1', cells: { name: 'A' }, actions: [{ id: 'edit', label: 'Edit' }] },
     ];
     const el = await mountGrid({ rows, columns: [{ key: 'name', header: 'Name' }] });
-    expect(el.querySelectorAll('civ-button[data-civ-menu-trigger]').length).toBe(1);
+    expect(el.querySelectorAll('civ-action-button[data-civ-menu-trigger]').length).toBe(1);
   });
 
   it('renders each action menu item with its label visible', async () => {

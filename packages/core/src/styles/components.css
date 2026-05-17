@@ -1733,12 +1733,20 @@
   /* ── Action Button (compact) ──────────────────────────────── */
 
   .civ-action-btn {
-    @apply civ-inline-flex civ-items-center civ-justify-center
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-1
            civ-font-sans civ-rounded
            civ-border civ-cursor-pointer
            civ-transition-colors civ-whitespace-nowrap;
     font-size: var(--civ-typography-fontSize-base);
     padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  /* Icon-only mode — square, padding shrinks to match icon. */
+  .civ-action-btn--icon-only {
+    aspect-ratio: 1 / 1;
+    padding: var(--civ-spacing-1);
   }
 
   .civ-action-btn--primary {
@@ -2131,37 +2139,10 @@
     @apply civ-m-0 civ-p-0;
   }
 
-  .civ-pagination__prev,
-  .civ-pagination__next,
-  .civ-pagination__page {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-gap-1
-           civ-px-3 civ-py-2 civ-rounded civ-border civ-bg-white
-           civ-cursor-pointer;
-    border-color: var(--civ-color-base-light);
-    color: var(--civ-color-base-darkest);
-    font: inherit;
-    font-size: var(--civ-typography-fontSize-base);
-    min-width: 2.5rem;
-    min-height: 2.5rem;
-  }
-
-  .civ-pagination__prev:hover:not(:disabled),
-  .civ-pagination__next:hover:not(:disabled),
-  .civ-pagination__page:hover:not([aria-current='page']) {
-    background-color: var(--civ-color-base-lightest);
-  }
-
-  .civ-pagination__prev:disabled,
-  .civ-pagination__next:disabled {
-    opacity: var(--civ-opacity-disabled);
-    cursor: not-allowed;
-  }
-
-  .civ-pagination__page--current,
+  /* Pagination numbered buttons reuse .civ-action-btn for the base shape,
+     plus this rule for the current-page font weight. Prev/Next are real
+     <civ-action-button> elements and inherit civ-action-btn directly. */
   .civ-pagination__page[aria-current='page'] {
-    background-color: var(--civ-color-primary-DEFAULT);
-    color: var(--civ-color-white-DEFAULT);
-    border-color: var(--civ-color-primary-DEFAULT);
     font-weight: 600;
   }
 

@@ -46,14 +46,14 @@ describe('civ-pagination', () => {
 
   it('disables Previous on the first page', async () => {
     const el = await fixture('<civ-pagination total-items="100" page-size="25" page="1"></civ-pagination>');
-    const prev = el.querySelector('.civ-pagination__prev') as HTMLButtonElement;
-    expect(prev.disabled).toBe(true);
+    const prev = el.querySelector('.civ-pagination__prev') as HTMLElement;
+    expect(prev.hasAttribute('disabled')).toBe(true);
   });
 
   it('disables Next on the last page', async () => {
     const el = await fixture('<civ-pagination total-items="100" page-size="25" page="4"></civ-pagination>');
-    const next = el.querySelector('.civ-pagination__next') as HTMLButtonElement;
-    expect(next.disabled).toBe(true);
+    const next = el.querySelector('.civ-pagination__next') as HTMLElement;
+    expect(next.hasAttribute('disabled')).toBe(true);
   });
 
   it('fires civ-page-change when Next is clicked', async () => {
@@ -61,7 +61,8 @@ describe('civ-pagination', () => {
     const handler = vi.fn();
     el.addEventListener('civ-page-change', handler);
 
-    const next = el.querySelector('.civ-pagination__next') as HTMLButtonElement;
+    // Click the inner native button so the click reaches the host's handler the same way a real user click does.
+    const next = el.querySelector('.civ-pagination__next button') as HTMLButtonElement;
     next.click();
 
     expect(handler).toHaveBeenCalledOnce();
@@ -73,7 +74,7 @@ describe('civ-pagination', () => {
     const handler = vi.fn();
     el.addEventListener('civ-page-change', handler);
 
-    const prev = el.querySelector('.civ-pagination__prev') as HTMLButtonElement;
+    const prev = el.querySelector('.civ-pagination__prev button') as HTMLButtonElement;
     prev.click();
 
     expect(handler).toHaveBeenCalledOnce();
@@ -99,7 +100,7 @@ describe('civ-pagination', () => {
     const handler = vi.fn();
     el.addEventListener('civ-page-change', handler);
 
-    const current = el.querySelector('.civ-pagination__page--current') as HTMLButtonElement;
+    const current = el.querySelector('.civ-pagination__page[aria-current="page"]') as HTMLButtonElement;
     current.click();
 
     expect(handler).not.toHaveBeenCalled();

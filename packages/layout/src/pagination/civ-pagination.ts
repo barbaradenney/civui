@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t } from '@civui/core';
+import '@civui/actions/action-button';
 
 /**
  * CivUI Pagination
@@ -129,31 +130,27 @@ export class CivPagination extends CivBaseElement {
 
         <ul class="civ-pagination__list">
           <li>
-            <button
-              type="button"
+            <civ-action-button
               class="civ-pagination__prev"
+              variant="tertiary"
+              icon-start="chevron-left"
+              label="${t('paginationPreviousLabel')}"
               ?disabled="${current === 1}"
-              aria-label="${t('paginationPreviousLabel')}"
               @click="${() => this._goto(current - 1)}"
-            >
-              <civ-icon name="chevron-left" aria-hidden="true"></civ-icon>
-              <span class="civ-pagination__btn-label">${t('paginationPreviousLabel')}</span>
-            </button>
+            ></civ-action-button>
           </li>
 
           ${pages.map((p) => this._renderPageEntry(p, current))}
 
           <li>
-            <button
-              type="button"
+            <civ-action-button
               class="civ-pagination__next"
+              variant="tertiary"
+              icon-end="chevron-right"
+              label="${t('paginationNextLabel')}"
               ?disabled="${current === totalPages}"
-              aria-label="${t('paginationNextLabel')}"
               @click="${() => this._goto(current + 1)}"
-            >
-              <span class="civ-pagination__btn-label">${t('paginationNextLabel')}</span>
-              <civ-icon name="chevron-right" aria-hidden="true"></civ-icon>
-            </button>
+            ></civ-action-button>
           </li>
         </ul>
       </nav>
@@ -170,11 +167,12 @@ export class CivPagination extends CivBaseElement {
       page: String(p),
       pageCount: String(this.totalPages),
     });
+    const variant = isCurrent ? 'civ-action-btn--primary' : 'civ-action-btn--tertiary';
     return html`
       <li>
         <button
           type="button"
-          class="${`civ-pagination__page ${isCurrent ? 'civ-pagination__page--current' : ''}`}"
+          class="civ-action-btn ${variant} civ-pagination__page"
           aria-label="${isCurrent ? currentLabel : pageLabel}"
           aria-current="${isCurrent ? 'page' : 'false'}"
           @click="${() => this._goto(p)}"

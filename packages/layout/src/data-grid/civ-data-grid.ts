@@ -1,7 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId } from '@civui/core';
-import '@civui/actions/button';
+import '@civui/actions/action-button';
 import '@civui/overlays/menu';
 import './civ-data-grid.types.js';
 import type {
@@ -346,13 +346,13 @@ export class CivDataGrid extends CivBaseElement {
           label="${label}"
           @civ-menu-select="${(e: Event) => this._onActionSelect(e, row)}"
         >
-          <civ-button
+          <civ-action-button
             data-civ-menu-trigger
             variant="tertiary"
             icon-start="more-vert"
             icon-only
             label="${label}"
-          ></civ-button>
+          ></civ-action-button>
           ${actions.map((action) => html`
             <civ-menu-item
               value="${action.id}"

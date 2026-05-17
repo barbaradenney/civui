@@ -28,6 +28,11 @@ props:
       title: Size
       type: string
       description: 'Trigger size variant'
+    inline:
+      title: Inline
+      type: boolean
+      default: false
+      description: 'Render inline so the trigger flows as the last words of the teaser'
 
 slots:
   teaser:

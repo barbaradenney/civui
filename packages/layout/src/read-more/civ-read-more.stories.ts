@@ -29,6 +29,7 @@ disclosure when there is no useful teaser to show.
     lessLabel: { control: 'text' },
     icon: { control: 'text' },
     size: { control: 'select', options: ['default', 'sm'] },
+    inline: { control: 'boolean' },
   },
 };
 
@@ -131,6 +132,23 @@ export const SmallSize: Story = {
         </p>
       </div>
     </civ-read-more>
+  `,
+};
+
+export const Inline: Story = {
+  name: 'Inline (last words of the paragraph)',
+  render: () => html`
+    <p class="civ-m-0">
+      <civ-read-more inline>
+        We use the income information you provide to determine your benefit
+        amount and verify eligibility.
+        <span data-rest>
+          Specifically, gross monthly income is compared against the income
+          limit for your household size; net worth is also reviewed against
+          the applicable cap.
+        </span>
+      </civ-read-more>
+    </p>
   `,
 };
 

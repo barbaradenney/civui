@@ -72,6 +72,8 @@ const COMPONENTS = [
   'civ-icon',
   'civ-filter-chip',
   'civ-filter-chip-group',
+  'civ-disclosure',
+  'civ-read-more',
   // Preset input wrappers — each is a self-contained web component
   // that extends text-input with a baked-in mask and validation.
   // Drupal SDCs mirror that shape: a thin pass-through twig that

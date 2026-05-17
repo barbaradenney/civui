@@ -68,6 +68,19 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   /** Trigger size: 'default' or 'sm'. */
   @property({ type: String }) size: 'default' | 'sm' = 'default';
 
+  /**
+   * Inline mode. The teaser, rest region, and trigger all render
+   * inline so the button reads as "...the last words at the end of
+   * the paragraph" rather than as a separate block-level affordance.
+   * The trigger drops its button chrome (no background, underlined)
+   * and any chevron icon is suppressed.
+   *
+   * Author the teaser as plain text (no `<p>` wrapper) so the inline
+   * flow reads cleanly; block elements inside an inline container
+   * defeat the layout.
+   */
+  @property({ type: Boolean, reflect: true }) inline = false;
+
   private readonly _restId = generateId('civ-read-more-rest');
 
   override _getSlotConfig(): SlotConfig {
@@ -86,6 +99,12 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
     const lessText = this.lessLabel || t('readLessButton');
     const buttonText = this.expanded ? lessText : moreText;
     const sizeClass = this.size === 'sm' ? 'civ-toggle-btn--sm' : '';
+    // Inline mode drops the button chrome (no `civ-toggle-btn`
+    // palette, no icon) so the trigger reads as a continuation of
+    // the surrounding text rather than a separate affordance.
+    const triggerClasses = this.inline
+      ? 'civ-read-more__trigger civ-read-more__trigger--inline'
+      : `civ-toggle-btn civ-read-more__trigger ${sizeClass}`;
     return html`
       <div class="civ-read-more__teaser" data-civ-read-more-teaser></div>
       <div
@@ -96,12 +115,12 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
       ></div>
       <button
         type="button"
-        class="civ-toggle-btn civ-read-more__trigger ${sizeClass}"
+        class="${triggerClasses}"
         aria-expanded="${this.expanded ? 'true' : 'false'}"
         aria-controls="${this._restId}"
         @click="${this._onToggle}"
       >
-        ${this.icon
+        ${this.icon && !this.inline
           ? html`<civ-icon name="${this.icon}" class="civ-read-more__icon" aria-hidden="true"></civ-icon>`
           : nothing}
         ${buttonText}

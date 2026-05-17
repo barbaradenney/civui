@@ -38,6 +38,12 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', 'sm'],
     },
+    inline: {
+      type: 'boolean',
+      description: 'Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron) — the trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout.',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

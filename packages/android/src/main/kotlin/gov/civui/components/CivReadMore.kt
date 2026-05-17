@@ -23,6 +23,7 @@ fun CivReadMore(
     lessLabel: String = "",
     icon: String = "",
     size: String = "default",
+    inline: Boolean = false,
     modifier: Modifier = Modifier,
     onToggle: ((Boolean) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

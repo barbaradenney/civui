@@ -104,6 +104,8 @@ const config: StorybookConfig = {
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),
       '@civui/overlays/action-sheet': resolve(root, 'packages/overlays/src/action-sheet/index.ts'),
+      '@civui/overlays/drawer': resolve(root, 'packages/overlays/src/drawer/index.ts'),
+      '@civui/overlays/menu': resolve(root, 'packages/overlays/src/menu/index.ts'),
       '@civui/overlays': resolve(root, 'packages/overlays/src/index.ts'),
       // Layout
       '@civui/layout/card': resolve(root, 'packages/layout/src/card/index.ts'),
@@ -114,6 +116,8 @@ const config: StorybookConfig = {
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
+      '@civui/layout/pagination': resolve(root, 'packages/layout/src/pagination/index.ts'),
+      '@civui/layout/data-grid': resolve(root, 'packages/layout/src/data-grid/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Storybook utilities — used by stories that wrap demos in
       // `<civ-demo-frame>`. Resolve to source so the storybook build

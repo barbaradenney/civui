@@ -19,3 +19,5 @@
 | `striped` | `boolean` | `false` | Apply zebra striping to body rows for visual row separation |
 | `bordered` | `boolean` | `false` | Apply borders between cells (in addition to the default row-bottom borders) |
 | `interactive` | `boolean` | `false` | When true, clicking a row body fires `civ-row-activate`. Use to wire a master-detail drawer or navigate-to-record flow. Clicks that originate inside the selection checkbox cell, the row-actions cell, or any inner `<a>`/`<button>`/`<input>`/`<select>`/`<textarea>`/`[role="button"]` are ignored so those affordances retain their own behavior. Disabled rows (`row.disabled`) are not interactive even when this prop is set |
+| `expanded-row-ids` | `array` | — | IDs of currently-expanded rows. Controlled — update in response to `civ-row-expand`. Pass `[]` for "none expanded". Only takes effect on rows whose `expandable` flag is true |
+| `expand-template` | `string` | — | Render callback for expanded-row detail content. `(row) => string \| number \| TemplateResult`. Required when any row has `expandable: true` — without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific) |

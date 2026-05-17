@@ -78,4 +78,20 @@ export interface GridRow {
   disabled?: boolean;
   /** Row-action menu entries. Omit or pass an empty array to suppress the actions column. */
   actions?: GridRowAction[];
+  /**
+   * When true, the row gets a leading expand-chevron column and an
+   * expandable detail row below it. The grid's `expandTemplate` prop
+   * renders the detail content for this row when it's in `expandedRowIds`.
+   * Mixing expandable + non-expandable rows is allowed — the expand
+   * column shows a chevron only on expandable rows.
+   */
+  expandable?: boolean;
 }
+
+/**
+ * Callback that renders the detail content for an expanded row. Return a
+ * string, number, or Lit `TemplateResult` — same shape as a column
+ * formatter. The grid wraps the result in a `<td colspan="N">` inside a
+ * new `<tr>` immediately below the data row.
+ */
+export type GridExpandTemplate = (row: GridRow) => string | number | TemplateResult;

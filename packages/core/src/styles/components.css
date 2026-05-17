@@ -1426,6 +1426,15 @@
     .civ-btn {
       @apply civ-flex civ-w-full;
     }
+    .civ-btn--icon-only {
+      @apply civ-w-auto civ-inline-flex;
+    }
+  }
+
+  /* Icon-only mode — square button, padding shrinks to match the icon size. */
+  .civ-btn--icon-only {
+    @apply civ-px-2 civ-py-2;
+    aspect-ratio: 1 / 1;
   }
 
   .civ-btn--primary {
@@ -2013,19 +2022,6 @@
   .civ-data-grid__select-wrap {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     cursor: pointer;
-  }
-
-  .civ-data-grid__action-trigger {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-rounded civ-cursor-pointer;
-    color: var(--civ-color-base-darkest);
-    width: 2rem;
-    height: 2rem;
-    padding: 0;
-  }
-
-  .civ-data-grid__action-trigger:hover {
-    background-color: var(--civ-color-base-lightest);
   }
 
   .civ-data-grid__state {

@@ -65,6 +65,12 @@ props:
       title: Disabled
       type: boolean
       default: false
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Density variant. `default` renders the full label / hint / error chrome and prefix/suffix decoration. `sm` (compact) renders just the bare `<input>` with the host''s `aria-label` propagated; prefix/suffix decoration is dropped. For dense ...'
 
 libraryOverrides:
   dependencies:

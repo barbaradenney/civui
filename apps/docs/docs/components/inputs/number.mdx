@@ -10,6 +10,30 @@ import EventsTable from "./_number.events.mdx";
 
 # Number
 
+CivUI's numeric inputs. Three components covering the most common shapes:
+
+- [`<civ-number>`](#civ-number) — generic numeric input for quantities, counts, ages, percentages, measurements.
+- [`<civ-currency>`](#civ-currency) — US dollar amounts with automatic formatting, masking, and validation.
+- [`<civ-routing-number>`](#civ-routing-number) — 9-digit bank routing numbers with ABA mod-10 checksum validation.
+
+Identifier-shaped numeric fields (SSN, EIN, ZIP, phone) have their own dedicated presets — see [PII](./pii.mdx) and [Contact](./contact.mdx).
+
+## When to use which
+
+| Scenario | Component | Why |
+| --- | --- | --- |
+| Quantity, count, age, household size | [`civ-number`](#civ-number) | Generic numeric, optional min/max |
+| Percentage, ratio, score | [`civ-number`](#civ-number) | Use `suffix="%"` and `min` / `max` |
+| Weight, distance, measurement | [`civ-number`](#civ-number) | `allow-decimal` and a unit suffix |
+| Temperature, deltas | [`civ-number`](#civ-number) | `allow-negative` |
+| Dollar amount: income, expense, fee, refund | [`civ-currency`](#civ-currency) | Auto-format, `$` prefix, decimal handling |
+| Bank routing number | [`civ-routing-number`](#civ-routing-number) | 9-digit ABA mod-10 checksum, plain-language label |
+| Native `<input type="number">` | avoid | `civ-number` is the accessible replacement — no scroll-wheel mutation, no locale-specific decimals, no inconsistent iOS spinners |
+
+---
+
+## `civ-number`
+
 <!-- contract-link:start -->
 
 > **Contract reference:** [`civ-number`](pathname:///civui/storybook/?path=/docs/contract-civ-number--docs) — auto-generated structured contract for cross-platform implementation.
@@ -18,75 +42,61 @@ import EventsTable from "./_number.events.mdx";
 
 `<civ-number>`
 
-Generic numeric input for quantities, counts, ages, and other non-currency
-numbers. Renders `<input type="text" inputmode="numeric">` (or
+Generic numeric input. Renders `<input type="text" inputmode="numeric">` (or
 `inputmode="decimal"` when `allow-decimal` is set) — this is more accessible
 than the native `<input type="number">`, which has known issues: scroll-wheel
 mutation, locale-specific decimal separators, and inconsistent iOS spinners.
 
-For dollar amounts use [`<civ-currency>`](./currency.mdx); for SSN, ZIP,
-EIN, phone numbers, etc. use the dedicated preset components.
+### Examples
 
-## Examples
-
-### Default
+#### Default
 
 <StoryEmbed id="forms-inputs-number--default" />
 
-### With min/max range
+#### With min/max range
 
 <StoryEmbed id="forms-inputs-number--with-range" />
 
-### Decimal values
+#### Decimal values
 
 <StoryEmbed id="forms-inputs-number--decimal" />
 
-### With suffix unit
+#### With suffix unit
 
 <StoryEmbed id="forms-inputs-number--with-suffix" />
 
-### With prefix
+#### With prefix
 
 <StoryEmbed id="forms-inputs-number--with-prefix" />
 
-### Allows negative values
+#### Allows negative values
 
 <StoryEmbed id="forms-inputs-number--negative" />
 
-### Government form example — household size
+#### Government form example — household size
 
 <StoryEmbed id="forms-inputs-number--household-size" />
 
-### With error
+#### With error
 
 <StoryEmbed id="forms-inputs-number--with-error" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-number--default)
 
-## Shared Props
+### Shared Props
 
 All form components share these props: `label`, `name`, `value`, `hint`,
 `error`, `required`, `disabled`.
 
-## Component-Specific Props
+### Component-Specific Props
 
 <PropsTable />
 
-## Events
+### Events
 
 <EventsTable />
 
-## When to Use Number vs Currency vs Text Input
-
-- **Number** — quantities, ages, counts, percentages, measurements. Generic
-  numeric input with min/max validation. Optional `allow-decimal` and
-  `allow-negative`.
-- **Currency** — dollar amounts. Auto-formats with commas + 2 decimal places,
-  PII-safe mask handling.
-- **Text Input with `type="number"`** — avoid this for numeric input.
-  `civ-number` is the accessible replacement.
-
-## Usage
+### Usage
 
 ```html
 <!-- Basic integer input -->
@@ -131,7 +141,7 @@ All form components share these props: `label`, `name`, `value`, `hint`,
 ></civ-number>
 ```
 
-## Validation
+### Validation
 
 `civ-number` runs `validate.range()` on blur when `min` or `max` is set,
 producing standard "Must be at least N", "Must be no more than N", or "Must
@@ -141,7 +151,7 @@ Empty values skip range validation — required-field validation is handled
 by `civ-form`. Lone `-`, `.`, or `-.` partials are cleared on blur so the
 form sees `""` instead of `NaN`.
 
-## Accessibility
+### Accessibility
 
 - Native `type="text"` with `inputmode="numeric"` / `inputmode="decimal"`.
   Mobile keyboards show the numeric keypad without the spinner UX of
@@ -151,3 +161,210 @@ form sees `""` instead of `NaN`.
   the user is composing.
 - Paste handler announces politely to assistive tech when clipboard content
   was filtered (e.g., pasting "$1,234.56" into an integer-only field).
+
+---
+
+## `civ-currency`
+
+`<civ-currency>`
+
+Pre-configured input for US dollar amounts with automatic formatting,
+masking, and validation. Use this for any field that captures a dollar
+value — income, expenses, fees, refunds, benefit amounts, claim amounts.
+
+### Examples
+
+#### Default
+
+<StoryEmbed id="forms-inputs-currency--default" />
+
+#### With hint
+
+<StoryEmbed id="forms-inputs-currency--with-hint" />
+
+#### Required
+
+<StoryEmbed id="forms-inputs-currency--required" />
+
+#### With error
+
+<StoryEmbed id="forms-inputs-currency--with-error" />
+
+#### Disabled
+
+<StoryEmbed id="forms-inputs-currency--disabled" />
+
+#### All states
+
+<StoryEmbed id="forms-inputs-currency--all-states" />
+
+#### Government form example
+
+<StoryEmbed id="forms-inputs-currency--government-form-example" />
+
+#### Whole dollars (`decimals="0"`)
+
+<StoryEmbed id="forms-inputs-currency--whole-dollars" />
+
+For tax-style fields that ask for whole-dollar amounts (W-4 line 4c,
+partial FAFSA income lines, VA benefit applications). The decimal key
+is rejected during typing, blur rounds to the nearest dollar, and the
+display omits the `.00` suffix.
+
+#### Min / max bounds
+
+<StoryEmbed id="forms-inputs-currency--with-min-max" />
+
+Inline bounds validation. Out-of-range values surface an error on blur
+rather than waiting for a server round-trip. Pair with `required` for
+hard-stop submission.
+
+#### Allow negative (refunds / adjustments)
+
+<StoryEmbed id="forms-inputs-currency--allow-negative" />
+
+The default validator rejects negative amounts ("Enter a valid dollar
+amount"). Opt in with `allow-negative` for refunds, adjustments, and
+expense-report fields where a debit is meaningful. Min/max bounds still
+apply when negatives are allowed (e.g. `min="-1000" max="1000"` for a
+±$1,000 adjustment window).
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-currency--default)
+
+### Shared Props
+
+All form components share these props: `label`, `name`, `value`, `hint`,
+`error`, `required`, `disabled`, `readonly`, `required-message`.
+
+Defaults that differ from `<civ-text-input>`:
+
+| Prop | Default |
+| --- | --- |
+| `label` | `t('currencyLabel')` ("Amount") |
+| `hint` | `t('maskCurrencyHint')` ("For example: 1,234.56") |
+
+### Events
+
+| Event | Detail | Description |
+| --- | --- | --- |
+| `civ-input` | `{ value: string }` | Fires on every keystroke. Value is the raw numeric string (no commas, no `$`). |
+| `civ-change` | `{ value: string }` | Fires on committed value change. Same detail shape. |
+
+### Formatting behavior
+
+`<civ-currency>` is implemented as a thin wrapper over `<civ-text-input>`
+with `mask="currency"`, `validate="currency"`, `inputmode="decimal"`, and a
+`$` prefix. The mask handles:
+
+- **Blur formatting** — typed `1234.5` becomes `1,234.50` when the user
+  leaves the field. Commas insert at thousands boundaries; decimals
+  pad/truncate to exactly two places.
+- **Focus normalization** — re-entering the field shows the raw value
+  (`1234.5`) so the user can edit without fighting the formatter.
+- **Storage format** — `el.value` is always the raw numeric string
+  (`"1234.5"` or `"1234.50"`). Commas and the `$` prefix are display only.
+
+### Validation
+
+The built-in `validate.currency()` validator runs on blur. It accepts
+any string that parses as a finite positive number (or zero). Rejects:
+
+- Negative values (use `civ-number` with `allow-negative` for those)
+- Non-numeric characters surviving the mask
+- More than 2 decimal places
+
+Custom errors via the `error` prop override the built-in message.
+
+### Usage
+
+```html
+<!-- Basic amount field (uses default "Amount" label) -->
+<civ-currency name="amount" required></civ-currency>
+
+<!-- Custom label and hint -->
+<civ-currency
+  label="Monthly gross income"
+  name="gross_income"
+  hint="Before taxes and deductions"
+  required
+></civ-currency>
+
+<!-- Prefilled from server response -->
+<civ-currency
+  label="Refund amount"
+  name="refund"
+  value="2400.00"
+  readonly
+></civ-currency>
+
+<!-- Programmatic error (e.g. server-side validation) -->
+<civ-currency
+  label="Claim amount"
+  name="claim"
+  error="Claim exceeds the program maximum of $25,000"
+></civ-currency>
+```
+
+### Composition
+
+`<civ-currency>` is used as a sub-field by [`<civ-income>`](../compound/income.mdx)
+(amount + frequency pair) and by [`<civ-direct-deposit>`](../compound/direct-deposit.mdx)
+patterns. Consumers building their own compound forms (rent, mortgage,
+asset estimates) should compose `civ-currency` directly rather than
+re-implementing the masking and validation.
+
+### Accessibility
+
+- The `$` prefix is rendered as a visual `<span class="civ-input-prefix">`
+  marked `aria-hidden="true"` — screen readers announce the field as
+  "Amount" (the label) without the symbol leaking into the announcement.
+- `inputmode="decimal"` triggers the mobile decimal keyboard (digits
+  plus `.`) on iOS and Android.
+- Validation errors are announced assertively by the underlying
+  `<civ-text-input>` (the form-element base class wires the live
+  region).
+- The blur-mode mask (formatting only happens on blur, not as you
+  type) avoids the cursor-jumping accessibility problems of live
+  currency masks.
+
+### Localization
+
+Three locale strings drive the default labels and messages:
+
+| Key | English | Notes |
+| --- | --- | --- |
+| `currencyLabel` | `"Amount"` | Falls back when `label` is empty |
+| `maskCurrencyHint` | `"For example: 1,234.56"` | Falls back when `hint` is empty |
+| `maskCurrencyError` | `"Enter a valid dollar amount"` | Surfaced on validation failure |
+
+Override via `setLocale()` (global) or pass `label` / `hint` / `error`
+explicitly (per-component). Locales that use a different decimal
+separator (e.g. `,` in many European locales) require a separate effort —
+the current implementation is hard-wired to US dollar conventions.
+
+---
+
+## `civ-routing-number`
+
+`<civ-routing-number>`
+
+Pre-configured input for bank routing numbers with built-in 9-digit
+validation (ABA mod-10 checksum) and plain-language labeling. Used in
+[`<civ-direct-deposit>`](../compound/direct-deposit.mdx) alongside an
+account number and a [`<civ-currency>`](#civ-currency) deposit amount.
+
+Default label: "Routing number".
+
+<StoryEmbed id="forms-inputs-text-input--routing-number" />
+
+```html
+<civ-routing-number label="Routing number" name="routing" required></civ-routing-number>
+```
+
+### Validation
+
+The built-in `validate.routing()` validator runs on blur. It rejects
+strings that aren't exactly 9 digits or fail the ABA mod-10 checksum
+(catches single-digit typos and digit-transposition errors). Use the
+declarative `validate="routing"` attribute on `<civ-text-input>` if
+you need the validator without the routing-number-specific defaults.

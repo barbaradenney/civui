@@ -34,6 +34,7 @@ interface ComponentMapping {
 
 const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-text-input', drupal: 'text-input' },
+  { schema: 'civ-number', drupal: 'number' },
   { schema: 'civ-checkbox', drupal: 'checkbox' },
   { schema: 'civ-radio-group', drupal: 'radio-group' },
   { schema: 'civ-radio', drupal: 'radio' },

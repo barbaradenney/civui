@@ -731,6 +731,13 @@
       "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
     },
     {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Controls/Checkbox",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default (tile)</p>\n        <civ-checkbox label=\"I agree to the terms\" name=\"agree-default\"></civ-checkbox>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" + label (column-toggle pattern)</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Visible label, no tile chrome. Used by civ-column-visibility for the toggle panel.</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-1\">\n          <civ-checkbox spacing=\"sm\" label=\"Application ID\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" label=\"Applicant\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" label=\"Status\"></civ-checkbox>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" + aria-label only (data-grid row-select pattern)</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input, no visible chrome. aria-label names the control for AT.</p>\n        <div class=\"civ-flex civ-gap-2 civ-items-center\">\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 1\"></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 2\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 3\" indeterminate></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 4\" disabled></civ-checkbox>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+    },
+    {
       "story": "WithDescription",
       "category": "Forms/Controls/Checkbox",
       "html": "<civ-checkbox\n      label=\"Email notifications\"\n      name=\"email-notifications\"\n      description=\"Receive weekly updates about your application status\"\n    ></civ-checkbox>",
@@ -1166,6 +1173,13 @@
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
+      "story": "CompactDensityComparison",
+      "name": "Compact Density — Default vs spacing=",
+      "category": "Layout/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">spacing=\"sm\" (recommended for data-grid rows)</p>\n          <civ-data-grid class=\"story-density-compare-sm\" caption=\"Applications — compact badges\"></civ-data-grid>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">spacing=\"default\"</p>\n          <civ-data-grid class=\"story-density-compare-default\" caption=\"Applications — default badges\"></civ-data-grid>\n        </div>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-default\" caption=\"Veterans benefits applications\"></civ-data-grid>",
@@ -1343,6 +1357,13 @@
       "story": "Required",
       "category": "Forms/Inputs/Date Picker",
       "html": "<civ-date-picker label=\"Appointment date\" name=\"appointment\" required></civ-date-picker>",
+      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Date Picker",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-date-picker label=\"Appointment date\" name=\"appt-default\" hint=\"MM/DD/YYYY\"></civ-date-picker>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Compact input + trigger. Useful for data-grid cell editors on date columns.</p>\n        <civ-date-picker spacing=\"sm\" aria-label=\"Appointment date\" name=\"appt-compact\"></civ-date-picker>\n      </div>\n    </div>",
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
     },
     {
@@ -3356,6 +3377,13 @@
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Number",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-number label=\"Annual income\" name=\"income-default\" prefix=\"$\" allow-decimal></civ-number>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare numeric input, no chrome and no prefix/suffix. Used by data-grid cell editors for number columns.</p>\n        <civ-number spacing=\"sm\" aria-label=\"Annual income\" name=\"income-compact\" allow-decimal></civ-number>\n      </div>\n    </div>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
       "story": "WithError",
       "name": "With error",
       "category": "Forms/Inputs/Number",
@@ -4655,6 +4683,13 @@
       "source": "packages/inputs/src/select/civ-select.stories.ts"
     },
     {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Select",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-select label=\"State\" name=\"state-default\" preset=\"us-state\"></civ-select>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" (no placeholder)</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">For data-grid cell editors, where the column header labels the control and the value is already populated.</p>\n        <civ-select spacing=\"sm\" aria-label=\"State\" name=\"state-compact\" preset=\"us-state\"></civ-select>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" empty-label=\"All\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">For filter rows that need a \"show all\" affordance.</p>\n        <civ-select spacing=\"sm\" aria-label=\"Filter by state\" empty-label=\"All states\" name=\"state-filter\" preset=\"us-state\"></civ-select>\n      </div>\n    </div>",
+      "source": "packages/inputs/src/select/civ-select.stories.ts"
+    },
+    {
       "story": "WidthVariants",
       "name": "Width variants",
       "category": "Forms/Inputs/Select",
@@ -5214,6 +5249,13 @@
       "source": "packages/core/src/foundations/density-examples.stories.ts"
     },
     {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-text-input label=\"Applicant name\" name=\"name-default\" hint=\"First and last\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input, no chrome. aria-label on the host names the control for AT.</p>\n        <civ-text-input spacing=\"sm\" aria-label=\"Applicant name\" name=\"name-compact\"></civ-text-input>\n      </div>\n    </div>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
       "story": "SpacousScale",
       "name": "Spacious Scale",
       "category": "Foundations/Density Examples",
@@ -5299,6 +5341,13 @@
       "story": "Required",
       "category": "Forms/Inputs/Textarea",
       "html": "<civ-textarea label=\"Description of incident\" name=\"description\" required></civ-textarea>",
+      "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Textarea",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-textarea label=\"Notes\" name=\"notes-default\" hint=\"Add context for the reviewer.\" rows=\"3\"></civ-textarea>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare textarea, no chrome. Useful when a longer-form column needs an inline editor.</p>\n        <civ-textarea spacing=\"sm\" aria-label=\"Notes\" name=\"notes-compact\" rows=\"3\"></civ-textarea>\n      </div>\n    </div>",
       "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
     },
     {

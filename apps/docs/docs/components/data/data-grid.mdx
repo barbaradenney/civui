@@ -91,6 +91,10 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 
 <StoryEmbed id="layout-data-grid--sticky-end-column" minHeight={400} />
 
+### Export to CSV / JSON
+
+<StoryEmbed id="layout-data-grid--export-to-csv" minHeight={500} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
 ## Props
@@ -310,6 +314,50 @@ value back into their data and reassign `grid.rows`.
 - Disabled rows (`row.disabled`) are not editable even when `column.editable` is set.
 - Editable cells in an `interactive` grid: clicking the cell starts edit mode but does NOT fire `civ-row-activate`. The cell-click stops propagation.
 - Only one cell is in edit mode at a time. Starting an edit on another cell would not be a v1 concern (consumer can blur first).
+
+## Export to CSV / JSON
+
+`@civui/data/export` exports a `gridExport` utility — a pure function
+that returns a `File` (a named `Blob`) the consumer can hand to an
+anchor download, `navigator.share`, or any other Blob-consuming path.
+No component, no event dispatch; the data-grid stays focused on
+rendering, the export utility stays focused on serialization.
+
+```ts
+import { gridExport } from '@civui/data/export';
+
+function downloadCsv(grid: HTMLElement & { rows: GridRow[]; columns: GridColumn[] }) {
+  const file = gridExport(grid.rows, grid.columns, {
+    format: 'csv',
+    filename: 'applications.csv',
+  });
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+```
+
+**Options:**
+
+| Option | Default | Behavior |
+|---|---|---|
+| `format` | `'csv'` | `'csv'` (RFC 4180 quoting, CRLF line endings) or `'json'` (pretty-printed array of `row.cells` objects) |
+| `filename` | `'export.csv'` / `'export.json'` | Name on the returned `File`. MIME type is set automatically (`text/csv` / `application/json`). |
+| `includeHidden` | `false` | When `false`, columns with `hidden: true` are omitted — matches what the user is seeing. Set `true` to export every declared column. |
+| `useFormatter` | `false` (CSV only) | When `true`, the column's `formatter` callback produces the cell's text. Most formatters return `TemplateResult` which doesn't stringify usefully — only enable when you've authored plain-value formatters. |
+| `selectedRowIds` | (all rows) | When provided, only rows whose `id` is in this array are exported. Pairs with `grid.selectedRowIds` for "export selection" flows. |
+
+**CSV quoting** follows RFC 4180: values containing `,`, `"`, or
+`\r\n` are wrapped in double quotes with embedded `"` doubled. Plain
+values are emitted unquoted. Header cells follow the same rule.
+
+**JSON shape**: an array of `row.cells` subset objects keyed by the
+exported `column.key`. Native types are preserved (numbers stay
+numbers, booleans stay booleans) — unlike CSV where everything
+stringifies.
 
 ## Sticky columns
 

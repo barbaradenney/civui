@@ -626,3 +626,68 @@ export const StickyEndColumn: Story = {
     `;
   },
 };
+
+export const ExportToCsv: Story = {
+  name: 'Export to CSV / JSON',
+  render: () => {
+    setTimeout(async () => {
+      const grid = document.querySelector('civ-data-grid.story-export') as any;
+      const csvBtn = document.querySelector('#story-export-csv') as HTMLButtonElement;
+      const jsonBtn = document.querySelector('#story-export-json') as HTMLButtonElement;
+      const selectedBtn = document.querySelector('#story-export-selected') as HTMLButtonElement;
+      const out = document.querySelector('#story-export-out') as HTMLElement;
+      if (!grid || !csvBtn || !jsonBtn || !selectedBtn || !out) return;
+
+      // Lazy-load the export utility to keep this story self-contained.
+      const { gridExport } = await import('@civui/data/export');
+
+      grid.columns = defaultColumns;
+      grid.rows = toRows(SAMPLE_DATA);
+      grid.selectable = 'multiple';
+      grid.selectedRowIds = [];
+      grid.addEventListener('civ-selection-change', (e: Event) => {
+        grid.selectedRowIds = (e as CustomEvent).detail.selectedRowIds;
+      });
+
+      const preview = (file: File) => {
+        file.text().then((text) => {
+          out.textContent = `${file.name} (${file.type})\n\n${text}`;
+        });
+      };
+
+      csvBtn.addEventListener('click', () => {
+        preview(gridExport(grid.rows, grid.columns, {
+          filename: 'applications.csv',
+        }));
+      });
+      jsonBtn.addEventListener('click', () => {
+        preview(gridExport(grid.rows, grid.columns, {
+          format: 'json',
+          filename: 'applications.json',
+        }));
+      });
+      selectedBtn.addEventListener('click', () => {
+        preview(gridExport(grid.rows, grid.columns, {
+          filename: 'selected-applications.csv',
+          selectedRowIds: grid.selectedRowIds,
+        }));
+      });
+    }, 0);
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-3">
+        <p class="civ-m-0">
+          Select rows below, then preview an export. In production the
+          consumer would create a Blob URL and trigger a download instead
+          of printing — the utility is the same.
+        </p>
+        <div class="civ-flex civ-gap-2">
+          <civ-action-button id="story-export-csv" variant="secondary" icon-start="download" label="Export all (CSV)"></civ-action-button>
+          <civ-action-button id="story-export-json" variant="secondary" icon-start="download" label="Export all (JSON)"></civ-action-button>
+          <civ-action-button id="story-export-selected" variant="secondary" icon-start="download" label="Export selection (CSV)"></civ-action-button>
+        </div>
+        <civ-data-grid class="story-export" caption="Applications (export demo)"></civ-data-grid>
+        <pre id="story-export-out" style="background: var(--civ-color-base-lightest); padding: var(--civ-spacing-3); border-radius: 4px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 0.85em;">Click an export button to preview the output.</pre>
+      </div>
+    `;
+  },
+};

@@ -13,7 +13,8 @@
     "./toolbar": "./dist/toolbar/index.js",
     "./bulk-actions": "./dist/bulk-actions/index.js",
     "./filterable-list": "./dist/filterable-list/index.js",
-    "./column-visibility": "./dist/column-visibility/index.js"
+    "./column-visibility": "./dist/column-visibility/index.js",
+    "./export": "./dist/export/index.js"
   },
   "files": [
     "dist"

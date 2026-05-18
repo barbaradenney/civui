@@ -788,6 +788,14 @@ export const MultiColumnSort: Story = {
       grid.multiSort = true;
       grid.sortKeys = [];
       // Client-side sort that honors the full stack.
+      const compare = (av: unknown, bv: unknown): number => {
+        // Numeric compare when both values are numbers — avoids the
+        // lexicographic '10' < '2' trap of a pure String() compare.
+        if (typeof av === 'number' && typeof bv === 'number') return av - bv;
+        const as = String(av ?? '');
+        const bs = String(bv ?? '');
+        return as < bs ? -1 : as > bs ? 1 : 0;
+      };
       const applySort = (keys: { key: string; direction: 'asc' | 'desc' }[]) => {
         if (keys.length === 0) {
           grid.rows = [...allRows];
@@ -795,11 +803,8 @@ export const MultiColumnSort: Story = {
         }
         const sorted = [...allRows].sort((a, b) => {
           for (const { key, direction } of keys) {
-            const av = String(a.cells[key] ?? '');
-            const bv = String(b.cells[key] ?? '');
-            if (av === bv) continue;
-            const cmp = av < bv ? -1 : 1;
-            return direction === 'asc' ? cmp : -cmp;
+            const cmp = compare(a.cells[key], b.cells[key]);
+            if (cmp !== 0) return direction === 'asc' ? cmp : -cmp;
           }
           return 0;
         });

@@ -170,15 +170,17 @@ grid.sortKeys = [
 ];
 ```
 
-`sortBy` / `sortDirection` continue to reflect the **primary** (first) key for backward-compat readers — but in multi-sort mode you should manage `sortKeys` directly.
+`sortBy` / `sortDirection` continue to reflect the **primary** (first) key — the grid mirrors `sortKeys[0]` into them on every render when `multiSort` is on, so backward-compat readers see consistent state. **Writes** to `sortBy` / `sortDirection` while `multiSort` is on are overwritten on the next render; manage `sortKeys` and let the mirror fan out.
 
 ### Interaction model
 
-- **Plain click** on any header — replaces the stack with a single key on that column, cycling `asc → desc → none` if it's already the only one.
+- **Plain click** on any header — replaces the stack with a single key on that column, cycling `asc → desc → none` if the column is already in the stack (at any position).
 - **Shift-click** on a header NOT in the stack — appends it (asc).
 - **Shift-click** on a header already in the stack — cycles its direction `asc → desc → removed`.
 
-Position badges (`1, 2, 3…`) render next to the chevron when the stack has more than one key, so the priority order is visible. A single-key stack omits the badge (no "1" on a column that's the only sort).
+Keyboard users get the same gestures: Enter / Space activate as a plain click, and **Shift+Enter / Shift+Space** acts as Shift-click. This works whether or not `keyboardNav` is on; with `keyboardNav` the focus stop is the cell itself, otherwise it's the inner sort button.
+
+Position badges (`1, 2, 3…`) render next to the chevron when the stack has more than one key, so the priority order is visible. A single-key stack omits the badge (no "1" on a column that's the only sort). Screen reader users hear the position in the sort button's `aria-label` — e.g. "Sort Status descending, sort priority 2".
 
 ### Event detail
 
@@ -197,20 +199,28 @@ grid.addEventListener('civ-sort', (e) => {
 For a client-side multi-key sort:
 
 ```ts
+// Compare two values from the same column. Numeric compare for numbers
+// (avoids the '10' < '2' lex trap), string compare for everything else.
+function compare(a, b) {
+  if (typeof a === 'number' && typeof b === 'number') return a - b;
+  const as = String(a ?? '');
+  const bs = String(b ?? '');
+  return as < bs ? -1 : as > bs ? 1 : 0;
+}
+
 function applySort(rows, keys) {
   if (keys.length === 0) return rows;
   return [...rows].sort((a, b) => {
     for (const { key, direction } of keys) {
-      const av = a.cells[key];
-      const bv = b.cells[key];
-      if (av === bv) continue;
-      const cmp = av < bv ? -1 : 1;
-      return direction === 'asc' ? cmp : -cmp;
+      const cmp = compare(a.cells[key], b.cells[key]);
+      if (cmp !== 0) return direction === 'asc' ? cmp : -cmp;
     }
     return 0;
   });
 }
 ```
+
+For typed columns beyond plain numbers and strings (dates, booleans, currency strings like `"$1,250"`), supply per-column comparators of your own.
 
 For server-side, hand the array to your query API. Most SQL engines accept it as an `ORDER BY` clause.
 
@@ -655,6 +665,7 @@ Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key naviga
 | <kbd>PageDown</kbd> / <kbd>PageUp</kbd> | Jump ±10 rows (clamped to the grid). |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control — sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
 | <kbd>F2</kbd> | Start edit on an editable cell (Excel convention). No-op on other cells. |
+| <kbd>Shift</kbd>+<kbd>Enter</kbd> / <kbd>Shift</kbd>+<kbd>Space</kbd> | When `multiSort` is on and the focused cell is a sortable header, adds it to (or cycles direction within) the multi-sort stack — the keyboard equivalent of mouse Shift-click. |
 | <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell (see [Escape returns focus to the cell](#escape-returns-focus-to-the-cell)). |
 
 ### Activation model

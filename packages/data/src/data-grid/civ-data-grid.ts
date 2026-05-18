@@ -119,6 +119,16 @@ export type {
  *   ]},
  * ];
  * grid.addEventListener('civ-sort', (e) => fetchData(e.detail));
+ *
+ * // Multi-sort: opt in via `multiSort` and read `sortKeys` from the event.
+ * // Shift-click a header to add it as a secondary / tertiary key; the
+ * // event carries the full target stack.
+ * grid.multiSort = true;
+ * grid.sortKeys = [];
+ * grid.addEventListener('civ-sort', (e) => {
+ *   grid.sortKeys = e.detail.sortKeys;
+ *   fetchData({ sortKeys: grid.sortKeys });
+ * });
  * ```
  */
 @customElement('civ-data-grid')
@@ -280,7 +290,7 @@ export class CivDataGrid extends CivBaseElement {
     const sortIcon = isSorted
       ? (sortInfo.direction === 'asc' ? 'chevron-up' : 'chevron-down')
       : 'unfold-more';
-    const sortLabel = isSorted && sortInfo.direction === 'asc'
+    const sortLabelBase = isSorted && sortInfo.direction === 'asc'
       ? t('dataGridSortDescending').replace('{column}', col.header)
       : t('dataGridSortAscending').replace('{column}', col.header);
     // Position badge: render "1, 2, 3…" next to the chevron when the
@@ -289,6 +299,14 @@ export class CivDataGrid extends CivBaseElement {
     const showPositionBadge = this.multiSort
       && isSorted
       && this._activeSortKeys().length > 1;
+    // For screen reader users, also append the sort priority to the
+    // button's aria-label — the badge is aria-hidden because the number
+    // alone reads poorly out of context.
+    const sortLabel = showPositionBadge && sortInfo
+      ? sortLabelBase + t('dataGridSortPositionSuffix').replace(
+          '{position}', String(sortInfo.position + 1),
+        )
+      : sortLabelBase;
 
     return html`
       <th
@@ -305,8 +323,8 @@ export class CivDataGrid extends CivBaseElement {
         >
           <span>${col.header}</span>
           <civ-icon name="${sortIcon}" aria-hidden="true"></civ-icon>
-          ${showPositionBadge
-            ? html`<span class="civ-data-grid__sort-position" aria-hidden="true">${sortInfo!.position + 1}</span>`
+          ${showPositionBadge && sortInfo
+            ? html`<span class="civ-data-grid__sort-position" aria-hidden="true">${sortInfo.position + 1}</span>`
             : nothing}
         </button>
       </th>
@@ -855,6 +873,19 @@ export class CivDataGrid extends CivBaseElement {
     if (changed.has('columns')) {
       this._stickyCache = undefined;
     }
+    // Multi-sort → single-sort mirror. When `multiSort` is on, sortBy /
+    // sortDirection are derived from `sortKeys[0]` — kept in sync here so
+    // backward-compat readers (and the schema docs that promised "mirrors
+    // the primary key") observe consistent state. Writing them directly
+    // while multiSort is on is overridden on the next render; consumers
+    // should manage `sortKeys` and let this hook fan out.
+    if (this.multiSort) {
+      const primary = this.sortKeys?.[0];
+      const nextSortBy = primary?.key ?? '';
+      const nextSortDirection: GridSortDirection = primary?.direction ?? 'none';
+      if (this.sortBy !== nextSortBy) this.sortBy = nextSortBy;
+      if (this.sortDirection !== nextSortDirection) this.sortDirection = nextSortDirection;
+    }
   }
 
   override updated(changed: Map<string, unknown>): void {
@@ -1305,14 +1336,23 @@ export class CivDataGrid extends CivBaseElement {
    * → remove from stack.
    */
   private _computeNextSortKeys(columnKey: string, shiftKey: boolean): GridSortKey[] {
+    // Defensive guard — only honor sort interactions for columns that
+    // declared `sortable: true`. The header doesn't render a sort button
+    // for non-sortable columns, but programmatic / synthetic callers
+    // shouldn't be able to insert garbage.
+    const col = this.columns.find((c) => c.key === columnKey);
+    if (!col?.sortable) return this._activeSortKeys();
+
     const current = this._activeSortKeys();
     if (!this.multiSort || !shiftKey) {
-      // Plain click — single-key sort, cycle through asc / desc / none on
-      // the same column, or replace the stack with a fresh asc on a new
-      // column.
-      const onlyEntry = current[0];
-      if (onlyEntry && onlyEntry.key === columnKey) {
-        if (onlyEntry.direction === 'asc') return [{ key: columnKey, direction: 'desc' }];
+      // Plain click — single-key sort. Cycle the clicked column's
+      // direction (asc → desc → none) and replace the stack with just
+      // that result. The "cycle from current state" rule keeps the
+      // gesture predictable even when the clicked column was already in
+      // a multi-sort stack at some other position.
+      const existing = current.find((k) => k.key === columnKey);
+      if (existing) {
+        if (existing.direction === 'asc') return [{ key: columnKey, direction: 'desc' }];
         return []; // desc → cleared
       }
       return [{ key: columnKey, direction: 'asc' }];
@@ -1651,7 +1691,7 @@ export class CivDataGrid extends CivBaseElement {
       case 'PageUp': this._moveRow(-10); break;
       case 'Enter':
       case ' ':
-        this._activateFocusedCell(false);
+        this._activateFocusedCell(false, e.shiftKey);
         break;
       case 'F2':
         this._activateFocusedCell(true);
@@ -1706,7 +1746,7 @@ export class CivDataGrid extends CivBaseElement {
    * that only clicks the edit trigger — other controls (sort, expand,
    * menu) are no-ops on F2.
    */
-  private _activateFocusedCell(preferEdit: boolean): void {
+  private _activateFocusedCell(preferEdit: boolean, shiftKey = false): void {
     const cells = this._allCells();
     const cell = cells[this._focusedRow]?.[this._focusedCol];
     if (!cell) return;
@@ -1733,8 +1773,22 @@ export class CivDataGrid extends CivBaseElement {
         || ctrl instanceof HTMLButtonElement
         || ctrl instanceof HTMLAnchorElement
         || ctrl.getAttribute('role') === 'button';
-      if (isAction) ctrl.click();
-      else ctrl.focus();
+      if (isAction) {
+        // Preserve modifier keys on the synthetic click so Shift+Enter on
+        // a sort header honors the multi-sort gesture (otherwise the
+        // keyboard path is mouse-only).
+        if (shiftKey) {
+          ctrl.dispatchEvent(new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            shiftKey: true,
+          }));
+        } else {
+          ctrl.click();
+        }
+      } else {
+        ctrl.focus();
+      }
       return;
     }
 

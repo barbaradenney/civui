@@ -2645,4 +2645,161 @@ describe('civ-data-grid — multi-column sort', () => {
     expect(detail.column).toBe('status');
     expect(detail.direction).toBe('asc');
   });
+
+  it('plain-click on a non-primary stacked column cycles ITS direction (not always asc)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    // 'status' is the secondary key in desc — plain-click should cycle
+    // it to none (the desc → cleared step), not silently reset to asc.
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([]);
+  });
+
+  it('cumulative shift-click chain builds the stack in click order', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', true);
+    el.sortKeys = handler.mock.calls[0][0].detail.sortKeys;
+    await elementUpdated(el);
+    clickHeader(el, 'status', true);
+    el.sortKeys = handler.mock.calls[1][0].detail.sortKeys;
+    await elementUpdated(el);
+    clickHeader(el, 'updated', true);
+    expect(handler.mock.calls[2][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+      { key: 'updated', direction: 'asc' },
+    ]);
+  });
+
+  it('undefined sortKeys is treated as an empty stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    // sortKeys deliberately left undefined.
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+    ]);
+  });
+
+  it('civ-sort detail reports column="" and direction="none" when a key is cleared from the stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'desc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', false); // desc → cleared
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('');
+    expect(detail.direction).toBe('none');
+    expect(detail.sortKeys).toEqual([]);
+  });
+
+  it('willUpdate mirrors sortKeys[0] into sortBy / sortDirection when multiSort is on', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'status', direction: 'desc' },
+      { key: 'name', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    expect(el.sortBy).toBe('status');
+    expect(el.sortDirection).toBe('desc');
+    // Clearing the stack should reset the mirror.
+    el.sortKeys = [];
+    await elementUpdated(el);
+    expect(el.sortBy).toBe('');
+    expect(el.sortDirection).toBe('none');
+  });
+
+  it('Shift+Enter on a sort header in keyboardNav mode appends to the multi-sort stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.keyboardNav = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // The "Status" header is the second cell of row 0.
+    const headerRow = el.querySelector('thead tr')!;
+    const statusTh = headerRow.querySelectorAll('th')[1] as HTMLElement;
+    pressKey(statusTh, 'Enter', { shiftKey: true });
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ]);
+  });
+
+  it('Enter without Shift in keyboardNav mode acts as a plain click (replaces the stack)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.keyboardNav = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    const headerRow = el.querySelector('thead tr')!;
+    const updatedTh = headerRow.querySelectorAll('th')[2] as HTMLElement;
+    pressKey(updatedTh, 'Enter'); // no shift
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'updated', direction: 'asc' },
+    ]);
+  });
+
+  it('aria-label includes sort-priority suffix when the multi-sort stack has > 1 key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const sortBtns = el.querySelectorAll('.civ-data-grid__sort-btn');
+    expect(sortBtns[0].getAttribute('aria-label')).toMatch(/sort priority 1/);
+    expect(sortBtns[1].getAttribute('aria-label')).toMatch(/sort priority 2/);
+  });
+
+  it('aria-label does NOT include sort-priority suffix when the stack is a single key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const sortBtns = el.querySelectorAll('.civ-data-grid__sort-btn');
+    expect(sortBtns[0].getAttribute('aria-label')).not.toMatch(/sort priority/);
+  });
+
+  it('_computeNextSortKeys ignores interactions on non-sortable columns (defensive)', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'static', header: 'Static' }, // no sortable
+    ];
+    const el = await mountGrid({ columns: cols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Call the private function directly — covers the synthetic /
+    // programmatic path. The render path doesn't expose the second
+    // column's sort button because it isn't sortable.
+    const next = (el as any)._computeNextSortKeys('static', true);
+    expect(next).toEqual([{ key: 'name', direction: 'asc' }]); // unchanged
+  });
 });

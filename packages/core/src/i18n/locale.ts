@@ -69,6 +69,7 @@ export interface CivLocaleStrings {
   dataGridSortAscending: string;  // "Sort {column} ascending"
   dataGridSortDescending: string; // "Sort {column} descending"
   dataGridSortClear: string;      // "Clear sort on {column}"
+  dataGridSortPositionSuffix: string; // ", sort priority {position}" — appended to the sort button's aria-label in multi-sort mode so SR users hear which key is primary / secondary
   dataGridSelectRow: string;      // "Select row {row}"
   dataGridSelectAll: string;      // "Select all rows on this page"
   dataGridRowActions: string;     // "Actions for row {row}"
@@ -796,6 +797,7 @@ const defaultStrings: CivLocaleStrings = {
   dataGridLabel: 'Data grid',
   dataGridSortAscending: 'Sort {column} ascending',
   dataGridSortDescending: 'Sort {column} descending',
+  dataGridSortPositionSuffix: ', sort priority {position}',
   dataGridSortClear: 'Clear sort on {column}',
   dataGridSelectRow: 'Select row {row}',
   dataGridSelectAll: 'Select all rows on this page',

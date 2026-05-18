@@ -50,8 +50,8 @@ const schema: ComponentSchema = {
       attribute: 'multi-sort',
     },
     sortKeys: {
-      type: 'string',
-      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]` (`{ key: string, direction: \'asc\' | \'desc\' }[]`) — the type is `string` here only because the schema doesn\'t model arrays of objects. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
+      type: 'array',
+      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]` — each entry is `{ key: string, direction: \'asc\' | \'desc\' }`. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
       webOnly: true,
     },
     responsive: {

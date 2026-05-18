@@ -2122,6 +2122,23 @@
     font-size: var(--civ-typography-fontSize-xs);
     font-weight: 600;
     line-height: 1;
+    /* Defense against the parent sort-btn's :hover underline — civ-
+       inline-flex breaks text-decoration inheritance per spec, but lock
+       it in so a future refactor (e.g. switching to inline) can't
+       silently regress. */
+    text-decoration: none;
+  }
+
+  /* Windows High Contrast Mode — background-color drops out, leaving a
+     bare "1" / "2" floating next to the chevron. Pin to system colors so
+     the badge stays visible. */
+  @media (forced-colors: active) {
+    .civ-data-grid__sort-position {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+      border: 1px solid CanvasText;
+    }
   }
 
   .civ-data-grid__td {

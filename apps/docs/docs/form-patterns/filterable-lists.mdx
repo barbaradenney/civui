@@ -1,0 +1,210 @@
+---
+title: Filterable & Sortable Lists
+sidebar_position: 15
+sidebar_label: Filterable & Sortable Lists
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Filterable & Sortable Lists
+
+Patterns for the non-tabular case — directories, catalogs, FAQs, document libraries, glossaries. When the answer for "show me a list of things" isn't a spreadsheet-style table, reach for [`<civ-filterable-list>`](../components/data/filterable-list.mdx) and compose it with the filter and sort affordances on this page.
+
+For tabular admin / back-office screens (sortable columns, bulk operations, master-detail), see [Data Grid Patterns](./data-grid-patterns.mdx) instead.
+
+## Which component fits?
+
+| Need | Component | Why |
+| --- | --- | --- |
+| Tabular rows with sortable column headers, multi-row selection, cell-level data | [`<civ-data-grid>`](../components/data/data-grid.mdx) | Spreadsheet-shaped data — comparison across columns is the primary value |
+| Cards / list rows with search + chip filters (directories, catalogs, FAQs) | [`<civ-filterable-list>`](../components/data/filterable-list.mdx) | Browsing by attribute or keyword; rows are self-contained items, not row-vs-row comparisons |
+| Plain semantic list with no filtering (action lists, summary lists) | [`<civ-list>`](../components/layout/list.mdx) | Just structure — no search, no sort, no interactive selection beyond per-row affordances |
+
+If a list grows past ~50 visible items without an obvious mental model for browsing, that's the cue to switch from `civ-list` to `civ-filterable-list`. If users need to compare items column-by-column or operate on many at once, switch to `civ-data-grid`.
+
+## Filter UX patterns
+
+`<civ-filterable-list>` is unopinionated about the filter UI — anything that fires `civ-input` or `civ-change` inside its `data-filterable-list-filters` slot becomes a live filter. Multiple filters compose with AND logic.
+
+### Search box
+
+The most common starting point. A `<civ-text-input type="search">` (or any element marked `data-filterable-list-search`) matches case-insensitively against the `data-filter` attribute on each item.
+
+```html
+<civ-filterable-list label="Search publications">
+  <div data-filterable-list-filters>
+    <civ-text-input type="search" placeholder="Search by title or topic"></civ-text-input>
+  </div>
+  <ul>
+    <li data-filter="Veteran benefits eligibility 2024">…</li>
+    <li data-filter="Disability claim filing guide">…</li>
+  </ul>
+</civ-filterable-list>
+```
+
+### Filter chips (single-pick or multi-pick)
+
+`<civ-filter-chip-group>` renders toggleable pills — ideal when there's a small, named taxonomy (5–15 categories) the user picks from.
+
+<StoryEmbed id="actions-filter-chip-group--multi-select" />
+
+```html
+<civ-filterable-list label="Browse by topic">
+  <div data-filterable-list-filters>
+    <civ-filter-chip-group name="topic" mode="multi" data-filter-name="topic">
+      <civ-filter-chip value="benefits" label="Benefits"></civ-filter-chip>
+      <civ-filter-chip value="health" label="Health"></civ-filter-chip>
+      <civ-filter-chip value="housing" label="Housing"></civ-filter-chip>
+    </civ-filter-chip-group>
+  </div>
+  <ul>
+    <li data-filter-topic="benefits">Disability compensation</li>
+    <li data-filter-topic="health">VA medical care</li>
+    <li data-filter-topic="housing benefits">VA home loan guaranty</li>
+  </ul>
+</civ-filterable-list>
+```
+
+The `data-filter-name="topic"` attribute on the chip group binds it to `data-filter-topic="…"` on each item. Items with whitespace-separated values match any of them.
+
+### Filter select (single-pick from many)
+
+When the taxonomy is too long for chips (20+ options), use a `<civ-select>` in the filters slot.
+
+```html
+<civ-filterable-list label="Find forms">
+  <div data-filterable-list-filters>
+    <civ-select label="Form category" name="category" data-filter-name="category">
+      <option value="">All categories</option>
+      <option value="disability">Disability</option>
+      <option value="education">Education</option>
+      <option value="pension">Pension</option>
+    </civ-select>
+  </div>
+  <ul>
+    <li data-filter-category="disability">21-526EZ — Disability Compensation</li>
+    <li data-filter-category="education">22-1990 — Education Benefits</li>
+  </ul>
+</civ-filterable-list>
+```
+
+### Filter checkbox group (multi-pick from many)
+
+For multi-pick taxonomies that don't fit as chips (longer labels, hierarchical groupings), use `<civ-checkbox-group>` with `data-filter-name`.
+
+```html
+<civ-checkbox-group legend="Format" name="format" data-filter-name="format">
+  <civ-checkbox value="pdf" label="PDF"></civ-checkbox>
+  <civ-checkbox value="online" label="Online application"></civ-checkbox>
+  <civ-checkbox value="form" label="Printable form"></civ-checkbox>
+</civ-checkbox-group>
+```
+
+### Combining filters
+
+Filters compose with AND — search-box query AND chip selection AND select choice must all match for an item to stay visible. Put higher-discoverability filters first (search box at top, chips below, select / checkbox groups underneath).
+
+<StoryEmbed id="layout-filterable-list--organization-directory" />
+
+## Sort UX patterns
+
+`<civ-filterable-list>` does **not** sort natively — it filters the slotted children in place but doesn't reorder them. Three approaches depending on whether sort order is fixed or user-controlled:
+
+### 1. Pre-sort the slotted children
+
+When sort order is fixed (alphabetical glossary, chronological history), sort the items on the server or at build time and slot them in the final order. No client-side sort code needed — `<civ-filterable-list>` keeps DOM order when filtering.
+
+<StoryEmbed id="layout-filterable-list--glossary" />
+
+### 2. Sort dropdown reorders the DOM via JS
+
+When the user picks the sort key, put a `<civ-select>` outside the filters slot and reorder the slotted items in response to `civ-change`:
+
+```html
+<civ-select label="Sort by" name="sort" id="sort-select">
+  <option value="title">Title (A–Z)</option>
+  <option value="updated">Recently updated</option>
+  <option value="published">Published date</option>
+</civ-select>
+
+<civ-filterable-list label="Publications">
+  <ul id="publications">
+    <li data-filter="…" data-sort-title="Veteran benefits" data-sort-updated="2026-04-12" data-sort-published="2024-01-15">…</li>
+    …
+  </ul>
+</civ-filterable-list>
+
+<script>
+  const sortSelect = document.getElementById('sort-select');
+  const list = document.getElementById('publications');
+  sortSelect.addEventListener('civ-change', (e) => {
+    const key = `sort-${e.detail.value}`;
+    const items = Array.from(list.children);
+    items.sort((a, b) => a.dataset[key].localeCompare(b.dataset[key]));
+    items.forEach(item => list.appendChild(item));
+  });
+</script>
+```
+
+The filter pass re-runs automatically when items move — `<civ-filterable-list>` observes the slotted content and re-applies active filters after each mutation.
+
+### 3. Alphabetical groups (A–Z directory)
+
+For glossary / phonebook patterns, group items by first letter with sticky section headings. The Glossary story above shows this pattern — each `<li>` carries `data-filter-letter="A"`, and a sticky `<h3>` heading sits above each letter group. Filtering preserves the visible groups; if no items in a letter match, hide the heading too with `:has(li:not([hidden]))`.
+
+```css
+.glossary-group:not(:has(li:not([hidden]))) { display: none; }
+```
+
+## Composition examples
+
+### Search + chips (organization directory)
+
+A search box for keyword lookup paired with multi-select chips for service-type filtering. Both compose with AND.
+
+<StoryEmbed id="layout-filterable-list--organization-directory" />
+
+### Search-only minimal lookup
+
+When the taxonomy is too small or too varied to chunk into chips, just a search box is enough. Common for short FAQs, glossary lookups, and people directories.
+
+<StoryEmbed id="layout-filterable-list--search-only" />
+
+### Search + structured filters (medication lookup)
+
+Drug names, prescription formularies, and similar reference data often need both free-text search and one or two structured filters (drug class, brand vs generic). The Medication lookup story shows the search + chip-group composition with a result count.
+
+<StoryEmbed id="layout-filterable-list--medication-lookup" />
+
+### People directory with structured profile data
+
+Names + roles + locations + contact info, each row a self-contained card. Search box for name lookup, chips for role / location filters.
+
+<StoryEmbed id="layout-filterable-list--people-directory" />
+
+## When to switch to `<civ-data-grid>`
+
+If the screen needs any of the following, `<civ-data-grid>` is the right surface, not `<civ-filterable-list>`:
+
+- **Column-by-column comparison** — readers scan across columns to compare two or more rows (case status table, claim list, transaction log).
+- **Built-in sortable column headers** — click a header to sort; data-grid does this natively, filterable-list doesn't.
+- **Multi-row selection and bulk operations** — checkbox column plus a bulk-actions bar above the grid.
+- **Pagination at scale** — once you're showing more than 100 rows at a time, pagination (which data-grid hands off to `<civ-pagination>`) keeps the DOM small.
+- **Per-row action menus** — kebab menus that open per-row drawers or fire row-level actions.
+
+Filterable-list is for "browse a catalog of items"; data-grid is for "operate on a table of records." If the screen is a catalog with one or two interactive affordances per item, stay on filterable-list. If it's a workbench, move to data-grid.
+
+## Accessibility
+
+`<civ-filterable-list>` handles the accessibility plumbing automatically:
+
+- **Result-count announcement** — a polite `aria-live` region announces "12 of 48 results" after each filter pass (debounced ~300ms by `announce-delay` to avoid spamming).
+- **No-results state** — when all filters combine to zero matches, an empty-state message renders with `no-results-message` (override-able).
+- **Filter labels** — each filter control owns its label / legend like any other CivUI form control. Don't wrap them in a `<civ-fieldset>` (group components are self-contained).
+- **Search keyboard** — `type="search"` on the input gives users the native clear button on supporting browsers; `Escape` clears the field.
+
+## Related patterns
+
+- [**Data Grid Patterns**](./data-grid-patterns.mdx) — when the list is actually a table (sortable columns, bulk ops, master-detail).
+- [**Conditional Reveal**](./conditional-reveal.mdx) — show advanced filters only when the user opts in.
+- [**Multi-Step Form**](./multi-step-form.mdx) — when the user's selection from a filterable list feeds into a downstream form step.

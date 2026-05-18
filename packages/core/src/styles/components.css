@@ -1827,9 +1827,16 @@
   }
 
   .civ-menu__panel {
-    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
+    @apply civ-fixed civ-bg-white civ-border civ-border-base-light
            civ-rounded civ-shadow-lg civ-py-1;
-    top: calc(100% + var(--civ-spacing-1));
+    /* Position is computed in JS (top/left) on open — `position: fixed`
+       lets the panel escape any overflow / transform ancestor (the
+       data-grid scroll wrapper, a modal that scrolls its content, a
+       sidebar with `transform: translateZ(0)`). The CSS-only fallback
+       below pins the panel to the top-left corner; consumers should
+       rely on civ-menu's JS positioning. */
+    top: 0;
+    left: 0;
     min-width: 12rem;
     max-width: 18rem;
     z-index: var(--civ-z-overlay);
@@ -1840,13 +1847,11 @@
     display: block;
   }
 
-  .civ-menu__panel--align-start {
-    inset-inline-start: 0;
-  }
-
-  .civ-menu__panel--align-end {
-    inset-inline-end: 0;
-  }
+  /* The align-* modifiers are now a HINT for the JS positioner about
+     the preferred horizontal alignment relative to the trigger. The
+     positioner auto-flips when the preferred side would clip the
+     viewport edge. No layout properties here — the JS sets top/left
+     inline. */
 
   .civ-menu__backdrop {
     display: none;

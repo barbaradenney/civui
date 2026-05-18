@@ -8,8 +8,22 @@ import '../column-visibility/civ-column-visibility.js';
 import '@civui/actions/button';
 import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
+import '@civui/feedback/badge';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 import { applyGridFilters } from '../filter/grid-filter.js';
+
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
+  Approved: 'success',
+  Denied: 'error',
+  Pending: 'warning',
+  'In review': 'info',
+};
+
+const statusBadge = (value: unknown) => {
+  const v = String(value ?? '');
+  const variant = STATUS_VARIANT[v] ?? 'neutral';
+  return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
+};
 
 /**
  * End-to-end admin patterns — the data components (toolbar, bulk-actions,
@@ -92,7 +106,7 @@ export const BasicAdminList: Story = {
       { key: 'id', header: 'Application ID', width: '9rem' },
       { key: 'applicant', header: 'Applicant', sortable: true },
       { key: 'type', header: 'Type' },
-      { key: 'status', header: 'Status' },
+      { key: 'status', header: 'Status', formatter: statusBadge },
       { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
     ];
     setTimeout(() => {
@@ -176,7 +190,7 @@ export const BulkOperations: Story = {
       { key: 'id', header: 'Application ID', width: '9rem' },
       { key: 'applicant', header: 'Applicant', sortable: true },
       { key: 'type', header: 'Type' },
-      { key: 'status', header: 'Status' },
+      { key: 'status', header: 'Status', formatter: statusBadge },
       { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
     ];
     setTimeout(() => {
@@ -269,7 +283,7 @@ export const PowerUserGrid: Story = {
         filter: { type: 'text', placeholder: 'Search name' } },
       { key: 'type', header: 'Type',
         filter: { type: 'select', options: TYPES.map((t) => ({ value: t, label: t })) } },
-      { key: 'status', header: 'Status',
+      { key: 'status', header: 'Status', formatter: statusBadge,
         filter: { type: 'select', options: STATUSES.map((s) => ({ value: s, label: s })) } },
       { key: 'submitted', header: 'Submitted', sortable: true },
       { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },

@@ -194,3 +194,31 @@ export const YearJump: Story = {
     <civ-date-picker label="Date of birth" name="dob" hint="Use the year dropdown to jump to your birth year." hide-today-button max="2026-04-26"></civ-date-picker>
   `,
 };
+
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders the input + trigger button only, with no label / hint / error chrome around them. ' +
+          'The host\'s `aria-label` is propagated to the inner control. The calendar dialog still opens on trigger click.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-date-picker label="Appointment date" name="appt-default" hint="MM/DD/YYYY"></civ-date-picker>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Compact input + trigger. Useful for data-grid cell editors on date columns.</p>
+        <civ-date-picker spacing="sm" aria-label="Appointment date" name="appt-compact"></civ-date-picker>
+      </div>
+    </div>
+  `,
+};

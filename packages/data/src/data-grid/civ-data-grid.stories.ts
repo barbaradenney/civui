@@ -26,6 +26,13 @@ const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 
 const statusBadge = (value: unknown) => {
   const v = String(value ?? '');
   const variant = STATUS_VARIANT[v] ?? 'neutral';
+  return html`<civ-badge label="${v}" variant="${variant}" spacing="sm" with-icon></civ-badge>`;
+};
+
+/** Default-spacing badge — used only by the side-by-side density-comparison story. */
+const statusBadgeDefault = (value: unknown) => {
+  const v = String(value ?? '');
+  const variant = STATUS_VARIANT[v] ?? 'neutral';
   return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
 };
 
@@ -362,6 +369,50 @@ export const DensityScale: Story = {
         <div data-civ-scale="spacious">
           <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
           <civ-data-grid class="story-density-spacious" caption="Applications (spacious)"></civ-data-grid>
+        </div>
+      </div>
+    `;
+  },
+};
+
+/**
+ * Two side-by-side grids: one renders status badges in default density,
+ * the other in `spacing="sm"`. The compact variant is the recommended
+ * choice inside data-grid rows — it matches the height of the cell
+ * editors, selection checkboxes, and filter inputs (which all use
+ * `spacing="sm"` internally), so the row reads as a single visual unit.
+ *
+ * Default spacing still works inside a grid, but the extra vertical
+ * padding pushes the row height up and creates uneven baselines next to
+ * other compact controls.
+ */
+export const CompactDensityComparison: Story = {
+  name: 'Compact Density — Default vs spacing="sm"',
+  render: () => {
+    setTimeout(() => {
+      const sm = document.querySelector('civ-data-grid.story-density-compare-sm') as any;
+      const def = document.querySelector('civ-data-grid.story-density-compare-default') as any;
+      const rows = toRows(SAMPLE_DATA.slice(0, 4));
+      if (sm) {
+        sm.columns = defaultColumns; // statusBadge formatter renders spacing="sm"
+        sm.rows = rows;
+      }
+      if (def) {
+        def.columns = defaultColumns.map((c) =>
+          c.key === 'status' ? { ...c, formatter: statusBadgeDefault } : c,
+        );
+        def.rows = rows;
+      }
+    }, 0);
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-6">
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">spacing="sm" (recommended for data-grid rows)</p>
+          <civ-data-grid class="story-density-compare-sm" caption="Applications — compact badges"></civ-data-grid>
+        </div>
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">spacing="default"</p>
+          <civ-data-grid class="story-density-compare-default" caption="Applications — default badges"></civ-data-grid>
         </div>
       </div>
     `;

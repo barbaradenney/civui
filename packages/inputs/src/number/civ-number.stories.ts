@@ -144,3 +144,31 @@ export const WithError: Story = {
     ></civ-number>
   `,
 };
+
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare numeric `<input>` with no label / hint / error chrome and no prefix/suffix decoration. ' +
+          'The host\'s `aria-label` is propagated to the inner control. The numeric input filter (digit-only typing, optional decimal/negative) is preserved.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-number label="Annual income" name="income-default" prefix="$" allow-decimal></civ-number>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare numeric input, no chrome and no prefix/suffix. Used by data-grid cell editors for number columns.</p>
+        <civ-number spacing="sm" aria-label="Annual income" name="income-compact" allow-decimal></civ-number>
+      </div>
+    </div>
+  `,
+};

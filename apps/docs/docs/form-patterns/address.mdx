@@ -1,0 +1,129 @@
+---
+title: Address inputs
+sidebar_position: 13
+sidebar_label: Address inputs
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Address inputs
+
+CivUI ships three address-shaped inputs that solve different shapes of "where" question. This page is a short decision guide; each component has its own reference page with full props and examples.
+
+For trauma-informed handling of applicants who may not have permanent housing, see the separate [Housing & Address](./housing-address.mdx) pattern.
+
+## Which component do I reach for?
+
+| Question | Component | Why |
+| --- | --- | --- |
+| "What's your mailing / residential / billing address?" | [`<civ-address>`](../components/compound/address.mdx) | Country-adaptive — US shows state dropdown, others show free text |
+| "What's your ZIP code?" (standalone, for lookups or eligibility) | [`<civ-zip>`](../components/inputs/text-input.mdx#zip-code-civ-zip) | Lightweight 5- or 9-digit input with leading-zero preservation |
+| "What country?" (citizenship, place of birth, employer country) | [`<civ-country>`](../components/inputs/combobox.mdx#country-preset) | Type-ahead combobox with US-first ordering |
+| International postal code (UK, Canada, etc.) | [`<civ-text-input>`](../components/inputs/text-input.mdx) with custom `mask-pattern` | International codes contain letters — a generic `civ-postal-code` preset doesn't exist yet |
+
+## Full mailing address
+
+`<civ-address>` is the right answer for almost every government form that needs a place to send mail. It handles country selection, street lines, city, state, and ZIP/postal code in one compound — and it adapts the field shape based on which country the user picks.
+
+<StoryEmbed id="forms-compound-address--default" />
+
+```html
+<civ-address legend="Mailing address" name="mailing" required></civ-address>
+```
+
+See [`<civ-address>` reference](../components/compound/address.mdx) for variants (`general-delivery`, `contact`), value structure, sub-field autocomplete, and military address handling.
+
+## ZIP only
+
+When you just need a ZIP — facility finder, ZIP-based eligibility, store locator — reach for the standalone preset. It's a thin wrapper over `<civ-text-input>` with the right mask and validator.
+
+<StoryEmbed id="forms-inputs-text-input--zip-code" />
+
+```html
+<civ-zip label="ZIP code" name="zip" required></civ-zip>
+```
+
+ZIP+4 is one prop away:
+
+```html
+<civ-zip label="ZIP code" name="zip" extended required></civ-zip>
+```
+
+See [`<civ-zip>` reference](../components/inputs/text-input.mdx#zip-code-civ-zip) for validation rules and the leading-zero rationale.
+
+## Country only
+
+When the form needs a country independent of a full address (citizenship, country of birth, country of employment), use the standalone country preset. Type-ahead filtering makes the 250-item list manageable; US lists first by default for US-centric forms.
+
+<StoryEmbed id="forms-inputs-combobox--country" minHeight={350} />
+
+```html
+<civ-country label="Country" name="country" required></civ-country>
+```
+
+Restrict the list when only a subset applies:
+
+```html
+<civ-country label="Country" name="country" include="US,CA,MX" required></civ-country>
+```
+
+See [`<civ-country>` reference](../components/inputs/combobox.mdx#country-preset) for `include` / `exclude` filtering and US-first ordering.
+
+## International postal codes
+
+There is no general-purpose international postal-code preset today — UK (`SW1A 1AA`), Canada (`M5V 3L9`), and Netherlands (`1012 AB`) all use letters, so a numeric mask wouldn't apply. Use `<civ-text-input>` directly with a custom `mask-pattern`:
+
+```html
+<!-- UK postcode: AANN NAA or ANN NAA depending on area -->
+<civ-text-input
+  label="Postcode"
+  name="postcode"
+  mask-pattern="**** ***"
+  hint="For example: SW1A 1AA"
+></civ-text-input>
+```
+
+When you collect addresses via `<civ-address>`, the compound switches the ZIP field to a free-text postal-code input automatically when the country isn't US — no custom mask needed.
+
+## Composition examples
+
+### Address inside a multi-step form
+
+Put `<civ-address>` on its own step when the form is long; the compound spans multiple rows and dedicating a step keeps the page short.
+
+```html
+<civ-form-step name="address" heading="Where do you live?">
+  <civ-address legend="Residential address" name="home" required></civ-address>
+</civ-form-step>
+```
+
+### ZIP-only "find your nearest..." pattern
+
+A ZIP-only input is the right surface for facility-finder flows (find a clinic, find an office, find a service center). Pair it with a submit button that runs the lookup — no full address needed.
+
+```html
+<civ-zip label="Find services near you" name="zip" hint="Enter your ZIP code to see options nearby" required></civ-zip>
+<civ-button label="Find services" variant="primary"></civ-button>
+```
+
+### Address conditional on residency status
+
+When some applicants don't have a US address (e.g., overseas military, expats), reveal the address only when needed:
+
+```html
+<civ-yes-no legend="Do you have a US mailing address?" name="hasAddress" required></civ-yes-no>
+
+<civ-conditional when="hasAddress" equals="yes">
+  <civ-address legend="Mailing address" name="mailing" required></civ-address>
+</civ-conditional>
+
+<civ-conditional when="hasAddress" equals="no">
+  <civ-country label="Country of residence" name="country" required></civ-country>
+</civ-conditional>
+```
+
+## Related patterns
+
+- [**Housing & Address**](./housing-address.mdx) — trauma-informed patterns for collecting addresses from applicants who may not have permanent housing. Uses the `general-delivery` and `contact` variants of `<civ-address>`.
+- [**Conditional Reveal**](./conditional-reveal.mdx) — show/hide address fields based on prior answers.
+- [**Multi-Step Form**](./multi-step-form.mdx) — when to give the address its own step.

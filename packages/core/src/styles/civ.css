@@ -75,6 +75,7 @@ summary:focus,
   --civ-z-overlay: 100;
   --civ-z-skip-link: 9999;
   --civ-shadow-overlay: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  --civ-shadow-sticky-boundary: rgba(0, 0, 0, 0.15);
   --civ-backdrop-color: rgba(0, 0, 0, 0.5);
 }
 

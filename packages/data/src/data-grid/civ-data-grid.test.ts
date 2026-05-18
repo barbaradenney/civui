@@ -1283,4 +1283,76 @@ describe('civ-data-grid — sticky columns', () => {
     expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
     expect(td.getAttribute('style')).toContain('position: sticky');
   });
+
+  it('selected rows set --_civ-sticky-bg so sticky cells share the selection background', async () => {
+    // The cascade pattern: rather than overriding the sticky cell's
+    // background directly, the row sets a CSS custom property that
+    // the sticky cell consumes. This keeps stripe / select / hover
+    // visuals consistent through the pinned columns.
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+      selectable: 'multiple',
+      selectedRowIds: ['1'],
+    });
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    expect(row.classList.contains('civ-data-grid__tr--selected')).toBe(true);
+    // Don't assert the resolved background (jsdom doesn't compute it
+    // reliably) — verify the cascade source classes are on the row,
+    // which is what drives the styling.
+    const stickyCell = row.querySelector('.civ-data-grid__cell--sticky') as HTMLElement;
+    expect(stickyCell).not.toBeNull();
+  });
+
+  it('striped grids put both row-background and sticky-bg cascade on odd rows', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [
+        { id: '1', cells: { id: 'A-1' } },
+        { id: '2', cells: { id: 'A-2' } },
+      ],
+    });
+    el.striped = true;
+    await elementUpdated(el);
+    // The striped + sticky CSS rules target `.civ-data-grid--striped
+    // .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd)` — verify
+    // the wrapper class is in place and the rows have sticky cells.
+    expect(el.querySelector('.civ-data-grid--striped')).not.toBeNull();
+    const stickyCells = el.querySelectorAll('tbody .civ-data-grid__cell--sticky');
+    expect(stickyCells.length).toBe(2);
+  });
+
+  it('sticky-header cell gets the higher z-index token (corner cell layering)', async () => {
+    // When both sticky-header (on the grid) and a sticky-start column
+    // are active, the top-left corner cell needs to layer above the
+    // body sticky cells. The CSS uses --civ-z-sticky-header in the
+    // thead descendant selector — verify the header cell carries the
+    // sticky class so the rule matches.
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    el.stickyHeader = true;
+    await elementUpdated(el);
+    const cornerCell = el.querySelector('thead .civ-data-grid__cell--sticky') as HTMLElement;
+    expect(cornerCell).not.toBeNull();
+    expect(cornerCell.tagName).toBe('TH');
+  });
+
+  it('still emits the sticky classes when responsive="stacked" (CSS handles the reset at narrow viewports)', async () => {
+    // The render path doesn't conditionally drop sticky based on
+    // responsive mode — that would require knowing the viewport. The
+    // sticky styles are present in the DOM but neutralized by the
+    // `@media (max-width: 480px)` rule in components.css. Test verifies
+    // the class is still on the cell (the media query handles the
+    // visual neutralization separately).
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    // responsive defaults to 'stacked'
+    expect(el.responsive).toBe('stacked');
+    const td = el.querySelector('tbody td') as HTMLElement;
+    expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+  });
 });

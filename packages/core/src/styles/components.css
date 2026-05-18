@@ -2408,6 +2408,45 @@
     min-width: 0;
   }
 
+  /* Aggregator footer — <tfoot> row of per-column aggregates. The cell
+     border-top sets it apart from the data rows above; bold font weight
+     mirrors how Excel renders totals. Placeholder cells (no aggregate
+     configured, or special select / expand / actions columns) leave the
+     cell visually empty but keep alignment. */
+  .civ-data-grid__tfoot {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__tfoot-cell {
+    border-top: 2px solid var(--civ-color-base-light);
+    font-weight: 600;
+  }
+
+  /* Sticky footer — cells use position: sticky bottom so the footer row
+     stays pinned to the bottom of the scroll region. Matches the
+     sticky-header pattern (which sticks individual <th>s rather than
+     the whole <thead>, because browsers don't reliably sticky <thead>
+     or <tfoot> elements). */
+  .civ-data-grid--sticky-footer .civ-data-grid__tfoot-cell {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--civ-color-base-lightest);
+    z-index: var(--civ-z-sticky-header);
+  }
+
+  /* Per-group subtotal row — same visual treatment as the footer row so
+     it reads as a "group total". Gets an extra background tint to
+     separate it from the regular data rows above. */
+  .civ-data-grid__tr--group-subtotal {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__tr--group-subtotal .civ-data-grid__tfoot-cell {
+    /* Subtotals get a thinner border than the grand-total footer — they
+       belong inside their group, not at the bottom of everything. */
+    border-top: 1px solid var(--civ-color-base-light);
+  }
+
   /* Keyboard-nav focus indicator on the focused cell. The global focus
      rule (civ.css) already matches `[tabindex]:not([tabindex="-1"]):focus`
      and would fire on the focused cell — but its halo (box-shadow) paints

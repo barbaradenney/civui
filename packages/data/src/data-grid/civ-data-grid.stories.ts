@@ -10,6 +10,7 @@ import '@civui/inputs/text-input';
 import '@civui/overlays/drawer';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 import { applyGridFilters } from '../filter/grid-filter.js';
+import { sum, avg } from '../aggregate/grid-aggregate.js';
 
 const meta: Meta = {
   title: 'Layout/Data Grid',
@@ -761,6 +762,64 @@ export const KeyboardNavigation: Story = {
           keyboard-nav
           bordered
         ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const Aggregations: Story = {
+  name: 'Aggregator footer + group subtotals',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-aggregate') as any;
+      if (!grid) return;
+      const fmtUSD = (n: number) =>
+        n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true },
+        { key: 'type', header: 'Type' },
+        {
+          key: 'amount',
+          header: 'Award amount',
+          align: 'numeric',
+          formatter: (v) => fmtUSD(Number(v)),
+          aggregate: (rows, col) => `Total: ${fmtUSD(sum(rows, col))}`,
+        },
+        {
+          key: 'days',
+          header: 'Days in review',
+          align: 'numeric',
+          aggregate: (rows, col) => `Avg: ${avg(rows, col).toFixed(1)}`,
+        },
+      ];
+      grid.columns = cols;
+      grid.rows = SAMPLE_DATA.map((d, i) => ({
+        id: d.id,
+        cells: {
+          applicant: d.applicant,
+          type: d.type,
+          amount: 1500 + i * 850,
+          days: 4 + (i * 3) % 28,
+        },
+      }));
+      grid.groupBy = 'type';
+      grid.stickyFooter = true;
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Each column with <code>aggregate</code> contributes a per-group
+          subtotal row plus a grand-total in the sticky <code>&lt;tfoot&gt;</code>.
+          Custom function aggregators do the formatting (currency,
+          decimals, "Total:" / "Avg:" prefixes).
+        </p>
+        <div style="max-height: 360px; overflow-y: auto; border: 1px solid var(--civ-color-base-lighter);">
+          <civ-data-grid
+            class="story-aggregate"
+            caption="Applications with subtotals"
+            bordered
+          ></civ-data-grid>
+        </div>
       </div>
     `;
   },

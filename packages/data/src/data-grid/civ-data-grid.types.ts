@@ -55,6 +55,29 @@ export type GridFilterValue =
 export type GridFilters = Record<string, GridFilterValue>;
 
 /**
+ * Per-column aggregator for the footer row and per-group subtotal rows.
+ *
+ * String form: built-in aggregators that operate on the column's cell
+ * values. `sum` / `avg` / `min` / `max` parse cells via `Number()` and
+ * silently drop non-numeric / null / empty entries. `count` counts rows
+ * whose cell is not null / undefined / empty string.
+ *
+ * Function form: full control. Receives the row subset for the
+ * aggregate context (the whole grid, a filtered slice, a single group)
+ * plus the column definition. Return a string or number — the grid
+ * renders it verbatim, so the function is the right place to format
+ * (`'$' + sum(rows, col).toFixed(2)`, etc.). Use the helpers exported
+ * from `@civui/data/aggregate` to compose.
+ */
+export type GridAggregator =
+  | 'sum'
+  | 'avg'
+  | 'count'
+  | 'min'
+  | 'max'
+  | ((rows: readonly GridRow[], col: GridColumn) => string | number);
+
+/**
  * Column definition. Set via the grid's `columns` JS property.
  */
 export interface GridColumn {
@@ -117,6 +140,16 @@ export interface GridColumn {
    * placeholder in the filter row to keep columns aligned.
    */
   filter?: GridColumnFilter;
+  /**
+   * Per-column aggregator for the footer row and (when `groupBy` is set)
+   * per-group subtotal rows. Built-in: `'sum' | 'avg' | 'count' | 'min' |
+   * 'max'`. Pass a function for custom formatting:
+   * `aggregate: (rows, col) => '$' + sum(rows, col).toFixed(2)`. The
+   * footer renders automatically when ANY column has `aggregate` set;
+   * non-aggregated columns get an empty placeholder cell so columns
+   * align. Use the helpers from `@civui/data/aggregate` to compose.
+   */
+  aggregate?: GridAggregator;
 }
 
 /**

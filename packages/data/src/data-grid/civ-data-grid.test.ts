@@ -2319,3 +2319,179 @@ describe('civ-data-grid — column filtering', () => {
     expect(document.activeElement).toBe(cell);
   });
 });
+
+describe('civ-data-grid — aggregator footer', () => {
+  const aggColumns: GridColumn[] = [
+    { key: 'name', header: 'Name' },
+    { key: 'amount', header: 'Amount', align: 'numeric', aggregate: 'sum' },
+    { key: 'count', header: 'Count', aggregate: 'count' },
+  ];
+  const aggRows: GridRow[] = [
+    { id: '1', cells: { name: 'A', amount: 100, count: 'x' } },
+    { id: '2', cells: { name: 'B', amount: 250, count: 'y' } },
+    { id: '3', cells: { name: 'C', amount: 50, count: 'z' } },
+  ];
+
+  it('does NOT render <tfoot> when no column has aggregate', async () => {
+    const el = await mountGrid();
+    expect(el.querySelector('tfoot')).toBeNull();
+  });
+
+  it('renders <tfoot> when any column has aggregate', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    expect(el.querySelector('tfoot.civ-data-grid__tfoot')).not.toBeNull();
+  });
+
+  it('computes sum for a sum column from current rows', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    const cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // Layout: [name placeholder, amount sum, count]
+    expect(cells[1].textContent?.trim()).toBe('400');
+    expect(cells[2].textContent?.trim()).toBe('3');
+  });
+
+  it('renders placeholder cells for columns without an aggregator', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    const cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // First cell is the "Name" column placeholder.
+    expect(cells[0].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(cells[0].textContent?.trim()).toBe('');
+  });
+
+  it('renders placeholders for selection / expand / row-actions columns', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const rows: GridRow[] = [{
+      id: '1',
+      cells: { name: 'A', amount: 100 },
+      actions: [{ id: 'view', label: 'View' }],
+    }];
+    const el = await mountGrid({ columns: cols, rows, selectable: 'multiple' });
+    const footerCells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // 1 select placeholder + 1 name placeholder + 1 amount sum + 1 actions placeholder = 4
+    expect(footerCells).toHaveLength(4);
+    expect(footerCells[0].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(footerCells[1].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(footerCells[2].textContent?.trim()).toBe('100');
+    expect(footerCells[3].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+  });
+
+  it('supports a function aggregator and renders its returned value verbatim', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      {
+        key: 'amount',
+        header: 'Amount',
+        aggregate: (rows) => '$' + rows.reduce((s, r) => s + Number(r.cells.amount), 0).toFixed(2),
+      },
+    ];
+    const el = await mountGrid({ columns: cols, rows: aggRows });
+    const cell = el.querySelector('tfoot .civ-data-grid__tfoot-cell:not(.civ-data-grid__tfoot-cell--placeholder)');
+    expect(cell?.textContent?.trim()).toBe('$400.00');
+  });
+
+  it('applies stickyFooter class to the wrapper when stickyFooter=true AND any column aggregates', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    el.stickyFooter = true;
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sticky-footer')).not.toBeNull();
+  });
+
+  it('does NOT apply stickyFooter class when no column aggregates (footer wouldn\'t render anyway)', async () => {
+    const el = await mountGrid();
+    el.stickyFooter = true;
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sticky-footer')).toBeNull();
+  });
+
+  it('recomputes the footer when rows change', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    let cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    expect(cells[1].textContent?.trim()).toBe('400');
+    el.rows = [
+      { id: '1', cells: { name: 'A', amount: 1000, count: 'x' } },
+    ];
+    await elementUpdated(el);
+    cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    expect(cells[1].textContent?.trim()).toBe('1000');
+    expect(cells[2].textContent?.trim()).toBe('1');
+  });
+
+  it('renders per-group subtotal rows when groupBy + aggregate are both set', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100, count: 'a' } },
+      { id: '2', cells: { name: 'B', type: 'X', amount: 250, count: 'b' } },
+      { id: '3', cells: { name: 'C', type: 'Y', amount: 50, count: 'c' } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+      { key: 'count', header: 'Count', aggregate: 'count' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const subtotals = el.querySelectorAll('.civ-data-grid__tr--group-subtotal');
+    expect(subtotals).toHaveLength(2);
+    // Group X subtotal: 100 + 250 = 350
+    const xCells = subtotals[0].querySelectorAll('.civ-data-grid__tfoot-cell');
+    expect(xCells[2].textContent?.trim()).toBe('350');
+    expect(xCells[3].textContent?.trim()).toBe('2');
+    // Group Y subtotal: 50
+    const yCells = subtotals[1].querySelectorAll('.civ-data-grid__tfoot-cell');
+    expect(yCells[2].textContent?.trim()).toBe('50');
+    expect(yCells[3].textContent?.trim()).toBe('1');
+  });
+
+  it('omits subtotal rows when showGroupSubtotals=false', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100 } },
+      { id: '2', cells: { name: 'B', type: 'X', amount: 250 } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    el.showGroupSubtotals = false;
+    await elementUpdated(el);
+    expect(el.querySelectorAll('.civ-data-grid__tr--group-subtotal')).toHaveLength(0);
+    // But the grand-total footer still renders.
+    expect(el.querySelector('tfoot.civ-data-grid__tfoot')).not.toBeNull();
+  });
+
+  it('subtotal rows only render for expanded groups', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100 } },
+      { id: '2', cells: { name: 'B', type: 'Y', amount: 50 } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    el.expandedGroups = ['X']; // Y collapsed
+    await elementUpdated(el);
+    const subtotals = el.querySelectorAll('.civ-data-grid__tr--group-subtotal');
+    expect(subtotals).toHaveLength(1);
+    expect(subtotals[0].getAttribute('data-group-subtotal-for')).toBe('X');
+  });
+
+  it('keyboardNav includes footer cells in cell-nav rotation', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const footerCells = el.querySelectorAll('tfoot .civ-data-grid__td');
+    // Footer cells get role=gridcell + tabindex managed via _applyKeyboardNav.
+    expect(footerCells[0].getAttribute('role')).toBe('gridcell');
+    // All cells start with tabindex=-1 except focused (0, 0).
+    footerCells.forEach((c) => expect((c as HTMLElement).tabIndex).toBe(-1));
+  });
+});

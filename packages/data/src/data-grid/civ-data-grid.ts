@@ -4,6 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
 import '@civui/overlays/menu';
+import { applyAggregator } from '../aggregate/grid-aggregate.js';
 import './civ-data-grid.types.js';
 import type {
   GridColumn,
@@ -19,6 +20,7 @@ import type {
   GridColumnFilter,
   GridFilterValue,
   GridFilters,
+  GridAggregator,
 } from './civ-data-grid.types.js';
 
 export type {
@@ -35,6 +37,7 @@ export type {
   GridColumnFilter,
   GridFilterValue,
   GridFilters,
+  GridAggregator,
 };
 
 /**
@@ -80,6 +83,8 @@ export type {
  * @prop {Function} expandTemplate - `(row) => string | TemplateResult` — renders the detail content shown when a row is expanded. Required when any row has `expandable: true`.
  * @prop {boolean} keyboardNav - Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. See the data-grid doc page "Keyboard navigation" section for the full key map and behavior notes.
  * @prop {Object} filters - Active filter values keyed by column.key (controlled). Update in response to `civ-filter-change`. See the doc page "Column filtering" section.
+ * @prop {boolean} stickyFooter - Pin the aggregator footer to the bottom of the scrolling container.
+ * @prop {boolean} showGroupSubtotals - When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group (default `true`).
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
@@ -138,6 +143,8 @@ export class CivDataGrid extends CivBaseElement {
   @property({ attribute: false }) groupLabel?: GridGroupLabel;
   @property({ type: Boolean, attribute: 'keyboard-nav' }) keyboardNav = false;
   @property({ attribute: false }) filters: GridFilters = {};
+  @property({ type: Boolean, attribute: 'sticky-footer' }) stickyFooter = false;
+  @property({ type: Boolean, attribute: 'show-group-subtotals' }) showGroupSubtotals = true;
 
   /**
    * Roving-tabindex position when `keyboardNav` is on. Plain fields (not
@@ -177,6 +184,7 @@ export class CivDataGrid extends CivBaseElement {
       this.striped ? 'civ-data-grid--striped' : '',
       this.bordered ? 'civ-data-grid--bordered' : '',
       this.keyboardNav ? 'civ-data-grid--keyboard-nav' : '',
+      this.stickyFooter && this._hasAnyAggregate() ? 'civ-data-grid--sticky-footer' : '',
     ].filter(Boolean).join(' ');
 
     return html`
@@ -234,6 +242,7 @@ export class CivDataGrid extends CivBaseElement {
           <tbody class="civ-data-grid__tbody">
             ${this._renderBody()}
           </tbody>
+          ${this._hasAnyAggregate() ? this._renderFooter() : nothing}
         </table>
       </div>
     `;
@@ -339,6 +348,7 @@ export class CivDataGrid extends CivBaseElement {
    */
   private _renderGroupedBody(): Array<TemplateResult | TemplateResult[]> {
     const groups = this._buildGroups();
+    const showSubtotals = this.showGroupSubtotals && this._hasAnyAggregate();
     const out: Array<TemplateResult | TemplateResult[]> = [];
     let rowIndex = 0;
     for (const [groupKey, groupRows] of groups) {
@@ -347,6 +357,9 @@ export class CivDataGrid extends CivBaseElement {
         for (const row of groupRows) {
           out.push(this._renderRow(row, rowIndex));
           rowIndex++;
+        }
+        if (showSubtotals) {
+          out.push(this._renderGroupSubtotalRow(groupKey, groupRows));
         }
       } else {
         rowIndex += groupRows.length;
@@ -571,6 +584,80 @@ export class CivDataGrid extends CivBaseElement {
       next[col.key] = updated;
     }
     dispatch(this, 'civ-filter-change', { filters: next, columnKey: col.key });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Aggregator footer + per-group subtotals
+  // ---------------------------------------------------------------------------
+
+  /** True if any visible column declares an `aggregate`. */
+  private _hasAnyAggregate(): boolean {
+    return this._visibleColumns.some((c) => !!c.aggregate);
+  }
+
+  /**
+   * Render `<tfoot>` with one row of aggregator cells, computed from the
+   * full `rows` set (the consumer is responsible for filtering /
+   * paginating before assignment). Special columns (expand, select,
+   * actions) render placeholder cells so columns align with header and
+   * body.
+   */
+  private _renderFooter(): TemplateResult {
+    return html`
+      <tfoot class="civ-data-grid__tfoot">
+        <tr class="civ-data-grid__tfoot-row">
+          ${this._hasAnyExpandable()
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+          ${this.selectable !== 'none'
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+          ${this._visibleColumns.map((col) => this._renderFooterCell(col, this.rows))}
+          ${this._hasAnyRowActions()
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+        </tr>
+      </tfoot>
+    `;
+  }
+
+  private _renderFooterCell(col: GridColumn, scopedRows: readonly GridRow[]): TemplateResult {
+    const sticky = this._stickyAttrs(col);
+    const alignClass = col.align ? `civ-data-grid__td--align-${col.align}` : '';
+    const cellClass = `civ-data-grid__td civ-data-grid__tfoot-cell ${alignClass} ${sticky.cls}`;
+    if (!col.aggregate) {
+      return html`<td class="${cellClass} civ-data-grid__tfoot-cell--placeholder" style="${sticky.style}"></td>`;
+    }
+    const value = applyAggregator(scopedRows, col);
+    return html`
+      <td class="${cellClass}" style="${sticky.style}">${value as unknown as TemplateResult}</td>
+    `;
+  }
+
+  /**
+   * Render a per-group subtotal row. Same column layout as a data row
+   * but each cell shows its column's aggregator value computed from the
+   * group's rows. Only inserted when `showGroupSubtotals` is true and at
+   * least one column has an `aggregate`.
+   */
+  private _renderGroupSubtotalRow(groupKey: string, groupRows: readonly GridRow[]): TemplateResult {
+    return html`
+      <tr
+        class="civ-data-grid__tr--group-subtotal"
+        data-group-subtotal-for="${groupKey}"
+      >
+        ${this._hasAnyExpandable()
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+        ${this.selectable !== 'none'
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+        ${this._visibleColumns.map((col) => this._renderFooterCell(col, groupRows))}
+        ${this._hasAnyRowActions()
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+      </tr>
+    `;
   }
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
@@ -1315,7 +1402,9 @@ export class CivDataGrid extends CivBaseElement {
    * region semantics and the consumer's keyboard nav should bypass them.
    */
   private _allCells(): HTMLElement[][] {
-    const trs = Array.from(this.querySelectorAll('thead tr, tbody tr')) as HTMLElement[];
+    const trs = Array.from(
+      this.querySelectorAll('thead tr, tbody tr, tfoot tr'),
+    ) as HTMLElement[];
     return trs
       .filter((tr) => !tr.querySelector(':scope > .civ-data-grid__state'))
       .map((tr) =>

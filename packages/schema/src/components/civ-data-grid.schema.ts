@@ -136,6 +136,18 @@ const schema: ComponentSchema = {
       description: 'Active filter values keyed by column.key. Typed as `Record<string, GridFilterValue>` — passed as an object literal, not a string (the type is `string` here only because the schema doesn\'t model object literals; the actual runtime shape is `{ [columnKey]: { type: \'text\' | \'select\' | \'number-range\', value?, min?, max? } }`). Controlled — update in response to `civ-filter-change`. Set `column.filter = { type, options?, placeholder? }` to opt a column into the filter row. The filter row renders inside `<thead>` beneath the column headers; columns without a filter config get an empty placeholder cell so the row stays aligned. Use the `applyGridFilters` utility from `@civui/data/filter` for client-side filtering, or wire it to your server query',
       webOnly: true,
     },
+    stickyFooter: {
+      type: 'boolean',
+      description: 'Pin the aggregator footer to the bottom of the scrolling container. Only takes effect when at least one column has `aggregate` set; otherwise no footer renders',
+      default: false,
+      attribute: 'sticky-footer',
+    },
+    showGroupSubtotals: {
+      type: 'boolean',
+      description: 'When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group. Default `true`. Disable when you want a grand-total footer but not per-group subtotals',
+      default: true,
+      attribute: 'show-group-subtotals',
+    },
   },
 
   events: {

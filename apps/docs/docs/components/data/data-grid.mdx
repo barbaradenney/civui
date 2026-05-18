@@ -103,6 +103,10 @@ For admin screens with many interactive cells — sort, expand, edit, select, ro
 
 <StoryEmbed id="layout-data-grid--column-filtering" minHeight={500} />
 
+### Aggregator footer + group subtotals
+
+<StoryEmbed id="layout-data-grid--aggregations" minHeight={500} />
+
 ### Keyboard grid navigation
 
 <StoryEmbed id="layout-data-grid--keyboard-navigation" minHeight={500} />
@@ -407,6 +411,75 @@ The grid skips hidden columns (header + body) — same path
   sticky` on the toggle button) so the group identity is always
   visible alongside the sticky data columns.
 
+## Aggregator footer
+
+Set `column.aggregate` on any column to render an aggregator footer. The grid creates a `<tfoot>` automatically and renders a per-column aggregator cell; columns without an aggregator show empty placeholder cells. When `groupBy` is also set, each expanded group gets its own subtotal row at the bottom of its data rows.
+
+### Built-in aggregators
+
+```ts
+{ key: 'amount', header: 'Amount', aggregate: 'sum' }   // sum
+{ key: 'amount', header: 'Amount', aggregate: 'avg' }   // average (mean)
+{ key: 'id',     header: 'ID',     aggregate: 'count' } // non-empty cells
+{ key: 'amount', header: 'Amount', aggregate: 'min' }   // smallest finite value
+{ key: 'amount', header: 'Amount', aggregate: 'max' }   // largest finite value
+```
+
+`sum` / `avg` / `min` / `max` parse cells via `Number()` and silently drop non-finite values (null, undefined, '', 'N/A', etc.) — matches Google Sheets / Excel. `count` counts cells that are present and non-empty (Excel `COUNTA`, not `COUNT`). `min` / `max` on an empty set return `0` rather than `±Infinity`.
+
+### Custom aggregators (formatting, labels, weighted averages)
+
+For anything beyond a plain number — currency formatting, "Total:" prefixes, weighted averages, ratios — pass a function:
+
+```ts
+import { sum, avg, count } from '@civui/data/aggregate';
+
+const cols = [
+  { key: 'applicant', header: 'Applicant' },
+  {
+    key: 'amount',
+    header: 'Award amount',
+    aggregate: (rows, col) =>
+      `Total: $${sum(rows, col).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
+  },
+  {
+    key: 'days',
+    header: 'Days in review',
+    aggregate: (rows, col) => `Avg: ${avg(rows, col).toFixed(1)} days`,
+  },
+];
+```
+
+The function receives the row subset for the aggregate context (the whole grid for the footer; the group's rows for a group subtotal) plus the column definition. Return a string or number — the grid renders it verbatim, so the function is the right place to format.
+
+### Per-group subtotals
+
+When `groupBy` is set and any column has `aggregate`, each expanded group renders a subtotal row beneath its data rows. The subtotal row uses the same column layout as a data row but each cell shows its column's aggregator computed from that group's rows. Set `showGroupSubtotals="false"` to keep the grand-total footer but drop the per-group rows.
+
+### Sticky footer
+
+`stickyFooter` pins the `<tfoot>` to the bottom of the scrolling container — useful for long tables where the totals would otherwise scroll off-screen. The grid is responsible for the sticky positioning of its own cells; the table must sit inside a scrollable element with a constrained height for the effect to engage.
+
+```html
+<div style="max-height: 400px; overflow-y: auto;">
+  <civ-data-grid sticky-footer caption="Applications"></civ-data-grid>
+</div>
+```
+
+### Aggregates + filters
+
+The footer aggregates **whatever rows the consumer hands to the grid** — there's no internal filter / paginate step. When you use `applyGridFilters` client-side, set `grid.rows` to the filtered set and aggregates recompute automatically:
+
+```ts
+grid.addEventListener('civ-filter-change', (e) => {
+  grid.filters = e.detail.filters;
+  grid.rows = applyGridFilters(allRows, cols, grid.filters);
+  // Footer + subtotals recompute from the new rows on the next render.
+});
+```
+
+For server-side data, the consumer can also return per-column server-computed aggregates and surface them via custom function aggregators that ignore the `rows` arg and read from a separate state slot — useful when totals are computed across the full dataset, not just the current page.
+
 ## Per-column filtering
 
 Set `column.filter` on any column to render a filter input in a row beneath the column headers. Three variants ship today:
@@ -690,7 +763,6 @@ pager.addEventListener('civ-page-change', (e) => {
 
 ## Coming in follow-up work
 
-- **Aggregations / footer row** — per-column sum / avg / count, optionally per-group when `groupBy` is set
 - **Multi-column sort** — Shift-click to add secondary / tertiary sort keys
 - **Saved views / presets** — user-saveable named bundles of column visibility + filters + sort
 - **URL state persistence** — sync sort / filter / page to query params for shareable views

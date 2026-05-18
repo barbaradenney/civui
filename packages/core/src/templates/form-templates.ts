@@ -193,12 +193,20 @@ export function renderHint(id: string, text: string, groupSpacing = false) {
 
 /**
  * Render an error span with role="alert". Returns nothing if text is falsy.
+ *
+ * Includes a leading `error` icon (filled circle with `!`) marked
+ * `aria-hidden` — the role="alert" announces the text, the icon is a
+ * non-color visual cue for users with color-vision deficiencies (also
+ * matches GOV.UK / USWDS / VA.gov / FAFSA conventions).
+ *
  * @param groupSpacing - true for group components (civ-error-text--group), false for individual inputs (civ-error-text)
  */
 export function renderError(id: string, text: string, groupSpacing = false) {
   if (!text) return nothing;
   const cls = groupSpacing ? 'civ-error-text--group' : 'civ-error-text';
-  return html`<span class="${cls}" id="${id}" role="alert">${text}</span>`;
+  return html`<span class="${cls}" id="${id}" role="alert"
+    ><civ-icon name="error" class="civ-error-text__icon" aria-hidden="true"></civ-icon
+    ><span class="civ-error-text__msg">${text}</span></span>`;
 }
 
 /**

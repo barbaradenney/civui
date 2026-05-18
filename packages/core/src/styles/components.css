@@ -592,9 +592,26 @@
 
   .civ-error-text,
   .civ-error-text--group {
-    @apply civ-block civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
+    @apply civ-flex civ-items-start civ-gap-1 civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
     text-box-trim: both;
     text-box-edge: cap alphabetic;
+  }
+
+  /* Inline error icon (filled circle with !). Sized to match the
+     error-text cap-height so the icon optically aligns with the first
+     line of text. The small top inset compensates for the icon's
+     internal padding so it sits flush with the cap height rather than
+     the line-box. */
+  .civ-error-text__icon,
+  .civ-error-text--group .civ-error-text__icon {
+    flex-shrink: 0;
+    font-size: 1.125em;
+    line-height: 1;
+    margin-top: 0.0625em;
+  }
+
+  .civ-error-text__msg {
+    min-width: 0;
   }
 
   .civ-input {
@@ -692,7 +709,8 @@
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
   .civ-input-inline-action:disabled {
-    @apply civ-opacity-disabled civ-cursor-not-allowed;
+    @apply civ-cursor-not-allowed;
+    opacity: var(--civ-opacity-disabled);
   }
   .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
   .civ-input-action:focus {
@@ -701,7 +719,8 @@
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
   .civ-input-action:disabled {
-    @apply civ-opacity-disabled civ-cursor-not-allowed;
+    @apply civ-cursor-not-allowed;
+    opacity: var(--civ-opacity-disabled);
   }
 
   .civ-input-icon-wrap {

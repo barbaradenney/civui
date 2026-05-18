@@ -244,6 +244,18 @@ describe('renderError', () => {
     const output = renderToString(result);
     expect(output).toContain('civ-error-text--group');
   });
+
+  it('renders an inline aria-hidden error icon before the text', () => {
+    const result = renderError('err-3', 'Field is required');
+    const output = renderToString(result);
+    expect(output).toContain('<civ-icon');
+    expect(output).toContain('name="error"');
+    expect(output).toContain('aria-hidden="true"');
+    expect(output).toContain('civ-error-text__icon');
+    // The message itself sits in a sibling span so the icon doesn't
+    // get caught by ::first-letter or selection clipping.
+    expect(output).toContain('civ-error-text__msg');
+  });
 });
 
 describe('inputClasses', () => {

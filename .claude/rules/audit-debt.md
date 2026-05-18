@@ -37,6 +37,18 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Navigation components follow-ups
+
+- **Surfaced:** Navigation components landing, 2026-05-18. Branch `claude/add-navigation-components-YikKk`.
+- **What landed:** Three new navigation-component clusters in `@civui/actions` — `<civ-breadcrumb>` + `<civ-breadcrumb-item>` (anchor-based trail with CSS chevron separators and `aria-current="page"` on the final crumb), `<civ-nav>` + `<civ-nav-item>` (top-level horizontal site nav, stacks vertically at ≤480px, single-level only), `<civ-tabs>` + `<civ-tab>` + `<civ-tab-panel>` (full ARIA tabs pattern with roving tabindex, manual activation, arrow / Home / End keyboard navigation, and auto-wired `aria-controls` / `aria-labelledby`). Schemas, tests (33 new tests), Storybook stories, and Docusaurus pages all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Tab panels backed by URL.** Tabs are JS-state-driven. A future addition could optionally sync the selected tab to the URL (hash or query param) so deep linking and back-button navigation work; today the consumer wires that up themselves via the `civ-change` event.
+  2. **Multi-level nav with dropdown submenus.** `<civ-nav>` is single-level by design. Submenus (hover/click triggered dropdowns, mobile sheet collapse, focus management) are deliberately out of scope — use a separate menu component if needed.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-breadcrumb`, `civ-breadcrumb-item`, `civ-nav`, `civ-nav-item`, `civ-tabs`, `civ-tab`, and `civ-tab-panel` and they validate cleanly + produce Props/Events partials, but none are registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{Breadcrumb,BreadcrumbItem,Nav,NavItem,Tabs,Tab,TabPanel}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{Breadcrumb,...}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{breadcrumb,breadcrumb-item,nav,nav-item,tabs,tab,tab-panel}/{name}.component.yml`). Pattern: shape `civ-nav` / `civ-breadcrumb` after `civ-list` (parent renders a container, child sets `role="listitem"`); shape `civ-tabs` after `civ-segmented-control` (parent owns roving tabindex + keyboard).
+- **Why deferred:** Same rationale as the existing native-stubs entry — tab presentation has platform quirks (SwiftUI's `TabView` vs custom segmented-control vs `Picker`, Compose's `TabRow` / `ScrollableTabRow`) that need device verification. Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

@@ -92,7 +92,7 @@ const config: StorybookConfig = {
       '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),
       '@civui/feedback/count': resolve(root, 'packages/feedback/src/count/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
-      // Actions (button, action-button, filter-chip, link, link-card, skip-link)
+      // Actions (button, action-button, filter-chip, link, link-card, skip-link, breadcrumb, nav, tabs)
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(root, 'packages/actions/src/action-button/index.ts'),
       '@civui/actions/filter-chip': resolve(root, 'packages/actions/src/filter-chip/index.ts'),
@@ -100,6 +100,9 @@ const config: StorybookConfig = {
       '@civui/actions/link': resolve(root, 'packages/actions/src/link/index.ts'),
       '@civui/actions/link-card': resolve(root, 'packages/actions/src/link-card/index.ts'),
       '@civui/actions/skip-link': resolve(root, 'packages/actions/src/skip-link/index.ts'),
+      '@civui/actions/breadcrumb': resolve(root, 'packages/actions/src/breadcrumb/index.ts'),
+      '@civui/actions/nav': resolve(root, 'packages/actions/src/nav/index.ts'),
+      '@civui/actions/tabs': resolve(root, 'packages/actions/src/tabs/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),

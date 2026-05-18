@@ -1,0 +1,102 @@
+---
+title: Tabs
+sidebar_position: 9
+sidebar_label: Tabs
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import TabsProps from "./_tabs.props.mdx";
+import TabProps from "./_tab.props.mdx";
+import TabsEvents from "./_tabs.events.mdx";
+import TabEvents from "./_tab.events.mdx";
+
+# Tabs
+
+`<civ-tabs>` + `<civ-tab>` + `<civ-tab-panel>`
+
+ARIA tab pattern — a tablist with associated panels. Tabs and panels are paired by `value`. Keyboard navigation follows the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) tabs pattern: roving tabindex, `ArrowLeft` / `ArrowRight` to move between tabs, `Home` / `End` to jump to first / last. Disabled tabs are skipped.
+
+**Activation is manual.** Pressing a tab (Enter / Space / click) selects it; arrow-key navigation also selects to keep the keyboard and pointer behaviors aligned. This is safer than automatic follow-focus when panel content is expensive to render or fetch.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-tabs--default" />
+
+### Two tabs
+
+<StoryEmbed id="navigation-tabs--two-tabs" />
+
+### With disabled tab
+
+<StoryEmbed id="navigation-tabs--with-disabled-tab" />
+
+### Rich panel content
+
+<StoryEmbed id="navigation-tabs--rich-panel-content" />
+
+### Keyboard navigation
+
+<StoryEmbed id="navigation-tabs--keyboard" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-tabs--default)
+
+## Usage
+
+```html
+<civ-tabs label="Account settings" value="profile">
+  <civ-tab value="profile" label="Profile"></civ-tab>
+  <civ-tab value="security" label="Security"></civ-tab>
+  <civ-tab value="notifications" label="Notifications"></civ-tab>
+
+  <civ-tab-panel value="profile">Profile content</civ-tab-panel>
+  <civ-tab-panel value="security">Security content</civ-tab-panel>
+  <civ-tab-panel value="notifications">Notifications content</civ-tab-panel>
+</civ-tabs>
+```
+
+Set the same `value` on each tab and its corresponding panel. If `value` on `<civ-tabs>` is not set, the first tab is selected by default.
+
+Listen for `civ-change` on the parent to react to tab changes:
+
+```html
+<civ-tabs label="Settings" id="settings-tabs">
+  <!-- … -->
+</civ-tabs>
+
+<script>
+  document.getElementById('settings-tabs').addEventListener('civ-change', (e) => {
+    console.log('Selected tab:', e.detail.value);
+  });
+</script>
+```
+
+## Props — civ-tabs
+
+<TabsProps />
+
+## Events — civ-tabs
+
+<TabsEvents />
+
+## Props — civ-tab
+
+<TabProps />
+
+## Events — civ-tab
+
+<TabEvents />
+
+## Accessibility
+
+- Tablist carries `role="tablist"` with the supplied `aria-label`.
+- Each tab is a `<button role="tab">` with `aria-selected` and `aria-controls` set to its panel's id.
+- Each panel is `role="tabpanel"` with `aria-labelledby` set to its tab's id.
+- Roving tabindex: only the selected tab is a Tab stop, so the tablist costs one keystop in the page's overall Tab order regardless of how many tabs are inside.
+- Panels are `tabindex="0"` so keyboard users can scroll panel content with the keyboard after activating a tab.
+
+## When to use a different component
+
+- For navigation that updates the URL (one page per tab), use `<civ-nav>` with `<a href>` items — the URL is the source of truth, no JS state needed.
+- For mutually-exclusive selection inside a single form question, use `<civ-segmented-control>` or `<civ-radio-group>`.

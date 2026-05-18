@@ -75,6 +75,9 @@ export interface CivLocaleStrings {
   dataGridExpandRow: string;      // "Expand row {row}"
   dataGridCollapseRow: string;    // "Collapse row {row}"
   dataGridEditCell: string;       // "Edit {column}"
+  dataGridExpandGroup: string;    // "Expand group {group}"
+  dataGridCollapseGroup: string;  // "Collapse group {group}"
+  dataGridGroupNoValue: string;   // "(no value)" — fallback label for null/undefined group key
   dataGridEmpty: string;          // "No data to display"
   dataGridLoading: string;        // "Loading…"
   dataGridErrorLabel: string;     // "Failed to load data"
@@ -795,6 +798,9 @@ const defaultStrings: CivLocaleStrings = {
   dataGridExpandRow: 'Expand row {row}',
   dataGridCollapseRow: 'Collapse row {row}',
   dataGridEditCell: 'Edit {column}',
+  dataGridExpandGroup: 'Expand group {group}',
+  dataGridCollapseGroup: 'Collapse group {group}',
+  dataGridGroupNoValue: '(no value)',
   dataGridEmpty: 'No data to display',
   dataGridLoading: 'Loading…',
   dataGridErrorLabel: 'Failed to load data',

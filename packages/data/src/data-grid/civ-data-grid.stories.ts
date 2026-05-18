@@ -691,3 +691,35 @@ export const ExportToCsv: Story = {
     `;
   },
 };
+
+export const GroupBy: Story = {
+  name: 'Group-by collapsible groups',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-groupby') as any;
+      if (!grid) return;
+      grid.columns = defaultColumns;
+      grid.rows = toRows(SAMPLE_DATA);
+      grid.groupBy = 'type';
+      grid.expandedGroups = ['Disability', 'Pension', 'Education', 'Healthcare'];
+      grid.groupLabel = (key: string, rows: any[]) =>
+        `${key} (${rows.length} application${rows.length === 1 ? '' : 's'})`;
+      grid.addEventListener('civ-group-toggle', (e: Event) => {
+        const { groupKey, expanded } = (e as CustomEvent).detail;
+        grid.expandedGroups = expanded
+          ? [...grid.expandedGroups, groupKey]
+          : grid.expandedGroups.filter((k: string) => k !== groupKey);
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Rows are grouped by the <strong>Type</strong> column. Click a
+          chevron to collapse a group; its data rows hide while the header
+          stays.
+        </p>
+        <civ-data-grid class="story-groupby" caption="Applications grouped by type"></civ-data-grid>
+      </div>
+    `;
+  },
+};

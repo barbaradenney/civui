@@ -13,6 +13,7 @@ import type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridGroupLabel,
   GridCellInputType,
   GridCellOption,
 } from './civ-data-grid.types.js';
@@ -25,6 +26,7 @@ export type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridGroupLabel,
   GridCellInputType,
   GridCellOption,
 };
@@ -77,6 +79,7 @@ export type {
  * @fires civ-cell-edit-start - { rowId, columnKey, row } — user activated edit mode on an editable cell
  * @fires civ-cell-edit-commit - { rowId, columnKey, value, row } — user committed a valid new value (Enter / blur / click-outside)
  * @fires civ-cell-edit-cancel - { rowId, columnKey, row } — user cancelled an edit (Escape)
+ * @fires civ-group-toggle - { groupKey, expanded } — user toggled a group header's chevron
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -119,6 +122,9 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: Boolean }) interactive = false;
   @property({ attribute: false }) expandedRowIds: string[] = [];
   @property({ attribute: false }) expandTemplate?: GridExpandTemplate;
+  @property({ type: String, attribute: 'group-by' }) groupBy = '';
+  @property({ attribute: false }) expandedGroups?: string[];
+  @property({ attribute: false }) groupLabel?: GridGroupLabel;
 
   /** Internal edit-mode tracking — one cell at a time. */
   @state() private _editingCell: { rowId: string; columnKey: string } | null = null;
@@ -275,7 +281,95 @@ export class CivDataGrid extends CivBaseElement {
       `;
     }
 
+    if (this.groupBy) {
+      return this._renderGroupedBody();
+    }
     return this.rows.map((row, rowIndex) => this._renderRow(row, rowIndex));
+  }
+
+  /**
+   * Render rows in groups. Groups appear in the order their first member
+   * appears in `rows` (consumer pre-sorts to control group order). Each
+   * group emits a header row followed by — if expanded — its data rows.
+   */
+  private _renderGroupedBody(): Array<TemplateResult | TemplateResult[]> {
+    const groups = this._buildGroups();
+    const out: Array<TemplateResult | TemplateResult[]> = [];
+    let rowIndex = 0;
+    for (const [groupKey, groupRows] of groups) {
+      out.push(this._renderGroupHeader(groupKey, groupRows));
+      if (this._isGroupExpanded(groupKey)) {
+        for (const row of groupRows) {
+          out.push(this._renderRow(row, rowIndex));
+          rowIndex++;
+        }
+      } else {
+        rowIndex += groupRows.length;
+      }
+    }
+    return out;
+  }
+
+  /** Insertion-ordered map from group key (stringified) → rows. */
+  private _buildGroups(): Map<string, GridRow[]> {
+    const map = new Map<string, GridRow[]>();
+    for (const row of this.rows) {
+      const raw = row.cells?.[this.groupBy];
+      // Stringify so Map keys are stable when the value is `null`, `undefined`,
+      // a number, etc. Use a sentinel for missing values so the empty-string
+      // header label doesn't get confused with a legitimate empty value.
+      const key = raw == null ? '' : String(raw);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(row);
+    }
+    return map;
+  }
+
+  private _isGroupExpanded(groupKey: string): boolean {
+    // When the consumer hasn't set `expandedGroups`, all groups are expanded.
+    if (!this.expandedGroups) return true;
+    return this.expandedGroups.includes(groupKey);
+  }
+
+  private _renderGroupHeader(groupKey: string, groupRows: GridRow[]): TemplateResult {
+    const isExpanded = this._isGroupExpanded(groupKey);
+    const colspan = this._totalColumnCount();
+    const label = this.groupLabel
+      ? this.groupLabel(groupKey, groupRows)
+      : `${groupKey || t('dataGridGroupNoValue')} (${groupRows.length})`;
+    const ariaLabel = isExpanded
+      ? t('dataGridCollapseGroup').replace('{group}', groupKey || '—')
+      : t('dataGridExpandGroup').replace('{group}', groupKey || '—');
+    return html`
+      <tr class="civ-data-grid__tr--group" data-group-key="${groupKey}">
+        <td
+          class="civ-data-grid__td civ-data-grid__td--group"
+          colspan="${colspan}"
+        >
+          <button
+            type="button"
+            class="civ-data-grid__group-toggle"
+            aria-expanded="${isExpanded ? 'true' : 'false'}"
+            aria-label="${ariaLabel}"
+            @click="${() => this._onToggleGroup(groupKey)}"
+          >
+            <civ-icon
+              name="${isExpanded ? 'chevron-down' : 'chevron-right'}"
+              aria-hidden="true"
+            ></civ-icon>
+            <span class="civ-data-grid__group-label">${label}</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }
+
+  private _onToggleGroup(groupKey: string): void {
+    const nextExpanded = !this._isGroupExpanded(groupKey);
+    dispatch(this, 'civ-group-toggle', {
+      groupKey,
+      expanded: nextExpanded,
+    });
   }
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {

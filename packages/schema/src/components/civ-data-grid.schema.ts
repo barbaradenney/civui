@@ -108,6 +108,22 @@ const schema: ComponentSchema = {
       description: 'Render callback for expanded-row detail content. `(row) => string | number | TemplateResult`. Required when any row has `expandable: true` — without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific)',
       webOnly: true,
     },
+    groupBy: {
+      type: 'string',
+      description: 'When set to a column key, rows are grouped by `row.cells[groupBy]` and each group gets a collapsible header row spanning all columns. Groups appear in the order their first member appears in `rows` — pre-sort to control group order. Pass empty string to disable grouping',
+      default: '',
+      attribute: 'group-by',
+    },
+    expandedGroups: {
+      type: 'array',
+      description: 'Group keys currently expanded. Controlled — update in response to `civ-group-toggle`. When undefined (the default), all groups render expanded; pass an array (even `[]`) to take control',
+      webOnly: true,
+    },
+    groupLabel: {
+      type: 'string',
+      description: 'Render callback for group header labels. `(groupKey, rows) => string`. When omitted, the header reads `{groupKey} ({count})`. Use to render readable labels for technical keys (e.g. `\'in-review\'` → `\'In review (3)\'`)',
+      webOnly: true,
+    },
   },
 
   events: {
@@ -170,6 +186,13 @@ const schema: ComponentSchema = {
         rowId: { type: 'string', description: 'The row whose edit was cancelled' },
         columnKey: { type: 'string', description: 'The column key of the cell' },
         row: { type: 'object', description: 'The full row object' },
+      },
+    },
+    'civ-group-toggle': {
+      description: 'Fires when the user clicks a group header\'s chevron. Consumers manage `expandedGroups` in response: add the key when `expanded === true`, remove it when `false`',
+      detail: {
+        groupKey: { type: 'string', description: 'The stringified group key (the value of `row.cells[groupBy]` for the group)' },
+        expanded: { type: 'boolean', description: 'The target expanded state (not the previous state) — reducer-friendly' },
       },
     },
   },

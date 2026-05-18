@@ -95,6 +95,10 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 
 <StoryEmbed id="layout-data-grid--export-to-csv" minHeight={500} />
 
+### Group-by collapsible groups
+
+<StoryEmbed id="layout-data-grid--group-by" minHeight={500} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
 ## Props
@@ -314,6 +318,51 @@ value back into their data and reassign `grid.rows`.
 - Disabled rows (`row.disabled`) are not editable even when `column.editable` is set.
 - Editable cells in an `interactive` grid: clicking the cell starts edit mode but does NOT fire `civ-row-activate`. The cell-click stops propagation.
 - Only one cell is in edit mode at a time. Starting an edit on another cell would not be a v1 concern (consumer can blur first).
+
+## Group-by collapsible groups
+
+Set `groupBy` to a column key to group rows by that column's value.
+Each group renders a header row spanning all visible columns with a
+chevron to toggle expansion.
+
+```ts
+grid.groupBy = 'type';
+grid.expandedGroups = ['Disability', 'Pension', 'Education'];
+grid.groupLabel = (key, rows) => `${key} (${rows.length} application${rows.length === 1 ? '' : 's'})`;
+
+grid.addEventListener('civ-group-toggle', (e) => {
+  const { groupKey, expanded } = e.detail;
+  grid.expandedGroups = expanded
+    ? [...grid.expandedGroups, groupKey]
+    : grid.expandedGroups.filter((k) => k !== groupKey);
+});
+```
+
+**Group order**: groups appear in the order their first member appears
+in `rows`. The grid does not re-sort rows for grouping — pre-sort your
+data if you need a specific group order.
+
+**`expandedGroups` semantics**: when undefined (the default), all
+groups render expanded. Once you assign an array (even `[]`), you
+take control — only groups whose key is in the array stay expanded.
+
+**`groupLabel` callback**: optional `(groupKey, rows) => string`. When
+omitted, the header reads `{groupKey} ({count})`. Use this to render
+readable labels for technical keys (`'in-review'` → `'In review (3)'`),
+to localize, or to embed aggregates.
+
+**Empty group keys**: rows with `cells[groupBy]` set to `null` or
+`undefined` are grouped under the empty-string key (`''`); the header
+falls back to the i18n `dataGridGroupNoValue` string (`(no value)`).
+
+**Interaction with other features:**
+- **Sort** within groups requires the consumer to pre-sort rows. Group
+  boundaries are preserved because group order follows row-array
+  insertion, not column-derived sorting.
+- **Selection** is per-row independently — there's no select-all-in-
+  group affordance in v1.
+- **Expandable rows** work alongside groups: a row inside a group can
+  still expand to show its detail panel.
 
 ## Export to CSV / JSON
 

@@ -2261,6 +2261,36 @@
     }
   }
 
+  /* Group header row — spans all visible columns; shows the group label
+     and a chevron to toggle expansion. Reads as a distinct band so users
+     don't mistake it for a data row. */
+  .civ-data-grid__tr--group {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__td--group {
+    padding: 0;
+    /* Defeat alternating-stripe styling on group header rows — the
+       cell's own background takes over. */
+    background: transparent;
+  }
+
+  .civ-data-grid__group-toggle {
+    @apply civ-flex civ-items-center civ-gap-2 civ-w-full civ-text-start
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-font-bold;
+    color: var(--civ-color-base-darkest);
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+  }
+
+  .civ-data-grid__group-toggle:hover {
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  .civ-data-grid__group-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   /* Editable cells — the cell's content lives inside a real <button>
      when in display mode so the cell is a keyboard focus stop.
      The td gets the hover hint; the button is full-width / transparent /

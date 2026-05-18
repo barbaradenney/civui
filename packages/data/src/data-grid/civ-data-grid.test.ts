@@ -1356,3 +1356,158 @@ describe('civ-data-grid — sticky columns', () => {
     expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
   });
 });
+
+describe('civ-data-grid — group-by', () => {
+  const groupColumns: GridColumn[] = [
+    { key: 'id', header: 'ID' },
+    { key: 'applicant', header: 'Applicant' },
+    { key: 'type', header: 'Type' },
+  ];
+  const groupRows: GridRow[] = [
+    { id: '1', cells: { id: 'A-1', applicant: 'Smith', type: 'Disability' } },
+    { id: '2', cells: { id: 'A-2', applicant: 'Doe', type: 'Disability' } },
+    { id: '3', cells: { id: 'A-3', applicant: 'Reyes', type: 'Pension' } },
+    { id: '4', cells: { id: 'A-4', applicant: 'Chen', type: 'Pension' } },
+  ];
+
+  it('does not group by default (groupBy is empty)', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    expect(el.querySelectorAll('.civ-data-grid__tr--group').length).toBe(0);
+    expect(el.querySelectorAll('tbody tr').length).toBe(4);
+  });
+
+  it('renders a group header row per distinct group when groupBy is set', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const groupHeaders = el.querySelectorAll('.civ-data-grid__tr--group');
+    expect(groupHeaders.length).toBe(2);
+    const keys = Array.from(groupHeaders).map((h) => h.getAttribute('data-group-key'));
+    expect(keys).toEqual(['Disability', 'Pension']);
+  });
+
+  it('group header spans all visible columns via colspan', async () => {
+    const el = await mountGrid({
+      columns: groupColumns,
+      rows: groupRows,
+      selectable: 'multiple',
+    });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const header = el.querySelector('.civ-data-grid__td--group') as HTMLElement;
+    // 3 columns + 1 select = 4
+    expect(header.getAttribute('colspan')).toBe('4');
+  });
+
+  it('group header label defaults to "{key} ({count})"', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const labels = Array.from(
+      el.querySelectorAll<HTMLElement>('.civ-data-grid__group-label'),
+    ).map((n) => n.textContent?.trim());
+    expect(labels).toEqual(['Disability (2)', 'Pension (2)']);
+  });
+
+  it('groupLabel callback overrides the default label', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    el.groupLabel = (key: string, rows: any[]) => `${key.toUpperCase()} — ${rows.length} applicant(s)`;
+    await elementUpdated(el);
+    const labels = Array.from(
+      el.querySelectorAll<HTMLElement>('.civ-data-grid__group-label'),
+    ).map((n) => n.textContent?.trim());
+    expect(labels[0]).toBe('DISABILITY — 2 applicant(s)');
+  });
+
+  it('renders all rows when no expandedGroups is set (default-all-expanded)', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    // tbody has: 2 group headers + 4 data rows = 6.
+    expect(el.querySelectorAll('tbody tr').length).toBe(6);
+  });
+
+  it('hides rows whose group is not in expandedGroups', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    el.expandedGroups = ['Disability']; // Pension collapsed
+    await elementUpdated(el);
+    // 2 group headers + 2 Disability rows (Pension's 2 rows hidden) = 4.
+    expect(el.querySelectorAll('tbody tr').length).toBe(4);
+    // Pension rows should not be in the DOM.
+    const text = el.querySelector('tbody')?.textContent ?? '';
+    expect(text).toContain('Smith');
+    expect(text).toContain('Doe');
+    expect(text).not.toContain('Reyes');
+    expect(text).not.toContain('Chen');
+  });
+
+  it('chevron aria-expanded reflects current state per group', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    el.expandedGroups = ['Disability'];
+    await elementUpdated(el);
+    const toggles = Array.from(el.querySelectorAll<HTMLButtonElement>('.civ-data-grid__group-toggle'));
+    expect(toggles[0].getAttribute('aria-expanded')).toBe('true');
+    expect(toggles[1].getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('fires civ-group-toggle with target state when the chevron is clicked', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    el.expandedGroups = ['Disability', 'Pension'];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-group-toggle', handler);
+    const toggle = el.querySelector('.civ-data-grid__group-toggle') as HTMLButtonElement;
+    toggle.click();
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail).toEqual({
+      groupKey: 'Disability',
+      expanded: false, // target: collapse this one
+    });
+  });
+
+  it('preserves group order from the rows array (insertion-ordered)', async () => {
+    // Reverse the natural order — Pension first then Disability.
+    const reordered: GridRow[] = [
+      { id: '3', cells: { id: 'A-3', applicant: 'Reyes', type: 'Pension' } },
+      { id: '1', cells: { id: 'A-1', applicant: 'Smith', type: 'Disability' } },
+      { id: '4', cells: { id: 'A-4', applicant: 'Chen', type: 'Pension' } },
+      { id: '2', cells: { id: 'A-2', applicant: 'Doe', type: 'Disability' } },
+    ];
+    const el = await mountGrid({ columns: groupColumns, rows: reordered });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const keys = Array.from(el.querySelectorAll('.civ-data-grid__tr--group'))
+      .map((h) => h.getAttribute('data-group-key'));
+    expect(keys).toEqual(['Pension', 'Disability']);
+  });
+
+  it('renders null/undefined group values under an empty-string key', async () => {
+    const rows: GridRow[] = [
+      { id: '1', cells: { id: 'A-1', applicant: 'Smith', type: null } },
+      { id: '2', cells: { id: 'A-2', applicant: 'Doe', type: 'Disability' } },
+    ];
+    const el = await mountGrid({ columns: groupColumns, rows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const keys = Array.from(el.querySelectorAll('.civ-data-grid__tr--group'))
+      .map((h) => h.getAttribute('data-group-key'));
+    expect(keys).toContain(''); // empty string for null
+    expect(keys).toContain('Disability');
+  });
+
+  it('uses the i18n fallback label when the group key is empty', async () => {
+    const rows: GridRow[] = [
+      { id: '1', cells: { id: 'A-1', applicant: 'Smith', type: null } },
+    ];
+    const el = await mountGrid({ columns: groupColumns, rows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const label = el.querySelector('.civ-data-grid__group-label') as HTMLElement;
+    // i18n fallback "(no value)" appears for the empty group key.
+    expect(label.textContent).toContain('(no value)');
+  });
+});

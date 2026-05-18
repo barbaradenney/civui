@@ -1,0 +1,213 @@
+---
+title: Data Grid Patterns
+sidebar_position: 14
+sidebar_label: Data Grid
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Data Grid Patterns
+
+Realistic admin / back-office compositions of the CivUI data components — `<civ-toolbar>`, `<civ-bulk-actions>`, `<civ-column-visibility>`, `<civ-data-grid>`, `<civ-pagination>`, plus `<civ-drawer>` for master-detail. None of these need a custom wrapper; pick the pattern that fits the screen and copy the wiring.
+
+## Components at a glance
+
+| Component | When to use |
+|-----------|-------------|
+| `civ-data-grid` | Anchor of every back-office list screen. Renders sortable headers, selectable rows, per-row action menus, and a USWDS-style stacked layout on mobile. |
+| `civ-toolbar` | Search input and primary actions ("New X") above the grid. Right-aligns trailing controls via the `data-civ-toolbar-end` slot. |
+| `civ-bulk-actions` | Action bar that appears between toolbar and grid when one or more rows are selected. Auto-hides when `count="0"`. |
+| `civ-column-visibility` | Popover that lets users toggle which columns are visible. Lives in the toolbar's end slot on power-user screens. |
+| `civ-pagination` | USWDS-style page navigation below the grid. Owns its own `civ-page-change` event — the grid does NOT paginate internally. |
+| `civ-drawer` (overlay) | Right- or left-anchored side panel for master-detail screens. Opens on row activation. |
+
+## Pattern 1 — Basic admin list
+
+The 80% case: a single screen listing records with search and an "Add" action above, sortable columns, and pagination below. Use this whenever you need to display a list of things and let the user search, sort, and click into a record.
+
+<StoryEmbed id="patterns-data-grid--basic-admin-list" minHeight={600} />
+
+```html
+<civ-toolbar label="Applications toolbar">
+  <civ-text-input label="Search applicants" type="search"></civ-text-input>
+  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+</civ-toolbar>
+<civ-data-grid caption="Applications"></civ-data-grid>
+<civ-pagination item-name="application"></civ-pagination>
+```
+
+```ts
+const grid = document.querySelector('civ-data-grid');
+const pager = document.querySelector('civ-pagination');
+const search = document.querySelector('civ-text-input');
+
+let page = 1;
+let pageSize = 25;
+let query = '';
+
+const apply = () => {
+  const rows = filter(allRows, query);
+  pager.totalItems = rows.length;
+  const start = (page - 1) * pageSize;
+  grid.rows = rows.slice(start, start + pageSize);
+  pager.page = page;
+  pager.pageSize = pageSize;
+};
+
+grid.columns = columns;
+apply();
+
+search.addEventListener('civ-input', (e) => {
+  query = e.detail.value;
+  page = 1;  // reset to first page on new query
+  apply();
+});
+pager.addEventListener('civ-page-change', (e) => {
+  page = e.detail.page;
+  pageSize = e.detail.pageSize;
+  apply();
+});
+```
+
+**Key wiring points**
+- The consumer owns paging: `civ-data-grid` only renders the rows you give it. Slice client-side for ≤1000 rows; fetch a page at a time for larger sets.
+- Reset `page` to 1 whenever the underlying row set changes (search query, filter, sort).
+- Surface the search input in the toolbar — never in the grid header. Toolbar search filters the whole grid; in-header inputs filter one column (use Pattern 3 instead).
+
+## Pattern 2 — Bulk operations
+
+When users routinely act on multiple records at once — export selected, reassign, bulk-delete — add row selection and a `<civ-bulk-actions>` bar. The bar auto-hides at `count="0"` so the toolbar stays uncluttered when nothing is selected.
+
+<StoryEmbed id="patterns-data-grid--bulk-operations" minHeight={650} />
+
+```html
+<civ-toolbar label="Applications toolbar">
+  <civ-text-input label="Search applicants" type="search"></civ-text-input>
+  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+</civ-toolbar>
+
+<civ-bulk-actions count="0" item-name="application">
+  <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
+  <civ-action-button variant="secondary" icon-start="forward" label="Reassign"></civ-action-button>
+  <civ-action-button variant="secondary" danger icon-start="delete" label="Delete"></civ-action-button>
+</civ-bulk-actions>
+
+<civ-data-grid caption="Applications"></civ-data-grid>
+<civ-pagination item-name="application"></civ-pagination>
+```
+
+```ts
+let selectedRowIds = [];
+
+grid.selectable = 'multiple';
+
+grid.addEventListener('civ-selection-change', (e) => {
+  selectedRowIds = e.detail.selectedRowIds;
+  bulk.count = selectedRowIds.length;
+  grid.selectedRowIds = selectedRowIds;
+});
+
+bulk.addEventListener('civ-clear-selection', () => {
+  selectedRowIds = [];
+  grid.selectedRowIds = [];
+  bulk.count = 0;
+});
+```
+
+**Key wiring points**
+- `civ-bulk-actions` is the contract surface for selection. The grid dispatches `civ-selection-change` with the full id list; the consumer routes that into `bulk.count` AND `grid.selectedRowIds`.
+- Selection persists across page changes if the consumer keeps the id list out of the grid's view of rows. Don't reset selection on `civ-page-change`.
+- Pair destructive bulk actions with a confirm dialog (`<civ-modal>`) before firing the action. Bulk-delete with no confirmation is the most common Section 508 / usability finding in admin UI audits.
+
+## Pattern 3 — Power-user grid
+
+For back-office staff who live in the screen all day. Per-column filters (the in-table filter row), a column-visibility popover in the toolbar, sortable headers, and pagination. Trades visual density for control.
+
+<StoryEmbed id="patterns-data-grid--power-user-grid" minHeight={700} />
+
+```html
+<civ-toolbar label="Applications toolbar">
+  <civ-text-input label="Search applicants" type="search"></civ-text-input>
+  <civ-column-visibility data-civ-toolbar-end></civ-column-visibility>
+  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+</civ-toolbar>
+<civ-data-grid caption="Applications" bordered></civ-data-grid>
+<civ-pagination item-name="application"></civ-pagination>
+```
+
+```ts
+import { applyGridFilters } from '@civui/data/filter';
+
+const cols = [
+  { key: 'applicant', header: 'Applicant', sortable: true,
+    filter: { type: 'text', placeholder: 'Search name' } },
+  { key: 'type', header: 'Type',
+    filter: { type: 'select', options: [...] } },
+  { key: 'status', header: 'Status',
+    filter: { type: 'select', options: [...] } },
+  // ...
+];
+
+let hidden = [];
+let filters = {};
+
+colsCtrl.columns = cols;
+colsCtrl.addEventListener('civ-column-visibility-change', (e) => {
+  hidden = e.detail.hiddenColumns;
+  grid.columns = cols.map((c) => ({ ...c, hidden: hidden.includes(c.key) }));
+});
+
+grid.addEventListener('civ-filter-change', (e) => {
+  filters = e.detail.filters;
+  grid.rows = applyGridFilters(allRows, cols, filters);
+});
+```
+
+**Key wiring points**
+- Column visibility is **controlled**: the popover dispatches `civ-column-visibility-change` with the new hidden list; the consumer rebuilds `grid.columns` with `hidden` flags. Sticky state is the consumer's responsibility (persist to localStorage / user profile).
+- `applyGridFilters` from `@civui/data/filter` handles `text`, `select`, `multi-select`, and `number-range` filter types declaratively — don't reimplement the matching logic.
+- Per-column filters and a toolbar search input can coexist, but pick one as primary: the filter row is for narrowing within visible columns; toolbar search is for "find this person." Two competing search affordances confuses users.
+
+## Pattern 4 — Master-detail (row → drawer)
+
+For "browse the list, dive into a record" workflows. Mark the grid `interactive` so clicking a row dispatches `civ-row-activate`; open a `<civ-drawer>` with the row's full detail. The drawer doesn't navigate away from the list, so users keep their scroll position and selection state.
+
+<StoryEmbed id="layout-data-grid--master-detail-drawer" minHeight={500} />
+
+```html
+<civ-data-grid caption="Applications" interactive></civ-data-grid>
+<civ-drawer position="end" heading="Application details">
+  <dl id="detail-fields" style="margin: 0;"></dl>
+</civ-drawer>
+```
+
+```ts
+grid.interactive = true;
+grid.addEventListener('civ-row-activate', (e) => {
+  const row = e.detail.row;
+  drawer.heading = `Application ${row.id}`;
+  populateDetailFields(row.cells);
+  drawer.open = true;
+});
+```
+
+**Key wiring points**
+- The `interactive` flag adds keyboard activation (Enter on a focused row), focus-ring chrome, and a "row is clickable" cursor. Don't simulate this by listening for clicks on `<tr>` directly — you'll miss keyboard users.
+- Pair `interactive` with at least one row action (View, Edit, etc.) so the same destination is reachable for users who can't click — the grid warns in the console when `interactive=true` is set without any row actions.
+- Don't use master-detail when the detail is more than ~10 fields or contains its own forms; a drawer crammed with content reads as a modal-in-disguise. Navigate to a dedicated record page instead.
+
+## Which pattern do I use?
+
+| If the screen needs… | Use |
+|----|----|
+| List + search + open record | Pattern 1 (Basic) |
+| Multi-select + bulk operations | Pattern 2 (Bulk) |
+| Column-level filters, hideable columns | Pattern 3 (Power-user) |
+| Browse list, peek at details without leaving | Pattern 4 (Master-detail) |
+| All of the above | Compose them: add bulk-actions to Pattern 3, or master-detail to Pattern 2. The components don't conflict. |
+
+## Mobile
+
+All four patterns work on mobile (≤480px). The grid's stacked variant converts rows to vertical label/value blocks via CSS — no JS re-template. The toolbar, bulk-actions bar, and pagination flow naturally. Row-action menus and column-visibility popovers render as bottom sheets, matching the project-wide mobile-popup rule.
+
+The one mobile constraint to know: pick `responsive="stacked"` (the default), not `responsive="scroll"`. Scroll mode keeps the table at full width and horizontally scrolls — useful when columns must stay aligned (e.g. financial data) but cramped on a phone, and it traps the row-action menu's bottom sheet inside the scroll wrapper.

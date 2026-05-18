@@ -1354,6 +1354,13 @@
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
     },
     {
+      "story": "InlineToday",
+      "name": "Inline today shortcut",
+      "category": "Forms/Inputs/Date Picker",
+      "html": "<civ-date-picker label=\"Visit date\" name=\"visit\" inline-today></civ-date-picker>",
+      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
+    },
+    {
       "story": "Required",
       "category": "Forms/Inputs/Date Picker",
       "html": "<civ-date-picker label=\"Appointment date\" name=\"appointment\" required></civ-date-picker>",
@@ -5140,6 +5147,13 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "Clearable",
+      "name": "Inline: Clearable",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<civ-text-input\n      label=\"Search filings\"\n      name=\"filing-search\"\n      type=\"search\"\n      leading-icon=\"search\"\n      value=\"VA disability\"\n      clearable\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Type to see the clear button appear. Suppresses any trailing icon while the value is non-empty.\n    </p>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
       "story": "CustomPatterns",
       "name": "Custom Patterns",
       "category": "Foundations/Input Masks",
@@ -5275,6 +5289,13 @@
       "category": "Foundations/Print Preview",
       "html": "<h2 class=\"civ-text-lg civ-font-bold civ-mb-4\">Text Inputs — Print Preview</h2>\n\n    <civ-text-input label=\"Full legal name\" name=\"name\" value=\"Jane A. Smith\" hint=\"As it appears on your government-issued ID\" required></civ-text-input>\n\n    <civ-text-input label=\"Email address\" name=\"email\" value=\"jane.smith@example.gov\" type=\"email\"></civ-text-input>\n\n    <civ-text-input label=\"Social Security number\" name=\"ssn\" value=\"***-**-6789\" hint=\"For example: 123-45-6789\" mask=\"ssn\"></civ-text-input>\n\n    <civ-text-input label=\"Phone number\" name=\"phone\" value=\"(555) 123-4567\" mask=\"phone-us\"></civ-text-input>",
       "source": "packages/core/src/foundations/print-preview.stories.ts"
+    },
+    {
+      "story": "TrailingActionSlot",
+      "name": "Inline: Trailing action slot (escape hatch)",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<civ-text-input label=\"API key\" name=\"api-key\" value=\"sk-abc123def456ghi789\">\n      <button\n        data-trailing-action\n        type=\"button\"\n        class=\"civ-input-action\"\n        aria-label=\"Copy API key\"\n        @click=${(e: Event) => {\n          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');\n          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));\n        }}\n      >\n        <civ-icon name=\"content_copy\" aria-hidden=\"true\"></civ-icon>\n      </button>\n    </civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Apply <code>.civ-input-action</code> to match the input chrome.\n    </p>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "TrailingIcon",
@@ -5416,6 +5437,13 @@
       "name": "Default (combo mode)",
       "category": "Forms/Inputs/Time Picker",
       "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt_time\"\n      hint=\"Choose any 15-minute slot during the day\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "InlineNow",
+      "name": "Inline ",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Pickup time\"\n      name=\"pickup_time\"\n      mode=\"combo\"\n      minute-step=\"15\"\n      inline-now\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {

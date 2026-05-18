@@ -653,6 +653,57 @@
     box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
   }
 
+  /* Escape-hatch slot for consumer-provided trailing action buttons (copy,
+     paste, generate, scan, etc.). The slot container is flush with the
+     input — no border, no padding — and consumers apply `.civ-input-action`
+     to the button itself for chrome that matches `.civ-close-btn`. */
+  .civ-input-action-slot {
+    @apply civ-inline-flex civ-items-center civ-justify-center;
+    flex-shrink: 0;
+  }
+
+  .civ-input-action {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
+    color: var(--civ-color-base-dark);
+    width: 1.75em;
+    height: 1.75em;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Inline text-button affordance inset in an input (e.g. date-picker
+     "Today", time-picker "Now"). Distinct from `.civ-input-action` which
+     is icon-only and circular. The button has no border or fill — it
+     reads as a text shortcut inside the input chrome. */
+  .civ-input-inline-action {
+    @apply civ-inline-flex civ-items-center civ-justify-center
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded;
+    color: var(--civ-color-primary-dark);
+    padding: 0 0.5em;
+    font-size: var(--civ-typography-fontSize-sm);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .civ-input-inline-action:hover { background: rgba(0, 0, 0, 0.05); }
+  .civ-input-inline-action:focus {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  }
+  .civ-input-inline-action:disabled {
+    @apply civ-opacity-disabled civ-cursor-not-allowed;
+  }
+  .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
+  .civ-input-action:focus {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
+    outline-offset: var(--civ-focus-outline-offset);
+    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+  }
+  .civ-input-action:disabled {
+    @apply civ-opacity-disabled civ-cursor-not-allowed;
+  }
+
   .civ-input-icon-wrap {
     @apply civ-relative civ-flex civ-items-stretch;
   }

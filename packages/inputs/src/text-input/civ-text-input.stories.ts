@@ -199,6 +199,46 @@ export const LeadingAndTrailingIcons: Story = {
   `,
 };
 
+export const Clearable: Story = {
+  name: 'Inline: Clearable',
+  render: () => html`
+    <civ-text-input
+      label="Search filings"
+      name="filing-search"
+      type="search"
+      leading-icon="search"
+      value="VA disability"
+      clearable
+    ></civ-text-input>
+    <p class="civ-mt-3 civ-text-sm">
+      Type to see the clear button appear. Suppresses any trailing icon while the value is non-empty.
+    </p>
+  `,
+};
+
+export const TrailingActionSlot: Story = {
+  name: 'Inline: Trailing action slot (escape hatch)',
+  render: () => html`
+    <civ-text-input label="API key" name="api-key" value="sk-abc123def456ghi789">
+      <button
+        data-trailing-action
+        type="button"
+        class="civ-input-action"
+        aria-label="Copy API key"
+        @click=${(e: Event) => {
+          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');
+          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));
+        }}
+      >
+        <civ-icon name="content_copy" aria-hidden="true"></civ-icon>
+      </button>
+    </civ-text-input>
+    <p class="civ-mt-3 civ-text-sm">
+      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Apply <code>.civ-input-action</code> to match the input chrome.
+    </p>
+  `,
+};
+
 // ── Prefix / Suffix ─────────────────────────────────────────
 
 export const Prefix: Story = {

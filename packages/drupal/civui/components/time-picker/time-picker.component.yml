@@ -85,6 +85,15 @@ props:
       title: Disabled slots
       type: array
       description: 'Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots).'
+    inline_now:
+      title: Inline now
+      type: boolean
+      default: false
+      description: 'Render an inline "Now" shortcut button next to the combobox input (combo mode only). Lets users jump to the current time without opening the picker. Disabled when host is disabled/readonly. Text and select modes are unsupported in v1 — u...'
+    inline_now_label:
+      title: Inline now label
+      type: string
+      description: 'Override the inline "Now" button label. Defaults to the locale-aware "Now".'
 
 libraryOverrides:
   dependencies:

@@ -88,6 +88,28 @@ When `trailing-icon-label` is set, the icon is exposed to assistive tech as `rol
 
 <StoryEmbed id="forms-inputs-text-input--leading-and-trailing-icons" />
 
+### Clearable
+
+Set `clearable` to render an inline "×" button on the trailing edge whenever the value is non-empty. Clicking it clears the value, refocuses the input, and fires `civ-input` + `civ-change` with `{ value: "" }`. The clear button takes precedence over any `trailing-icon` while the field has content.
+
+<StoryEmbed id="forms-inputs-text-input--clearable" />
+
+### Trailing Action Slot
+
+For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, generate, units toggle — pass a child element with the `data-trailing-action` attribute. Apply the `.civ-input-action` class so the button matches the input chrome (height, hover state, focus ring). Set `type="button"` and an `aria-label`. The slot is **web-only** (Light DOM design system; iOS/Android/Drupal do not project this) and is intentionally an escape hatch — if a use case becomes common, we'll promote it to a first-class prop.
+
+```html
+<civ-text-input label="API key" name="apiKey" value="sk-...">
+  <button data-trailing-action type="button" class="civ-input-action" aria-label="Copy API key">
+    <civ-icon name="content_copy" aria-hidden="true"></civ-icon>
+  </button>
+</civ-text-input>
+```
+
+Precedence inside the trailing inset region: when the value is non-empty, the clear button wins (suppressing both the slot and `trailing-icon`); otherwise the slot wins over `trailing-icon`. `suffix` always wins — slot + suffix together is unsupported.
+
+<StoryEmbed id="forms-inputs-text-input--trailing-action-slot" />
+
 ### Prefix
 
 Text rendered inside the input border on the leading edge (e.g., "@", "$"). The prefix shares the input's border and background for a seamless look.

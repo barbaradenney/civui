@@ -178,6 +178,21 @@ export const TodayButtonDisabled: Story = {
   `,
 };
 
+export const InlineToday: Story = {
+  name: 'Inline today shortcut',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Add `inline-today` to render a "Today" shortcut button inset in the input chrome. The user can pick today without opening the dialog. Auto-disables when today is out of `min`/`max` range or already selected.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-date-picker label="Visit date" name="visit" inline-today></civ-date-picker>
+  `,
+};
+
 // ── Year jump (DOB pickers) ───────────────────────────────────
 
 export const YearJump: Story = {

@@ -88,6 +88,16 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'today-button-label' }) todayButtonLabel = '';
   /** Hide the dialog footer "Today" button (e.g., for date-of-birth pickers). */
   @property({ type: Boolean, attribute: 'hide-today-button' }) hideTodayButton = false;
+  /**
+   * Render an inline "Today" shortcut button inset in the input chrome. Lets
+   * users jump to today without opening the picker dialog. Disabled when
+   * today is out of `min`/`max` range, when the host is disabled/readonly,
+   * or when the value already matches today. Suppressed in compact
+   * (`spacing="sm"`) mode where chrome is intentionally minimal.
+   */
+  @property({ type: Boolean, attribute: 'inline-today' }) inlineToday = false;
+  /** Override the inline "Today" button label. Defaults to `t('datePickerTodayButton')`. */
+  @property({ type: String, attribute: 'inline-today-label' }) inlineTodayLabel = '';
   @property({ type: String, attribute: 'invalid-format-message' }) invalidFormatMessage = '';
   @property({ type: String, attribute: 'date-range-message' }) dateRangeMessage = '';
   @property({ type: String, attribute: 'min-date-message' }) minDateMessage = '';
@@ -299,6 +309,10 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
       ? interpolate(this.selectedDateLabel || t('datePickerSelectedDateLabel'), { date: formatDateLong(selectedDate, this.locale) })
       : (this.chooseDateLabel || t('datePickerChooseDateLabel'));
 
+    const showInlineToday = this.inlineToday && !isCompact && !this.disabled && !this.readonly;
+    const todayISO = toISODateString(this._todayDate());
+    const inlineTodayDisabled = !this._isTodayAvailable() || this.value === todayISO;
+
     const inner = html`
       <div class="civ-relative">
         <div class="civ-input-group">
@@ -324,6 +338,14 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
                 aria-label="${this.clearLabel || t('datePickerClearLabel')}"
                 @click="${this._onClear}"
               ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
+            ` : nothing}
+            ${showInlineToday ? html`
+              <button
+                type="button"
+                class="civ-input-inline-action"
+                ?disabled="${inlineTodayDisabled}"
+                @click="${this._onInlineTodayClick}"
+              >${this.inlineTodayLabel || t('datePickerTodayButton')}</button>
             ` : nothing}
           </div>
           <button
@@ -593,6 +615,16 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
    * — click is treated like clicking today's cell directly.
    */
   private _onTodayClick(): void {
+    if (!this._isTodayAvailable()) return;
+    this._selectDate(this._todayDate());
+  }
+
+  /**
+   * Inline "Today" shortcut click — same effect as picking today's date,
+   * but skips opening the dialog. `_selectDate` calls `_closeDialog()` as a
+   * no-op since `_open` is false. Disabled when out of range or already today.
+   */
+  private _onInlineTodayClick(): void {
     if (!this._isTodayAvailable()) return;
     this._selectDate(this._todayDate());
   }

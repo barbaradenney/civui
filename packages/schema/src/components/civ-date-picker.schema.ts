@@ -113,6 +113,18 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'hide-today-button',
     },
+    inlineToday: {
+      type: 'boolean',
+      description: 'Render an inline "Today" shortcut inset in the input chrome (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today',
+      default: false,
+      attribute: 'inline-today',
+    },
+    inlineTodayLabel: {
+      type: 'string',
+      description: 'Override the inline "Today" button label. Defaults to the locale-aware "Today"',
+      default: '',
+      attribute: 'inline-today-label',
+    },
     invalidFormatMessage: {
       type: 'string',
       description: 'Validation error shown when typed text doesn\'t parse as MM/DD/YYYY',

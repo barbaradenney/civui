@@ -771,6 +771,55 @@ describe('text-input inline icons', () => {
     });
   });
 
+  describe('trailing-action slot (escape hatch)', () => {
+    it('relocates a [data-trailing-action] child into the rendered slot container', async () => {
+      const el = await fixture<CivTextInput>(`
+        <civ-text-input label="API key" value="abc">
+          <button data-trailing-action type="button" class="civ-input-action" aria-label="Copy">copy</button>
+        </civ-text-input>
+      `);
+      await elementUpdated(el);
+      const container = el.querySelector('[data-civ-trailing-action]');
+      expect(container).not.toBeNull();
+      const button = container!.querySelector('button[data-trailing-action]');
+      expect(button).not.toBeNull();
+      expect(button!.textContent).toBe('copy');
+    });
+
+    it('suppresses trailing-icon when the slot has content', async () => {
+      const el = await fixture<CivTextInput>(`
+        <civ-text-input label="API key" trailing-icon="info">
+          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+        </civ-text-input>
+      `);
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
+      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+    });
+
+    it('clear button takes precedence over the slot when value is non-empty', async () => {
+      const el = await fixture<CivTextInput>(`
+        <civ-text-input label="API key" clearable value="hello">
+          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+        </civ-text-input>
+      `);
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-close-btn')).not.toBeNull();
+      expect(el.querySelector('[data-civ-trailing-action]')).toBeNull();
+    });
+
+    it('shows the slot once the value is cleared (clear no longer applies)', async () => {
+      const el = await fixture<CivTextInput>(`
+        <civ-text-input label="API key" clearable>
+          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+        </civ-text-input>
+      `);
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-close-btn')).toBeNull();
+      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+    });
+  });
+
   describe('currency mask handlers', () => {
     it('shows raw value on focus (strips formatting for editing)', async () => {
       const el = await fixture<CivTextInput>(

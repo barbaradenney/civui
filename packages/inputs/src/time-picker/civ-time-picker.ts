@@ -123,6 +123,19 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'now-button-label' }) nowButtonLabel = '';
 
   /**
+   * Render an inline "Now" shortcut inset next to the combobox input
+   * (combo mode only). Lets users jump to the current time without
+   * opening the picker. Disabled when host is disabled/readonly.
+   *
+   * Text mode and select mode aren't supported in v1 — the multi-field
+   * layouts don't have a natural inset position. Use `show-now-button`
+   * for the standalone footer button on those modes.
+   */
+  @property({ type: Boolean, attribute: 'inline-now' }) inlineNow = false;
+  /** Override the inline "Now" button label. Defaults to `t('timePickerNowButton')`. */
+  @property({ type: String, attribute: 'inline-now-label' }) inlineNowLabel = '';
+
+  /**
    * Combo-mode only: list of 24-hour `HH:MM` strings to render as
    * disabled (greyed, non-selectable) options in the dropdown. Useful
    * for appointment scheduling where some slots are already booked.
@@ -472,7 +485,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     // names like `${name}-hour`). Skipping the name on the combobox
     // makes the inner element invisible to form iteration while
     // still preserving its internal ElementInternals + value state.
-    return html`
+    const showInline = this.inlineNow && !this.disabled && !this.readonly;
+    const combobox = html`
       <civ-combobox
         label="${label}"
         .options="${this._comboOptions()}"
@@ -488,6 +502,21 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         ?hide-required-indicator="${this.hideRequiredIndicator}"
         @civ-change="${this._onComboChange}"
       ></civ-combobox>
+    `;
+    return html`
+      ${showInline
+        ? html`
+            <div class="civ-input-group">
+              <div class="civ-flex-1">${combobox}</div>
+              <button
+                type="button"
+                class="civ-action-btn civ-action-btn--tertiary"
+                ?disabled="${this.disabled}"
+                @click="${this._onNowClick}"
+              >${this.inlineNowLabel || t('timePickerNowButton')}</button>
+            </div>
+          `
+        : combobox}
       ${this._renderNowButton()}
     `;
   }

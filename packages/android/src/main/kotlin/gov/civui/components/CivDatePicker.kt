@@ -98,6 +98,8 @@ fun CivDatePicker(
     todayLabel: String = "",
     todayButtonLabel: String = "",
     hideTodayButton: Boolean = false,
+    inlineToday: Boolean = false,
+    inlineTodayLabel: String = "",
     invalidFormatMessage: String = "",
     dateRangeMessage: String = "",
     minDateMessage: String = "",

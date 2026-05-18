@@ -120,6 +120,12 @@ public struct CivDatePicker: View {
     /// Whether to hide the today shortcut button.
     public var hideTodayButton: Bool
 
+    /// Whether to render an inline "Today" shortcut inset in the input chrome.
+    public var inlineToday: Bool
+
+    /// Override the inline "Today" button label.
+    public var inlineTodayLabel: String
+
     /// Error message for invalid date format.
     public var invalidFormatMessage: String
 
@@ -171,6 +177,8 @@ public struct CivDatePicker: View {
         todayLabel: String = "",
         todayButtonLabel: String = "",
         hideTodayButton: Bool = false,
+        inlineToday: Bool = false,
+        inlineTodayLabel: String = "",
         invalidFormatMessage: String = "",
         dateRangeMessage: String = "",
         minDateMessage: String = "",
@@ -208,6 +216,8 @@ public struct CivDatePicker: View {
         self.todayLabel = todayLabel
         self.todayButtonLabel = todayButtonLabel
         self.hideTodayButton = hideTodayButton
+        self.inlineToday = inlineToday
+        self.inlineTodayLabel = inlineTodayLabel
         self.invalidFormatMessage = invalidFormatMessage
         self.dateRangeMessage = dateRangeMessage
         self.minDateMessage = minDateMessage

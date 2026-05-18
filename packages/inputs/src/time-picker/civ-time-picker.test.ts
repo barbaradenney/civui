@@ -1021,6 +1021,65 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
   });
 });
 
+describe('civ-time-picker — inline Now (combo mode)', () => {
+  afterEach(cleanupFixtures);
+
+  function withFakeNow(h: number, m: number, fn: () => Promise<void> | void) {
+    const realNow = Date;
+    (globalThis as any).Date = class extends realNow {
+      constructor() { super(); }
+      getHours(): number { return h; }
+      getMinutes(): number { return m; }
+    };
+    return Promise.resolve(fn()).finally(() => {
+      (globalThis as any).Date = realNow;
+    });
+  }
+
+  it('does not render an inline button by default', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo"></civ-time-picker>');
+    await elementUpdated(el);
+    // The civ-input-group wrapper is the cue that inline mode is active.
+    expect(el.querySelector('.civ-input-group .civ-action-btn--tertiary')).toBeNull();
+  });
+
+  it('renders an inline Now button when inline-now is set (combo mode)', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo" inline-now></civ-time-picker>');
+    await elementUpdated(el);
+    const btn = el.querySelector('.civ-input-group button.civ-action-btn--tertiary') as HTMLButtonElement | null;
+    expect(btn).not.toBeNull();
+    expect(btn!.textContent?.trim()).toBe('Now');
+  });
+
+  it('sets value to the current time on click', async () => {
+    await withFakeNow(14, 30, async () => {
+      const el = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo" minute-step="15" inline-now></civ-time-picker>');
+      await elementUpdated(el);
+      const btn = el.querySelector('.civ-input-group button.civ-action-btn--tertiary') as HTMLButtonElement;
+      btn.click();
+      await elementUpdated(el);
+      expect(el.value).toBe('14:30');
+    });
+  });
+
+  it('hides the inline Now button when host is disabled or readonly', async () => {
+    const elDisabled = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo" inline-now disabled></civ-time-picker>');
+    await elementUpdated(elDisabled);
+    expect(elDisabled.querySelector('.civ-input-group button.civ-action-btn--tertiary')).toBeNull();
+
+    const elReadonly = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo" inline-now readonly></civ-time-picker>');
+    await elementUpdated(elReadonly);
+    expect(elReadonly.querySelector('.civ-input-group button.civ-action-btn--tertiary')).toBeNull();
+  });
+
+  it('honors a custom inline-now-label', async () => {
+    const el = await fixture<CivTimePicker>('<civ-time-picker label="When" mode="combo" inline-now inline-now-label="Ahora"></civ-time-picker>');
+    await elementUpdated(el);
+    const btn = el.querySelector('.civ-input-group button.civ-action-btn--tertiary') as HTMLButtonElement;
+    expect(btn.textContent?.trim()).toBe('Ahora');
+  });
+});
+
 describe('civ-time-picker — text mode: prefill edge cases', () => {
   it('renders 12 AM (00:00) as "12:00" with period AM', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" name="t" value="00:00"></civ-time-picker>');

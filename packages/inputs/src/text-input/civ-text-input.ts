@@ -5,6 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import {
   CivFormElement,
   LegendHeadingMixin,
+  LightDomSlotMixin,
   inputClasses,
   inputWidthClass,
   MASK_PRESETS,
@@ -20,7 +21,7 @@ import {
   debounce,
   COUNT_ANNOUNCE_MS,
 } from '@civui/core';
-import type { InputWidth, MaskDefinition } from '@civui/core';
+import type { InputWidth, MaskDefinition, SlotConfig } from '@civui/core';
 import { dispatch } from '@civui/core';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
@@ -37,7 +38,11 @@ export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' 
  * @element civ-text-input
  */
 @customElement('civ-text-input')
-export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
+export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormElement)) {
+  override _getSlotConfig(): SlotConfig {
+    return { 'data-trailing-action': '[data-civ-trailing-action]' };
+  }
+
   @property({ type: String }) type: TextInputType = 'text';
   @property({ type: String }) width: InputWidth = 'default';
   /**
@@ -282,6 +287,7 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
 
   override firstUpdated(): void {
     super.firstUpdated();
+    this._relocateSlots();
     if (this._activePattern && this.value && this.maskMode === 'blur') {
       // Apply mask formatting to the visible input for pre-populated values
       requestAnimationFrame(() => {
@@ -352,12 +358,16 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     const hasPrefix = !!(this.prefix || isCurrency);
     const hasSuffix = !!this.suffix;
     const needsClearButton = this.clearable && !!this.value;
-    // Inline icons defer to prefix/suffix and the clear button on the same edge.
+    // Trailing-action slot is the consumer escape hatch. Precedence inside the
+    // trailing inset region: clear (when value present) > slot > trailing-icon.
+    const hasTrailingActionSlot = this._hasSlottedChildren('data-trailing-action');
+    const needsTrailingActionSlot = hasTrailingActionSlot && !needsClearButton && !hasSuffix;
+    // Inline icons defer to prefix/suffix, the clear button, and the slot on the same edge.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
-    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton;
+    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsTrailingActionSlot;
 
     const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon });
-    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency });
+    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency });
 
     const inner = html`
       ${wrappedInput}
@@ -548,12 +558,13 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     hasPrefix: boolean;
     hasSuffix: boolean;
     needsClearButton: boolean;
+    needsTrailingActionSlot: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
     isCurrency: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
-    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton;
+    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
+    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton || needsTrailingActionSlot;
     const needsIconOverlay = !needsAdjacentWrapper && (showLeadingIcon || showTrailingIcon);
 
     if (needsAdjacentWrapper) {
@@ -564,6 +575,8 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
           ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close"></civ-icon>
             </button>`
+          : nothing}${needsTrailingActionSlot
+          ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
           : nothing}${hasSuffix
           ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
           : nothing}</div>`;

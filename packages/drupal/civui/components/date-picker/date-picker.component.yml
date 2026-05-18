@@ -135,6 +135,15 @@ props:
       enum: ['default', 'sm']
       default: 'default'
       description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the input + trigger button with the host''s `aria-label` propagated. For dense surfaces like data-grid cell editors'
+    inline_today:
+      title: Inline today
+      type: boolean
+      default: false
+      description: 'Render an inline "Today" shortcut inset in the input chrome (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today'
+    inline_today_label:
+      title: Inline today label
+      type: string
+      description: 'Override the inline "Today" button label. Defaults to the locale-aware "Today"'
 
 libraryOverrides:
   dependencies:

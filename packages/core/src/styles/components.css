@@ -1858,7 +1858,13 @@
   }
 
   /* Mobile: bottom sheet pattern. Backdrop appears, panel fills
-     bottom-anchored fixed position via .civ-bottom-sheet shared rule. */
+     bottom-anchored fixed position via .civ-bottom-sheet shared rule.
+     The `top: auto; left: auto` reset is needed because the desktop
+     base rule sets `top: 0; left: 0` (the JS positioner overrides
+     them inline on desktop). Without the reset, the desktop defaults
+     would defeat .civ-bottom-sheet's `top: auto; bottom: 0` cascade
+     and the panel would render as a TOP-anchored 50vh sheet instead
+     of a bottom sheet. */
   @media (max-width: 480px) {
     .civ-menu__backdrop {
       display: block;
@@ -1869,6 +1875,8 @@
     }
 
     .civ-menu__panel {
+      top: auto;
+      left: auto;
       max-width: none;
       min-width: 0;
     }

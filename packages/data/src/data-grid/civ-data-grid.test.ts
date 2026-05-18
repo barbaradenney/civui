@@ -1864,4 +1864,104 @@ describe('civ-data-grid — keyboard navigation', () => {
     pressKey(grid[0][0], 'Enter');
     expect(handler).not.toHaveBeenCalled();
   });
+
+  it('column memory restores the user\'s column after transiting a single-cell group row', async () => {
+    // Three data rows with a `type` column we'll group by.
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'status', header: 'Status' },
+    ];
+    const rows: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', status: 'On' } },
+      { id: '2', cells: { name: 'B', type: 'Y', status: 'Off' } },
+      { id: '3', cells: { name: 'C', type: 'Y', status: 'On' } },
+    ];
+    const el = await mountGrid({ columns: cols, rows });
+    el.groupBy = 'type';
+    el.expandedGroups = ['X', 'Y'];
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Layout (with groupBy):
+    //   row 0: thead — 3 column-header cells
+    //   row 1: group "X" header — 1 col-span cell
+    //   row 2: data row id=1 — 3 cells
+    //   row 3: group "Y" header — 1 col-span cell
+    //   row 4: data row id=2 — 3 cells
+    //   row 5: data row id=3 — 3 cells
+    // Navigate header (0, 2) "Status".
+    pressKey(grid[0][0], 'ArrowRight');
+    pressKey(grid[0][1], 'ArrowRight');
+    expect(grid[0][2].tabIndex).toBe(0);
+    // ArrowDown into the "X" group row — only col 0 exists, focus collapses.
+    pressKey(grid[0][2], 'ArrowDown');
+    expect(grid[1][0].tabIndex).toBe(0);
+    expect(grid[1].length).toBe(1);
+    // ArrowDown into the data row — col 2 should be restored from memory.
+    pressKey(grid[1][0], 'ArrowDown');
+    expect(grid[2][2].tabIndex).toBe(0);
+    // Continue down through "Y" group row to next data row — col 2 still restored.
+    pressKey(grid[2][2], 'ArrowDown');
+    expect(grid[3][0].tabIndex).toBe(0); // Y group header
+    pressKey(grid[3][0], 'ArrowDown');
+    expect(grid[4][2].tabIndex).toBe(0);
+  });
+
+  it('column memory does not survive an explicit horizontal nav', async () => {
+    // After moving with ArrowLeft, vertical nav uses the new column.
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    pressKey(grid[0][0], 'ArrowRight');
+    pressKey(grid[0][1], 'ArrowRight'); // now at (0, 2)
+    pressKey(grid[0][2], 'ArrowLeft'); // now at (0, 1) — memory becomes 1
+    pressKey(grid[0][1], 'ArrowDown'); // (1, 1)
+    expect(grid[1][1].tabIndex).toBe(0);
+  });
+
+  it('Escape returns focus to the cell when focus is on an inner control', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Focus the sort button inside the "Name" column header.
+    const sortBtn = el.querySelector('.civ-data-grid__sort-btn') as HTMLButtonElement;
+    sortBtn.focus();
+    // Sanity — focus is on the button, not the cell.
+    expect(document.activeElement).toBe(sortBtn);
+    // Press Escape — focus should move to the parent th.
+    sortBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(document.activeElement).toBe(grid[0][0]);
+  });
+
+  it('Escape is inert when focus is already on the cell (lets consumer-level handlers run)', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    const handler = vi.fn();
+    el.addEventListener('keydown', handler, { capture: false });
+    // Focus is already on the cell — Escape should not preventDefault.
+    grid[0][0].focus();
+    const ev = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    grid[0][0].dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
+  });
+
+  it('arrow keys work when focus is on an inner control (mouse-clicked into the grid)', async () => {
+    // Simulates: user clicks the sort button (or returns from an action
+    // menu) and immediately presses ArrowDown — focus should jump to the
+    // next row's cell at the same column.
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    const sortBtn = el.querySelector('.civ-data-grid__sort-btn') as HTMLButtonElement;
+    sortBtn.focus();
+    // Press ArrowDown — closest('th') is the "Name" header at (0, 0).
+    sortBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(grid[1][0].tabIndex).toBe(0);
+  });
 });

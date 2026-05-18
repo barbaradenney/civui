@@ -136,9 +136,17 @@ export class CivDataGrid extends CivBaseElement {
    * triggering a Lit re-render — the tabindex sync runs imperatively in
    * `_applyKeyboardNav()`. `_pendingFocus` flags that we should call
    * `.focus()` after the next render (post-arrow-key, post-edit-exit).
+   *
+   * `_colMemory` is the desired column position from the most recent
+   * horizontal navigation (ArrowLeft/Right, Home/End, mouse click). When
+   * vertical navigation lands on a single-cell row (group header, detail
+   * row) the focus collapses to col 0, but `_colMemory` stays put so the
+   * NEXT vertical move can restore the user's column on a multi-col row.
+   * Matches Excel / Google Sheets behavior.
    */
   private _focusedRow = 0;
   private _focusedCol = 0;
+  private _colMemory = 0;
   private _pendingFocus = false;
 
   /** Internal edit-mode tracking — one cell at a time. */
@@ -1225,6 +1233,9 @@ export class CivDataGrid extends CivBaseElement {
         if (c === -1) continue;
         this._focusedRow = r;
         this._focusedCol = c;
+        // Multi-col rows seed the column memory so subsequent vertical
+        // moves restore this column when transiting single-cell rows.
+        if (cells[r].length > 1) this._colMemory = c;
         break;
       }
     }
@@ -1238,6 +1249,7 @@ export class CivDataGrid extends CivBaseElement {
       case 'Home': {
         if (e.ctrlKey || e.metaKey) this._focusedRow = 0;
         this._focusedCol = 0;
+        this._colMemory = 0;
         this._pendingFocus = true;
         this._applyKeyboardNav();
         break;
@@ -1246,6 +1258,7 @@ export class CivDataGrid extends CivBaseElement {
         const cells = this._allCells();
         if (e.ctrlKey || e.metaKey) this._focusedRow = cells.length - 1;
         this._focusedCol = (cells[this._focusedRow]?.length ?? 1) - 1;
+        this._colMemory = this._focusedCol;
         this._pendingFocus = true;
         this._applyKeyboardNav();
         break;
@@ -1259,6 +1272,20 @@ export class CivDataGrid extends CivBaseElement {
       case 'F2':
         this._activateFocusedCell(true);
         break;
+      case 'Escape':
+        // WAI-ARIA Grid Pattern "actionable cell" — when focus is on an
+        // inner control of a cell (a sort button, a row-actions kebab
+        // trigger), Escape returns focus to the cell so the user can
+        // continue arrow-keying. Inner controls' own Escape handling (e.g.
+        // <civ-menu> closing) runs first because the event bubbles from
+        // deepest descendant up; this layer just catches the second Esc
+        // (or the only one when no inner widget claims it).
+        if (targetCell && target !== targetCell) {
+          targetCell.focus();
+        } else {
+          handled = false;
+        }
+        break;
       default:
         handled = false;
     }
@@ -1270,7 +1297,11 @@ export class CivDataGrid extends CivBaseElement {
     if (cells.length === 0) return;
     this._focusedRow = Math.max(0, Math.min(cells.length - 1, this._focusedRow + delta));
     const rowLen = cells[this._focusedRow]?.length ?? 1;
-    if (this._focusedCol > rowLen - 1) this._focusedCol = rowLen - 1;
+    // Column memory: restore the user's preferred column when the new row
+    // has it; otherwise clamp to what's available but DON'T overwrite the
+    // memory — so transit through single-cell group / detail rows preserves
+    // the user's column position.
+    this._focusedCol = Math.min(this._colMemory, rowLen - 1);
     this._pendingFocus = true;
     this._applyKeyboardNav();
   }
@@ -1280,6 +1311,8 @@ export class CivDataGrid extends CivBaseElement {
     if (cells.length === 0) return;
     const rowLen = cells[this._focusedRow]?.length ?? 1;
     this._focusedCol = Math.max(0, Math.min(rowLen - 1, this._focusedCol + delta));
+    // Explicit horizontal navigation — this is the new desired column.
+    this._colMemory = this._focusedCol;
     this._pendingFocus = true;
     this._applyKeyboardNav();
   }
@@ -1345,6 +1378,10 @@ export class CivDataGrid extends CivBaseElement {
       if (c === -1) continue;
       this._focusedRow = r;
       this._focusedCol = c;
+      // Explicit cell selection (mouse click / direct focus) — treat the
+      // landing column as the new desired column, so subsequent vertical
+      // moves use it as their memory.
+      if (cells[r].length > 1) this._colMemory = c;
       cells.forEach((rowEls, ri) =>
         rowEls.forEach((cellEl, ci) => {
           cellEl.tabIndex = ri === r && ci === c ? 0 : -1;

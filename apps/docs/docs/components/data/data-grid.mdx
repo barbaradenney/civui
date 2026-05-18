@@ -429,7 +429,7 @@ Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key naviga
 | <kbd>PageDown</kbd> / <kbd>PageUp</kbd> | Jump ±10 rows (clamped to the grid). |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control — sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
 | <kbd>F2</kbd> | Start edit on an editable cell (Excel convention). No-op on other cells. |
-| <kbd>Esc</kbd> | Inside an active edit, cancels (existing inline-editing behavior). |
+| <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell — so after closing an action menu, `Esc` walks back out to the cell so arrow keys resume. |
 
 ### Activation model
 
@@ -447,16 +447,33 @@ When the cell has no focusable descendant **and** the row is `interactive`, Ente
 
 When `keyboardNav` is on and the user commits or cancels an edit, focus returns to the cell (not to `<body>`) so they can keep arrow-keying through data without dropping out of the grid.
 
+### Column memory across single-cell rows
+
+When `↑` / `↓` transit a row that only has one cell — a **group header**, an **expanded detail row** — focus collapses to col 0 (the only cell), but the user's preferred column is remembered. The next vertical move that reaches a multi-cell row restores their column. Matches Excel / Google Sheets behavior.
+
+```text
+   Name   Type   Status
+─────────────────────────────
+        ▼ Type X
+   A       X      On      ← user navigates here, then ↓
+        ▼ Type Y          ← group row collapses to col 0
+   B       Y      Off     ← col 2 ("Status") restored
+   C       Y      On
+```
+
+Explicit horizontal navigation (`←` / `→`, `Home` / `End`, mouse click) updates the memory; transit through single-cell rows does not.
+
+### Escape returns focus to the cell
+
+When focus has moved off the cell onto an inner control — e.g. after the user opened an action menu and then closed it, leaving focus on the kebab trigger — pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern: inner widgets handle their own `Esc` first (a menu closes itself), then the grid catches the second `Esc` to escape back to the cell.
+
+Arrow keys also continue to work directly from an inner control — the keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate.
+
 ### When to use it
 
 - ✅ Admin / back-office screens with sortable + editable + selectable + action-menu cells where Tab would walk through dozens of controls per page.
 - ✅ Power-user workflows where a keyboard-first review of many rows is faster than a mouse-driven one.
 - ❌ Simple readable tables (no inline editing, no row actions) — leave `keyboardNav` off so screen readers stay in normal table reading mode.
-
-### Limitations (v1)
-
-- **Group header rows** and **expand detail rows** are reachable as single col-0 stops, not navigated column-by-column. Enter on a group row toggles the group; on a detail row it activates the first inner control.
-- **Inside the action menu**, the existing `<civ-menu>` keyboard map takes over (arrows move between items, Enter selects). When the menu closes, focus returns to the kebab trigger inside the cell — press <kbd>Esc</kbd> or <kbd>Tab</kbd> to leave; arrow keys may not navigate back to other cells until the cell itself regains focus.
 
 ## Export to CSV / JSON
 

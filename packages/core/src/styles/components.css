@@ -2628,6 +2628,25 @@
     .civ-data-grid--stacked .civ-data-grid__filter-cell::before {
       content: '';
     }
+
+    /* In stacked mode the cells are converted to vertical blocks, so
+       the outer wrapper's `overflow-x: auto` has nothing to scroll —
+       but on iOS Safari (and historically other browsers) any
+       `overflow` value other than `visible` creates a containing
+       block for `position: fixed` descendants, which traps the
+       row-action menu's bottom-sheet panel inside the grid instead
+       of letting it anchor to the viewport. The trapped panel ends
+       up positioned at the bottom of the scroll container (often
+       offscreen below the visible area); the backdrop, which has its
+       OWN `position: fixed` and isn't trapped, covers the viewport
+       and intercepts taps — closing the menu before any item click
+       can register. Drop the overflow so the bottom-sheet panel
+       escapes. (Scroll mode keeps its overflow — users who opt into
+       horizontal scrolling expect it; the menu inside is a separate
+       trade-off we'll address with a portal in a follow-up.) */
+    .civ-data-grid--stacked .civ-data-grid__scroll {
+      overflow: visible;
+    }
   }
 
   /* ── Pagination ────────────────────────────────────────────── */

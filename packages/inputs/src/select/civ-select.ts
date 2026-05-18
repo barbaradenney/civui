@@ -211,7 +211,16 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
     `;
   }
 
-  /** Compact render — bare <select> with no chrome, host aria-label propagated. */
+  /**
+   * Compact render — bare <select> with no chrome, host aria-label propagated.
+   *
+   * Unlike default mode, the empty placeholder `<option value="">` is only
+   * rendered when `empty-label` is explicitly set to a non-empty string. This
+   * lets dense surfaces (data-grid cell editor) suppress the phantom "Select…"
+   * row when the column config already provides the full option set. Filter
+   * cells that *want* a placeholder (e.g. "All") opt in by setting
+   * `empty-label="All"`.
+   */
   private _renderCompact() {
     const ariaLabel = this.getAttribute('aria-label') || undefined;
     return html`
@@ -227,7 +236,9 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
         aria-invalid="${this.error ? 'true' : nothing}"
         @change="${this._onSelectChange}"
       >
-        <option value="">${this.emptyLabel || t('selectEmpty')}</option>
+        ${this.emptyLabel
+          ? html`<option value="">${this.emptyLabel}</option>`
+          : nothing}
         ${this._renderGroupedOptions()}
       </select>
     `;

@@ -853,7 +853,9 @@ describe('civ-data-grid — inline cell editing', () => {
     expect(host).not.toBeNull();
     expect(host.value).toBe('open');
     const select = host.querySelector('select') as HTMLSelectElement;
-    expect(select.querySelectorAll('option').length).toBe(3); // 2 options + empty placeholder option
+    // Just the 2 column options — civ-select spacing="sm" suppresses the
+    // empty placeholder when empty-label is not set.
+    expect(select.querySelectorAll('option').length).toBe(2);
   });
 
   it('renders a number-shaped input when inputType is "number"', async () => {

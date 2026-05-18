@@ -172,12 +172,44 @@ describe('civ-tabs', () => {
 });
 
 describe('civ-tab-panel', () => {
-  it('sets role="tabpanel" and tabindex="0" on the host', async () => {
+  it('sets role="tabpanel" on the host', async () => {
     const el = await fixture<CivTabs>(tabsHtml());
     await settle();
     const panel = el.querySelector('civ-tab-panel')!;
     expect(panel.getAttribute('role')).toBe('tabpanel');
+  });
+
+  it('sets tabindex="0" when the panel has no focusable content (keyboard scroll target)', async () => {
+    const el = await fixture<CivTabs>(tabsHtml());
+    await settle();
+    const panel = el.querySelector('civ-tab-panel')!;
     expect(panel.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('does not set tabindex when the panel has its own focusable content (avoid double tab stop)', async () => {
+    const el = await fixture<CivTabs>(`
+      <civ-tabs label="x" value="a">
+        <civ-tab value="a" label="A"></civ-tab>
+        <civ-tab-panel value="a">
+          <button>Inside button</button>
+        </civ-tab-panel>
+      </civ-tabs>
+    `);
+    await settle();
+    const panel = el.querySelector('civ-tab-panel')!;
+    expect(panel.hasAttribute('tabindex')).toBe(false);
+  });
+
+  it('respects an explicit author-set tabindex', async () => {
+    const el = await fixture<CivTabs>(`
+      <civ-tabs label="x" value="a">
+        <civ-tab value="a" label="A"></civ-tab>
+        <civ-tab-panel value="a" tabindex="-1">no auto override</civ-tab-panel>
+      </civ-tabs>
+    `);
+    await settle();
+    const panel = el.querySelector('civ-tab-panel')!;
+    expect(panel.getAttribute('tabindex')).toBe('-1');
   });
 
   it('preserves slotted content after relocation', async () => {

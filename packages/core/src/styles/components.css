@@ -3158,13 +3158,15 @@
     font-size: var(--civ-typography-fontSize-sm);
   }
 
-  /* Chevron separator rendered between adjacent items. CSS owns this
-     so consumers don't ship a separator character per item — the
-     separator scales with text and stays out of the accessible name. */
+  /* Chevron separator rendered between adjacent items. CSS owns this so
+     consumers don't ship a separator character per item, and the separator
+     scales with text. Pseudo-element content has no accessible name in
+     modern AT engines (the `content` property is treated as decorative),
+     so no extra ARIA wiring is needed. */
   civ-breadcrumb-item + civ-breadcrumb-item::before {
     content: "›";
-    @apply civ-mx-1 civ-text-base-dark;
-    speak: none;
+    @apply civ-mx-1;
+    color: var(--civ-color-base-dark);
   }
 
   .civ-breadcrumb__link {

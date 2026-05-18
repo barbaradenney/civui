@@ -1137,17 +1137,15 @@ export class CivDataGrid extends CivBaseElement {
   private _focusEditInput(el: HTMLElement | undefined): void {
     if (!el) return;
     // Defer to next microtask so the input is attached when we focus.
-    // For civ-text-input / civ-number / civ-select the element is the
-    // custom-element host; its focus() override forwards to the inner
-    // <input>/<select>. After focus we look up the inner control to
-    // call .select() where supported, so existing text gets selected
-    // on cell-edit entry (the conventional UX for inline editing).
+    // The element is always a civ-text-input / civ-number / civ-select host
+    // (never a raw <input>); its focus() override forwards to the inner
+    // <input>/<select>. After focus we look up the inner control to call
+    // .select() where supported, so existing text gets selected on
+    // cell-edit entry (the conventional UX for inline editing).
     queueMicrotask(() => {
       if (!el.isConnected) return;
       el.focus();
-      const inner = el instanceof HTMLInputElement
-        ? el
-        : el.querySelector?.('input, textarea') as HTMLInputElement | null;
+      const inner = el.querySelector?.('input, textarea') as HTMLInputElement | null;
       if (inner && typeof inner.select === 'function') {
         try { inner.select(); } catch { /* selects don't support .select */ }
       }

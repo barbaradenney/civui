@@ -32,11 +32,22 @@ export class CivTabPanel extends LightDomSlotMixin(CivBaseElement) {
   override connectedCallback(): void {
     super.connectedCallback();
     if (!this.hasAttribute('role')) this.setAttribute('role', 'tabpanel');
-    if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
+    // tabindex is set in firstUpdated, after slot relocation, so we can
+    // detect whether the panel contains its own focusable content.
   }
 
   override firstUpdated(): void {
     this._relocateSlots();
+    // Per WAI-ARIA APG, a tabpanel should be in the tab sequence only when
+    // it contains no focusable descendants. With focusables inside, the
+    // panel-level tabindex creates an extra tab stop between the active tab
+    // and the first interactive control. We only auto-set tabindex when
+    // the author hasn't supplied their own value.
+    if (this.hasAttribute('tabindex')) return;
+    const hasFocusable = this.querySelector(
+      'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (!hasFocusable) this.setAttribute('tabindex', '0');
   }
 
   override render() {

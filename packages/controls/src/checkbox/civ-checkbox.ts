@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, forwardTileClick, renderHint, renderError, t } from '@civui/core';
+import { CivBooleanFormElement, devWarn, dispatch, forwardTileClick, renderHint, renderError, t } from '@civui/core';
 
 export type CheckboxSpacing = 'default' | 'sm';
 
@@ -29,12 +29,22 @@ export class CivCheckbox extends CivBooleanFormElement {
   @property({ type: Boolean, reflect: true }) tile = true;
   @property({ type: String }) spacing: CheckboxSpacing = 'default';
 
+  /** Tracks whether the missing-accessible-name dev warning has fired (fires once per instance). */
+  private _warnedMissingAccessibleName = false;
+
   override render() {
     const isCompact = this.spacing === 'sm';
     // Compact mode: bare input, no chrome. Propagate host aria-label so the
     // surrounding context (e.g. data-grid row label) names the control for AT.
     if (isCompact) {
       const ariaLabel = this.getAttribute('aria-label') || undefined;
+      if (!this.label && !ariaLabel && !this._warnedMissingAccessibleName) {
+        devWarn(
+          'civ-checkbox',
+          'spacing="sm" requires either `label` or `aria-label` so screen-reader users hear what the checkbox is for. Without one, the control is unlabeled to AT.',
+        );
+        this._warnedMissingAccessibleName = true;
+      }
       const input = html`
         <input
           class="civ-check-input civ-check-input--sm"

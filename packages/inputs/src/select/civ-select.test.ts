@@ -447,4 +447,27 @@ describe('civ-select spacing="sm"', () => {
     el.focus();
     expect(document.activeElement).toBe(select);
   });
+
+  it('suppresses the empty placeholder option when empty-label is unset', async () => {
+    const el = await fixture<any>(
+      `<civ-select spacing="sm" aria-label="Pick"></civ-select>`,
+    );
+    el.options = [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }];
+    await elementUpdated(el);
+    const options = el.querySelectorAll('option');
+    expect(options).toHaveLength(2);
+    expect(options[0].value).toBe('a');
+  });
+
+  it('renders an empty placeholder option when empty-label is set', async () => {
+    const el = await fixture<any>(
+      `<civ-select spacing="sm" aria-label="Pick" empty-label="All"></civ-select>`,
+    );
+    el.options = [{ value: 'a', label: 'A' }];
+    await elementUpdated(el);
+    const options = el.querySelectorAll('option');
+    expect(options).toHaveLength(2);
+    expect(options[0].value).toBe('');
+    expect(options[0].textContent).toBe('All');
+  });
 });

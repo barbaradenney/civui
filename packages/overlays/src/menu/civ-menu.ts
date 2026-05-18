@@ -53,7 +53,10 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
 
   private _clickOutside = clickOutside(this, () => this._requestClose());
   private _boundOnKeydown = this._onKeydown.bind(this);
+  private _boundOnReflow = this._repositionPanel.bind(this);
   private _wired = false;
+  /** Scroll containers we've attached scroll listeners to during open. */
+  private _scrollAncestors: Element[] = [];
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -76,6 +79,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     super.disconnectedCallback();
     document.removeEventListener('keydown', this._boundOnKeydown);
     this._clickOutside.remove();
+    this._detachReflowListeners();
     this._unwireTrigger();
   }
 
@@ -252,13 +256,133 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     if (this.open) {
       this._clickOutside.add();
       await this.updateComplete;
+      this._repositionPanel();
+      this._attachReflowListeners();
       const items = this._getItems();
       if (items.length && this._activeIndex >= 0) {
         items[Math.min(this._activeIndex, items.length - 1)]?.focus();
       }
     } else {
       this._clickOutside.remove();
+      this._detachReflowListeners();
+      this._clearPanelPlacement();
     }
+  }
+
+  /**
+   * Compute the panel's viewport position and apply inline top/left
+   * styles. The CSS sets `position: fixed` so the panel escapes any
+   * overflow / transform ancestor (the data-grid scroll wrapper is the
+   * common offender — row-action menus were clipped before this).
+   *
+   * **Auto-flip:** if the preferred horizontal alignment would clip the
+   * viewport edge (panel exceeds the right edge with `align='start'`,
+   * or extends past the left edge with `align='end'`), the positioner
+   * flips to the opposite side. The same logic applies vertically: the
+   * panel prefers to render below the trigger, but flips above when
+   * there's more room there.
+   *
+   * **Mobile:** the bottom-sheet rule (`.civ-bottom-sheet` at ≤480px)
+   * pins the panel to the viewport bottom and owns its own positioning.
+   * Skip the JS placement so inline styles don't fight the CSS.
+   */
+  private _repositionPanel(): void {
+    if (!this.open) return;
+    const panel = this.querySelector<HTMLElement>('.civ-menu__panel');
+    const trigger = this._getTrigger();
+    if (!panel || !trigger) return;
+
+    // Mobile bottom-sheet — CSS owns positioning. Clear any inline
+    // styles we may have set from a previous desktop render and bail.
+    // jsdom doesn't implement matchMedia, so guard the call before we
+    // ask about the viewport width.
+    if (
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 480px)').matches
+    ) {
+      this._clearPanelPlacement();
+      return;
+    }
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const margin = 8;
+    const gap = 4;
+
+    // The panel is already `display: block` (open class) so dimensions
+    // are measurable. Clear previous inline styles first so measurement
+    // reflects the natural size at this viewport, not a stale offset.
+    panel.style.top = '';
+    panel.style.left = '';
+    const panelWidth = panel.offsetWidth;
+    const panelHeight = panel.offsetHeight;
+
+    // Vertical placement: prefer below the trigger; flip above when
+    // there's more room there. Clamp to viewport so the panel never
+    // hangs off the top/bottom even if both sides are tight.
+    const spaceBelow = vh - triggerRect.bottom - margin;
+    const spaceAbove = triggerRect.top - margin;
+    let top: number;
+    if (spaceBelow >= panelHeight + gap || spaceBelow >= spaceAbove) {
+      top = triggerRect.bottom + gap;
+    } else {
+      top = triggerRect.top - panelHeight - gap;
+    }
+    top = Math.max(margin, Math.min(top, vh - panelHeight - margin));
+
+    // Horizontal placement: `align='end'` (default) anchors the panel's
+    // right edge to the trigger's right edge — panel extends leftward.
+    // `align='start'` is the mirror. Flip when the preferred side would
+    // clip past the viewport edge.
+    const endLeft = triggerRect.right - panelWidth;
+    const startLeft = triggerRect.left;
+    let left: number;
+    if (this.align === 'end') {
+      left = endLeft >= margin ? endLeft : startLeft;
+    } else {
+      left = startLeft + panelWidth <= vw - margin ? startLeft : endLeft;
+    }
+    left = Math.max(margin, Math.min(left, vw - panelWidth - margin));
+
+    panel.style.top = `${top}px`;
+    panel.style.left = `${left}px`;
+  }
+
+  private _clearPanelPlacement(): void {
+    const panel = this.querySelector<HTMLElement>('.civ-menu__panel');
+    if (!panel) return;
+    panel.style.top = '';
+    panel.style.left = '';
+  }
+
+  /**
+   * Attach reflow listeners on every scrollable ancestor + the window
+   * itself. When any of them scroll or the viewport resizes, recompute
+   * the panel position so it stays glued to the trigger. `{passive: true}`
+   * because we never preventDefault.
+   */
+  private _attachReflowListeners(): void {
+    window.addEventListener('resize', this._boundOnReflow, { passive: true });
+    window.addEventListener('scroll', this._boundOnReflow, { passive: true });
+    let node: Element | null = this.parentElement;
+    while (node) {
+      const overflow = getComputedStyle(node).overflow;
+      if (/auto|scroll|hidden/.test(overflow)) {
+        node.addEventListener('scroll', this._boundOnReflow, { passive: true });
+        this._scrollAncestors.push(node);
+      }
+      node = node.parentElement;
+    }
+  }
+
+  private _detachReflowListeners(): void {
+    window.removeEventListener('resize', this._boundOnReflow);
+    window.removeEventListener('scroll', this._boundOnReflow);
+    for (const node of this._scrollAncestors) {
+      node.removeEventListener('scroll', this._boundOnReflow);
+    }
+    this._scrollAncestors = [];
   }
 }
 

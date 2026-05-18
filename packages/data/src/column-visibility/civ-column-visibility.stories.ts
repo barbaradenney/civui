@@ -2,7 +2,21 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-column-visibility.js';
 import '../data-grid/civ-data-grid.js';
+import '@civui/feedback/badge';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
+
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
+  Approved: 'success',
+  Denied: 'error',
+  Pending: 'warning',
+  'In review': 'info',
+};
+
+const statusBadge = (value: unknown) => {
+  const v = String(value ?? '');
+  const variant = STATUS_VARIANT[v] ?? 'neutral';
+  return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
+};
 
 const meta: Meta = {
   title: 'Data/Column Visibility',
@@ -25,7 +39,7 @@ const SAMPLE_COLUMNS: GridColumn[] = [
   { key: 'id', header: 'Application ID', width: '9rem' },
   { key: 'applicant', header: 'Applicant', sortable: true },
   { key: 'type', header: 'Type' },
-  { key: 'status', header: 'Status' },
+  { key: 'status', header: 'Status', formatter: statusBadge },
   { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
 ];
 

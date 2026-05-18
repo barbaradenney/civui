@@ -40,6 +40,14 @@ export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' 
 export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) type: TextInputType = 'text';
   @property({ type: String }) width: InputWidth = 'default';
+  /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the bare `<input>` with the host's `aria-label`
+   * propagated for screen-reader text. For use in dense surfaces like
+   * data-grid cell editors where the surrounding context labels the control.
+   * Mask / validation behavior is preserved in compact mode.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
   @property({ type: String }) placeholder: string = '';
   @property({ type: String }) pattern: string = '';
   @property({ type: Number }) maxlength?: number;
@@ -329,7 +337,16 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     return ids.join(' ');
   }
 
+  /** Focus the inner <input> — used by callers like the data-grid cell editor. */
+  override focus(options?: FocusOptions): void {
+    const input = this.querySelector<HTMLInputElement>('input');
+    if (input) input.focus(options);
+    else super.focus(options);
+  }
+
   override render() {
+    if (this.spacing === 'sm') return this._renderCompact();
+
     const widthClass = inputWidthClass(this.width);
     const isCurrency = this._isCurrency;
     const hasPrefix = !!(this.prefix || isCurrency);
@@ -368,6 +385,17 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
     `;
   }
 
+  /** Compact render — bare <input> with no chrome, no prefix/suffix/clear/icons. Mask + validate behavior is preserved (the inner input's @input/@blur/@change handlers still fire). */
+  private _renderCompact() {
+    return this._renderInput({
+      widthClass: 'civ-w-full',
+      hasPrefix: false,
+      hasSuffix: false,
+      showLeadingIcon: false,
+      showTrailingIcon: false,
+    });
+  }
+
   /**
    * Render the bare `<input>` element with mask-aware attributes and handlers.
    * The wrapper layer (prefix/suffix/icon overlay) is composed separately by
@@ -394,16 +422,19 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
           ? ['civ-rounded-e-none']
           : [];
 
+    const isCompact = this.spacing === 'sm';
     const classes = inputClasses({
       extra: [
         widthClass,
         'civ-max-w-full',
+        ...(isCompact ? ['civ-input--sm'] : []),
         ...roundingClasses,
         ...(isCurrency ? ['civ-text-end'] : []),
         ...(showLeadingIcon ? ['civ-input-with-leading-icon'] : []),
         ...(showTrailingIcon ? ['civ-input-with-trailing-icon'] : []),
       ],
     });
+    const ariaLabel = isCompact ? (this.getAttribute('aria-label') || undefined) : undefined;
 
     // Preset inputmode wins over explicit inputmode prop
     const effectiveInputmode = (maskDef?.inputmode && this.type === 'text')
@@ -446,6 +477,7 @@ export class CivTextInput extends LegendHeadingMixin(CivFormElement) {
         minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
         autocomplete="${effectiveAutocomplete || nothing}"
         inputmode="${effectiveInputmode || nothing}"
+        aria-label="${ariaLabel ?? nothing}"
         aria-describedby="${this._ariaDescribedBy || nothing}"
         aria-invalid="${this.error ? 'true' : nothing}"
         @input="${handlers.input}"

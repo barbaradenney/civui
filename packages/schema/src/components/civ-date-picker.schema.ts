@@ -24,6 +24,12 @@ const schema: ComponentSchema = {
       description: 'Input placeholder showing expected format',
       default: 'mm/dd/yyyy',
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the input + trigger button with the host\'s `aria-label` propagated. For dense surfaces like data-grid cell editors',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     locale: {
       type: 'string',
       description: 'Locale for date formatting',

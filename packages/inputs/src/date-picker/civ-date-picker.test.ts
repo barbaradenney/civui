@@ -1048,6 +1048,27 @@ describe('civ-date-picker', () => {
       }
     });
   });
+
+  describe('spacing="sm"', () => {
+    it('renders just the input + trigger button with no chrome', async () => {
+      const el = await fixture(
+        '<civ-date-picker spacing="sm" aria-label="Date" hint="not shown" label="not shown"></civ-date-picker>',
+      );
+      expect(el.querySelector('input')).not.toBeNull();
+      expect(el.querySelector('.civ-label')).toBeNull();
+      expect(el.querySelector('.civ-hint')).toBeNull();
+    });
+
+    it('propagates host aria-label to the inner <input>', async () => {
+      const el = await fixture('<civ-date-picker spacing="sm" aria-label="Birthday"></civ-date-picker>');
+      expect(el.querySelector('input')!.getAttribute('aria-label')).toBe('Birthday');
+    });
+
+    it('applies civ-input--sm class to the inner <input>', async () => {
+      const el = await fixture('<civ-date-picker spacing="sm" aria-label="x"></civ-date-picker>');
+      expect(el.querySelector('input')!.classList.contains('civ-input--sm')).toBe(true);
+    });
+  });
 });
 
 // Helper for keyboard events on dialog

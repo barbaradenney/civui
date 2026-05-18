@@ -4,6 +4,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
 import '@civui/controls/checkbox';
+import '@civui/inputs/text-input';
+import '@civui/inputs/number';
+import '@civui/inputs/select';
 import '@civui/overlays/menu';
 import { applyAggregator } from '../aggregate/grid-aggregate.js';
 import './civ-data-grid.types.js';
@@ -1067,18 +1070,39 @@ export class CivDataGrid extends CivBaseElement {
     inputType: 'text' | 'number',
     errorId: string | undefined,
   ): TemplateResult {
+    const value = raw == null ? '' : String(raw);
+    const ariaInvalid = errorId ? 'true' : 'false';
+    if (inputType === 'number') {
+      return html`
+        <civ-number
+          class="civ-data-grid__edit-input"
+          aria-label="${col.header}"
+          aria-invalid="${ariaInvalid}"
+          aria-describedby="${errorId ?? nothing}"
+          spacing="sm"
+          disable-analytics
+          allow-decimal
+          allow-negative
+          .value="${value}"
+          @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
+          @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+          ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+        ></civ-number>
+      `;
+    }
     return html`
-      <input
+      <civ-text-input
         class="civ-data-grid__edit-input"
-        type="${inputType}"
-        .value="${raw == null ? '' : String(raw)}"
         aria-label="${col.header}"
-        aria-invalid="${errorId ? 'true' : 'false'}"
+        aria-invalid="${ariaInvalid}"
         aria-describedby="${errorId ?? nothing}"
+        spacing="sm"
+        disable-analytics
+        .value="${value}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
         @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
-        ${ref((el) => this._focusEditInput(el as HTMLInputElement | undefined))}
-      />
+        ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+      ></civ-text-input>
     `;
   }
 
@@ -1089,34 +1113,40 @@ export class CivDataGrid extends CivBaseElement {
     errorId: string | undefined,
   ): TemplateResult {
     const options = col.options ?? [];
+    const value = raw == null ? '' : String(raw);
     return html`
-      <select
+      <civ-select
         class="civ-data-grid__edit-input"
-        .value="${raw == null ? '' : String(raw)}"
         aria-label="${col.header}"
         aria-invalid="${errorId ? 'true' : 'false'}"
         aria-describedby="${errorId ?? nothing}"
+        spacing="sm"
+        disable-analytics
+        .value="${value}"
+        .options="${options}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
         @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
-        ${ref((el) => this._focusEditInput(el as HTMLSelectElement | undefined))}
-      >
-        ${options.map(
-          (opt) => html`
-            <option value="${opt.value}" ?selected="${String(raw) === opt.value}">${opt.label}</option>
-          `,
-        )}
-      </select>
+        ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+      ></civ-select>
     `;
   }
 
-  private _focusEditInput(el: HTMLInputElement | HTMLSelectElement | undefined): void {
+  private _focusEditInput(el: HTMLElement | undefined): void {
     if (!el) return;
     // Defer to next microtask so the input is attached when we focus.
+    // For civ-text-input / civ-number / civ-select the element is the
+    // custom-element host; its focus() override forwards to the inner
+    // <input>/<select>. After focus we look up the inner control to
+    // call .select() where supported, so existing text gets selected
+    // on cell-edit entry (the conventional UX for inline editing).
     queueMicrotask(() => {
       if (!el.isConnected) return;
       el.focus();
-      if ('select' in el && typeof el.select === 'function') {
-        try { el.select(); } catch { /* selects don't support .select */ }
+      const inner = el instanceof HTMLInputElement
+        ? el
+        : el.querySelector?.('input, textarea') as HTMLInputElement | null;
+      if (inner && typeof inner.select === 'function') {
+        try { inner.select(); } catch { /* selects don't support .select */ }
       }
     });
   }

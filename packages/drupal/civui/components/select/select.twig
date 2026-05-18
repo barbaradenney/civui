@@ -12,6 +12,7 @@
   {% if options %}options='{{ options|json_encode|raw }}'{% endif %}
   {% if width %}width="{{ width }}"{% endif %}
   {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+  {% if spacing %}spacing="{{ spacing }}"{% endif %}
 >
   {% block options %}{{ options }}{% endblock %}
 </civ-select>

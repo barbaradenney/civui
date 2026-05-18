@@ -81,6 +81,7 @@ fun CivDatePicker(
     disabled: Boolean = false,
     readonly: Boolean = false,
     placeholder: String = "MM/DD/YYYY",
+    spacing: String = "default",
     name: String = "",
     formState: CivFormState? = null,
     locale: String = "",

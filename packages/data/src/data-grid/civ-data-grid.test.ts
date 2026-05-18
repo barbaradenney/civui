@@ -848,13 +848,15 @@ describe('civ-data-grid — inline cell editing', () => {
     const cell = el.querySelector('tbody td') as HTMLElement;
     cell.click();
     await elementUpdated(el);
-    const select = el.querySelector('select.civ-data-grid__edit-input') as HTMLSelectElement;
-    expect(select).not.toBeNull();
-    expect(select.value).toBe('open');
-    expect(select.querySelectorAll('option').length).toBe(2);
+    // The cell editor now renders <civ-select spacing="sm"> wrapping a native <select>.
+    const host = el.querySelector('civ-select.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    expect(host).not.toBeNull();
+    expect(host.value).toBe('open');
+    const select = host.querySelector('select') as HTMLSelectElement;
+    expect(select.querySelectorAll('option').length).toBe(3); // 2 options + empty placeholder option
   });
 
-  it('renders type=number input when inputType is "number"', async () => {
+  it('renders a number-shaped input when inputType is "number"', async () => {
     const el = await mountGrid({
       columns: [{ key: 'age', header: 'Age', editable: true, inputType: 'number' }],
       rows: [{ id: '1', cells: { age: 42 } }],
@@ -862,9 +864,14 @@ describe('civ-data-grid — inline cell editing', () => {
     const cell = el.querySelector('tbody td') as HTMLElement;
     cell.click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    expect(input.type).toBe('number');
-    expect(input.value).toBe('42');
+    // The cell editor renders <civ-number spacing="sm">; the inner input uses
+    // inputmode="decimal" (numeric keyboard on touch) rather than
+    // type="number" so we can preserve partial-typing states like "12.".
+    const host = el.querySelector('civ-number.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    expect(host).not.toBeNull();
+    expect(host.value).toBe('42');
+    const inner = host.querySelector('input') as HTMLInputElement;
+    expect(inner.getAttribute('inputmode')).toBe('decimal');
   });
 
   it('commits with civ-cell-edit-commit on Enter', async () => {

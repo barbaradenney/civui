@@ -44,6 +44,10 @@ public struct CivDatePicker: View {
     /// Placeholder text shown when no date is selected.
     public var placeholder: String
 
+    /// Density variant — "default" or "sm" (compact). Suppresses chrome
+    /// for use in dense surfaces like data-grid cell editors.
+    public var spacing: String
+
     /// Whether a date is required.
     public var isRequired: Bool
 
@@ -142,6 +146,7 @@ public struct CivDatePicker: View {
         min: String? = nil,
         max: String? = nil,
         placeholder: String = "",
+        spacing: String = "default",
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isReadonly: Bool = false,
@@ -178,6 +183,7 @@ public struct CivDatePicker: View {
         self.min = min
         self.max = max
         self.placeholder = placeholder
+        self.spacing = spacing
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly

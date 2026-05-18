@@ -19,6 +19,9 @@ public struct CivNumber: View {
     public var placeholder: String
     public var prefix: String
     public var suffix: String
+    /// Density variant — "default" or "sm" (compact). Suppresses chrome
+    /// for use in dense surfaces like data-grid cell editors.
+    public var spacing: String
     public var hint: String?
     public var error: String?
     public var isRequired: Bool
@@ -35,6 +38,7 @@ public struct CivNumber: View {
         max: Double? = nil,
         allowDecimal: Bool = false,
         allowNegative: Bool = false,
+        spacing: String = "default",
         placeholder: String = "",
         prefix: String = "",
         suffix: String = "",
@@ -53,6 +57,7 @@ public struct CivNumber: View {
         self.max = max
         self.allowDecimal = allowDecimal
         self.allowNegative = allowNegative
+        self.spacing = spacing
         self.placeholder = placeholder
         self.prefix = prefix
         self.suffix = suffix

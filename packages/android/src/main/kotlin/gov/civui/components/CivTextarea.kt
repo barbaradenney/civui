@@ -73,6 +73,7 @@ fun CivTextarea(
     readonly: Boolean = false,
     placeholder: String = "",
     rows: Int = 5,
+    spacing: String = "default",
     maxlength: Int? = null,
     maxwords: Int? = null,
     minlength: Int = 0,

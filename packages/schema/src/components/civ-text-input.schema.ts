@@ -21,6 +21,12 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the bare `<input>` with the host\'s `aria-label` propagated for screen-reader text. For use in dense surfaces like data-grid cell editors where the surrounding context labels the control. Mask / validation behavior is preserved in compact mode',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     placeholder: {
       type: 'string',
       description: 'Placeholder text (never use as sole label)',

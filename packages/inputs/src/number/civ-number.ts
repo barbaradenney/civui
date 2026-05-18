@@ -53,11 +53,26 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) prefix = '';
   @property({ type: String }) suffix = '';
   @property({ type: String }) width: InputWidth = 'default';
+  /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the bare `<input>` with the host's `aria-label`
+   * propagated. Prefix / suffix decoration is dropped in compact mode.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /** Tracks whether the current error was set by the range validator. */
   private _rangeError = false;
 
+  /** Focus the inner <input> — used by callers like the data-grid cell editor. */
+  override focus(options?: FocusOptions): void {
+    const input = this.querySelector<HTMLInputElement>('input');
+    if (input) input.focus(options);
+    else super.focus(options);
+  }
+
   override render() {
+    if (this.spacing === 'sm') return this._renderCompact();
+
     const widthClass = inputWidthClass(this.width);
     const hasPrefix = !!this.prefix;
     const hasSuffix = !!this.suffix;
@@ -127,6 +142,35 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
         })}
         ${wrapped}
       </div>
+    `;
+  }
+
+  /** Compact render — bare <input>, no prefix/suffix decoration, no chrome. */
+  private _renderCompact() {
+    const ariaLabel = this.getAttribute('aria-label') || undefined;
+    const inputmode = this.allowDecimal ? 'decimal' : 'numeric';
+    return html`
+      <input
+        class="civ-input civ-input--sm civ-w-full civ-text-end"
+        id="${this._inputId}"
+        type="text"
+        name="${this.name || nothing}"
+        .value="${this.value}"
+        placeholder="${this.placeholder || nothing}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        ?required="${this.required}"
+        inputmode="${inputmode}"
+        autocomplete="off"
+        aria-label="${ariaLabel ?? nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-valuemin="${this.min != null ? String(this.min) : nothing}"
+        aria-valuemax="${this.max != null ? String(this.max) : nothing}"
+        @input="${this._onInput}"
+        @change="${this._onChange}"
+        @blur="${this._onBlur}"
+        @paste="${this._onPaste}"
+      />
     `;
   }
 

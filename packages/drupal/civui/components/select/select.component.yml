@@ -62,7 +62,12 @@ props:
       title: Autocomplete
       type: string
       description: 'Autocomplete hint forwarded to the underlying <select>'
-
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the bare `<select>` with the host''s `aria-label` propagated for screen-reader text. For dense surfaces like data-grid cell editors'
 
 slots:
   options:

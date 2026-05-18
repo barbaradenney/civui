@@ -39,6 +39,13 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) placeholder = '';
   @property({ type: Boolean }) autogrow = false;
   @property({ type: String, attribute: 'max-height' }) maxHeight = '';
+  /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the bare `<textarea>` with the host's
+   * `aria-label` propagated for screen-reader text. For dense surfaces like
+   * data-grid cell editors.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /**
    * Declarative validation. When set, the validator runs on blur (and the
@@ -123,7 +130,16 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
     return text.trim().split(/\s+/).filter(Boolean).length;
   }
 
+  /** Focus the inner <textarea> — used by callers that wrap civ-textarea in larger UIs. */
+  override focus(options?: FocusOptions): void {
+    const ta = this.querySelector<HTMLTextAreaElement>('textarea');
+    if (ta) ta.focus(options);
+    else super.focus(options);
+  }
+
   override render() {
+    if (this.spacing === 'sm') return this._renderCompact();
+
     const classes = inputClasses({
       extra: [this.autogrow ? 'civ-resize-none civ-overflow-hidden' : 'civ-resize-y'],
     });
@@ -200,6 +216,30 @@ export class CivTextarea extends LegendHeadingMixin(CivFormElement) {
         })}
         ${inner}
       </div>
+    `;
+  }
+
+  /** Compact render — bare <textarea>, no char count / word count / chrome. */
+  private _renderCompact() {
+    const ariaLabel = this.getAttribute('aria-label') || undefined;
+    return html`
+      <textarea
+        class="civ-input civ-input--sm civ-w-full civ-resize-y"
+        id="${this._inputId}"
+        name="${this.name}"
+        rows="${this.rows}"
+        .value="${this.value}"
+        placeholder="${this.placeholder || nothing}"
+        maxlength="${this.maxlength && this.maxlength > 0 ? this.maxlength : nothing}"
+        minlength="${this.minlength && this.minlength > 0 ? this.minlength : nothing}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        ?required="${this.required}"
+        aria-label="${ariaLabel ?? nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        @input="${this._onInput}"
+        @change="${this._onChange}"
+      ></textarea>
     `;
   }
 

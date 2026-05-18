@@ -31,6 +31,12 @@ const schema: ComponentSchema = {
       description: 'Placeholder text (never use as sole label)',
       default: '',
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label / hint / error / char-count chrome. `sm` (compact) renders just the bare `<textarea>` with the host\'s `aria-label` propagated. For dense surfaces like data-grid cell editors',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     autogrow: {
       type: 'boolean',
       description: 'Auto-expand the textarea height to fit the content as the user types',

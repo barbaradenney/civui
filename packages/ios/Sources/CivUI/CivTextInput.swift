@@ -137,6 +137,11 @@ public struct CivTextInput: View {
     /// Width variant.
     public var width: CivInputWidth
 
+    /// Density variant — "default" or "sm" (compact). In "sm" mode the
+    /// surrounding chrome (label, hint, error) is suppressed for use in
+    /// dense surfaces like data-grid cell editors.
+    public var spacing: String
+
     /// Input mask preset.
     public var mask: CivInputMask
 
@@ -245,6 +250,7 @@ public struct CivTextInput: View {
         minLength: Int? = nil,
         inputType: CivInputType = .text,
         width: CivInputWidth = .full,
+        spacing: String = "default",
         mask: CivInputMask = .none,
         onInput: ((String) -> Void)? = nil,
         onChange: ((String) -> Void)? = nil,
@@ -285,6 +291,7 @@ public struct CivTextInput: View {
         self.minLength = minLength
         self.inputType = inputType
         self.width = width
+        self.spacing = spacing
         self.mask = mask
         self.onInput = onInput
         self.onChange = onChange

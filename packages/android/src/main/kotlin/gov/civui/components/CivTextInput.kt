@@ -162,6 +162,7 @@ fun CivTextInput(
     placeholder: String? = null,
     inputType: CivInputType = CivInputType.Text,
     width: CivInputWidth = CivInputWidth.Full,
+    spacing: String = "default",
     mask: CivInputMask? = null,
     maxLength: Int? = null,
     minLength: Int? = null,

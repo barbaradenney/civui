@@ -593,6 +593,16 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Compact density — for dense surfaces (data-grid cell editors,
+     column-toggle panels). Reduced vertical padding and slightly smaller
+     font so the control fits a table-row height without wrapping. Used
+     in combination with each input's `spacing="sm"` mode, which also
+     drops the surrounding label / hint / error chrome. */
+  .civ-input--sm {
+    @apply civ-px-2 civ-py-1;
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
   .civ-input:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;

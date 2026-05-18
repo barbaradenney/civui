@@ -416,3 +416,35 @@ describe('civ-select civ-input event', () => {
     }
   });
 });
+
+describe('civ-select spacing="sm"', () => {
+  it('renders the bare <select> with no label / hint / error chrome', async () => {
+    const el = await fixture(
+      `<civ-select spacing="sm" aria-label="Status" hint="not shown" .options="${[
+        { value: 'a', label: 'A' },
+      ]}"></civ-select>`,
+    ) as any;
+    expect(el.querySelector('select')).not.toBeNull();
+    expect(el.querySelector('.civ-hint')).toBeNull();
+    expect(el.querySelector('.civ-label')).toBeNull();
+  });
+
+  it('propagates host aria-label to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="Pick one"></civ-select>');
+    const select = el.querySelector('select')!;
+    expect(select.getAttribute('aria-label')).toBe('Pick one');
+  });
+
+  it('applies civ-input--sm class to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="x"></civ-select>');
+    const select = el.querySelector('select')!;
+    expect(select.classList.contains('civ-input--sm')).toBe(true);
+  });
+
+  it('forwards focus() to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="x"></civ-select>') as HTMLElement;
+    const select = el.querySelector('select')!;
+    el.focus();
+    expect(document.activeElement).toBe(select);
+  });
+});

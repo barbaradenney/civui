@@ -3,6 +3,7 @@ import { ref } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
+import '@civui/controls/checkbox';
 import '@civui/overlays/menu';
 import { applyAggregator } from '../aggregate/grid-aggregate.js';
 import './civ-data-grid.types.js';
@@ -1229,15 +1230,16 @@ export class CivDataGrid extends CivBaseElement {
     }
     return html`
       <td class="civ-data-grid__td civ-data-grid__td--select">
-        <label class="civ-data-grid__select-wrap">
-          <input
-            type="checkbox"
+        <div class="civ-data-grid__select-wrap">
+          <civ-checkbox
+            spacing="sm"
+            aria-label="${label}"
             .checked="${isSelected}"
             ?disabled="${row.disabled}"
-            aria-label="${label}"
-            @change="${() => this._toggleRowSelected(row.id)}"
-          />
-        </label>
+            disable-analytics
+            @civ-change="${() => this._toggleRowSelected(row.id)}"
+          ></civ-checkbox>
+        </div>
       </td>
     `;
   }
@@ -1248,16 +1250,17 @@ export class CivDataGrid extends CivBaseElement {
     const allSelected = enabledRows.length > 0 && selectedEnabled.length === enabledRows.length;
     const someSelected = selectedEnabled.length > 0 && !allSelected;
     return html`
-      <label class="civ-data-grid__select-wrap">
-        <input
-          type="checkbox"
+      <div class="civ-data-grid__select-wrap">
+        <civ-checkbox
+          spacing="sm"
+          aria-label="${t('dataGridSelectAll')}"
           .checked="${allSelected}"
           .indeterminate="${someSelected}"
           ?disabled="${enabledRows.length === 0}"
-          aria-label="${t('dataGridSelectAll')}"
-          @change="${this._onSelectAllChange}"
-        />
-      </label>
+          disable-analytics
+          @civ-change="${this._onSelectAllChange}"
+        ></civ-checkbox>
+      </div>
     `;
   }
 
@@ -1387,7 +1390,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onSelectAllChange = (e: Event): void => {
-    const checked = (e.target as HTMLInputElement).checked;
+    const checked = (e as CustomEvent<{ checked: boolean }>).detail.checked;
     const enabledIds = this.rows.filter((r) => !r.disabled).map((r) => r.id);
     const next = checked ? enabledIds : [];
     dispatch(this, 'civ-selection-change', { selectedRowIds: next });

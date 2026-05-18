@@ -46,7 +46,12 @@ props:
       type: boolean
       default: true
       description: 'Tile variant with bordered card styling. Default is true — tiles are the standard treatment; opt out for blank inline checkboxes'
-
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Density variant. `default` renders the full tap-target with label, hint, description, and required-mark chrome. `sm` renders a compact 20px input with no chrome — for use inside data-grid rows, column-toggle panels, and other dense surfa...'
 
 libraryOverrides:
   dependencies:

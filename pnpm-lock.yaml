@@ -327,6 +327,9 @@ importers:
       '@civui/actions':
         specifier: workspace:*
         version: link:../actions
+      '@civui/controls':
+        specifier: workspace:*
+        version: link:../controls
       '@civui/core':
         specifier: workspace:*
         version: link:../core

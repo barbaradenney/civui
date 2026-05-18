@@ -64,6 +64,11 @@ public struct CivCheckbox: View {
     /// Whether to render in tile (card) style.
     public var isTile: Bool
 
+    /// Density variant — "default" or "sm" (compact). In "sm" mode, tile chrome
+    /// is forced off and the checkbox renders at half the default size for use
+    /// in dense surfaces like data-grid rows or column-toggle panels.
+    public var spacing: String
+
     /// Called on every checked state change (parallels `civ-input`/`civ-change` events).
     /// Parameters: (checked: Bool, value: String)
     public var onChange: ((Bool, String) -> Void)?
@@ -90,6 +95,7 @@ public struct CivCheckbox: View {
         formName: String = "",
         isIndeterminate: Bool = false,
         isTile: Bool = false,
+        spacing: String = "default",
         onChange: ((Bool, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -105,6 +111,7 @@ public struct CivCheckbox: View {
         self.formName = formName
         self.isIndeterminate = isIndeterminate
         self.isTile = isTile
+        self.spacing = spacing
         self.onChange = onChange
         self.onAnalytics = onAnalytics
     }

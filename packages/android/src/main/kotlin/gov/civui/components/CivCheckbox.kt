@@ -73,6 +73,7 @@ fun CivCheckbox(
     name: String = "",
     indeterminate: Boolean = false,
     tile: Boolean = false,
+    spacing: String = "default",
     onChange: ((Boolean) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

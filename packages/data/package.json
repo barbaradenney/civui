@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@civui/actions": "workspace:*",
+    "@civui/controls": "workspace:*",
     "@civui/core": "workspace:*",
     "@civui/overlays": "workspace:*",
     "lit": "^3.2.0"

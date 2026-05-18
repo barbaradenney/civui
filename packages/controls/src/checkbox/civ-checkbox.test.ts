@@ -147,6 +147,63 @@ describe('civ-checkbox', () => {
   });
 });
 
+describe('civ-checkbox spacing="sm"', () => {
+  it('skips tile chrome and renders just the input when label is empty', async () => {
+    const el = await fixture('<civ-checkbox spacing="sm" aria-label="Select row 1"></civ-checkbox>');
+    expect(el.querySelector('.civ-check-tile')).toBeNull();
+    expect(el.querySelector('label')).toBeNull();
+    const input = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(input).not.toBeNull();
+    expect(input.classList.contains('civ-check-input--sm')).toBe(true);
+  });
+
+  it('propagates host aria-label to the inner input', async () => {
+    const el = await fixture('<civ-checkbox spacing="sm" aria-label="Select row 1"></civ-checkbox>');
+    const input = el.querySelector('input[type="checkbox"]')!;
+    expect(input.getAttribute('aria-label')).toBe('Select row 1');
+  });
+
+  it('renders label inline when label is provided (e.g. column-visibility panel)', async () => {
+    const el = await fixture('<civ-checkbox spacing="sm" label="Customer name"></civ-checkbox>');
+    const label = el.querySelector('label.civ-check-row');
+    expect(label).not.toBeNull();
+    expect(el.querySelector('.civ-check-tile')).toBeNull();
+    expect(el.querySelector('.civ-check-label')!.textContent).toBe('Customer name');
+  });
+
+  it('does not render hint, description, or required-mark in compact mode', async () => {
+    const el = await fixture(
+      `<civ-checkbox
+        spacing="sm"
+        label="Compact"
+        hint="should not render"
+        description="should not render"
+        required></civ-checkbox>`,
+    );
+    expect(el.querySelector('.civ-hint')).toBeNull();
+    expect(el.querySelector('.civ-check-description')).toBeNull();
+    expect(el.querySelector('.civ-required-mark')).toBeNull();
+  });
+
+  it('still fires civ-change when toggled', async () => {
+    const el = await fixture('<civ-checkbox spacing="sm" aria-label="x"></civ-checkbox>');
+    const handler = vi.fn();
+    el.addEventListener('civ-change', handler as EventListener);
+    const input = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.checked).toBe(true);
+  });
+
+  it('supports indeterminate state', async () => {
+    const el = await fixture('<civ-checkbox spacing="sm" aria-label="x" indeterminate></civ-checkbox>') as any;
+    await elementUpdated(el);
+    const input = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(input.indeterminate).toBe(true);
+  });
+});
+
 describe('civ-checkbox-group', () => {
   it('renders layout container', async () => {
     const el = await fixture(`

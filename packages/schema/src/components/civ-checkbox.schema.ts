@@ -32,6 +32,12 @@ const schema: ComponentSchema = {
       default: true,
       reflect: true,
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full tap-target with label, hint, description, and required-mark chrome. `sm` renders a compact 20px input with no chrome — for use inside data-grid rows, column-toggle panels, and other dense surfaces where the surrounding context labels the control. In `sm` mode, the tile is forced off and the host\'s `aria-label` is propagated to the inner `<input>` when `label` is empty',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
   },
 
   events: {

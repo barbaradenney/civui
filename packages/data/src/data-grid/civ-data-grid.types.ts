@@ -4,6 +4,16 @@ import type { TemplateResult } from 'lit';
 export type GridSortDirection = 'asc' | 'desc' | 'none';
 
 /**
+ * A single entry in a multi-column sort stack. `direction` here is always
+ * directional — a cleared sort is represented by the column being absent
+ * from the `sortKeys` array, not by an entry with `direction: 'none'`.
+ */
+export interface GridSortKey {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+/**
  * Mobile responsive behavior for narrow viewports (≤480px).
  * - `'stacked'` — each row collapses to a vertical label/value block (USWDS stacked pattern).
  * - `'scroll'` — wraps the table in a horizontally-scrollable region; rows stay tabular.
@@ -24,6 +34,58 @@ export interface GridCellOption {
   value: string;
   label: string;
 }
+
+/**
+ * Per-column filter configuration. Set on a column to render a filter
+ * input in the filter row beneath the headers. Three variants:
+ * - `text` — case-insensitive substring match against the cell's stringified value.
+ * - `select` — exact match against one of the supplied options.
+ * - `number-range` — pair of min/max inputs; cell value parsed as a number and bounded.
+ *
+ * The filter row is consumer-controlled: each change fires `civ-filter-change`
+ * with the new filter state; the consumer applies the filter to its data and
+ * updates the grid's `rows`. Use the `applyGridFilters` utility from
+ * `@civui/data/filter` for client-side filtering.
+ */
+export type GridColumnFilter =
+  | { type: 'text'; placeholder?: string }
+  | { type: 'select'; options: GridCellOption[]; placeholder?: string }
+  | { type: 'number-range'; minPlaceholder?: string; maxPlaceholder?: string };
+
+/**
+ * Filter value held in the grid's `filters` map, keyed by column.key. Each
+ * value's shape matches its column's filter `type`.
+ */
+export type GridFilterValue =
+  | { type: 'text'; value: string }
+  | { type: 'select'; value: string }
+  | { type: 'number-range'; min?: number; max?: number };
+
+/** Map of active filter values, keyed by `column.key`. */
+export type GridFilters = Record<string, GridFilterValue>;
+
+/**
+ * Per-column aggregator for the footer row and per-group subtotal rows.
+ *
+ * String form: built-in aggregators that operate on the column's cell
+ * values. `sum` / `avg` / `min` / `max` parse cells via `Number()` and
+ * silently drop non-numeric / null / empty entries. `count` counts rows
+ * whose cell is not null / undefined / empty string.
+ *
+ * Function form: full control. Receives the row subset for the
+ * aggregate context (the whole grid, a filtered slice, a single group)
+ * plus the column definition. Return a string or number — the grid
+ * renders it verbatim, so the function is the right place to format
+ * (`'$' + sum(rows, col).toFixed(2)`, etc.). Use the helpers exported
+ * from `@civui/data/aggregate` to compose.
+ */
+export type GridAggregator =
+  | 'sum'
+  | 'avg'
+  | 'count'
+  | 'min'
+  | 'max'
+  | ((rows: readonly GridRow[], col: GridColumn) => string | number);
 
 /**
  * Column definition. Set via the grid's `columns` JS property.
@@ -79,6 +141,25 @@ export interface GridColumn {
    * accept. Runs on Enter / blur before the commit event fires.
    */
   validate?: (value: unknown, row: GridRow) => string | null;
+  /**
+   * Per-column filter configuration. When set, a filter input renders in
+   * the filter row beneath the headers. The grid dispatches
+   * `civ-filter-change` with the new filter state on every input — the
+   * consumer manages `filters` and re-renders `rows` accordingly.
+   * Special cells (selection, expand, actions) render an empty
+   * placeholder in the filter row to keep columns aligned.
+   */
+  filter?: GridColumnFilter;
+  /**
+   * Per-column aggregator for the footer row and (when `groupBy` is set)
+   * per-group subtotal rows. Built-in: `'sum' | 'avg' | 'count' | 'min' |
+   * 'max'`. Pass a function for custom formatting:
+   * `aggregate: (rows, col) => '$' + sum(rows, col).toFixed(2)`. The
+   * footer renders automatically when ANY column has `aggregate` set;
+   * non-aggregated columns get an empty placeholder cell so columns
+   * align. Use the helpers from `@civui/data/aggregate` to compose.
+   */
+  aggregate?: GridAggregator;
 }
 
 /**

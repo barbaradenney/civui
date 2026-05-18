@@ -32,16 +32,27 @@ const schema: ComponentSchema = {
     },
     sortBy: {
       type: 'string',
-      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`',
+      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`. When `multiSort` is on, this mirrors the PRIMARY (first) sort key in `sortKeys` for backward-compat readers',
       default: '',
       attribute: 'sort-by',
     },
     sortDirection: {
       type: 'enum',
-      description: 'Current sort direction. `none` clears the sort indicator',
+      description: 'Current sort direction. `none` clears the sort indicator. When `multiSort` is on, mirrors `sortKeys[0].direction` (or `none` when the stack is empty)',
       values: ['asc', 'desc', 'none'],
       default: 'none',
       attribute: 'sort-direction',
+    },
+    multiSort: {
+      type: 'boolean',
+      description: 'Opt into multi-column sort. When enabled, Shift-click a sortable header to add it to the sort stack (or cycle / remove it); plain click replaces the stack with a single key. Position badges (1, 2, 3…) render next to the chevron when the stack has more than one key. The `civ-sort` event always carries the full target stack in `sortKeys`',
+      default: false,
+      attribute: 'multi-sort',
+    },
+    sortKeys: {
+      type: 'array',
+      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]` — each entry is `{ key: string, direction: \'asc\' | \'desc\' }`. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
+      webOnly: true,
     },
     responsive: {
       type: 'enum',
@@ -131,14 +142,32 @@ const schema: ComponentSchema = {
       attribute: 'keyboard-nav',
       webOnly: true,
     },
+    filters: {
+      type: 'string',
+      description: 'Active filter values keyed by column.key. Typed as `Record<string, GridFilterValue>` — passed as an object literal, not a string (the type is `string` here only because the schema doesn\'t model object literals; the actual runtime shape is `{ [columnKey]: { type: \'text\' | \'select\' | \'number-range\', value?, min?, max? } }`). Controlled — update in response to `civ-filter-change`. Set `column.filter = { type, options?, placeholder? }` to opt a column into the filter row. The filter row renders inside `<thead>` beneath the column headers; columns without a filter config get an empty placeholder cell so the row stays aligned. Use the `applyGridFilters` utility from `@civui/data/filter` for client-side filtering, or wire it to your server query',
+      webOnly: true,
+    },
+    stickyFooter: {
+      type: 'boolean',
+      description: 'Pin the aggregator footer to the bottom of the scrolling container. Only takes effect when at least one column has `aggregate` set; otherwise no footer renders',
+      default: false,
+      attribute: 'sticky-footer',
+    },
+    showGroupSubtotals: {
+      type: 'boolean',
+      description: 'When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group. Default `true`. Disable when you want a grand-total footer but not per-group subtotals',
+      default: true,
+      attribute: 'show-group-subtotals',
+    },
   },
 
   events: {
     'civ-sort': {
-      description: 'Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` accordingly (and re-fetch / re-sort data)',
+      description: 'Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` (single-sort mode) or `sortKeys` (multi-sort mode) accordingly and re-fetch / re-sort data',
       detail: {
-        column: { type: 'string', description: 'The new column key being sorted by (empty string when sort was cleared)' },
-        direction: { type: 'string', description: 'The new direction: `asc`, `desc`, or `none`' },
+        column: { type: 'string', description: 'The just-toggled column key, or empty string when the column was cleared from the sort' },
+        direction: { type: 'string', description: 'The just-toggled column\'s new direction: `asc`, `desc`, or `none` (when cleared)' },
+        sortKeys: { type: 'object', description: 'The full target sort stack as `GridSortKey[]`. Single-element when `multiSort` is off; empty array when sort was cleared. Use this in multi-sort mode; `column` / `direction` are kept for backward-compat single-sort consumers' },
       },
     },
     'civ-selection-change': {
@@ -200,6 +229,13 @@ const schema: ComponentSchema = {
       detail: {
         groupKey: { type: 'string', description: 'The stringified group key (the value of `row.cells[groupBy]` for the group)' },
         expanded: { type: 'boolean', description: 'The target expanded state (not the previous state) — reducer-friendly' },
+      },
+    },
+    'civ-filter-change': {
+      description: 'Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own — use `applyGridFilters` from `@civui/data/filter` for the client-side default',
+      detail: {
+        filters: { type: 'object', description: 'New full filter state (record keyed by column.key)' },
+        columnKey: { type: 'string', description: 'The column.key whose filter changed' },
       },
     },
   },

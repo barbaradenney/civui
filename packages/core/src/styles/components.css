@@ -2107,6 +2107,40 @@
     color: var(--civ-color-primary-dark);
   }
 
+  /* Multi-sort position badge — small numeric indicator (1, 2, 3…) next
+     to the sort chevron showing this column's priority in the sort
+     stack. Only rendered when more than one column is sorted (a
+     single-key sort doesn't need a "1" badge). */
+  .civ-data-grid__sort-position {
+    @apply civ-inline-flex civ-items-center civ-justify-center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 var(--civ-spacing-1);
+    border-radius: 999px;
+    background-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    font-size: var(--civ-typography-fontSize-xs);
+    font-weight: 600;
+    line-height: 1;
+    /* Defense against the parent sort-btn's :hover underline — civ-
+       inline-flex breaks text-decoration inheritance per spec, but lock
+       it in so a future refactor (e.g. switching to inline) can't
+       silently regress. */
+    text-decoration: none;
+  }
+
+  /* Windows High Contrast Mode — background-color drops out, leaving a
+     bare "1" / "2" floating next to the chevron. Pin to system colors so
+     the badge stays visible. */
+  @media (forced-colors: active) {
+    .civ-data-grid__sort-position {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      color: HighlightText;
+      border: 1px solid CanvasText;
+    }
+  }
+
   .civ-data-grid__td {
     @apply civ-px-3 civ-py-2;
     font-size: var(--civ-typography-fontSize-base);
@@ -2366,6 +2400,85 @@
   .civ-data-grid__select-wrap {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     cursor: pointer;
+  }
+
+  /* Filter row — sits inside <thead> beneath the column-header row. Each
+     cell hosts a native <input> / <select> styled to a compact admin look.
+     Placeholder cells (for select / expand / actions columns, and for
+     columns without a filter config) are empty but keep the alignment. */
+  .civ-data-grid__filter-row {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__filter-cell {
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+    vertical-align: middle;
+  }
+
+  .civ-data-grid__filter-input {
+    @apply civ-w-full;
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    border: 1px solid var(--civ-color-base-light);
+    border-radius: 4px;
+    background-color: var(--civ-color-white-DEFAULT);
+    font-size: var(--civ-typography-fontSize-sm);
+    line-height: 1.4;
+    box-sizing: border-box;
+  }
+
+  .civ-data-grid__filter-input:focus {
+    outline: none;
+    border-color: var(--civ-color-primary-DEFAULT);
+    box-shadow: 0 0 0 2px var(--civ-color-primary-lighter);
+  }
+
+  .civ-data-grid__filter-range {
+    @apply civ-flex civ-gap-2;
+  }
+
+  .civ-data-grid__filter-input--range {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /* Aggregator footer — <tfoot> row of per-column aggregates. The cell
+     border-top sets it apart from the data rows above; bold font weight
+     mirrors how Excel renders totals. Placeholder cells (no aggregate
+     configured, or special select / expand / actions columns) leave the
+     cell visually empty but keep alignment. */
+  .civ-data-grid__tfoot {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__tfoot-cell {
+    border-top: 2px solid var(--civ-color-base-light);
+    font-weight: 600;
+  }
+
+  /* Sticky footer — cells use position: sticky bottom so the footer row
+     stays pinned to the bottom of the scroll region. Matches the
+     sticky-header pattern (which sticks individual <th>s rather than
+     the whole <thead>, because browsers don't reliably sticky <thead>
+     or <tfoot> elements). */
+  .civ-data-grid--sticky-footer .civ-data-grid__tfoot-cell {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--civ-color-base-lightest);
+    z-index: var(--civ-z-sticky-header);
+  }
+
+  /* Per-group subtotal row — same visual treatment as the footer row so
+     it reads as a "group total". Gets an extra background tint to
+     separate it from the regular data rows above. */
+  .civ-data-grid__tr--group-subtotal {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__tr--group-subtotal .civ-data-grid__tfoot-cell {
+    /* Subtotals get a thinner border than the grand-total footer — they
+       belong inside their group, not at the bottom of everything. */
+    border-top: 1px solid var(--civ-color-base-light);
   }
 
   /* Keyboard-nav focus indicator on the focused cell. The global focus

@@ -9,6 +9,8 @@ import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
 import '@civui/overlays/drawer';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
+import { applyGridFilters } from '../filter/grid-filter.js';
+import { sum, avg } from '../aggregate/grid-aggregate.js';
 
 const meta: Meta = {
   title: 'Layout/Data Grid',
@@ -760,6 +762,212 @@ export const KeyboardNavigation: Story = {
           keyboard-nav
           bordered
         ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const MultiColumnSort: Story = {
+  name: 'Multi-column sort (Shift-click)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-multisort') as any;
+      if (!grid) return;
+      const allRows = SAMPLE_DATA.map((d) => ({
+        id: d.id,
+        cells: { applicant: d.applicant, type: d.type, status: d.status, updated: d.updated },
+      }));
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true },
+        { key: 'type', header: 'Type', sortable: true },
+        { key: 'status', header: 'Status', sortable: true },
+        { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
+      ];
+      grid.columns = cols;
+      grid.rows = [...allRows];
+      grid.multiSort = true;
+      grid.sortKeys = [];
+      // Client-side sort that honors the full stack.
+      const compare = (av: unknown, bv: unknown): number => {
+        // Numeric compare when both values are numbers — avoids the
+        // lexicographic '10' < '2' trap of a pure String() compare.
+        if (typeof av === 'number' && typeof bv === 'number') return av - bv;
+        const as = String(av ?? '');
+        const bs = String(bv ?? '');
+        return as < bs ? -1 : as > bs ? 1 : 0;
+      };
+      const applySort = (keys: { key: string; direction: 'asc' | 'desc' }[]) => {
+        if (keys.length === 0) {
+          grid.rows = [...allRows];
+          return;
+        }
+        const sorted = [...allRows].sort((a, b) => {
+          for (const { key, direction } of keys) {
+            const cmp = compare(a.cells[key], b.cells[key]);
+            if (cmp !== 0) return direction === 'asc' ? cmp : -cmp;
+          }
+          return 0;
+        });
+        grid.rows = sorted;
+      };
+      grid.addEventListener('civ-sort', (e: Event) => {
+        const { sortKeys } = (e as CustomEvent).detail;
+        grid.sortKeys = sortKeys;
+        applySort(sortKeys);
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Click a header to sort by that column alone.
+          <strong>Shift-click</strong> additional headers to add them as
+          secondary / tertiary sort keys — the priority badge (1, 2, 3…)
+          next to the chevron shows the order. Shift-click an active key
+          again to flip its direction; a third shift-click removes it.
+        </p>
+        <civ-data-grid
+          class="story-multisort"
+          caption="Applications (multi-column sort)"
+          bordered
+        ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const Aggregations: Story = {
+  name: 'Aggregator footer + group subtotals',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-aggregate') as any;
+      if (!grid) return;
+      const fmtUSD = (n: number) =>
+        n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true },
+        { key: 'type', header: 'Type' },
+        {
+          key: 'amount',
+          header: 'Award amount',
+          align: 'numeric',
+          formatter: (v) => fmtUSD(Number(v)),
+          aggregate: (rows, col) => `Total: ${fmtUSD(sum(rows, col))}`,
+        },
+        {
+          key: 'days',
+          header: 'Days in review',
+          align: 'numeric',
+          aggregate: (rows, col) => `Avg: ${avg(rows, col).toFixed(1)}`,
+        },
+      ];
+      grid.columns = cols;
+      grid.rows = SAMPLE_DATA.map((d, i) => ({
+        id: d.id,
+        cells: {
+          applicant: d.applicant,
+          type: d.type,
+          amount: 1500 + i * 850,
+          days: 4 + (i * 3) % 28,
+        },
+      }));
+      grid.groupBy = 'type';
+      grid.stickyFooter = true;
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Each column with <code>aggregate</code> contributes a per-group
+          subtotal row plus a grand-total in the sticky <code>&lt;tfoot&gt;</code>.
+          Custom function aggregators do the formatting (currency,
+          decimals, "Total:" / "Avg:" prefixes).
+        </p>
+        <div style="max-height: 360px; overflow-y: auto; border: 1px solid var(--civ-color-base-lighter);">
+          <civ-data-grid
+            class="story-aggregate"
+            caption="Applications with subtotals"
+            bordered
+          ></civ-data-grid>
+        </div>
+      </div>
+    `;
+  },
+};
+
+export const ColumnFiltering: Story = {
+  name: 'Per-column filtering',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-filter') as any;
+      const status = document.getElementById('story-filter-status');
+      if (!grid) return;
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true, filter: { type: 'text', placeholder: 'Search name' } },
+        { key: 'type', header: 'Type', filter: {
+          type: 'select',
+          options: [
+            { value: 'Disability', label: 'Disability' },
+            { value: 'Pension', label: 'Pension' },
+            { value: 'Education', label: 'Education' },
+            { value: 'Healthcare', label: 'Healthcare' },
+          ],
+        }},
+        { key: 'status', header: 'Status', filter: {
+          type: 'select',
+          options: [
+            { value: 'In review', label: 'In review' },
+            { value: 'Approved', label: 'Approved' },
+            { value: 'Pending', label: 'Pending' },
+            { value: 'Denied', label: 'Denied' },
+          ],
+        }},
+        { key: 'amount', header: 'Amount', align: 'numeric',
+          filter: { type: 'number-range' },
+          formatter: (v) => `$${v}`,
+        },
+      ];
+      const allRows: GridRow[] = SAMPLE_DATA.map((d, i) => ({
+        id: d.id,
+        cells: {
+          applicant: d.applicant,
+          type: d.type,
+          status: d.status,
+          // Synthesize an "amount" column for the range filter demo.
+          amount: 100 + i * 75,
+        },
+      }));
+      grid.columns = cols;
+      grid.rows = allRows;
+      grid.filters = {};
+      const updateStatus = () => {
+        const n = Object.keys(grid.filters).length;
+        if (status) {
+          status.textContent = n === 0
+            ? `${grid.rows.length} rows shown — no filters active.`
+            : `${grid.rows.length} of ${allRows.length} rows shown — ${n} active filter${n === 1 ? '' : 's'}.`;
+        }
+      };
+      updateStatus();
+      grid.addEventListener('civ-filter-change', (e: Event) => {
+        const { filters } = (e as CustomEvent).detail;
+        grid.filters = filters;
+        grid.rows = applyGridFilters(allRows, cols, filters);
+        updateStatus();
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Type, select, or set a min/max — the grid dispatches
+          <code>civ-filter-change</code> with the new full filter state,
+          and the consumer applies the filter via
+          <code>applyGridFilters</code> from <code>@civui/data/filter</code>.
+        </p>
+        <civ-data-grid
+          class="story-filter"
+          caption="Applications (with per-column filters)"
+          bordered
+        ></civ-data-grid>
+        <p id="story-filter-status" class="civ-mt-3" aria-live="polite"></p>
       </div>
     `;
   },

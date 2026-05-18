@@ -4,18 +4,24 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
 import '@civui/overlays/menu';
+import { applyAggregator } from '../aggregate/grid-aggregate.js';
 import './civ-data-grid.types.js';
 import type {
   GridColumn,
   GridRow,
   GridRowAction,
   GridSortDirection,
+  GridSortKey,
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
   GridGroupLabel,
   GridCellInputType,
   GridCellOption,
+  GridColumnFilter,
+  GridFilterValue,
+  GridFilters,
+  GridAggregator,
 } from './civ-data-grid.types.js';
 
 export type {
@@ -23,12 +29,17 @@ export type {
   GridRow,
   GridRowAction,
   GridSortDirection,
+  GridSortKey,
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
   GridGroupLabel,
   GridCellInputType,
   GridCellOption,
+  GridColumnFilter,
+  GridFilterValue,
+  GridFilters,
+  GridAggregator,
 };
 
 /**
@@ -58,8 +69,10 @@ export type {
  * @prop {boolean} captionHidden - Visually hide the caption (still announced to AT).
  * @prop {Array} columns - Column definitions (JS property; no HTML attribute).
  * @prop {Array} rows - Row data (JS property; no HTML attribute).
- * @prop {string} sortBy - Currently-sorted column key. Empty string = no active sort.
- * @prop {string} sortDirection - 'asc' | 'desc' | 'none'.
+ * @prop {string} sortBy - Currently-sorted column key. Empty string = no active sort. When `multiSort` is on, this reflects the PRIMARY sort key (mirrors `sortKeys[0]`) for backward-compat readers; the full stack is in `sortKeys`.
+ * @prop {string} sortDirection - 'asc' | 'desc' | 'none'. When `multiSort` is on, mirrors `sortKeys[0].direction` (or `'none'` when the stack is empty).
+ * @prop {boolean} multiSort - Opt into multi-column sort. When enabled, Shift-click a sortable header to add it to the sort stack; plain click replaces the stack. Position badges (1, 2, 3…) render next to chevrons when the stack has more than one key.
+ * @prop {Array} sortKeys - Multi-column sort stack (controlled). Each entry is `{ key, direction }`; entries earlier in the array are higher-priority. Update in response to `civ-sort` (which always includes `sortKeys` in its detail).
  * @prop {string} responsive - 'stacked' (default) collapses to vertical blocks on mobile; 'scroll' wraps in a horizontal scroll region.
  * @prop {boolean} stickyHeader - Sticks the header row to the top while scrolling vertically.
  * @prop {string} selectable - 'none' | 'single' | 'multiple' — row-selection mode.
@@ -73,8 +86,11 @@ export type {
  * @prop {Array} expandedRowIds - IDs of currently-expanded rows (controlled). Update in response to `civ-row-expand`.
  * @prop {Function} expandTemplate - `(row) => string | TemplateResult` — renders the detail content shown when a row is expanded. Required when any row has `expandable: true`.
  * @prop {boolean} keyboardNav - Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. See the data-grid doc page "Keyboard navigation" section for the full key map and behavior notes.
+ * @prop {Object} filters - Active filter values keyed by column.key (controlled). Update in response to `civ-filter-change`. See the doc page "Column filtering" section.
+ * @prop {boolean} stickyFooter - Pin the aggregator footer to the bottom of the scrolling container.
+ * @prop {boolean} showGroupSubtotals - When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group (default `true`).
  *
- * @fires civ-sort - { column, direction } — user clicked a sortable column header
+ * @fires civ-sort - { column, direction, sortKeys } — user clicked a sortable column header. `column` + `direction` describe the just-toggled column (for backward-compat consumers); `sortKeys` is the full target stack (always present, single-element when `multiSort` is off).
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
  * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
@@ -83,6 +99,7 @@ export type {
  * @fires civ-cell-edit-commit - { rowId, columnKey, value, row } — user committed a valid new value (Enter / blur / click-outside)
  * @fires civ-cell-edit-cancel - { rowId, columnKey, row } — user cancelled an edit (Escape)
  * @fires civ-group-toggle - { groupKey, expanded } — user toggled a group header's chevron
+ * @fires civ-filter-change - { filters, columnKey } — user changed a per-column filter input; `filters` is the new full state, `columnKey` identifies which column changed
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -102,6 +119,16 @@ export type {
  *   ]},
  * ];
  * grid.addEventListener('civ-sort', (e) => fetchData(e.detail));
+ *
+ * // Multi-sort: opt in via `multiSort` and read `sortKeys` from the event.
+ * // Shift-click a header to add it as a secondary / tertiary key; the
+ * // event carries the full target stack.
+ * grid.multiSort = true;
+ * grid.sortKeys = [];
+ * grid.addEventListener('civ-sort', (e) => {
+ *   grid.sortKeys = e.detail.sortKeys;
+ *   fetchData({ sortKeys: grid.sortKeys });
+ * });
  * ```
  */
 @customElement('civ-data-grid')
@@ -113,6 +140,8 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: String, attribute: 'sort-by' }) sortBy = '';
   @property({ type: String, attribute: 'sort-direction' })
   sortDirection: GridSortDirection = 'none';
+  @property({ type: Boolean, attribute: 'multi-sort' }) multiSort = false;
+  @property({ attribute: false }) sortKeys?: GridSortKey[];
   @property({ type: String }) responsive: GridResponsiveMode = 'stacked';
   @property({ type: Boolean, attribute: 'sticky-header' }) stickyHeader = false;
   @property({ type: String }) selectable: GridSelectionMode = 'none';
@@ -129,6 +158,9 @@ export class CivDataGrid extends CivBaseElement {
   @property({ attribute: false }) expandedGroups?: string[];
   @property({ attribute: false }) groupLabel?: GridGroupLabel;
   @property({ type: Boolean, attribute: 'keyboard-nav' }) keyboardNav = false;
+  @property({ attribute: false }) filters: GridFilters = {};
+  @property({ type: Boolean, attribute: 'sticky-footer' }) stickyFooter = false;
+  @property({ type: Boolean, attribute: 'show-group-subtotals' }) showGroupSubtotals = true;
 
   /**
    * Roving-tabindex position when `keyboardNav` is on. Plain fields (not
@@ -168,6 +200,7 @@ export class CivDataGrid extends CivBaseElement {
       this.striped ? 'civ-data-grid--striped' : '',
       this.bordered ? 'civ-data-grid--bordered' : '',
       this.keyboardNav ? 'civ-data-grid--keyboard-nav' : '',
+      this.stickyFooter && this._hasAnyAggregate() ? 'civ-data-grid--sticky-footer' : '',
     ].filter(Boolean).join(' ');
 
     return html`
@@ -220,23 +253,24 @@ export class CivDataGrid extends CivBaseElement {
               ${this._visibleColumns.map((col) => this._renderHeaderCell(col))}
               ${this._hasAnyRowActions() ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--actions"><span class="civ-sr-only">Actions</span></th>` : nothing}
             </tr>
+            ${this._hasAnyFilter() ? this._renderFilterRow() : nothing}
           </thead>
           <tbody class="civ-data-grid__tbody">
             ${this._renderBody()}
           </tbody>
+          ${this._hasAnyAggregate() ? this._renderFooter() : nothing}
         </table>
       </div>
     `;
   }
 
   private _renderHeaderCell(col: GridColumn): TemplateResult {
-    const isSorted = this.sortBy === col.key;
+    // Resolve the column's current sort state — in multi-sort mode read
+    // from the sortKeys stack; otherwise use the single sortBy / sortDirection.
+    const sortInfo = this._sortInfoForColumn(col.key);
+    const isSorted = sortInfo !== null;
     const ariaSort = isSorted
-      ? (this.sortDirection === 'asc'
-          ? 'ascending'
-          : this.sortDirection === 'desc'
-            ? 'descending'
-            : 'none')
+      ? (sortInfo.direction === 'asc' ? 'ascending' : 'descending')
       : 'none';
     const alignClass = col.align ? `civ-data-grid__th--align-${col.align}` : '';
     const widthStyle = col.width ? `width: ${col.width};` : '';
@@ -254,11 +288,25 @@ export class CivDataGrid extends CivBaseElement {
     }
 
     const sortIcon = isSorted
-      ? (this.sortDirection === 'asc' ? 'chevron-up' : 'chevron-down')
+      ? (sortInfo.direction === 'asc' ? 'chevron-up' : 'chevron-down')
       : 'unfold-more';
-    const sortLabel = isSorted && this.sortDirection === 'asc'
+    const sortLabelBase = isSorted && sortInfo.direction === 'asc'
       ? t('dataGridSortDescending').replace('{column}', col.header)
       : t('dataGridSortAscending').replace('{column}', col.header);
+    // Position badge: render "1, 2, 3…" next to the chevron when the
+    // multi-sort stack has more than one key, so the priority order is
+    // visible. Skipped for the single-key case to keep the visual quiet.
+    const showPositionBadge = this.multiSort
+      && isSorted
+      && this._activeSortKeys().length > 1;
+    // For screen reader users, also append the sort priority to the
+    // button's aria-label — the badge is aria-hidden because the number
+    // alone reads poorly out of context.
+    const sortLabel = showPositionBadge && sortInfo
+      ? sortLabelBase + t('dataGridSortPositionSuffix').replace(
+          '{position}', String(sortInfo.position + 1),
+        )
+      : sortLabelBase;
 
     return html`
       <th
@@ -271,13 +319,44 @@ export class CivDataGrid extends CivBaseElement {
           type="button"
           class="civ-data-grid__sort-btn"
           aria-label="${sortLabel}"
-          @click="${() => this._onSortClick(col.key)}"
+          @click="${(e: MouseEvent) => this._onSortClick(col.key, e.shiftKey)}"
         >
           <span>${col.header}</span>
           <civ-icon name="${sortIcon}" aria-hidden="true"></civ-icon>
+          ${showPositionBadge && sortInfo
+            ? html`<span class="civ-data-grid__sort-position" aria-hidden="true">${sortInfo.position + 1}</span>`
+            : nothing}
         </button>
       </th>
     `;
+  }
+
+  /**
+   * Look up a column's current sort state. In multi-sort mode, returns
+   * `{ direction, position }` from `sortKeys` (or null if absent). In
+   * single-sort mode, returns `{ direction, position: 0 }` when this
+   * column is the active sort, or null otherwise.
+   */
+  private _sortInfoForColumn(columnKey: string): { direction: 'asc' | 'desc'; position: number } | null {
+    if (this.multiSort) {
+      const idx = (this.sortKeys ?? []).findIndex((k) => k.key === columnKey);
+      if (idx === -1) return null;
+      return { direction: this.sortKeys![idx].direction, position: idx };
+    }
+    if (this.sortBy === columnKey && (this.sortDirection === 'asc' || this.sortDirection === 'desc')) {
+      return { direction: this.sortDirection, position: 0 };
+    }
+    return null;
+  }
+
+  /** Current active sort keys — `sortKeys` in multi-sort mode, or a
+   *  synthetic single-element array derived from `sortBy` / `sortDirection`. */
+  private _activeSortKeys(): GridSortKey[] {
+    if (this.multiSort) return this.sortKeys ?? [];
+    if (this.sortBy && (this.sortDirection === 'asc' || this.sortDirection === 'desc')) {
+      return [{ key: this.sortBy, direction: this.sortDirection }];
+    }
+    return [];
   }
 
   private _renderBody(): TemplateResult | Array<TemplateResult | TemplateResult[]> {
@@ -329,6 +408,7 @@ export class CivDataGrid extends CivBaseElement {
    */
   private _renderGroupedBody(): Array<TemplateResult | TemplateResult[]> {
     const groups = this._buildGroups();
+    const showSubtotals = this.showGroupSubtotals && this._hasAnyAggregate();
     const out: Array<TemplateResult | TemplateResult[]> = [];
     let rowIndex = 0;
     for (const [groupKey, groupRows] of groups) {
@@ -337,6 +417,9 @@ export class CivDataGrid extends CivBaseElement {
         for (const row of groupRows) {
           out.push(this._renderRow(row, rowIndex));
           rowIndex++;
+        }
+        if (showSubtotals) {
+          out.push(this._renderGroupSubtotalRow(groupKey, groupRows));
         }
       } else {
         rowIndex += groupRows.length;
@@ -413,6 +496,228 @@ export class CivDataGrid extends CivBaseElement {
       groupKey,
       expanded: nextExpanded,
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Column filtering (opt-in via `column.filter`)
+  // ---------------------------------------------------------------------------
+
+  /** True if any visible column has a filter config. */
+  private _hasAnyFilter(): boolean {
+    return this._visibleColumns.some((c) => !!c.filter);
+  }
+
+  /**
+   * Render the filter row beneath the column headers. Special columns
+   * (expand chevron, selection, row-actions) get empty placeholder cells
+   * so the row aligns with the headers above and the data rows below.
+   * Columns without a `filter` config also render an empty placeholder
+   * — so the row reads visually like a complete header row.
+   */
+  private _renderFilterRow(): TemplateResult {
+    return html`
+      <tr
+        class="civ-data-grid__filter-row"
+        aria-label="${t('dataGridFilterRowLabel')}"
+      >
+        ${this._hasAnyExpandable()
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+        ${this.selectable !== 'none'
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+        ${this._visibleColumns.map((col) => this._renderFilterCell(col))}
+        ${this._hasAnyRowActions()
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+      </tr>
+    `;
+  }
+
+  private _renderFilterCell(col: GridColumn): TemplateResult {
+    if (!col.filter) {
+      return html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`;
+    }
+    const sticky = this._stickyAttrs(col);
+    const cellClass = `civ-data-grid__td civ-data-grid__filter-cell ${sticky.cls}`;
+    const cellStyle = sticky.style;
+    const current = this.filters[col.key];
+    switch (col.filter.type) {
+      case 'text':
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <input
+              type="text"
+              class="civ-data-grid__filter-input"
+              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              placeholder="${col.filter.placeholder ?? ''}"
+              .value="${current?.type === 'text' ? current.value : ''}"
+              @input="${(e: Event) => this._onFilterInput(col, e)}"
+            />
+          </td>
+        `;
+      case 'select': {
+        const opts = col.filter.options;
+        const placeholder = col.filter.placeholder ?? t('dataGridFilterSelectAll');
+        const value = current?.type === 'select' ? current.value : '';
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <select
+              class="civ-data-grid__filter-input"
+              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              .value="${value}"
+              @change="${(e: Event) => this._onFilterInput(col, e)}"
+            >
+              <option value="">${placeholder}</option>
+              ${opts.map(
+                (o) => html`
+                  <option value="${o.value}" ?selected="${value === o.value}">${o.label}</option>
+                `,
+              )}
+            </select>
+          </td>
+        `;
+      }
+      case 'number-range': {
+        const min = current?.type === 'number-range' ? current.min : undefined;
+        const max = current?.type === 'number-range' ? current.max : undefined;
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <div class="civ-data-grid__filter-range">
+              <input
+                type="number"
+                class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                aria-label="${t('dataGridFilterMin').replace('{column}', col.header)}"
+                placeholder="${col.filter.minPlaceholder ?? 'Min'}"
+                .value="${min == null ? '' : String(min)}"
+                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
+              />
+              <input
+                type="number"
+                class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                aria-label="${t('dataGridFilterMax').replace('{column}', col.header)}"
+                placeholder="${col.filter.maxPlaceholder ?? 'Max'}"
+                .value="${max == null ? '' : String(max)}"
+                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
+              />
+            </div>
+          </td>
+        `;
+      }
+    }
+  }
+
+  private _onFilterInput(col: GridColumn, e: Event): void {
+    const target = e.currentTarget as HTMLInputElement | HTMLSelectElement;
+    const rawValue = target.value;
+    const next: GridFilters = { ...this.filters };
+    if (col.filter?.type === 'text') {
+      if (rawValue === '') delete next[col.key];
+      else next[col.key] = { type: 'text', value: rawValue };
+    } else if (col.filter?.type === 'select') {
+      if (rawValue === '') delete next[col.key];
+      else next[col.key] = { type: 'select', value: rawValue };
+    }
+    dispatch(this, 'civ-filter-change', { filters: next, columnKey: col.key });
+  }
+
+  private _onFilterRangeInput(col: GridColumn, e: Event, bound: 'min' | 'max'): void {
+    const target = e.currentTarget as HTMLInputElement;
+    const rawValue = target.value;
+    const current = this.filters[col.key];
+    const existing = current?.type === 'number-range' ? current : { type: 'number-range' as const };
+    const next: GridFilters = { ...this.filters };
+    const updated: GridFilterValue = {
+      type: 'number-range',
+      min: bound === 'min'
+        ? (rawValue === '' ? undefined : Number(rawValue))
+        : existing.min,
+      max: bound === 'max'
+        ? (rawValue === '' ? undefined : Number(rawValue))
+        : existing.max,
+    };
+    // Drop the entry entirely when both bounds are clear — keeps the
+    // filters map free of empty noise.
+    if (updated.type === 'number-range' && updated.min === undefined && updated.max === undefined) {
+      delete next[col.key];
+    } else {
+      next[col.key] = updated;
+    }
+    dispatch(this, 'civ-filter-change', { filters: next, columnKey: col.key });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Aggregator footer + per-group subtotals
+  // ---------------------------------------------------------------------------
+
+  /** True if any visible column declares an `aggregate`. */
+  private _hasAnyAggregate(): boolean {
+    return this._visibleColumns.some((c) => !!c.aggregate);
+  }
+
+  /**
+   * Render `<tfoot>` with one row of aggregator cells, computed from the
+   * full `rows` set (the consumer is responsible for filtering /
+   * paginating before assignment). Special columns (expand, select,
+   * actions) render placeholder cells so columns align with header and
+   * body.
+   */
+  private _renderFooter(): TemplateResult {
+    return html`
+      <tfoot class="civ-data-grid__tfoot">
+        <tr class="civ-data-grid__tfoot-row">
+          ${this._hasAnyExpandable()
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+          ${this.selectable !== 'none'
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+          ${this._visibleColumns.map((col) => this._renderFooterCell(col, this.rows))}
+          ${this._hasAnyRowActions()
+            ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+            : nothing}
+        </tr>
+      </tfoot>
+    `;
+  }
+
+  private _renderFooterCell(col: GridColumn, scopedRows: readonly GridRow[]): TemplateResult {
+    const sticky = this._stickyAttrs(col);
+    const alignClass = col.align ? `civ-data-grid__td--align-${col.align}` : '';
+    const cellClass = `civ-data-grid__td civ-data-grid__tfoot-cell ${alignClass} ${sticky.cls}`;
+    if (!col.aggregate) {
+      return html`<td class="${cellClass} civ-data-grid__tfoot-cell--placeholder" style="${sticky.style}"></td>`;
+    }
+    const value = applyAggregator(scopedRows, col);
+    return html`
+      <td class="${cellClass}" style="${sticky.style}">${value as unknown as TemplateResult}</td>
+    `;
+  }
+
+  /**
+   * Render a per-group subtotal row. Same column layout as a data row
+   * but each cell shows its column's aggregator value computed from the
+   * group's rows. Only inserted when `showGroupSubtotals` is true and at
+   * least one column has an `aggregate`.
+   */
+  private _renderGroupSubtotalRow(groupKey: string, groupRows: readonly GridRow[]): TemplateResult {
+    return html`
+      <tr
+        class="civ-data-grid__tr--group-subtotal"
+        data-group-subtotal-for="${groupKey}"
+      >
+        ${this._hasAnyExpandable()
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+        ${this.selectable !== 'none'
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+        ${this._visibleColumns.map((col) => this._renderFooterCell(col, groupRows))}
+        ${this._hasAnyRowActions()
+          ? html`<td class="civ-data-grid__td civ-data-grid__tfoot-cell civ-data-grid__tfoot-cell--placeholder"></td>`
+          : nothing}
+      </tr>
+    `;
   }
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
@@ -567,6 +872,19 @@ export class CivDataGrid extends CivBaseElement {
     }
     if (changed.has('columns')) {
       this._stickyCache = undefined;
+    }
+    // Multi-sort → single-sort mirror. When `multiSort` is on, sortBy /
+    // sortDirection are derived from `sortKeys[0]` — kept in sync here so
+    // backward-compat readers (and the schema docs that promised "mirrors
+    // the primary key") observe consistent state. Writing them directly
+    // while multiSort is on is overridden on the next render; consumers
+    // should manage `sortKeys` and let this hook fan out.
+    if (this.multiSort) {
+      const primary = this.sortKeys?.[0];
+      const nextSortBy = primary?.key ?? '';
+      const nextSortDirection: GridSortDirection = primary?.direction ?? 'none';
+      if (this.sortBy !== nextSortBy) this.sortBy = nextSortBy;
+      if (this.sortDirection !== nextSortDirection) this.sortDirection = nextSortDirection;
     }
   }
 
@@ -987,21 +1305,73 @@ export class CivDataGrid extends CivBaseElement {
     `;
   }
 
-  private _onSortClick(columnKey: string): void {
-    let nextDirection: GridSortDirection;
-    if (this.sortBy !== columnKey) {
-      nextDirection = 'asc';
-    } else if (this.sortDirection === 'asc') {
-      nextDirection = 'desc';
-    } else if (this.sortDirection === 'desc') {
-      nextDirection = 'none';
+  private _onSortClick(columnKey: string, shiftKey: boolean): void {
+    const nextKeys = this._computeNextSortKeys(columnKey, shiftKey);
+    // Find what changed for the just-toggled column so the event detail
+    // can carry the column / direction backward-compat shape.
+    const prevEntry = this._activeSortKeys().find((k) => k.key === columnKey);
+    const nextEntry = nextKeys.find((k) => k.key === columnKey);
+    let column: string;
+    let direction: GridSortDirection;
+    if (nextEntry) {
+      column = columnKey;
+      direction = nextEntry.direction;
+    } else if (prevEntry) {
+      // Toggled off — report 'none' for this column.
+      column = '';
+      direction = 'none';
     } else {
-      nextDirection = 'asc';
+      // Edge case (shouldn't happen): report cleared.
+      column = '';
+      direction = 'none';
     }
-    dispatch(this, 'civ-sort', {
-      column: nextDirection === 'none' ? '' : columnKey,
-      direction: nextDirection,
-    });
+    dispatch(this, 'civ-sort', { column, direction, sortKeys: nextKeys });
+  }
+
+  /**
+   * Pure state machine for the sort stack — single-sort cycle when
+   * `multiSort` is off (or no Shift), multi-sort add / cycle / remove
+   * when Shift is held and `multiSort` is on. Single-sort cycle:
+   * asc → desc → none. Shift+click cycle in multi-sort: add (asc) → desc
+   * → remove from stack.
+   */
+  private _computeNextSortKeys(columnKey: string, shiftKey: boolean): GridSortKey[] {
+    // Defensive guard — only honor sort interactions for columns that
+    // declared `sortable: true`. The header doesn't render a sort button
+    // for non-sortable columns, but programmatic / synthetic callers
+    // shouldn't be able to insert garbage.
+    const col = this.columns.find((c) => c.key === columnKey);
+    if (!col?.sortable) return this._activeSortKeys();
+
+    const current = this._activeSortKeys();
+    if (!this.multiSort || !shiftKey) {
+      // Plain click — single-key sort. Cycle the clicked column's
+      // direction (asc → desc → none) and replace the stack with just
+      // that result. The "cycle from current state" rule keeps the
+      // gesture predictable even when the clicked column was already in
+      // a multi-sort stack at some other position.
+      const existing = current.find((k) => k.key === columnKey);
+      if (existing) {
+        if (existing.direction === 'asc') return [{ key: columnKey, direction: 'desc' }];
+        return []; // desc → cleared
+      }
+      return [{ key: columnKey, direction: 'asc' }];
+    }
+    // Shift+click in multi-sort mode — modify the existing stack.
+    const idx = current.findIndex((k) => k.key === columnKey);
+    if (idx === -1) {
+      // Column not yet in stack — append with asc.
+      return [...current, { key: columnKey, direction: 'asc' }];
+    }
+    const entry = current[idx];
+    if (entry.direction === 'asc') {
+      // Cycle to desc, in place.
+      const next = [...current];
+      next[idx] = { key: columnKey, direction: 'desc' };
+      return next;
+    }
+    // desc — remove from stack.
+    return current.filter((k) => k.key !== columnKey);
   }
 
   private _toggleRowSelected(rowId: string): void {
@@ -1157,7 +1527,9 @@ export class CivDataGrid extends CivBaseElement {
    * region semantics and the consumer's keyboard nav should bypass them.
    */
   private _allCells(): HTMLElement[][] {
-    const trs = Array.from(this.querySelectorAll('thead tr, tbody tr')) as HTMLElement[];
+    const trs = Array.from(
+      this.querySelectorAll('thead tr, tbody tr, tfoot tr'),
+    ) as HTMLElement[];
     return trs
       .filter((tr) => !tr.querySelector(':scope > .civ-data-grid__state'))
       .map((tr) =>
@@ -1319,7 +1691,7 @@ export class CivDataGrid extends CivBaseElement {
       case 'PageUp': this._moveRow(-10); break;
       case 'Enter':
       case ' ':
-        this._activateFocusedCell(false);
+        this._activateFocusedCell(false, e.shiftKey);
         break;
       case 'F2':
         this._activateFocusedCell(true);
@@ -1374,7 +1746,7 @@ export class CivDataGrid extends CivBaseElement {
    * that only clicks the edit trigger — other controls (sort, expand,
    * menu) are no-ops on F2.
    */
-  private _activateFocusedCell(preferEdit: boolean): void {
+  private _activateFocusedCell(preferEdit: boolean, shiftKey = false): void {
     const cells = this._allCells();
     const cell = cells[this._focusedRow]?.[this._focusedCol];
     if (!cell) return;
@@ -1387,12 +1759,36 @@ export class CivDataGrid extends CivBaseElement {
       return;
     }
 
-    // Enter / Space — click the primary inner control if present.
+    // Enter / Space — activate the primary inner control if present.
+    // For "action" controls (buttons, links, checkbox/radio inputs), click
+    // them. For text-entry controls (text/number inputs, selects), focus
+    // them so the user can begin typing — Esc returns to the cell.
     const ctrl = cell.querySelector(
       'button, input, select, a, [role="button"]',
     ) as HTMLElement | null;
     if (ctrl) {
-      ctrl.click();
+      const isToggle = ctrl instanceof HTMLInputElement
+        && (ctrl.type === 'checkbox' || ctrl.type === 'radio');
+      const isAction = isToggle
+        || ctrl instanceof HTMLButtonElement
+        || ctrl instanceof HTMLAnchorElement
+        || ctrl.getAttribute('role') === 'button';
+      if (isAction) {
+        // Preserve modifier keys on the synthetic click so Shift+Enter on
+        // a sort header honors the multi-sort gesture (otherwise the
+        // keyboard path is mouse-only).
+        if (shiftKey) {
+          ctrl.dispatchEvent(new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            shiftKey: true,
+          }));
+        } else {
+          ctrl.click();
+        }
+      } else {
+        ctrl.focus();
+      }
       return;
     }
 

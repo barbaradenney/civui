@@ -146,7 +146,10 @@ describe('civ-data-grid — sorting', () => {
     const nameBtn = el.querySelector('thead th:first-child .civ-data-grid__sort-btn') as HTMLButtonElement;
     nameBtn.click();
     expect(handler).toHaveBeenCalledOnce();
-    expect(handler.mock.calls[0][0].detail).toEqual({ column: 'name', direction: 'asc' });
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('name');
+    expect(detail.direction).toBe('asc');
+    expect(detail.sortKeys).toEqual([{ key: 'name', direction: 'asc' }]);
   });
 
   it('cycles asc → desc → none', async () => {
@@ -155,12 +158,16 @@ describe('civ-data-grid — sorting', () => {
     el.addEventListener('civ-sort', handler);
     const nameBtn = el.querySelector('thead th:first-child .civ-data-grid__sort-btn') as HTMLButtonElement;
     nameBtn.click();
-    expect(handler.mock.calls[0][0].detail).toEqual({ column: 'name', direction: 'desc' });
+    expect(handler.mock.calls[0][0].detail.column).toBe('name');
+    expect(handler.mock.calls[0][0].detail.direction).toBe('desc');
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'desc' }]);
 
     el.sortDirection = 'desc';
     await elementUpdated(el);
     nameBtn.click();
-    expect(handler.mock.calls[1][0].detail).toEqual({ column: '', direction: 'none' });
+    expect(handler.mock.calls[1][0].detail.column).toBe('');
+    expect(handler.mock.calls[1][0].detail.direction).toBe('none');
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([]);
   });
 });
 
@@ -2130,5 +2137,669 @@ describe('civ-data-grid — keyboard navigation', () => {
     // The row's select-checkbox is disabled and Enter doesn't toggle selection.
     const selectChk = grid[1][0].querySelector('input[type="checkbox"]') as HTMLInputElement;
     expect(selectChk.disabled).toBe(true);
+  });
+});
+
+describe('civ-data-grid — column filtering', () => {
+  const filterColumns: GridColumn[] = [
+    { key: 'name', header: 'Name', filter: { type: 'text', placeholder: 'Search…' } },
+    { key: 'status', header: 'Status', filter: {
+      type: 'select',
+      options: [
+        { value: 'Active', label: 'Active' },
+        { value: 'Pending', label: 'Pending' },
+      ],
+    }},
+    { key: 'amount', header: 'Amount', filter: { type: 'number-range' } },
+  ];
+  const filterRows: GridRow[] = [
+    { id: '1', cells: { name: 'Smith', status: 'Active', amount: 100 } },
+    { id: '2', cells: { name: 'Doe', status: 'Pending', amount: 50 } },
+  ];
+
+  it('does NOT render a filter row when no column has a filter config', async () => {
+    const el = await mountGrid();
+    expect(el.querySelector('.civ-data-grid__filter-row')).toBeNull();
+  });
+
+  it('renders a filter row inside <thead> when any column declares a filter', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const row = el.querySelector('thead .civ-data-grid__filter-row');
+    expect(row).not.toBeNull();
+  });
+
+  it('renders a text input for a text-filter column with the placeholder', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    expect(input).not.toBeNull();
+    expect(input.placeholder).toBe('Search…');
+    expect(input.getAttribute('aria-label')).toBe('Filter Name');
+  });
+
+  it('renders a select with a default "All" empty option for a select-filter column', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const select = el.querySelector('.civ-data-grid__filter-cell select') as HTMLSelectElement;
+    expect(select).not.toBeNull();
+    const options = Array.from(select.options).map((o) => o.value);
+    expect(options).toEqual(['', 'Active', 'Pending']);
+    expect(select.getAttribute('aria-label')).toBe('Filter Status');
+  });
+
+  it('renders two number inputs for a number-range filter column with min/max labels', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const rangeInputs = el.querySelectorAll('.civ-data-grid__filter-input--range');
+    expect(rangeInputs).toHaveLength(2);
+    expect(rangeInputs[0].getAttribute('aria-label')).toBe('Min Amount');
+    expect(rangeInputs[1].getAttribute('aria-label')).toBe('Max Amount');
+  });
+
+  it('renders placeholder cells aligned with selection / expand / actions columns', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name', filter: { type: 'text' } },
+      { key: 'status', header: 'Status' },
+    ];
+    const rows: GridRow[] = [{
+      id: '1',
+      cells: { name: 'A', status: 'X' },
+      actions: [{ id: 'edit', label: 'Edit' }],
+    }];
+    const el = await mountGrid({ columns: cols, rows, selectable: 'multiple' });
+    const row = el.querySelector('.civ-data-grid__filter-row')!;
+    const cells = row.querySelectorAll('.civ-data-grid__filter-cell');
+    // 1 selection placeholder + 1 text filter cell + 1 column-without-filter placeholder + 1 actions placeholder.
+    expect(cells).toHaveLength(4);
+    expect(cells[0].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[2].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[3].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[1].querySelector('input')).not.toBeNull();
+  });
+
+  it('fires civ-filter-change with target state on text input', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.value = 'smith';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.columnKey).toBe('name');
+    expect(detail.filters).toEqual({ name: { type: 'text', value: 'smith' } });
+  });
+
+  it('drops the filter entry when text input is cleared to empty', async () => {
+    const el = await mountGrid({
+      columns: filterColumns,
+      rows: filterRows,
+    });
+    el.filters = { name: { type: 'text', value: 'smith' } };
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({});
+  });
+
+  it('fires civ-filter-change with select value', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const select = el.querySelector('.civ-data-grid__filter-cell select') as HTMLSelectElement;
+    select.value = 'Active';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({
+      status: { type: 'select', value: 'Active' },
+    });
+  });
+
+  it('merges number-range min and max bounds across multiple events', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    // Set min first.
+    minInput.value = '50';
+    minInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({
+      amount: { type: 'number-range', min: 50, max: undefined },
+    });
+    // Apply the new state, then set max.
+    el.filters = handler.mock.calls[0][0].detail.filters;
+    await elementUpdated(el);
+    maxInput.value = '100';
+    maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[1][0].detail.filters).toEqual({
+      amount: { type: 'number-range', min: 50, max: 100 },
+    });
+  });
+
+  it('drops the number-range filter entry when both bounds are cleared', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.filters = { amount: { type: 'number-range', min: 10, max: 100 } };
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    minInput.value = '';
+    minInput.dispatchEvent(new Event('input', { bubbles: true }));
+    // After clearing min, the next state in the dispatched event still has max=100.
+    el.filters = handler.mock.calls[0][0].detail.filters;
+    await elementUpdated(el);
+    maxInput.value = '';
+    maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[1][0].detail.filters).toEqual({});
+  });
+
+  it('filter inputs drop to tabindex=-1 when keyboardNav is on', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    expect(input.tabIndex).toBe(-1);
+  });
+
+  it('Enter on a focused filter cell focuses its input (text-entry pattern)', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    // Filter row is the second tr in thead — index 1.
+    const filterRow = el.querySelector('thead tr.civ-data-grid__filter-row')!;
+    const firstFilterCell = filterRow.querySelector('.civ-data-grid__filter-cell:not(.civ-data-grid__filter-cell--placeholder)') as HTMLElement;
+    firstFilterCell.focus();
+    expect(document.activeElement).toBe(firstFilterCell);
+    pressKey(firstFilterCell, 'Enter');
+    const input = firstFilterCell.querySelector('input') as HTMLInputElement;
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('Esc from a focused filter input returns focus to its cell', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.focus();
+    expect(document.activeElement).toBe(input);
+    pressKey(input, 'Escape');
+    const cell = input.closest('.civ-data-grid__filter-cell');
+    expect(document.activeElement).toBe(cell);
+  });
+});
+
+describe('civ-data-grid — aggregator footer', () => {
+  const aggColumns: GridColumn[] = [
+    { key: 'name', header: 'Name' },
+    { key: 'amount', header: 'Amount', align: 'numeric', aggregate: 'sum' },
+    { key: 'count', header: 'Count', aggregate: 'count' },
+  ];
+  const aggRows: GridRow[] = [
+    { id: '1', cells: { name: 'A', amount: 100, count: 'x' } },
+    { id: '2', cells: { name: 'B', amount: 250, count: 'y' } },
+    { id: '3', cells: { name: 'C', amount: 50, count: 'z' } },
+  ];
+
+  it('does NOT render <tfoot> when no column has aggregate', async () => {
+    const el = await mountGrid();
+    expect(el.querySelector('tfoot')).toBeNull();
+  });
+
+  it('renders <tfoot> when any column has aggregate', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    expect(el.querySelector('tfoot.civ-data-grid__tfoot')).not.toBeNull();
+  });
+
+  it('computes sum for a sum column from current rows', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    const cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // Layout: [name placeholder, amount sum, count]
+    expect(cells[1].textContent?.trim()).toBe('400');
+    expect(cells[2].textContent?.trim()).toBe('3');
+  });
+
+  it('renders placeholder cells for columns without an aggregator', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    const cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // First cell is the "Name" column placeholder.
+    expect(cells[0].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(cells[0].textContent?.trim()).toBe('');
+  });
+
+  it('renders placeholders for selection / expand / row-actions columns', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const rows: GridRow[] = [{
+      id: '1',
+      cells: { name: 'A', amount: 100 },
+      actions: [{ id: 'view', label: 'View' }],
+    }];
+    const el = await mountGrid({ columns: cols, rows, selectable: 'multiple' });
+    const footerCells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    // 1 select placeholder + 1 name placeholder + 1 amount sum + 1 actions placeholder = 4
+    expect(footerCells).toHaveLength(4);
+    expect(footerCells[0].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(footerCells[1].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+    expect(footerCells[2].textContent?.trim()).toBe('100');
+    expect(footerCells[3].classList.contains('civ-data-grid__tfoot-cell--placeholder')).toBe(true);
+  });
+
+  it('supports a function aggregator and renders its returned value verbatim', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      {
+        key: 'amount',
+        header: 'Amount',
+        aggregate: (rows) => '$' + rows.reduce((s, r) => s + Number(r.cells.amount), 0).toFixed(2),
+      },
+    ];
+    const el = await mountGrid({ columns: cols, rows: aggRows });
+    const cell = el.querySelector('tfoot .civ-data-grid__tfoot-cell:not(.civ-data-grid__tfoot-cell--placeholder)');
+    expect(cell?.textContent?.trim()).toBe('$400.00');
+  });
+
+  it('applies stickyFooter class to the wrapper when stickyFooter=true AND any column aggregates', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    el.stickyFooter = true;
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sticky-footer')).not.toBeNull();
+  });
+
+  it('does NOT apply stickyFooter class when no column aggregates (footer wouldn\'t render anyway)', async () => {
+    const el = await mountGrid();
+    el.stickyFooter = true;
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sticky-footer')).toBeNull();
+  });
+
+  it('recomputes the footer when rows change', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    let cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    expect(cells[1].textContent?.trim()).toBe('400');
+    el.rows = [
+      { id: '1', cells: { name: 'A', amount: 1000, count: 'x' } },
+    ];
+    await elementUpdated(el);
+    cells = el.querySelectorAll('tfoot .civ-data-grid__tfoot-cell');
+    expect(cells[1].textContent?.trim()).toBe('1000');
+    expect(cells[2].textContent?.trim()).toBe('1');
+  });
+
+  it('renders per-group subtotal rows when groupBy + aggregate are both set', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100, count: 'a' } },
+      { id: '2', cells: { name: 'B', type: 'X', amount: 250, count: 'b' } },
+      { id: '3', cells: { name: 'C', type: 'Y', amount: 50, count: 'c' } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+      { key: 'count', header: 'Count', aggregate: 'count' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const subtotals = el.querySelectorAll('.civ-data-grid__tr--group-subtotal');
+    expect(subtotals).toHaveLength(2);
+    // Group X subtotal: 100 + 250 = 350
+    const xCells = subtotals[0].querySelectorAll('.civ-data-grid__tfoot-cell');
+    expect(xCells[2].textContent?.trim()).toBe('350');
+    expect(xCells[3].textContent?.trim()).toBe('2');
+    // Group Y subtotal: 50
+    const yCells = subtotals[1].querySelectorAll('.civ-data-grid__tfoot-cell');
+    expect(yCells[2].textContent?.trim()).toBe('50');
+    expect(yCells[3].textContent?.trim()).toBe('1');
+  });
+
+  it('omits subtotal rows when showGroupSubtotals=false', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100 } },
+      { id: '2', cells: { name: 'B', type: 'X', amount: 250 } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    el.showGroupSubtotals = false;
+    await elementUpdated(el);
+    expect(el.querySelectorAll('.civ-data-grid__tr--group-subtotal')).toHaveLength(0);
+    // But the grand-total footer still renders.
+    expect(el.querySelector('tfoot.civ-data-grid__tfoot')).not.toBeNull();
+  });
+
+  it('subtotal rows only render for expanded groups', async () => {
+    const groupRowsLocal: GridRow[] = [
+      { id: '1', cells: { name: 'A', type: 'X', amount: 100 } },
+      { id: '2', cells: { name: 'B', type: 'Y', amount: 50 } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'type', header: 'Type' },
+      { key: 'amount', header: 'Amount', aggregate: 'sum' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRowsLocal });
+    el.groupBy = 'type';
+    el.expandedGroups = ['X']; // Y collapsed
+    await elementUpdated(el);
+    const subtotals = el.querySelectorAll('.civ-data-grid__tr--group-subtotal');
+    expect(subtotals).toHaveLength(1);
+    expect(subtotals[0].getAttribute('data-group-subtotal-for')).toBe('X');
+  });
+
+  it('keyboardNav includes footer cells in cell-nav rotation', async () => {
+    const el = await mountGrid({ columns: aggColumns, rows: aggRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const footerCells = el.querySelectorAll('tfoot .civ-data-grid__td');
+    // Footer cells get role=gridcell + tabindex managed via _applyKeyboardNav.
+    expect(footerCells[0].getAttribute('role')).toBe('gridcell');
+    // All cells start with tabindex=-1 except focused (0, 0).
+    footerCells.forEach((c) => expect((c as HTMLElement).tabIndex).toBe(-1));
+  });
+});
+
+describe('civ-data-grid — multi-column sort', () => {
+  const sortCols: GridColumn[] = [
+    { key: 'name', header: 'Name', sortable: true },
+    { key: 'status', header: 'Status', sortable: true },
+    { key: 'updated', header: 'Updated', sortable: true },
+  ];
+
+  function clickHeader(el: any, columnKey: string, shiftKey = false) {
+    const cols = ['name', 'status', 'updated'];
+    const idx = cols.indexOf(columnKey);
+    const btn = el.querySelectorAll('thead .civ-data-grid__sort-btn')[idx] as HTMLButtonElement;
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, shiftKey }));
+  }
+
+  it('without multiSort=true, shift-click is ignored (single-sort cycle as today)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Click name → asc
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'asc' }]);
+    // Shift-click status — should REPLACE (since multiSort is off), not add.
+    el.sortBy = 'name';
+    el.sortDirection = 'asc';
+    await elementUpdated(el);
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([{ key: 'status', direction: 'asc' }]);
+  });
+
+  it('with multiSort=true, plain click on a new column replaces the stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'status', direction: 'asc' }]);
+  });
+
+  it('with multiSort=true, plain click on the active column cycles asc → desc → none', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'desc' }]);
+    el.sortKeys = [{ key: 'name', direction: 'desc' }];
+    await elementUpdated(el);
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([]);
+  });
+
+  it('with multiSort=true, shift-click ADDS a new column to the stack (asc)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ]);
+  });
+
+  it('with multiSort=true, shift-click on an existing column cycles asc → desc → removed', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Shift-click status (asc → desc, in-place).
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ]);
+    el.sortKeys = handler.mock.calls[0][0].detail.sortKeys;
+    await elementUpdated(el);
+    // Shift-click again (desc → removed).
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+    ]);
+  });
+
+  it('renders a position badge next to the chevron when the stack has more than one key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const badges = el.querySelectorAll('.civ-data-grid__sort-position');
+    expect(badges).toHaveLength(2);
+    expect(badges[0].textContent?.trim()).toBe('1');
+    expect(badges[1].textContent?.trim()).toBe('2');
+  });
+
+  it('does NOT render a position badge for a single-key sort', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    expect(el.querySelectorAll('.civ-data-grid__sort-position')).toHaveLength(0);
+  });
+
+  it('sets aria-sort correctly for every column in the multi-sort stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const ths = el.querySelectorAll('thead .civ-data-grid__th--sortable');
+    expect(ths[0].getAttribute('aria-sort')).toBe('ascending');
+    expect(ths[1].getAttribute('aria-sort')).toBe('descending');
+    expect(ths[2].getAttribute('aria-sort')).toBe('none');
+  });
+
+  it('civ-sort event carries column + direction for the just-toggled column even in multi-sort mode', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', true);
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('status');
+    expect(detail.direction).toBe('asc');
+  });
+
+  it('plain-click on a non-primary stacked column cycles ITS direction (not always asc)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    // 'status' is the secondary key in desc — plain-click should cycle
+    // it to none (the desc → cleared step), not silently reset to asc.
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([]);
+  });
+
+  it('cumulative shift-click chain builds the stack in click order', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', true);
+    el.sortKeys = handler.mock.calls[0][0].detail.sortKeys;
+    await elementUpdated(el);
+    clickHeader(el, 'status', true);
+    el.sortKeys = handler.mock.calls[1][0].detail.sortKeys;
+    await elementUpdated(el);
+    clickHeader(el, 'updated', true);
+    expect(handler.mock.calls[2][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+      { key: 'updated', direction: 'asc' },
+    ]);
+  });
+
+  it('undefined sortKeys is treated as an empty stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    // sortKeys deliberately left undefined.
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+    ]);
+  });
+
+  it('civ-sort detail reports column="" and direction="none" when a key is cleared from the stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'desc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', false); // desc → cleared
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('');
+    expect(detail.direction).toBe('none');
+    expect(detail.sortKeys).toEqual([]);
+  });
+
+  it('willUpdate mirrors sortKeys[0] into sortBy / sortDirection when multiSort is on', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'status', direction: 'desc' },
+      { key: 'name', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    expect(el.sortBy).toBe('status');
+    expect(el.sortDirection).toBe('desc');
+    // Clearing the stack should reset the mirror.
+    el.sortKeys = [];
+    await elementUpdated(el);
+    expect(el.sortBy).toBe('');
+    expect(el.sortDirection).toBe('none');
+  });
+
+  it('Shift+Enter on a sort header in keyboardNav mode appends to the multi-sort stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.keyboardNav = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // The "Status" header is the second cell of row 0.
+    const headerRow = el.querySelector('thead tr')!;
+    const statusTh = headerRow.querySelectorAll('th')[1] as HTMLElement;
+    pressKey(statusTh, 'Enter', { shiftKey: true });
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ]);
+  });
+
+  it('Enter without Shift in keyboardNav mode acts as a plain click (replaces the stack)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.keyboardNav = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    const headerRow = el.querySelector('thead tr')!;
+    const updatedTh = headerRow.querySelectorAll('th')[2] as HTMLElement;
+    pressKey(updatedTh, 'Enter'); // no shift
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'updated', direction: 'asc' },
+    ]);
+  });
+
+  it('aria-label includes sort-priority suffix when the multi-sort stack has > 1 key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const sortBtns = el.querySelectorAll('.civ-data-grid__sort-btn');
+    expect(sortBtns[0].getAttribute('aria-label')).toMatch(/sort priority 1/);
+    expect(sortBtns[1].getAttribute('aria-label')).toMatch(/sort priority 2/);
+  });
+
+  it('aria-label does NOT include sort-priority suffix when the stack is a single key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const sortBtns = el.querySelectorAll('.civ-data-grid__sort-btn');
+    expect(sortBtns[0].getAttribute('aria-label')).not.toMatch(/sort priority/);
+  });
+
+  it('_computeNextSortKeys ignores interactions on non-sortable columns (defensive)', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'static', header: 'Static' }, // no sortable
+    ];
+    const el = await mountGrid({ columns: cols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Call the private function directly — covers the synthetic /
+    // programmatic path. The render path doesn't expose the second
+    // column's sort button because it isn't sortable.
+    const next = (el as any)._computeNextSortKeys('static', true);
+    expect(next).toEqual([{ key: 'name', direction: 'asc' }]); // unchanged
   });
 });

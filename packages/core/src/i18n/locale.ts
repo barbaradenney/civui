@@ -69,6 +69,7 @@ export interface CivLocaleStrings {
   dataGridSortAscending: string;  // "Sort {column} ascending"
   dataGridSortDescending: string; // "Sort {column} descending"
   dataGridSortClear: string;      // "Clear sort on {column}"
+  dataGridSortPositionSuffix: string; // ", sort priority {position}" — appended to the sort button's aria-label in multi-sort mode so SR users hear which key is primary / secondary
   dataGridSelectRow: string;      // "Select row {row}"
   dataGridSelectAll: string;      // "Select all rows on this page"
   dataGridRowActions: string;     // "Actions for row {row}"
@@ -78,6 +79,11 @@ export interface CivLocaleStrings {
   dataGridExpandGroup: string;    // "Expand group {group}"
   dataGridCollapseGroup: string;  // "Collapse group {group}"
   dataGridGroupNoValue: string;   // "(no value)" — fallback label for null/undefined group key
+  dataGridFilterByColumn: string; // "Filter {column}"
+  dataGridFilterMin: string;      // "Min {column}"
+  dataGridFilterMax: string;      // "Max {column}"
+  dataGridFilterRowLabel: string; // "Column filters" — accessible name for the filter row
+  dataGridFilterSelectAll: string; // "All" — default empty-option label for select filters
   dataGridEmpty: string;          // "No data to display"
   dataGridLoading: string;        // "Loading…"
   dataGridErrorLabel: string;     // "Failed to load data"
@@ -791,6 +797,7 @@ const defaultStrings: CivLocaleStrings = {
   dataGridLabel: 'Data grid',
   dataGridSortAscending: 'Sort {column} ascending',
   dataGridSortDescending: 'Sort {column} descending',
+  dataGridSortPositionSuffix: ', sort priority {position}',
   dataGridSortClear: 'Clear sort on {column}',
   dataGridSelectRow: 'Select row {row}',
   dataGridSelectAll: 'Select all rows on this page',
@@ -801,6 +808,11 @@ const defaultStrings: CivLocaleStrings = {
   dataGridExpandGroup: 'Expand group {group}',
   dataGridCollapseGroup: 'Collapse group {group}',
   dataGridGroupNoValue: '(no value)',
+  dataGridFilterByColumn: 'Filter {column}',
+  dataGridFilterMin: 'Min {column}',
+  dataGridFilterMax: 'Max {column}',
+  dataGridFilterRowLabel: 'Column filters',
+  dataGridFilterSelectAll: 'All',
   dataGridEmpty: 'No data to display',
   dataGridLoading: 'Loading…',
   dataGridErrorLabel: 'Failed to load data',

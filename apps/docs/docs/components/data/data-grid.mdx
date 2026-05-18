@@ -85,6 +85,12 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 
 <StoryEmbed id="layout-data-grid--inline-cell-editing" minHeight={400} />
 
+### Sticky columns
+
+<StoryEmbed id="layout-data-grid--sticky-columns" minHeight={400} />
+
+<StoryEmbed id="layout-data-grid--sticky-end-column" minHeight={400} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
 ## Props
@@ -304,6 +310,41 @@ value back into their data and reassign `grid.rows`.
 - Disabled rows (`row.disabled`) are not editable even when `column.editable` is set.
 - Editable cells in an `interactive` grid: clicking the cell starts edit mode but does NOT fire `civ-row-activate`. The cell-click stops propagation.
 - Only one cell is in edit mode at a time. Starting an edit on another cell would not be a v1 concern (consumer can blur first).
+
+## Sticky columns
+
+Set `column.sticky: 'start'` to pin a column to the leading edge or
+`'end'` to pin it to the trailing edge. Pinned columns stay visible
+while the rest of the table scrolls horizontally — useful for wide
+admin tables where the row-identity column (ID / name) needs to stay
+anchored.
+
+```ts
+grid.columns = [
+  { key: 'id', header: 'ID', width: '5rem', sticky: 'start' },
+  { key: 'applicant', header: 'Applicant', width: '14rem', sticky: 'start' },
+  { key: 'type', header: 'Type', width: '10rem' },
+  // …more columns
+  { key: 'updated', header: 'Last updated', width: '8rem', sticky: 'end' },
+];
+grid.responsive = 'scroll';
+```
+
+**Constraints:**
+- Multi-column sticky requires explicit `width` on every pinned column
+  (except the first on each edge). CSS can't compute cumulative offsets
+  against `width: auto`. The grid fires a dev-mode warning if violated.
+- The boundary cell (the inner edge of the pinned group) gets a thin
+  shadow so users see the separation from scrolling content.
+- Striped, selected, and hover row backgrounds override the sticky
+  default surface color so visual state stays visible through pinned
+  cells.
+
+**Composition**: sticky columns work with `responsive="scroll"` (the
+intended pairing) and also with the default flow-table mode if the
+container is narrower than the table's natural width. Sticky doesn't
+interact with `responsive="stacked"` — on mobile the table collapses
+to vertical blocks and column-level pinning isn't meaningful.
 
 ## Responsive behavior
 

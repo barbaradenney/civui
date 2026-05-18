@@ -2202,6 +2202,65 @@
     background: transparent;
   }
 
+  /* Sticky columns — pinned to the leading or trailing edge while the
+     rest of the table scrolls horizontally. Inline `left` / `right`
+     offsets are computed at render time; the shared styles (background,
+     z-index) live here. The background is required so scrolling content
+     doesn't show through. Striped / selected / hover row backgrounds
+     cascade through the `--_civ-sticky-bg` custom property so sticky
+     cells share whatever visual state the row has. */
+  .civ-data-grid__cell--sticky {
+    position: sticky;
+    background-color: var(--_civ-sticky-bg, var(--civ-color-white-DEFAULT));
+    /* Layer above non-sticky cells so they slide under during scroll. */
+    z-index: var(--civ-z-sticky);
+  }
+
+  /* Header sticky cells stack above body sticky cells when both
+     sticky-header and sticky-columns are active (the top-left corner). */
+  .civ-data-grid__thead .civ-data-grid__cell--sticky {
+    z-index: var(--civ-z-sticky-header);
+  }
+
+  /* Row-state custom-property setters — these cascade to the row's
+     sticky cells via background-color: var(--_civ-sticky-bg, ...).
+     The cascade beats explicit overrides on the sticky cell because
+     CSS custom-property resolution happens per element using the
+     nearest cascading value. */
+  .civ-data-grid__tr--selected {
+    --_civ-sticky-bg: var(--civ-color-primary-lightest);
+  }
+
+  .civ-data-grid__tr--interactive:hover {
+    --_civ-sticky-bg: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid--striped .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd) {
+    --_civ-sticky-bg: var(--civ-color-base-lightest);
+  }
+
+  /* Boundary shadow — a thin shadow on the inner edge of the last
+     sticky-start column (or first sticky-end column) so users see the
+     separation between pinned and scrolling content. */
+  .civ-data-grid__cell--sticky-boundary-start {
+    box-shadow: 4px 0 4px -4px var(--civ-shadow-sticky-boundary);
+  }
+
+  .civ-data-grid__cell--sticky-boundary-end {
+    box-shadow: -4px 0 4px -4px var(--civ-shadow-sticky-boundary);
+  }
+
+  /* Stacked mobile mode (≤480px) collapses each row to a vertical block,
+     so position: sticky has no horizontal scroll axis to stick against.
+     Neutralize the sticky CSS + boundary shadow so the rendered output
+     reads as plain stacked content. */
+  @media (max-width: 480px) {
+    .civ-data-grid--stacked .civ-data-grid__cell--sticky {
+      position: static;
+      box-shadow: none;
+    }
+  }
+
   /* Editable cells — the cell's content lives inside a real <button>
      when in display mode so the cell is a keyboard focus stop.
      The td gets the hover hint; the button is full-width / transparent /

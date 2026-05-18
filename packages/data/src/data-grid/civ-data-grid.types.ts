@@ -46,6 +46,17 @@ export interface GridColumn {
    */
   hidden?: boolean;
   /**
+   * Pin this column to the leading (`'start'`) or trailing (`'end'`) edge
+   * so it stays visible while the rest of the table scrolls horizontally
+   * (only takes effect with `responsive="scroll"` or when the table
+   * overflows its container). When multiple columns share the same edge,
+   * they stack in their natural column order — each subsequent sticky
+   * column's offset accumulates the preceding ones' widths, so multi-
+   * column sticky requires explicit `width` values. A dev-mode warning
+   * fires if you set `sticky` without `width` on a second sticky column.
+   */
+  sticky?: 'start' | 'end';
+  /**
    * Optional formatter that turns the raw cell value into displayable content.
    * Return a string, number, or Lit `TemplateResult` for richer output (e.g. badges, links).
    * The formatter receives `(value, row, rowIndex)`.

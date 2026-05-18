@@ -1139,3 +1139,220 @@ describe('civ-data-grid — inline cell editing', () => {
   // entirely (`input.value = 'abc'` → ''), so the path is not directly
   // reachable in tests. The behavior is documented inline at the guard.
 });
+
+describe('civ-data-grid — sticky columns', () => {
+  it('does not add sticky classes when no column has sticky', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name' }],
+      rows: [{ id: '1', cells: { name: 'A' } }],
+    });
+    expect(el.querySelector('.civ-data-grid__cell--sticky')).toBeNull();
+  });
+
+  it('applies position: sticky to header and body cells of a start-sticky column', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const th = el.querySelector('thead th:first-child') as HTMLElement;
+    const td = el.querySelector('tbody td:first-child') as HTMLElement;
+    expect(th.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+    expect(th.classList.contains('civ-data-grid__cell--sticky-start')).toBe(true);
+    expect(th.getAttribute('style')).toContain('position: sticky');
+    expect(th.getAttribute('style')).toContain('inset-inline-start: 0');
+    expect(td.getAttribute('style')).toContain('position: sticky');
+  });
+
+  it('does not stick non-sticky columns', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const nonStickyTh = el.querySelectorAll('thead th')[1] as HTMLElement;
+    expect(nonStickyTh.classList.contains('civ-data-grid__cell--sticky')).toBe(false);
+  });
+
+  it('accumulates offsets across multiple start-sticky columns', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name', width: '12rem', sticky: 'start' },
+        { key: 'role', header: 'Role' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith', role: 'Admin' } }],
+    });
+    const ths = el.querySelectorAll('thead th');
+    const first = ths[0] as HTMLElement;
+    const second = ths[1] as HTMLElement;
+    expect(first.getAttribute('style')).toContain('inset-inline-start: 0');
+    // Second sticky column starts after the first's width.
+    expect(second.getAttribute('style')).toMatch(/inset-inline-start:\s*calc\(4rem\)/);
+  });
+
+  it('handles end-sticky columns with right offsets accumulated in reverse', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'name', header: 'Name' },
+        { key: 'a', header: 'A', width: '6rem', sticky: 'end' },
+        { key: 'b', header: 'B', width: '8rem', sticky: 'end' },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', a: 1, b: 2 } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    // Rightmost (B) gets offset 0; A accumulates B's 8rem.
+    expect(ths[2].getAttribute('style')).toContain('inset-inline-end: 0');
+    expect(ths[1].getAttribute('style')).toMatch(/inset-inline-end:\s*calc\(8rem\)/);
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-end')).toBe(true);
+  });
+
+  it('marks the last start-sticky column with the boundary class (for the shadow)', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name', width: '12rem', sticky: 'start' },
+        { key: 'role', header: 'Role' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith', role: 'Admin' } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    expect(ths[0].classList.contains('civ-data-grid__cell--sticky-boundary-start')).toBe(false);
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-boundary-start')).toBe(true);
+  });
+
+  it('marks the first end-sticky column with the boundary class', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'name', header: 'Name' },
+        { key: 'a', header: 'A', width: '6rem', sticky: 'end' },
+        { key: 'b', header: 'B', width: '8rem', sticky: 'end' },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', a: 1, b: 2 } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    // The visually-leftmost end-sticky column (A) is the boundary.
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-boundary-end')).toBe(true);
+    expect(ths[2].classList.contains('civ-data-grid__cell--sticky-boundary-end')).toBe(false);
+  });
+
+  it('warns in dev mode when multiple sticky columns share an edge without explicit widths', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        // Second sticky column without width — can't accumulate the offset.
+        { key: 'name', header: 'Name', sticky: 'start' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).toMatch(/civ-data-grid/);
+    expect(message).toMatch(/sticky/);
+    expect(message).toMatch(/width/);
+    warn.mockRestore();
+  });
+
+  it('does not warn when only a single sticky column per edge omits width', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      columns: [
+        // First sticky column — width is fine to omit; offset is 0.
+        { key: 'id', header: 'ID', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).not.toMatch(/sticky/);
+    warn.mockRestore();
+  });
+
+  it('applies sticky styles to editable cells too', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start', editable: true },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    const td = el.querySelector('tbody td') as HTMLElement;
+    expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+    expect(td.getAttribute('style')).toContain('position: sticky');
+  });
+
+  it('selected rows set --_civ-sticky-bg so sticky cells share the selection background', async () => {
+    // The cascade pattern: rather than overriding the sticky cell's
+    // background directly, the row sets a CSS custom property that
+    // the sticky cell consumes. This keeps stripe / select / hover
+    // visuals consistent through the pinned columns.
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+      selectable: 'multiple',
+      selectedRowIds: ['1'],
+    });
+    const row = el.querySelector('tbody tr') as HTMLElement;
+    expect(row.classList.contains('civ-data-grid__tr--selected')).toBe(true);
+    // Don't assert the resolved background (jsdom doesn't compute it
+    // reliably) — verify the cascade source classes are on the row,
+    // which is what drives the styling.
+    const stickyCell = row.querySelector('.civ-data-grid__cell--sticky') as HTMLElement;
+    expect(stickyCell).not.toBeNull();
+  });
+
+  it('striped grids put both row-background and sticky-bg cascade on odd rows', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [
+        { id: '1', cells: { id: 'A-1' } },
+        { id: '2', cells: { id: 'A-2' } },
+      ],
+    });
+    el.striped = true;
+    await elementUpdated(el);
+    // The striped + sticky CSS rules target `.civ-data-grid--striped
+    // .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd)` — verify
+    // the wrapper class is in place and the rows have sticky cells.
+    expect(el.querySelector('.civ-data-grid--striped')).not.toBeNull();
+    const stickyCells = el.querySelectorAll('tbody .civ-data-grid__cell--sticky');
+    expect(stickyCells.length).toBe(2);
+  });
+
+  it('sticky-header cell gets the higher z-index token (corner cell layering)', async () => {
+    // When both sticky-header (on the grid) and a sticky-start column
+    // are active, the top-left corner cell needs to layer above the
+    // body sticky cells. The CSS uses --civ-z-sticky-header in the
+    // thead descendant selector — verify the header cell carries the
+    // sticky class so the rule matches.
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    el.stickyHeader = true;
+    await elementUpdated(el);
+    const cornerCell = el.querySelector('thead .civ-data-grid__cell--sticky') as HTMLElement;
+    expect(cornerCell).not.toBeNull();
+    expect(cornerCell.tagName).toBe('TH');
+  });
+
+  it('still emits the sticky classes when responsive="stacked" (CSS handles the reset at narrow viewports)', async () => {
+    // The render path doesn't conditionally drop sticky based on
+    // responsive mode — that would require knowing the viewport. The
+    // sticky styles are present in the DOM but neutralized by the
+    // `@media (max-width: 480px)` rule in components.css. Test verifies
+    // the class is still on the cell (the media query handles the
+    // visual neutralization separately).
+    const el = await mountGrid({
+      columns: [{ key: 'id', header: 'ID', width: '4rem', sticky: 'start' }],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    // responsive defaults to 'stacked'
+    expect(el.responsive).toBe('stacked');
+    const td = el.querySelector('tbody td') as HTMLElement;
+    expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+  });
+});

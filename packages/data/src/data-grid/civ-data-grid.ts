@@ -199,13 +199,15 @@ export class CivDataGrid extends CivBaseElement {
       : 'none';
     const alignClass = col.align ? `civ-data-grid__th--align-${col.align}` : '';
     const widthStyle = col.width ? `width: ${col.width};` : '';
+    const sticky = this._stickyAttrs(col);
+    const cellStyle = `${widthStyle}${sticky.style}`;
 
     if (!col.sortable) {
       return html`
         <th
           scope="col"
-          class="civ-data-grid__th ${alignClass}"
-          style="${widthStyle}"
+          class="civ-data-grid__th ${alignClass} ${sticky.cls}"
+          style="${cellStyle}"
         >${col.header}</th>
       `;
     }
@@ -220,9 +222,9 @@ export class CivDataGrid extends CivBaseElement {
     return html`
       <th
         scope="col"
-        class="civ-data-grid__th civ-data-grid__th--sortable ${alignClass}"
+        class="civ-data-grid__th civ-data-grid__th--sortable ${alignClass} ${sticky.cls}"
         aria-sort="${ariaSort}"
-        style="${widthStyle}"
+        style="${cellStyle}"
       >
         <button
           type="button"
@@ -409,12 +411,19 @@ export class CivDataGrid extends CivBaseElement {
    *  (which is the only reactive prop that affects them). */
   private _anyExpandableCache?: boolean;
   private _anyRowActionsCache?: boolean;
+  /** Per-column sticky-offset map. Invalidated when `columns` change. */
+  private _stickyCache?: Map<string, { side: 'start' | 'end'; offset: string; isFirst: boolean; isLast: boolean }>;
+  /** Per-instance dedupe for the sticky-without-width warning. */
+  private _warnedStickyWithoutWidth = false;
 
   override willUpdate(changed: Map<string, unknown>): void {
     super.willUpdate?.(changed);
     if (changed.has('rows')) {
       this._anyExpandableCache = undefined;
       this._anyRowActionsCache = undefined;
+    }
+    if (changed.has('columns')) {
+      this._stickyCache = undefined;
     }
   }
 
@@ -478,9 +487,10 @@ export class CivDataGrid extends CivBaseElement {
     const alignClass = col.align ? `civ-data-grid__td--align-${col.align}` : '';
     const isEditable = !!col.editable && !row.disabled;
     const isEditing = isEditable && this._isEditing(row.id, col.key);
+    const sticky = this._stickyAttrs(col);
 
     if (isEditing) {
-      return this._renderEditCell(col, row, raw, alignClass);
+      return this._renderEditCell(col, row, raw, alignClass, sticky);
     }
 
     const value = col.formatter ? col.formatter(raw, row, rowIndex) : (raw ?? '');
@@ -501,8 +511,9 @@ export class CivDataGrid extends CivBaseElement {
       const editLabel = t('dataGridEditCell').replace('{column}', col.header);
       return html`
         <td
-          class="civ-data-grid__td ${alignClass} ${editableClass}"
+          class="civ-data-grid__td ${alignClass} ${editableClass} ${sticky.cls}"
           data-label="${col.header}"
+          style="${sticky.style}"
           @click="${onClick}"
         >
           <button
@@ -515,8 +526,9 @@ export class CivDataGrid extends CivBaseElement {
     }
     return html`
       <td
-        class="civ-data-grid__td ${alignClass}"
+        class="civ-data-grid__td ${alignClass} ${sticky.cls}"
         data-label="${col.header}"
+        style="${sticky.style}"
       >${value as unknown as TemplateResult}</td>
     `;
   }
@@ -526,6 +538,7 @@ export class CivDataGrid extends CivBaseElement {
     row: GridRow,
     raw: unknown,
     alignClass: string,
+    sticky: { style: string; cls: string } = { style: '', cls: '' },
   ): TemplateResult {
     const inputType = col.inputType ?? 'text';
     const errorId = `${this._instanceId}-edit-error-${row.id}-${col.key}`;
@@ -533,8 +546,9 @@ export class CivDataGrid extends CivBaseElement {
     const errorClass = showError ? 'civ-data-grid__td--edit-error' : '';
     return html`
       <td
-        class="civ-data-grid__td civ-data-grid__td--editing ${alignClass} ${errorClass}"
+        class="civ-data-grid__td civ-data-grid__td--editing ${alignClass} ${errorClass} ${sticky.cls}"
         data-label="${col.header}"
+        style="${sticky.style}"
       >
         ${inputType === 'select'
           ? this._renderEditSelect(col, row, raw, showError ? errorId : undefined)
@@ -836,6 +850,89 @@ export class CivDataGrid extends CivBaseElement {
 
   private get _visibleColumns(): GridColumn[] {
     return this.columns.filter((c) => !c.hidden);
+  }
+
+  /**
+   * Build the per-column sticky cache. For 'start' columns, offsets
+   * accumulate left-to-right; for 'end' columns, accumulate right-to-
+   * left. Each column needs `width` to participate in the offset
+   * calculation; the first sticky column on either edge can omit width
+   * (offset is 0). When a non-first sticky column omits width, we fire
+   * a dev warning (offset would be `calc(0 + auto)` which CSS can't
+   * compute).
+   */
+  private _getStickyInfo(col: GridColumn) {
+    if (this._stickyCache === undefined) {
+      this._stickyCache = new Map();
+      const visible = this._visibleColumns;
+      const startCols = visible.filter((c) => c.sticky === 'start');
+      const endCols = visible.filter((c) => c.sticky === 'end');
+      let needWarning = false;
+
+      startCols.forEach((c, i) => {
+        if (i > 0 && !c.width) needWarning = true;
+        const offset = i === 0
+          ? '0'
+          : startCols.slice(0, i).map((p) => p.width ?? '0').join(' + ');
+        this._stickyCache!.set(c.key, {
+          side: 'start',
+          offset: i === 0 ? '0' : `calc(${offset})`,
+          isFirst: i === 0,
+          isLast: i === startCols.length - 1,
+        });
+      });
+
+      // For end-edge, iterate in reverse column order so the *rightmost*
+      // sticky column gets offset 0, and earlier ones accumulate the
+      // widths of those that come after them.
+      const endReversed = [...endCols].reverse();
+      endReversed.forEach((c, i) => {
+        if (i > 0 && !c.width) needWarning = true;
+        const offset = i === 0
+          ? '0'
+          : endReversed.slice(0, i).map((p) => p.width ?? '0').join(' + ');
+        this._stickyCache!.set(c.key, {
+          side: 'end',
+          offset: i === 0 ? '0' : `calc(${offset})`,
+          isFirst: i === 0,
+          isLast: i === endReversed.length - 1,
+        });
+      });
+
+      if (needWarning && !this._warnedStickyWithoutWidth) {
+        this._warnedStickyWithoutWidth = true;
+        devWarn(
+          'civ-data-grid',
+          'Multiple sticky columns on the same edge require explicit `width` on every column except the first. Without widths, CSS can\'t compute the cumulative offset and sticky cells will overlap. Set `column.width` (e.g. \'12rem\', \'120px\') on each.',
+        );
+      }
+    }
+    return this._stickyCache.get(col.key);
+  }
+
+  /**
+   * Generate the inline style + class list for a sticky header / body
+   * cell. Returns empty strings when the column is not sticky so the
+   * caller can interpolate unconditionally.
+   */
+  private _stickyAttrs(col: GridColumn): { style: string; cls: string } {
+    const info = this._getStickyInfo(col);
+    if (!info) return { style: '', cls: '' };
+    const side = info.side;
+    const property = side === 'start' ? 'inset-inline-start' : 'inset-inline-end';
+    const style = `position: sticky; ${property}: ${info.offset};`;
+    const cls = [
+      'civ-data-grid__cell--sticky',
+      `civ-data-grid__cell--sticky-${side}`,
+      // Boundary cell — the inner edge facing the scrolling content.
+      // For sticky-start that's the rightmost pinned column (last in
+      // natural order = `isLast`); for sticky-end, the leftmost pinned
+      // column — which is the *last* entry we emitted because we
+      // iterate end columns in reverse order in _getStickyInfo.
+      info.isLast && side === 'start' ? 'civ-data-grid__cell--sticky-boundary-start' : '',
+      info.isLast && side === 'end' ? 'civ-data-grid__cell--sticky-boundary-end' : '',
+    ].filter(Boolean).join(' ');
+    return { style, cls };
   }
 
   private _totalColumnCount(): number {

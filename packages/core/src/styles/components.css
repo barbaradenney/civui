@@ -2052,7 +2052,15 @@
 
   .civ-data-grid__table {
     width: 100%;
-    border-collapse: collapse;
+    /* `border-collapse: separate` + zero spacing renders identically to
+       `collapse` for our border setup (we only set bottom/right borders,
+       never top/left, so no collapsing was actually happening) — but it
+       fixes the sticky-column rendering bug. With `collapse`, sticky
+       `<th>` / `<td>` cells share collapsed borders with neighbors that
+       *aren't* sticky; when the sticky cell lifts out of flow, those
+       shared borders leave 1–2px visual gaps between pinned columns. */
+    border-collapse: separate;
+    border-spacing: 0;
     /* Caption renders above the table by default. */
     caption-side: top;
   }
@@ -2541,8 +2549,26 @@
       border: 0;
     }
 
-    .civ-data-grid--stacked .civ-data-grid__tr {
+    /* All row variants — data, group header, expand-detail, group
+       subtotal, filter row (rendered in thead but not part of the hidden
+       column-header row), and tfoot row — switch to block layout in
+       lockstep. Mixing `display: block` (data rows) with the default
+       `display: table-row` (group/subtotal/detail/footer) confuses the
+       browser's table layout and triggers visual shifts on collapse. */
+    .civ-data-grid--stacked .civ-data-grid__tr,
+    .civ-data-grid--stacked .civ-data-grid__tr--group,
+    .civ-data-grid--stacked .civ-data-grid__tr--detail,
+    .civ-data-grid--stacked .civ-data-grid__tr--group-subtotal,
+    .civ-data-grid--stacked .civ-data-grid__filter-row,
+    .civ-data-grid--stacked .civ-data-grid__tfoot-row {
       display: block;
+    }
+
+    /* Data rows get a visible separator + vertical padding. The other
+       row types render their own chrome (group label, detail content,
+       subtotal aggregates) and shouldn't pick up an extra border /
+       padding shell. */
+    .civ-data-grid--stacked .civ-data-grid__tr {
       border-bottom: 2px solid var(--civ-color-base-light);
       padding: var(--civ-spacing-2) 0;
     }
@@ -2572,6 +2598,34 @@
     }
 
     .civ-data-grid--stacked .civ-data-grid__td--actions::before {
+      content: '';
+    }
+
+    /* Group toggle button — the sticky positioning that keeps the label
+       anchored during horizontal scroll on desktop has no scroll context
+       on mobile (rows are stacked vertically). Neutralize so the button
+       doesn't trigger spurious layout shifts when the group's data rows
+       are added or removed during collapse. */
+    .civ-data-grid--stacked .civ-data-grid__group-toggle {
+      position: static;
+    }
+
+    /* Group / subtotal / detail / footer cells reset the flex layout —
+       they span the full row (colspan in table mode, full width here)
+       and host a single block of content, not a label/value pair. */
+    .civ-data-grid--stacked .civ-data-grid__td--group,
+    .civ-data-grid--stacked .civ-data-grid__td--detail,
+    .civ-data-grid--stacked .civ-data-grid__tr--group-subtotal .civ-data-grid__td,
+    .civ-data-grid--stacked .civ-data-grid__tfoot-cell,
+    .civ-data-grid--stacked .civ-data-grid__filter-cell {
+      display: block;
+      text-align: start;
+    }
+
+    .civ-data-grid--stacked .civ-data-grid__td--group::before,
+    .civ-data-grid--stacked .civ-data-grid__td--detail::before,
+    .civ-data-grid--stacked .civ-data-grid__tfoot-cell::before,
+    .civ-data-grid--stacked .civ-data-grid__filter-cell::before {
       content: '';
     }
   }

@@ -2368,6 +2368,46 @@
     cursor: pointer;
   }
 
+  /* Filter row — sits inside <thead> beneath the column-header row. Each
+     cell hosts a native <input> / <select> styled to a compact admin look.
+     Placeholder cells (for select / expand / actions columns, and for
+     columns without a filter config) are empty but keep the alignment. */
+  .civ-data-grid__filter-row {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  .civ-data-grid__filter-cell {
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
+    vertical-align: middle;
+  }
+
+  .civ-data-grid__filter-input {
+    @apply civ-w-full;
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    border: 1px solid var(--civ-color-base-light);
+    border-radius: 4px;
+    background-color: var(--civ-color-white-DEFAULT);
+    font-size: var(--civ-typography-fontSize-sm);
+    line-height: 1.4;
+    box-sizing: border-box;
+  }
+
+  .civ-data-grid__filter-input:focus {
+    outline: none;
+    border-color: var(--civ-color-primary-DEFAULT);
+    box-shadow: 0 0 0 2px var(--civ-color-primary-lighter);
+  }
+
+  .civ-data-grid__filter-range {
+    @apply civ-flex civ-gap-2;
+  }
+
+  .civ-data-grid__filter-input--range {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   /* Keyboard-nav focus indicator on the focused cell. The global focus
      rule (civ.css) already matches `[tabindex]:not([tabindex="-1"]):focus`
      and would fire on the focused cell — but its halo (box-shadow) paints

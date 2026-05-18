@@ -26,6 +26,35 @@ export interface GridCellOption {
 }
 
 /**
+ * Per-column filter configuration. Set on a column to render a filter
+ * input in the filter row beneath the headers. Three variants:
+ * - `text` — case-insensitive substring match against the cell's stringified value.
+ * - `select` — exact match against one of the supplied options.
+ * - `number-range` — pair of min/max inputs; cell value parsed as a number and bounded.
+ *
+ * The filter row is consumer-controlled: each change fires `civ-filter-change`
+ * with the new filter state; the consumer applies the filter to its data and
+ * updates the grid's `rows`. Use the `applyGridFilters` utility from
+ * `@civui/data/filter` for client-side filtering.
+ */
+export type GridColumnFilter =
+  | { type: 'text'; placeholder?: string }
+  | { type: 'select'; options: GridCellOption[]; placeholder?: string }
+  | { type: 'number-range'; minPlaceholder?: string; maxPlaceholder?: string };
+
+/**
+ * Filter value held in the grid's `filters` map, keyed by column.key. Each
+ * value's shape matches its column's filter `type`.
+ */
+export type GridFilterValue =
+  | { type: 'text'; value: string }
+  | { type: 'select'; value: string }
+  | { type: 'number-range'; min?: number; max?: number };
+
+/** Map of active filter values, keyed by `column.key`. */
+export type GridFilters = Record<string, GridFilterValue>;
+
+/**
  * Column definition. Set via the grid's `columns` JS property.
  */
 export interface GridColumn {
@@ -79,6 +108,15 @@ export interface GridColumn {
    * accept. Runs on Enter / blur before the commit event fires.
    */
   validate?: (value: unknown, row: GridRow) => string | null;
+  /**
+   * Per-column filter configuration. When set, a filter input renders in
+   * the filter row beneath the headers. The grid dispatches
+   * `civ-filter-change` with the new filter state on every input — the
+   * consumer manages `filters` and re-renders `rows` accordingly.
+   * Special cells (selection, expand, actions) render an empty
+   * placeholder in the filter row to keep columns aligned.
+   */
+  filter?: GridColumnFilter;
 }
 
 /**

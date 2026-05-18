@@ -16,6 +16,9 @@ import type {
   GridGroupLabel,
   GridCellInputType,
   GridCellOption,
+  GridColumnFilter,
+  GridFilterValue,
+  GridFilters,
 } from './civ-data-grid.types.js';
 
 export type {
@@ -29,6 +32,9 @@ export type {
   GridGroupLabel,
   GridCellInputType,
   GridCellOption,
+  GridColumnFilter,
+  GridFilterValue,
+  GridFilters,
 };
 
 /**
@@ -73,6 +79,7 @@ export type {
  * @prop {Array} expandedRowIds - IDs of currently-expanded rows (controlled). Update in response to `civ-row-expand`.
  * @prop {Function} expandTemplate - `(row) => string | TemplateResult` — renders the detail content shown when a row is expanded. Required when any row has `expandable: true`.
  * @prop {boolean} keyboardNav - Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. See the data-grid doc page "Keyboard navigation" section for the full key map and behavior notes.
+ * @prop {Object} filters - Active filter values keyed by column.key (controlled). Update in response to `civ-filter-change`. See the doc page "Column filtering" section.
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
@@ -83,6 +90,7 @@ export type {
  * @fires civ-cell-edit-commit - { rowId, columnKey, value, row } — user committed a valid new value (Enter / blur / click-outside)
  * @fires civ-cell-edit-cancel - { rowId, columnKey, row } — user cancelled an edit (Escape)
  * @fires civ-group-toggle - { groupKey, expanded } — user toggled a group header's chevron
+ * @fires civ-filter-change - { filters, columnKey } — user changed a per-column filter input; `filters` is the new full state, `columnKey` identifies which column changed
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -129,6 +137,7 @@ export class CivDataGrid extends CivBaseElement {
   @property({ attribute: false }) expandedGroups?: string[];
   @property({ attribute: false }) groupLabel?: GridGroupLabel;
   @property({ type: Boolean, attribute: 'keyboard-nav' }) keyboardNav = false;
+  @property({ attribute: false }) filters: GridFilters = {};
 
   /**
    * Roving-tabindex position when `keyboardNav` is on. Plain fields (not
@@ -220,6 +229,7 @@ export class CivDataGrid extends CivBaseElement {
               ${this._visibleColumns.map((col) => this._renderHeaderCell(col))}
               ${this._hasAnyRowActions() ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--actions"><span class="civ-sr-only">Actions</span></th>` : nothing}
             </tr>
+            ${this._hasAnyFilter() ? this._renderFilterRow() : nothing}
           </thead>
           <tbody class="civ-data-grid__tbody">
             ${this._renderBody()}
@@ -413,6 +423,154 @@ export class CivDataGrid extends CivBaseElement {
       groupKey,
       expanded: nextExpanded,
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Column filtering (opt-in via `column.filter`)
+  // ---------------------------------------------------------------------------
+
+  /** True if any visible column has a filter config. */
+  private _hasAnyFilter(): boolean {
+    return this._visibleColumns.some((c) => !!c.filter);
+  }
+
+  /**
+   * Render the filter row beneath the column headers. Special columns
+   * (expand chevron, selection, row-actions) get empty placeholder cells
+   * so the row aligns with the headers above and the data rows below.
+   * Columns without a `filter` config also render an empty placeholder
+   * — so the row reads visually like a complete header row.
+   */
+  private _renderFilterRow(): TemplateResult {
+    return html`
+      <tr
+        class="civ-data-grid__filter-row"
+        aria-label="${t('dataGridFilterRowLabel')}"
+      >
+        ${this._hasAnyExpandable()
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+        ${this.selectable !== 'none'
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+        ${this._visibleColumns.map((col) => this._renderFilterCell(col))}
+        ${this._hasAnyRowActions()
+          ? html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`
+          : nothing}
+      </tr>
+    `;
+  }
+
+  private _renderFilterCell(col: GridColumn): TemplateResult {
+    if (!col.filter) {
+      return html`<td class="civ-data-grid__td civ-data-grid__filter-cell civ-data-grid__filter-cell--placeholder"></td>`;
+    }
+    const sticky = this._stickyAttrs(col);
+    const cellClass = `civ-data-grid__td civ-data-grid__filter-cell ${sticky.cls}`;
+    const cellStyle = sticky.style;
+    const current = this.filters[col.key];
+    switch (col.filter.type) {
+      case 'text':
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <input
+              type="text"
+              class="civ-data-grid__filter-input"
+              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              placeholder="${col.filter.placeholder ?? ''}"
+              .value="${current?.type === 'text' ? current.value : ''}"
+              @input="${(e: Event) => this._onFilterInput(col, e)}"
+            />
+          </td>
+        `;
+      case 'select': {
+        const opts = col.filter.options;
+        const placeholder = col.filter.placeholder ?? t('dataGridFilterSelectAll');
+        const value = current?.type === 'select' ? current.value : '';
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <select
+              class="civ-data-grid__filter-input"
+              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              .value="${value}"
+              @change="${(e: Event) => this._onFilterInput(col, e)}"
+            >
+              <option value="">${placeholder}</option>
+              ${opts.map(
+                (o) => html`
+                  <option value="${o.value}" ?selected="${value === o.value}">${o.label}</option>
+                `,
+              )}
+            </select>
+          </td>
+        `;
+      }
+      case 'number-range': {
+        const min = current?.type === 'number-range' ? current.min : undefined;
+        const max = current?.type === 'number-range' ? current.max : undefined;
+        return html`
+          <td class="${cellClass}" style="${cellStyle}">
+            <div class="civ-data-grid__filter-range">
+              <input
+                type="number"
+                class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                aria-label="${t('dataGridFilterMin').replace('{column}', col.header)}"
+                placeholder="${col.filter.minPlaceholder ?? 'Min'}"
+                .value="${min == null ? '' : String(min)}"
+                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
+              />
+              <input
+                type="number"
+                class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                aria-label="${t('dataGridFilterMax').replace('{column}', col.header)}"
+                placeholder="${col.filter.maxPlaceholder ?? 'Max'}"
+                .value="${max == null ? '' : String(max)}"
+                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
+              />
+            </div>
+          </td>
+        `;
+      }
+    }
+  }
+
+  private _onFilterInput(col: GridColumn, e: Event): void {
+    const target = e.currentTarget as HTMLInputElement | HTMLSelectElement;
+    const rawValue = target.value;
+    const next: GridFilters = { ...this.filters };
+    if (col.filter?.type === 'text') {
+      if (rawValue === '') delete next[col.key];
+      else next[col.key] = { type: 'text', value: rawValue };
+    } else if (col.filter?.type === 'select') {
+      if (rawValue === '') delete next[col.key];
+      else next[col.key] = { type: 'select', value: rawValue };
+    }
+    dispatch(this, 'civ-filter-change', { filters: next, columnKey: col.key });
+  }
+
+  private _onFilterRangeInput(col: GridColumn, e: Event, bound: 'min' | 'max'): void {
+    const target = e.currentTarget as HTMLInputElement;
+    const rawValue = target.value;
+    const current = this.filters[col.key];
+    const existing = current?.type === 'number-range' ? current : { type: 'number-range' as const };
+    const next: GridFilters = { ...this.filters };
+    const updated: GridFilterValue = {
+      type: 'number-range',
+      min: bound === 'min'
+        ? (rawValue === '' ? undefined : Number(rawValue))
+        : existing.min,
+      max: bound === 'max'
+        ? (rawValue === '' ? undefined : Number(rawValue))
+        : existing.max,
+    };
+    // Drop the entry entirely when both bounds are clear — keeps the
+    // filters map free of empty noise.
+    if (updated.type === 'number-range' && updated.min === undefined && updated.max === undefined) {
+      delete next[col.key];
+    } else {
+      next[col.key] = updated;
+    }
+    dispatch(this, 'civ-filter-change', { filters: next, columnKey: col.key });
   }
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
@@ -1387,12 +1545,22 @@ export class CivDataGrid extends CivBaseElement {
       return;
     }
 
-    // Enter / Space — click the primary inner control if present.
+    // Enter / Space — activate the primary inner control if present.
+    // For "action" controls (buttons, links, checkbox/radio inputs), click
+    // them. For text-entry controls (text/number inputs, selects), focus
+    // them so the user can begin typing — Esc returns to the cell.
     const ctrl = cell.querySelector(
       'button, input, select, a, [role="button"]',
     ) as HTMLElement | null;
     if (ctrl) {
-      ctrl.click();
+      const isToggle = ctrl instanceof HTMLInputElement
+        && (ctrl.type === 'checkbox' || ctrl.type === 'radio');
+      const isAction = isToggle
+        || ctrl instanceof HTMLButtonElement
+        || ctrl instanceof HTMLAnchorElement
+        || ctrl.getAttribute('role') === 'button';
+      if (isAction) ctrl.click();
+      else ctrl.focus();
       return;
     }
 

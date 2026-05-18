@@ -131,6 +131,11 @@ const schema: ComponentSchema = {
       attribute: 'keyboard-nav',
       webOnly: true,
     },
+    filters: {
+      type: 'string',
+      description: 'Active filter values keyed by column.key. Typed as `Record<string, GridFilterValue>` — passed as an object literal, not a string (the type is `string` here only because the schema doesn\'t model object literals; the actual runtime shape is `{ [columnKey]: { type: \'text\' | \'select\' | \'number-range\', value?, min?, max? } }`). Controlled — update in response to `civ-filter-change`. Set `column.filter = { type, options?, placeholder? }` to opt a column into the filter row. The filter row renders inside `<thead>` beneath the column headers; columns without a filter config get an empty placeholder cell so the row stays aligned. Use the `applyGridFilters` utility from `@civui/data/filter` for client-side filtering, or wire it to your server query',
+      webOnly: true,
+    },
   },
 
   events: {
@@ -200,6 +205,13 @@ const schema: ComponentSchema = {
       detail: {
         groupKey: { type: 'string', description: 'The stringified group key (the value of `row.cells[groupBy]` for the group)' },
         expanded: { type: 'boolean', description: 'The target expanded state (not the previous state) — reducer-friendly' },
+      },
+    },
+    'civ-filter-change': {
+      description: 'Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own — use `applyGridFilters` from `@civui/data/filter` for the client-side default',
+      detail: {
+        filters: { type: 'object', description: 'New full filter state (record keyed by column.key)' },
+        columnKey: { type: 'string', description: 'The column.key whose filter changed' },
       },
     },
   },

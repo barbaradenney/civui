@@ -99,6 +99,10 @@ For admin screens with many interactive cells — sort, expand, edit, select, ro
 
 <StoryEmbed id="layout-data-grid--group-by" minHeight={500} />
 
+### Per-column filtering
+
+<StoryEmbed id="layout-data-grid--column-filtering" minHeight={500} />
+
 ### Keyboard grid navigation
 
 <StoryEmbed id="layout-data-grid--keyboard-navigation" minHeight={500} />
@@ -403,6 +407,83 @@ The grid skips hidden columns (header + body) — same path
   sticky` on the toggle button) so the group identity is always
   visible alongside the sticky data columns.
 
+## Per-column filtering
+
+Set `column.filter` on any column to render a filter input in a row beneath the column headers. Three variants ship today:
+
+- `text` — case-insensitive substring match (one `<input type="text">`).
+- `select` — exact-match dropdown built from the supplied options.
+- `number-range` — pair of min / max number inputs.
+
+The grid is consumer-controlled: every keystroke / change dispatches `civ-filter-change` with the new full filter state, and the consumer applies the filter to its row data. For client-side filtering, the `applyGridFilters` utility from `@civui/data/filter` is the canonical implementation:
+
+```ts
+import { applyGridFilters } from '@civui/data/filter';
+
+const cols = [
+  { key: 'name',   header: 'Name',   sortable: true, filter: { type: 'text', placeholder: 'Search…' } },
+  { key: 'status', header: 'Status', filter: { type: 'select', options: [
+    { value: 'active',  label: 'Active' },
+    { value: 'pending', label: 'Pending' },
+  ]}},
+  { key: 'amount', header: 'Amount', align: 'numeric', filter: { type: 'number-range' } },
+];
+
+const allRows = await fetchRows();
+grid.columns = cols;
+grid.rows = allRows;
+grid.filters = {};
+
+grid.addEventListener('civ-filter-change', (e) => {
+  const { filters } = e.detail;
+  grid.filters = filters;
+  grid.rows = applyGridFilters(allRows, cols, filters);
+});
+```
+
+### Filter row layout
+
+Cells in the filter row line up one-to-one with the header cells above:
+
+- Selection, expand, and row-actions columns render an empty placeholder cell.
+- Columns without a `filter` config also render an empty placeholder cell (so the visual grid stays aligned).
+- The cells that DO carry filters render the input directly inside the cell — no extra label / hint chrome, since the column header above already provides the label. The input's `aria-label` reads `"Filter <column>"` for screen readers.
+
+### Filter semantics (`applyGridFilters`)
+
+- **`text`** — `String(cell).toLowerCase().includes(value.toLowerCase())`. Empty input is a no-op.
+- **`select`** — `String(cell) === value`. Empty option (`value=""`) is the "All" no-op.
+- **`number-range`** — `min <= Number(cell) <= max` (both bounds inclusive, both optional). Cells whose value is `null` / `undefined` / `""` or doesn't parse to a finite number are **excluded** from any active range — matches Google Sheets / Excel behavior so blank cells don't sneak into "≥ 0" filters.
+- Multiple active filters **AND** together. A row must satisfy every filter to appear.
+
+### Server-side filtering
+
+`civ-filter-change` is a target-state event — `e.detail.filters` is the full filter map, not a diff. Hand it to your query API:
+
+```ts
+grid.addEventListener('civ-filter-change', async (e) => {
+  grid.filters = e.detail.filters;
+  grid.loading = true;
+  const { rows, total } = await api.search({ filters: grid.filters, page: 1 });
+  grid.rows = rows;
+  grid.loading = false;
+});
+```
+
+`e.detail.columnKey` is also provided when you need to know which column the user touched — useful for analytics or for debouncing per-column inputs.
+
+### Filters + sort + grouping
+
+The three composite features are orthogonal:
+
+- **Filters apply first** (when using `applyGridFilters` client-side), then the consumer sorts and groups the filtered set. The grid renders whatever rows you hand it.
+- The filter row sits in `<thead>` underneath the header row, above the body — sort indicators on column headers continue to function normally above their filter inputs.
+- `groupBy` groups the rows that survive filtering. Empty groups disappear naturally.
+
+### Filters + keyboard navigation
+
+With `keyboardNav` on, filter cells participate in cell navigation. Pressing <kbd>Enter</kbd> on a focused filter cell focuses the inner input so the user can start typing; <kbd>Esc</kbd> returns focus to the cell so arrow keys resume.
+
 ## Keyboard navigation {#keyboard-navigation}
 
 Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) — opt in to a single tab stop with arrow-key cell navigation, instead of the default tab-through-every-control behavior. The grid becomes a **single tab stop** — inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so Tab doesn't walk through every cell. Once focus is on the grid, arrow keys move between cells and Enter / Space activate the cell's primary control.
@@ -610,8 +691,9 @@ pager.addEventListener('civ-page-change', (e) => {
 ## Coming in follow-up work
 
 - **Aggregations / footer row** — per-column sum / avg / count, optionally per-group when `groupBy` is set
-- **Column filtering** — per-column filter row with text / select / range inputs
 - **Multi-column sort** — Shift-click to add secondary / tertiary sort keys
+- **Saved views / presets** — user-saveable named bundles of column visibility + filters + sort
+- **URL state persistence** — sync sort / filter / page to query params for shareable views
 - **Native iOS / Android implementations** — schema is in place; native bodies are placeholders until a dedicated implementation pass
 
 See `.claude/rules/audit-debt.md` for the implementation backlog.

@@ -14,7 +14,8 @@
     "./bulk-actions": "./dist/bulk-actions/index.js",
     "./filterable-list": "./dist/filterable-list/index.js",
     "./column-visibility": "./dist/column-visibility/index.js",
-    "./export": "./dist/export/index.js"
+    "./export": "./dist/export/index.js",
+    "./filter": "./dist/filter/index.js"
   },
   "files": [
     "dist"

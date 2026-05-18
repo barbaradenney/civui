@@ -9,6 +9,7 @@ import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
 import '@civui/overlays/drawer';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
+import { applyGridFilters } from '../filter/grid-filter.js';
 
 const meta: Meta = {
   title: 'Layout/Data Grid',
@@ -760,6 +761,86 @@ export const KeyboardNavigation: Story = {
           keyboard-nav
           bordered
         ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const ColumnFiltering: Story = {
+  name: 'Per-column filtering',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-filter') as any;
+      const status = document.getElementById('story-filter-status');
+      if (!grid) return;
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true, filter: { type: 'text', placeholder: 'Search name' } },
+        { key: 'type', header: 'Type', filter: {
+          type: 'select',
+          options: [
+            { value: 'Disability', label: 'Disability' },
+            { value: 'Pension', label: 'Pension' },
+            { value: 'Education', label: 'Education' },
+            { value: 'Healthcare', label: 'Healthcare' },
+          ],
+        }},
+        { key: 'status', header: 'Status', filter: {
+          type: 'select',
+          options: [
+            { value: 'In review', label: 'In review' },
+            { value: 'Approved', label: 'Approved' },
+            { value: 'Pending', label: 'Pending' },
+            { value: 'Denied', label: 'Denied' },
+          ],
+        }},
+        { key: 'amount', header: 'Amount', align: 'numeric',
+          filter: { type: 'number-range' },
+          formatter: (v) => `$${v}`,
+        },
+      ];
+      const allRows: GridRow[] = SAMPLE_DATA.map((d, i) => ({
+        id: d.id,
+        cells: {
+          applicant: d.applicant,
+          type: d.type,
+          status: d.status,
+          // Synthesize an "amount" column for the range filter demo.
+          amount: 100 + i * 75,
+        },
+      }));
+      grid.columns = cols;
+      grid.rows = allRows;
+      grid.filters = {};
+      const updateStatus = () => {
+        const n = Object.keys(grid.filters).length;
+        if (status) {
+          status.textContent = n === 0
+            ? `${grid.rows.length} rows shown — no filters active.`
+            : `${grid.rows.length} of ${allRows.length} rows shown — ${n} active filter${n === 1 ? '' : 's'}.`;
+        }
+      };
+      updateStatus();
+      grid.addEventListener('civ-filter-change', (e: Event) => {
+        const { filters } = (e as CustomEvent).detail;
+        grid.filters = filters;
+        grid.rows = applyGridFilters(allRows, cols, filters);
+        updateStatus();
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Type, select, or set a min/max — the grid dispatches
+          <code>civ-filter-change</code> with the new full filter state,
+          and the consumer applies the filter via
+          <code>applyGridFilters</code> from <code>@civui/data/filter</code>.
+        </p>
+        <civ-data-grid
+          class="story-filter"
+          caption="Applications (with per-column filters)"
+          bordered
+        ></civ-data-grid>
+        <p id="story-filter-status" class="civ-mt-3" aria-live="polite"></p>
       </div>
     `;
   },

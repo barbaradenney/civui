@@ -2132,3 +2132,190 @@ describe('civ-data-grid — keyboard navigation', () => {
     expect(selectChk.disabled).toBe(true);
   });
 });
+
+describe('civ-data-grid — column filtering', () => {
+  const filterColumns: GridColumn[] = [
+    { key: 'name', header: 'Name', filter: { type: 'text', placeholder: 'Search…' } },
+    { key: 'status', header: 'Status', filter: {
+      type: 'select',
+      options: [
+        { value: 'Active', label: 'Active' },
+        { value: 'Pending', label: 'Pending' },
+      ],
+    }},
+    { key: 'amount', header: 'Amount', filter: { type: 'number-range' } },
+  ];
+  const filterRows: GridRow[] = [
+    { id: '1', cells: { name: 'Smith', status: 'Active', amount: 100 } },
+    { id: '2', cells: { name: 'Doe', status: 'Pending', amount: 50 } },
+  ];
+
+  it('does NOT render a filter row when no column has a filter config', async () => {
+    const el = await mountGrid();
+    expect(el.querySelector('.civ-data-grid__filter-row')).toBeNull();
+  });
+
+  it('renders a filter row inside <thead> when any column declares a filter', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const row = el.querySelector('thead .civ-data-grid__filter-row');
+    expect(row).not.toBeNull();
+  });
+
+  it('renders a text input for a text-filter column with the placeholder', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    expect(input).not.toBeNull();
+    expect(input.placeholder).toBe('Search…');
+    expect(input.getAttribute('aria-label')).toBe('Filter Name');
+  });
+
+  it('renders a select with a default "All" empty option for a select-filter column', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const select = el.querySelector('.civ-data-grid__filter-cell select') as HTMLSelectElement;
+    expect(select).not.toBeNull();
+    const options = Array.from(select.options).map((o) => o.value);
+    expect(options).toEqual(['', 'Active', 'Pending']);
+    expect(select.getAttribute('aria-label')).toBe('Filter Status');
+  });
+
+  it('renders two number inputs for a number-range filter column with min/max labels', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const rangeInputs = el.querySelectorAll('.civ-data-grid__filter-input--range');
+    expect(rangeInputs).toHaveLength(2);
+    expect(rangeInputs[0].getAttribute('aria-label')).toBe('Min Amount');
+    expect(rangeInputs[1].getAttribute('aria-label')).toBe('Max Amount');
+  });
+
+  it('renders placeholder cells aligned with selection / expand / actions columns', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name', filter: { type: 'text' } },
+      { key: 'status', header: 'Status' },
+    ];
+    const rows: GridRow[] = [{
+      id: '1',
+      cells: { name: 'A', status: 'X' },
+      actions: [{ id: 'edit', label: 'Edit' }],
+    }];
+    const el = await mountGrid({ columns: cols, rows, selectable: 'multiple' });
+    const row = el.querySelector('.civ-data-grid__filter-row')!;
+    const cells = row.querySelectorAll('.civ-data-grid__filter-cell');
+    // 1 selection placeholder + 1 text filter cell + 1 column-without-filter placeholder + 1 actions placeholder.
+    expect(cells).toHaveLength(4);
+    expect(cells[0].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[2].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[3].classList.contains('civ-data-grid__filter-cell--placeholder')).toBe(true);
+    expect(cells[1].querySelector('input')).not.toBeNull();
+  });
+
+  it('fires civ-filter-change with target state on text input', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.value = 'smith';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.columnKey).toBe('name');
+    expect(detail.filters).toEqual({ name: { type: 'text', value: 'smith' } });
+  });
+
+  it('drops the filter entry when text input is cleared to empty', async () => {
+    const el = await mountGrid({
+      columns: filterColumns,
+      rows: filterRows,
+    });
+    el.filters = { name: { type: 'text', value: 'smith' } };
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({});
+  });
+
+  it('fires civ-filter-change with select value', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const select = el.querySelector('.civ-data-grid__filter-cell select') as HTMLSelectElement;
+    select.value = 'Active';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({
+      status: { type: 'select', value: 'Active' },
+    });
+  });
+
+  it('merges number-range min and max bounds across multiple events', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    // Set min first.
+    minInput.value = '50';
+    minInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[0][0].detail.filters).toEqual({
+      amount: { type: 'number-range', min: 50, max: undefined },
+    });
+    // Apply the new state, then set max.
+    el.filters = handler.mock.calls[0][0].detail.filters;
+    await elementUpdated(el);
+    maxInput.value = '100';
+    maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[1][0].detail.filters).toEqual({
+      amount: { type: 'number-range', min: 50, max: 100 },
+    });
+  });
+
+  it('drops the number-range filter entry when both bounds are cleared', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.filters = { amount: { type: 'number-range', min: 10, max: 100 } };
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-filter-change', handler);
+    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    minInput.value = '';
+    minInput.dispatchEvent(new Event('input', { bubbles: true }));
+    // After clearing min, the next state in the dispatched event still has max=100.
+    el.filters = handler.mock.calls[0][0].detail.filters;
+    await elementUpdated(el);
+    maxInput.value = '';
+    maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(handler.mock.calls[1][0].detail.filters).toEqual({});
+  });
+
+  it('filter inputs drop to tabindex=-1 when keyboardNav is on', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    expect(input.tabIndex).toBe(-1);
+  });
+
+  it('Enter on a focused filter cell focuses its input (text-entry pattern)', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    // Filter row is the second tr in thead — index 1.
+    const filterRow = el.querySelector('thead tr.civ-data-grid__filter-row')!;
+    const firstFilterCell = filterRow.querySelector('.civ-data-grid__filter-cell:not(.civ-data-grid__filter-cell--placeholder)') as HTMLElement;
+    firstFilterCell.focus();
+    expect(document.activeElement).toBe(firstFilterCell);
+    pressKey(firstFilterCell, 'Enter');
+    const input = firstFilterCell.querySelector('input') as HTMLInputElement;
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('Esc from a focused filter input returns focus to its cell', async () => {
+    const el = await mountGrid({ columns: filterColumns, rows: filterRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__filter-cell input[type="text"]') as HTMLInputElement;
+    input.focus();
+    expect(document.activeElement).toBe(input);
+    pressKey(input, 'Escape');
+    const cell = input.closest('.civ-data-grid__filter-cell');
+    expect(document.activeElement).toBe(cell);
+  });
+});

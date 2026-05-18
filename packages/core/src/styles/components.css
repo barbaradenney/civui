@@ -37,10 +37,13 @@
   /* Inline-block: intrinsic-size interactive boxes that flow with text. */
   civ-action-button,
   civ-action-link,
+  civ-breadcrumb-item,
   civ-button,
   civ-icon,
   civ-menu,
-  civ-segment {
+  civ-nav-item,
+  civ-segment,
+  civ-tab {
     display: inline-block;
   }
 
@@ -48,6 +51,7 @@
   civ-action-sheet,
   civ-address,
   civ-alert,
+  civ-breadcrumb,
   civ-bulk-actions,
   civ-button-group,
   civ-card,
@@ -84,6 +88,7 @@
   civ-menu-item,
   civ-modal,
   civ-name,
+  civ-nav,
   civ-number,
   civ-page-header,
   civ-pagination,
@@ -108,6 +113,8 @@
   civ-ssn,
   civ-summary,
   civ-support-resources,
+  civ-tab-panel,
+  civ-tabs,
   civ-text-input,
   civ-textarea,
   civ-time-picker,
@@ -3100,6 +3107,118 @@
     .civ-progress-fill--complete {
       background-color: var(--civ-color-success-dark);
     }
+  }
+
+  /* ── Breadcrumb ────────────────────────────────────────────── */
+
+  .civ-breadcrumb__list {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-1
+           civ-list-none civ-p-0 civ-m-0;
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
+  /* Chevron separator rendered between adjacent items. CSS owns this
+     so consumers don't ship a separator character per item — the
+     separator scales with text and stays out of the accessible name. */
+  civ-breadcrumb-item + civ-breadcrumb-item::before {
+    content: "›";
+    @apply civ-mx-1 civ-text-base-dark;
+    speak: none;
+  }
+
+  .civ-breadcrumb__link {
+    @apply civ-text-primary civ-underline;
+  }
+  .civ-breadcrumb__link:hover {
+    @apply civ-text-primary-dark;
+  }
+
+  .civ-breadcrumb__current {
+    @apply civ-font-bold;
+    color: var(--civ-color-base-darkest);
+  }
+
+  /* ── Nav (top-level horizontal site nav) ─────────────────── */
+
+  .civ-nav__list {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-1
+           civ-list-none civ-p-0 civ-m-0;
+  }
+
+  .civ-nav__link {
+    @apply civ-inline-flex civ-items-center civ-px-3 civ-py-2
+           civ-rounded civ-font-bold civ-no-underline;
+    color: var(--civ-color-base-darkest);
+    font-size: var(--civ-typography-fontSize-base);
+  }
+  .civ-nav__link:hover {
+    @apply civ-text-primary civ-underline;
+  }
+
+  /* Active page: persistent underline + primary color so the current
+     page reads as visited even before keyboard focus. */
+  .civ-nav__link--current {
+    @apply civ-text-primary civ-underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+  }
+
+  .civ-nav__link--disabled {
+    @apply civ-cursor-not-allowed civ-no-underline;
+    opacity: var(--civ-opacity-disabled);
+  }
+  .civ-nav__link--disabled:hover {
+    @apply civ-no-underline;
+    color: var(--civ-color-base-darkest);
+  }
+
+  @media (max-width: 480px) {
+    .civ-nav__list {
+      @apply civ-flex-col civ-items-stretch civ-gap-0;
+    }
+    .civ-nav__link {
+      @apply civ-block civ-py-3;
+    }
+  }
+
+  /* ── Tabs ─────────────────────────────────────────────────── */
+
+  .civ-tabs__list {
+    @apply civ-flex civ-flex-wrap civ-items-stretch civ-gap-0
+           civ-border-b-2 civ-border-base-light;
+  }
+
+  .civ-tabs__panels {
+    @apply civ-pt-4;
+  }
+
+  .civ-tab {
+    @apply civ-inline-flex civ-items-center civ-px-4 civ-py-2
+           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-font-bold;
+    color: var(--civ-color-base-darkest);
+    font-size: var(--civ-typography-fontSize-base);
+    /* Pull the bottom border up so the selected indicator sits on the
+       tablist's bottom rule rather than below it. */
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+  }
+  .civ-tab:hover:not(:disabled) {
+    @apply civ-text-primary;
+  }
+
+  .civ-tab--selected {
+    color: var(--civ-color-primary-DEFAULT);
+    border-bottom-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-tab:disabled,
+  .civ-tab--disabled {
+    @apply civ-cursor-not-allowed;
+    opacity: var(--civ-opacity-disabled);
+  }
+
+  .civ-tab-panel[hidden] {
+    display: none;
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */

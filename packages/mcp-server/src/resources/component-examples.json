@@ -34,6 +34,13 @@
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     },
     {
+      "story": "ExportToCsv",
+      "name": "Export to CSV / JSON",
+      "category": "Layout/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <p class=\"civ-m-0\">\n          Select rows below, then preview an export. In production the\n          consumer would create a Blob URL and trigger a download instead\n          of printing — the utility is the same.\n        </p>\n        <div class=\"civ-flex civ-gap-2\">\n          <civ-action-button id=\"story-export-csv\" variant=\"secondary\" icon-start=\"download\" label=\"Export all (CSV)\"></civ-action-button>\n          <civ-action-button id=\"story-export-json\" variant=\"secondary\" icon-start=\"download\" label=\"Export all (JSON)\"></civ-action-button>\n          <civ-action-button id=\"story-export-selected\" variant=\"secondary\" icon-start=\"download\" label=\"Export selection (CSV)\"></civ-action-button>\n        </div>\n        <civ-data-grid class=\"story-export\" caption=\"Applications (export demo)\"></civ-data-grid>\n        <pre id=\"story-export-out\" style=\"background: var(--civ-color-base-lightest); padding: var(--civ-spacing-3); border-radius: 4px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 0.85em;\">Click an export button to preview the output.</pre>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
       "story": "Pressed",
       "name": "Toggle (Pressed)",
       "category": "Actions/Action Button",
@@ -268,6 +275,32 @@
       "category": "Feedback/Badge",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-badge variant=\"info\" label=\"Info\" with-icon></civ-badge>\n      <civ-badge variant=\"success\" label=\"Approved\" with-icon></civ-badge>\n      <civ-badge variant=\"warning\" label=\"Pending\" with-icon></civ-badge>\n      <civ-badge variant=\"error\" label=\"Denied\" with-icon></civ-badge>\n      <civ-badge variant=\"neutral\" label=\"Draft\" with-icon></civ-badge>\n    </div>",
       "source": "packages/feedback/src/badge/civ-badge.stories.ts"
+    }
+  ],
+  "civ-breadcrumb": [
+    {
+      "story": "CustomLandmarkName",
+      "category": "Navigation/Breadcrumb",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      Use the <code>label</code> prop to name the landmark when a page has more than one breadcrumb trail.\n    </p>\n    <civ-breadcrumb label=\"Section path\">\n      <civ-breadcrumb-item href=\"/forms\" label=\"Forms\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"VA Form 10-10EZ\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
+      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Navigation/Breadcrumb",
+      "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits\" label=\"Benefits\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Healthcare\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
+      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+    },
+    {
+      "story": "FourLevels",
+      "category": "Navigation/Breadcrumb",
+      "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits\" label=\"Benefits\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits/healthcare\" label=\"Healthcare\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Apply\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
+      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+    },
+    {
+      "story": "TwoLevels",
+      "category": "Navigation/Breadcrumb",
+      "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Benefits\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
+      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
     }
   ],
   "civ-bulk-actions": [
@@ -1112,6 +1145,20 @@
   ],
   "civ-data-grid": [
     {
+      "story": "Aggregations",
+      "name": "Aggregator footer + group subtotals",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          Each column with <code>aggregate</code> contributes a per-group\n          subtotal row plus a grand-total in the sticky <code>&lt;tfoot&gt;</code>.\n          Custom function aggregators do the formatting (currency,\n          decimals, \"Total:\" / \"Avg:\" prefixes).\n        </p>\n        <div style=\"max-height: 360px; overflow-y: auto; border: 1px solid var(--civ-color-base-lighter);\">\n          <civ-data-grid\n            class=\"story-aggregate\"\n            caption=\"Applications with subtotals\"\n            bordered\n          ></civ-data-grid>\n        </div>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "ColumnFiltering",
+      "name": "Per-column filtering",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          Type, select, or set a min/max — the grid dispatches\n          <code>civ-filter-change</code> with the new full filter state,\n          and the consumer applies the filter via\n          <code>applyGridFilters</code> from <code>@civui/data/filter</code>.\n        </p>\n        <civ-data-grid\n          class=\"story-filter\"\n          caption=\"Applications (with per-column filters)\"\n          bordered\n        ></civ-data-grid>\n        <p id=\"story-filter-status\" class=\"civ-mt-3\" aria-live=\"polite\"></p>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-default\" caption=\"Veterans benefits applications\"></civ-data-grid>",
@@ -1137,9 +1184,51 @@
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
+      "story": "ExpandableNestedGrid",
+      "name": "Expandable Rows → nested civ-data-grid",
+      "category": "Layout/Data Grid",
+      "html": "<p class=\"civ-m-0 civ-mb-2\"><strong>Supporting documents for ${row.id}</strong></p>\n          <civ-data-grid\n            caption=\"Documents for ${row.id}\"\n            caption-hidden\n            .columns=${[\n              { key: 'name', header: 'Document name' },\n              { key: 'type', header: 'Type' },\n              { key: 'uploaded', header: 'Uploaded', align: 'end' },\n            ]}\n            .rows=${docs}\n          ></civ-data-grid>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "GroupBy",
+      "name": "Group-by collapsible groups",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          Rows are grouped by the <strong>Type</strong> column. Click a\n          chevron to collapse a group; its data rows hide while the header\n          stays.\n        </p>\n        <civ-data-grid class=\"story-groupby\" caption=\"Applications grouped by type\"></civ-data-grid>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "InlineCellEditing",
+      "name": "Inline Cell Editing",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          Click <strong>Applicant</strong> or <strong>Type</strong> cells to edit.\n          Enter or blur commits; Escape cancels. Applicant requires ≥3 characters.\n        </p>\n        <civ-data-grid class=\"story-edit\" caption=\"Applications (editable)\"></civ-data-grid>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "KeyboardNavigation",
+      "name": "Keyboard grid navigation (role=",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          With <code>keyboardNav</code>, the table promotes to\n          <code>role=\"grid\"</code> and becomes a single tab stop. Once\n          focused, use:\n        </p>\n        <ul class=\"civ-mb-4\" style=\"line-height: 1.7;\">\n          <li><kbd>Tab</kbd> — focus the grid; <kbd>Tab</kbd> again leaves it.</li>\n          <li><kbd>← → ↑ ↓</kbd> — move between cells.</li>\n          <li><kbd>Home</kbd> / <kbd>End</kbd> — first / last cell in the current row.</li>\n          <li><kbd>Ctrl+Home</kbd> / <kbd>Ctrl+End</kbd> — first / last cell in the grid.</li>\n          <li><kbd>PageUp</kbd> / <kbd>PageDown</kbd> — jump 10 rows.</li>\n          <li><kbd>Enter</kbd> / <kbd>Space</kbd> — activate the cell (sort, toggle checkbox, open menu, start edit).</li>\n          <li><kbd>F2</kbd> — start edit on editable cells (Excel convention).</li>\n          <li><kbd>Esc</kbd> — cancel an active edit.</li>\n        </ul>\n        <civ-data-grid\n          class=\"story-keynav\"\n          caption=\"Applications — keyboard-navigable\"\n          keyboard-nav\n          bordered\n        ></civ-data-grid>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
       "story": "Loading",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid loading caption=\"Loading applications\"></civ-data-grid>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "MasterDetailDrawer",
+      "name": "Master-Detail (row → civ-drawer)",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">Click any row to view its detail.</p>\n        <civ-data-grid class=\"story-detail\" caption=\"Applications\"></civ-data-grid>\n        <civ-drawer class=\"story-detail\" position=\"end\" heading=\"Application details\">\n          <dl id=\"story-detail-fields\" style=\"margin: 0;\"></dl>\n        </civ-drawer>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "MultiColumnSort",
+      "name": "Multi-column sort (Shift-click)",
+      "category": "Layout/Data Grid",
+      "html": "<div>\n        <p class=\"civ-mb-3\">\n          Click a header to sort by that column alone.\n          <strong>Shift-click</strong> additional headers to add them as\n          secondary / tertiary sort keys — the priority badge (1, 2, 3…)\n          next to the chevron shows the order. Shift-click an active key\n          again to flip its direction; a third shift-click removes it.\n        </p>\n        <civ-data-grid\n          class=\"story-multisort\"\n          caption=\"Applications (multi-column sort)\"\n          bordered\n        ></civ-data-grid>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
@@ -1172,6 +1261,20 @@
       "story": "Sortable",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-sortable\" caption=\"Applications (sortable)\"></civ-data-grid>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "StickyColumns",
+      "name": "Sticky Columns (pinned start)",
+      "category": "Layout/Data Grid",
+      "html": "<div style=\"max-width: 700px;\">\n        <p class=\"civ-mb-3\">\n          ID and Applicant are pinned to the leading edge. Scroll horizontally —\n          they stay visible while the rest of the columns slide under.\n        </p>\n        <civ-data-grid class=\"story-sticky\" caption=\"Applications (wide table)\"></civ-data-grid>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "StickyEndColumn",
+      "name": "Sticky Column (pinned end)",
+      "category": "Layout/Data Grid",
+      "html": "<div style=\"max-width: 700px;\">\n        <p class=\"civ-mb-3\">\n          The Last updated column is pinned to the trailing edge.\n        </p>\n        <civ-data-grid class=\"story-sticky-end\" caption=\"Applications (sticky end)\"></civ-data-grid>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
@@ -3178,6 +3281,38 @@
       "source": "packages/compound/src/name/civ-name.stories.ts"
     }
   ],
+  "civ-nav": [
+    {
+      "story": "Default",
+      "category": "Navigation/Nav",
+      "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/forms\" label=\"Forms\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
+      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+    },
+    {
+      "story": "FooterNavigation",
+      "category": "Navigation/Nav",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      Multiple navs on the same page each need a distinct <code>label</code>.\n    </p>\n    <civ-nav label=\"Footer navigation\">\n      <civ-nav-item href=\"/privacy\" label=\"Privacy\"></civ-nav-item>\n      <civ-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-nav-item>\n      <civ-nav-item href=\"/foia\" label=\"FOIA\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
+      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+    },
+    {
+      "story": "MobileStacking",
+      "category": "Navigation/Nav",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      At ≤480px the items stack vertically. Resize the viewport to see it.\n    </p>\n    <div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-nav label=\"Primary navigation\">\n        <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n        <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n        <civ-nav-item href=\"/forms\" label=\"Forms\"></civ-nav-item>\n        <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n      </civ-nav>\n    </div>",
+      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+    },
+    {
+      "story": "NoActivePage",
+      "category": "Navigation/Nav",
+      "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\"></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
+      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+    },
+    {
+      "story": "WithDisabled",
+      "category": "Navigation/Nav",
+      "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/admin\" label=\"Admin\" disabled></civ-nav-item>\n    </civ-nav>",
+      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+    }
+  ],
   "civ-number": [
     {
       "story": "Decimal",
@@ -4838,6 +4973,38 @@
       "source": "packages/form-patterns/src/support-resources/civ-support-resources.stories.ts"
     }
   ],
+  "civ-tabs": [
+    {
+      "story": "Default",
+      "category": "Navigation/Tabs",
+      "html": "<civ-tabs label=\"Account settings\" value=\"profile\">\n      <civ-tab value=\"profile\" label=\"Profile\"></civ-tab>\n      <civ-tab value=\"security\" label=\"Security\"></civ-tab>\n      <civ-tab value=\"notifications\" label=\"Notifications\"></civ-tab>\n\n      <civ-tab-panel value=\"profile\">\n        <h3 class=\"civ-mt-0\">Profile</h3>\n        <p>Update your display name, photo, and contact preferences.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"security\">\n        <h3 class=\"civ-mt-0\">Security</h3>\n        <p>Change your password, manage sign-in devices, and review login history.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"notifications\">\n        <h3 class=\"civ-mt-0\">Notifications</h3>\n        <p>Choose which updates we send by email and text.</p>\n      </civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+    },
+    {
+      "story": "Keyboard",
+      "category": "Navigation/Tabs",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      Focus a tab and try <kbd>←</kbd> / <kbd>→</kbd> to move between tabs,\n      <kbd>Home</kbd> / <kbd>End</kbd> to jump to first / last.\n    </p>\n    <civ-tabs label=\"Keyboard demo\" value=\"first\">\n      <civ-tab value=\"first\" label=\"First\"></civ-tab>\n      <civ-tab value=\"second\" label=\"Second\"></civ-tab>\n      <civ-tab value=\"third\" label=\"Third\"></civ-tab>\n      <civ-tab value=\"fourth\" label=\"Fourth\"></civ-tab>\n\n      <civ-tab-panel value=\"first\">Panel 1 content.</civ-tab-panel>\n      <civ-tab-panel value=\"second\">Panel 2 content.</civ-tab-panel>\n      <civ-tab-panel value=\"third\">Panel 3 content.</civ-tab-panel>\n      <civ-tab-panel value=\"fourth\">Panel 4 content.</civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+    },
+    {
+      "story": "RichPanelContent",
+      "category": "Navigation/Tabs",
+      "html": "<civ-tabs label=\"Application overview\" value=\"summary\">\n      <civ-tab value=\"summary\" label=\"Summary\"></civ-tab>\n      <civ-tab value=\"documents\" label=\"Documents (4)\"></civ-tab>\n      <civ-tab value=\"history\" label=\"History\"></civ-tab>\n\n      <civ-tab-panel value=\"summary\">\n        <h3 class=\"civ-mt-0\">Application VA-21P-527</h3>\n        <p>Pension claim filed on May 5, 2026. Currently under review.</p>\n        <civ-button variant=\"primary\">Continue application</civ-button>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"documents\">\n        <ul>\n          <li>DD-214 — uploaded May 1, 2026</li>\n          <li>Marriage certificate — uploaded May 2, 2026</li>\n          <li>Birth certificate — uploaded May 3, 2026</li>\n          <li>VA Form 21-526EZ — submitted May 5, 2026</li>\n        </ul>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"history\">\n        <p>Activity history will appear here once your application is processed.</p>\n      </civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+    },
+    {
+      "story": "TwoTabs",
+      "category": "Navigation/Tabs",
+      "html": "<civ-tabs label=\"Application status\">\n      <civ-tab value=\"open\" label=\"Open (3)\"></civ-tab>\n      <civ-tab value=\"closed\" label=\"Closed\"></civ-tab>\n\n      <civ-tab-panel value=\"open\">Three open applications.</civ-tab-panel>\n      <civ-tab-panel value=\"closed\">No closed applications yet.</civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+    },
+    {
+      "story": "WithDisabledTab",
+      "category": "Navigation/Tabs",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      Disabled tabs are skipped by arrow-key navigation.\n    </p>\n    <civ-tabs label=\"Forms\" value=\"active\">\n      <civ-tab value=\"active\" label=\"Active forms\"></civ-tab>\n      <civ-tab value=\"drafts\" label=\"Drafts\"></civ-tab>\n      <civ-tab value=\"archived\" label=\"Archived\" disabled></civ-tab>\n\n      <civ-tab-panel value=\"active\">Forms you're actively working on.</civ-tab-panel>\n      <civ-tab-panel value=\"drafts\">Forms you've saved as drafts.</civ-tab-panel>\n      <civ-tab-panel value=\"archived\">Archive is empty.</civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+    }
+  ],
   "civ-tag": [
     {
       "story": "AllVariants",
@@ -5341,6 +5508,20 @@
       "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
     },
     {
+      "story": "BasicAdminList",
+      "name": "Basic admin list (toolbar + grid + pagination)",
+      "category": "Patterns/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input\n            class=\"story-basic-search\"\n            label=\"Search applicants\"\n            type=\"search\"\n            placeholder=\"Name or application ID\"\n          ></civ-text-input>\n          <civ-button\n            data-civ-toolbar-end\n            variant=\"primary\"\n            label=\"New application\"\n            icon-start=\"add\"\n          ></civ-button>\n        </civ-toolbar>\n        <civ-data-grid class=\"story-basic\" caption=\"Applications\"></civ-data-grid>\n        <civ-pagination\n          class=\"story-basic\"\n          item-name=\"application\"\n        ></civ-pagination>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid-patterns.stories.ts"
+    },
+    {
+      "story": "BulkOperations",
+      "name": "Bulk operations (multi-select + bulk-actions bar)",
+      "category": "Patterns/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input label=\"Search applicants\" type=\"search\"></civ-text-input>\n          <civ-button\n            data-civ-toolbar-end\n            variant=\"primary\"\n            label=\"New application\"\n            icon-start=\"add\"\n          ></civ-button>\n        </civ-toolbar>\n        <civ-bulk-actions class=\"story-bulk\" count=\"0\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" icon-start=\"forward\" label=\"Reassign\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger icon-start=\"delete\" label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n        <civ-data-grid class=\"story-bulk\" caption=\"Applications\"></civ-data-grid>\n        <civ-pagination\n          class=\"story-bulk\"\n          item-name=\"application\"\n        ></civ-pagination>\n        <p id=\"story-bulk-log\" class=\"civ-text-sm civ-mt-2\" aria-live=\"polite\"></p>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid-patterns.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Layout/Toolbar",
       "html": "<civ-toolbar label=\"Applications toolbar\">\n      <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n      <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n    </civ-toolbar>",
@@ -5365,6 +5546,13 @@
       "category": "Layout/Data Grid",
       "html": "<div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add application\"></civ-button>\n        </civ-toolbar>\n        <civ-bulk-actions class=\"story-full\" count=\"0\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" icon-start=\"download\" label=\"Export\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n        <civ-data-grid class=\"story-full\" caption=\"Applications\"></civ-data-grid>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "PowerUserGrid",
+      "name": "Power-user grid (filters + column visibility + sort + pagination)",
+      "category": "Patterns/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <civ-toolbar label=\"Applications toolbar\">\n          <civ-text-input label=\"Search applicants\" type=\"search\"></civ-text-input>\n          <civ-column-visibility\n            data-civ-toolbar-end\n            class=\"story-power\"\n          ></civ-column-visibility>\n          <civ-button\n            data-civ-toolbar-end\n            variant=\"primary\"\n            label=\"New application\"\n            icon-start=\"add\"\n          ></civ-button>\n        </civ-toolbar>\n        <civ-data-grid\n          class=\"story-power\"\n          caption=\"Applications (filterable, sortable, hideable columns)\"\n          bordered\n        ></civ-data-grid>\n        <civ-pagination\n          class=\"story-power\"\n          item-name=\"application\"\n        ></civ-pagination>\n      </div>",
+      "source": "packages/data/src/data-grid/civ-data-grid-patterns.stories.ts"
     },
     {
       "story": "StartOnly",

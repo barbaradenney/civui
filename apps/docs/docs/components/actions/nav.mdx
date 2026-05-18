@@ -1,0 +1,73 @@
+---
+title: Nav
+sidebar_position: 8
+sidebar_label: Nav
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import NavProps from "./_nav.props.mdx";
+import NavItemProps from "./_nav-item.props.mdx";
+
+# Nav
+
+`<civ-nav>` + `<civ-nav-item>`
+
+Top-level horizontal site navigation. The parent renders a `<nav>` landmark with a horizontal `<ul>` of `<civ-nav-item>` links. The active item should set `current` — it gets `aria-current="page"` plus a persistent underline so the current page reads as such even without keyboard focus. Items stack vertically on mobile (≤480px).
+
+Single-level only. For dropdown submenus, use a separate menu component.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-nav--default" />
+
+### No active page
+
+<StoryEmbed id="navigation-nav--no-active-page" />
+
+### With disabled item
+
+<StoryEmbed id="navigation-nav--with-disabled" />
+
+### Footer navigation (custom landmark name)
+
+<StoryEmbed id="navigation-nav--footer-navigation" />
+
+### Mobile stacking
+
+<StoryEmbed id="navigation-nav--mobile-stacking" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-nav--default)
+
+## Usage
+
+```html
+<civ-nav label="Primary navigation">
+  <civ-nav-item href="/" label="Home" current></civ-nav-item>
+  <civ-nav-item href="/benefits" label="Benefits"></civ-nav-item>
+  <civ-nav-item href="/forms" label="Forms"></civ-nav-item>
+  <civ-nav-item href="/contact" label="Contact"></civ-nav-item>
+</civ-nav>
+```
+
+## Props — civ-nav
+
+<NavProps />
+
+## Props — civ-nav-item
+
+<NavItemProps />
+
+## Accessibility
+
+- Renders as a `<nav>` landmark. Always set `label` when a page has more than one nav so screen-reader landmark navigation can distinguish them.
+- Each link inherits the global focus ring from `civ.css`.
+- The active item uses `aria-current="page"` so the user's location is announced.
+- Disabled items render as a non-interactive `<span>` with `aria-disabled="true"` — a `disabled` `<a>` would still be focusable, so we drop the href entirely.
+
+## When to use a different component
+
+- For a navigation affordance that should look like a button, use `<civ-button href="…">`.
+- For inline links in body prose, use `<civ-link>`.
+- For per-row action clusters (Edit, Remove next to a card), use `<civ-button>` or `<civ-action-button>`.

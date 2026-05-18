@@ -1,0 +1,61 @@
+---
+title: Breadcrumb
+sidebar_position: 7
+sidebar_label: Breadcrumb
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import BreadcrumbProps from "./_breadcrumb.props.mdx";
+import BreadcrumbItemProps from "./_breadcrumb-item.props.mdx";
+
+# Breadcrumb
+
+`<civ-breadcrumb>` + `<civ-breadcrumb-item>`
+
+A breadcrumb trail showing the user's path through a hierarchy. The parent renders a `<nav>` landmark containing an `<ol>` of items. The last item should set `current` (or omit `href`) — that item renders as a non-link `<span aria-current="page">`. Chevron separators between items are added by CSS so consumers don't have to ship a separator character per item.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-breadcrumb--default" />
+
+### Two levels
+
+<StoryEmbed id="navigation-breadcrumb--two-levels" />
+
+### Four levels
+
+<StoryEmbed id="navigation-breadcrumb--four-levels" />
+
+### Custom landmark name
+
+<StoryEmbed id="navigation-breadcrumb--custom-landmark-name" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-breadcrumb--default)
+
+## Usage
+
+```html
+<civ-breadcrumb>
+  <civ-breadcrumb-item href="/" label="Home"></civ-breadcrumb-item>
+  <civ-breadcrumb-item href="/benefits" label="Benefits"></civ-breadcrumb-item>
+  <civ-breadcrumb-item label="Healthcare" current></civ-breadcrumb-item>
+</civ-breadcrumb>
+```
+
+The final crumb represents the current page — either set `current` or omit `href`. Both render the same non-link `<span aria-current="page">` element.
+
+## Props — civ-breadcrumb
+
+<BreadcrumbProps />
+
+## Props — civ-breadcrumb-item
+
+<BreadcrumbItemProps />
+
+## Accessibility
+
+- Renders as a `<nav>` landmark with `aria-label="Breadcrumb"` by default. Override with the `label` prop when a page has more than one breadcrumb trail.
+- The current page uses `aria-current="page"` so screen readers announce the user's position.
+- Chevron separators are decorative (rendered via CSS `::before`) and are not part of the accessible name.

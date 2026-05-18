@@ -174,6 +174,10 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-progress-steps': 'form/progress.mdx',
   'civ-progress-header': 'form/progress.mdx',
   'civ-progress-percent': 'form/progress.mdx',
+  'civ-breadcrumb-item': 'actions/breadcrumb.mdx',
+  'civ-nav-item': 'actions/nav.mdx',
+  'civ-tab': 'actions/tabs.mdx',
+  'civ-tab-panel': 'actions/tabs.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

@@ -939,9 +939,16 @@ describe('civ-data-grid — inline cell editing', () => {
     el.addEventListener('civ-cell-edit-commit', handler);
     (el.querySelector('tbody td') as HTMLElement).click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    input.value = 'Doe';
-    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    // The cell editor is now <civ-text-input spacing="sm">. User typing
+    // fires `input` on the inner <input>, which civ-text-input handles to
+    // update its `value` property. The grid listens for `focusout` (which
+    // bubbles, unlike `blur`) so the listener on the host fires when the
+    // inner input loses focus.
+    const host = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const inner = host.querySelector('input') as HTMLInputElement;
+    inner.value = 'Doe';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     expect(handler).toHaveBeenCalledOnce();
     expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
   });
@@ -1083,10 +1090,13 @@ describe('civ-data-grid — inline cell editing', () => {
     // Start edit on Name.
     (el.querySelector('tbody td:first-child') as HTMLElement).click();
     await elementUpdated(el);
-    const inputA = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    inputA.value = 'Doe';
-    // Simulate blur (browser fires it when the user clicks elsewhere).
-    inputA.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    const hostA = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const innerA = hostA.querySelector('input') as HTMLInputElement;
+    innerA.value = 'Doe';
+    innerA.dispatchEvent(new Event('input', { bubbles: true }));
+    // Simulate the blur that fires when the user clicks elsewhere. Production
+    // listens for `focusout` (which bubbles to the host) since `blur` does not.
+    innerA.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
 
     // Then click the Role cell.
     (el.querySelectorAll('tbody td')[1] as HTMLElement).click();
@@ -1139,10 +1149,13 @@ describe('civ-data-grid — inline cell editing', () => {
     el.addEventListener('civ-cell-edit-commit', handler);
     (el.querySelector('tbody td') as HTMLElement).click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    input.value = 'Doe';
+    const host = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const inner = host.querySelector('input') as HTMLInputElement;
+    inner.value = 'Doe';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
     // Simulate the blur that would happen on a click outside the grid.
-    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    // `focusout` bubbles (unlike `blur`) so the host's listener fires.
+    inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     expect(handler).toHaveBeenCalledOnce();
     expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
   });

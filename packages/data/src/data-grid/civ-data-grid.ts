@@ -1088,7 +1088,7 @@ export class CivDataGrid extends CivBaseElement {
           allow-negative
           .value="${value}"
           @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
-          @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+          @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
           ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
         ></civ-number>
       `;
@@ -1103,7 +1103,7 @@ export class CivDataGrid extends CivBaseElement {
         disable-analytics
         .value="${value}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
-        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+        @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
         ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
       ></civ-text-input>
     `;
@@ -1128,7 +1128,7 @@ export class CivDataGrid extends CivBaseElement {
         .value="${value}"
         .options="${options}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
-        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
+        @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
         ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
       ></civ-select>
     `;

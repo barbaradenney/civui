@@ -32,16 +32,27 @@ const schema: ComponentSchema = {
     },
     sortBy: {
       type: 'string',
-      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`',
+      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`. When `multiSort` is on, this mirrors the PRIMARY (first) sort key in `sortKeys` for backward-compat readers',
       default: '',
       attribute: 'sort-by',
     },
     sortDirection: {
       type: 'enum',
-      description: 'Current sort direction. `none` clears the sort indicator',
+      description: 'Current sort direction. `none` clears the sort indicator. When `multiSort` is on, mirrors `sortKeys[0].direction` (or `none` when the stack is empty)',
       values: ['asc', 'desc', 'none'],
       default: 'none',
       attribute: 'sort-direction',
+    },
+    multiSort: {
+      type: 'boolean',
+      description: 'Opt into multi-column sort. When enabled, Shift-click a sortable header to add it to the sort stack (or cycle / remove it); plain click replaces the stack with a single key. Position badges (1, 2, 3…) render next to the chevron when the stack has more than one key. The `civ-sort` event always carries the full target stack in `sortKeys`',
+      default: false,
+      attribute: 'multi-sort',
+    },
+    sortKeys: {
+      type: 'string',
+      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]` (`{ key: string, direction: \'asc\' | \'desc\' }[]`) — the type is `string` here only because the schema doesn\'t model arrays of objects. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
+      webOnly: true,
     },
     responsive: {
       type: 'enum',
@@ -152,10 +163,11 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-sort': {
-      description: 'Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` accordingly (and re-fetch / re-sort data)',
+      description: 'Fires when the user activates a sortable column header. The consumer should update `sortBy` and `sortDirection` (single-sort mode) or `sortKeys` (multi-sort mode) accordingly and re-fetch / re-sort data',
       detail: {
-        column: { type: 'string', description: 'The new column key being sorted by (empty string when sort was cleared)' },
-        direction: { type: 'string', description: 'The new direction: `asc`, `desc`, or `none`' },
+        column: { type: 'string', description: 'The just-toggled column key, or empty string when the column was cleared from the sort' },
+        direction: { type: 'string', description: 'The just-toggled column\'s new direction: `asc`, `desc`, or `none` (when cleared)' },
+        sortKeys: { type: 'object', description: 'The full target sort stack as `GridSortKey[]`. Single-element when `multiSort` is off; empty array when sort was cleared. Use this in multi-sort mode; `column` / `direction` are kept for backward-compat single-sort consumers' },
       },
     },
     'civ-selection-change': {

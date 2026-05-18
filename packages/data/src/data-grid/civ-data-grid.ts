@@ -11,6 +11,7 @@ import type {
   GridRow,
   GridRowAction,
   GridSortDirection,
+  GridSortKey,
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
@@ -28,6 +29,7 @@ export type {
   GridRow,
   GridRowAction,
   GridSortDirection,
+  GridSortKey,
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
@@ -67,8 +69,10 @@ export type {
  * @prop {boolean} captionHidden - Visually hide the caption (still announced to AT).
  * @prop {Array} columns - Column definitions (JS property; no HTML attribute).
  * @prop {Array} rows - Row data (JS property; no HTML attribute).
- * @prop {string} sortBy - Currently-sorted column key. Empty string = no active sort.
- * @prop {string} sortDirection - 'asc' | 'desc' | 'none'.
+ * @prop {string} sortBy - Currently-sorted column key. Empty string = no active sort. When `multiSort` is on, this reflects the PRIMARY sort key (mirrors `sortKeys[0]`) for backward-compat readers; the full stack is in `sortKeys`.
+ * @prop {string} sortDirection - 'asc' | 'desc' | 'none'. When `multiSort` is on, mirrors `sortKeys[0].direction` (or `'none'` when the stack is empty).
+ * @prop {boolean} multiSort - Opt into multi-column sort. When enabled, Shift-click a sortable header to add it to the sort stack; plain click replaces the stack. Position badges (1, 2, 3…) render next to chevrons when the stack has more than one key.
+ * @prop {Array} sortKeys - Multi-column sort stack (controlled). Each entry is `{ key, direction }`; entries earlier in the array are higher-priority. Update in response to `civ-sort` (which always includes `sortKeys` in its detail).
  * @prop {string} responsive - 'stacked' (default) collapses to vertical blocks on mobile; 'scroll' wraps in a horizontal scroll region.
  * @prop {boolean} stickyHeader - Sticks the header row to the top while scrolling vertically.
  * @prop {string} selectable - 'none' | 'single' | 'multiple' — row-selection mode.
@@ -86,7 +90,7 @@ export type {
  * @prop {boolean} stickyFooter - Pin the aggregator footer to the bottom of the scrolling container.
  * @prop {boolean} showGroupSubtotals - When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group (default `true`).
  *
- * @fires civ-sort - { column, direction } — user clicked a sortable column header
+ * @fires civ-sort - { column, direction, sortKeys } — user clicked a sortable column header. `column` + `direction` describe the just-toggled column (for backward-compat consumers); `sortKeys` is the full target stack (always present, single-element when `multiSort` is off).
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
  * @fires civ-row-action - { rowId, action, row } — user activated a row-action item
  * @fires civ-row-activate - { rowId, row } — user clicked a row body when `interactive` is set (master-detail trigger)
@@ -126,6 +130,8 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: String, attribute: 'sort-by' }) sortBy = '';
   @property({ type: String, attribute: 'sort-direction' })
   sortDirection: GridSortDirection = 'none';
+  @property({ type: Boolean, attribute: 'multi-sort' }) multiSort = false;
+  @property({ attribute: false }) sortKeys?: GridSortKey[];
   @property({ type: String }) responsive: GridResponsiveMode = 'stacked';
   @property({ type: Boolean, attribute: 'sticky-header' }) stickyHeader = false;
   @property({ type: String }) selectable: GridSelectionMode = 'none';
@@ -249,13 +255,12 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _renderHeaderCell(col: GridColumn): TemplateResult {
-    const isSorted = this.sortBy === col.key;
+    // Resolve the column's current sort state — in multi-sort mode read
+    // from the sortKeys stack; otherwise use the single sortBy / sortDirection.
+    const sortInfo = this._sortInfoForColumn(col.key);
+    const isSorted = sortInfo !== null;
     const ariaSort = isSorted
-      ? (this.sortDirection === 'asc'
-          ? 'ascending'
-          : this.sortDirection === 'desc'
-            ? 'descending'
-            : 'none')
+      ? (sortInfo.direction === 'asc' ? 'ascending' : 'descending')
       : 'none';
     const alignClass = col.align ? `civ-data-grid__th--align-${col.align}` : '';
     const widthStyle = col.width ? `width: ${col.width};` : '';
@@ -273,11 +278,17 @@ export class CivDataGrid extends CivBaseElement {
     }
 
     const sortIcon = isSorted
-      ? (this.sortDirection === 'asc' ? 'chevron-up' : 'chevron-down')
+      ? (sortInfo.direction === 'asc' ? 'chevron-up' : 'chevron-down')
       : 'unfold-more';
-    const sortLabel = isSorted && this.sortDirection === 'asc'
+    const sortLabel = isSorted && sortInfo.direction === 'asc'
       ? t('dataGridSortDescending').replace('{column}', col.header)
       : t('dataGridSortAscending').replace('{column}', col.header);
+    // Position badge: render "1, 2, 3…" next to the chevron when the
+    // multi-sort stack has more than one key, so the priority order is
+    // visible. Skipped for the single-key case to keep the visual quiet.
+    const showPositionBadge = this.multiSort
+      && isSorted
+      && this._activeSortKeys().length > 1;
 
     return html`
       <th
@@ -290,13 +301,44 @@ export class CivDataGrid extends CivBaseElement {
           type="button"
           class="civ-data-grid__sort-btn"
           aria-label="${sortLabel}"
-          @click="${() => this._onSortClick(col.key)}"
+          @click="${(e: MouseEvent) => this._onSortClick(col.key, e.shiftKey)}"
         >
           <span>${col.header}</span>
           <civ-icon name="${sortIcon}" aria-hidden="true"></civ-icon>
+          ${showPositionBadge
+            ? html`<span class="civ-data-grid__sort-position" aria-hidden="true">${sortInfo!.position + 1}</span>`
+            : nothing}
         </button>
       </th>
     `;
+  }
+
+  /**
+   * Look up a column's current sort state. In multi-sort mode, returns
+   * `{ direction, position }` from `sortKeys` (or null if absent). In
+   * single-sort mode, returns `{ direction, position: 0 }` when this
+   * column is the active sort, or null otherwise.
+   */
+  private _sortInfoForColumn(columnKey: string): { direction: 'asc' | 'desc'; position: number } | null {
+    if (this.multiSort) {
+      const idx = (this.sortKeys ?? []).findIndex((k) => k.key === columnKey);
+      if (idx === -1) return null;
+      return { direction: this.sortKeys![idx].direction, position: idx };
+    }
+    if (this.sortBy === columnKey && (this.sortDirection === 'asc' || this.sortDirection === 'desc')) {
+      return { direction: this.sortDirection, position: 0 };
+    }
+    return null;
+  }
+
+  /** Current active sort keys — `sortKeys` in multi-sort mode, or a
+   *  synthetic single-element array derived from `sortBy` / `sortDirection`. */
+  private _activeSortKeys(): GridSortKey[] {
+    if (this.multiSort) return this.sortKeys ?? [];
+    if (this.sortBy && (this.sortDirection === 'asc' || this.sortDirection === 'desc')) {
+      return [{ key: this.sortBy, direction: this.sortDirection }];
+    }
+    return [];
   }
 
   private _renderBody(): TemplateResult | Array<TemplateResult | TemplateResult[]> {
@@ -1232,21 +1274,64 @@ export class CivDataGrid extends CivBaseElement {
     `;
   }
 
-  private _onSortClick(columnKey: string): void {
-    let nextDirection: GridSortDirection;
-    if (this.sortBy !== columnKey) {
-      nextDirection = 'asc';
-    } else if (this.sortDirection === 'asc') {
-      nextDirection = 'desc';
-    } else if (this.sortDirection === 'desc') {
-      nextDirection = 'none';
+  private _onSortClick(columnKey: string, shiftKey: boolean): void {
+    const nextKeys = this._computeNextSortKeys(columnKey, shiftKey);
+    // Find what changed for the just-toggled column so the event detail
+    // can carry the column / direction backward-compat shape.
+    const prevEntry = this._activeSortKeys().find((k) => k.key === columnKey);
+    const nextEntry = nextKeys.find((k) => k.key === columnKey);
+    let column: string;
+    let direction: GridSortDirection;
+    if (nextEntry) {
+      column = columnKey;
+      direction = nextEntry.direction;
+    } else if (prevEntry) {
+      // Toggled off — report 'none' for this column.
+      column = '';
+      direction = 'none';
     } else {
-      nextDirection = 'asc';
+      // Edge case (shouldn't happen): report cleared.
+      column = '';
+      direction = 'none';
     }
-    dispatch(this, 'civ-sort', {
-      column: nextDirection === 'none' ? '' : columnKey,
-      direction: nextDirection,
-    });
+    dispatch(this, 'civ-sort', { column, direction, sortKeys: nextKeys });
+  }
+
+  /**
+   * Pure state machine for the sort stack — single-sort cycle when
+   * `multiSort` is off (or no Shift), multi-sort add / cycle / remove
+   * when Shift is held and `multiSort` is on. Single-sort cycle:
+   * asc → desc → none. Shift+click cycle in multi-sort: add (asc) → desc
+   * → remove from stack.
+   */
+  private _computeNextSortKeys(columnKey: string, shiftKey: boolean): GridSortKey[] {
+    const current = this._activeSortKeys();
+    if (!this.multiSort || !shiftKey) {
+      // Plain click — single-key sort, cycle through asc / desc / none on
+      // the same column, or replace the stack with a fresh asc on a new
+      // column.
+      const onlyEntry = current[0];
+      if (onlyEntry && onlyEntry.key === columnKey) {
+        if (onlyEntry.direction === 'asc') return [{ key: columnKey, direction: 'desc' }];
+        return []; // desc → cleared
+      }
+      return [{ key: columnKey, direction: 'asc' }];
+    }
+    // Shift+click in multi-sort mode — modify the existing stack.
+    const idx = current.findIndex((k) => k.key === columnKey);
+    if (idx === -1) {
+      // Column not yet in stack — append with asc.
+      return [...current, { key: columnKey, direction: 'asc' }];
+    }
+    const entry = current[idx];
+    if (entry.direction === 'asc') {
+      // Cycle to desc, in place.
+      const next = [...current];
+      next[idx] = { key: columnKey, direction: 'desc' };
+      return next;
+    }
+    // desc — remove from stack.
+    return current.filter((k) => k.key !== columnKey);
   }
 
   private _toggleRowSelected(rowId: string): void {

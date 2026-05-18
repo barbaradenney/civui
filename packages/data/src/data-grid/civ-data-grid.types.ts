@@ -4,6 +4,16 @@ import type { TemplateResult } from 'lit';
 export type GridSortDirection = 'asc' | 'desc' | 'none';
 
 /**
+ * A single entry in a multi-column sort stack. `direction` here is always
+ * directional — a cleared sort is represented by the column being absent
+ * from the `sortKeys` array, not by an entry with `direction: 'none'`.
+ */
+export interface GridSortKey {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+/**
  * Mobile responsive behavior for narrow viewports (≤480px).
  * - `'stacked'` — each row collapses to a vertical label/value block (USWDS stacked pattern).
  * - `'scroll'` — wraps the table in a horizontally-scrollable region; rows stay tabular.

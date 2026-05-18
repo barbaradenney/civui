@@ -767,6 +767,69 @@ export const KeyboardNavigation: Story = {
   },
 };
 
+export const MultiColumnSort: Story = {
+  name: 'Multi-column sort (Shift-click)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-multisort') as any;
+      if (!grid) return;
+      const allRows = SAMPLE_DATA.map((d) => ({
+        id: d.id,
+        cells: { applicant: d.applicant, type: d.type, status: d.status, updated: d.updated },
+      }));
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true },
+        { key: 'type', header: 'Type', sortable: true },
+        { key: 'status', header: 'Status', sortable: true },
+        { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
+      ];
+      grid.columns = cols;
+      grid.rows = [...allRows];
+      grid.multiSort = true;
+      grid.sortKeys = [];
+      // Client-side sort that honors the full stack.
+      const applySort = (keys: { key: string; direction: 'asc' | 'desc' }[]) => {
+        if (keys.length === 0) {
+          grid.rows = [...allRows];
+          return;
+        }
+        const sorted = [...allRows].sort((a, b) => {
+          for (const { key, direction } of keys) {
+            const av = String(a.cells[key] ?? '');
+            const bv = String(b.cells[key] ?? '');
+            if (av === bv) continue;
+            const cmp = av < bv ? -1 : 1;
+            return direction === 'asc' ? cmp : -cmp;
+          }
+          return 0;
+        });
+        grid.rows = sorted;
+      };
+      grid.addEventListener('civ-sort', (e: Event) => {
+        const { sortKeys } = (e as CustomEvent).detail;
+        grid.sortKeys = sortKeys;
+        applySort(sortKeys);
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          Click a header to sort by that column alone.
+          <strong>Shift-click</strong> additional headers to add them as
+          secondary / tertiary sort keys — the priority badge (1, 2, 3…)
+          next to the chevron shows the order. Shift-click an active key
+          again to flip its direction; a third shift-click removes it.
+        </p>
+        <civ-data-grid
+          class="story-multisort"
+          caption="Applications (multi-column sort)"
+          bordered
+        ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
 export const Aggregations: Story = {
   name: 'Aggregator footer + group subtotals',
   render: () => {

@@ -146,7 +146,10 @@ describe('civ-data-grid — sorting', () => {
     const nameBtn = el.querySelector('thead th:first-child .civ-data-grid__sort-btn') as HTMLButtonElement;
     nameBtn.click();
     expect(handler).toHaveBeenCalledOnce();
-    expect(handler.mock.calls[0][0].detail).toEqual({ column: 'name', direction: 'asc' });
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('name');
+    expect(detail.direction).toBe('asc');
+    expect(detail.sortKeys).toEqual([{ key: 'name', direction: 'asc' }]);
   });
 
   it('cycles asc → desc → none', async () => {
@@ -155,12 +158,16 @@ describe('civ-data-grid — sorting', () => {
     el.addEventListener('civ-sort', handler);
     const nameBtn = el.querySelector('thead th:first-child .civ-data-grid__sort-btn') as HTMLButtonElement;
     nameBtn.click();
-    expect(handler.mock.calls[0][0].detail).toEqual({ column: 'name', direction: 'desc' });
+    expect(handler.mock.calls[0][0].detail.column).toBe('name');
+    expect(handler.mock.calls[0][0].detail.direction).toBe('desc');
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'desc' }]);
 
     el.sortDirection = 'desc';
     await elementUpdated(el);
     nameBtn.click();
-    expect(handler.mock.calls[1][0].detail).toEqual({ column: '', direction: 'none' });
+    expect(handler.mock.calls[1][0].detail.column).toBe('');
+    expect(handler.mock.calls[1][0].detail.direction).toBe('none');
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([]);
   });
 });
 
@@ -2493,5 +2500,149 @@ describe('civ-data-grid — aggregator footer', () => {
     expect(footerCells[0].getAttribute('role')).toBe('gridcell');
     // All cells start with tabindex=-1 except focused (0, 0).
     footerCells.forEach((c) => expect((c as HTMLElement).tabIndex).toBe(-1));
+  });
+});
+
+describe('civ-data-grid — multi-column sort', () => {
+  const sortCols: GridColumn[] = [
+    { key: 'name', header: 'Name', sortable: true },
+    { key: 'status', header: 'Status', sortable: true },
+    { key: 'updated', header: 'Updated', sortable: true },
+  ];
+
+  function clickHeader(el: any, columnKey: string, shiftKey = false) {
+    const cols = ['name', 'status', 'updated'];
+    const idx = cols.indexOf(columnKey);
+    const btn = el.querySelectorAll('thead .civ-data-grid__sort-btn')[idx] as HTMLButtonElement;
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, shiftKey }));
+  }
+
+  it('without multiSort=true, shift-click is ignored (single-sort cycle as today)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Click name → asc
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'asc' }]);
+    // Shift-click status — should REPLACE (since multiSort is off), not add.
+    el.sortBy = 'name';
+    el.sortDirection = 'asc';
+    await elementUpdated(el);
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([{ key: 'status', direction: 'asc' }]);
+  });
+
+  it('with multiSort=true, plain click on a new column replaces the stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'status', direction: 'asc' }]);
+  });
+
+  it('with multiSort=true, plain click on the active column cycles asc → desc → none', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([{ key: 'name', direction: 'desc' }]);
+    el.sortKeys = [{ key: 'name', direction: 'desc' }];
+    await elementUpdated(el);
+    clickHeader(el, 'name', false);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([]);
+  });
+
+  it('with multiSort=true, shift-click ADDS a new column to the stack (asc)', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ]);
+  });
+
+  it('with multiSort=true, shift-click on an existing column cycles asc → desc → removed', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'asc' },
+    ];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    // Shift-click status (asc → desc, in-place).
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[0][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ]);
+    el.sortKeys = handler.mock.calls[0][0].detail.sortKeys;
+    await elementUpdated(el);
+    // Shift-click again (desc → removed).
+    clickHeader(el, 'status', true);
+    expect(handler.mock.calls[1][0].detail.sortKeys).toEqual([
+      { key: 'name', direction: 'asc' },
+    ]);
+  });
+
+  it('renders a position badge next to the chevron when the stack has more than one key', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const badges = el.querySelectorAll('.civ-data-grid__sort-position');
+    expect(badges).toHaveLength(2);
+    expect(badges[0].textContent?.trim()).toBe('1');
+    expect(badges[1].textContent?.trim()).toBe('2');
+  });
+
+  it('does NOT render a position badge for a single-key sort', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    expect(el.querySelectorAll('.civ-data-grid__sort-position')).toHaveLength(0);
+  });
+
+  it('sets aria-sort correctly for every column in the multi-sort stack', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [
+      { key: 'name', direction: 'asc' },
+      { key: 'status', direction: 'desc' },
+    ];
+    await elementUpdated(el);
+    const ths = el.querySelectorAll('thead .civ-data-grid__th--sortable');
+    expect(ths[0].getAttribute('aria-sort')).toBe('ascending');
+    expect(ths[1].getAttribute('aria-sort')).toBe('descending');
+    expect(ths[2].getAttribute('aria-sort')).toBe('none');
+  });
+
+  it('civ-sort event carries column + direction for the just-toggled column even in multi-sort mode', async () => {
+    const el = await mountGrid({ columns: sortCols });
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    clickHeader(el, 'status', true);
+    const detail = handler.mock.calls[0][0].detail;
+    expect(detail.column).toBe('status');
+    expect(detail.direction).toBe('asc');
   });
 });

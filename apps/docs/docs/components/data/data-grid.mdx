@@ -45,6 +45,10 @@ For admin screens with many interactive cells — sort, expand, edit, select, ro
 
 <StoryEmbed id="layout-data-grid--sortable" minHeight={400} />
 
+### Multi-column sort
+
+<StoryEmbed id="layout-data-grid--multi-column-sort" minHeight={400} />
+
 ### Multiple selection
 
 <StoryEmbed id="layout-data-grid--multiple-selection" minHeight={400} />
@@ -141,6 +145,74 @@ interface GridColumn {
   formatter?: (value: unknown, row: GridRow, rowIndex: number) => string | number | TemplateResult;
 }
 ```
+
+## Multi-column sort
+
+By default, the grid is single-sort: clicking a header cycles `asc → desc → none` on that column alone. Set `multiSort` to opt into stacked sort keys — the Excel / Sheets behavior where Shift-click adds a secondary key, then a tertiary, etc.
+
+```html
+<civ-data-grid caption="Applications" multi-sort></civ-data-grid>
+```
+
+### State shape
+
+When `multiSort` is on, `sortKeys` is the source of truth:
+
+```ts
+interface GridSortKey {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+grid.sortKeys = [
+  { key: 'status',  direction: 'asc' },   // primary
+  { key: 'updated', direction: 'desc' },  // secondary
+];
+```
+
+`sortBy` / `sortDirection` continue to reflect the **primary** (first) key for backward-compat readers — but in multi-sort mode you should manage `sortKeys` directly.
+
+### Interaction model
+
+- **Plain click** on any header — replaces the stack with a single key on that column, cycling `asc → desc → none` if it's already the only one.
+- **Shift-click** on a header NOT in the stack — appends it (asc).
+- **Shift-click** on a header already in the stack — cycles its direction `asc → desc → removed`.
+
+Position badges (`1, 2, 3…`) render next to the chevron when the stack has more than one key, so the priority order is visible. A single-key stack omits the badge (no "1" on a column that's the only sort).
+
+### Event detail
+
+Every `civ-sort` event carries both shapes:
+
+```ts
+grid.addEventListener('civ-sort', (e) => {
+  const { column, direction, sortKeys } = e.detail;
+  // - column / direction describe the JUST-toggled column (single-sort consumers can use this)
+  // - sortKeys is the full target stack (multi-sort consumers use this)
+  grid.sortKeys = sortKeys;
+  rerenderRowsWithSort(sortKeys);
+});
+```
+
+For a client-side multi-key sort:
+
+```ts
+function applySort(rows, keys) {
+  if (keys.length === 0) return rows;
+  return [...rows].sort((a, b) => {
+    for (const { key, direction } of keys) {
+      const av = a.cells[key];
+      const bv = b.cells[key];
+      if (av === bv) continue;
+      const cmp = av < bv ? -1 : 1;
+      return direction === 'asc' ? cmp : -cmp;
+    }
+    return 0;
+  });
+}
+```
+
+For server-side, hand the array to your query API. Most SQL engines accept it as an `ORDER BY` clause.
 
 ## Row definition
 
@@ -763,9 +835,13 @@ pager.addEventListener('civ-page-change', (e) => {
 
 ## Coming in follow-up work
 
-- **Multi-column sort** — Shift-click to add secondary / tertiary sort keys
-- **Saved views / presets** — user-saveable named bundles of column visibility + filters + sort
-- **URL state persistence** — sync sort / filter / page to query params for shareable views
-- **Native iOS / Android implementations** — schema is in place; native bodies are placeholders until a dedicated implementation pass
+The web component is feature-complete for v1. Two convenience layers remain on the wishlist; pick them up when a consumer explicitly asks:
 
-See `.claude/rules/audit-debt.md` for the implementation backlog.
+- **Saved views / presets** — user-saveable named bundles of column visibility + filters + sort. Composes existing primitives; the only new piece is a storage abstraction (consumer-controlled by default).
+- **URL state persistence** — sync sort / filters / page to query params for shareable filtered views. Pure utility module; no component changes.
+
+The remaining real work is platform parity:
+
+- **Native iOS / Android implementations** — schema is in place; native bodies are placeholders. This is a dedicated implementation pass, not a feature pass — see `.claude/rules/audit-debt.md`.
+
+Out of scope for this component (AG-Grid-Enterprise-tier features that government admin tools rarely need): column resizing, column reordering, row drag-reordering, virtual scrolling, cell-range selection, clipboard, header tooltips, truncation tooltips. Open an issue if a real consumer needs one.

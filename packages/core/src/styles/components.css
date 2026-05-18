@@ -2384,6 +2384,17 @@
       var(--civ-focus-outline-color);
   }
 
+  /* Windows High Contrast Mode — the inset box-shadow halo is dropped by
+     the OS, so make the outline transparent so the system Highlight color
+     replaces it (per GOV.UK forced-colors pattern). */
+  @media (forced-colors: active) {
+    .civ-data-grid--keyboard-nav .civ-data-grid__th:focus,
+    .civ-data-grid--keyboard-nav .civ-data-grid__td:focus {
+      outline: var(--civ-focus-outline-width) solid transparent;
+      outline-offset: calc(-1 * var(--civ-focus-outline-width));
+    }
+  }
+
   .civ-data-grid__state {
     @apply civ-text-center civ-py-6;
     color: var(--civ-color-base-dark);

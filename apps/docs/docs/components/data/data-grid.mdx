@@ -429,7 +429,7 @@ Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key naviga
 | <kbd>PageDown</kbd> / <kbd>PageUp</kbd> | Jump ±10 rows (clamped to the grid). |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control — sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
 | <kbd>F2</kbd> | Start edit on an editable cell (Excel convention). No-op on other cells. |
-| <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell — so after closing an action menu, `Esc` walks back out to the cell so arrow keys resume. |
+| <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell (see [Escape returns focus to the cell](#escape-returns-focus-to-the-cell)). |
 
 ### Activation model
 
@@ -465,9 +465,15 @@ Explicit horizontal navigation (`←` / `→`, `Home` / `End`, mouse click) upda
 
 ### Escape returns focus to the cell
 
-When focus has moved off the cell onto an inner control — e.g. after the user opened an action menu and then closed it, leaving focus on the kebab trigger — pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern: inner widgets handle their own `Esc` first (a menu closes itself), then the grid catches the second `Esc` to escape back to the cell.
+When focus has moved off the cell onto an inner control — e.g. a sort button after clicking it, or the row-actions kebab after closing its menu — pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern.
 
-Arrow keys also continue to work directly from an inner control — the keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate.
+When a `<civ-menu>` is currently open inside a cell, the grid intentionally bails on `Esc` so the menu can close itself and restore focus to its trigger; the next `Esc` (now with the menu closed) walks the focus from the trigger back out to the cell. Two presses → cell focused → arrows resume.
+
+Arrow keys also continue to work directly from an inner control — the keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate vertically out of a sort button.
+
+### Screen reader mode
+
+`role="grid"` flips JAWS / NVDA / VoiceOver into "applications" or "forms" mode while focus is inside the grid: the standard table-reading shortcuts (T to jump tables, Ctrl+Alt+Arrow to move by row / column) are suppressed in favor of the application's own arrow-key handling — which is now the grid's. This is the intended WAI-ARIA Grid behavior. **Leave `keyboardNav` off for simple readable tables** so SR users keep their normal table-reading affordances.
 
 ### When to use it
 

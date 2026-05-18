@@ -593,21 +593,19 @@
   .civ-error-text,
   .civ-error-text--group {
     @apply civ-flex civ-items-start civ-gap-1 civ-mb-1 civ-text-sm civ-text-error civ-font-bold;
-    text-box-trim: both;
-    text-box-edge: cap alphabetic;
   }
 
-  /* Inline error icon (filled circle with !). Sized to match the
-     error-text cap-height so the icon optically aligns with the first
-     line of text. The small top inset compensates for the icon's
-     internal padding so it sits flush with the cap height rather than
-     the line-box. */
+  /* Inline error icon (filled circle with !). Matches the text's
+     font-size and line-height so the icon's line-box has the same
+     height as the first line of text. Combined with `align-items:
+     start`, this aligns the icon's vertical center with the text's
+     vertical center on the first line — and the icon stays put when
+     the text wraps to a second line (hanging-indent layout). */
   .civ-error-text__icon,
   .civ-error-text--group .civ-error-text__icon {
     flex-shrink: 0;
-    font-size: 1.125em;
-    line-height: 1;
-    margin-top: 0.0625em;
+    font-size: 1em;
+    line-height: inherit;
   }
 
   .civ-error-text__msg {

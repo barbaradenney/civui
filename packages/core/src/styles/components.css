@@ -2368,6 +2368,22 @@
     cursor: pointer;
   }
 
+  /* Keyboard-nav focus indicator on the focused cell. The global focus
+     rule (civ.css) already matches `[tabindex]:not([tabindex="-1"]):focus`
+     and would fire on the focused cell — but its halo (box-shadow) paints
+     OUTSIDE the cell and would bleed into adjacent cells. Override here to
+     paint the focus treatment as an inset ring instead, so it stays inside
+     the cell bounds. Same colors, same layering (dark band + yellow halo),
+     just inverted from outside-the-cell to inside-the-cell. */
+  .civ-data-grid--keyboard-nav .civ-data-grid__th:focus,
+  .civ-data-grid--keyboard-nav .civ-data-grid__td:focus {
+    outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
+    outline-offset: calc(-1 * var(--civ-focus-outline-width));
+    box-shadow: inset 0 0 0
+      calc(var(--civ-focus-outline-width) + var(--civ-focus-shadow-spread))
+      var(--civ-focus-outline-color);
+  }
+
   .civ-data-grid__state {
     @apply civ-text-center civ-py-6;
     color: var(--civ-color-base-dark);

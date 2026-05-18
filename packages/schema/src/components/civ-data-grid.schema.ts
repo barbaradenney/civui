@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-data-grid',
-  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Uses native `<table>` semantics (not `role="grid"`) per WAI-ARIA APG recommendation for predominantly readable tabular data.',
+  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Defaults to native `<table>` semantics for simple readable data; opt in to `keyboardNav` for spreadsheet-style 2D arrow-key navigation per the WAI-ARIA Grid Pattern.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -123,6 +123,12 @@ const schema: ComponentSchema = {
       type: 'string',
       description: 'Render callback for group header labels. `(groupKey, rows) => string`. When omitted, the header reads `{groupKey} ({count})`. Use to render readable labels for technical keys (e.g. `\'in-review\'` → `\'In review (3)\'`)',
       webOnly: true,
+    },
+    keyboardNav: {
+      type: 'boolean',
+      description: 'Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. Inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so the whole grid becomes a single tab stop; Enter / Space activate the cell\'s primary control, F2 enters edit mode on editable cells, Home / End move to row bounds, Ctrl+Home / Ctrl+End move to grid corners, PageUp / PageDown step ±10 rows. Recommended for admin screens with many interactive cells; leave off for simple readable tables',
+      default: false,
+      attribute: 'keyboard-nav',
     },
   },
 

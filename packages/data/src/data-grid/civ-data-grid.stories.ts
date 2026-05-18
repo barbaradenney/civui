@@ -692,6 +692,79 @@ export const ExportToCsv: Story = {
   },
 };
 
+export const KeyboardNavigation: Story = {
+  name: 'Keyboard grid navigation (role="grid")',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-keynav') as any;
+      if (!grid) return;
+      const cols: GridColumn[] = [
+        { key: 'applicant', header: 'Applicant', sortable: true },
+        { key: 'type', header: 'Type' },
+        { key: 'status', header: 'Status', editable: true, inputType: 'select', options: [
+          { value: 'In review', label: 'In review' },
+          { value: 'Approved', label: 'Approved' },
+          { value: 'Pending', label: 'Pending' },
+          { value: 'Denied', label: 'Denied' },
+        ]},
+        { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
+      ];
+      let data = [...SAMPLE_DATA];
+      const rows: GridRow[] = data.map((d) => ({
+        id: d.id,
+        cells: { applicant: d.applicant, type: d.type, status: d.status, updated: d.updated },
+        actions: [
+          { id: 'view', label: 'View details' },
+          { id: 'edit', label: 'Edit' },
+        ],
+      }));
+      grid.columns = cols;
+      grid.rows = rows;
+      grid.selectable = 'multiple';
+      grid.selectedRowIds = [];
+      grid.addEventListener('civ-selection-change', (e: Event) => {
+        grid.selectedRowIds = (e as CustomEvent).detail.selectedRowIds;
+      });
+      grid.addEventListener('civ-sort', (e: Event) => {
+        const { column, direction } = (e as CustomEvent).detail;
+        grid.sortBy = column;
+        grid.sortDirection = direction;
+      });
+      grid.addEventListener('civ-cell-edit-commit', (e: Event) => {
+        const { rowId, columnKey, value } = (e as CustomEvent).detail;
+        grid.rows = grid.rows.map((r: GridRow) =>
+          r.id === rowId ? { ...r, cells: { ...r.cells, [columnKey]: value } } : r,
+        );
+      });
+    }, 0);
+    return html`
+      <div>
+        <p class="civ-mb-3">
+          With <code>keyboardNav</code>, the table promotes to
+          <code>role="grid"</code> and becomes a single tab stop. Once
+          focused, use:
+        </p>
+        <ul class="civ-mb-4" style="line-height: 1.7;">
+          <li><kbd>Tab</kbd> — focus the grid; <kbd>Tab</kbd> again leaves it.</li>
+          <li><kbd>← → ↑ ↓</kbd> — move between cells.</li>
+          <li><kbd>Home</kbd> / <kbd>End</kbd> — first / last cell in the current row.</li>
+          <li><kbd>Ctrl+Home</kbd> / <kbd>Ctrl+End</kbd> — first / last cell in the grid.</li>
+          <li><kbd>PageUp</kbd> / <kbd>PageDown</kbd> — jump 10 rows.</li>
+          <li><kbd>Enter</kbd> / <kbd>Space</kbd> — activate the cell (sort, toggle checkbox, open menu, start edit).</li>
+          <li><kbd>F2</kbd> — start edit on editable cells (Excel convention).</li>
+          <li><kbd>Esc</kbd> — cancel an active edit.</li>
+        </ul>
+        <civ-data-grid
+          class="story-keynav"
+          caption="Applications — keyboard-navigable"
+          keyboard-nav
+          bordered
+        ></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
 export const GroupBy: Story = {
   name: 'Group-by collapsible groups',
   render: () => {

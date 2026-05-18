@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { fixture, cleanupFixtures, elementUpdated, pressKey } from '@civui/test-utils';
 import './civ-data-grid.js';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 
@@ -1606,5 +1606,262 @@ describe('civ-data-grid — group-by', () => {
     const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
     expect(message).not.toMatch(/groupBy/);
     warn.mockRestore();
+  });
+});
+
+describe('civ-data-grid — keyboard navigation', () => {
+  // Helper — get the 2D cell layout (header row + body rows).
+  function cells(el: any): HTMLElement[][] {
+    const trs = Array.from(el.querySelectorAll('thead tr, tbody tr')) as HTMLElement[];
+    return trs.map((tr) =>
+      Array.from(tr.querySelectorAll(':scope > th, :scope > td')) as HTMLElement[],
+    );
+  }
+
+  it('does NOT promote to role="grid" by default (semantic table is the default)', async () => {
+    const el = await mountGrid();
+    const table = el.querySelector('table.civ-data-grid__table');
+    expect(table?.getAttribute('role')).toBeNull();
+    const ths = el.querySelectorAll('thead th');
+    expect(ths[0]?.getAttribute('role')).toBeNull();
+  });
+
+  it('promotes to role="grid" + role="columnheader" + role="gridcell" when keyboardNav=true', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const table = el.querySelector('table.civ-data-grid__table');
+    expect(table?.getAttribute('role')).toBe('grid');
+    const trs = el.querySelectorAll('thead tr, tbody tr');
+    trs.forEach((tr: Element) => expect(tr.getAttribute('role')).toBe('row'));
+    const headers = el.querySelectorAll('thead th');
+    headers.forEach((th: Element) => expect(th.getAttribute('role')).toBe('columnheader'));
+    const bodyCells = el.querySelectorAll('tbody td');
+    bodyCells.forEach((td: Element) => expect(td.getAttribute('role')).toBe('gridcell'));
+  });
+
+  it('applies roving tabindex — exactly one cell at tabindex=0', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const focusable = el.querySelectorAll(
+      '.civ-data-grid__th[tabindex="0"], .civ-data-grid__td[tabindex="0"]',
+    );
+    expect(focusable.length).toBe(1);
+    // Initial position is (0, 0) — the first header cell.
+    const grid = cells(el);
+    expect(focusable[0]).toBe(grid[0][0]);
+  });
+
+  it('drops inner controls (sort button) to tabindex=-1 when keyboardNav=true', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const sortBtn = el.querySelector('.civ-data-grid__sort-btn') as HTMLButtonElement;
+    expect(sortBtn).not.toBeNull();
+    expect(sortBtn.tabIndex).toBe(-1);
+  });
+
+  it('arrow keys move the roving tabindex between cells', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Start at (0, 0). ArrowRight → (0, 1).
+    pressKey(grid[0][0], 'ArrowRight');
+    expect(grid[0][1].tabIndex).toBe(0);
+    expect(grid[0][0].tabIndex).toBe(-1);
+    // ArrowDown → (1, 1) — first body row, second cell.
+    pressKey(grid[0][1], 'ArrowDown');
+    expect(grid[1][1].tabIndex).toBe(0);
+  });
+
+  it('Home moves to first cell in row; End moves to last cell in row', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Move to (1, 2) first.
+    pressKey(grid[0][0], 'ArrowDown');
+    pressKey(grid[1][0], 'ArrowRight');
+    pressKey(grid[1][1], 'ArrowRight');
+    expect(grid[1][2].tabIndex).toBe(0);
+    // Home → (1, 0)
+    pressKey(grid[1][2], 'Home');
+    expect(grid[1][0].tabIndex).toBe(0);
+    // End → (1, last)
+    pressKey(grid[1][0], 'End');
+    const lastCol = grid[1].length - 1;
+    expect(grid[1][lastCol].tabIndex).toBe(0);
+  });
+
+  it('Ctrl+Home moves to grid (0, 0); Ctrl+End moves to last cell of last row', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Move somewhere in the middle.
+    pressKey(grid[0][0], 'ArrowDown');
+    pressKey(grid[1][0], 'ArrowRight');
+    expect(grid[1][1].tabIndex).toBe(0);
+    // Ctrl+End — last row, last col.
+    pressKey(grid[1][1], 'End', { ctrlKey: true });
+    const lastRow = grid.length - 1;
+    const lastCol = grid[lastRow].length - 1;
+    expect(grid[lastRow][lastCol].tabIndex).toBe(0);
+    // Ctrl+Home — back to (0, 0).
+    pressKey(grid[lastRow][lastCol], 'Home', { ctrlKey: true });
+    expect(grid[0][0].tabIndex).toBe(0);
+  });
+
+  it('PageDown / PageUp move by 10 rows (clamped to the grid)', async () => {
+    // Build a 25-row grid.
+    const manyRows: GridRow[] = Array.from({ length: 25 }, (_, i) => ({
+      id: `r${i}`,
+      cells: { name: `Name ${i}`, status: 'A', updated: '2026-01-01' },
+    }));
+    const el = await mountGrid({ rows: manyRows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // PageDown from (0, 0) → (10, 0)
+    pressKey(grid[0][0], 'PageDown');
+    expect(grid[10][0].tabIndex).toBe(0);
+    // PageDown again → (20, 0)
+    pressKey(grid[10][0], 'PageDown');
+    expect(grid[20][0].tabIndex).toBe(0);
+    // PageDown beyond end clamps to last row (25 body rows + 1 header = 26 rows; last index 25).
+    pressKey(grid[20][0], 'PageDown');
+    expect(grid[grid.length - 1][0].tabIndex).toBe(0);
+    // PageUp from last clamps backward.
+    pressKey(grid[grid.length - 1][0], 'PageUp');
+    expect(grid[grid.length - 11][0].tabIndex).toBe(0);
+  });
+
+  it('Enter on a sortable header activates the column sort', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    const grid = cells(el);
+    pressKey(grid[0][0], 'Enter');
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.column).toBe('name');
+  });
+
+  it('Enter on a select cell toggles row selection', async () => {
+    const el = await mountGrid({ selectable: 'multiple' });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-selection-change', handler);
+    // First body row, first cell = the select cell.
+    const grid = cells(el);
+    pressKey(grid[1][0], 'Enter');
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.selectedRowIds).toEqual(['1']);
+  });
+
+  it('Enter on a plain cell of an interactive row fires civ-row-activate', async () => {
+    const el = await mountGrid({
+      interactive: true,
+      rows: baseRows.map((r) => ({ ...r, actions: [{ id: 'view', label: 'View' }] })),
+    });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-row-activate', handler);
+    // (1, 0) in this grid is the row-actions cell? No — interactive + actions means actions column is present.
+    // Layout: with selectable='none', actions=present: cells are [...visibleColumns, actionsCell]
+    // So (1, 0) is the first data cell (name). Enter → it's plain text → row-activate.
+    const grid = cells(el);
+    pressKey(grid[1][0], 'Enter');
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.rowId).toBe('1');
+  });
+
+  it('F2 on an editable cell enters edit mode', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name' },
+      { key: 'amount', header: 'Amount', editable: true, inputType: 'number' },
+    ];
+    const rows: GridRow[] = [{ id: '1', cells: { name: 'A', amount: 42 } }];
+    const el = await mountGrid({ columns: cols, rows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // (1, 1) is the editable amount cell.
+    pressKey(grid[1][1], 'F2');
+    await elementUpdated(el);
+    expect(el._editingCell).toEqual({ rowId: '1', columnKey: 'amount' });
+    const input = el.querySelector('.civ-data-grid__edit-input');
+    expect(input).not.toBeNull();
+  });
+
+  it('refocuses the cell after edit commits when keyboardNav is on', async () => {
+    const cols: GridColumn[] = [
+      { key: 'name', header: 'Name', editable: true },
+    ];
+    const rows: GridRow[] = [{ id: '1', cells: { name: 'A' } }];
+    const el = await mountGrid({ columns: cols, rows });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    pressKey(grid[1][0], 'F2');
+    await elementUpdated(el);
+    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
+    input.value = 'B';
+    // Simulate Enter on input (which commits).
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    // Edit-cell mode cleared; cell re-focuses.
+    expect(el._editingCell).toBeNull();
+    // Pending focus consumed — the cell should have tabindex=0 and (in a
+    // real browser) the focus would land on it. jsdom's focus() doesn't
+    // throw; the post-render tabindex sync is the observable signal.
+    const after = cells(el);
+    expect(after[1][0].tabIndex).toBe(0);
+  });
+
+  it('reverts to plain semantic table when keyboardNav is toggled off', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    expect(el.querySelector('table')?.getAttribute('role')).toBe('grid');
+    el.keyboardNav = false;
+    await elementUpdated(el);
+    expect(el.querySelector('table')?.getAttribute('role')).toBeNull();
+    // Inner controls regain default tab order (no explicit tabindex).
+    const sortBtn = el.querySelector('.civ-data-grid__sort-btn') as HTMLButtonElement;
+    expect(sortBtn.getAttribute('tabindex')).toBeNull();
+    // Cells lose their tabindex too.
+    const firstTh = el.querySelector('thead th');
+    expect(firstTh?.getAttribute('tabindex')).toBeNull();
+  });
+
+  it('focusin on a cell syncs the roving tabindex (mouse click compatibility)', async () => {
+    const el = await mountGrid();
+    el.keyboardNav = true;
+    await elementUpdated(el);
+    const grid = cells(el);
+    // Dispatch focusin on (2, 1) — simulates user clicking that cell.
+    grid[2][1].dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    expect(grid[2][1].tabIndex).toBe(0);
+    expect(grid[0][0].tabIndex).toBe(-1);
+  });
+
+  it('arrow keys are inert when keyboardNav is off (default)', async () => {
+    const el = await mountGrid();
+    // keyboardNav is false by default.
+    const handler = vi.fn();
+    el.addEventListener('civ-sort', handler);
+    const grid = cells(el);
+    // Headers don't have tabindex=0 because keyboardNav is off, so they
+    // aren't even focusable as a cell — but dispatching the event still
+    // verifies the keydown handler bails out.
+    pressKey(grid[0][0], 'ArrowRight');
+    pressKey(grid[0][0], 'Enter');
+    expect(handler).not.toHaveBeenCalled();
   });
 });

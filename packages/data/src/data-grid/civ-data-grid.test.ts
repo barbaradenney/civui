@@ -1139,3 +1139,148 @@ describe('civ-data-grid — inline cell editing', () => {
   // entirely (`input.value = 'abc'` → ''), so the path is not directly
   // reachable in tests. The behavior is documented inline at the guard.
 });
+
+describe('civ-data-grid — sticky columns', () => {
+  it('does not add sticky classes when no column has sticky', async () => {
+    const el = await mountGrid({
+      columns: [{ key: 'name', header: 'Name' }],
+      rows: [{ id: '1', cells: { name: 'A' } }],
+    });
+    expect(el.querySelector('.civ-data-grid__cell--sticky')).toBeNull();
+  });
+
+  it('applies position: sticky to header and body cells of a start-sticky column', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const th = el.querySelector('thead th:first-child') as HTMLElement;
+    const td = el.querySelector('tbody td:first-child') as HTMLElement;
+    expect(th.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+    expect(th.classList.contains('civ-data-grid__cell--sticky-start')).toBe(true);
+    expect(th.getAttribute('style')).toContain('position: sticky');
+    expect(th.getAttribute('style')).toContain('inset-inline-start: 0');
+    expect(td.getAttribute('style')).toContain('position: sticky');
+  });
+
+  it('does not stick non-sticky columns', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const nonStickyTh = el.querySelectorAll('thead th')[1] as HTMLElement;
+    expect(nonStickyTh.classList.contains('civ-data-grid__cell--sticky')).toBe(false);
+  });
+
+  it('accumulates offsets across multiple start-sticky columns', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name', width: '12rem', sticky: 'start' },
+        { key: 'role', header: 'Role' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith', role: 'Admin' } }],
+    });
+    const ths = el.querySelectorAll('thead th');
+    const first = ths[0] as HTMLElement;
+    const second = ths[1] as HTMLElement;
+    expect(first.getAttribute('style')).toContain('inset-inline-start: 0');
+    // Second sticky column starts after the first's width.
+    expect(second.getAttribute('style')).toMatch(/inset-inline-start:\s*calc\(4rem\)/);
+  });
+
+  it('handles end-sticky columns with right offsets accumulated in reverse', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'name', header: 'Name' },
+        { key: 'a', header: 'A', width: '6rem', sticky: 'end' },
+        { key: 'b', header: 'B', width: '8rem', sticky: 'end' },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', a: 1, b: 2 } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    // Rightmost (B) gets offset 0; A accumulates B's 8rem.
+    expect(ths[2].getAttribute('style')).toContain('inset-inline-end: 0');
+    expect(ths[1].getAttribute('style')).toMatch(/inset-inline-end:\s*calc\(8rem\)/);
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-end')).toBe(true);
+  });
+
+  it('marks the last start-sticky column with the boundary class (for the shadow)', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'name', header: 'Name', width: '12rem', sticky: 'start' },
+        { key: 'role', header: 'Role' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith', role: 'Admin' } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    expect(ths[0].classList.contains('civ-data-grid__cell--sticky-boundary-start')).toBe(false);
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-boundary-start')).toBe(true);
+  });
+
+  it('marks the first end-sticky column with the boundary class', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'name', header: 'Name' },
+        { key: 'a', header: 'A', width: '6rem', sticky: 'end' },
+        { key: 'b', header: 'B', width: '8rem', sticky: 'end' },
+      ],
+      rows: [{ id: '1', cells: { name: 'Smith', a: 1, b: 2 } }],
+    });
+    const ths = el.querySelectorAll('thead th') as NodeListOf<HTMLElement>;
+    // The visually-leftmost end-sticky column (A) is the boundary.
+    expect(ths[1].classList.contains('civ-data-grid__cell--sticky-boundary-end')).toBe(true);
+    expect(ths[2].classList.contains('civ-data-grid__cell--sticky-boundary-end')).toBe(false);
+  });
+
+  it('warns in dev mode when multiple sticky columns share an edge without explicit widths', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        // Second sticky column without width — can't accumulate the offset.
+        { key: 'name', header: 'Name', sticky: 'start' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).toMatch(/civ-data-grid/);
+    expect(message).toMatch(/sticky/);
+    expect(message).toMatch(/width/);
+    warn.mockRestore();
+  });
+
+  it('does not warn when only a single sticky column per edge omits width', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await mountGrid({
+      columns: [
+        // First sticky column — width is fine to omit; offset is 0.
+        { key: 'id', header: 'ID', sticky: 'start' },
+        { key: 'name', header: 'Name' },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1', name: 'Smith' } }],
+    });
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).not.toMatch(/sticky/);
+    warn.mockRestore();
+  });
+
+  it('applies sticky styles to editable cells too', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start', editable: true },
+      ],
+      rows: [{ id: '1', cells: { id: 'A-1' } }],
+    });
+    const td = el.querySelector('tbody td') as HTMLElement;
+    expect(td.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+    expect(td.getAttribute('style')).toContain('position: sticky');
+  });
+});

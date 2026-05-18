@@ -541,3 +541,88 @@ export const InlineCellEditing: Story = {
     `;
   },
 };
+
+export const StickyColumns: Story = {
+  name: 'Sticky Columns (pinned start)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-sticky') as any;
+      if (!grid) return;
+      grid.columns = [
+        { key: 'id', header: 'ID', width: '5rem', sticky: 'start' },
+        { key: 'applicant', header: 'Applicant', width: '14rem', sticky: 'start' },
+        { key: 'type', header: 'Type', width: '10rem' },
+        { key: 'status', header: 'Status', width: '8rem' },
+        { key: 'submitted', header: 'Submitted', width: '8rem' },
+        { key: 'reviewed', header: 'Last reviewed', width: '10rem' },
+        { key: 'reviewer', header: 'Reviewer', width: '12rem' },
+        { key: 'notes', header: 'Notes', width: '20rem' },
+        { key: 'updated', header: 'Last updated', width: '8rem', align: 'end' },
+      ];
+      grid.rows = SAMPLE_DATA.map((d) => ({
+        id: d.id,
+        cells: {
+          id: d.id,
+          applicant: d.applicant,
+          type: d.type,
+          status: d.status,
+          submitted: '2026-04-22',
+          reviewed: '2026-05-09',
+          reviewer: 'Adams, Casey',
+          notes: 'Pending supporting documentation upload from claimant.',
+          updated: d.updated,
+        },
+      }));
+      grid.responsive = 'scroll';
+    }, 0);
+    return html`
+      <div style="max-width: 700px;">
+        <p class="civ-mb-3">
+          ID and Applicant are pinned to the leading edge. Scroll horizontally —
+          they stay visible while the rest of the columns slide under.
+        </p>
+        <civ-data-grid class="story-sticky" caption="Applications (wide table)"></civ-data-grid>
+      </div>
+    `;
+  },
+};
+
+export const StickyEndColumn: Story = {
+  name: 'Sticky Column (pinned end)',
+  render: () => {
+    setTimeout(() => {
+      const grid = document.querySelector('civ-data-grid.story-sticky-end') as any;
+      if (!grid) return;
+      grid.columns = [
+        { key: 'id', header: 'ID', width: '5rem' },
+        { key: 'applicant', header: 'Applicant', width: '14rem' },
+        { key: 'type', header: 'Type', width: '10rem' },
+        { key: 'status', header: 'Status', width: '8rem' },
+        { key: 'submitted', header: 'Submitted', width: '8rem' },
+        { key: 'reviewer', header: 'Reviewer', width: '12rem' },
+        { key: 'updated', header: 'Last updated', width: '10rem', align: 'end', sticky: 'end' },
+      ];
+      grid.rows = SAMPLE_DATA.map((d) => ({
+        id: d.id,
+        cells: {
+          id: d.id,
+          applicant: d.applicant,
+          type: d.type,
+          status: d.status,
+          submitted: '2026-04-22',
+          reviewer: 'Adams, Casey',
+          updated: d.updated,
+        },
+      }));
+      grid.responsive = 'scroll';
+    }, 0);
+    return html`
+      <div style="max-width: 700px;">
+        <p class="civ-mb-3">
+          The Last updated column is pinned to the trailing edge.
+        </p>
+        <civ-data-grid class="story-sticky-end" caption="Applications (sticky end)"></civ-data-grid>
+      </div>
+    `;
+  },
+};

@@ -69,6 +69,8 @@ summary:focus,
 
 /* Z-index scale — named layers for predictable stacking */
 :root {
+  --civ-z-sticky: 1;             /* sticky table cells, above sibling cells */
+  --civ-z-sticky-header: 2;      /* sticky-header cells, above sticky body cells */
   --civ-z-overlay-backdrop: 99;
   --civ-z-overlay: 100;
   --civ-z-skip-link: 9999;

@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     columns: {
       type: 'array',
-      description: 'Column definitions: `{ key, header, sortable?, align?, width?, hidden?, formatter?, editable?, inputType?, options?, validate? }`. Set `editable: true` + `inputType: \'text\' | \'number\' | \'select\'` to make cells in this column click-to-edit; provide `validate(value, row) => string | null` to block invalid commits. The formatter / validate callbacks are web-only; native platforms render and validate values through their own type-mapping logic',
+      description: 'Column definitions: `{ key, header, sortable?, align?, width?, hidden?, sticky?, formatter?, editable?, inputType?, options?, validate? }`. Set `sticky: \'start\' | \'end\'` to pin a column to the leading or trailing edge so it stays visible while the rest of the table scrolls horizontally; multi-column sticky requires explicit `width` on each pinned column so CSS can compute cumulative offsets. Set `editable: true` + `inputType: \'text\' | \'number\' | \'select\'` to make cells in this column click-to-edit; provide `validate(value, row) => string | null` to block invalid commits. The formatter / validate callbacks are web-only; native platforms render and validate values through their own type-mapping logic',
       webOnly: true,
     },
     rows: {

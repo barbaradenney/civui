@@ -3,6 +3,10 @@ import { ref } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
+import '@civui/controls/checkbox';
+import '@civui/inputs/text-input';
+import '@civui/inputs/number';
+import '@civui/inputs/select';
 import '@civui/overlays/menu';
 import { applyAggregator } from '../aggregate/grid-aggregate.js';
 import './civ-data-grid.types.js';
@@ -542,18 +546,20 @@ export class CivDataGrid extends CivBaseElement {
     const cellClass = `civ-data-grid__td civ-data-grid__filter-cell ${sticky.cls}`;
     const cellStyle = sticky.style;
     const current = this.filters[col.key];
+    const ariaLabel = t('dataGridFilterByColumn').replace('{column}', col.header);
     switch (col.filter.type) {
       case 'text':
         return html`
           <td class="${cellClass}" style="${cellStyle}">
-            <input
-              type="text"
+            <civ-text-input
               class="civ-data-grid__filter-input"
-              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              spacing="sm"
+              disable-analytics
+              aria-label="${ariaLabel}"
               placeholder="${col.filter.placeholder ?? ''}"
               .value="${current?.type === 'text' ? current.value : ''}"
-              @input="${(e: Event) => this._onFilterInput(col, e)}"
-            />
+              @civ-input="${(e: Event) => this._onFilterInput(col, e)}"
+            ></civ-text-input>
           </td>
         `;
       case 'select': {
@@ -562,19 +568,16 @@ export class CivDataGrid extends CivBaseElement {
         const value = current?.type === 'select' ? current.value : '';
         return html`
           <td class="${cellClass}" style="${cellStyle}">
-            <select
+            <civ-select
               class="civ-data-grid__filter-input"
-              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              spacing="sm"
+              disable-analytics
+              aria-label="${ariaLabel}"
+              empty-label="${placeholder}"
               .value="${value}"
-              @change="${(e: Event) => this._onFilterInput(col, e)}"
-            >
-              <option value="">${placeholder}</option>
-              ${opts.map(
-                (o) => html`
-                  <option value="${o.value}" ?selected="${value === o.value}">${o.label}</option>
-                `,
-              )}
-            </select>
+              .options="${opts}"
+              @civ-change="${(e: Event) => this._onFilterInput(col, e)}"
+            ></civ-select>
           </td>
         `;
       }
@@ -584,22 +587,28 @@ export class CivDataGrid extends CivBaseElement {
         return html`
           <td class="${cellClass}" style="${cellStyle}">
             <div class="civ-data-grid__filter-range">
-              <input
-                type="number"
+              <civ-number
                 class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                spacing="sm"
+                disable-analytics
+                allow-decimal
+                allow-negative
                 aria-label="${t('dataGridFilterMin').replace('{column}', col.header)}"
                 placeholder="${col.filter.minPlaceholder ?? 'Min'}"
                 .value="${min == null ? '' : String(min)}"
-                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
-              />
-              <input
-                type="number"
+                @civ-input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
+              ></civ-number>
+              <civ-number
                 class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                spacing="sm"
+                disable-analytics
+                allow-decimal
+                allow-negative
                 aria-label="${t('dataGridFilterMax').replace('{column}', col.header)}"
                 placeholder="${col.filter.maxPlaceholder ?? 'Max'}"
                 .value="${max == null ? '' : String(max)}"
-                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
-              />
+                @civ-input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
+              ></civ-number>
             </div>
           </td>
         `;
@@ -608,8 +617,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onFilterInput(col: GridColumn, e: Event): void {
-    const target = e.currentTarget as HTMLInputElement | HTMLSelectElement;
-    const rawValue = target.value;
+    const rawValue = (e as CustomEvent<{ value: string }>).detail.value;
     const next: GridFilters = { ...this.filters };
     if (col.filter?.type === 'text') {
       if (rawValue === '') delete next[col.key];
@@ -622,8 +630,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onFilterRangeInput(col: GridColumn, e: Event, bound: 'min' | 'max'): void {
-    const target = e.currentTarget as HTMLInputElement;
-    const rawValue = target.value;
+    const rawValue = (e as CustomEvent<{ value: string }>).detail.value;
     const current = this.filters[col.key];
     const existing = current?.type === 'number-range' ? current : { type: 'number-range' as const };
     const next: GridFilters = { ...this.filters };
@@ -1066,18 +1073,39 @@ export class CivDataGrid extends CivBaseElement {
     inputType: 'text' | 'number',
     errorId: string | undefined,
   ): TemplateResult {
+    const value = raw == null ? '' : String(raw);
+    const ariaInvalid = errorId ? 'true' : 'false';
+    if (inputType === 'number') {
+      return html`
+        <civ-number
+          class="civ-data-grid__edit-input"
+          aria-label="${col.header}"
+          aria-invalid="${ariaInvalid}"
+          aria-describedby="${errorId ?? nothing}"
+          spacing="sm"
+          disable-analytics
+          allow-decimal
+          allow-negative
+          .value="${value}"
+          @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
+          @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
+          ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+        ></civ-number>
+      `;
+    }
     return html`
-      <input
+      <civ-text-input
         class="civ-data-grid__edit-input"
-        type="${inputType}"
-        .value="${raw == null ? '' : String(raw)}"
         aria-label="${col.header}"
-        aria-invalid="${errorId ? 'true' : 'false'}"
+        aria-invalid="${ariaInvalid}"
         aria-describedby="${errorId ?? nothing}"
+        spacing="sm"
+        disable-analytics
+        .value="${value}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
-        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
-        ${ref((el) => this._focusEditInput(el as HTMLInputElement | undefined))}
-      />
+        @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
+        ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+      ></civ-text-input>
     `;
   }
 
@@ -1088,34 +1116,38 @@ export class CivDataGrid extends CivBaseElement {
     errorId: string | undefined,
   ): TemplateResult {
     const options = col.options ?? [];
+    const value = raw == null ? '' : String(raw);
     return html`
-      <select
+      <civ-select
         class="civ-data-grid__edit-input"
-        .value="${raw == null ? '' : String(raw)}"
         aria-label="${col.header}"
         aria-invalid="${errorId ? 'true' : 'false'}"
         aria-describedby="${errorId ?? nothing}"
+        spacing="sm"
+        disable-analytics
+        .value="${value}"
+        .options="${options}"
         @keydown="${(e: KeyboardEvent) => this._onEditKeydown(e, row, col)}"
-        @blur="${(e: Event) => this._onEditBlur(e, row, col)}"
-        ${ref((el) => this._focusEditInput(el as HTMLSelectElement | undefined))}
-      >
-        ${options.map(
-          (opt) => html`
-            <option value="${opt.value}" ?selected="${String(raw) === opt.value}">${opt.label}</option>
-          `,
-        )}
-      </select>
+        @focusout="${(e: Event) => this._onEditBlur(e, row, col)}"
+        ${ref((el) => this._focusEditInput(el as HTMLElement | undefined))}
+      ></civ-select>
     `;
   }
 
-  private _focusEditInput(el: HTMLInputElement | HTMLSelectElement | undefined): void {
+  private _focusEditInput(el: HTMLElement | undefined): void {
     if (!el) return;
     // Defer to next microtask so the input is attached when we focus.
+    // The element is always a civ-text-input / civ-number / civ-select host
+    // (never a raw <input>); its focus() override forwards to the inner
+    // <input>/<select>. After focus we look up the inner control to call
+    // .select() where supported, so existing text gets selected on
+    // cell-edit entry (the conventional UX for inline editing).
     queueMicrotask(() => {
       if (!el.isConnected) return;
       el.focus();
-      if ('select' in el && typeof el.select === 'function') {
-        try { el.select(); } catch { /* selects don't support .select */ }
+      const inner = el.querySelector?.('input, textarea') as HTMLInputElement | null;
+      if (inner && typeof inner.select === 'function') {
+        try { inner.select(); } catch { /* selects don't support .select */ }
       }
     });
   }
@@ -1229,15 +1261,16 @@ export class CivDataGrid extends CivBaseElement {
     }
     return html`
       <td class="civ-data-grid__td civ-data-grid__td--select">
-        <label class="civ-data-grid__select-wrap">
-          <input
-            type="checkbox"
+        <div class="civ-data-grid__select-wrap">
+          <civ-checkbox
+            spacing="sm"
+            aria-label="${label}"
             .checked="${isSelected}"
             ?disabled="${row.disabled}"
-            aria-label="${label}"
-            @change="${() => this._toggleRowSelected(row.id)}"
-          />
-        </label>
+            disable-analytics
+            @civ-change="${() => this._toggleRowSelected(row.id)}"
+          ></civ-checkbox>
+        </div>
       </td>
     `;
   }
@@ -1248,16 +1281,17 @@ export class CivDataGrid extends CivBaseElement {
     const allSelected = enabledRows.length > 0 && selectedEnabled.length === enabledRows.length;
     const someSelected = selectedEnabled.length > 0 && !allSelected;
     return html`
-      <label class="civ-data-grid__select-wrap">
-        <input
-          type="checkbox"
+      <div class="civ-data-grid__select-wrap">
+        <civ-checkbox
+          spacing="sm"
+          aria-label="${t('dataGridSelectAll')}"
           .checked="${allSelected}"
           .indeterminate="${someSelected}"
           ?disabled="${enabledRows.length === 0}"
-          aria-label="${t('dataGridSelectAll')}"
-          @change="${this._onSelectAllChange}"
-        />
-      </label>
+          disable-analytics
+          @civ-change="${this._onSelectAllChange}"
+        ></civ-checkbox>
+      </div>
     `;
   }
 
@@ -1387,7 +1421,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onSelectAllChange = (e: Event): void => {
-    const checked = (e.target as HTMLInputElement).checked;
+    const checked = (e as CustomEvent<{ checked: boolean }>).detail.checked;
     const enabledIds = this.rows.filter((r) => !r.disabled).map((r) => r.id);
     const next = checked ? enabledIds : [];
     dispatch(this, 'civ-selection-change', { selectedRowIds: next });

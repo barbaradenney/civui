@@ -281,3 +281,25 @@ describe('civ-number', () => {
     expect(el.value).toBe('-12');
   });
 });
+
+describe('civ-number spacing="sm"', () => {
+  it('renders just the bare <input> with no chrome or prefix/suffix decoration', async () => {
+    const el = await fixture(
+      '<civ-number spacing="sm" aria-label="Amount" prefix="$" suffix="kg"></civ-number>',
+    );
+    expect(el.querySelector('input')).not.toBeNull();
+    expect(el.querySelector('.civ-input-prefix')).toBeNull();
+    expect(el.querySelector('.civ-input-suffix')).toBeNull();
+    expect(el.querySelector('.civ-label')).toBeNull();
+  });
+
+  it('propagates host aria-label to the inner <input>', async () => {
+    const el = await fixture('<civ-number spacing="sm" aria-label="Age"></civ-number>');
+    expect(el.querySelector('input')!.getAttribute('aria-label')).toBe('Age');
+  });
+
+  it('applies civ-input--sm class to the inner <input>', async () => {
+    const el = await fixture('<civ-number spacing="sm" aria-label="x"></civ-number>');
+    expect(el.querySelector('input')!.classList.contains('civ-input--sm')).toBe(true);
+  });
+});

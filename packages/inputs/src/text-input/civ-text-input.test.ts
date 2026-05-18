@@ -1213,3 +1213,44 @@ describe('text-input inline icons', () => {
 
   });
 });
+
+describe('civ-text-input spacing="sm"', () => {
+  it('renders just the bare <input> with no chrome', async () => {
+    const el = await fixture(
+      '<civ-text-input spacing="sm" aria-label="Cell" hint="not shown" label="not shown"></civ-text-input>',
+    );
+    expect(el.querySelector('input')).not.toBeNull();
+    expect(el.querySelector('.civ-label')).toBeNull();
+    expect(el.querySelector('.civ-hint')).toBeNull();
+  });
+
+  it('propagates host aria-label to the inner <input>', async () => {
+    const el = await fixture('<civ-text-input spacing="sm" aria-label="Name"></civ-text-input>');
+    expect(el.querySelector('input')!.getAttribute('aria-label')).toBe('Name');
+  });
+
+  it('applies civ-input--sm class to the inner <input>', async () => {
+    const el = await fixture('<civ-text-input spacing="sm" aria-label="x"></civ-text-input>');
+    expect(el.querySelector('input')!.classList.contains('civ-input--sm')).toBe(true);
+  });
+
+  it('forwards focus() to the inner <input>', async () => {
+    const el = await fixture('<civ-text-input spacing="sm" aria-label="x"></civ-text-input>') as HTMLElement;
+    el.focus();
+    expect(document.activeElement).toBe(el.querySelector('input'));
+  });
+
+  it('preserves mask behavior in compact mode', async () => {
+    const el = await fixture(
+      '<civ-text-input spacing="sm" aria-label="SSN" mask="ssn"></civ-text-input>',
+    ) as any;
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = '123456789';
+    input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    input.dispatchEvent(new FocusEvent('blur'));
+    await elementUpdated(el);
+    // Mask preset normalizes ssn to digits — exact display format depends on
+    // mode but raw value is preserved as digits.
+    expect(el.value.replace(/\D/g, '')).toBe('123456789');
+  });
+});

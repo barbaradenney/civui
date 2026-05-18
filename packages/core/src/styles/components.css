@@ -604,6 +604,16 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Compact density — for dense surfaces (data-grid cell editors,
+     column-toggle panels). Reduced vertical padding and slightly smaller
+     font so the control fits a table-row height without wrapping. Used
+     in combination with each input's `spacing="sm"` mode, which also
+     drops the surrounding label / hint / error chrome. */
+  .civ-input--sm {
+    @apply civ-px-2 civ-py-1;
+    font-size: var(--civ-typography-fontSize-sm);
+  }
+
   .civ-input:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;
@@ -841,6 +851,22 @@
     width: var(--civ-spacing-8);
     height: var(--civ-spacing-8);
     flex-shrink: 0;
+  }
+
+  /* Compact size — for dense surfaces (data-grid rows, column-toggle panels).
+     Half the default tap-target; used in combination with spacing="sm" which
+     also drops the tile chrome and hint/description/required-mark. */
+  .civ-check-input--sm {
+    width: var(--civ-spacing-4);
+    height: var(--civ-spacing-4);
+  }
+
+  /* Compact host shouldn't claim the full row — it sits inline inside a
+     data-grid cell or column-toggle panel. Default host is block (set in
+     the host-display rule near the top of this file) so form rows stack
+     correctly; sm mode shrinks the host to intrinsic size. */
+  civ-checkbox[spacing="sm"] {
+    display: inline-block;
   }
 
   .civ-check-input:focus {
@@ -2058,24 +2084,17 @@
     inset-inline-end: 0;
   }
 
+  /* Each option is a <civ-checkbox spacing="sm">. The checkbox handles its
+     own input + label layout via .civ-check-row; this wrapper class adds the
+     panel-row padding and hover state. */
   .civ-column-visibility__option {
-    @apply civ-flex civ-items-center civ-gap-2 civ-px-3 civ-py-2 civ-cursor-pointer;
+    @apply civ-block civ-px-3 civ-py-2;
     color: var(--civ-color-base-darkest);
     user-select: none;
   }
 
   .civ-column-visibility__option:hover {
     background-color: var(--civ-color-base-lightest);
-  }
-
-  .civ-column-visibility__option input[type="checkbox"] {
-    flex-shrink: 0;
-    accent-color: var(--civ-color-primary-DEFAULT);
-  }
-
-  .civ-column-visibility__option-label {
-    flex: 1 1 auto;
-    min-width: 0;
   }
 
   /* ── Data Grid ─────────────────────────────────────────────── */
@@ -2475,21 +2494,12 @@
     vertical-align: middle;
   }
 
+  /* Filter cells host civ-text-input / civ-select / civ-number components
+     in their `spacing="sm"` compact mode. Those components own their own
+     border / padding / focus chrome via `.civ-input--sm`, so this rule is
+     layout-only: full-width inside the cell. */
   .civ-data-grid__filter-input {
     @apply civ-w-full;
-    padding: var(--civ-spacing-1) var(--civ-spacing-2);
-    border: 1px solid var(--civ-color-base-light);
-    border-radius: 4px;
-    background-color: var(--civ-color-white-DEFAULT);
-    font-size: var(--civ-typography-fontSize-sm);
-    line-height: 1.4;
-    box-sizing: border-box;
-  }
-
-  .civ-data-grid__filter-input:focus {
-    outline: none;
-    border-color: var(--civ-color-primary-DEFAULT);
-    box-shadow: 0 0 0 2px var(--civ-color-primary-lighter);
   }
 
   .civ-data-grid__filter-range {
@@ -3148,13 +3158,15 @@
     font-size: var(--civ-typography-fontSize-sm);
   }
 
-  /* Chevron separator rendered between adjacent items. CSS owns this
-     so consumers don't ship a separator character per item — the
-     separator scales with text and stays out of the accessible name. */
+  /* Chevron separator rendered between adjacent items. CSS owns this so
+     consumers don't ship a separator character per item, and the separator
+     scales with text. Pseudo-element content has no accessible name in
+     modern AT engines (the `content` property is treated as decorative),
+     so no extra ARIA wiring is needed. */
   civ-breadcrumb-item + civ-breadcrumb-item::before {
     content: "›";
-    @apply civ-mx-1 civ-text-base-dark;
-    speak: none;
+    @apply civ-mx-1;
+    color: var(--civ-color-base-dark);
   }
 
   .civ-breadcrumb__link {

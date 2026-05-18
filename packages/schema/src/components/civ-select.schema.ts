@@ -31,6 +31,12 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the bare `<select>` with the host\'s `aria-label` propagated for screen-reader text. For dense surfaces like data-grid cell editors',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     autocomplete: {
       type: 'string',
       description: 'Autocomplete hint forwarded to the underlying `<select>`',

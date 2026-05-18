@@ -20,7 +20,11 @@ export default defineConfig({
       '@civui/layout/list': resolve(__dirname, '../layout/src/list/index.ts'),
       '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),
       '@civui/inputs/text-input': resolve(__dirname, '../inputs/src/text-input/index.ts'),
+      '@civui/inputs/number': resolve(__dirname, '../inputs/src/number/index.ts'),
+      '@civui/inputs/select': resolve(__dirname, '../inputs/src/select/index.ts'),
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
+      '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
+      '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
     },
   },
 });

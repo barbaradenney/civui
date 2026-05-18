@@ -61,6 +61,10 @@ public struct CivTextarea: View {
     /// Ignored if `maxlength` is also set.
     public var maxwords: Int?
 
+    /// Density variant — "default" or "sm" (compact). Suppresses chrome
+    /// for use in dense surfaces like data-grid cell editors.
+    public var spacing: String
+
     /// Called on every value change (parallels `civ-input` event).
     public var onInput: ((String) -> Void)?
 
@@ -117,6 +121,7 @@ public struct CivTextarea: View {
         isReadonly: Bool = false,
         placeholder: String? = nil,
         rows: Int = 5,
+        spacing: String = "default",
         maxlength: Int? = nil,
         maxwords: Int? = nil,
         onInput: ((String) -> Void)? = nil,
@@ -141,6 +146,7 @@ public struct CivTextarea: View {
         self.isReadonly = isReadonly
         self.placeholder = placeholder
         self.rows = rows
+        self.spacing = spacing
         self.maxlength = maxlength
         self.maxwords = maxwords
         self.onInput = onInput

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, clickOutside, dispatch, generateId, t } from '@civui/core';
+import '@civui/controls/checkbox';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
 
 /**
@@ -128,7 +129,7 @@ export class CivColumnVisibility extends CivBaseElement {
   }
 
   private _onToggleColumn(key: string, e: Event): void {
-    const checked = (e.target as HTMLInputElement).checked;
+    const checked = (e as CustomEvent<{ checked: boolean }>).detail.checked;
     let next: string[];
     if (checked) {
       // Unhide.
@@ -136,11 +137,15 @@ export class CivColumnVisibility extends CivBaseElement {
     } else {
       // Hide — but enforce minVisible.
       if (this._visibleCount() <= this.minVisible) {
-        // Refuse the toggle. The user's interactive `.checked = false`
-        // mutated the DOM directly, but Lit's property binding caches
-        // the previous value (true) and treats a re-render as a no-op.
-        // Restore by flipping the input back manually.
-        (e.target as HTMLInputElement).checked = true;
+        // Refuse the toggle. civ-checkbox already flipped its internal
+        // `checked` to false in response to the inner input's change
+        // event; restore both the host property and the inner <input>
+        // synchronously so callers (and tests) see the restored state
+        // without awaiting an extra update cycle.
+        const target = e.target as HTMLElement & { checked?: boolean };
+        target.checked = true;
+        const input = target.querySelector('input[type="checkbox"]') as HTMLInputElement | null;
+        if (input) input.checked = true;
         return;
       }
       next = this.hiddenColumns.includes(key)
@@ -185,14 +190,14 @@ export class CivColumnVisibility extends CivBaseElement {
             >
               ${this.columns.map(
                 (col) => html`
-                  <label class="civ-column-visibility__option">
-                    <input
-                      type="checkbox"
-                      .checked="${!this._isHidden(col.key)}"
-                      @change="${(e: Event) => this._onToggleColumn(col.key, e)}"
-                    />
-                    <span class="civ-column-visibility__option-label">${col.header}</span>
-                  </label>
+                  <civ-checkbox
+                    class="civ-column-visibility__option"
+                    spacing="sm"
+                    label="${col.header}"
+                    .checked="${!this._isHidden(col.key)}"
+                    disable-analytics
+                    @civ-change="${(e: Event) => this._onToggleColumn(col.key, e)}"
+                  ></civ-checkbox>
                 `,
               )}
             </div>

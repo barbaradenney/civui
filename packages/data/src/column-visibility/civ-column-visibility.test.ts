@@ -65,7 +65,7 @@ describe('civ-column-visibility', () => {
     el.open = true;
     await elementUpdated(el);
     const labels = Array.from(
-      el.querySelectorAll<HTMLElement>('.civ-column-visibility__option-label'),
+      el.querySelectorAll<HTMLElement>('.civ-column-visibility__option .civ-check-label'),
     ).map((n) => n.textContent?.trim());
     expect(labels).toEqual(['Application ID', 'Applicant', 'Status', 'Last updated']);
   });
@@ -223,7 +223,7 @@ describe('civ-column-visibility', () => {
     el.columns = [...COLUMNS, { key: 'newcol', header: 'New column' }];
     await elementUpdated(el);
     const labels = Array.from(
-      el.querySelectorAll<HTMLElement>('.civ-column-visibility__option-label'),
+      el.querySelectorAll<HTMLElement>('.civ-column-visibility__option .civ-check-label'),
     ).map((n) => n.textContent?.trim());
     expect(labels).toEqual(['Application ID', 'Applicant', 'Status', 'Last updated', 'New column']);
   });

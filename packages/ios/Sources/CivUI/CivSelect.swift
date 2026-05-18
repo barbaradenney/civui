@@ -93,6 +93,10 @@ public struct CivSelect: View {
     /// Width variant for the select field (e.g., "full", "auto").
     public var width: String
 
+    /// Density variant — "default" or "sm" (compact). Suppresses chrome
+    /// for use in dense surfaces like data-grid cell editors.
+    public var spacing: String
+
     /// Autocomplete hint for the browser/OS.
     public var autocomplete: String
 
@@ -126,6 +130,7 @@ public struct CivSelect: View {
         formValidate: (() -> String?)? = nil,
         isPii: Bool = false,
         width: String = "full",
+        spacing: String = "default",
         autocomplete: String = "",
         preset: String = "",
         presetVariant: String = ""
@@ -147,6 +152,7 @@ public struct CivSelect: View {
         self.formValidate = formValidate
         self.isPii = isPii
         self.width = width
+        self.spacing = spacing
         self.autocomplete = autocomplete
         self.preset = preset
         self.presetVariant = presetVariant

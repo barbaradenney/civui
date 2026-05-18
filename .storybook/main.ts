@@ -79,6 +79,7 @@ const config: StorybookConfig = {
       '@civui/inputs/text-input': resolve(root, 'packages/inputs/src/text-input/index.ts'),
       '@civui/inputs/textarea': resolve(root, 'packages/inputs/src/textarea/index.ts'),
       '@civui/inputs/select': resolve(root, 'packages/inputs/src/select/index.ts'),
+      '@civui/inputs/number': resolve(root, 'packages/inputs/src/number/index.ts'),
       '@civui/inputs/memorable-date': resolve(root, 'packages/inputs/src/date-input/index.ts'),
       '@civui/inputs/yes-no': resolve(root, 'packages/inputs/src/yes-no/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),

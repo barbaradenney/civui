@@ -80,6 +80,7 @@ fun CivSelect(
     disabled: Boolean = false,
     readonly: Boolean = false,
     width: String = "full",
+    spacing: String = "default",
     autocomplete: String = "",
     preset: String = "",
     presetVariant: String = "",

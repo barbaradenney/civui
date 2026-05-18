@@ -5,6 +5,7 @@
 |-----------|------|---------|-------------|
 | `type` | `'text'` \| `'email'` \| `'number'` \| `'password'` \| `'search'` \| `'tel'` \| `'url'` | `'text'` | HTML input type controlling keyboard and secure entry |
 | `width` | `'default'` \| `'2xs'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` | `'default'` | Width variant |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the bare `<input>` with the host's `aria-label` propagated for screen-reader text. For use in dense surfaces like data-grid cell editors where the surrounding context labels the control. Mask / validation behavior is preserved in compact mode |
 | `placeholder` | `string` | `''` | Placeholder text (never use as sole label) |
 | `pattern` | `string` | `''` | Validation regex pattern |
 | `maxlength` | `number` | — | Maximum character length |

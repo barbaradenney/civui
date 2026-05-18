@@ -65,6 +65,12 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) max = '';
   @property({ type: String }) placeholder = '';
   @property({ type: String }) locale = 'en-US';
+  /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the input + trigger button with the host's
+   * `aria-label` propagated. For dense surfaces like data-grid cell editors.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
   @property({ type: Number, attribute: 'week-starts-on' }) weekStartsOn = 0;
 
   @property({ type: String, attribute: 'disabled-dates' }) disabledDates = '';
@@ -273,8 +279,20 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     });
   }
 
+  /** Focus the inner text input — used by callers like the data-grid cell editor. */
+  override focus(options?: FocusOptions): void {
+    const input = this.querySelector<HTMLInputElement>('input');
+    if (input) input.focus(options);
+    else super.focus(options);
+  }
+
   override render() {
-    const classes = inputClasses({ rounded: 'civ-rounded-s civ-rounded-e-none' });
+    const isCompact = this.spacing === 'sm';
+    const classes = inputClasses({
+      rounded: 'civ-rounded-s civ-rounded-e-none',
+      extra: isCompact ? ['civ-input--sm'] : undefined,
+    });
+    const ariaLabel = isCompact ? (this.getAttribute('aria-label') || undefined) : undefined;
 
     const selectedDate = this.value ? parseISODate(this.value) : null;
     const buttonLabel = selectedDate
@@ -293,6 +311,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               placeholder="${this.placeholder || t('datePickerPlaceholder')}"
               ?disabled="${this.disabled}"
               ?required="${this.required}"
+              aria-label="${ariaLabel ?? nothing}"
               aria-describedby="${this._ariaDescribedBy || nothing}"
               aria-invalid="${this.error ? 'true' : nothing}"
               @input="${this._onTextInput}"
@@ -322,6 +341,8 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
         ${this._open ? this._renderDialog(selectedDate) : nothing}
       </div>
     `;
+
+    if (isCompact) return inner;
 
     return html`
       <div class="civ-mb-4">

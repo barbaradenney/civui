@@ -51,6 +51,12 @@ const schema: ComponentSchema = {
       values: ['default', 'tiny', 'small', 'medium', 'large'],
       webOnly: true,
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label / hint / error chrome and prefix/suffix decoration. `sm` (compact) renders just the bare `<input>` with the host\'s `aria-label` propagated; prefix/suffix decoration is dropped. For dense surfaces like data-grid cell editors',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
   },
 
   events: {

@@ -45,6 +45,15 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) autocomplete = '';
 
   /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the `<select>` element with the host's
+   * `aria-label` propagated for screen-reader text. For use in dense surfaces
+   * like data-grid cell editors where the surrounding context labels the
+   * control.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
+  /**
    * Pre-populate options from a built-in data set. Available presets:
    * `us-state`, `service-branch`, `discharge-type`, `suffix`,
    * `relationship-type`, `marital-status`, `ethnicity`, `gender`, `language`,
@@ -148,7 +157,16 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
     return ids.join(' ');
   }
 
+  /** Focus the inner <select> — used by callers that wrap civ-select in larger UIs (e.g. data-grid cell editor). */
+  override focus(options?: FocusOptions): void {
+    const select = this.querySelector<HTMLSelectElement>('select');
+    if (select) select.focus(options);
+    else super.focus(options);
+  }
+
   override render() {
+    if (this.spacing === 'sm') return this._renderCompact();
+
     const widthClass = inputWidthClass(this.width);
     const classes = inputClasses({
       extra: ['civ-select-field', widthClass, 'civ-max-w-full'],
@@ -190,6 +208,39 @@ export class CivSelect extends LegendHeadingMixin(CivFormElement) {
         })}
         ${inner}
       </div>
+    `;
+  }
+
+  /**
+   * Compact render — bare <select> with no chrome, host aria-label propagated.
+   *
+   * Unlike default mode, the empty placeholder `<option value="">` is only
+   * rendered when `empty-label` is explicitly set to a non-empty string. This
+   * lets dense surfaces (data-grid cell editor) suppress the phantom "Select…"
+   * row when the column config already provides the full option set. Filter
+   * cells that *want* a placeholder (e.g. "All") opt in by setting
+   * `empty-label="All"`.
+   */
+  private _renderCompact() {
+    const ariaLabel = this.getAttribute('aria-label') || undefined;
+    return html`
+      <select
+        class="civ-input civ-input--sm civ-select-field civ-w-full"
+        id="${this._inputId}"
+        name="${this.name}"
+        .value="${this.value}"
+        ?disabled="${this.disabled || this.readonly}"
+        ?required="${this.required}"
+        autocomplete="${this.autocomplete || nothing}"
+        aria-label="${ariaLabel ?? nothing}"
+        aria-invalid="${this.error ? 'true' : nothing}"
+        @change="${this._onSelectChange}"
+      >
+        ${this.emptyLabel
+          ? html`<option value="">${this.emptyLabel}</option>`
+          : nothing}
+        ${this._renderGroupedOptions()}
+      </select>
     `;
   }
 

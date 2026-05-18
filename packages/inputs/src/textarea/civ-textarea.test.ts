@@ -404,3 +404,24 @@ describe('textarea declarative validate="length"', () => {
     expect(textarea.getAttribute('minlength')).toBe('3');
   });
 });
+
+describe('civ-textarea spacing="sm"', () => {
+  it('renders just the bare <textarea> with no chrome', async () => {
+    const el = await fixture(
+      '<civ-textarea spacing="sm" aria-label="Cell" hint="not shown" label="not shown"></civ-textarea>',
+    );
+    expect(el.querySelector('textarea')).not.toBeNull();
+    expect(el.querySelector('.civ-label')).toBeNull();
+    expect(el.querySelector('.civ-hint')).toBeNull();
+  });
+
+  it('propagates host aria-label to the inner <textarea>', async () => {
+    const el = await fixture('<civ-textarea spacing="sm" aria-label="Notes"></civ-textarea>');
+    expect(el.querySelector('textarea')!.getAttribute('aria-label')).toBe('Notes');
+  });
+
+  it('applies civ-input--sm class to the inner <textarea>', async () => {
+    const el = await fixture('<civ-textarea spacing="sm" aria-label="x"></civ-textarea>');
+    expect(el.querySelector('textarea')!.classList.contains('civ-input--sm')).toBe(true);
+  });
+});

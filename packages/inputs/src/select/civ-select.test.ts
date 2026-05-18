@@ -416,3 +416,58 @@ describe('civ-select civ-input event', () => {
     }
   });
 });
+
+describe('civ-select spacing="sm"', () => {
+  it('renders the bare <select> with no label / hint / error chrome', async () => {
+    const el = await fixture(
+      `<civ-select spacing="sm" aria-label="Status" hint="not shown" .options="${[
+        { value: 'a', label: 'A' },
+      ]}"></civ-select>`,
+    ) as any;
+    expect(el.querySelector('select')).not.toBeNull();
+    expect(el.querySelector('.civ-hint')).toBeNull();
+    expect(el.querySelector('.civ-label')).toBeNull();
+  });
+
+  it('propagates host aria-label to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="Pick one"></civ-select>');
+    const select = el.querySelector('select')!;
+    expect(select.getAttribute('aria-label')).toBe('Pick one');
+  });
+
+  it('applies civ-input--sm class to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="x"></civ-select>');
+    const select = el.querySelector('select')!;
+    expect(select.classList.contains('civ-input--sm')).toBe(true);
+  });
+
+  it('forwards focus() to the inner <select>', async () => {
+    const el = await fixture('<civ-select spacing="sm" aria-label="x"></civ-select>') as HTMLElement;
+    const select = el.querySelector('select')!;
+    el.focus();
+    expect(document.activeElement).toBe(select);
+  });
+
+  it('suppresses the empty placeholder option when empty-label is unset', async () => {
+    const el = await fixture<any>(
+      `<civ-select spacing="sm" aria-label="Pick"></civ-select>`,
+    );
+    el.options = [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }];
+    await elementUpdated(el);
+    const options = el.querySelectorAll('option');
+    expect(options).toHaveLength(2);
+    expect(options[0].value).toBe('a');
+  });
+
+  it('renders an empty placeholder option when empty-label is set', async () => {
+    const el = await fixture<any>(
+      `<civ-select spacing="sm" aria-label="Pick" empty-label="All"></civ-select>`,
+    );
+    el.options = [{ value: 'a', label: 'A' }];
+    await elementUpdated(el);
+    const options = el.querySelectorAll('option');
+    expect(options).toHaveLength(2);
+    expect(options[0].value).toBe('');
+    expect(options[0].textContent).toBe('All');
+  });
+});

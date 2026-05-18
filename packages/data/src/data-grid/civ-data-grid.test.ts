@@ -848,13 +848,17 @@ describe('civ-data-grid — inline cell editing', () => {
     const cell = el.querySelector('tbody td') as HTMLElement;
     cell.click();
     await elementUpdated(el);
-    const select = el.querySelector('select.civ-data-grid__edit-input') as HTMLSelectElement;
-    expect(select).not.toBeNull();
-    expect(select.value).toBe('open');
+    // The cell editor now renders <civ-select spacing="sm"> wrapping a native <select>.
+    const host = el.querySelector('civ-select.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    expect(host).not.toBeNull();
+    expect(host.value).toBe('open');
+    const select = host.querySelector('select') as HTMLSelectElement;
+    // Just the 2 column options — civ-select spacing="sm" suppresses the
+    // empty placeholder when empty-label is not set.
     expect(select.querySelectorAll('option').length).toBe(2);
   });
 
-  it('renders type=number input when inputType is "number"', async () => {
+  it('renders a number-shaped input when inputType is "number"', async () => {
     const el = await mountGrid({
       columns: [{ key: 'age', header: 'Age', editable: true, inputType: 'number' }],
       rows: [{ id: '1', cells: { age: 42 } }],
@@ -862,9 +866,14 @@ describe('civ-data-grid — inline cell editing', () => {
     const cell = el.querySelector('tbody td') as HTMLElement;
     cell.click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    expect(input.type).toBe('number');
-    expect(input.value).toBe('42');
+    // The cell editor renders <civ-number spacing="sm">; the inner input uses
+    // inputmode="decimal" (numeric keyboard on touch) rather than
+    // type="number" so we can preserve partial-typing states like "12.".
+    const host = el.querySelector('civ-number.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    expect(host).not.toBeNull();
+    expect(host.value).toBe('42');
+    const inner = host.querySelector('input') as HTMLInputElement;
+    expect(inner.getAttribute('inputmode')).toBe('decimal');
   });
 
   it('commits with civ-cell-edit-commit on Enter', async () => {
@@ -932,9 +941,16 @@ describe('civ-data-grid — inline cell editing', () => {
     el.addEventListener('civ-cell-edit-commit', handler);
     (el.querySelector('tbody td') as HTMLElement).click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    input.value = 'Doe';
-    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    // The cell editor is now <civ-text-input spacing="sm">. User typing
+    // fires `input` on the inner <input>, which civ-text-input handles to
+    // update its `value` property. The grid listens for `focusout` (which
+    // bubbles, unlike `blur`) so the listener on the host fires when the
+    // inner input loses focus.
+    const host = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const inner = host.querySelector('input') as HTMLInputElement;
+    inner.value = 'Doe';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
+    inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     expect(handler).toHaveBeenCalledOnce();
     expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
   });
@@ -1076,10 +1092,13 @@ describe('civ-data-grid — inline cell editing', () => {
     // Start edit on Name.
     (el.querySelector('tbody td:first-child') as HTMLElement).click();
     await elementUpdated(el);
-    const inputA = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    inputA.value = 'Doe';
-    // Simulate blur (browser fires it when the user clicks elsewhere).
-    inputA.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    const hostA = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const innerA = hostA.querySelector('input') as HTMLInputElement;
+    innerA.value = 'Doe';
+    innerA.dispatchEvent(new Event('input', { bubbles: true }));
+    // Simulate the blur that fires when the user clicks elsewhere. Production
+    // listens for `focusout` (which bubbles to the host) since `blur` does not.
+    innerA.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
 
     // Then click the Role cell.
     (el.querySelectorAll('tbody td')[1] as HTMLElement).click();
@@ -1132,10 +1151,13 @@ describe('civ-data-grid — inline cell editing', () => {
     el.addEventListener('civ-cell-edit-commit', handler);
     (el.querySelector('tbody td') as HTMLElement).click();
     await elementUpdated(el);
-    const input = el.querySelector('.civ-data-grid__edit-input') as HTMLInputElement;
-    input.value = 'Doe';
+    const host = el.querySelector('.civ-data-grid__edit-input') as HTMLElement & { value: string };
+    const inner = host.querySelector('input') as HTMLInputElement;
+    inner.value = 'Doe';
+    inner.dispatchEvent(new Event('input', { bubbles: true }));
     // Simulate the blur that would happen on a click outside the grid.
-    input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
+    // `focusout` bubbles (unlike `blur`) so the host's listener fires.
+    inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     expect(handler).toHaveBeenCalledOnce();
     expect(handler.mock.calls[0][0].detail.value).toBe('Doe');
   });
@@ -2189,6 +2211,8 @@ describe('civ-data-grid — column filtering', () => {
     const el = await mountGrid({ columns: filterColumns, rows: filterRows });
     const rangeInputs = el.querySelectorAll('.civ-data-grid__filter-input--range');
     expect(rangeInputs).toHaveLength(2);
+    // aria-label sits on the host civ-number; the inner <input> reads it via
+    // the spacing="sm" host-attribute propagation in civ-number's render.
     expect(rangeInputs[0].getAttribute('aria-label')).toBe('Min Amount');
     expect(rangeInputs[1].getAttribute('aria-label')).toBe('Max Amount');
   });
@@ -2258,7 +2282,13 @@ describe('civ-data-grid — column filtering', () => {
     const el = await mountGrid({ columns: filterColumns, rows: filterRows });
     const handler = vi.fn();
     el.addEventListener('civ-filter-change', handler);
-    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    // The host is <civ-number>; the inner <input> is what receives user
+    // typing and triggers civ-input via the component's @input handler.
+    const [minHost, maxHost] = Array.from(
+      el.querySelectorAll('.civ-data-grid__filter-input--range'),
+    );
+    const minInput = minHost.querySelector('input') as HTMLInputElement;
+    const maxInput = maxHost.querySelector('input') as HTMLInputElement;
     // Set min first.
     minInput.value = '50';
     minInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -2281,7 +2311,11 @@ describe('civ-data-grid — column filtering', () => {
     await elementUpdated(el);
     const handler = vi.fn();
     el.addEventListener('civ-filter-change', handler);
-    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    const [minHost, maxHost] = Array.from(
+      el.querySelectorAll('.civ-data-grid__filter-input--range'),
+    );
+    const minInput = minHost.querySelector('input') as HTMLInputElement;
+    const maxInput = maxHost.querySelector('input') as HTMLInputElement;
     minInput.value = '';
     minInput.dispatchEvent(new Event('input', { bubbles: true }));
     // After clearing min, the next state in the dispatched event still has max=100.

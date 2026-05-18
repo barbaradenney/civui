@@ -32,3 +32,7 @@ export { CivFilterableList } from './filterable-list/index.js';
 
 // Column Visibility
 export { CivColumnVisibility } from './column-visibility/index.js';
+
+// Export utility (no custom element — pure function)
+export { gridExport } from './export/index.js';
+export type { GridExportOptions } from './export/index.js';

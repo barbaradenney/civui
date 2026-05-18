@@ -351,3 +351,46 @@ export const MinAndMaxSelections: Story = {
     </civ-checkbox-group>
   `,
 };
+
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` forces tile chrome off, drops hint / description / required-mark, and renders a 20px input ' +
+          '(half the default tap-target). When `label` is empty, only the bare `<input>` is rendered and the host\'s ' +
+          '`aria-label` is propagated for screen-reader text — the pattern data-grid uses for selection checkboxes.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default (tile)</p>
+        <civ-checkbox label="I agree to the terms" name="agree-default"></civ-checkbox>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm" + label (column-toggle pattern)</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Visible label, no tile chrome. Used by civ-column-visibility for the toggle panel.</p>
+        <div class="civ-flex civ-flex-col civ-gap-1">
+          <civ-checkbox spacing="sm" label="Application ID" checked></civ-checkbox>
+          <civ-checkbox spacing="sm" label="Applicant" checked></civ-checkbox>
+          <civ-checkbox spacing="sm" label="Status"></civ-checkbox>
+        </div>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm" + aria-label only (data-grid row-select pattern)</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input, no visible chrome. aria-label names the control for AT.</p>
+        <div class="civ-flex civ-gap-2 civ-items-center">
+          <civ-checkbox spacing="sm" aria-label="Select row 1"></civ-checkbox>
+          <civ-checkbox spacing="sm" aria-label="Select row 2" checked></civ-checkbox>
+          <civ-checkbox spacing="sm" aria-label="Select row 3" indeterminate></civ-checkbox>
+          <civ-checkbox spacing="sm" aria-label="Select row 4" disabled></civ-checkbox>
+        </div>
+      </div>
+    </div>
+  `,
+};

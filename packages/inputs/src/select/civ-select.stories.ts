@@ -443,3 +443,38 @@ export const AllPresets: Story = {
     </div>
   `,
 };
+
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare `<select>` with no label / hint / error chrome. ' +
+          'The host\'s `aria-label` is propagated to the inner control. ' +
+          'The empty placeholder option is also suppressed unless `empty-label` is explicitly set — ' +
+          'set it to opt in (e.g. `empty-label="All"` for filter rows).',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-select label="State" name="state-default" preset="us-state"></civ-select>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm" (no placeholder)</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">For data-grid cell editors, where the column header labels the control and the value is already populated.</p>
+        <civ-select spacing="sm" aria-label="State" name="state-compact" preset="us-state"></civ-select>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm" empty-label="All"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">For filter rows that need a "show all" affordance.</p>
+        <civ-select spacing="sm" aria-label="Filter by state" empty-label="All states" name="state-filter" preset="us-state"></civ-select>
+      </div>
+    </div>
+  `,
+};

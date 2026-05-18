@@ -152,3 +152,31 @@ export const ValidateMinLength: Story = {
     <civ-textarea label="Describe what happened" name="what-happened" hint="Please give us at least 50 characters of detail." validate="length" minlength="50"></civ-textarea>
   `,
 };
+
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare `<textarea>` with no label / hint / char-count chrome. ' +
+          'The host\'s `aria-label` is propagated to the inner control. For dense surfaces like data-grid cell editors.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-textarea label="Notes" name="notes-default" hint="Add context for the reviewer." rows="3"></civ-textarea>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare textarea, no chrome. Useful when a longer-form column needs an inline editor.</p>
+        <civ-textarea spacing="sm" aria-label="Notes" name="notes-compact" rows="3"></civ-textarea>
+      </div>
+    </div>
+  `,
+};

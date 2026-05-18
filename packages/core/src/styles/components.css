@@ -2280,6 +2280,12 @@
            civ-bg-transparent civ-border-0 civ-cursor-pointer civ-font-bold;
     color: var(--civ-color-base-darkest);
     padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    /* Keep the chevron + label anchored at the leading edge of the
+       viewport while the (potentially wide) group header td slides
+       under it during horizontal scroll. Without this, the label
+       disappears off-screen on wide grids with sticky columns. */
+    position: sticky;
+    inset-inline-start: 0;
   }
 
   .civ-data-grid__group-toggle:hover {

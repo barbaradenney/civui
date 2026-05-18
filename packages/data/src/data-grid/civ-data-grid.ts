@@ -310,19 +310,27 @@ export class CivDataGrid extends CivBaseElement {
     return out;
   }
 
-  /** Insertion-ordered map from group key (stringified) → rows. */
+  /**
+   * Insertion-ordered map from group key (stringified) → rows. Memoized
+   * via `_groupsCache` so the grouping pass runs once per render set and
+   * not once per cell-render call. Invalidated in `willUpdate` when
+   * `rows` or `groupBy` change.
+   */
   private _buildGroups(): Map<string, GridRow[]> {
-    const map = new Map<string, GridRow[]>();
-    for (const row of this.rows) {
-      const raw = row.cells?.[this.groupBy];
-      // Stringify so Map keys are stable when the value is `null`, `undefined`,
-      // a number, etc. Use a sentinel for missing values so the empty-string
-      // header label doesn't get confused with a legitimate empty value.
-      const key = raw == null ? '' : String(raw);
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(row);
+    if (this._groupsCache === undefined) {
+      const map = new Map<string, GridRow[]>();
+      for (const row of this.rows) {
+        const raw = row.cells?.[this.groupBy];
+        // Stringify so Map keys are stable when the value is `null`,
+        // `undefined`, a number, etc. The empty-string key catches missing
+        // values; the header label falls back to the i18n "(no value)" string.
+        const key = raw == null ? '' : String(raw);
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(row);
+      }
+      this._groupsCache = map;
     }
-    return map;
+    return this._groupsCache;
   }
 
   private _isGroupExpanded(groupKey: string): boolean {
@@ -507,6 +515,8 @@ export class CivDataGrid extends CivBaseElement {
   private _anyRowActionsCache?: boolean;
   /** Per-column sticky-offset map. Invalidated when `columns` change. */
   private _stickyCache?: Map<string, { side: 'start' | 'end'; offset: string; isFirst: boolean; isLast: boolean }>;
+  /** Insertion-ordered rows-by-group cache. Invalidated when `rows` or `groupBy` change. */
+  private _groupsCache?: Map<string, GridRow[]>;
   /** Per-instance dedupe for the sticky-without-width warning. */
   private _warnedStickyWithoutWidth = false;
 
@@ -515,6 +525,10 @@ export class CivDataGrid extends CivBaseElement {
     if (changed.has('rows')) {
       this._anyExpandableCache = undefined;
       this._anyRowActionsCache = undefined;
+      this._groupsCache = undefined;
+    }
+    if (changed.has('groupBy')) {
+      this._groupsCache = undefined;
     }
     if (changed.has('columns')) {
       this._stickyCache = undefined;
@@ -528,6 +542,9 @@ export class CivDataGrid extends CivBaseElement {
     }
     if (changed.has('rows') || changed.has('expandTemplate')) {
       this._maybeWarnExpandableWithoutTemplate();
+    }
+    if (changed.has('groupBy') || changed.has('columns') || changed.has('rows')) {
+      this._maybeWarnGroupByMismatch();
     }
   }
 
@@ -573,6 +590,32 @@ export class CivDataGrid extends CivBaseElement {
     devWarn(
       'civ-data-grid',
       'Rows with `expandable: true` are present but `expandTemplate` is not set. Expanded rows will render a blank detail cell. Set `grid.expandTemplate = (row) => …` to render the detail content.',
+    );
+  }
+
+  /** Per-instance dedupe for the groupBy-mismatch warning. */
+  private _warnedGroupByMismatch = false;
+
+  /**
+   * When `groupBy` is set but doesn't match any column.key AND no row's
+   * cells actually contains the key, every row lands under the empty-
+   * string group with the "(no value)" label. Silently confusing — the
+   * grid renders as one big group. Warn once per instance so the
+   * consumer sees the typo.
+   */
+  private _maybeWarnGroupByMismatch(): void {
+    if (this._warnedGroupByMismatch) return;
+    if (!this.groupBy) return;
+    if (!this.rows || this.rows.length === 0) return;
+    const knownColumn = this.columns.some((c) => c.key === this.groupBy);
+    const presentInData = this.rows.some(
+      (r) => r.cells != null && this.groupBy in r.cells,
+    );
+    if (knownColumn || presentInData) return;
+    this._warnedGroupByMismatch = true;
+    devWarn(
+      'civ-data-grid',
+      `groupBy="${this.groupBy}" doesn't match any column.key, and no row's cells contains that key — every row will land under the empty "(no value)" group. Double-check the key.`,
     );
   }
 

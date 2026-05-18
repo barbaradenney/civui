@@ -355,14 +355,49 @@ to localize, or to embed aggregates.
 `undefined` are grouped under the empty-string key (`''`); the header
 falls back to the i18n `dataGridGroupNoValue` string (`(no value)`).
 
+**Tip — hide the redundant grouped column.** When you group by `type`,
+every data row's "Type" cell shows the same value as its group header.
+You can drop the duplicate column by marking it hidden:
+
+```ts
+grid.columns = columns.map((c) =>
+  c.key === grid.groupBy ? { ...c, hidden: true } : c
+);
+```
+
+The grid skips hidden columns (header + body) — same path
+`civ-column-visibility` uses.
+
 **Interaction with other features:**
-- **Sort** within groups requires the consumer to pre-sort rows. Group
-  boundaries are preserved because group order follows row-array
-  insertion, not column-derived sorting.
+- **Sort + grouping**: a naive `rows.sort(...)` across the whole array
+  will fracture groups (same group's rows scatter). When sorting an
+  active grouped grid, sort *within each group*:
+  ```ts
+  function sortWithinGroups(rows, groupBy, sortBy, direction) {
+    const groups = new Map();
+    for (const r of rows) {
+      const k = String(r.cells?.[groupBy] ?? '');
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(r);
+    }
+    const sorted = [];
+    for (const [, groupRows] of groups) {
+      groupRows.sort((a, b) => /* compare a.cells[sortBy] / b.cells[sortBy] */);
+      sorted.push(...groupRows);
+    }
+    return sorted;
+  }
+  ```
+  Group boundaries are preserved because group order follows row-array
+  insertion order.
 - **Selection** is per-row independently — there's no select-all-in-
   group affordance in v1.
 - **Expandable rows** work alongside groups: a row inside a group can
   still expand to show its detail panel.
+- **Sticky columns**: the group label stays anchored at the leading
+  edge of the viewport during horizontal scroll (via `position:
+  sticky` on the toggle button) so the group identity is always
+  visible alongside the sticky data columns.
 
 ## Export to CSV / JSON
 

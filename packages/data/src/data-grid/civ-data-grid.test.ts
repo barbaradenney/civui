@@ -1510,4 +1510,101 @@ describe('civ-data-grid — group-by', () => {
     // i18n fallback "(no value)" appears for the empty group key.
     expect(label.textContent).toContain('(no value)');
   });
+
+  it('explicit expandedGroups=[] collapses every group (consumer takes control)', async () => {
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'type';
+    el.expandedGroups = [];
+    await elementUpdated(el);
+    // 2 group headers + 0 data rows.
+    expect(el.querySelectorAll('tbody tr').length).toBe(2);
+    const toggles = el.querySelectorAll<HTMLButtonElement>('.civ-data-grid__group-toggle');
+    expect(toggles[0].getAttribute('aria-expanded')).toBe('false');
+    expect(toggles[1].getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('sticky-start columns still get sticky classes on data rows inside groups', async () => {
+    const el = await mountGrid({
+      columns: [
+        { key: 'id', header: 'ID', width: '4rem', sticky: 'start' },
+        { key: 'applicant', header: 'Applicant' },
+        { key: 'type', header: 'Type' },
+      ],
+      rows: groupRows,
+    });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    // Find a data row (not a group header) and assert its first cell is sticky.
+    const dataRows = el.querySelectorAll('tbody tr:not(.civ-data-grid__tr--group)');
+    expect(dataRows.length).toBeGreaterThan(0);
+    const firstCell = dataRows[0].querySelector('td') as HTMLElement;
+    expect(firstCell.classList.contains('civ-data-grid__cell--sticky')).toBe(true);
+    expect(firstCell.getAttribute('style')).toContain('position: sticky');
+  });
+
+  it('expandable rows inside a group still get a chevron and fire civ-row-expand', async () => {
+    const rows: GridRow[] = [
+      {
+        id: '1',
+        cells: { id: 'A-1', applicant: 'Smith', type: 'Disability' },
+        expandable: true,
+      },
+    ];
+    const el = await mountGrid({ columns: groupColumns, rows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-row-expand', handler);
+    const expandToggle = el.querySelector('.civ-data-grid__expand-toggle') as HTMLButtonElement;
+    expect(expandToggle).not.toBeNull();
+    expandToggle.click();
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.rowId).toBe('1');
+  });
+
+  it('editable cells still fire civ-cell-edit-start when clicked inside a group', async () => {
+    const rows: GridRow[] = [
+      { id: '1', cells: { id: 'A-1', applicant: 'Smith', type: 'Disability' } },
+    ];
+    const cols: GridColumn[] = [
+      { key: 'id', header: 'ID' },
+      { key: 'applicant', header: 'Applicant', editable: true },
+      { key: 'type', header: 'Type' },
+    ];
+    const el = await mountGrid({ columns: cols, rows });
+    el.groupBy = 'type';
+    await elementUpdated(el);
+    const handler = vi.fn();
+    el.addEventListener('civ-cell-edit-start', handler);
+    const editableCell = el.querySelector('tbody tr:not(.civ-data-grid__tr--group) td:nth-child(2)') as HTMLElement;
+    editableCell.click();
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail.columnKey).toBe('applicant');
+  });
+
+  it('warns in dev mode when groupBy doesn\'t match any column key or row data', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await mountGrid({ columns: groupColumns, rows: groupRows });
+    el.groupBy = 'typo-no-such-key';
+    await elementUpdated(el);
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).toMatch(/groupBy/);
+    expect(message).toMatch(/typo-no-such-key/);
+    warn.mockRestore();
+  });
+
+  it('does NOT warn when groupBy matches a column.key (even if no row data has the key yet)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // Column declares 'category' but rows haven't populated it — still legitimate.
+    const cols: GridColumn[] = [
+      ...groupColumns,
+      { key: 'category', header: 'Category' },
+    ];
+    const el = await mountGrid({ columns: cols, rows: groupRows });
+    el.groupBy = 'category';
+    await elementUpdated(el);
+    const message = warn.mock.calls.map((c) => c.join(' ')).join('\n');
+    expect(message).not.toMatch(/groupBy/);
+    warn.mockRestore();
+  });
 });

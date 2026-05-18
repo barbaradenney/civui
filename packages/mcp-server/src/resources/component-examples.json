@@ -1153,7 +1153,7 @@
   "civ-data-grid": [
     {
       "story": "Aggregations",
-      "name": "Aggregator footer + group subtotals",
+      "name": "Aggregations",
       "category": "Layout/Data Grid",
       "html": "<div>\n        <p class=\"civ-mb-3\">\n          Each column with <code>aggregate</code> contributes a per-group\n          subtotal row plus a grand-total in the sticky <code>&lt;tfoot&gt;</code>.\n          Custom function aggregators do the formatting (currency,\n          decimals, \"Total:\" / \"Avg:\" prefixes).\n        </p>\n        <div style=\"max-height: 360px; overflow-y: auto; border: 1px solid var(--civ-color-base-lighter);\">\n          <civ-data-grid\n            class=\"story-aggregate\"\n            caption=\"Applications with subtotals\"\n            bordered\n          ></civ-data-grid>\n        </div>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
@@ -1288,6 +1288,13 @@
       "story": "Striped",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-striped\" caption=\"Striped rows\"></civ-data-grid>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "WithFormatter",
+      "name": "With Cell Formatter",
+      "category": "Layout/Data Grid",
+      "html": "<civ-data-grid class=\"story-formatter\" caption=\"Applications with status tags\"></civ-data-grid>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
@@ -5059,13 +5066,6 @@
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-gap-2 civ-flex-wrap civ-items-center\">\n      <civ-tag label=\"Healthcare\" variant=\"blue\"></civ-tag>\n      <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n      <civ-tag label=\"Disability\" variant=\"purple\"></civ-tag>\n      <civ-tag label=\"Archived\" variant=\"gray\"></civ-tag>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
-    },
-    {
-      "story": "WithFormatter",
-      "name": "With Cell Formatter",
-      "category": "Layout/Data Grid",
-      "html": "<civ-tag variant=\"${variant}\">${v}</civ-tag>",
-      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
       "story": "WithIcons",

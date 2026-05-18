@@ -132,3 +132,11 @@ export interface GridRow {
  * new `<tr>` immediately below the data row.
  */
 export type GridExpandTemplate = (row: GridRow) => string | number | TemplateResult;
+
+/**
+ * Callback that turns a raw group key (whatever value is in
+ * `row.cells[groupBy]`) into the human-readable label shown in the
+ * group header. Receives the group key + the rows in that group so the
+ * label can include a count or aggregate.
+ */
+export type GridGroupLabel = (groupKey: string, rows: readonly GridRow[]) => string;

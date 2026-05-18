@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-data-grid',
-  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Uses native `<table>` semantics (not `role="grid"`) per WAI-ARIA APG recommendation for predominantly readable tabular data.',
+  description: 'Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Pagination is composed as a sibling `<civ-pagination>` element rather than a slot. On viewports ≤480px, rows collapse to vertical label/value blocks via CSS (no JS re-template). Defaults to native `<table>` semantics for simple readable data; opt in to `keyboardNav` for spreadsheet-style 2D arrow-key navigation per the WAI-ARIA Grid Pattern.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -108,6 +108,29 @@ const schema: ComponentSchema = {
       description: 'Render callback for expanded-row detail content. `(row) => string | number | TemplateResult`. Required when any row has `expandable: true` — without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific)',
       webOnly: true,
     },
+    groupBy: {
+      type: 'string',
+      description: 'When set to a column key, rows are grouped by `row.cells[groupBy]` and each group gets a collapsible header row spanning all columns. Groups appear in the order their first member appears in `rows` — pre-sort to control group order. Pass empty string to disable grouping',
+      default: '',
+      attribute: 'group-by',
+    },
+    expandedGroups: {
+      type: 'array',
+      description: 'Group keys currently expanded. Controlled — update in response to `civ-group-toggle`. When undefined (the default), all groups render expanded; pass an array (even `[]`) to take control',
+      webOnly: true,
+    },
+    groupLabel: {
+      type: 'string',
+      description: 'Render callback for group header labels. `(groupKey, rows) => string`. When omitted, the header reads `{groupKey} ({count})`. Use to render readable labels for technical keys (e.g. `\'in-review\'` → `\'In review (3)\'`)',
+      webOnly: true,
+    },
+    keyboardNav: {
+      type: 'boolean',
+      description: 'Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. Inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so the whole grid becomes a single tab stop; Enter / Space activate the cell\'s primary control, F2 enters edit mode on editable cells, Home / End move to row bounds, Ctrl+Home / Ctrl+End move to grid corners, PageUp / PageDown step ±10 rows. Web-only — native platforms have their own focus models and the `role="grid"` promotion is HTML-specific',
+      default: false,
+      attribute: 'keyboard-nav',
+      webOnly: true,
+    },
   },
 
   events: {
@@ -170,6 +193,13 @@ const schema: ComponentSchema = {
         rowId: { type: 'string', description: 'The row whose edit was cancelled' },
         columnKey: { type: 'string', description: 'The column key of the cell' },
         row: { type: 'object', description: 'The full row object' },
+      },
+    },
+    'civ-group-toggle': {
+      description: 'Fires when the user clicks a group header\'s chevron. Consumers manage `expandedGroups` in response: add the key when `expanded === true`, remove it when `false`',
+      detail: {
+        groupKey: { type: 'string', description: 'The stringified group key (the value of `row.cells[groupBy]` for the group)' },
+        expanded: { type: 'boolean', description: 'The target expanded state (not the previous state) — reducer-friendly' },
       },
     },
   },

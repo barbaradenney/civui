@@ -22,9 +22,9 @@ Semantic `<table>`-based data grid for admin and back-office screens. Renders so
 
 The grid is **controlled** — the consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, and `civ-row-action`; the consumer listens for `civ-page-change` directly on the pagination element.
 
-## Accessibility foundation: semantic `<table>`, not `role="grid"`
+## Accessibility foundation: semantic `<table>` by default, `role="grid"` on demand
 
-The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role="grid"` for predominantly readable tabular data — even when columns are sortable. `role="grid"` requires full 2D arrow-key navigation that's worse for screen reader users on data display. CivUI's data grid follows this guidance:
+The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role="grid"` for predominantly readable tabular data — even when columns are sortable. CivUI's data grid follows that guidance **by default**:
 
 - Native `<table>` + `<caption>` for the accessible name
 - `<th scope="col">` for column headers
@@ -33,7 +33,7 @@ The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role=
 - Row-action menus use `<civ-menu>` (WAI-ARIA Menu Button pattern)
 - Empty / loading / error states use `aria-live` / `role="alert"` so screen readers hear them
 
-If you need spreadsheet-style 2D arrow-key navigation, the right answer is a separate component layered on `role="grid"` — don't promote the data grid in place.
+For admin screens with many interactive cells — sort, expand, edit, select, row actions — Tabbing through every control becomes noisy. Set the `keyboardNav` prop and the grid promotes to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/). The whole grid becomes one tab stop; arrow keys move between cells; Enter / Space / F2 activate the cell's primary control. See the [Keyboard navigation](#keyboard-navigation) section below for the full key map.
 
 ## Examples
 
@@ -94,6 +94,14 @@ If you need spreadsheet-style 2D arrow-key navigation, the right answer is a sep
 ### Export to CSV / JSON
 
 <StoryEmbed id="layout-data-grid--export-to-csv" minHeight={500} />
+
+### Group-by collapsible groups
+
+<StoryEmbed id="layout-data-grid--group-by" minHeight={500} />
+
+### Keyboard grid navigation
+
+<StoryEmbed id="layout-data-grid--keyboard-navigation" minHeight={500} />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-data-grid--default)
 
@@ -315,6 +323,164 @@ value back into their data and reassign `grid.rows`.
 - Editable cells in an `interactive` grid: clicking the cell starts edit mode but does NOT fire `civ-row-activate`. The cell-click stops propagation.
 - Only one cell is in edit mode at a time. Starting an edit on another cell would not be a v1 concern (consumer can blur first).
 
+## Group-by collapsible groups
+
+Set `groupBy` to a column key to group rows by that column's value.
+Each group renders a header row spanning all visible columns with a
+chevron to toggle expansion.
+
+```ts
+grid.groupBy = 'type';
+grid.expandedGroups = ['Disability', 'Pension', 'Education'];
+grid.groupLabel = (key, rows) => `${key} (${rows.length} application${rows.length === 1 ? '' : 's'})`;
+
+grid.addEventListener('civ-group-toggle', (e) => {
+  const { groupKey, expanded } = e.detail;
+  grid.expandedGroups = expanded
+    ? [...grid.expandedGroups, groupKey]
+    : grid.expandedGroups.filter((k) => k !== groupKey);
+});
+```
+
+**Group order**: groups appear in the order their first member appears
+in `rows`. The grid does not re-sort rows for grouping — pre-sort your
+data if you need a specific group order.
+
+**`expandedGroups` semantics**: when undefined (the default), all
+groups render expanded. Once you assign an array (even `[]`), you
+take control — only groups whose key is in the array stay expanded.
+
+**`groupLabel` callback**: optional `(groupKey, rows) => string`. When
+omitted, the header reads `{groupKey} ({count})`. Use this to render
+readable labels for technical keys (`'in-review'` → `'In review (3)'`),
+to localize, or to embed aggregates.
+
+**Empty group keys**: rows with `cells[groupBy]` set to `null` or
+`undefined` are grouped under the empty-string key (`''`); the header
+falls back to the i18n `dataGridGroupNoValue` string (`(no value)`).
+
+**Tip — hide the redundant grouped column.** When you group by `type`,
+every data row's "Type" cell shows the same value as its group header.
+You can drop the duplicate column by marking it hidden:
+
+```ts
+grid.columns = columns.map((c) =>
+  c.key === grid.groupBy ? { ...c, hidden: true } : c
+);
+```
+
+The grid skips hidden columns (header + body) — same path
+`civ-column-visibility` uses.
+
+**Interaction with other features:**
+- **Sort + grouping**: a naive `rows.sort(...)` across the whole array
+  will fracture groups (same group's rows scatter). When sorting an
+  active grouped grid, sort *within each group*:
+  ```ts
+  function sortWithinGroups(rows, groupBy, sortBy, direction) {
+    const groups = new Map();
+    for (const r of rows) {
+      const k = String(r.cells?.[groupBy] ?? '');
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(r);
+    }
+    const sorted = [];
+    for (const [, groupRows] of groups) {
+      groupRows.sort((a, b) => /* compare a.cells[sortBy] / b.cells[sortBy] */);
+      sorted.push(...groupRows);
+    }
+    return sorted;
+  }
+  ```
+  Group boundaries are preserved because group order follows row-array
+  insertion order.
+- **Selection** is per-row independently — there's no select-all-in-
+  group affordance in v1.
+- **Expandable rows** work alongside groups: a row inside a group can
+  still expand to show its detail panel.
+- **Sticky columns**: the group label stays anchored at the leading
+  edge of the viewport during horizontal scroll (via `position:
+  sticky` on the toggle button) so the group identity is always
+  visible alongside the sticky data columns.
+
+## Keyboard navigation {#keyboard-navigation}
+
+Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) — opt in to a single tab stop with arrow-key cell navigation, instead of the default tab-through-every-control behavior. The grid becomes a **single tab stop** — inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so Tab doesn't walk through every cell. Once focus is on the grid, arrow keys move between cells and Enter / Space activate the cell's primary control.
+
+```html
+<civ-data-grid
+  caption="Applications"
+  keyboard-nav
+  bordered
+></civ-data-grid>
+```
+
+### Key map
+
+| Key | Action |
+|---|---|
+| <kbd>Tab</kbd> | Focus the grid (the cell at the current roving-tabindex position). Tab again to leave. |
+| <kbd>←</kbd> <kbd>→</kbd> | Move one cell left / right within the current row. |
+| <kbd>↑</kbd> <kbd>↓</kbd> | Move one row up / down (header ↔ body included). |
+| <kbd>Home</kbd> | First cell in the current row. |
+| <kbd>End</kbd> | Last cell in the current row. |
+| <kbd>Ctrl</kbd>+<kbd>Home</kbd> | First cell of the grid (header row, first column). |
+| <kbd>Ctrl</kbd>+<kbd>End</kbd> | Last cell of the last body row. |
+| <kbd>PageDown</kbd> / <kbd>PageUp</kbd> | Jump ±10 rows (clamped to the grid). |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control — sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
+| <kbd>F2</kbd> | Start edit on an editable cell (Excel convention). No-op on other cells. |
+| <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell (see [Escape returns focus to the cell](#escape-returns-focus-to-the-cell)). |
+
+### Activation model
+
+Enter / Space find the first focusable descendant of the focused cell (`button, input, select, a, [role="button"]`) and click it. That single rule covers:
+
+- Sortable headers → clicks the sort button → fires `civ-sort`.
+- Select-all header / row select cells → clicks the checkbox or radio → fires `civ-selection-change`.
+- Expand cells → clicks the chevron → fires `civ-row-expand`.
+- Actions cells → clicks the kebab trigger → opens the menu.
+- Editable cells → clicks the cell trigger button → enters edit mode (focus moves to the input).
+
+When the cell has no focusable descendant **and** the row is `interactive`, Enter / Space fire `civ-row-activate` instead — so master-detail flows have a keyboard path even on rows that don't carry inline actions.
+
+### Focus after edit
+
+When `keyboardNav` is on and the user commits or cancels an edit, focus returns to the cell (not to `<body>`) so they can keep arrow-keying through data without dropping out of the grid.
+
+### Column memory across single-cell rows
+
+When `↑` / `↓` transit a row that only has one cell — a **group header**, an **expanded detail row** — focus collapses to col 0 (the only cell), but the user's preferred column is remembered. The next vertical move that reaches a multi-cell row restores their column. Matches Excel / Google Sheets behavior.
+
+```text
+   Name   Type   Status
+─────────────────────────────
+        ▼ Type X
+   A       X      On      ← user navigates here, then ↓
+        ▼ Type Y          ← group row collapses to col 0
+   B       Y      Off     ← col 2 ("Status") restored
+   C       Y      On
+```
+
+Explicit horizontal navigation (`←` / `→`, `Home` / `End`, mouse click) updates the memory; transit through single-cell rows does not.
+
+### Escape returns focus to the cell
+
+When focus has moved off the cell onto an inner control — e.g. a sort button after clicking it, or the row-actions kebab after closing its menu — pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern.
+
+When a `<civ-menu>` is currently open inside a cell, the grid intentionally bails on `Esc` so the menu can close itself and restore focus to its trigger; the next `Esc` (now with the menu closed) walks the focus from the trigger back out to the cell. Two presses → cell focused → arrows resume.
+
+Arrow keys also continue to work directly from an inner control — the keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate vertically out of a sort button.
+
+### Screen reader mode
+
+`role="grid"` flips JAWS / NVDA / VoiceOver into "applications" or "forms" mode while focus is inside the grid: the standard table-reading shortcuts (T to jump tables, Ctrl+Alt+Arrow to move by row / column) are suppressed in favor of the application's own arrow-key handling — which is now the grid's. This is the intended WAI-ARIA Grid behavior. **Leave `keyboardNav` off for simple readable tables** so SR users keep their normal table-reading affordances.
+
+### When to use it
+
+- ✅ Admin / back-office screens with sortable + editable + selectable + action-menu cells where Tab would walk through dozens of controls per page.
+- ✅ Power-user workflows where a keyboard-first review of many rows is faster than a mouse-driven one.
+- ❌ Simple readable tables (no inline editing, no row actions) — leave `keyboardNav` off so screen readers stay in normal table reading mode.
+
 ## Export to CSV / JSON
 
 `@civui/data/export` exports a `gridExport` utility — a pure function
@@ -443,8 +609,9 @@ pager.addEventListener('civ-page-change', (e) => {
 
 ## Coming in follow-up work
 
-- **Inline editing** — column-level `editable: true` + per-cell click-to-edit
-- **Nested rows** — expand a row to reveal a child `<civ-data-grid>` or detail panel
+- **Aggregations / footer row** — per-column sum / avg / count, optionally per-group when `groupBy` is set
+- **Column filtering** — per-column filter row with text / select / range inputs
+- **Multi-column sort** — Shift-click to add secondary / tertiary sort keys
 - **Native iOS / Android implementations** — schema is in place; native bodies are placeholders until a dedicated implementation pass
 
 See `.claude/rules/audit-debt.md` for the implementation backlog.

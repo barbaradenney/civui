@@ -13,6 +13,7 @@ import type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridGroupLabel,
   GridCellInputType,
   GridCellOption,
 } from './civ-data-grid.types.js';
@@ -25,6 +26,7 @@ export type {
   GridResponsiveMode,
   GridSelectionMode,
   GridExpandTemplate,
+  GridGroupLabel,
   GridCellInputType,
   GridCellOption,
 };
@@ -37,11 +39,13 @@ export type {
  * and integrates with `civ-pagination`. Mobile (≤480px) stacks each row
  * into a vertical block via CSS — no JS re-template.
  *
- * **Why `<table>` instead of `role="grid"`?** The WAI-ARIA APG recommends
+ * **Why semantic `<table>` by default?** The WAI-ARIA APG recommends
  * semantic `<table>` for predominantly readable tabular data, even when
- * sortable. `role="grid"` requires 2D arrow-key navigation that doesn't
- * map well to screen reader UX for data display. Future work (spreadsheet-
- * style cell selection, copy/paste) may promote a variant to `role="grid"`.
+ * sortable. `role="grid"` requires 2D arrow-key navigation that's overkill
+ * when the user just wants to read rows. For admin screens with lots of
+ * interactive cells (edit, expand, actions, sort), set `keyboardNav`
+ * — the grid promotes to `role="grid"` with roving tabindex and arrow-key
+ * navigation per the WAI-ARIA Grid Pattern.
  *
  * **Data flow (controlled).** The consumer manages `rows`, `columns`,
  * `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid emits
@@ -68,6 +72,7 @@ export type {
  * @prop {boolean} interactive - When true, clicking a row (outside the select / actions cells) fires `civ-row-activate`. Use to wire a master-detail drawer or a navigate-to-record flow.
  * @prop {Array} expandedRowIds - IDs of currently-expanded rows (controlled). Update in response to `civ-row-expand`.
  * @prop {Function} expandTemplate - `(row) => string | TemplateResult` — renders the detail content shown when a row is expanded. Required when any row has `expandable: true`.
+ * @prop {boolean} keyboardNav - Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. See the data-grid doc page "Keyboard navigation" section for the full key map and behavior notes.
  *
  * @fires civ-sort - { column, direction } — user clicked a sortable column header
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
@@ -77,6 +82,7 @@ export type {
  * @fires civ-cell-edit-start - { rowId, columnKey, row } — user activated edit mode on an editable cell
  * @fires civ-cell-edit-commit - { rowId, columnKey, value, row } — user committed a valid new value (Enter / blur / click-outside)
  * @fires civ-cell-edit-cancel - { rowId, columnKey, row } — user cancelled an edit (Escape)
+ * @fires civ-group-toggle - { groupKey, expanded } — user toggled a group header's chevron
  *
  * **Pagination.** Render `<civ-pagination>` as a sibling next to the grid
  * and wire its `civ-page-change` event to update the grid's `rows`.
@@ -119,6 +125,29 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: Boolean }) interactive = false;
   @property({ attribute: false }) expandedRowIds: string[] = [];
   @property({ attribute: false }) expandTemplate?: GridExpandTemplate;
+  @property({ type: String, attribute: 'group-by' }) groupBy = '';
+  @property({ attribute: false }) expandedGroups?: string[];
+  @property({ attribute: false }) groupLabel?: GridGroupLabel;
+  @property({ type: Boolean, attribute: 'keyboard-nav' }) keyboardNav = false;
+
+  /**
+   * Roving-tabindex position when `keyboardNav` is on. Plain fields (not
+   * `@state`) so we can update them in response to focus changes without
+   * triggering a Lit re-render — the tabindex sync runs imperatively in
+   * `_applyKeyboardNav()`. `_pendingFocus` flags that we should call
+   * `.focus()` after the next render (post-arrow-key, post-edit-exit).
+   *
+   * `_colMemory` is the desired column position from the most recent
+   * horizontal navigation (ArrowLeft/Right, Home/End, mouse click). When
+   * vertical navigation lands on a single-cell row (group header, detail
+   * row) the focus collapses to col 0, but `_colMemory` stays put so the
+   * NEXT vertical move can restore the user's column on a multi-col row.
+   * Matches Excel / Google Sheets behavior.
+   */
+  private _focusedRow = 0;
+  private _focusedCol = 0;
+  private _colMemory = 0;
+  private _pendingFocus = false;
 
   /** Internal edit-mode tracking — one cell at a time. */
   @state() private _editingCell: { rowId: string; columnKey: string } | null = null;
@@ -138,6 +167,7 @@ export class CivDataGrid extends CivBaseElement {
       this.stickyHeader ? 'civ-data-grid--sticky' : '',
       this.striped ? 'civ-data-grid--striped' : '',
       this.bordered ? 'civ-data-grid--bordered' : '',
+      this.keyboardNav ? 'civ-data-grid--keyboard-nav' : '',
     ].filter(Boolean).join(' ');
 
     return html`
@@ -151,16 +181,27 @@ export class CivDataGrid extends CivBaseElement {
   private _renderTable(): TemplateResult {
     const caption = this.caption || t('dataGridLabel');
     const captionClass = this.captionHidden ? 'civ-sr-only' : 'civ-data-grid__caption';
+    const captionId = `${this._instanceId}-caption`;
+    // When keyboardNav is on the scroll wrapper's tabindex=0 would create a
+    // second tab stop (wrapper + focused cell), contradicting the
+    // single-tab-stop contract. Drop it — arrow keys handle horizontal
+    // traversal, and we scroll cells into view explicitly on focus.
+    const scrollTabindex = this.responsive === 'scroll' && !this.keyboardNav ? '0' : '-1';
 
     return html`
       <div
         class="civ-data-grid__scroll"
         role="${this.responsive === 'scroll' ? 'region' : 'presentation'}"
         aria-label="${this.responsive === 'scroll' ? caption : ''}"
-        tabindex="${this.responsive === 'scroll' ? '0' : '-1'}"
+        tabindex="${scrollTabindex}"
       >
-        <table class="civ-data-grid__table">
-          <caption class="${captionClass}">${caption}</caption>
+        <table
+          class="civ-data-grid__table"
+          aria-labelledby="${captionId}"
+          @keydown="${this._onTableKeydown}"
+          @focusin="${this._onTableFocusin}"
+        >
+          <caption id="${captionId}" class="${captionClass}">${caption}</caption>
           <thead class="civ-data-grid__thead">
             <tr>
               ${this._hasAnyExpandable()
@@ -275,7 +316,103 @@ export class CivDataGrid extends CivBaseElement {
       `;
     }
 
+    if (this.groupBy) {
+      return this._renderGroupedBody();
+    }
     return this.rows.map((row, rowIndex) => this._renderRow(row, rowIndex));
+  }
+
+  /**
+   * Render rows in groups. Groups appear in the order their first member
+   * appears in `rows` (consumer pre-sorts to control group order). Each
+   * group emits a header row followed by — if expanded — its data rows.
+   */
+  private _renderGroupedBody(): Array<TemplateResult | TemplateResult[]> {
+    const groups = this._buildGroups();
+    const out: Array<TemplateResult | TemplateResult[]> = [];
+    let rowIndex = 0;
+    for (const [groupKey, groupRows] of groups) {
+      out.push(this._renderGroupHeader(groupKey, groupRows));
+      if (this._isGroupExpanded(groupKey)) {
+        for (const row of groupRows) {
+          out.push(this._renderRow(row, rowIndex));
+          rowIndex++;
+        }
+      } else {
+        rowIndex += groupRows.length;
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Insertion-ordered map from group key (stringified) → rows. Memoized
+   * via `_groupsCache` so the grouping pass runs once per render set and
+   * not once per cell-render call. Invalidated in `willUpdate` when
+   * `rows` or `groupBy` change.
+   */
+  private _buildGroups(): Map<string, GridRow[]> {
+    if (this._groupsCache === undefined) {
+      const map = new Map<string, GridRow[]>();
+      for (const row of this.rows) {
+        const raw = row.cells?.[this.groupBy];
+        // Stringify so Map keys are stable when the value is `null`,
+        // `undefined`, a number, etc. The empty-string key catches missing
+        // values; the header label falls back to the i18n "(no value)" string.
+        const key = raw == null ? '' : String(raw);
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(row);
+      }
+      this._groupsCache = map;
+    }
+    return this._groupsCache;
+  }
+
+  private _isGroupExpanded(groupKey: string): boolean {
+    // When the consumer hasn't set `expandedGroups`, all groups are expanded.
+    if (!this.expandedGroups) return true;
+    return this.expandedGroups.includes(groupKey);
+  }
+
+  private _renderGroupHeader(groupKey: string, groupRows: GridRow[]): TemplateResult {
+    const isExpanded = this._isGroupExpanded(groupKey);
+    const colspan = this._totalColumnCount();
+    const label = this.groupLabel
+      ? this.groupLabel(groupKey, groupRows)
+      : `${groupKey || t('dataGridGroupNoValue')} (${groupRows.length})`;
+    const ariaLabel = isExpanded
+      ? t('dataGridCollapseGroup').replace('{group}', groupKey || '—')
+      : t('dataGridExpandGroup').replace('{group}', groupKey || '—');
+    return html`
+      <tr class="civ-data-grid__tr--group" data-group-key="${groupKey}">
+        <td
+          class="civ-data-grid__td civ-data-grid__td--group"
+          colspan="${colspan}"
+        >
+          <button
+            type="button"
+            class="civ-data-grid__group-toggle"
+            aria-expanded="${isExpanded ? 'true' : 'false'}"
+            aria-label="${ariaLabel}"
+            @click="${() => this._onToggleGroup(groupKey)}"
+          >
+            <civ-icon
+              name="${isExpanded ? 'chevron-down' : 'chevron-right'}"
+              aria-hidden="true"
+            ></civ-icon>
+            <span class="civ-data-grid__group-label">${label}</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }
+
+  private _onToggleGroup(groupKey: string): void {
+    const nextExpanded = !this._isGroupExpanded(groupKey);
+    dispatch(this, 'civ-group-toggle', {
+      groupKey,
+      expanded: nextExpanded,
+    });
   }
 
   private _renderRow(row: GridRow, rowIndex: number): TemplateResult | TemplateResult[] {
@@ -413,6 +550,8 @@ export class CivDataGrid extends CivBaseElement {
   private _anyRowActionsCache?: boolean;
   /** Per-column sticky-offset map. Invalidated when `columns` change. */
   private _stickyCache?: Map<string, { side: 'start' | 'end'; offset: string; isFirst: boolean; isLast: boolean }>;
+  /** Insertion-ordered rows-by-group cache. Invalidated when `rows` or `groupBy` change. */
+  private _groupsCache?: Map<string, GridRow[]>;
   /** Per-instance dedupe for the sticky-without-width warning. */
   private _warnedStickyWithoutWidth = false;
 
@@ -421,6 +560,10 @@ export class CivDataGrid extends CivBaseElement {
     if (changed.has('rows')) {
       this._anyExpandableCache = undefined;
       this._anyRowActionsCache = undefined;
+      this._groupsCache = undefined;
+    }
+    if (changed.has('groupBy')) {
+      this._groupsCache = undefined;
     }
     if (changed.has('columns')) {
       this._stickyCache = undefined;
@@ -434,6 +577,14 @@ export class CivDataGrid extends CivBaseElement {
     }
     if (changed.has('rows') || changed.has('expandTemplate')) {
       this._maybeWarnExpandableWithoutTemplate();
+    }
+    if (changed.has('groupBy') || changed.has('columns') || changed.has('rows')) {
+      this._maybeWarnGroupByMismatch();
+    }
+    if (this.keyboardNav) {
+      this._applyKeyboardNav();
+    } else if (changed.has('keyboardNav')) {
+      this._clearKeyboardNav();
     }
   }
 
@@ -479,6 +630,32 @@ export class CivDataGrid extends CivBaseElement {
     devWarn(
       'civ-data-grid',
       'Rows with `expandable: true` are present but `expandTemplate` is not set. Expanded rows will render a blank detail cell. Set `grid.expandTemplate = (row) => …` to render the detail content.',
+    );
+  }
+
+  /** Per-instance dedupe for the groupBy-mismatch warning. */
+  private _warnedGroupByMismatch = false;
+
+  /**
+   * When `groupBy` is set but doesn't match any column.key AND no row's
+   * cells actually contains the key, every row lands under the empty-
+   * string group with the "(no value)" label. Silently confusing — the
+   * grid renders as one big group. Warn once per instance so the
+   * consumer sees the typo.
+   */
+  private _maybeWarnGroupByMismatch(): void {
+    if (this._warnedGroupByMismatch) return;
+    if (!this.groupBy) return;
+    if (!this.rows || this.rows.length === 0) return;
+    const knownColumn = this.columns.some((c) => c.key === this.groupBy);
+    const presentInData = this.rows.some(
+      (r) => r.cells != null && this.groupBy in r.cells,
+    );
+    if (knownColumn || presentInData) return;
+    this._warnedGroupByMismatch = true;
+    devWarn(
+      'civ-data-grid',
+      `groupBy="${this.groupBy}" doesn't match any column.key, and no row's cells contains that key — every row will land under the empty "(no value)" group. Double-check the key.`,
     );
   }
 
@@ -694,6 +871,10 @@ export class CivDataGrid extends CivBaseElement {
     }
     this._editError = '';
     this._editingCell = null;
+    // When keyboardNav is on, the edit input is the focused element; after
+    // commit we re-render to the static cell, then send focus back to the
+    // cell so the user can arrow-key away without dropping out of the grid.
+    if (this.keyboardNav) this._pendingFocus = true;
     dispatch(this, 'civ-cell-edit-commit', {
       rowId: row.id,
       columnKey: col.key,
@@ -706,6 +887,7 @@ export class CivDataGrid extends CivBaseElement {
     if (!this._isEditing(row.id, col.key)) return;
     this._editingCell = null;
     this._editError = '';
+    if (this.keyboardNav) this._pendingFocus = true;
     dispatch(this, 'civ-cell-edit-cancel', { rowId: row.id, columnKey: col.key, row });
   }
 
@@ -951,6 +1133,308 @@ export class CivDataGrid extends CivBaseElement {
     }
     return this._anyRowActionsCache;
   }
+
+  // ---------------------------------------------------------------------------
+  // Keyboard-grid navigation (opt-in via `keyboardNav`)
+  //
+  // Implements the WAI-ARIA Grid Pattern:
+  //   https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+  //
+  // The table becomes a single tab stop. Inner controls (sort buttons, expand
+  // toggles, action menus, edit triggers, checkboxes) drop to `tabindex=-1`
+  // so they don't claim Tab — arrow keys move between cells and Enter / Space
+  // activate the cell's primary control.
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Return the table cells laid out as a 2D array, one entry per `<th>` /
+   * `<td>` keyed by render row × cell-within-row. Group-header and
+   * detail-row cells appear as a single-element row (they span all columns
+   * via colspan) — navigating in / out of them stays at col 0.
+   *
+   * Rows that render a state placeholder (`loading` / `error` / empty)
+   * are excluded — they keep their `role="status"` / `role="alert"` live-
+   * region semantics and the consumer's keyboard nav should bypass them.
+   */
+  private _allCells(): HTMLElement[][] {
+    const trs = Array.from(this.querySelectorAll('thead tr, tbody tr')) as HTMLElement[];
+    return trs
+      .filter((tr) => !tr.querySelector(':scope > .civ-data-grid__state'))
+      .map((tr) =>
+        Array.from(tr.querySelectorAll(':scope > th, :scope > td')) as HTMLElement[],
+      );
+  }
+
+  /** Locate a cell's (row, col) position in the current grid. */
+  private _findCellIndex(cell: HTMLElement): { r: number; c: number } | null {
+    const cells = this._allCells();
+    for (let r = 0; r < cells.length; r++) {
+      const c = cells[r].indexOf(cell);
+      if (c !== -1) return { r, c };
+    }
+    return null;
+  }
+
+  /**
+   * Set the focused-cell position from a directly-known cell element. When
+   * `updateMemory` is true and the row has more than one cell, the column
+   * is also recorded as the desired-column for the column-memory model.
+   */
+  private _syncFocusFromCell(cell: HTMLElement, updateMemory: boolean): boolean {
+    const pos = this._findCellIndex(cell);
+    if (!pos) return false;
+    this._focusedRow = pos.r;
+    this._focusedCol = pos.c;
+    if (updateMemory) {
+      const cells = this._allCells();
+      if ((cells[pos.r]?.length ?? 1) > 1) this._colMemory = pos.c;
+    }
+    return true;
+  }
+
+  private _applyKeyboardNav(): void {
+    const cells = this._allCells();
+    if (cells.length === 0) return;
+    // Clamp focus to the current grid bounds — rows / columns may have
+    // shrunk since we last navigated.
+    if (this._focusedRow > cells.length - 1) this._focusedRow = cells.length - 1;
+    if (this._focusedRow < 0) this._focusedRow = 0;
+    const rowLen = cells[this._focusedRow]?.length ?? 1;
+    if (this._focusedCol > rowLen - 1) this._focusedCol = rowLen - 1;
+    if (this._focusedCol < 0) this._focusedCol = 0;
+
+    const table = this.querySelector('table.civ-data-grid__table');
+    table?.setAttribute('role', 'grid');
+    // WAI-ARIA Grid Pattern — when multi-row selection is supported, the
+    // grid container must declare it so AT can offer the right interaction.
+    if (this.selectable === 'multiple') {
+      table?.setAttribute('aria-multiselectable', 'true');
+    } else {
+      table?.removeAttribute('aria-multiselectable');
+    }
+
+    cells.forEach((rowEls, r) => {
+      const tr = rowEls[0]?.parentElement;
+      tr?.setAttribute('role', 'row');
+      rowEls.forEach((cell, c) => {
+        const isHeader = cell.tagName === 'TH';
+        cell.setAttribute('role', isHeader ? 'columnheader' : 'gridcell');
+        cell.tabIndex = r === this._focusedRow && c === this._focusedCol ? 0 : -1;
+      });
+    });
+
+    // Inner controls — excluded from the page tab order. The editing cell's
+    // input is the one exception: it needs to stay focusable so Tab from
+    // outside still reaches it after a programmatic focus().
+    this.querySelectorAll(
+      '.civ-data-grid__th button, .civ-data-grid__td button, .civ-data-grid__td input, .civ-data-grid__td select, .civ-data-grid__td a, .civ-data-grid__td [role="button"]',
+    ).forEach((el) => {
+      if ((el as HTMLElement).closest('.civ-data-grid__td--editing')) return;
+      (el as HTMLElement).tabIndex = -1;
+    });
+
+    if (this._pendingFocus) {
+      this._pendingFocus = false;
+      const target = cells[this._focusedRow]?.[this._focusedCol];
+      target?.focus();
+      // Bring the focused cell into view when the table sits inside a
+      // horizontally-scrolling region. `block: 'nearest'` keeps vertical
+      // scroll quiet when the row is already visible. jsdom doesn't
+      // implement scrollIntoView, so guard the call so tests don't throw.
+      if (typeof target?.scrollIntoView === 'function') {
+        target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+    }
+  }
+
+  /**
+   * Undo `_applyKeyboardNav` when the consumer flips `keyboardNav` off.
+   * The grid reverts to plain semantic-table behavior (no role overrides,
+   * inner controls regain default tab order).
+   */
+  private _clearKeyboardNav(): void {
+    const table = this.querySelector('table.civ-data-grid__table');
+    table?.removeAttribute('role');
+    table?.removeAttribute('aria-multiselectable');
+    this.querySelectorAll('thead tr, tbody tr').forEach((tr) =>
+      tr.removeAttribute('role'),
+    );
+    this.querySelectorAll('.civ-data-grid__th, .civ-data-grid__td').forEach((el) => {
+      el.removeAttribute('role');
+      el.removeAttribute('tabindex');
+    });
+    this.querySelectorAll(
+      '.civ-data-grid__th button, .civ-data-grid__td button, .civ-data-grid__td input, .civ-data-grid__td select, .civ-data-grid__td a, .civ-data-grid__td [role="button"]',
+    ).forEach((el) => el.removeAttribute('tabindex'));
+  }
+
+  private _onTableKeydown = (e: KeyboardEvent): void => {
+    if (!this.keyboardNav) return;
+    const target = e.target as HTMLElement;
+    // Edit-mode inputs have their own keymap (Enter commits, Escape cancels);
+    // let those handlers run first.
+    if (target.closest('.civ-data-grid__td--editing')) return;
+    // When an open <civ-menu> sits inside a cell (the row-actions kebab),
+    // its keydown handler is bound to `document` — i.e. it fires AFTER the
+    // grid's, not before. Bail so the menu can consume keys it owns
+    // (Escape to close, Arrow keys to move between items) before this
+    // handler decides what to do with them. After the menu closes, focus
+    // returns to the trigger inside the cell and this guard lifts on the
+    // next key press.
+    if (target.closest('civ-menu[open]')) return;
+
+    // Sync focused cell from the event target — covers mouse/programmatic
+    // focus that didn't go through `_onTableFocusin` (e.g. a focus call
+    // synchronous with the keydown, or a test dispatching keydown without
+    // a prior focus event). Cheap when the indices are already correct.
+    const targetCell = target.closest(
+      '.civ-data-grid__th, .civ-data-grid__td',
+    ) as HTMLElement | null;
+    if (targetCell) this._syncFocusFromCell(targetCell, true);
+
+    let handled = true;
+    switch (e.key) {
+      case 'ArrowRight': this._moveCol(1); break;
+      case 'ArrowLeft': this._moveCol(-1); break;
+      case 'ArrowDown': this._moveRow(1); break;
+      case 'ArrowUp': this._moveRow(-1); break;
+      case 'Home': {
+        if (e.ctrlKey || e.metaKey) this._focusedRow = 0;
+        this._focusedCol = 0;
+        this._colMemory = 0;
+        this._pendingFocus = true;
+        this._applyKeyboardNav();
+        break;
+      }
+      case 'End': {
+        const cells = this._allCells();
+        if (e.ctrlKey || e.metaKey) this._focusedRow = cells.length - 1;
+        this._focusedCol = (cells[this._focusedRow]?.length ?? 1) - 1;
+        this._colMemory = this._focusedCol;
+        this._pendingFocus = true;
+        this._applyKeyboardNav();
+        break;
+      }
+      case 'PageDown': this._moveRow(10); break;
+      case 'PageUp': this._moveRow(-10); break;
+      case 'Enter':
+      case ' ':
+        this._activateFocusedCell(false);
+        break;
+      case 'F2':
+        this._activateFocusedCell(true);
+        break;
+      case 'Escape':
+        // WAI-ARIA Grid Pattern "actionable cell" — when focus is on an
+        // inner control of a cell (a sort button, a kebab trigger after
+        // its menu has closed), Escape returns focus to the cell so the
+        // user can continue arrow-keying. Inner widgets that own Escape
+        // (e.g. <civ-menu> while open) are already handled by the
+        // open-menu guard above; this branch only fires when no inner
+        // widget claimed the key.
+        if (targetCell && target !== targetCell) {
+          targetCell.focus();
+        } else {
+          handled = false;
+        }
+        break;
+      default:
+        handled = false;
+    }
+    if (handled) e.preventDefault();
+  };
+
+  private _moveRow(delta: number): void {
+    const cells = this._allCells();
+    if (cells.length === 0) return;
+    this._focusedRow = Math.max(0, Math.min(cells.length - 1, this._focusedRow + delta));
+    const rowLen = cells[this._focusedRow]?.length ?? 1;
+    // Column memory: restore the user's preferred column when the new row
+    // has it; otherwise clamp to what's available but DON'T overwrite the
+    // memory — so transit through single-cell group / detail rows preserves
+    // the user's column position.
+    this._focusedCol = Math.min(this._colMemory, rowLen - 1);
+    this._pendingFocus = true;
+    this._applyKeyboardNav();
+  }
+
+  private _moveCol(delta: number): void {
+    const cells = this._allCells();
+    if (cells.length === 0) return;
+    const rowLen = cells[this._focusedRow]?.length ?? 1;
+    this._focusedCol = Math.max(0, Math.min(rowLen - 1, this._focusedCol + delta));
+    // Explicit horizontal navigation — this is the new desired column.
+    this._colMemory = this._focusedCol;
+    this._pendingFocus = true;
+    this._applyKeyboardNav();
+  }
+
+  /**
+   * Activate the focused cell. `preferEdit` (F2) is a stricter variant
+   * that only clicks the edit trigger — other controls (sort, expand,
+   * menu) are no-ops on F2.
+   */
+  private _activateFocusedCell(preferEdit: boolean): void {
+    const cells = this._allCells();
+    const cell = cells[this._focusedRow]?.[this._focusedCol];
+    if (!cell) return;
+
+    if (preferEdit) {
+      const trigger = cell.querySelector(
+        '.civ-data-grid__edit-cell-trigger',
+      ) as HTMLElement | null;
+      trigger?.click();
+      return;
+    }
+
+    // Enter / Space — click the primary inner control if present.
+    const ctrl = cell.querySelector(
+      'button, input, select, a, [role="button"]',
+    ) as HTMLElement | null;
+    if (ctrl) {
+      ctrl.click();
+      return;
+    }
+
+    // No inner control — when the row is interactive, fire row-activate so
+    // master-detail flows have a keyboard path.
+    if (this.interactive) {
+      const tr = cell.closest('tr');
+      const rowId = tr?.getAttribute('data-row-id');
+      if (rowId) {
+        const row = this.rows.find((r) => r.id === rowId);
+        if (row && !row.disabled) {
+          dispatch(this, 'civ-row-activate', { rowId: row.id, row });
+        }
+      }
+    }
+  }
+
+  /**
+   * When focus enters a cell directly (e.g. user clicks a cell or an inner
+   * control), sync the roving-tabindex position to match so subsequent
+   * arrow keys navigate from where the user actually is. We sync tabindex
+   * imperatively here rather than via a re-render — re-rendering during
+   * a focus event would yank focus away.
+   */
+  private _onTableFocusin = (e: FocusEvent): void => {
+    if (!this.keyboardNav) return;
+    const target = e.target as HTMLElement;
+    const cell = target.closest(
+      '.civ-data-grid__th, .civ-data-grid__td',
+    ) as HTMLElement | null;
+    if (!cell) return;
+    if (!this._syncFocusFromCell(cell, true)) return;
+    // Sync tabindex imperatively here rather than via a re-render —
+    // re-rendering during a focus event would yank focus away.
+    const r = this._focusedRow;
+    const c = this._focusedCol;
+    this._allCells().forEach((rowEls, ri) =>
+      rowEls.forEach((cellEl, ci) => {
+        cellEl.tabIndex = ri === r && ci === c ? 0 : -1;
+      }),
+    );
+  };
 }
 
 declare global {

@@ -724,7 +724,7 @@ export const KeyboardNavigation: Story = {
         ]},
         { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
       ];
-      let data = [...SAMPLE_DATA];
+      const data = [...SAMPLE_DATA];
       const rows: GridRow[] = data.map((d) => ({
         id: d.id,
         cells: { applicant: d.applicant, type: d.type, status: d.status, updated: d.updated },
@@ -849,7 +849,7 @@ export const MultiColumnSort: Story = {
 };
 
 export const Aggregations: Story = {
-  name: 'Aggregator footer + group subtotals',
+  name: 'Aggregations',
   render: () => {
     setTimeout(() => {
       const grid = document.querySelector('civ-data-grid.story-aggregate') as any;

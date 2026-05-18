@@ -70,7 +70,7 @@ export function generateWorkflowUi(
         );
       })
       .join('\n');
-    buttonsHtml = `\n  <div data-civ-workflow-actions class="civ-mt-4 civ-flex civ-gap-2">\n${buttons}\n  </div>`;
+    buttonsHtml = `\n  <div data-civ-workflow-actions class="civ-mt-4 civ-button-row">\n${buttons}\n  </div>`;
   }
 
   if (isTerminal) {

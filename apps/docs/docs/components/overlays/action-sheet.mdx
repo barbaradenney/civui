@@ -92,8 +92,10 @@ Renders as a fixed bottom sheet:
 >
   <div class="civ-p-4">
     <p>Are you sure?</p>
-    <civ-button label="Confirm" @click="${this.onConfirm}"></civ-button>
-    <civ-button variant="secondary" label="Cancel" @click="${() => this.confirmOpen = false}"></civ-button>
+    <div class="civ-button-row">
+      <civ-button variant="secondary" label="Cancel" @click="${() => this.confirmOpen = false}"></civ-button>
+      <civ-button label="Confirm" @click="${this.onConfirm}"></civ-button>
+    </div>
   </div>
 </civ-action-sheet>
 ```

@@ -1821,6 +1821,41 @@ Each color has shades: `lightest`, `lighter`, `light`, DEFAULT, `vivid` (primary
 
 Example: `civ-bg-error-lighter`, `civ-text-primary-dark`, `civ-border-base-light`.
 
+### Button row layout
+
+`<civ-button>` automatically goes full-width on mobile (≤480px) via the global `.civ-btn` rule. For single-button placements (`<civ-button>` inside a regular block container), that's all you need.
+
+For **primary + secondary form-flow button clusters** (Sign in / Start guest, Save and continue / Back, Submit / Cancel), wrap them in `<div class="civ-button-row">`:
+
+```html
+<!-- ✓ Stacks vertically on mobile (each button full-width), row on ≥481px -->
+<div class="civ-button-row">
+  <civ-button label="Save and continue" variant="primary"></civ-button>
+  <civ-button label="Back" variant="tertiary"></civ-button>
+</div>
+
+<!-- ✗ civ-flex keeps both buttons side-by-side at every viewport,
+     so on mobile each button gets ~50% of the row instead of 100% -->
+<div class="civ-flex civ-gap-3">
+  <civ-button label="Save and continue" variant="primary"></civ-button>
+  <civ-button label="Back" variant="tertiary"></civ-button>
+</div>
+```
+
+Two specific exceptions stay on `civ-flex`:
+- **Toolbar clusters** (text formatting, view toggles): use `<civ-button-group>` (`role="toolbar"`, flush borders, no gap).
+- **Row-action clusters** in list items (Edit / Remove next to a summary card): keep `civ-flex civ-gap-2`. Those intentionally stay row-laid-out on mobile per `government-patterns.md` so destructive labels don't grow to consume the screen.
+
+### Button-as-link
+
+`<civ-button href="...">` is polymorphic — it renders as `<a>` and the `.civ-btn--link` modifier underlines the label text automatically. Same button chrome, plus a clear "this navigates" affordance. Right-click "open in new tab", browser history, and screen-reader role all behave like a real link.
+
+```html
+<civ-button href="/dependents/new" variant="primary">Add dependent</civ-button>
+```
+
+For inline prose links (within sentences), use `<civ-link>` instead.
+
 ### Focus ring
 
 The focus ring is applied automatically by a global rule in `civ.css` — you don't add a class:

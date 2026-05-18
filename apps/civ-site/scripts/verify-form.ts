@@ -217,21 +217,24 @@ async function verifyForm(browser: Browser, form: string): Promise<FormResult> {
       unregistered.length > 0 ? `missing: ${unregistered.join(', ')}` : 'all defined',
     );
 
-    // Intro start buttons.
+    // Intro start buttons. civ-button is polymorphic — renders <button>
+    // for click-only actions, <a> when href is set (the start buttons
+    // now use href="#" + preventDefault so the design system's
+    // .civ-btn--link underline applies for "this navigates" affordance).
     const startButtons = await page.evaluate(() => {
       const signedIn = document.querySelector('civ-button[data-start-signed-in]');
       const guest = document.querySelector('civ-button[data-start-guest]');
+      const root: ParentNode | null = signedIn?.shadowRoot ?? signedIn ?? null;
+      const rendered = !!(root && (root.querySelector('button') || root.querySelector('a')));
       return {
         hasSignedIn: !!signedIn,
         hasGuest: !!guest,
-        signedInRendered: signedIn?.shadowRoot
-          ? signedIn.shadowRoot.querySelector('button') !== null
-          : signedIn?.querySelector('button') !== null,
+        signedInRendered: rendered,
       };
     });
     record('intro page has "Start signed-in" button', startButtons.hasSignedIn);
     record('intro page has "Start guest" button', startButtons.hasGuest);
-    record('start buttons rendered a native <button>', startButtons.signedInRendered);
+    record('start buttons render a clickable native element', startButtons.signedInRendered);
 
     // Intro → hub transition. Poll for the section swap rather than a
     // fixed wait — the click handler runs through the generator's
@@ -314,28 +317,37 @@ async function verifyPrefillFlow(browser: Browser): Promise<FormResult> {
     });
     await page.waitForTimeout(200);
 
-    // Signed-in path applies the sample prefill before opening the hub.
+    // Signed-in path applies the sample prefill and routes the user to
+    // the combined prefill review page (a single page that aggregates
+    // every chapter's prefilled fields). Hub is bypassed until the
+    // user confirms.
     await page.locator('civ-button[data-start-signed-in]').click();
     await page.waitForTimeout(300);
 
-    // Personal info gets every field prefilled in the sample data, so
-    // its prefill review should be the visible content inside the
-    // chapter.
-    await page.locator('civ-list-item[data-chapter-id="personal-info"] a').click();
-    await page.waitForTimeout(300);
-
-    const reviewState = await page.evaluate(() => {
-      const review = document.querySelector('[data-chapter="personal-info"] [data-prefill-review]');
-      const steps = document.querySelector('[data-chapter="personal-info"] [data-chapter-steps]');
+    const prefillPageState = await page.evaluate(() => {
+      const prefill = document.querySelector('section[data-page="prefill"]') as HTMLElement | null;
+      const hub = document.querySelector('section[data-page="hub"]') as HTMLElement | null;
+      const summary = document.querySelector('[data-prefill-combined-summary]') as (HTMLElement & { sections?: Array<{ heading: string }> }) | null;
+      const sections = summary?.sections ?? [];
       return {
-        reviewShown: review ? !(review as HTMLElement).hidden : false,
-        stepsHidden: steps ? (steps as HTMLElement).hidden : false,
+        prefillVisible: prefill ? !prefill.hidden : false,
+        hubHidden: hub ? hub.hidden : false,
+        sectionCount: sections.length,
+        sectionHeadings: sections.map((s) => s.heading),
       };
     });
-    record('prefill review is visible on the prefilled chapter', reviewState.reviewShown);
-    record('chapter form steps are hidden behind the review', reviewState.stepsHidden);
+    record(
+      'combined prefill page is the next view after signed-in start',
+      prefillPageState.prefillVisible && prefillPageState.hubHidden,
+      `prefillVisible=${prefillPageState.prefillVisible}, hubHidden=${prefillPageState.hubHidden}`,
+    );
+    record(
+      'combined prefill summary aggregates per-chapter sections',
+      prefillPageState.sectionCount > 0,
+      `${prefillPageState.sectionCount} section(s): ${prefillPageState.sectionHeadings.join(', ')}`,
+    );
 
-    await page.locator('[data-chapter="personal-info"] [data-prefill-continue]').click();
+    await page.locator('[data-prefill-combined-continue]').click();
     await page.waitForTimeout(300);
 
     const after = await page.evaluate(() => {
@@ -360,17 +372,17 @@ async function verifyPrefillFlow(browser: Browser): Promise<FormResult> {
       };
     });
     record(
-      'clicking prefill Continue lands on the hub',
+      'combined Continue lands on the hub',
       after.hubVisible,
       after.hubVisible ? 'hub visible' : 'hub still hidden',
     );
     record(
-      'clicking prefill Continue marks the chapter Complete',
+      'fully-prefilled chapter is marked Complete',
       after.personalBadgeLabel === 'Complete' && after.personalBadgeVariant === 'success',
-      `badge=${after.personalBadgeLabel}/${after.personalBadgeVariant}`,
+      `personal-info badge=${after.personalBadgeLabel}/${after.personalBadgeVariant}`,
     );
     record(
-      'next chapter is now visible with heading + Not started badge',
+      'partially-prefilled chapter is Not started (not auto-completed)',
       after.contactBadgeLabel === 'Not started' && (after.contactHeadingText ?? '').length > 0,
       `contact-info badge=${after.contactBadgeLabel}, heading="${after.contactHeadingText}"`,
     );

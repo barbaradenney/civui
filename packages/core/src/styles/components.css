@@ -210,6 +210,17 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
+  /* Active-task indicator for task-list rows. Consumers that want a
+     leading chevron pointing at the next-up task slot a
+     `<civ-icon data-list-item-start ...>` into every row and toggle
+     `data-task-active` on the active row at runtime. Inactive rows
+     hide the chevron so the active one stands out without making
+     the others appear "incomplete in a different way." */
+  civ-list-item:not([data-task-active]) > [data-list-item-start],
+  civ-list-item:not([data-task-active]) [data-civ-list-item-start-slot] {
+    display: none;
+  }
+
   /* Row layout — content on the left, action cluster on the right.
      Applies via :has() so it only kicks in when consumers actually
      use the `__content` / `__actions` BEM children. Without that
@@ -1537,6 +1548,26 @@
     .civ-btn {
       display: flex;
       width: 100%;
+    }
+  }
+
+  /* Form-actions button row: the standard cluster for primary +
+     secondary form-flow buttons (Sign in / Start guest, Save and
+     continue / Back, Submit / Cancel, etc.). Stacks on mobile so each
+     button picks up the .civ-btn full-width-on-mobile rule above;
+     becomes a row with gap above 480px. The primary button comes
+     first in source order on every viewport.
+     - Use civ-button-group instead for connected/flush toolbars
+       (role="toolbar" semantics, no gap between buttons).
+     - Use plain civ-flex + civ-gap-2 for row-action clusters in list
+       items (those intentionally stay row-laid-out on mobile per the
+       government-patterns.md row-action rule). */
+  .civ-button-row {
+    @apply civ-flex civ-flex-col civ-gap-3;
+  }
+  @media (min-width: 481px) {
+    .civ-button-row {
+      @apply civ-flex-row civ-items-center;
     }
   }
 

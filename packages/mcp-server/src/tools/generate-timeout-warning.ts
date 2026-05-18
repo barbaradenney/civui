@@ -55,7 +55,7 @@ export function generateTimeoutWarning(
   htmlParts.push(`  <h2 id="timeout-heading" class="civ-text-lg civ-font-bold civ-mb-4">Session expiring</h2>`);
   htmlParts.push(`  <p data-civ-timeout-message>Your session will expire in <span data-civ-countdown aria-live="polite" aria-atomic="true"></span>.</p>`);
 
-  htmlParts.push(`  <div class="civ-flex civ-gap-4 civ-mt-6">`);
+  htmlParts.push(`  <div class="civ-button-row civ-mt-6">`);
   if (extendable) {
     htmlParts.push(
       `    <button type="button" data-civ-timeout-extend class="civ-bg-primary civ-text-white civ-px-4 civ-py-2 civ-rounded">Extend session</button>`,

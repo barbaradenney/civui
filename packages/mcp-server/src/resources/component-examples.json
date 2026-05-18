@@ -355,7 +355,7 @@
       "story": "ActionBar",
       "name": "Action Bar",
       "category": "Foundations/Layout Examples",
-      "html": "<div class=\"civ-flex civ-justify-end civ-gap-4\">\n      <civ-button variant=\"secondary\" label=\"Save draft\"></civ-button>\n      <civ-button label=\"Continue\"></civ-button>\n    </div>",
+      "html": "<!-- civ-button-row stacks the cluster on mobile (each button picks up\n         the full-width-on-mobile rule); civ-justify-end keeps the row\n         right-aligned at desktop widths. Primary is last here because\n         form actions typically put the affirmative action at the\n         visually-strongest position (right-most on desktop). -->\n    <div class=\"civ-button-row civ-justify-end\">\n      <civ-button variant=\"secondary\" label=\"Save draft\"></civ-button>\n      <civ-button label=\"Continue\"></civ-button>\n    </div>",
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
     },
     {
@@ -383,7 +383,7 @@
       "story": "ClaimActions",
       "name": "Claim Actions",
       "category": "Actions/Button",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Upload evidence</p>\n        <div class=\"civ-flex civ-gap-3\">\n          <civ-button variant=\"primary\">Upload documents</civ-button>\n          <civ-button variant=\"tertiary\">Skip for now</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Manage dependents</p>\n        <div class=\"civ-flex civ-gap-3\">\n          <civ-button variant=\"secondary\">Add dependent</civ-button>\n          <civ-button variant=\"tertiary\" danger>Remove dependent</civ-button>\n        </div>\n      </div>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Upload evidence</p>\n        <div class=\"civ-button-row\">\n          <civ-button variant=\"primary\">Upload documents</civ-button>\n          <civ-button variant=\"tertiary\">Skip for now</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Manage dependents</p>\n        <div class=\"civ-button-row\">\n          <civ-button variant=\"secondary\">Add dependent</civ-button>\n          <civ-button variant=\"tertiary\" danger>Remove dependent</civ-button>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
@@ -440,7 +440,14 @@
       "story": "FormActions",
       "name": "Form Actions",
       "category": "Actions/Button",
-      "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        alert('Form submitted!');\n      }}\"\n    >\n      <p class=\"civ-mb-4\">Complete your VA benefits application and submit for review.</p>\n      <div class=\"civ-flex civ-gap-3\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n        <civ-button variant=\"secondary\">Save and continue later</civ-button>\n        <civ-button variant=\"tertiary\">Cancel</civ-button>\n      </div>\n    </form>",
+      "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        alert('Form submitted!');\n      }}\"\n    >\n      <p class=\"civ-mb-4\">Complete your VA benefits application and submit for review.</p>\n      <div class=\"civ-button-row\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n        <civ-button variant=\"secondary\">Save and continue later</civ-button>\n        <civ-button variant=\"tertiary\">Cancel</civ-button>\n      </div>\n    </form>",
+      "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "FormActionsMobile",
+      "name": "Form Actions (mobile)",
+      "category": "Actions/Button",
+      "html": "<p class=\"civ-mb-4 civ-text-sm\">\n      Below 481px viewports, <code>.civ-button-row</code> stacks the cluster vertically so\n      every button picks up the design system's full-width-on-mobile rule. Compare to plain\n      <code>civ-flex civ-gap-3</code>, which keeps the row horizontal at every width and\n      shrinks each button to its share of the row.\n    </p>\n    <div class=\"civ-button-row\">\n      <civ-button>Save and continue</civ-button>\n      <civ-button variant=\"tertiary\">Back</civ-button>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
@@ -500,7 +507,7 @@
       "story": "WithFocusTrap",
       "name": "With Focus Trap",
       "category": "Overlays/Action Sheet",
-      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open modal sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet trap-focus @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Confirm action</p>\n            <p class=\"civ-text-body civ-mb-4\">Are you sure you want to delete this item?</p>\n            <div class=\"civ-flex civ-gap-4\">\n              <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n              <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
+      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open modal sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet trap-focus @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Confirm action</p>\n            <p class=\"civ-text-body civ-mb-4\">Are you sure you want to delete this item?</p>\n            <div class=\"civ-button-row\">\n              <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n              <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
       "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
     },
     {

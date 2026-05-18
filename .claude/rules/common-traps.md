@@ -164,6 +164,42 @@ legends.
 
 ---
 
+## `civ-flex civ-gap-*` button rows don't go full-width on mobile
+
+A common reflex when placing two primary buttons side-by-side is to
+wrap them in `<div class="civ-flex civ-gap-3">`. That works on
+desktop, but on mobile each `civ-button` only gets to "100% of its
+share of the row" — i.e. ~50% — instead of the full-width tap target
+the design system intends.
+
+```html
+<!-- ✗ buttons stay side-by-side on mobile, each ~50% wide -->
+<div class="civ-flex civ-gap-3">
+  <civ-button label="Sign in and start" variant="primary"></civ-button>
+  <civ-button label="Start without signing in" variant="tertiary"></civ-button>
+</div>
+
+<!-- ✓ stacks on mobile (each full-width), row on ≥481px -->
+<div class="civ-button-row">
+  <civ-button label="Sign in and start" variant="primary"></civ-button>
+  <civ-button label="Start without signing in" variant="tertiary"></civ-button>
+</div>
+```
+
+`.civ-button-row` is the design-system utility for primary +
+secondary form-flow button clusters. Two specific exceptions stay
+on `civ-flex`:
+
+- **Toolbar clusters** (text formatting, view toggles, action chips):
+  use `<civ-button-group>` instead — it's `role="toolbar"`, connected/
+  flush borders, no gap.
+- **Row-action clusters** (Edit / Remove next to a summary card or
+  list row): keep `civ-flex civ-gap-2` — those *should* stay row on
+  mobile per the row-action rule (destructive labels shouldn't grow
+  to consume the whole screen).
+
+---
+
 ## Story display name should describe the story
 
 A `StoryObj` whose `name:` is unrelated to its export silently lies to

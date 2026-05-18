@@ -8,9 +8,26 @@ import '@civui/actions/button';
 import '@civui/actions/action-button';
 import '@civui/inputs/text-input';
 import '@civui/overlays/drawer';
+import '@civui/feedback/badge';
 import type { GridColumn, GridRow } from './civ-data-grid.types.js';
 import { applyGridFilters } from '../filter/grid-filter.js';
 import { sum, avg } from '../aggregate/grid-aggregate.js';
+
+// Status string → badge variant. The badge's `with-icon` attribute
+// auto-renders the variant's semantic icon (check-circle, warning,
+// error, info), so the formatter stays declarative.
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
+  Approved: 'success',
+  Denied: 'error',
+  Pending: 'warning',
+  'In review': 'info',
+};
+
+const statusBadge = (value: unknown) => {
+  const v = String(value ?? '');
+  const variant = STATUS_VARIANT[v] ?? 'neutral';
+  return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
+};
 
 const meta: Meta = {
   title: 'Layout/Data Grid',
@@ -52,7 +69,7 @@ const defaultColumns: GridColumn[] = [
   { key: 'id', header: 'Application ID', width: '9rem' },
   { key: 'applicant', header: 'Applicant', sortable: true },
   { key: 'type', header: 'Type' },
-  { key: 'status', header: 'Status' },
+  { key: 'status', header: 'Status', formatter: statusBadge },
   { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
 ];
 
@@ -194,11 +211,7 @@ export const WithFormatter: Story = {
         {
           key: 'status',
           header: 'Status',
-          formatter: (value: any) => {
-            const v = String(value);
-            const variant = v === 'Approved' ? 'success' : v === 'Denied' ? 'error' : 'info';
-            return html`<civ-tag variant="${variant}">${v}</civ-tag>` as any;
-          },
+          formatter: statusBadge,
         },
         { key: 'updated', header: 'Updated', align: 'end' },
       ];
@@ -522,7 +535,7 @@ export const InlineCellEditing: Story = {
             { value: 'Healthcare', label: 'Healthcare' },
           ],
         },
-        { key: 'status', header: 'Status' },
+        { key: 'status', header: 'Status', formatter: statusBadge },
         { key: 'updated', header: 'Last updated', align: 'end' },
       ];
       grid.addEventListener('civ-cell-edit-commit', (e: Event) => {
@@ -554,7 +567,7 @@ export const StickyColumns: Story = {
         { key: 'id', header: 'ID', width: '5rem', sticky: 'start' },
         { key: 'applicant', header: 'Applicant', width: '14rem', sticky: 'start' },
         { key: 'type', header: 'Type', width: '10rem' },
-        { key: 'status', header: 'Status', width: '8rem' },
+        { key: 'status', header: 'Status', width: '8rem', formatter: statusBadge },
         { key: 'submitted', header: 'Submitted', width: '8rem' },
         { key: 'reviewed', header: 'Last reviewed', width: '10rem' },
         { key: 'reviewer', header: 'Reviewer', width: '12rem' },
@@ -599,7 +612,7 @@ export const StickyEndColumn: Story = {
         { key: 'id', header: 'ID', width: '5rem' },
         { key: 'applicant', header: 'Applicant', width: '14rem' },
         { key: 'type', header: 'Type', width: '10rem' },
-        { key: 'status', header: 'Status', width: '8rem' },
+        { key: 'status', header: 'Status', width: '8rem', formatter: statusBadge },
         { key: 'submitted', header: 'Submitted', width: '8rem' },
         { key: 'reviewer', header: 'Reviewer', width: '12rem' },
         { key: 'updated', header: 'Last updated', width: '10rem', align: 'end', sticky: 'end' },
@@ -703,7 +716,7 @@ export const KeyboardNavigation: Story = {
       const cols: GridColumn[] = [
         { key: 'applicant', header: 'Applicant', sortable: true },
         { key: 'type', header: 'Type' },
-        { key: 'status', header: 'Status', editable: true, inputType: 'select', options: [
+        { key: 'status', header: 'Status', editable: true, formatter: statusBadge, inputType: 'select', options: [
           { value: 'In review', label: 'In review' },
           { value: 'Approved', label: 'Approved' },
           { value: 'Pending', label: 'Pending' },
@@ -711,7 +724,7 @@ export const KeyboardNavigation: Story = {
         ]},
         { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
       ];
-      let data = [...SAMPLE_DATA];
+      const data = [...SAMPLE_DATA];
       const rows: GridRow[] = data.map((d) => ({
         id: d.id,
         cells: { applicant: d.applicant, type: d.type, status: d.status, updated: d.updated },
@@ -780,7 +793,7 @@ export const MultiColumnSort: Story = {
       const cols: GridColumn[] = [
         { key: 'applicant', header: 'Applicant', sortable: true },
         { key: 'type', header: 'Type', sortable: true },
-        { key: 'status', header: 'Status', sortable: true },
+        { key: 'status', header: 'Status', sortable: true, formatter: statusBadge },
         { key: 'updated', header: 'Last updated', sortable: true, align: 'end' },
       ];
       grid.columns = cols;
@@ -836,7 +849,7 @@ export const MultiColumnSort: Story = {
 };
 
 export const Aggregations: Story = {
-  name: 'Aggregator footer + group subtotals',
+  name: 'Aggregations',
   render: () => {
     setTimeout(() => {
       const grid = document.querySelector('civ-data-grid.story-aggregate') as any;
@@ -911,7 +924,7 @@ export const ColumnFiltering: Story = {
             { value: 'Healthcare', label: 'Healthcare' },
           ],
         }},
-        { key: 'status', header: 'Status', filter: {
+        { key: 'status', header: 'Status', formatter: statusBadge, filter: {
           type: 'select',
           options: [
             { value: 'In review', label: 'In review' },

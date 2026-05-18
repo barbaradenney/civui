@@ -55,6 +55,10 @@ export async function assembleGovForm(formNumber: string, options?: {
 
   const allPages = [
     { id: 'intro', html: result.pages.intro.html },
+    // Combined prefill review (only entered from the signed-in path when
+    // there's actual prefill data; the signed-in click hands off to
+    // 'hub' directly when there's nothing to confirm).
+    { id: 'prefill', html: result.pages.prefill.html },
     { id: 'hub', html: result.taskListHub.html + complexHtml.hubInsert },
     ...result.pages.chapters.map(ch => ({ id: ch.id, html: complexHtml.chapterWrap(ch.id, ch.html) })),
     { id: 'review', html: result.pages.review.html },
@@ -164,14 +168,25 @@ ${chapterHeadings}
       mailingAddress: { value: '123 Main St, Springfield, IL 62701', source: 'profile' },
     };
 
-    document.querySelector('[data-start-signed-in]')?.addEventListener('click', function() {
-      showPage('hub');
+    // The start buttons render as <a href="#"> so the design system's
+    // .civ-btn--link styling underlines the label (visual cue that
+    // they navigate). The href is decorative — preventDefault keeps
+    // the browser from following it, and our router picks the actual
+    // destination from runtime state (prefill data presence).
+    document.querySelector('[data-start-signed-in]')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Apply prefill first so the combined review page has content
+      // before we route there. If there's nothing to confirm, hand off
+      // straight to the hub.
+      var hasPrefill = false;
       if (typeof window.civApplyPrefill === 'function') {
-        window.civApplyPrefill(samplePrefill);
+        hasPrefill = window.civApplyPrefill(samplePrefill) === true;
       }
+      showPage(hasPrefill ? 'prefill' : 'hub');
     });
 
-    document.querySelector('[data-start-guest]')?.addEventListener('click', function() {
+    document.querySelector('[data-start-guest]')?.addEventListener('click', function(e) {
+      e.preventDefault();
       showPage('hub');
     });
 
@@ -305,6 +320,16 @@ ${chapterHeadings}
       } else {
         item.removeAttribute('href');
       }
+      // The chevron icon in the start slot is hidden on every row by
+      // default — only the row marked data-task-active shows it.
+      // "Not started" is the single next-up task: in chapter rows it's
+      // the first incomplete chapter, in the review row it's the
+      // ready-to-review state once every chapter is complete.
+      if (status === 'not-started') {
+        item.setAttribute('data-task-active', '');
+      } else {
+        item.removeAttribute('data-task-active');
+      }
     }
 
     // ── Review Page Population ────────────────────────────────────
@@ -352,20 +377,36 @@ ${chapterHeadings}
 
     /**
      * Apply prefill data to the form. Sets prefillData on civ-form
-     * elements (which handle field values and locked state), then
-     * populates chapter summaries and updates task statuses.
+     * elements (which handle field values and locked state), populates
+     * each chapter's prefill-review (for partial-prefill chapters the
+     * user later opens from the hub), and aggregates the data into the
+     * combined prefill page that the signed-in entry routes to.
+     *
+     * Returns true when there was at least one prefilled field, so the
+     * caller can route to the combined page; false means "nothing to
+     * confirm, send the user straight to the hub."
      *
      * @param {Record<string, {value: string, source: string, locked?: boolean}>} prefillData
+     * @returns {boolean}
      */
     window.civApplyPrefill = function(prefillData) {
-      if (!prefillData || Object.keys(prefillData).length === 0) return;
+      if (!prefillData || Object.keys(prefillData).length === 0) return false;
 
       // Delegate field value setting to civ-form components
       document.querySelectorAll('civ-form').forEach(function(form) {
         form.prefillData = prefillData;
       });
 
-      // Populate chapter prefill review summaries
+      // Aggregated sections for the combined prefill review page. Each
+      // entry maps one chapter to its list of prefilled label/value
+      // pairs, plus whether that chapter is fully prefilled (in which
+      // case the combined Continue button marks it Complete).
+      var combinedSections = [];
+      var fullyPrefilledChapterIds = [];
+
+      // Populate per-chapter prefill review summaries (still shown when
+      // the user opens a chapter directly from the hub, e.g. a partial
+      // chapter that needs the form steps).
       document.querySelectorAll('[data-prefill-review]').forEach(function(review) {
         var chapterFieldNames = (review.getAttribute('data-chapter-fields') || '').split(',').filter(Boolean);
         var prefillItems = [];
@@ -382,34 +423,26 @@ ${chapterHeadings}
 
         if (prefillItems.length === 0) return;
 
+        var reviewChapter = review.closest('[data-chapter]');
+        var chapterIdForReview = reviewChapter ? reviewChapter.getAttribute('data-chapter') : null;
+        var allPrefilled = prefillItems.length === chapterFieldNames.length;
+        var allLocked = chapterFieldNames.every(function(n) { return prefillData[n] && prefillData[n].locked; });
+
+        // Per-chapter summary content (in case the user opens this
+        // chapter directly). No section-level Edit — every row carries
+        // its own editHref above, so the heading + row would otherwise
+        // duplicate the same affordance.
         var summary = review.querySelector('[data-prefill-summary]');
         if (summary) {
-          var allLocked = chapterFieldNames.every(function(n) { return prefillData[n] && prefillData[n].locked; });
-          summary.sections = [{ heading: '', editHref: allLocked ? '/profile/settings' : undefined, locked: allLocked, items: prefillItems }];
+          summary.sections = [{ heading: '', locked: allLocked, items: prefillItems }];
         }
 
-        // Show prefill review, hide form steps
+        // Show per-chapter prefill review, hide form steps.
         review.hidden = false;
         var steps = review.parentElement && review.parentElement.querySelector('[data-chapter-steps]');
         if (steps) steps.hidden = true;
 
-        // When every field in the chapter has a prefilled value the user
-        // is done — confirming returns them to the task list and marks
-        // the chapter complete. When only some fields are prefilled,
-        // confirming still drops them into the form steps for whatever
-        // remains unfilled.
-        // Note: the inner forEach above var-declares its own chapter
-        // local, so referencing that name here throws ReferenceError
-        // and silently kills the rest of this block (including the
-        // click-listener bind) — that is the "Continue does nothing"
-        // bug. Re-resolve the chapter element from the review host.
-        var reviewChapter = review.closest('[data-chapter]');
-        var chapterIdForReview = reviewChapter ? reviewChapter.getAttribute('data-chapter') : null;
-        var allPrefilled = prefillItems.length === chapterFieldNames.length;
-
-        // Update the body copy to match the actual outcome so the
-        // prefill UX doesn't read like a partial flow when nothing
-        // is left to fill out.
+        // Update body copy to match what Continue actually does.
         var hint = review.querySelector('[data-prefill-hint]');
         if (hint) {
           hint.textContent = allPrefilled
@@ -417,6 +450,9 @@ ${chapterHeadings}
             : 'If this information is accurate, press continue to fill out the rest of this section.';
         }
 
+        // Per-chapter Continue: same UX as the combined page for the
+        // single-chapter case — full-prefill → mark complete + hub,
+        // partial-prefill → form steps for the rest.
         var continueBtn = review.querySelector('[data-prefill-continue]');
         if (continueBtn) {
           continueBtn.addEventListener('click', function() {
@@ -431,31 +467,51 @@ ${chapterHeadings}
           });
         }
 
-        // Mark row as prefilled
-        var chapterId = review.closest('[data-chapter]');
-        chapterId = chapterId ? chapterId.getAttribute('data-chapter') : '';
-        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        if (item) item.setAttribute('data-prefilled', '');
-      });
+        // Mark the hub row as prefilled for downstream styling.
+        var listItem = document.querySelector('civ-list-item[data-chapter-id="' + chapterIdForReview + '"]');
+        if (listItem) listItem.setAttribute('data-prefilled', '');
 
-      // Update task statuses — only the FIRST prefilled chapter gets "review"
-      // (sequential unlocking: complete one before starting the next)
-      updateTaskList();
-      var firstReviewSet = false;
-      CHAPTERS.forEach(function(chapterId) {
-        var review = document.querySelector('[data-chapter="' + chapterId + '"] [data-prefill-review]:not([hidden])');
-        var item = document.querySelector('civ-list-item[data-chapter-id="' + chapterId + '"]');
-        var badge = item && item.querySelector('civ-badge');
-        var isComplete = badge && badge.getAttribute('variant') === 'success';
-        if (review && item && !isComplete) {
-          if (!firstReviewSet) {
-            setItemStatus(item, 'review', '#/' + chapterId);
-            firstReviewSet = true;
-          } else {
-            setItemStatus(item, 'cannot-start', null);
-          }
+        // Aggregate for the combined page. Heading is the chapter
+        // title (from CHAPTER_HEADINGS); per-row Edit links on each
+        // item (set above via prefillItems[i].editHref) are the only
+        // Edit affordance — no section-heading Edit, so the user
+        // sees a single, consistent edit pattern per row rather
+        // than redundant heading + row controls.
+        var heading = CHAPTER_HEADINGS[chapterIdForReview] || chapterIdForReview;
+        combinedSections.push({
+          heading: heading,
+          locked: allLocked,
+          items: prefillItems,
+        });
+        if (allPrefilled && chapterIdForReview) {
+          fullyPrefilledChapterIds.push(chapterIdForReview);
         }
       });
+
+      if (combinedSections.length === 0) return false;
+
+      // Push aggregated data into the combined-prefill page.
+      var combinedSummary = document.querySelector('[data-prefill-combined-summary]');
+      if (combinedSummary) {
+        combinedSummary.sections = combinedSections;
+      }
+
+      // Combined Continue: mark every fully-prefilled chapter Complete
+      // in one shot, then route the user to the task list. Partial
+      // chapters stay Not started — when the user opens one, the
+      // per-chapter prefill review surfaces the partial data and the
+      // form steps for what's left.
+      var combinedContinue = document.querySelector('[data-prefill-combined-continue]');
+      if (combinedContinue && !combinedContinue.dataset.civPrefillBound) {
+        combinedContinue.dataset.civPrefillBound = '1';
+        combinedContinue.addEventListener('click', function() {
+          fullyPrefilledChapterIds.forEach(function(id) { completedChapters.add(id); });
+          updateTaskList();
+          showPage('hub');
+        });
+      }
+
+      return true;
     };
 
     ${complexHtml.script}

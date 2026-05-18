@@ -210,6 +210,17 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
+  /* Active-task indicator for task-list rows. Consumers that want a
+     leading chevron pointing at the next-up task slot a
+     `<civ-icon data-list-item-start ...>` into every row and toggle
+     `data-task-active` on the active row at runtime. Inactive rows
+     hide the chevron so the active one stands out without making
+     the others appear "incomplete in a different way." */
+  civ-list-item:not([data-task-active]) > [data-list-item-start],
+  civ-list-item:not([data-task-active]) [data-civ-list-item-start-slot] {
+    display: none;
+  }
+
   /* Row layout — content on the left, action cluster on the right.
      Applies via :has() so it only kicks in when consumers actually
      use the `__content` / `__actions` BEM children. Without that
@@ -1566,6 +1577,26 @@
     }
   }
 
+  /* Form-actions button row: the standard cluster for primary +
+     secondary form-flow buttons (Sign in / Start guest, Save and
+     continue / Back, Submit / Cancel, etc.). Stacks on mobile so each
+     button picks up the .civ-btn full-width-on-mobile rule above;
+     becomes a row with gap above 480px. The primary button comes
+     first in source order on every viewport.
+     - Use civ-button-group instead for connected/flush toolbars
+       (role="toolbar" semantics, no gap between buttons).
+     - Use plain civ-flex + civ-gap-2 for row-action clusters in list
+       items (those intentionally stay row-laid-out on mobile per the
+       government-patterns.md row-action rule). */
+  .civ-button-row {
+    @apply civ-flex civ-flex-col civ-gap-3;
+  }
+  @media (min-width: 481px) {
+    .civ-button-row {
+      @apply civ-flex-row civ-items-center;
+    }
+  }
+
   /* ── Shared: Mobile Bottom Sheet ─────────────────────────── */
   /* Applied by modal, action-sheet, combobox, and datepicker on mobile.
      Use this mixin class or copy these properties for any popup that
@@ -1860,9 +1891,16 @@
   }
 
   .civ-menu__panel {
-    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
+    @apply civ-fixed civ-bg-white civ-border civ-border-base-light
            civ-rounded civ-shadow-lg civ-py-1;
-    top: calc(100% + var(--civ-spacing-1));
+    /* Position is computed in JS (top/left) on open — `position: fixed`
+       lets the panel escape any overflow / transform ancestor (the
+       data-grid scroll wrapper, a modal that scrolls its content, a
+       sidebar with `transform: translateZ(0)`). The CSS-only fallback
+       below pins the panel to the top-left corner; consumers should
+       rely on civ-menu's JS positioning. */
+    top: 0;
+    left: 0;
     min-width: 12rem;
     max-width: 18rem;
     z-index: var(--civ-z-overlay);
@@ -1873,20 +1911,24 @@
     display: block;
   }
 
-  .civ-menu__panel--align-start {
-    inset-inline-start: 0;
-  }
-
-  .civ-menu__panel--align-end {
-    inset-inline-end: 0;
-  }
+  /* The align-* modifiers are now a HINT for the JS positioner about
+     the preferred horizontal alignment relative to the trigger. The
+     positioner auto-flips when the preferred side would clip the
+     viewport edge. No layout properties here — the JS sets top/left
+     inline. */
 
   .civ-menu__backdrop {
     display: none;
   }
 
   /* Mobile: bottom sheet pattern. Backdrop appears, panel fills
-     bottom-anchored fixed position via .civ-bottom-sheet shared rule. */
+     bottom-anchored fixed position via .civ-bottom-sheet shared rule.
+     The `top: auto; left: auto` reset is needed because the desktop
+     base rule sets `top: 0; left: 0` (the JS positioner overrides
+     them inline on desktop). Without the reset, the desktop defaults
+     would defeat .civ-bottom-sheet's `top: auto; bottom: 0` cascade
+     and the panel would render as a TOP-anchored 50vh sheet instead
+     of a bottom sheet. */
   @media (max-width: 480px) {
     .civ-menu__backdrop {
       display: block;
@@ -1897,6 +1939,8 @@
     }
 
     .civ-menu__panel {
+      top: auto;
+      left: auto;
       max-width: none;
       min-width: 0;
     }

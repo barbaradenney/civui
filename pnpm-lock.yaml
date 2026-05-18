@@ -343,6 +343,9 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
+      '@civui/feedback':
+        specifier: workspace:*
+        version: link:../feedback
       '@civui/layout':
         specifier: workspace:*
         version: link:../layout

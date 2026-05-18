@@ -23,6 +23,8 @@ export interface GovFormResult {
   title: string;
   pages: {
     intro: { html: string; javascript: string };
+    /** Combined prefill review shown once after the signed-in entry, before the hub. */
+    prefill: { html: string; javascript: string };
     chapters: GovFormPage[];
     review: { html: string; javascript: string };
     confirmation: { html: string; javascript: string };
@@ -69,6 +71,9 @@ export async function generateGovForm(formNumber: string): Promise<GovFormResult
   const chapterPages = resolvedChapters
     .filter(ch => ch.id !== 'review-submit')
     .map(ch => generateChapterPage(ch, form));
+
+  // Generate combined prefill review (empty shell — populated at runtime)
+  const prefill = generatePrefillPage(form);
 
   // Generate review page
   const review = generateReviewPage(form, resolvedChapters);
@@ -146,6 +151,7 @@ export async function generateGovForm(formNumber: string): Promise<GovFormResult
     title: form.title,
     pages: {
       intro,
+      prefill,
       chapters: chapterPages,
       review,
       confirmation,
@@ -467,6 +473,42 @@ ${chapterIds}
   return { html, javascript };
 }
 
+/**
+ * Generate the combined prefill review page — shown once after the
+ * signed-in entry path when there's prefilled data, before the hub.
+ *
+ * The page is an empty shell at generation time. The runtime applies
+ * the prefill data, walks every chapter's prefill-review block to
+ * collect what's already filled, and pushes the result into the
+ * `<civ-summary data-prefill-combined-summary>` here as one section
+ * per chapter that has any data.
+ *
+ * Continue marks each fully-prefilled chapter Complete, updates the
+ * task list, and routes the user to the hub. Partial-prefill chapters
+ * remain Not started — when the user opens one, the per-chapter
+ * prefill review still shows the partial data and the form steps for
+ * what's left.
+ */
+function generatePrefillPage(form: ReturnType<typeof getFormDefinition> & {}): { html: string; javascript: string } {
+  const html = `<!-- Combined Prefill Review -->
+<div data-page="prefill">
+  <civ-page-header>
+    <h1 data-heading class="civ-heading-xl">${escapeHtml(form.title)}</h1>
+    <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
+  </civ-page-header>
+
+  <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this from your account. Confirm or edit anything that needs to change before continuing."></civ-alert>
+
+  <civ-summary data-prefill-combined-summary class="civ-mt-4"></civ-summary>
+
+  <p class="civ-mt-4">If this information is accurate, press continue to start your application.</p>
+  <div class="civ-mt-4">
+    <civ-button label="Continue" data-prefill-combined-continue></civ-button>
+  </div>
+</div>`;
+  return { html, javascript: '' };
+}
+
 /** Generate the confirmation page. */
 function generateConfirmationPage(form: ReturnType<typeof getFormDefinition> & {}): { html: string; javascript: string } {
   const html = `<!-- Confirmation Page -->
@@ -496,16 +538,19 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
       // Only the first chapter starts as navigable; rest are locked until unlocked
       const isActive = i === 0;
       const href = isActive ? ` href="#/${slugify(ch.id)}"` : '';
+      const activeAttr = isActive ? ' data-task-active' : '';
       // Decorative chevron points at the next-up task — purely visual,
       // empty label so screen readers don't announce "Next, Personal
-      // information" (the heading already names the chapter).
-      const startIcon = isActive
-        ? '<civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>'
-        : '';
+      // information" (the heading already names the chapter). Every
+      // row gets the chevron so the slot mixin captures it; CSS hides
+      // it on rows that aren't the currently-active task, and runtime
+      // setItemStatus toggles `data-task-active` to move it as the
+      // user makes progress.
+      const startIcon = '<civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>';
       const tag = isActive
         ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>'
         : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>';
-      return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}>
+      return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}${activeAttr}>
         ${startIcon}
         <span data-list-item-heading>${escapeHtml(ch.heading)}</span>
         <span data-list-item-description class="civ-text-sm">${escapeHtml(ch.hint)}</span>
@@ -535,6 +580,7 @@ ${chapterRows}
   <h3 class="civ-heading-md civ-mt-6 civ-mb-2">Review and submit</h3>
   <civ-list dividers>
     <civ-list-item data-review>
+      <civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>
       <span data-list-item-heading>Review your application</span>
       <span data-list-item-description class="civ-text-sm">Complete all sections before reviewing</span>
       <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>

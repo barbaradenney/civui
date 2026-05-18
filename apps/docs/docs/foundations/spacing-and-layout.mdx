@@ -146,11 +146,13 @@ For responsive grids, use inline styles for the template:
 <StoryEmbed id="foundations-layout-examples--action-bar" />
 
 ```html
-<div class="civ-flex civ-justify-end civ-gap-4">
+<div class="civ-button-row civ-justify-end">
   <civ-button variant="secondary" label="Save draft"></civ-button>
   <civ-button label="Continue"></civ-button>
 </div>
 ```
+
+`civ-button-row` stacks the cluster on mobile so each button picks up the full-width-on-mobile rule from `.civ-btn`; the `civ-justify-end` modifier keeps the row right-aligned above 480px. For toolbar/flush clusters (text formatting, view toggles) use `<civ-button-group>` instead; for row-action clusters inside list items (Edit / Remove on a summary card), keep `civ-flex civ-gap-2` per the [row-action rule](../../.claude/rules/government-patterns.md) — those intentionally stay row-laid-out on mobile.
 
 ### List item
 

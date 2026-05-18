@@ -39,6 +39,7 @@
     "lit": "^3.2.0"
   },
   "devDependencies": {
+    "@civui/feedback": "workspace:*",
     "@civui/layout": "workspace:*",
     "@civui/test-utils": "workspace:*",
     "@civui/tokens": "workspace:*",

@@ -195,12 +195,31 @@ export const FormActions: Story = {
       }}"
     >
       <p class="civ-mb-4">Complete your VA benefits application and submit for review.</p>
-      <div class="civ-flex civ-gap-3">
+      <div class="civ-button-row">
         <civ-button type="submit">Submit application</civ-button>
         <civ-button variant="secondary">Save and continue later</civ-button>
         <civ-button variant="tertiary">Cancel</civ-button>
       </div>
     </form>
+  `,
+};
+
+export const FormActionsMobile: Story = {
+  name: 'Form Actions (mobile)',
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  render: () => html`
+    <p class="civ-mb-4 civ-text-sm">
+      Below 481px viewports, <code>.civ-button-row</code> stacks the cluster vertically so
+      every button picks up the design system's full-width-on-mobile rule. Compare to plain
+      <code>civ-flex civ-gap-3</code>, which keeps the row horizontal at every width and
+      shrinks each button to its share of the row.
+    </p>
+    <div class="civ-button-row">
+      <civ-button>Save and continue</civ-button>
+      <civ-button variant="tertiary">Back</civ-button>
+    </div>
   `,
 };
 
@@ -210,14 +229,14 @@ export const ClaimActions: Story = {
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Upload evidence</p>
-        <div class="civ-flex civ-gap-3">
+        <div class="civ-button-row">
           <civ-button variant="primary">Upload documents</civ-button>
           <civ-button variant="tertiary">Skip for now</civ-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Manage dependents</p>
-        <div class="civ-flex civ-gap-3">
+        <div class="civ-button-row">
           <civ-button variant="secondary">Add dependent</civ-button>
           <civ-button variant="tertiary" danger>Remove dependent</civ-button>
         </div>

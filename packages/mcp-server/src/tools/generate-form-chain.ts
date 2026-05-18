@@ -102,7 +102,7 @@ export function generateFormChain(
     ...stepItems,
     `  </ol>`,
     `  <div data-civ-chain-content class="civ-mt-4"></div>`,
-    `  <div data-civ-chain-nav class="civ-mt-4 civ-flex civ-gap-2">`,
+    `  <div data-civ-chain-nav class="civ-mt-4 civ-button-row">`,
     `    <button type="button" data-civ-chain-prev class="civ-px-4 civ-py-2 civ-rounded civ-border"${backDisabled}>Back</button>`,
     `    <button type="button" data-civ-chain-next class="civ-px-4 civ-py-2 civ-rounded civ-bg-primary civ-text-white">${nextLabel}</button>`,
     `  </div>`,

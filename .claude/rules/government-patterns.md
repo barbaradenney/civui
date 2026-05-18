@@ -73,6 +73,15 @@ globs:
 - No absolute-positioned dropdowns on small screens — they overflow and are hard to tap.
 - Bottom sheets: `position: fixed; bottom: 0; left: 0; right: 0;` with rounded top corners.
 - Max height 50-70vh with `overflow-y: auto` for scrollable content.
+- **Primary buttons go full-width on mobile** automatically — `.civ-btn` switches to `display: flex; width: 100%` below 480px. Single-button placements (just `<civ-button>` in a block container) get this for free.
+- For **primary + secondary button clusters** (Sign in / Start guest, Save and continue / Back, Submit / Cancel), wrap in `<div class="civ-button-row">` instead of `civ-flex civ-gap-*`. It stacks vertically on mobile so each button hits the full-width rule, and switches to a horizontal row with gap above 480px. Primary always comes first in source order.
+- For **toolbar clusters** with flush borders (text formatting, view toggles), use `<civ-button-group>` instead — that's a different pattern (`role="toolbar"`, connected/flush, no gap).
+- For **row-action clusters** in list items (Edit / Remove next to a summary card), keep using `civ-flex civ-gap-2` — those intentionally stay row-laid-out on mobile per the row-action rule above.
+
+## Button polymorphism — link affordance
+- `<civ-button>` is polymorphic: with `href`, it renders as `<a>` and automatically picks up the `.civ-btn--link` class which underlines the label text. The button chrome stays the same; the underline is the visual cue that activating the control navigates.
+- Use `civ-button[href]` for "looks like a button, navigates like a link" — right-click → open in new tab, browser back history, screen-reader role all behave correctly.
+- For inline prose links (within sentences), use `<civ-link>` instead.
 
 ## Motion
 - All transitions use `var(--civ-motion-duration-*)` tokens — never hardcode durations.

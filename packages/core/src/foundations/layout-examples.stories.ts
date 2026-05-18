@@ -78,7 +78,12 @@ export const CardGrid: Story = {
 export const ActionBar: Story = {
   name: 'Action Bar',
   render: () => html`
-    <div class="civ-flex civ-justify-end civ-gap-4">
+    <!-- civ-button-row stacks the cluster on mobile (each button picks up
+         the full-width-on-mobile rule); civ-justify-end keeps the row
+         right-aligned at desktop widths. Primary is last here because
+         form actions typically put the affirmative action at the
+         visually-strongest position (right-most on desktop). -->
+    <div class="civ-button-row civ-justify-end">
       <civ-button variant="secondary" label="Save draft"></civ-button>
       <civ-button label="Continue"></civ-button>
     </div>

@@ -246,6 +246,15 @@ Semantic classes from \`components.css\` — use these instead of composing raw 
 |-------|---------|
 | \`.civ-sr-only\` | Visually hidden, accessible to screen readers |
 
+### Layout Utilities
+| Class | Purpose | Behavior |
+|-------|---------|----------|
+| \`.civ-button-row\` | Primary + secondary form-flow button cluster | Stacks vertically on mobile (≤480px) so each \`<civ-button>\` picks up the full-width-on-mobile rule; switches to a horizontal row with gap-3 above 480px. Primary button comes first in source order. Use for Sign in / Start guest, Save and continue / Back, Submit / Cancel pairs. |
+
+For **toolbar clusters** with connected/flush borders (text formatting, view toggles), use \`<civ-button-group>\` instead — that's \`role="toolbar"\`, no gap, distinct semantics.
+
+For **row-action clusters** in list items (Edit / Remove next to a summary card or list row), keep \`civ-flex civ-gap-2\` — those intentionally stay row-laid-out on mobile so destructive labels don't expand to consume the whole screen.
+
 ---
 
 ## 6. Focus Ring

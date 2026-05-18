@@ -2196,6 +2196,8 @@ describe('civ-data-grid — column filtering', () => {
     const el = await mountGrid({ columns: filterColumns, rows: filterRows });
     const rangeInputs = el.querySelectorAll('.civ-data-grid__filter-input--range');
     expect(rangeInputs).toHaveLength(2);
+    // aria-label sits on the host civ-number; the inner <input> reads it via
+    // the spacing="sm" host-attribute propagation in civ-number's render.
     expect(rangeInputs[0].getAttribute('aria-label')).toBe('Min Amount');
     expect(rangeInputs[1].getAttribute('aria-label')).toBe('Max Amount');
   });
@@ -2265,7 +2267,13 @@ describe('civ-data-grid — column filtering', () => {
     const el = await mountGrid({ columns: filterColumns, rows: filterRows });
     const handler = vi.fn();
     el.addEventListener('civ-filter-change', handler);
-    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    // The host is <civ-number>; the inner <input> is what receives user
+    // typing and triggers civ-input via the component's @input handler.
+    const [minHost, maxHost] = Array.from(
+      el.querySelectorAll('.civ-data-grid__filter-input--range'),
+    );
+    const minInput = minHost.querySelector('input') as HTMLInputElement;
+    const maxInput = maxHost.querySelector('input') as HTMLInputElement;
     // Set min first.
     minInput.value = '50';
     minInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -2288,7 +2296,11 @@ describe('civ-data-grid — column filtering', () => {
     await elementUpdated(el);
     const handler = vi.fn();
     el.addEventListener('civ-filter-change', handler);
-    const [minInput, maxInput] = el.querySelectorAll('.civ-data-grid__filter-input--range') as NodeListOf<HTMLInputElement>;
+    const [minHost, maxHost] = Array.from(
+      el.querySelectorAll('.civ-data-grid__filter-input--range'),
+    );
+    const minInput = minHost.querySelector('input') as HTMLInputElement;
+    const maxInput = maxHost.querySelector('input') as HTMLInputElement;
     minInput.value = '';
     minInput.dispatchEvent(new Event('input', { bubbles: true }));
     // After clearing min, the next state in the dispatched event still has max=100.

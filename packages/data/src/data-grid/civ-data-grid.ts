@@ -546,18 +546,20 @@ export class CivDataGrid extends CivBaseElement {
     const cellClass = `civ-data-grid__td civ-data-grid__filter-cell ${sticky.cls}`;
     const cellStyle = sticky.style;
     const current = this.filters[col.key];
+    const ariaLabel = t('dataGridFilterByColumn').replace('{column}', col.header);
     switch (col.filter.type) {
       case 'text':
         return html`
           <td class="${cellClass}" style="${cellStyle}">
-            <input
-              type="text"
+            <civ-text-input
               class="civ-data-grid__filter-input"
-              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              spacing="sm"
+              disable-analytics
+              aria-label="${ariaLabel}"
               placeholder="${col.filter.placeholder ?? ''}"
               .value="${current?.type === 'text' ? current.value : ''}"
-              @input="${(e: Event) => this._onFilterInput(col, e)}"
-            />
+              @civ-input="${(e: Event) => this._onFilterInput(col, e)}"
+            ></civ-text-input>
           </td>
         `;
       case 'select': {
@@ -566,19 +568,16 @@ export class CivDataGrid extends CivBaseElement {
         const value = current?.type === 'select' ? current.value : '';
         return html`
           <td class="${cellClass}" style="${cellStyle}">
-            <select
+            <civ-select
               class="civ-data-grid__filter-input"
-              aria-label="${t('dataGridFilterByColumn').replace('{column}', col.header)}"
+              spacing="sm"
+              disable-analytics
+              aria-label="${ariaLabel}"
+              empty-label="${placeholder}"
               .value="${value}"
-              @change="${(e: Event) => this._onFilterInput(col, e)}"
-            >
-              <option value="">${placeholder}</option>
-              ${opts.map(
-                (o) => html`
-                  <option value="${o.value}" ?selected="${value === o.value}">${o.label}</option>
-                `,
-              )}
-            </select>
+              .options="${opts}"
+              @civ-change="${(e: Event) => this._onFilterInput(col, e)}"
+            ></civ-select>
           </td>
         `;
       }
@@ -588,22 +587,28 @@ export class CivDataGrid extends CivBaseElement {
         return html`
           <td class="${cellClass}" style="${cellStyle}">
             <div class="civ-data-grid__filter-range">
-              <input
-                type="number"
+              <civ-number
                 class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                spacing="sm"
+                disable-analytics
+                allow-decimal
+                allow-negative
                 aria-label="${t('dataGridFilterMin').replace('{column}', col.header)}"
                 placeholder="${col.filter.minPlaceholder ?? 'Min'}"
                 .value="${min == null ? '' : String(min)}"
-                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
-              />
-              <input
-                type="number"
+                @civ-input="${(e: Event) => this._onFilterRangeInput(col, e, 'min')}"
+              ></civ-number>
+              <civ-number
                 class="civ-data-grid__filter-input civ-data-grid__filter-input--range"
+                spacing="sm"
+                disable-analytics
+                allow-decimal
+                allow-negative
                 aria-label="${t('dataGridFilterMax').replace('{column}', col.header)}"
                 placeholder="${col.filter.maxPlaceholder ?? 'Max'}"
                 .value="${max == null ? '' : String(max)}"
-                @input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
-              />
+                @civ-input="${(e: Event) => this._onFilterRangeInput(col, e, 'max')}"
+              ></civ-number>
             </div>
           </td>
         `;
@@ -612,8 +617,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onFilterInput(col: GridColumn, e: Event): void {
-    const target = e.currentTarget as HTMLInputElement | HTMLSelectElement;
-    const rawValue = target.value;
+    const rawValue = (e as CustomEvent<{ value: string }>).detail.value;
     const next: GridFilters = { ...this.filters };
     if (col.filter?.type === 'text') {
       if (rawValue === '') delete next[col.key];
@@ -626,8 +630,7 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _onFilterRangeInput(col: GridColumn, e: Event, bound: 'min' | 'max'): void {
-    const target = e.currentTarget as HTMLInputElement;
-    const rawValue = target.value;
+    const rawValue = (e as CustomEvent<{ value: string }>).detail.value;
     const current = this.filters[col.key];
     const existing = current?.type === 'number-range' ? current : { type: 'number-range' as const };
     const next: GridFilters = { ...this.filters };

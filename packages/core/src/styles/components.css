@@ -2450,21 +2450,12 @@
     vertical-align: middle;
   }
 
+  /* Filter cells host civ-text-input / civ-select / civ-number components
+     in their `spacing="sm"` compact mode. Those components own their own
+     border / padding / focus chrome via `.civ-input--sm`, so this rule is
+     layout-only: full-width inside the cell. */
   .civ-data-grid__filter-input {
     @apply civ-w-full;
-    padding: var(--civ-spacing-1) var(--civ-spacing-2);
-    border: 1px solid var(--civ-color-base-light);
-    border-radius: 4px;
-    background-color: var(--civ-color-white-DEFAULT);
-    font-size: var(--civ-typography-fontSize-sm);
-    line-height: 1.4;
-    box-sizing: border-box;
-  }
-
-  .civ-data-grid__filter-input:focus {
-    outline: none;
-    border-color: var(--civ-color-primary-DEFAULT);
-    box-shadow: 0 0 0 2px var(--civ-color-primary-lighter);
   }
 
   .civ-data-grid__filter-range {

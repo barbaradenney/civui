@@ -22,6 +22,7 @@
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
 import { pathToFileURL } from 'url';
+import { printRuleLink } from './lint-rule-links.js';
 
 const ROOT = join(import.meta.dirname, '..');
 
@@ -198,6 +199,7 @@ function main(): number {
     console.log(`    ${v.snippet}`);
   }
   console.log();
+  printRuleLink('fieldsets');
   return 1;
 }
 

@@ -8,19 +8,12 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ## Native platform implementation pass (iOS + Android)
 
-- **Surfaced:** Overlays + Compound audits, 2026-05-11. Scope corrected 2026-05-12.
-- **Scale:** Larger than originally reported. **15 iOS components** return `EmptyView()` today, not the 4 the original audit-debt entry implied. Android stubs follow the same pattern (no real Compose body).
-- **Stubbed iOS components** (those whose `public var body: some View` is `EmptyView()`):
-  - Overlays: `CivModal`, `CivActionSheet`
-  - Actions: `CivActionLink` (has `// TODO`)
-  - Feedback: `CivBadge`, `CivCount`
-  - Inputs: `CivCountry`, `CivDateRangePicker`
-  - Filter: `CivFilterChip`, `CivFilterChipGroup`, `CivFilterableList` (has `// TODO`)
-  - Layout: `CivImagePreview` (has `// TODO`), `CivInputGroup`
-  - Compound: `CivPartnershipHistory`, `CivRelationship`, `CivServiceHistory`
-- **State:** Each declares the schema's prop surface (so `schema-parity` is satisfied), but renders no actual native UI. Android equivalents render only `Column { ... }` placeholders.
+- **Surfaced:** Overlays + Compound audits, 2026-05-11. Scope corrected 2026-05-12. Allowlist mechanised 2026-05-19.
+- **Scale:** 20 iOS components currently return `EmptyView()`. Android stubs follow the same pattern (no real Compose body).
+- **Source of truth:** The canonical list lives in [`tools/ios-stub-allowlist.ts`](../../tools/ios-stub-allowlist.ts). The `pnpm lint:ios-stub-allowlist` CI gate enforces it both ways — a new stub without an entry fails the build, and an entry whose body is no longer EmptyView is flagged stale. Editing the allowlist requires a deliberate human PR.
+- **State:** Each component declares the schema's prop surface (so `schema-parity` is satisfied), but renders no actual native UI. Android equivalents render only `Column { ... }` placeholders.
 - **Why deferred:** This is a real native-implementation pass, not a quick port. SwiftUI/Compose work without device verification is risky — modal/sheet presentation in particular has platform-specific quirks (focus trap, dismiss gestures, scrim, keyboard insets) that LLMs cannot test blind. The schema-driven prop surface keeps the parity contract stable; UI implementation should be scheduled as dedicated work with someone who can run the simulators.
-- **What to watch for in the meantime:** When adding new props to a covered component, add them to the iOS/Android stubs too — schema parity requires it. Don't try to "fix" the empty bodies one component at a time without device testing.
+- **What to watch for in the meantime:** When adding new props to a covered component, add them to the iOS/Android stubs too — schema parity requires it. Don't try to "fix" the empty bodies one component at a time without device testing. If you have device access and want to implement one for real, remove the entry from the allowlist in the same PR — the lint will flag the stale entry otherwise.
 
 ---
 

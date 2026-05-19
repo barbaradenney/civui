@@ -26,6 +26,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
@@ -191,6 +192,7 @@ async function main(): Promise<void> {
     '  - Rename the @fires entry to match the actual event name, or\n' +
     '  - Add the missing dispatch call if the docstring is correct.',
   );
+  printRuleLink('jsdoc-events');
   process.exit(1);
 }
 

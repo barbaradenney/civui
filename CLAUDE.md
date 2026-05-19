@@ -42,9 +42,12 @@ pnpm test          # Run all tests (3600+ tests across packages)
 pnpm build         # Build all packages (respects dependency order)
 pnpm typecheck     # TypeScript type checking
 pnpm lint          # ESLint
-pnpm validate      # lint + typecheck + test (full CI check)
+pnpm validate      # lint + typecheck + test (full CI check, slow)
+pnpm preflight     # Fast pre-push: typecheck + lints + schema parity + doc-tables sync
 pnpm storybook     # Dev server on port 6006
-civui generate component <name>  # Scaffold new component across all 4 platforms
+pnpm scaffold:component <name>   # Scaffold a new component (web + iOS + Android + Drupal + schema + COVERED_COMPONENTS)
+pnpm generate:schema civ-<name>  # Bootstrap a schema from an existing Lit component
+civ generate component <name>    # Alternative scaffolder (also creates a schema) — equivalent for new components
 ```
 
 ## Architecture Patterns
@@ -236,7 +239,7 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - Schemas serve the contract role directly; no code-generation step is required (the previous `@civui/codegen` package was removed when this approach replaced it).
 
-**Coverage status (53 components, every cross-platform component covered):**
+**Coverage status (62 components, every cross-platform component covered):**
 - Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-date-range-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
 - Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-partnership-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`, `civ-conditional`, `civ-summary`, `civ-data-field`, `civ-section-intro`

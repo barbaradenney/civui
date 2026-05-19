@@ -20,6 +20,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
@@ -254,6 +255,7 @@ async function main(): Promise<void> {
     '  - Rename the @prop entry to match the current property, or\n' +
     '  - Add the missing @property if the docstring is correct.',
   );
+  printRuleLink('jsdoc-props');
   process.exit(1);
 }
 

@@ -69,4 +69,10 @@ describe('civ-country', () => {
     el.formResetCallback();
     expect(el.value).toBe('');
   });
+
+  it('forwards readonly to the inner combobox', async () => {
+    const el = await fixture('<civ-country name="country" readonly></civ-country>') as CivCountry;
+    const inner = el.querySelector('civ-combobox') as any;
+    expect(inner.hasAttribute('readonly')).toBe(true);
+  });
 });

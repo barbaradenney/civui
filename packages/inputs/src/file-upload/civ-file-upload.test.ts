@@ -911,3 +911,17 @@ describe('civ-file-upload interactions', () => {
     }
   });
 });
+
+describe('civ-file-upload readonly', () => {
+  it('hides the upload trigger when readonly', async () => {
+    const el = await fixture('<civ-file-upload legend="Upload" readonly></civ-file-upload>');
+    // The choose-file button only renders when not readonly.
+    expect(el.querySelector('.civ-dropzone__trigger')).toBeNull();
+  });
+
+  it('disables the file input when readonly', async () => {
+    const el = await fixture('<civ-file-upload legend="Upload" readonly></civ-file-upload>');
+    const input = el.querySelector('input[type="file"]') as HTMLInputElement;
+    expect(input.disabled).toBe(true);
+  });
+});

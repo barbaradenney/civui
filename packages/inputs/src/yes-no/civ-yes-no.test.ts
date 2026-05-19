@@ -371,4 +371,24 @@ describe('civ-yes-no', () => {
       expect(inner.getAttribute('aria-label')).toBeNull();
     });
   });
+
+  describe('readonly', () => {
+    it('clicking an option does not change the value', async () => {
+      const el = await fixture('<civ-yes-no legend="OK?" name="ok" value="yes" readonly></civ-yes-no>') as any;
+      // Second radio is the "No" option (Yes / No is the source order).
+      const options = el.querySelectorAll('button[role="radio"]') as NodeListOf<HTMLButtonElement>;
+      options[1].click();
+      await elementUpdated(el);
+      expect(el.value).toBe('yes');
+    });
+
+    it('sets aria-readonly on each option when readonly', async () => {
+      const el = await fixture('<civ-yes-no legend="OK?" name="ok" readonly></civ-yes-no>');
+      const options = el.querySelectorAll('button[role="radio"]');
+      expect(options.length).toBeGreaterThan(0);
+      for (const option of options) {
+        expect(option.hasAttribute('aria-readonly')).toBe(true);
+      }
+    });
+  });
 });

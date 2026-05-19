@@ -98,4 +98,13 @@ describe('civ-currency', () => {
     inner.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'SAMPLE' }, bubbles: true }));
     expect(received).toBe('SAMPLE');
   });
+
+  it('forwards civ-change from the inner control', async () => {
+    const el = await fixture('<civ-currency name="x"></civ-currency>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox')!;
+    let received = '';
+    el.addEventListener('civ-change', ((e: CustomEvent) => { received = e.detail.value; }) as EventListener);
+    inner.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '$1,234.56' }, bubbles: true }));
+    expect(received).toBe('$1,234.56');
+  });
 });

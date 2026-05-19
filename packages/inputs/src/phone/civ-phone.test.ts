@@ -83,4 +83,13 @@ describe('civ-phone', () => {
     inner.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'SAMPLE' }, bubbles: true }));
     expect(received).toBe('SAMPLE');
   });
+
+  it('forwards civ-change from the inner control', async () => {
+    const el = await fixture('<civ-phone name="x"></civ-phone>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox')!;
+    let received = '';
+    el.addEventListener('civ-change', ((e: CustomEvent) => { received = e.detail.value; }) as EventListener);
+    inner.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '(555) 555-5555' }, bubbles: true }));
+    expect(received).toBe('(555) 555-5555');
+  });
 });

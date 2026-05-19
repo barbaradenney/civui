@@ -222,4 +222,19 @@ describe('civ-toggle', () => {
       expect(el.querySelector(`#${id}`)).not.toBeNull();
     }
   });
+
+  it('readonly: click does not toggle the checked state', async () => {
+    const el = await fixture('<civ-toggle label="Opt in" checked readonly></civ-toggle>') as any;
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    expect(el.checked).toBe(true);
+    btn.click();
+    await elementUpdated(el);
+    expect(el.checked).toBe(true);
+  });
+
+  it('readonly: exposes aria-disabled="true" on the switch button', async () => {
+    const el = await fixture('<civ-toggle label="Opt in" readonly></civ-toggle>') as any;
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    expect(btn.getAttribute('aria-disabled')).toBe('true');
+  });
 });

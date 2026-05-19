@@ -77,4 +77,13 @@ describe('civ-zip', () => {
     inner.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'SAMPLE' }, bubbles: true }));
     expect(received).toBe('SAMPLE');
   });
+
+  it('forwards civ-change from the inner control', async () => {
+    const el = await fixture('<civ-zip name="x"></civ-zip>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox')!;
+    let received = '';
+    el.addEventListener('civ-change', ((e: CustomEvent) => { received = e.detail.value; }) as EventListener);
+    inner.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '90210' }, bubbles: true }));
+    expect(received).toBe('90210');
+  });
 });

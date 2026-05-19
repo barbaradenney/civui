@@ -471,3 +471,15 @@ describe('civ-select spacing="sm"', () => {
     expect(options[0].textContent).toBe('All');
   });
 });
+
+describe('civ-select readonly', () => {
+  it('disables the native <select> when readonly (native select has no readonly attribute)', async () => {
+    const el = await fixture('<civ-select label="State" name="state" readonly></civ-select>') as any;
+    el.options = [{ value: 'CA', label: 'California' }];
+    await elementUpdated(el);
+    const select = el.querySelector('select') as HTMLSelectElement;
+    // readonly is rolled into disabled because <select> doesn't
+    // support a real readonly attribute — see civ-select.ts.
+    expect(select.disabled).toBe(true);
+  });
+});

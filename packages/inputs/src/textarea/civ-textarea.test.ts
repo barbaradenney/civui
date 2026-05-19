@@ -425,3 +425,11 @@ describe('civ-textarea spacing="sm"', () => {
     expect(el.querySelector('textarea')!.classList.contains('civ-input--sm')).toBe(true);
   });
 });
+
+describe('civ-textarea readonly', () => {
+  it('marks the inner <textarea> readonly when host is readonly', async () => {
+    const el = await fixture('<civ-textarea label="Notes" name="notes" readonly></civ-textarea>');
+    const ta = el.querySelector('textarea') as HTMLTextAreaElement;
+    expect(ta.readOnly).toBe(true);
+  });
+});

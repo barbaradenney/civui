@@ -75,14 +75,20 @@ export const validate = {
   },
 
   /**
-   * International phone: E.164, 7–15 digits with `+` prefix. Accepts
-   * spaces, dashes, dots, and parens as separators (`.` covered for the
-   * common European dot-separated format `+33.1.42.34.56.78`).
+   * International phone: 7–15 digits per E.164, with optional `+` or
+   * `00` country-code prefix. Accepts spaces, dashes, dots, parens as
+   * separators (`.` covers the European dot-format `+33.1.42.34.56.78`).
+   *
+   * Permissive on purpose — users who type `7700 900123` or
+   * `0044 7700 900123` shouldn't get a client-side error just because
+   * they didn't lead with `+`. Server-side libphonenumber parsing
+   * resolves the country and produces the canonical E.164 form; the
+   * client validator just checks "looks like a phone number."
    */
   phoneIntl(value: string): ValidationResult {
     if (!/^[\d\s\-+().]+$/.test(value)) return fail('validatePhoneIntl');
-    const stripped = value.replace(/[\s\-().]/g, '');
-    if (!/^\+\d{7,15}$/.test(stripped)) {
+    const digits = value.replace(/[\s\-+().]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) {
       return fail('validatePhoneIntl');
     }
     return valid();

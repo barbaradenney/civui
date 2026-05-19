@@ -24,7 +24,7 @@ same events (`civ-input`, `civ-change` with `{ value: string }`).
 | Field | Component | Why |
 | --- | --- | --- |
 | US phone number | `<civ-phone>` | `(###) ###-####` mask on blur, `tel` keyboard, plain-language hint |
-| International phone number | `<civ-phone international>` | Skips US-format mask, expects E.164-ish raw input, `phoneIntl` validator |
+| International phone number | `<civ-phone international>` | Single field, no mask, `phoneIntl` validator (7-15 digits with optional `+` or `00` prefix) |
 | Email address | `<civ-email>` | `email` keyboard, RFC-compliant validator, default `autocomplete="email"` |
 
 ## Phone (`<civ-phone>`)
@@ -45,6 +45,12 @@ Default label: "Phone number"
 ### International format
 
 <StoryEmbed id="forms-inputs-text-input--phone-international" />
+
+International mode is **deliberately a single input** — no country picker, no flag, no separate `+CC` field. Three reasons:
+
+- **Autofill compatibility.** `autocomplete="tel"` matches a browser-saved phone in one shot. The split `tel-country-code` + `tel-national` pattern has spotty cross-browser support (Safari and Firefox often drop the country code), so most users would lose their saved value.
+- **Permissive client-side validation.** The `phoneIntl` validator accepts `+44 7700 900123`, `0044 7700 900123`, and `7700 900123` — anything 7–15 digits with optional `+` or `00` prefix. Strict E.164 normalization is a **server-side** job using libphonenumber; the client just checks "looks like a phone number."
+- **No mask.** Phone-number formats vary too much across countries to assume a fixed shape. Users type freely; the validator runs on blur.
 
 ### Usage
 

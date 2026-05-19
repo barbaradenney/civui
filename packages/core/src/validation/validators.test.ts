@@ -104,11 +104,19 @@ describe('validate.phoneIntl', () => {
     expect(validate.phoneIntl('+1.202.555.1234')).toEqual({ valid: true });
   });
 
-  it('rejects missing plus', () => {
-    expect(validate.phoneIntl('12025551234').valid).toBe(false);
+  it('accepts number without an explicit "+" prefix', () => {
+    // Permissive client-side — server libphonenumber resolves the
+    // country. Users on iOS/Android often copy from their call log
+    // which shows the number without the +.
+    expect(validate.phoneIntl('12025551234')).toEqual({ valid: true });
+    expect(validate.phoneIntl('7700 900123')).toEqual({ valid: true });
   });
 
-  it('rejects too short', () => {
+  it('accepts the "00" international prefix (alternative to +)', () => {
+    expect(validate.phoneIntl('0044 7700 900123')).toEqual({ valid: true });
+  });
+
+  it('rejects too short (<7 digits)', () => {
     expect(validate.phoneIntl('+123456').valid).toBe(false);
   });
 

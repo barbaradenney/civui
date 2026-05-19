@@ -81,6 +81,10 @@ export class CivRadio extends CivBaseElement {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
       this.checked = true;
+      // iOS Safari does not move focus to a radio on tap, so the
+      // global :focus ring never shows on mobile. Force focus
+      // explicitly so the visual feedback matches desktop.
+      target.focus();
       dispatch(this, 'civ-input', { value: this.value });
       dispatch(this, 'civ-change', { value: this.value });
       this.sendAnalytics('change');

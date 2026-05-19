@@ -672,7 +672,13 @@
     padding: 0;
     font-size: inherit;
   }
-  .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
+  /* @media (hover: hover) gates :hover styling to devices with a primary
+     pointer that can hover (mouse, trackpad, stylus). On touch devices
+     :hover fires on tap and sticks until another tap elsewhere, leaving
+     a "phantom hover" state on whichever button was last touched. */
+  @media (hover: hover) {
+    .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
+  }
   .civ-close-btn:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
@@ -711,7 +717,9 @@
     font-weight: 600;
     white-space: nowrap;
   }
-  .civ-input-inline-action:hover { background: rgba(0, 0, 0, 0.05); }
+  @media (hover: hover) {
+    .civ-input-inline-action:hover { background: rgba(0, 0, 0, 0.05); }
+  }
   .civ-input-inline-action:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
@@ -721,7 +729,9 @@
     @apply civ-cursor-not-allowed;
     opacity: var(--civ-opacity-disabled);
   }
-  .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
+  @media (hover: hover) {
+    .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
+  }
   .civ-input-action:focus {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
     outline-offset: var(--civ-focus-outline-offset);
@@ -730,6 +740,26 @@
   .civ-input-action:disabled {
     @apply civ-cursor-not-allowed;
     opacity: var(--civ-opacity-disabled);
+  }
+
+  /* WCAG 2.5.8 — minimum target size 44×44 CSS pixels for pointer
+     inputs. Desktop keeps the compact em-sized chrome (cursor precision
+     makes 24–28px targets fine); mobile bumps every input-inset action
+     button up to the recommended floor so tap accuracy stays high
+     (password reveal, trailing-action slot, datepicker / timepicker
+     "Today"/"Now" shortcuts, file cancel / retry). `.civ-close-btn`
+     already meets 44×44 site-wide via the shared block further down,
+     so it isn't repeated here. */
+  @media (max-width: 480px) {
+    .civ-input-action,
+    .civ-input-inline-action,
+    .civ-datepicker-today-btn,
+    .civ-time-picker-now-btn,
+    .civ-file-cancel-btn,
+    .civ-file-retry-btn {
+      min-width: 44px;
+      min-height: 44px;
+    }
   }
 
   .civ-input-icon-wrap {
@@ -1007,9 +1037,11 @@
     transition: background-color var(--civ-motion-duration-fast, 100ms), border-color var(--civ-motion-duration-fast, 100ms);
   }
 
-  .civ-check-tile:hover:not(:has(:disabled)) {
-    background-color: var(--civ-color-primary-lightest);
-    border-color: var(--civ-color-primary-DEFAULT);
+  @media (hover: hover) {
+    .civ-check-tile:hover:not(:has(:disabled)) {
+      background-color: var(--civ-color-primary-lightest);
+      border-color: var(--civ-color-primary-DEFAULT);
+    }
   }
 
 
@@ -1111,8 +1143,10 @@
   .civ-file-cancel-btn {
     color: var(--civ-color-base-dark);
   }
-  .civ-file-cancel-btn:hover {
-    color: var(--civ-color-base-darkest);
+  @media (hover: hover) {
+    .civ-file-cancel-btn:hover {
+      color: var(--civ-color-base-darkest);
+    }
   }
 
   .civ-file-retry-btn {
@@ -1301,9 +1335,11 @@
     background-size: 10px;
     padding-inline-end: 1.25rem;
   }
-  .civ-datepicker-month-select:hover,
-  .civ-datepicker-year-select:hover {
-    @apply civ-bg-base-lightest;
+  @media (hover: hover) {
+    .civ-datepicker-month-select:hover,
+    .civ-datepicker-year-select:hover {
+      @apply civ-bg-base-lightest;
+    }
   }
 
   /* Today button in the dialog footer */
@@ -1314,8 +1350,10 @@
     @apply civ-px-3 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
            civ-text-primary civ-bg-transparent civ-border-0 civ-cursor-pointer;
   }
-  .civ-datepicker-today-btn:hover:not(:disabled) {
-    @apply civ-bg-primary-lightest;
+  @media (hover: hover) {
+    .civ-datepicker-today-btn:hover:not(:disabled) {
+      @apply civ-bg-primary-lightest;
+    }
   }
   .civ-datepicker-today-btn:disabled {
     @apply civ-text-base-light civ-cursor-not-allowed;
@@ -1334,8 +1372,10 @@
     @apply civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
            civ-text-primary civ-bg-transparent civ-border-0 civ-cursor-pointer;
   }
-  .civ-time-picker-now-btn:hover:not(:disabled) {
-    @apply civ-bg-primary-lightest;
+  @media (hover: hover) {
+    .civ-time-picker-now-btn:hover:not(:disabled) {
+      @apply civ-bg-primary-lightest;
+    }
   }
   .civ-time-picker-now-btn:disabled {
     @apply civ-text-base-light civ-cursor-not-allowed;
@@ -3179,9 +3219,11 @@
     color: var(--civ-color-base-dark);
   }
 
-  .civ-close-btn:hover {
-    @apply civ-bg-base-lightest;
-    color: var(--civ-color-base-darkest);
+  @media (hover: hover) {
+    .civ-close-btn:hover {
+      @apply civ-bg-base-lightest;
+      color: var(--civ-color-base-darkest);
+    }
   }
 
   /* ── Progress Steps (segmented bar) ────────────────────────── */

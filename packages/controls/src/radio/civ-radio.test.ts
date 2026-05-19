@@ -123,6 +123,22 @@ describe('civ-radio', () => {
     expect(input!.className).not.toContain('focus:civ-outline-primary');
     expect(input!.className).not.toContain('focus:civ-outline-offset-0');
   });
+
+  it('focuses the input on change so the focus ring shows on iOS Safari tap', async () => {
+    // iOS Safari does not move focus to a radio on tap (the native
+    // platform quirk that motivates the explicit .focus() call in the
+    // change handler). Without this, the global :focus ring never shows
+    // on mobile after the user taps a radio.
+    const el = await fixture('<civ-radio label="Option A" value="a" name="opt"></civ-radio>');
+    const input = el.querySelector('input') as HTMLInputElement;
+    document.body.focus();
+    expect(document.activeElement).not.toBe(input);
+
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(document.activeElement).toBe(input);
+  });
 });
 
 describe('civ-radio-group', () => {

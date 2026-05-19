@@ -114,4 +114,38 @@ describe('civ-action-sheet accessibility', () => {
     expect(panel.getAttribute('aria-label')).toBeTruthy();
     expect(panel.getAttribute('aria-label')!.length).toBeGreaterThan(0);
   });
+
+  it('moves focus into the sheet when it opens', async () => {
+    // Without this, keyboard users land nowhere when the sheet opens
+    // and have to Tab manually to reach the content.
+    const el = await fixture(`
+      <civ-action-sheet>
+        <button id="first-action">First action</button>
+        <button id="second-action">Second action</button>
+      </civ-action-sheet>
+    `) as any;
+    document.body.focus();
+    el.open = true;
+    await elementUpdated(el);
+    // The update flush awaits one more microtask for the post-render focus.
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(document.activeElement?.id).toBe('first-action');
+  });
+
+  it('returns focus to the trigger element when closed', async () => {
+    const trigger = document.createElement('button');
+    trigger.id = 'sheet-trigger';
+    trigger.textContent = 'Open sheet';
+    document.body.appendChild(trigger);
+    trigger.focus();
+    const el = await fixture('<civ-action-sheet><p>Content</p></civ-action-sheet>') as any;
+    el.open = true;
+    await elementUpdated(el);
+    el.open = false;
+    await elementUpdated(el);
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    expect(document.activeElement?.id).toBe('sheet-trigger');
+    trigger.remove();
+  });
 });

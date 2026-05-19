@@ -126,6 +126,23 @@ describe('civ-repeater', () => {
     expect(eventDetail.index).toBe(0);
   });
 
+  it('moves focus into the new row when added', async () => {
+    // Without this, focus stays on the Add button and keyboard users
+    // have to Tab back up through the form to reach the new fields.
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `);
+    document.body.focus();
+    el.addRow();
+    await elementUpdated(el);
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    const newRow = el.querySelectorAll('[data-civ-repeater-row]')[0];
+    const firstInput = newRow.querySelector('input');
+    expect(document.activeElement).toBe(firstInput);
+  });
+
   it('removes a row and fires civ-repeater-remove', async () => {
     const el = await fixture<CivRepeater>(`
       <civ-repeater legend="Items" name="items" item-label="item" min="1">

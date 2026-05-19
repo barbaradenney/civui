@@ -115,6 +115,11 @@ export class CivCheckbox extends CivBooleanFormElement {
     const target = e.target as HTMLInputElement;
     this.checked = target.checked;
     this.indeterminate = false;
+    // iOS Safari does not move focus to a checkbox on tap, so the
+    // global :focus ring never shows on mobile. Force focus explicitly
+    // (programmatic focus works on iOS even when implicit tap-to-focus
+    // doesn't) so the visual feedback matches desktop.
+    target.focus();
     dispatch(this, 'civ-input', { checked: this.checked, value: this.value });
     dispatch(this, 'civ-change', { checked: this.checked, value: this.value });
     this.sendAnalytics('change', { checked: this.checked });

@@ -473,6 +473,24 @@ describe('civ-checkbox-group accessibility', () => {
     expect(input!.className).not.toContain('focus:civ-outline-primary');
     expect(input!.className).not.toContain('focus:civ-outline-offset-0');
   });
+
+  it('focuses the input on change so the focus ring shows on iOS Safari tap', async () => {
+    // iOS Safari does not move focus to a checkbox on tap (the native
+    // platform quirk that motivates the explicit .focus() call in the
+    // change handler). Without this, the global :focus ring never shows
+    // on mobile after the user taps to check.
+    const el = await fixture('<civ-checkbox label="Agree" name="agree"></civ-checkbox>');
+    const input = el.querySelector('input') as HTMLInputElement;
+    // Move focus elsewhere to simulate iOS Safari (where tap does not
+    // grant :focus to the input).
+    document.body.focus();
+    expect(document.activeElement).not.toBe(input);
+
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(document.activeElement).toBe(input);
+  });
 });
 
 describe('civ-checkbox indeterminate', () => {

@@ -14,7 +14,7 @@ This page lists what those affordances are and where each one lives.
 
 LLMs are confident pattern-matchers. Where a codebase relies on tribal knowledge ("we always put the legend on the group component, not the wrapper"), an agent will eventually guess wrong. CivUI's response is to turn every such convention into a static check that fails CI.
 
-The full list lives in [Quality Gates](./quality-gates) — 12 drift lints, 5 schema-as-contract gates, the parity report, the consistency check, the doc-tables-sync gate, the Storybook build gate, and the native compile check. The lints in particular were each written in response to a real failure mode (a story attribute that wasn't a real prop, a `civ-text-base-darker` class that doesn't resolve to a token, a `@prop` JSDoc tag that drifted from its `@property` declaration). Together they form a tight feedback loop: an agent edits a file, runs `pnpm validate:lints`, and gets a precise error message instead of a silent regression.
+The full list lives in [Quality Gates](./quality-gates) — 22 drift lints, 5 schema-as-contract gates, the parity report, the consistency check, the doc-tables-sync gate, the Storybook build gate, and the native compile check. The lints in particular were each written in response to a real failure mode (a story attribute that wasn't a real prop, a `civ-text-base-darker` class that doesn't resolve to a token, a `@prop` JSDoc tag that drifted from its `@property` declaration). Together they form a tight feedback loop: an agent edits a file, runs `pnpm validate:lints`, and gets a precise error message instead of a silent regression.
 
 Run the fast preflight before pushing:
 
@@ -29,7 +29,7 @@ When a lint fails, the failure output ends with a `→ see <path>#<anchor>` line
 
 ## Schemas are the machine-readable contract
 
-Every cross-platform component has a schema in `packages/schema/src/components/civ-<name>.schema.ts` describing its props, events, accessibility role, render order, and form behaviour in a platform-neutral form. 53 components are covered today.
+Every cross-platform component has a schema in `packages/schema/src/components/civ-<name>.schema.ts` describing its props, events, accessibility role, render order, and form behaviour in a platform-neutral form. 62 components are covered today.
 
 The schema is what an agent should read when answering "what props does this component support?" — not the TypeScript source, which mixes public API with internal implementation. The schema is also what the Drupal SDC YAMLs and Twig templates are regenerated from (`pnpm sync:drupal`), what the Props / Events tables on every doc page are generated from (`pnpm sync:doc-tables`), and what the auto-generated Storybook contract pages are built from. One source of truth, four downstream artefacts.
 
@@ -75,7 +75,7 @@ If you discover a new failure mode while working in this repo, append it to `com
 
 ## The MCP server
 
-The `@civui/mcp-server` package (`packages/mcp-server/`) exposes ~90 tools over the Model Context Protocol so an AI agent can interact with CivUI structurally instead of grepping source files. The tools cluster into a few groups:
+The `@civui/mcp-server` package (`packages/mcp-server/`) exposes ~80 tools over the Model Context Protocol so an AI agent can interact with CivUI structurally instead of grepping source files. The tools cluster into a few groups:
 
 - **Discovery** — `search_components({ query: "user uploads ID and signs" })` returns ranked component matches; `get_component_guide({ name: "civ-text-input" })` returns the schema + canonical examples + matching trap excerpts in one focused payload; `get_component_examples` pulls snippets from `*.stories.ts`.
 - **Generation** — `generate-gov-form`, `generate-react-form`, `generate-bilingual-form`, `generate-a11y-tests`, `generate-progress-bar`, `generate-confirmation-page`, `generate-summary`, and ~60 more emit ready-to-use markup or scaffolding from structured inputs.

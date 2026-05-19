@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseProperties, renderSchema } from '../generate-schema-from-source.js';
+import { parseProperties, parseDispatchedEvents, renderSchema } from '../generate-schema-from-source.js';
 
 describe('parseProperties', () => {
   it('extracts a basic string property with default', () => {
@@ -104,6 +104,82 @@ describe('parseProperties', () => {
     // disabled + required are inherited — only placeholder + maxlength survive.
     expect(props.map((p) => p.name).sort()).toEqual(['maxlength', 'placeholder']);
   });
+
+  it('filters PresetInputWrapper text-input props only when the base class is used', () => {
+    // Without PresetInputWrapper, `placeholder` should NOT be filtered.
+    const withoutMixin = `
+export class CivFoo extends CivFormElement {
+  @property({ type: String }) placeholder = '';
+}
+`;
+    expect(parseProperties(withoutMixin).map((p) => p.name)).toContain('placeholder');
+
+    // With PresetInputWrapper, `placeholder` IS filtered (the wrapper forwards it).
+    const withMixin = `
+export class CivSsn extends PresetInputWrapper {
+  @property({ type: String }) placeholder = '';
+  @property({ type: String }) customProp = '';
+}
+`;
+    const filtered = parseProperties(withMixin).map((p) => p.name);
+    expect(filtered).not.toContain('placeholder');
+    expect(filtered).toContain('customProp');
+  });
+
+  it('filters CivBooleanFormElement props only when that base class is used', () => {
+    const withoutBoolean = `
+export class CivFoo extends CivFormElement {
+  @property({ type: Boolean }) checked = false;
+}
+`;
+    // Plain CivFormElement components might define `checked` as their own prop.
+    expect(parseProperties(withoutBoolean).map((p) => p.name)).toContain('checked');
+
+    const withBoolean = `
+export class CivToggle extends CivBooleanFormElement {
+  @property({ type: Boolean }) checked = false;
+  @property({ type: String }) variant = 'default';
+}
+`;
+    const filtered = parseProperties(withBoolean).map((p) => p.name);
+    expect(filtered).not.toContain('checked');
+    expect(filtered).toContain('variant');
+  });
+});
+
+describe('parseDispatchedEvents', () => {
+  it('extracts events from dispatch(this, ...) calls', () => {
+    const src = `
+this.dispatchEvent(...);
+dispatch(this, 'civ-foo', { detail: { x: 1 } });
+dispatch(this, 'civ-bar');
+`;
+    expect(parseDispatchedEvents(src)).toEqual(['civ-bar', 'civ-foo']);
+  });
+
+  it('extracts events from new CustomEvent() calls', () => {
+    const src = `const e = new CustomEvent('civ-toggle', { detail: { open: true } });`;
+    expect(parseDispatchedEvents(src)).toEqual(['civ-toggle']);
+  });
+
+  it('filters out base-class events (civ-input, civ-change, civ-analytics, civ-reset)', () => {
+    const src = `
+dispatch(this, 'civ-input');
+dispatch(this, 'civ-change');
+dispatch(this, 'civ-analytics');
+dispatch(this, 'civ-reset');
+dispatch(this, 'civ-custom');
+`;
+    expect(parseDispatchedEvents(src)).toEqual(['civ-custom']);
+  });
+
+  it('deduplicates repeated dispatches of the same event', () => {
+    const src = `
+dispatch(this, 'civ-toggle');
+dispatch(this, 'civ-toggle');
+`;
+    expect(parseDispatchedEvents(src)).toEqual(['civ-toggle']);
+  });
 });
 
 describe('renderSchema', () => {
@@ -135,5 +211,32 @@ describe('renderSchema', () => {
       { name: 'maxlength', type: 'number', description: 'Maximum length' },
     ]);
     expect(src).toContain('"Maximum length"');
+  });
+
+  it('emits passed events as entries in the events block', () => {
+    const src = renderSchema('civ-foo', [], { events: ['civ-toggle', 'civ-dismiss'] });
+    expect(src).toContain("'civ-toggle':");
+    expect(src).toContain("'civ-dismiss':");
+    expect(src).toContain('TODO: fill in event detail keys');
+  });
+
+  it('branches a11y + form + renderOrder for CivBaseElement (non-form) components', () => {
+    const src = renderSchema('civ-foo', [], { extends: 'CivBaseElement', category: 'ui' });
+    expect(src).toContain("extends: 'CivBaseElement'");
+    expect(src).toContain("category: 'ui'");
+    expect(src).toContain("role: 'group'");
+    expect(src).toContain("requiredIndicator: 'none'");
+    expect(src).toContain('formAssociated: false');
+    expect(src).toContain("resetBehavior: 'none'");
+    // Container/slot render shape, not label/hint/error/input
+    expect(src).toContain("type: 'container'");
+    expect(src).toContain("type: 'slot'");
+  });
+
+  it('keeps form-control defaults for CivFormElement components', () => {
+    const src = renderSchema('civ-foo', [], { extends: 'CivFormElement', category: 'form-control' });
+    expect(src).toContain("extends: 'CivFormElement'");
+    expect(src).toContain("role: 'textbox'");
+    expect(src).toContain('formAssociated: true');
   });
 });

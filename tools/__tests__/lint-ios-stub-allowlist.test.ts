@@ -85,4 +85,17 @@ public struct CivFoo: View {
 `;
     expect(isStubBody(swift)).toBe(false);
   });
+
+  it('strips block comments inside the body', () => {
+    const swift = `
+public struct CivFoo: View {
+    public var body: some View {
+        /* TODO: implement this view
+           * on multiple lines */
+        EmptyView()
+    }
+}
+`;
+    expect(isStubBody(swift)).toBe(true);
+  });
 });

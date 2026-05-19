@@ -19,6 +19,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
@@ -126,6 +127,7 @@ async function main(): Promise<void> {
     console.error(`    Either rename the export to ${kebabToPascal(f.displaySlug)} or update the display name to match the export.`);
     console.error('');
   }
+  printRuleLink('story-names');
   process.exit(1);
 }
 

@@ -46,9 +46,10 @@ import { execSync } from 'child_process';
 const ROOT = join(import.meta.dirname, '..');
 const SCHEMA_DIR = join(ROOT, 'packages/schema/src/components');
 
-// Props inherited from base classes — filtered out of the generated
-// schema (they're declared on every form component).
-const INHERITED_PROPS = new Set([
+// Props that EVERY CivBaseElement / CivFormElement carries. Always filtered.
+// Kept in sync (by hand) with tools/lib/inherited.ts INHERITED_FORM_PROPS
+// — that file is the source of truth for the schema-parity check.
+const ALWAYS_INHERITED = new Set([
   'label',
   'name',
   'value',
@@ -59,9 +60,63 @@ const INHERITED_PROPS = new Set([
   'readonly',
   'touched',
   'requiredMessage',
+  'disableAnalytics',
   'analyticsId',
   'analyticsCategory',
 ]);
+
+// Props added by mixin / specialised base class — only filtered when the
+// source actually uses that base class. Conditionally applied so a non-
+// preset component with its own `placeholder` prop isn't silently dropped.
+const CONDITIONAL_INHERITED: Array<{ marker: RegExp; props: string[] }> = [
+  // CivBooleanFormElement
+  {
+    marker: /\bCivBooleanFormElement\b/,
+    props: ['checked', 'description', 'extraDescribedby'],
+  },
+  // LegendHeadingMixin
+  {
+    marker: /\bLegendHeadingMixin\b/,
+    props: ['headingLevel', 'size'],
+  },
+  // PresetInputWrapper — forwards text-input props to its inner child.
+  {
+    marker: /\bPresetInputWrapper\b/,
+    props: [
+      'type',
+      'placeholder',
+      'pattern',
+      'maxlength',
+      'minlength',
+      'autocomplete',
+      'inputmode',
+      'mask',
+      'maskPattern',
+      'maskMode',
+      'validate',
+      'prefix',
+      'suffix',
+      'clearable',
+      'leadingIcon',
+      'trailingIcon',
+      'leadingIconLabel',
+      'trailingIconLabel',
+      'hideCharCount',
+      'width',
+      'autofocus',
+    ],
+  },
+];
+
+function inheritedPropsFor(source: string): Set<string> {
+  const set = new Set(ALWAYS_INHERITED);
+  for (const { marker, props } of CONDITIONAL_INHERITED) {
+    if (marker.test(source)) {
+      for (const p of props) set.add(p);
+    }
+  }
+  return set;
+}
 
 interface PropInfo {
   name: string;
@@ -71,12 +126,29 @@ interface PropInfo {
   description?: string;
 }
 
+/** Custom events dispatched by a component — name only. Detail shapes need human review. */
+export function parseDispatchedEvents(source: string): string[] {
+  const events = new Set<string>();
+  // `dispatch(this, 'civ-foo', ...)` from @civui/core
+  for (const m of source.matchAll(/dispatch\s*\(\s*this\s*,\s*['"]([a-z-]+)['"]/g)) {
+    events.add(m[1]);
+  }
+  // `new CustomEvent('civ-foo', ...)`
+  for (const m of source.matchAll(/new\s+CustomEvent\s*\(\s*['"]([a-z-]+)['"]/g)) {
+    events.add(m[1]);
+  }
+  // Filter base-class dispatches that the schema doesn't need to declare.
+  const baseEvents = new Set(['civ-input', 'civ-change', 'civ-analytics', 'civ-reset']);
+  return [...events].filter((e) => !baseEvents.has(e)).sort();
+}
+
 /**
  * Parses @property decorators from a Lit source string. Returns
  * one PropInfo per declaration, in source order.
  */
 export function parseProperties(source: string): PropInfo[] {
   const props: PropInfo[] = [];
+  const inherited = inheritedPropsFor(source);
 
   // Match @property({ ... }) decorators followed by the property name
   // and an optional type annotation + default.
@@ -93,7 +165,7 @@ export function parseProperties(source: string): PropInfo[] {
   let m: RegExpExecArray | null;
   while ((m = propertyRegex.exec(source)) !== null) {
     const [, options, propName, typeAnn, defaultExpr] = m;
-    if (INHERITED_PROPS.has(propName)) continue;
+    if (inherited.has(propName)) continue;
 
     const optionsStr = options || '';
     let typeFromDecorator: string | undefined;
@@ -192,7 +264,22 @@ function defaultAttribute(propName: string): string {
   return propName.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
-export function renderSchema(componentName: string, props: PropInfo[]): string {
+export interface RenderOptions {
+  category?: string;
+  extends?: string;
+  events?: string[];
+}
+
+export function renderSchema(
+  componentName: string,
+  props: PropInfo[],
+  options: RenderOptions = {},
+): string {
+  const category = options.category ?? 'form-control';
+  const extendsBase = options.extends ?? 'CivFormElement';
+  const events = options.events ?? [];
+  const isFormControl = extendsBase === 'CivFormElement';
+
   const lines: string[] = [];
   lines.push(`import type { ComponentSchema } from '../schema.types.js';`);
   lines.push('');
@@ -202,8 +289,8 @@ export function renderSchema(componentName: string, props: PropInfo[]): string {
   lines.push(
     `  description: 'TODO: one-paragraph contract — match the description in the Lit source.',`,
   );
-  lines.push(`  category: 'form-control',`);
-  lines.push(`  extends: 'CivFormElement',`);
+  lines.push(`  category: '${category}',`);
+  lines.push(`  extends: '${extendsBase}',`);
   lines.push(`  isGroup: false,`);
   lines.push('');
   lines.push(`  props: {`);
@@ -229,28 +316,48 @@ export function renderSchema(componentName: string, props: PropInfo[]): string {
   lines.push(`  },`);
   lines.push('');
   lines.push(`  events: {`);
-  lines.push(
-    `    // TODO: declare custom events. \`civ-input\` / \`civ-change\` come from the base class.`,
-  );
+  if (events.length > 0) {
+    for (const evt of events) {
+      lines.push(`    '${evt}': {`);
+      lines.push(`      description: ${JSON.stringify(`TODO: describe ${evt}.`)},`);
+      lines.push(`      detail: {`);
+      lines.push(`        // TODO: fill in event detail keys from the dispatch call.`);
+      lines.push(`      },`);
+      lines.push(`    },`);
+    }
+  } else {
+    lines.push(
+      `    // TODO: declare custom events. \`civ-input\` / \`civ-change\` come from the base class.`,
+    );
+  }
   lines.push(`  },`);
   lines.push('');
   lines.push(`  a11y: {`);
-  lines.push(`    role: 'textbox', // TODO: confirm the ARIA role`);
-  lines.push(`    requiredIndicator: 'asterisk',`);
+  lines.push(`    role: '${isFormControl ? 'textbox' : 'group'}', // TODO: confirm the ARIA role`);
+  lines.push(`    requiredIndicator: '${isFormControl ? 'asterisk' : 'none'}',`);
   lines.push(`    errorAnnouncement: 'polite',`);
   lines.push(`  },`);
   lines.push('');
-  lines.push(`  renderOrder: [`);
-  lines.push(`    { type: 'label' },`);
-  lines.push(`    { type: 'hint' },`);
-  lines.push(`    { type: 'error' },`);
-  lines.push(`    { type: 'input' },`);
-  lines.push(`  ],`);
+  if (isFormControl) {
+    lines.push(`  renderOrder: [`);
+    lines.push(`    { type: 'label' },`);
+    lines.push(`    { type: 'hint' },`);
+    lines.push(`    { type: 'error' },`);
+    lines.push(`    { type: 'input' },`);
+    lines.push(`  ],`);
+  } else {
+    lines.push(`  renderOrder: [`);
+    lines.push(`    {`);
+    lines.push(`      type: 'container',`);
+    lines.push(`      children: [{ type: 'slot', bindings: { name: 'default' } }],`);
+    lines.push(`    },`);
+    lines.push(`  ],`);
+  }
   lines.push('');
   lines.push(`  form: {`);
   lines.push(`    valueMode: 'string',`);
-  lines.push(`    formAssociated: true,`);
-  lines.push(`    resetBehavior: 'restore-default-value',`);
+  lines.push(`    formAssociated: ${isFormControl},`);
+  lines.push(`    resetBehavior: '${isFormControl ? 'restore-default-value' : 'none'}',`);
   lines.push(`  },`);
   lines.push(`};`);
   lines.push('');
@@ -272,10 +379,42 @@ function findComponentSource(componentName: string): string | null {
   }
 }
 
+function parseFlags(argv: string[]): {
+  positional: string[];
+  category?: string;
+  extendsBase?: string;
+} {
+  const positional: string[] = [];
+  let category: string | undefined;
+  let extendsBase: string | undefined;
+  for (let i = 2; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg.startsWith('--category=')) category = arg.slice('--category='.length);
+    else if (arg.startsWith('--extends=')) extendsBase = arg.slice('--extends='.length);
+    else positional.push(arg);
+  }
+  return { positional, category, extendsBase };
+}
+
+const VALID_CATEGORIES = ['form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation'];
+const VALID_EXTENDS = ['CivFormElement', 'CivBaseElement'];
+
 function main(): number {
-  const arg = process.argv[2];
+  const { positional, category, extendsBase } = parseFlags(process.argv);
+  const arg = positional[0];
   if (!arg) {
-    console.error('Usage: pnpm generate:schema civ-<name>');
+    console.error('Usage: pnpm generate:schema civ-<name> [--category=<cat>] [--extends=<base>]');
+    console.error(`  --category: one of ${VALID_CATEGORIES.join(', ')} (default: form-control)`);
+    console.error(`  --extends:  one of ${VALID_EXTENDS.join(', ')} (default: CivFormElement)`);
+    return 1;
+  }
+
+  if (category && !VALID_CATEGORIES.includes(category)) {
+    console.error(`Invalid --category: "${category}". Valid: ${VALID_CATEGORIES.join(', ')}`);
+    return 1;
+  }
+  if (extendsBase && !VALID_EXTENDS.includes(extendsBase)) {
+    console.error(`Invalid --extends: "${extendsBase}". Valid: ${VALID_EXTENDS.join(', ')}`);
     return 1;
   }
 
@@ -302,16 +441,18 @@ function main(): number {
 
   const source = readFileSync(sourcePath, 'utf-8');
   const props = parseProperties(source);
-  const schema = renderSchema(componentName, props);
+  const events = parseDispatchedEvents(source);
+  const schema = renderSchema(componentName, props, { category, extends: extendsBase, events });
 
   writeFileSync(schemaPath, schema);
   console.log(`✓ generated packages/schema/src/components/${componentName}.schema.ts`);
   console.log(`  • ${props.length} props extracted from ${sourcePath.replace(ROOT + '/', '')}`);
+  console.log(`  • ${events.length} custom event(s) extracted from dispatch() / new CustomEvent() calls`);
   console.log('');
   console.log('Next steps:');
-  console.log('  1. Edit the description, category, and a11y role to match the component.');
+  console.log('  1. Edit the description and confirm the a11y role.');
   console.log('  2. Fill in enum values for any enum-typed props.');
-  console.log('  3. Declare events the component dispatches.');
+  console.log('  3. Fill in event detail keys for each extracted event.');
   console.log('  4. Mark web-specific props with `webOnly: true`.');
   console.log('  5. Register in `tools/schema-parity.ts` COVERED_COMPONENTS.');
   console.log('  6. Run `pnpm validate:schemas && pnpm parity:schema --platforms`.');

@@ -71,7 +71,7 @@ node --experimental-strip-types tools/validate-drupal-sdc.ts
 
 ## Schema-as-Contract Gates
 
-In addition to the parity report (which extracts and compares APIs from all four platforms), CivUI maintains a fifth artifact per component: a **platform-neutral schema** in `@civui/schema` that describes the public contract — props, events, accessibility role, render order, form behavior. **53 of the cross-platform components are covered**; the schema is the source a contractor (or a new platform implementation) reads when writing equivalent native code.
+In addition to the parity report (which extracts and compares APIs from all four platforms), CivUI maintains a fifth artifact per component: a **platform-neutral schema** in `@civui/schema` that describes the public contract — props, events, accessibility role, render order, form behavior. **62 of the cross-platform components are covered**; the schema is the source a contractor (or a new platform implementation) reads when writing equivalent native code.
 
 The Lit web implementation is the canonical reference. Four additional CI gates protect drift between the schema and the four implementations.
 
@@ -266,7 +266,7 @@ This ensures contributors don't forget to update native counterparts when changi
 | Check | Threshold | Blocking |
 |-------|-----------|----------|
 | Parity report | 85% per component | Yes |
-| Schema parity (Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC) | 0 drift across 53 components | Yes |
+| Schema parity (Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC) | 0 drift across 62 components | Yes |
 | Schema parity — Drupal SDC YAML type-drift | 0 type mismatches | Yes |
 | Schema validate (structural correctness) | 0 errors | Yes |
 | Drupal sync clean (regenerator output matches commit) | 0 diff | Yes |

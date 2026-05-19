@@ -56,6 +56,12 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/common-traps.md',
     anchor: 'mutedgray-text-classes-on-p-body-text',
   },
+  // The three lints below are vitest-driven (not standalone tsx scripts),
+  // so their rule links are emitted by a shell `||` wrapper in package.json
+  // — not by calling `printRuleLink()` from inside the lint. Keep the map
+  // entries in sync with the package.json links so the canonical mapping
+  // lives in one place. If you change the anchor here, also update the
+  // matching `lint:<name>` script in package.json.
   'double-labels': {
     path: '.claude/rules/common-traps.md',
     anchor: 'double-labelled-form-controls',

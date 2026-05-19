@@ -239,7 +239,7 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - Schemas serve the contract role directly; no code-generation step is required (the previous `@civui/codegen` package was removed when this approach replaced it).
 
-**Coverage status (53 components, every cross-platform component covered):**
+**Coverage status (62 components, every cross-platform component covered):**
 - Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-date-range-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
 - Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-partnership-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`, `civ-conditional`, `civ-summary`, `civ-data-field`, `civ-section-intro`

@@ -14,6 +14,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const DOCS_DIR = path.join(REPO_ROOT, 'apps/docs/docs');
@@ -131,6 +132,7 @@ async function main(): Promise<void> {
     if (closest) console.error(`    did you mean: id="${closest}"?`);
     console.error('');
   }
+  printRuleLink('story-embeds');
   process.exit(1);
 }
 

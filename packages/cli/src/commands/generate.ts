@@ -2,10 +2,14 @@ import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { findRoot, toPascalCase, success, header } from '../utils.js';
 
+const VALID_FORM_CATEGORIES = ['form-control', 'form-group', 'form-container'] as const;
+type FormCategory = (typeof VALID_FORM_CATEGORIES)[number];
+
 /**
- * civui generate component <name>
+ * civui generate component <name> [--package=<pkg>] [--category=<cat>]
  *
- * Scaffolds a new web component with:
+ * Scaffolds a new **form-participating** web component (extends CivFormElement)
+ * with:
  * - Component source (.ts)
  * - Unit test (.test.ts)
  * - Storybook story (.stories.ts)
@@ -14,7 +18,7 @@ import { findRoot, toPascalCase, success, header } from '../utils.js';
 export async function generate(
   type: string,
   args: string[],
-  _flags: Record<string, boolean | string>,
+  flags: Record<string, boolean | string>,
 ): Promise<void> {
   if (type !== 'component') {
     throw new Error(`Unknown generate type: "${type}". Supported: component`);
@@ -29,7 +33,17 @@ export async function generate(
     throw new Error('Component name must be kebab-case (e.g., date-range-picker)');
   }
 
-  header(`Generating component: civ-${name}`);
+  const pkg = typeof flags.package === 'string' ? flags.package : 'inputs';
+  const category = typeof flags.category === 'string' ? flags.category : 'form-control';
+
+  if (!(VALID_FORM_CATEGORIES as readonly string[]).includes(category)) {
+    throw new Error(
+      `Invalid --category: "${category}". Valid: ${VALID_FORM_CATEGORIES.join(', ')}.\n` +
+        `For non-form components (ui / feedback / navigation), use \`pnpm scaffold:component\` instead — it takes \`--extends=CivBaseElement\` and branches the component template accordingly.`,
+    );
+  }
+
+  header(`Generating component: civ-${name} (package: ${pkg}, category: ${category})`);
 
   const root = findRoot();
   const pascalName = toPascalCase(name);
@@ -39,8 +53,16 @@ export async function generate(
     .split('-')
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
     .join(' ');
-  const dir = resolve(root, 'packages/forms/src', name);
 
+  const pkgRoot = resolve(root, 'packages', pkg);
+  if (!existsSync(pkgRoot)) {
+    throw new Error(
+      `Package "packages/${pkg}/" does not exist. Pass --package=<name> with one of: ` +
+        `actions, controls, compound, core, data, feedback, form-patterns, inputs, layout, overlays.`,
+    );
+  }
+
+  const dir = resolve(pkgRoot, 'src', name);
   if (existsSync(dir)) {
     throw new Error(`Component directory already exists: ${dir}`);
   }
@@ -120,18 +142,50 @@ export async function generate(
   const schemaFile = resolve(schemaDir, `${tagName}.schema.ts`);
   if (!existsSync(schemaFile)) {
     mkdirSync(schemaDir, { recursive: true });
-    writeFileSync(schemaFile, schemaTemplate(tagName));
+    writeFileSync(schemaFile, schemaTemplate(tagName, category as FormCategory));
     success(`Created schema: ${tagName}.schema.ts`);
   }
 
-  // --- Register in tools/schema-parity.ts COVERED_COMPONENTS ---
-  const registered = registerInSchemaParity(root, tagName, className, name);
-  if (registered) {
+  // --- Register in tool tables ---
+  const parityResult = registerInSchemaParity(root, tagName, className, name, pkg);
+  if (parityResult === 'registered') {
     success(`Registered ${tagName} in tools/schema-parity.ts`);
+  } else if (parityResult === 'regex-mismatch') {
+    console.warn(
+      `⚠ Could not register ${tagName} in tools/schema-parity.ts — COVERED_COMPONENTS array layout has changed. Add the entry manually before pushing.`,
+    );
+  }
+
+  const drupalSdcRegistered = registerInSyncTool(
+    resolve(root, 'tools/sync-drupal-sdc.ts'),
+    `  { schema: '${tagName}', drupal: '${name}' },`,
+    /\nconst COMPONENTS: ComponentMapping\[\] = \[[\s\S]*?\n(\];)/,
+    tagName,
+  );
+  if (drupalSdcRegistered === 'registered') {
+    success(`Registered ${tagName} in tools/sync-drupal-sdc.ts`);
+  } else if (drupalSdcRegistered === 'regex-mismatch') {
+    console.warn(
+      `⚠ Could not register ${tagName} in tools/sync-drupal-sdc.ts — COMPONENTS array layout has changed. Add the entry manually.`,
+    );
+  }
+
+  const drupalTwigRegistered = registerInSyncTool(
+    resolve(root, 'tools/sync-drupal-twig.ts'),
+    `  '${tagName}',`,
+    /\nconst COMPONENTS = \[[\s\S]*?\n(\];)/,
+    tagName,
+  );
+  if (drupalTwigRegistered === 'registered') {
+    success(`Registered ${tagName} in tools/sync-drupal-twig.ts`);
+  } else if (drupalTwigRegistered === 'regex-mismatch') {
+    console.warn(
+      `⚠ Could not register ${tagName} in tools/sync-drupal-twig.ts — COMPONENTS array layout has changed. Add the entry manually.`,
+    );
   }
 
   console.log(`\nComponent scaffolded across 4 platforms + schema:`);
-  console.log(`  Web:     packages/forms/src/${name}/`);
+  console.log(`  Web:     packages/${pkg}/src/${name}/`);
   console.log(`  iOS:     packages/ios/Sources/CivUI/${className}.swift`);
   console.log(`  Android: packages/android/src/main/kotlin/gov/civui/components/${className}.kt`);
   console.log(`  Drupal:  packages/drupal/civui/components/${name}/`);
@@ -144,18 +198,21 @@ export async function generate(
   console.log(`  5. Implement native views in the iOS and Android stubs`);
 }
 
+type RegistrationResult = 'registered' | 'already-registered' | 'regex-mismatch' | 'file-missing';
+
 function registerInSchemaParity(
   root: string,
   tagName: string,
   className: string,
   name: string,
-): boolean {
+  pkg: string,
+): RegistrationResult {
   const path = resolve(root, 'tools/schema-parity.ts');
-  if (!existsSync(path)) return false;
+  if (!existsSync(path)) return 'file-missing';
   const src = readFileSync(path, 'utf-8');
-  if (src.includes(`name: '${tagName}'`)) return false;
+  if (src.includes(`name: '${tagName}'`)) return 'already-registered';
 
-  const litPath = `packages/forms/src/${name}/${tagName}.ts`;
+  const litPath = `packages/${pkg}/src/${name}/${tagName}.ts`;
   const iosPath = `packages/ios/Sources/CivUI/${className}.swift`;
   const androidPath = `packages/android/src/main/kotlin/gov/civui/components/${className}.kt`;
   const drupalPath = `packages/drupal/civui/components/${name}/${name}.component.yml`;
@@ -164,23 +221,52 @@ function registerInSchemaParity(
   const closingMatch = src.match(
     /\nconst COVERED_COMPONENTS: ComponentSpec\[\] = \[[\s\S]*?\n(\];)/,
   );
-  if (!closingMatch) return false;
+  if (!closingMatch) return 'regex-mismatch';
   const insertAt = src.lastIndexOf('];', closingMatch.index! + closingMatch[0].length);
   const next = src.slice(0, insertAt) + entryLine + '\n' + src.slice(insertAt);
   writeFileSync(path, next);
-  return true;
+  return 'registered';
 }
 
-function schemaTemplate(tagName: string): string {
+function registerInSyncTool(
+  path: string,
+  entryLine: string,
+  arrayRegex: RegExp,
+  tagName: string,
+): RegistrationResult {
+  if (!existsSync(path)) return 'file-missing';
+  const src = readFileSync(path, 'utf-8');
+  if (src.includes(`'${tagName}'`)) return 'already-registered';
+
+  const closingMatch = src.match(arrayRegex);
+  if (!closingMatch) return 'regex-mismatch';
+  const insertAt = src.lastIndexOf('];', closingMatch.index! + closingMatch[0].length);
+  const next = src.slice(0, insertAt) + entryLine + '\n' + src.slice(insertAt);
+  writeFileSync(path, next);
+  return 'registered';
+}
+
+function schemaTemplate(tagName: string, category: FormCategory): string {
+  // The CLI scaffolder is form-component-only — componentTemplate
+  // hardcodes `extends CivFormElement`, so the schema matches.
+  // For non-form components, use `pnpm scaffold:component`.
+  const a11yRole = category === 'form-group' ? 'group' : 'textbox';
+  const renderOrder = `[
+    { type: 'label' },
+    { type: 'hint' },
+    { type: 'error' },
+    { type: 'input' },
+  ]`;
+
   return `import type { ComponentSchema } from '../schema.types.js';
 
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: '${tagName}',
   description: 'TODO: one-paragraph contract — purpose, primary use case, notable composition. Match the description in the Lit source.',
-  category: 'form-control',
+  category: '${category}',
   extends: 'CivFormElement',
-  isGroup: false,
+  isGroup: ${category === 'form-group'},
 
   props: {
     // TODO: declare each component-specific prop here. Inherited form
@@ -205,17 +291,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'textbox',
+    role: '${a11yRole}',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'polite',
   },
 
-  renderOrder: [
-    { type: 'label' },
-    { type: 'hint' },
-    { type: 'error' },
-    { type: 'input' },
-  ],
+  renderOrder: ${renderOrder},
 
   form: {
     valueMode: 'string',

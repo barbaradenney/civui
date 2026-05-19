@@ -1,4 +1,4 @@
-#!/usr/bin/env npx tsx
+#!/usr/bin/env tsx
 /**
  * CivUI iOS stub allowlist lint.
  *
@@ -30,10 +30,10 @@ import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { IOS_STUB_ALLOWLIST } from './ios-stub-allowlist.js';
+import { printRuleLink } from './lint-rule-links.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const IOS_DIR = join(ROOT, 'packages/ios/Sources/CivUI');
-const RULE_LINK = '.claude/rules/audit-debt.md#native-platform-implementation-pass-ios--android';
 
 /**
  * Returns true if the file's top-level `public var body: some View`
@@ -58,7 +58,10 @@ function isStubBody(content: string): boolean {
     if (depth === 0) break;
     i++;
   }
-  const inner = content.slice(openIdx + 1, i);
+  let inner = content.slice(openIdx + 1, i);
+  // Strip block comments first (they may span multiple lines).
+  inner = inner.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Then strip line comments and split.
   const meaningful = inner
     .split('\n')
     .map((line) => line.replace(/\/\/.*$/, '').trim())
@@ -130,7 +133,9 @@ function main(): number {
     );
     console.log(`to IOS_STUB_ALLOWLIST in tools/ios-stub-allowlist.ts.`);
     console.log(`Otherwise, implement the SwiftUI body.`);
-    console.log(`\n→ see ${RULE_LINK}\n`);
+    console.log();
+    printRuleLink('ios-stub-allowlist');
+    console.log();
   }
 
   if (staleEntries.length > 0) {
@@ -150,7 +155,9 @@ function main(): number {
     console.log(
       `\nIf you implemented this without device verification, please revert.`,
     );
-    console.log(`\n→ see ${RULE_LINK}\n`);
+    console.log();
+    printRuleLink('ios-stub-allowlist');
+    console.log();
   }
 
   return exit;

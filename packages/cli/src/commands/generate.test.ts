@@ -5,7 +5,17 @@ vi.mock('node:fs', () => ({
   writeFileSync: vi.fn(),
   mkdirSync: vi.fn(),
   existsSync: vi.fn(),
-  readFileSync: vi.fn(() => ''),
+  // readFileSync is only used by registerInSchemaParity / registerInSyncTool,
+  // and only when `existsSync(tool-file)` returns true. The default mock setup
+  // has `existsSync` return true only for package directories, so readFileSync
+  // shouldn't fire in tests. If it does, fail loudly rather than silently
+  // returning an empty string (which would make registration silently fail).
+  readFileSync: vi.fn((path: string) => {
+    throw new Error(
+      `readFileSync was called unexpectedly with "${path}". ` +
+        `If a new test path needs to exercise registration, mock readFileSync explicitly per-test.`,
+    );
+  }),
 }));
 
 // Mock findRoot and other utils to avoid filesystem traversal
@@ -31,8 +41,16 @@ const mockExistsSync = vi.mocked(existsSync);
 describe('generate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockExistsSync.mockReturnValue(false);
+    // Default: package dir exists (so package-validation passes); everything
+    // else does not (so the scaffolder can create files freely). Individual
+    // tests can override.
+    mockExistsSync.mockImplementation((p: any) => {
+      const path = String(p);
+      // Package root: "/mock/root/packages/inputs" (no trailing /src or component subdir)
+      return /\/packages\/[a-z-]+$/.test(path);
+    });
     vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -70,10 +88,31 @@ describe('generate', () => {
     );
   });
 
-  it('creates the component directory', async () => {
+  it('throws when --package points at a non-existent directory', async () => {
+    mockExistsSync.mockReturnValue(false);
+    await expect(
+      generate('component', ['date-picker'], { package: 'made-up' }),
+    ).rejects.toThrow('Package "packages/made-up/" does not exist');
+  });
+
+  it('throws on invalid --category', async () => {
+    await expect(
+      generate('component', ['date-picker'], { category: 'ui' }),
+    ).rejects.toThrow('Invalid --category: "ui"');
+  });
+
+  it('creates the component directory in the default package (inputs)', async () => {
     await generate('component', ['date-picker'], {});
     expect(mockMkdirSync).toHaveBeenCalledWith(
-      '/mock/root/packages/forms/src/date-picker',
+      '/mock/root/packages/inputs/src/date-picker',
+      { recursive: true },
+    );
+  });
+
+  it('honours --package=<name> when scaffolding the component directory', async () => {
+    await generate('component', ['date-picker'], { package: 'controls' });
+    expect(mockMkdirSync).toHaveBeenCalledWith(
+      '/mock/root/packages/controls/src/date-picker',
       { recursive: true },
     );
   });
@@ -100,7 +139,7 @@ describe('generate', () => {
     await generate('component', ['date-picker'], {});
     const firstCallPath = mockWriteFileSync.mock.calls[0][0];
     expect(firstCallPath).toBe(
-      '/mock/root/packages/forms/src/date-picker/civ-date-picker.ts',
+      '/mock/root/packages/inputs/src/date-picker/civ-date-picker.ts',
     );
   });
 

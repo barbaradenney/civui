@@ -49,6 +49,13 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
   @property({ type: Number }) max?: number;
   @property({ type: Boolean, attribute: 'allow-decimal' }) allowDecimal = false;
   @property({ type: Boolean, attribute: 'allow-negative' }) allowNegative = false;
+  /**
+   * Increment / decrement applied when the user presses ArrowUp /
+   * ArrowDown. Defaults to 1 (matches native `<input type="number">`).
+   * Set to 0 to disable arrow-key stepping. Fractional steps (e.g.
+   * 0.5, 0.25) require `allow-decimal`.
+   */
+  @property({ type: Number }) step = 1;
   @property({ type: String }) placeholder = '';
   @property({ type: String }) prefix = '';
   @property({ type: String }) suffix = '';
@@ -112,6 +119,7 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
         @change="${this._onChange}"
         @blur="${this._onBlur}"
         @paste="${this._onPaste}"
+        @keydown="${this._onKeydown}"
       />
     `;
 
@@ -170,6 +178,7 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
         @change="${this._onChange}"
         @blur="${this._onBlur}"
         @paste="${this._onPaste}"
+        @keydown="${this._onKeydown}"
       />
     `;
   }
@@ -302,6 +311,61 @@ export class CivNumber extends LegendHeadingMixin(CivFormElement) {
   override formResetCallback(): void {
     super.formResetCallback();
     this._rangeError = false;
+  }
+
+  /**
+   * ArrowUp / ArrowDown step the value by `step` (default 1). Matches
+   * native `<input type="number">` behavior, which we lose by rendering
+   * `type="text"` (we use text to preserve leading-zero strings and
+   * avoid locale-specific decimal-separator issues).
+   *
+   * Skips when:
+   *  - step is 0 (consumer disabled)
+   *  - host is disabled/readonly
+   *  - the current partial state isn't a number ("-", ".", "")
+   *
+   * Clamps to [min, max] when set. Uses fixed-precision rounding
+   * (matched to step + current) to dodge floating-point drift
+   * (`0.1 + 0.2 ≠ 0.3`).
+   */
+  private _onKeydown(e: KeyboardEvent): void {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    if (this.step === 0 || this.disabled || this.readonly) return;
+
+    e.preventDefault();
+
+    const current = this.value === '' ? (this.min ?? 0) : Number(this.value);
+    if (!Number.isFinite(current)) return;
+
+    const direction = e.key === 'ArrowUp' ? 1 : -1;
+    const raw = current + direction * this.step;
+
+    // Match the decimal precision of `step` so 0.1+0.2 doesn't render
+    // as "0.30000000000000004".
+    const precision = (n: number): number => {
+      const s = String(n);
+      const idx = s.indexOf('.');
+      return idx === -1 ? 0 : s.length - idx - 1;
+    };
+    const p = Math.max(precision(this.step), precision(current));
+    let next = Number(raw.toFixed(p));
+
+    if (this.min != null && next < this.min) next = this.min;
+    if (this.max != null && next > this.max) next = this.max;
+    if (!this.allowNegative && next < 0) next = 0;
+
+    const nextStr = String(next);
+    if (nextStr === this.value) return;
+
+    this.value = nextStr;
+    const input = e.target as HTMLInputElement;
+    input.value = nextStr;
+    if (this._rangeError) {
+      this.error = '';
+      this._rangeError = false;
+    }
+    dispatch(this, 'civ-input', { value: this.value });
+    dispatch(this, 'civ-change', { value: this.value });
   }
 }
 

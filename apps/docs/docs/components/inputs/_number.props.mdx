@@ -7,6 +7,7 @@
 | `max` | `number` | — | Maximum allowed value (inclusive). Validates on blur. |
 | `allow-decimal` | `boolean` | `false` | Allow a decimal separator. When false (default), only integers are accepted. |
 | `allow-negative` | `boolean` | `false` | Allow a leading minus sign. Default is false; set true for temperature, deltas, etc. |
+| `step` | `number` | `1` | Increment / decrement applied on ArrowUp / ArrowDown. Matches native `<input type="number">` keyboard behavior. Set to 0 to disable arrow-key stepping. Fractional steps (0.5, 0.25) require `allow-decimal`. |
 | `placeholder` | `string` | `''` | Placeholder text |
 | `prefix` | `string` | `''` | Prefix text rendered before the input (e.g., "#") |
 | `suffix` | `string` | `''` | Suffix text rendered after the input (e.g., "%", "kg") |

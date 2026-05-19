@@ -71,6 +71,11 @@ props:
       enum: ['default', 'sm']
       default: 'default'
       description: 'Density variant. `default` renders the full label / hint / error chrome and prefix/suffix decoration. `sm` (compact) renders just the bare `<input>` with the host''s `aria-label` propagated; prefix/suffix decoration is dropped. For dense ...'
+    step:
+      title: Step
+      type: integer
+      default: 1
+      description: 'Increment / decrement applied on ArrowUp / ArrowDown. Matches native `<input type="number">` keyboard behavior. Set to 0 to disable arrow-key stepping. Fractional steps (0.5, 0.25) require `allow-decimal`.'
 
 libraryOverrides:
   dependencies:

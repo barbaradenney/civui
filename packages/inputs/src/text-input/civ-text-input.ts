@@ -64,6 +64,16 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
   @property({ type: String }) prefix = '';
   @property({ type: String }) suffix = '';
   @property({ type: Boolean }) clearable = false;
+  /**
+   * When true and `type="password"`, renders an inset eye/eye-slash
+   * button on the trailing edge that toggles the input between
+   * `type="password"` (obscured) and `type="text"` (revealed).
+   * Suppressed for non-password types. The clear button still takes
+   * precedence when both are active.
+   */
+  @property({ type: Boolean, attribute: 'reveal-password' }) revealPassword = false;
+  /** Internal state — whether the password is currently revealed. */
+  @state() private _passwordRevealed = false;
 
   /**
    * Decorative icon rendered inside the input on the leading edge.
@@ -358,16 +368,21 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     const hasPrefix = !!(this.prefix || isCurrency);
     const hasSuffix = !!this.suffix;
     const needsClearButton = this.clearable && !!this.value;
+    // Password-reveal toggle: only when reveal-password is set AND
+    // type is "password" (or was — the toggle flips the rendered
+    // type, but the host's `type` prop stays "password"). Clear button
+    // takes precedence when both are active.
+    const needsRevealButton = this.revealPassword && this.type === 'password' && !this.disabled && !this.readonly && !needsClearButton;
     // Trailing-action slot is the consumer escape hatch. Precedence inside the
-    // trailing inset region: clear (when value present) > slot > trailing-icon.
+    // trailing inset region: clear (when value present) > reveal > slot > trailing-icon.
     const hasTrailingActionSlot = this._hasSlottedChildren('data-trailing-action');
-    const needsTrailingActionSlot = hasTrailingActionSlot && !needsClearButton && !hasSuffix;
-    // Inline icons defer to prefix/suffix, the clear button, and the slot on the same edge.
+    const needsTrailingActionSlot = hasTrailingActionSlot && !needsClearButton && !needsRevealButton && !hasSuffix;
+    // Inline icons defer to prefix/suffix, the clear button, the reveal button, and the slot on the same edge.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
-    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsTrailingActionSlot;
+    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsRevealButton && !needsTrailingActionSlot;
 
     const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon });
-    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency });
+    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency });
 
     const inner = html`
       ${wrappedInput}
@@ -471,11 +486,17 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
 
     const handlers = this._resolveHandlers();
 
+    // When reveal-password is active and the user has toggled the
+    // reveal button, render `type="text"` so the value is visible.
+    // The host's `type` prop stays "password" — only the rendered
+    // input attribute flips.
+    const effectiveType = (this.type === 'password' && this._passwordRevealed) ? 'text' : this.type;
+
     return html`
       <input
         class="${classes}"
         id="${this._inputId}"
-        type="${this.type}"
+        type="${effectiveType}"
         name="${this.name || nothing}"
         .value="${displayValue}"
         placeholder="${this.placeholder || nothing}"
@@ -558,13 +579,14 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     hasPrefix: boolean;
     hasSuffix: boolean;
     needsClearButton: boolean;
+    needsRevealButton: boolean;
     needsTrailingActionSlot: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
     isCurrency: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
-    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton || needsTrailingActionSlot;
+    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
+    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || needsTrailingActionSlot;
     const needsIconOverlay = !needsAdjacentWrapper && (showLeadingIcon || showTrailingIcon);
 
     if (needsAdjacentWrapper) {
@@ -575,6 +597,14 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
           ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
               <civ-icon name="close"></civ-icon>
             </button>`
+          : nothing}${needsRevealButton
+          ? html`<button
+              type="button"
+              class="civ-input-action"
+              aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
+              aria-pressed="${this._passwordRevealed}"
+              @click="${this._onTogglePasswordReveal}"
+            ><civ-icon name="${this._passwordRevealed ? 'visibility-off' : 'visibility'}" aria-hidden="true"></civ-icon></button>`
           : nothing}${needsTrailingActionSlot
           ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
           : nothing}${hasSuffix
@@ -616,6 +646,16 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
         ${interpolate(t('inputCharsRemaining'), { count: this.maxlength! - this._announcedCharCount })}
       </span>
     `;
+  }
+
+  /**
+   * Toggle password reveal. Flips the `_passwordRevealed` state which
+   * causes `_renderInput` to render `type="text"` instead of "password"
+   * on the next update. The host's `type` prop is unchanged — only
+   * the rendered attribute swaps.
+   */
+  private _onTogglePasswordReveal(): void {
+    this._passwordRevealed = !this._passwordRevealed;
   }
 
   /**

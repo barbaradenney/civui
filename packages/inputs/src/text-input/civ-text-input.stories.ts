@@ -216,6 +216,23 @@ export const Clearable: Story = {
   `,
 };
 
+export const PasswordReveal: Story = {
+  name: 'Inline: Password reveal',
+  render: () => html`
+    <civ-text-input
+      label="Password"
+      name="password"
+      type="password"
+      autocomplete="current-password"
+      value="hunter2-supersecret"
+      reveal-password
+    ></civ-text-input>
+    <p class="civ-mt-3 civ-text-sm">
+      Click the eye button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+    </p>
+  `,
+};
+
 export const TrailingActionSlot: Story = {
   name: 'Inline: Trailing action slot (escape hatch)',
   render: () => html`

@@ -3391,6 +3391,13 @@
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
+      "story": "StepKeyboard",
+      "name": "Keyboard step (ArrowUp / ArrowDown)",
+      "category": "Forms/Inputs/Number",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-number label=\"Quantity\" name=\"qty\" value=\"3\" min=\"0\" max=\"20\"></civ-number>\n      <civ-number label=\"Half-hour increments\" name=\"hours\" value=\"2.5\" step=\"0.5\" min=\"0\" max=\"24\" allow-decimal></civ-number>\n      <civ-number label=\"Temperature (°C)\" name=\"temp\" value=\"20\" step=\"1\" allow-negative></civ-number>\n    </div>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
       "story": "WithError",
       "name": "With error",
       "category": "Forms/Inputs/Number",
@@ -5241,6 +5248,13 @@
       "category": "Foundations/Input Masks",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Phone (blur mode — default)\" name=\"phone1\" hint=\"Type freely, formatted on blur\" mask=\"phone-us\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"Phone (live mode)\" name=\"phone2\" hint=\"Formatted as you type\" mask=\"phone-us\" mask-mode=\"live\" type=\"tel\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/masks-examples.stories.ts"
+    },
+    {
+      "story": "PasswordReveal",
+      "name": "Inline: Password reveal",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<civ-text-input\n      label=\"Password\"\n      name=\"password\"\n      type=\"password\"\n      autocomplete=\"current-password\"\n      value=\"hunter2-supersecret\"\n      reveal-password\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Click the eye button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.\n    </p>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "Prefix",

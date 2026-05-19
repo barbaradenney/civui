@@ -145,6 +145,25 @@ export const WithError: Story = {
   `,
 };
 
+export const StepKeyboard: Story = {
+  name: 'Keyboard step (ArrowUp / ArrowDown)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Focus the input and press ArrowUp / ArrowDown to step by the `step` prop (default 1). Matches native `<input type="number">` keyboard behavior — which CivUI otherwise loses because it renders `type="text"` to preserve leading zeros and avoid locale decimal-separator issues. Respects `min`/`max` and `allow-negative`. Set `step="0"` to disable.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-number label="Quantity" name="qty" value="3" min="0" max="20"></civ-number>
+      <civ-number label="Half-hour increments" name="hours" value="2.5" step="0.5" min="0" max="24" allow-decimal></civ-number>
+      <civ-number label="Temperature (°C)" name="temp" value="20" step="1" allow-negative></civ-number>
+    </div>
+  `,
+};
+
 // ── spacing="sm" — compact mode for dense surfaces ────────────
 
 export const Spacing: Story = {

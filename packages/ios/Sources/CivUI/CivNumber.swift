@@ -16,6 +16,7 @@ public struct CivNumber: View {
     public var max: Double?
     public var allowDecimal: Bool
     public var allowNegative: Bool
+    public var step: Double
     public var placeholder: String
     public var prefix: String
     public var suffix: String
@@ -38,6 +39,7 @@ public struct CivNumber: View {
         max: Double? = nil,
         allowDecimal: Bool = false,
         allowNegative: Bool = false,
+        step: Double = 1,
         spacing: String = "default",
         placeholder: String = "",
         prefix: String = "",
@@ -57,6 +59,7 @@ public struct CivNumber: View {
         self.max = max
         self.allowDecimal = allowDecimal
         self.allowNegative = allowNegative
+        self.step = step
         self.spacing = spacing
         self.placeholder = placeholder
         self.prefix = prefix

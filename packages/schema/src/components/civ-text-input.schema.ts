@@ -102,6 +102,12 @@ const schema: ComponentSchema = {
       description: 'When true and the value is non-empty, renders a clear button on the trailing edge',
       default: false,
     },
+    revealPassword: {
+      type: 'boolean',
+      description: 'When true and type="password", renders an inset eye/eye-slash button on the trailing edge that toggles the rendered input type between "password" and "text". Suppressed for non-password types. Clear button takes precedence when both are active',
+      default: false,
+      attribute: 'reveal-password',
+    },
     leadingIcon: {
       type: 'string',
       description: 'Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set',

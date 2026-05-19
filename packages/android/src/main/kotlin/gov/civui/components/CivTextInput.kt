@@ -174,6 +174,7 @@ fun CivTextInput(
     prefix: String = "",
     suffix: String = "",
     clearable: Boolean = false,
+    revealPassword: Boolean = false,
     leadingIcon: String = "",
     leadingIconLabel: String = "",
     trailingIcon: String = "",

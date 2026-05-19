@@ -26,6 +26,7 @@ fun CivNumber(
     max: Double? = null,
     allowDecimal: Boolean = false,
     allowNegative: Boolean = false,
+    step: Double = 1.0,
     spacing: String = "default",
     placeholder: String = "",
     prefix: String = "",

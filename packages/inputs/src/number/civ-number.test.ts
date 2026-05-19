@@ -282,6 +282,98 @@ describe('civ-number', () => {
   });
 });
 
+describe('civ-number keyboard step (ArrowUp / ArrowDown)', () => {
+  function pressKey(input: HTMLInputElement, key: string) {
+    input.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+  }
+
+  it('ArrowUp increments by step (default 1)', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty" value="3"></civ-number>');
+    await elementUpdated(el);
+    const input = el.querySelector('input')!;
+    pressKey(input, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('4');
+  });
+
+  it('ArrowDown decrements by step', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty" value="3"></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowDown');
+    await elementUpdated(el);
+    expect(el.value).toBe('2');
+  });
+
+  it('honors custom step', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Hours" value="2.5" step="0.5" allow-decimal></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('3');
+  });
+
+  it('avoids floating-point drift (0.1 + 0.2 → "0.3" not "0.30000000000000004")', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="x" value="0.1" step="0.2" allow-decimal></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('0.3');
+  });
+
+  it('clamps to max', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty" value="10" max="10"></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('10');
+  });
+
+  it('clamps to min', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty" value="0" min="0"></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowDown');
+    await elementUpdated(el);
+    expect(el.value).toBe('0');
+  });
+
+  it('step=0 disables arrow-key stepping', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="x" value="3" step="0"></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('3');
+  });
+
+  it('disabled/readonly inputs do not respond to arrow keys', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="x" value="3" readonly></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('3');
+  });
+
+  it('starts from min (or 0) when value is empty', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="x" min="5"></civ-number>');
+    await elementUpdated(el);
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(el.value).toBe('6');
+  });
+
+  it('dispatches civ-input and civ-change on each step', async () => {
+    const el = await fixture<CivNumber>('<civ-number label="Qty" value="3"></civ-number>');
+    await elementUpdated(el);
+    const inputs: string[] = [];
+    const changes: string[] = [];
+    el.addEventListener('civ-input', (e) => inputs.push((e as CustomEvent).detail.value));
+    el.addEventListener('civ-change', (e) => changes.push((e as CustomEvent).detail.value));
+    pressKey(el.querySelector('input')!, 'ArrowUp');
+    await elementUpdated(el);
+    expect(inputs).toEqual(['4']);
+    expect(changes).toEqual(['4']);
+  });
+});
+
 describe('civ-number spacing="sm"', () => {
   it('renders just the bare <input> with no chrome or prefix/suffix decoration', async () => {
     const el = await fixture(

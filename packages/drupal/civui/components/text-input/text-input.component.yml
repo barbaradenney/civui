@@ -152,6 +152,11 @@ props:
       enum: ['default', 'sm']
       default: 'default'
       description: 'Density variant. `default` renders the full label / hint / error chrome. `sm` (compact) renders just the bare `<input>` with the host''s `aria-label` propagated for screen-reader text. For use in dense surfaces like data-grid cell editors...'
+    reveal_password:
+      title: Reveal password
+      type: boolean
+      default: false
+      description: 'When true and type="password", renders an inset eye/eye-slash button on the trailing edge that toggles the rendered input type between "password" and "text". Suppressed for non-password types. Clear button takes precedence when both are ...'
 
 libraryOverrides:
   dependencies:

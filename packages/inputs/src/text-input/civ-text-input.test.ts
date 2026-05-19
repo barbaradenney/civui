@@ -771,6 +771,81 @@ describe('text-input inline icons', () => {
     });
   });
 
+  describe('password reveal toggle', () => {
+    it('does not render the reveal button for non-password types', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Email" type="email" reveal-password value="hello"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      expect(el.querySelector('button[aria-label="Show password"], button[aria-label="Hide password"]')).toBeNull();
+    });
+
+    it('renders the reveal button when type="password" and reveal-password is set', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      const btn = el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement | null;
+      expect(btn).not.toBeNull();
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.type).toBe('password');
+    });
+
+    it('flips the rendered input type to "text" on click and back on second click', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
+      );
+      await elementUpdated(el);
+
+      const btn = el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement;
+      btn.click();
+      await elementUpdated(el);
+
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.type).toBe('text');
+      // Re-query: the aria-label flips
+      expect(el.querySelector('button[aria-label="Hide password"]')).not.toBeNull();
+
+      (el.querySelector('button[aria-label="Hide password"]') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect((el.querySelector('input') as HTMLInputElement).type).toBe('password');
+    });
+
+    it('host `type` prop stays "password" through the toggle', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      (el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement).click();
+      await elementUpdated(el);
+      expect(el.type).toBe('password'); // host prop unchanged
+    });
+
+    it('clear button takes precedence over reveal button when both apply', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password clearable value="hunter2"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-close-btn')).not.toBeNull();
+      // Reveal button hidden when clear is showing
+      expect(el.querySelector('button[aria-label="Show password"]')).toBeNull();
+    });
+
+    it('hides the reveal button when host is disabled or readonly', async () => {
+      const elDisabled = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="x" disabled></civ-text-input>'
+      );
+      await elementUpdated(elDisabled);
+      expect(elDisabled.querySelector('button[aria-label="Show password"]')).toBeNull();
+
+      const elReadonly = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="x" readonly></civ-text-input>'
+      );
+      await elementUpdated(elReadonly);
+      expect(elReadonly.querySelector('button[aria-label="Show password"]')).toBeNull();
+    });
+  });
+
   describe('trailing-action slot (escape hatch)', () => {
     it('relocates a [data-trailing-action] child into the rendered slot container', async () => {
       const el = await fixture<CivTextInput>(`

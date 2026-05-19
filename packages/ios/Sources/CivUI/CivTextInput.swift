@@ -200,6 +200,9 @@ public struct CivTextInput: View {
     /// Whether to show a clear button.
     public var clearable: Bool
 
+    /// When true and type="password", renders a reveal toggle.
+    public var revealPassword: Bool
+
     /// Leading icon name.
     public var leadingIcon: String
 
@@ -268,6 +271,7 @@ public struct CivTextInput: View {
         prefix: String = "",
         suffix: String = "",
         clearable: Bool = false,
+        revealPassword: Bool = false,
         leadingIcon: String = "",
         leadingIconLabel: String = "",
         trailingIcon: String = "",
@@ -309,6 +313,7 @@ public struct CivTextInput: View {
         self.prefix = prefix
         self.suffix = suffix
         self.clearable = clearable
+        self.revealPassword = revealPassword
         self.leadingIcon = leadingIcon
         self.leadingIconLabel = leadingIconLabel
         self.trailingIcon = trailingIcon

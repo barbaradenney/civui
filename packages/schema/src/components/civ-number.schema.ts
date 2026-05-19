@@ -29,6 +29,11 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'allow-negative',
     },
+    step: {
+      type: 'number',
+      description: 'Increment / decrement applied on ArrowUp / ArrowDown. Matches native `<input type="number">` keyboard behavior. Set to 0 to disable arrow-key stepping. Fractional steps (0.5, 0.25) require `allow-decimal`.',
+      default: 1,
+    },
     placeholder: {
       type: 'string',
       description: 'Placeholder text',

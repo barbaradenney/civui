@@ -1,3 +1,5 @@
+// Preset wrapper — contract: packages/schema/src/components/civ-text-input.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { t } from '@civui/core';
@@ -34,6 +36,8 @@ export class CivSsn extends PresetInputWrapper {
         label="${label}"
         name="${this.name}"
         value="${this.value}"
+        width="${this.width}"
+        placeholder="${this.placeholder || nothing}"
         hint="${hint}"
         error="${this.error}"
         mask="${mask || nothing}"

@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-yes-no.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend } from '@civui/core';

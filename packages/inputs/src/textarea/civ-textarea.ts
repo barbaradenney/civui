@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-textarea.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, debounce, dispatch, inputClasses, renderLabel, renderFormHeader, t, interpolate, validate, COUNT_ANNOUNCE_MS } from '@civui/core';

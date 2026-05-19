@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-date-picker.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {

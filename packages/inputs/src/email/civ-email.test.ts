@@ -36,4 +36,43 @@ describe('civ-email', () => {
     el.formResetCallback();
     expect(el.value).toBe('');
   });
+
+  it('forwards width to the inner control', async () => {
+    const el = await fixture('<civ-email name="x" width="md"></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('width')).toBe('md');
+  });
+
+  it('forwards placeholder to the inner control', async () => {
+    const el = await fixture('<civ-email name="x" placeholder="PH"></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('placeholder')).toBe('PH');
+  });
+
+  it('forwards readonly to the inner control', async () => {
+    const el = await fixture('<civ-email name="x" readonly></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.hasAttribute('readonly')).toBe(true);
+  });
+
+  it('forwards disabled to the inner control', async () => {
+    const el = await fixture('<civ-email name="x" disabled></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('propagates an error string down to the inner control', async () => {
+    const el = await fixture('<civ-email name="x" error="An error"></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('error')).toBe('An error');
+  });
+
+  it('forwards civ-input from the inner control', async () => {
+    const el = await fixture('<civ-email name="x"></civ-email>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox')!;
+    let received = '';
+    el.addEventListener('civ-input', ((e: CustomEvent) => { received = e.detail.value; }) as EventListener);
+    inner.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'SAMPLE' }, bubbles: true }));
+    expect(received).toBe('SAMPLE');
+  });
 });

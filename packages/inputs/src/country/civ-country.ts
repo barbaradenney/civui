@@ -1,4 +1,6 @@
-import { html } from 'lit';
+// Preset wrapper — contract: packages/schema/src/components/civ-combobox.schema.ts
+
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { dispatch, t } from '@civui/core';
 import { PresetInputWrapper } from '../preset-input/preset-input-wrapper.js';
@@ -78,6 +80,8 @@ export class CivCountry extends PresetInputWrapper {
         label="${label}"
         name="${this.name}"
         value="${this.value}"
+        width="${this.width}"
+        placeholder="${this.placeholder || nothing}"
         hint="${this.hint}"
         error="${this.error}"
         .options="${this._options}"

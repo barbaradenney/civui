@@ -8,6 +8,7 @@
 | `inputmode` | `''` \| `'text'` \| `'numeric'` \| `'decimal'` \| `'tel'` \| `'search'` \| `'email'` \| `'url'` | `''` | Mobile keyboard hint passed through to the inner `<input>`. Use `"numeric"` for digit-keyed option lists (time slots, ZIP/postal lookups). Empty (default) lets the browser pick the alphabetic keyboard. |
 | `no-results-text` | `string` | `'No results found'` | Text shown when filter matches no options |
 | `width` | `'default'` \| `'2xs'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` | `'default'` | Width variant |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Density variant. `default` renders the full label/hint/error chrome. `sm` (compact) renders just the bare `<input>` with the host's `aria-label` propagated — used inside dense surfaces like data-grid cell editors. Web-only because the compact mode is specific to web data-grid cell-editing. |
 | `load-options` | `string` | — | Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute) |
 | `load-debounce` | `number` | `300` | Debounce in ms before invoking loadOptions on input |
 | `min-query-length` | `number` | `0` | Minimum query length before loadOptions is called. 0 means call on first focus |

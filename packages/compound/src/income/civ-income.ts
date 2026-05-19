@@ -154,6 +154,7 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
               error="${this.frequencyError}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               @civ-input="${(e: CustomEvent) => this._onSubInput('frequency', e)}"
               @civ-change="${(e: CustomEvent) => this._onSubChange('frequency', e)}"
             ></civ-select>

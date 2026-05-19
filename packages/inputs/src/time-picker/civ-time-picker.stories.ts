@@ -123,6 +123,46 @@ export const WithError: Story = {
   `,
 };
 
+export const Required: Story = {
+  name: 'Required',
+  render: () => html`
+    <civ-time-picker
+      label="Appointment time"
+      name="appt"
+      minute-step="15"
+      required
+    ></civ-time-picker>
+  `,
+};
+
+export const Disabled: Story = {
+  name: 'Disabled',
+  render: () => html`
+    <civ-time-picker
+      label="Appointment time"
+      name="appt"
+      value="14:30"
+      minute-step="15"
+      disabled
+    ></civ-time-picker>
+  `,
+};
+
+export const AllStates: Story = {
+  name: 'All states',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-time-picker label="Default" name="t-default" minute-step="15"></civ-time-picker>
+      <civ-time-picker label="With value" name="t-value" value="14:30" minute-step="15"></civ-time-picker>
+      <civ-time-picker label="With hint" name="t-hint" hint="Choose any time during business hours" minute-step="15"></civ-time-picker>
+      <civ-time-picker label="With error" name="t-error" error="Select a time before submitting" minute-step="15"></civ-time-picker>
+      <civ-time-picker label="Required" name="t-required" minute-step="15" required></civ-time-picker>
+      <civ-time-picker label="Disabled" name="t-disabled" value="09:00" minute-step="15" disabled></civ-time-picker>
+      <civ-time-picker label="Readonly" name="t-readonly" value="11:00" minute-step="15" readonly></civ-time-picker>
+    </div>
+  `,
+};
+
 // ── Select mode (legacy variant for free-form precision) ───────
 
 export const SelectMode: Story = {

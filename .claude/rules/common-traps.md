@@ -539,6 +539,50 @@ three** alias maps: the workspace's `vitest.config.ts`, every
 
 ---
 
+## Compound `readonly` must cascade to every leaf control
+
+CivUI's `readonly` contract: when a compound parent
+(`civ-address`, `civ-name`, `civ-relationship`, …) is `readonly`,
+every leaf control inside renders read-only too. HTML doesn't
+cascade `readonly` the way `<fieldset disabled>` cascades
+`disabled`, so each compound has to forward the prop to every
+leaf itself.
+
+Wherever a compound renders a readonly-supporting inner control
+and forwards `?disabled="${this.disabled}"`, it must also forward
+`?readonly="${this.readonly}"` in the same opening tag:
+
+```ts
+// ✓ good — both cascade
+<civ-select
+  …
+  ?disabled="${this.disabled}"
+  ?readonly="${this.readonly}"
+></civ-select>
+
+// ✗ silent — parent.readonly = true leaves this field editable
+<civ-select
+  …
+  ?disabled="${this.disabled}"
+></civ-select>
+```
+
+Property binding (`.readonly="${this.readonly}"`) and bare
+attribute (`readonly="${this.readonly}"`) are also accepted —
+all three forms propagate the value. Selection-only controls
+(radio, checkbox, segmented) are exempt because HTML doesn't
+define `readonly` for them; lock those with `disabled`.
+
+**Caught by:** `pnpm lint:readonly-cascade` — scans
+`packages/compound/src` and `packages/form-patterns/src` for
+readonly-supporting `<civ-*>` tags with `?disabled` but no
+`?readonly`. Wired into `pnpm validate:lints` and the
+drift-lints CI gate. To add a new readonly-supporting input,
+append its tag to `READONLY_TAGS` in
+`tools/lint-readonly-cascade.ts`.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

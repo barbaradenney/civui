@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-combobox.schema.ts
+
 import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -83,6 +85,12 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   noMatchSuggestions?: (filter: string) => ComboboxOption[];
   @property({ type: String, attribute: 'no-results-text' }) noResultsText = '';
   @property({ type: String }) width: InputWidth = 'default';
+  /**
+   * Density variant. `default` renders the full label / hint / error chrome.
+   * `sm` (compact) renders just the bare `<input>` with the host's `aria-label`
+   * propagated. Used in dense surfaces like data-grid cell editors.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /**
    * Async option loader. When set, the component switches into remote mode:
@@ -227,7 +235,17 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         : '';
 
     const widthClass = inputWidthClass(this.width);
-    const classes = inputClasses({ extra: [widthClass, 'civ-max-w-full'] });
+    const isCompact = this.spacing === 'sm';
+    const classes = inputClasses({
+      extra: [
+        widthClass,
+        'civ-max-w-full',
+        ...(isCompact ? ['civ-input--sm'] : []),
+      ],
+    });
+    // In compact mode the host's `aria-label` is propagated to the inner
+    // <input> since the visible label / hint / error chrome is suppressed.
+    const ariaLabel = isCompact ? (this.getAttribute('aria-label') || undefined) : undefined;
 
     const inner = html`
       <div class="civ-relative">
@@ -242,12 +260,14 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             aria-expanded="${this._open}"
             aria-controls="${this._open ? this._listboxId : nothing}"
             aria-activedescendant="${this._open && activeOptionId ? activeOptionId : nothing}"
+            aria-label="${ariaLabel ?? nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             aria-invalid="${this.error ? 'true' : nothing}"
             .value="${this._displayValue}"
             placeholder="${this.placeholder || nothing}"
             inputmode="${this.inputmode || nothing}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             ?required="${this.required}"
             autocomplete="off"
             @input="${this._onFilterInput}"
@@ -255,7 +275,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             @blur="${this._onBlur}"
             @keydown="${this._onKeydown}"
           />
-          ${this.value && !this.disabled ? html`
+          ${this.value && !this.disabled && !this.readonly ? html`
             <button
               type="button"
               class="civ-close-btn"
@@ -270,7 +290,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             data-expanded="${this._open ? '' : nothing}"
             aria-hidden="true"
             tabindex="-1"
-            ?disabled="${this.disabled}"
+            ?disabled="${this.disabled || this.readonly}"
             @mousedown="${this._onChevronMousedown}"
             @click="${this._onChevronClick}"
           >
@@ -296,6 +316,12 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         </div>
       </div>
     `;
+
+    // Compact mode (spacing="sm") renders just the inner combobox markup
+    // — no label, hint, or error chrome. Used inside dense surfaces like
+    // data-grid cell editors where the surrounding column header carries
+    // the field's accessible name.
+    if (isCompact) return inner;
 
     return html`
       <div class="civ-mb-4">
@@ -460,7 +486,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
    * everything.
    */
   private _onChevronClick(e: Event): void {
-    if (this.disabled) return;
+    if (this.disabled || this.readonly) return;
     e.stopPropagation();
     if (this._open) {
       this._setOpen(false);
@@ -503,7 +529,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _onFocus(): void {
-    if (this.disabled) return;
+    if (this.disabled || this.readonly) return;
     this._setOpen(true);
     // First focus in remote mode with no filter yet: kick off an initial fetch
     // (so there's something to show immediately when minQueryLength is 0).

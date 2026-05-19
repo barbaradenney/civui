@@ -1423,6 +1423,13 @@
   ],
   "civ-date-range-picker": [
     {
+      "story": "AllStates",
+      "name": "All states",
+      "category": "Forms/Inputs/Date Range Picker",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-date-range-picker legend=\"Default\" name=\"dr-default\"></civ-date-range-picker>\n      <civ-date-range-picker legend=\"Prefilled\" name=\"dr-value\" value='{\"start\":\"2026-05-01\",\"end\":\"2026-05-08\"}'></civ-date-range-picker>\n      <civ-date-range-picker legend=\"With error\" name=\"dr-err\" value='{\"start\":\"2026-05-08\",\"end\":\"2026-05-01\"}' start-error=\"Start must be before end\"></civ-date-range-picker>\n      <civ-date-range-picker legend=\"Required\" name=\"dr-req\" required></civ-date-range-picker>\n      <civ-date-range-picker legend=\"Disabled\" name=\"dr-dis\" value='{\"start\":\"2026-05-01\",\"end\":\"2026-05-08\"}' disabled></civ-date-range-picker>\n      <civ-date-range-picker legend=\"Readonly\" name=\"dr-ro\" value='{\"start\":\"2026-05-01\",\"end\":\"2026-05-08\"}' readonly></civ-date-range-picker>\n    </div>",
+      "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
+    },
+    {
       "story": "CustomLabels",
       "category": "Forms/Inputs/Date Range Picker",
       "html": "<civ-date-range-picker\n      label=\"Hospital stay\"\n      name=\"stay\"\n      start-label=\"Admission date\"\n      end-label=\"Discharge date\"\n      start-hint=\"When were you admitted?\"\n      end-hint=\"When were you discharged?\"\n    ></civ-date-range-picker>",
@@ -1466,6 +1473,13 @@
       "story": "Required",
       "category": "Forms/Inputs/Date Range Picker",
       "html": "<civ-date-range-picker\n      label=\"Trip dates\"\n      name=\"trip\"\n      required\n    ></civ-date-range-picker>",
+      "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
+    },
+    {
+      "story": "WithError",
+      "name": "With error",
+      "category": "Forms/Inputs/Date Range Picker",
+      "html": "<civ-date-range-picker\n      legend=\"Stay dates\"\n      name=\"stay\"\n      value='{\"start\":\"2026-05-08\",\"end\":\"2026-05-01\"}'\n      start-error=\"Start must be before end\"\n    ></civ-date-range-picker>",
       "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
     },
     {
@@ -3357,6 +3371,13 @@
   ],
   "civ-number": [
     {
+      "story": "AllStates",
+      "name": "All states",
+      "category": "Forms/Inputs/Number",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-number label=\"Default\" name=\"n-default\"></civ-number>\n      <civ-number label=\"With value\" name=\"n-value\" value=\"3\"></civ-number>\n      <civ-number label=\"With hint\" name=\"n-hint\" hint=\"Enter a positive number\"></civ-number>\n      <civ-number label=\"With error\" name=\"n-error\" value=\"200\" min=\"0\" max=\"120\" error=\"Must be between 0 and 120\"></civ-number>\n      <civ-number label=\"Required\" name=\"n-required\" required></civ-number>\n      <civ-number label=\"Disabled\" name=\"n-disabled\" value=\"5\" disabled></civ-number>\n      <civ-number label=\"Readonly\" name=\"n-readonly\" value=\"42\" readonly></civ-number>\n    </div>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
       "story": "Decimal",
       "name": "Decimal values",
       "category": "Forms/Inputs/Number",
@@ -3367,6 +3388,12 @@
       "story": "Default",
       "category": "Forms/Inputs/Number",
       "html": "<civ-number label=\"Number of dependents\" name=\"dependents\"></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "Disabled",
+      "category": "Forms/Inputs/Number",
+      "html": "<civ-number label=\"Number of dependents\" name=\"dependents\" value=\"2\" disabled></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
@@ -3381,6 +3408,12 @@
       "name": "Allows negative values",
       "category": "Forms/Inputs/Number",
       "html": "<civ-number\n      label=\"Temperature (°C)\"\n      name=\"temp\"\n      allow-decimal\n      allow-negative\n      hint=\"Negative values allowed\"\n      width=\"small\"\n    ></civ-number>",
+      "source": "packages/inputs/src/number/civ-number.stories.ts"
+    },
+    {
+      "story": "Required",
+      "category": "Forms/Inputs/Number",
+      "html": "<civ-number label=\"Number of dependents\" name=\"dependents\" required></civ-number>",
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     },
     {
@@ -5433,6 +5466,13 @@
   ],
   "civ-time-picker": [
     {
+      "story": "AllStates",
+      "name": "All states",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-time-picker label=\"Default\" name=\"t-default\" minute-step=\"15\"></civ-time-picker>\n      <civ-time-picker label=\"With value\" name=\"t-value\" value=\"14:30\" minute-step=\"15\"></civ-time-picker>\n      <civ-time-picker label=\"With hint\" name=\"t-hint\" hint=\"Choose any time during business hours\" minute-step=\"15\"></civ-time-picker>\n      <civ-time-picker label=\"With error\" name=\"t-error\" error=\"Select a time before submitting\" minute-step=\"15\"></civ-time-picker>\n      <civ-time-picker label=\"Required\" name=\"t-required\" minute-step=\"15\" required></civ-time-picker>\n      <civ-time-picker label=\"Disabled\" name=\"t-disabled\" value=\"09:00\" minute-step=\"15\" disabled></civ-time-picker>\n      <civ-time-picker label=\"Readonly\" name=\"t-readonly\" value=\"11:00\" minute-step=\"15\" readonly></civ-time-picker>\n    </div>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
       "story": "BookedSlots",
       "name": "Booked slots (disabled-slots)",
       "category": "Forms/Inputs/Time Picker",
@@ -5454,6 +5494,13 @@
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
+      "story": "Disabled",
+      "name": "Disabled",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt\"\n      value=\"14:30\"\n      minute-step=\"15\"\n      disabled\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
       "story": "MinNow",
       "name": "min=",
       "category": "Forms/Inputs/Time Picker",
@@ -5465,6 +5512,13 @@
       "name": "Prefilled value",
       "category": "Forms/Inputs/Time Picker",
       "html": "<civ-time-picker\n      label=\"Departure time\"\n      name=\"departure\"\n      value=\"14:30\"\n      minute-step=\"15\"\n    ></civ-time-picker>",
+      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    },
+    {
+      "story": "Required",
+      "name": "Required",
+      "category": "Forms/Inputs/Time Picker",
+      "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt\"\n      minute-step=\"15\"\n      required\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {

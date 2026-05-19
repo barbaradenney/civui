@@ -100,6 +100,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           value="${this._data.branch}"
           error="${this.branchError}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           data-service-branch
           @civ-change="${this._onBranchChange}"
         ></civ-select>
@@ -111,6 +112,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           value="${this._data.startDate}"
           error="${this.startDateError}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('startDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('startDate', e)}"
         ></civ-memorable-date>
@@ -122,6 +124,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           value="${this._data.endDate}"
           error="${this.endDateError}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('endDate', e)}"
           @civ-change="${(e: CustomEvent) => this._onFieldChange('endDate', e)}"
         ></civ-memorable-date>
@@ -132,6 +135,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           value="${this._data.dischargeType}"
           error="${this.dischargeError}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           data-service-discharge
           @civ-change="${this._onDischargeChange}"
         ></civ-select>

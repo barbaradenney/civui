@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-date-range-picker.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, t, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
@@ -195,6 +197,7 @@ export class CivDateRangePicker extends LegendHeadingMixin(CivFormElement) {
             error="${this.startError}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             locale="${this.locale}"
             week-starts-on="${this.weekStartsOn}"
             @civ-input="${this._onStartInput}"
@@ -211,6 +214,7 @@ export class CivDateRangePicker extends LegendHeadingMixin(CivFormElement) {
             error="${this.endError}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             locale="${this.locale}"
             week-starts-on="${this.weekStartsOn}"
             @civ-input="${this._onEndInput}"

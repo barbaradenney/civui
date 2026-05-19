@@ -215,4 +215,12 @@ describe('civ-date-range-picker', () => {
     expect(end.getAttribute('locale')).toBe('fr-FR');
     expect(end.getAttribute('week-starts-on')).toBe('1');
   });
+
+  it('forwards readonly to both inner civ-date-picker children', async () => {
+    const el = await fixture<CivDateRangePicker>('<civ-date-range-picker legend="Dates" readonly></civ-date-range-picker>');
+    await elementUpdated(el);
+    const pickers = el.querySelectorAll('civ-date-picker');
+    expect(pickers.length).toBe(2);
+    pickers.forEach((p) => expect((p as any).readonly).toBe(true));
+  });
 });

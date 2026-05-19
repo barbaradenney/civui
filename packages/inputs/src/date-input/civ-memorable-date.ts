@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-memorable-date.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, getMonthNames, interpolate, parseISODate, renderFormHeader, renderLegend, buildDescribedBy, t } from '@civui/core';
@@ -177,6 +179,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               empty-label="${this.monthEmptyLabel || t('memorableDateMonthEmptyLabel')}"
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-select>
@@ -194,6 +197,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>
@@ -211,6 +215,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               hide-char-count
               ?required="${this.required}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               ?hide-required-indicator="${this.required}"
               disable-analytics
             ></civ-text-input>

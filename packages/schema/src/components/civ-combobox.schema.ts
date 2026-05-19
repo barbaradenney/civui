@@ -41,6 +41,13 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `default` renders the full label/hint/error chrome. `sm` (compact) renders just the bare `<input>` with the host\'s `aria-label` propagated — used inside dense surfaces like data-grid cell editors. Web-only because the compact mode is specific to web data-grid cell-editing.',
+      default: 'default',
+      values: ['default', 'sm'],
+      webOnly: true,
+    },
     loadOptions: {
       type: 'string',
       description: 'Async loader function `(query: string) => Promise<ComboboxOption[]>` for remote-driven option lists. Set programmatically (not as an attribute)',

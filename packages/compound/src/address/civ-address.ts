@@ -260,6 +260,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         value="${this._data.country}"
         us-first
         ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
         data-address-country
         @civ-change="${(e: CustomEvent) => this._onSubSelectChange('country', e)}"
       ></civ-country>
@@ -283,6 +284,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
           autocomplete="address-level1"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           data-address-state
           @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
         ></civ-select>
@@ -317,6 +319,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
             value="${this._data.state}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             data-address-state
             @civ-change="${(e: CustomEvent) => this._onSubSelectChange('state', e)}"
           ></civ-select>

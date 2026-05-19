@@ -160,6 +160,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
               value="${this._data.suffix}"
               autocomplete="honorific-suffix"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               data-name-suffix
               @civ-change="${(e: CustomEvent) => this._onSubSelectChange('suffix', e)}"
             ></civ-select>

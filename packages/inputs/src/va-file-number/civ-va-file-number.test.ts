@@ -60,4 +60,43 @@ describe('civ-va-file-number', () => {
     expect(el.value).toBe('');
     expect(el.error).toBe('');
   });
+
+  it('forwards width to the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x" width="md"></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('width')).toBe('md');
+  });
+
+  it('forwards placeholder to the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x" placeholder="PH"></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('placeholder')).toBe('PH');
+  });
+
+  it('forwards readonly to the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x" readonly></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.hasAttribute('readonly')).toBe(true);
+  });
+
+  it('forwards disabled to the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x" disabled></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('propagates an error string down to the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x" error="An error"></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox') as any;
+    expect(inner.getAttribute('error')).toBe('An error');
+  });
+
+  it('forwards civ-input from the inner control', async () => {
+    const el = await fixture('<civ-va-file-number name="x"></civ-va-file-number>') as any;
+    const inner = el.querySelector('civ-text-input, civ-combobox')!;
+    let received = '';
+    el.addEventListener('civ-input', ((e: CustomEvent) => { received = e.detail.value; }) as EventListener);
+    inner.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'SAMPLE' }, bubbles: true }));
+    expect(received).toBe('SAMPLE');
+  });
 });

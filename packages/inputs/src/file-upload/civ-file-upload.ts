@@ -1,3 +1,5 @@
+// Schema: packages/schema/src/components/civ-file-upload.schema.ts
+
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, renderLabel, renderFormHeader, t } from '@civui/core';

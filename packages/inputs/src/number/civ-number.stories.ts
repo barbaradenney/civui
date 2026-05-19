@@ -48,6 +48,33 @@ export const Default: Story = {
   `,
 };
 
+export const Required: Story = {
+  render: () => html`
+    <civ-number label="Number of dependents" name="dependents" required></civ-number>
+  `,
+};
+
+export const Disabled: Story = {
+  render: () => html`
+    <civ-number label="Number of dependents" name="dependents" value="2" disabled></civ-number>
+  `,
+};
+
+export const AllStates: Story = {
+  name: 'All states',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-number label="Default" name="n-default"></civ-number>
+      <civ-number label="With value" name="n-value" value="3"></civ-number>
+      <civ-number label="With hint" name="n-hint" hint="Enter a positive number"></civ-number>
+      <civ-number label="With error" name="n-error" value="200" min="0" max="120" error="Must be between 0 and 120"></civ-number>
+      <civ-number label="Required" name="n-required" required></civ-number>
+      <civ-number label="Disabled" name="n-disabled" value="5" disabled></civ-number>
+      <civ-number label="Readonly" name="n-readonly" value="42" readonly></civ-number>
+    </div>
+  `,
+};
+
 export const WithRange: Story = {
   name: 'With min/max range',
   render: () => html`

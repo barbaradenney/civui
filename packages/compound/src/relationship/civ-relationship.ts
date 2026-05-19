@@ -234,6 +234,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
           error="${this.relationshipError}"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
           data-relationship-type
           @civ-change="${this._onRelationshipChange}"
         ></civ-select>
@@ -245,6 +246,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
             value="${this._data.marriageDate}"
             error="${this.marriageDateError}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onDateInput('marriageDate', e)}"
             @civ-change="${(e: CustomEvent) => this._onDateChange('marriageDate', e)}"
           ></civ-memorable-date>
@@ -256,6 +258,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
               value="${this._data.divorceDate}"
               error="${this.divorceDateError}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               @civ-input="${(e: CustomEvent) => this._onDateInput('divorceDate', e)}"
               @civ-change="${(e: CustomEvent) => this._onDateChange('divorceDate', e)}"
             ></civ-memorable-date>
@@ -269,6 +272,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
             value="${this._data.dateOfBirth}"
             error="${this.dateOfBirthError}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfBirth', e)}"
             @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfBirth', e)}"
           ></civ-memorable-date>
@@ -280,6 +284,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
               value="${this._data.adoptionDate}"
               error="${this.adoptionDateError}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               @civ-input="${(e: CustomEvent) => this._onDateInput('adoptionDate', e)}"
               @civ-change="${(e: CustomEvent) => this._onDateChange('adoptionDate', e)}"
             ></civ-memorable-date>
@@ -307,6 +312,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
             value="${this._data.dateOfDeath}"
             error="${this.dateOfDeathError}"
             ?disabled="${this.disabled}"
+            ?readonly="${this.readonly}"
             @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
             @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
           ></civ-memorable-date>
@@ -328,6 +334,7 @@ export class CivRelationship extends LegendHeadingMixin(CivCompoundElement) {
               value="${this._data.dateOfDeath}"
               error="${this.dateOfDeathError}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               @civ-input="${(e: CustomEvent) => this._onDateInput('dateOfDeath', e)}"
               @civ-change="${(e: CustomEvent) => this._onDateChange('dateOfDeath', e)}"
             ></civ-memorable-date>

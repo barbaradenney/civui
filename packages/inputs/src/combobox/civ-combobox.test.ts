@@ -1126,3 +1126,42 @@ describe('civ-combobox — disabled options', () => {
     expect((el as any)._activeIndex).toBe(0);
   });
 });
+
+describe('civ-combobox readonly', () => {
+  afterEach(cleanupFixtures);
+
+  it('forwards readonly to the inner <input>', async () => {
+    const el = await fixture('<civ-combobox label="State" readonly></civ-combobox>') as any;
+    el.options = STATES;
+    el.value = 'CA';
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    expect(input.readOnly).toBe(true);
+  });
+
+  it('does not show the clear button when readonly', async () => {
+    const el = await fixture('<civ-combobox label="State" readonly></civ-combobox>') as any;
+    el.options = STATES;
+    el.value = 'CA';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-close-btn')).toBeNull();
+  });
+
+  it('disables the chevron toggle when readonly', async () => {
+    const el = await fixture('<civ-combobox label="State" readonly></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const chevron = el.querySelector('.civ-combobox-chevron') as HTMLButtonElement;
+    expect(chevron.disabled).toBe(true);
+  });
+
+  it('does not open the listbox on focus when readonly', async () => {
+    const el = await fixture('<civ-combobox label="State" readonly></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+    expect((el as any)._open).toBe(false);
+  });
+});

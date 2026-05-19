@@ -117,6 +117,32 @@ export const Disabled: Story = {
   `,
 };
 
+export const WithError: Story = {
+  name: 'With error',
+  render: () => html`
+    <civ-date-range-picker
+      legend="Stay dates"
+      name="stay"
+      value='{"start":"2026-05-08","end":"2026-05-01"}'
+      start-error="Start must be before end"
+    ></civ-date-range-picker>
+  `,
+};
+
+export const AllStates: Story = {
+  name: 'All states',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <civ-date-range-picker legend="Default" name="dr-default"></civ-date-range-picker>
+      <civ-date-range-picker legend="Prefilled" name="dr-value" value='{"start":"2026-05-01","end":"2026-05-08"}'></civ-date-range-picker>
+      <civ-date-range-picker legend="With error" name="dr-err" value='{"start":"2026-05-08","end":"2026-05-01"}' start-error="Start must be before end"></civ-date-range-picker>
+      <civ-date-range-picker legend="Required" name="dr-req" required></civ-date-range-picker>
+      <civ-date-range-picker legend="Disabled" name="dr-dis" value='{"start":"2026-05-01","end":"2026-05-08"}' disabled></civ-date-range-picker>
+      <civ-date-range-picker legend="Readonly" name="dr-ro" value='{"start":"2026-05-01","end":"2026-05-08"}' readonly></civ-date-range-picker>
+    </div>
+  `,
+};
+
 export const GovernmentLeaveRequest: Story = {
   name: 'Usage: Federal leave request',
   render: () => html`

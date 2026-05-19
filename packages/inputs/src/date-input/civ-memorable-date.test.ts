@@ -375,3 +375,15 @@ describe('civ-memorable-date analytics', () => {
     expect(analyticsCall![0].detail.action).toBe('change');
   });
 });
+
+describe('civ-memorable-date readonly', () => {
+  it('forwards readonly to all three sub-fields (month select + day + year text inputs)', async () => {
+    const el = await fixture('<civ-memorable-date legend="DOB" readonly></civ-memorable-date>');
+    await elementUpdated(el);
+    const select = el.querySelector('civ-select') as any;
+    const inputs = el.querySelectorAll('civ-text-input') as NodeListOf<any>;
+    expect(select.readonly).toBe(true);
+    expect(inputs.length).toBe(2);
+    inputs.forEach((input) => expect(input.readonly).toBe(true));
+  });
+});

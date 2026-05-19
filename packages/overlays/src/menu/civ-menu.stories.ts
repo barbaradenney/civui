@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-menu.js';
 import './civ-menu-item.js';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Overlays/Menu',

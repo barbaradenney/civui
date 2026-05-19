@@ -30,6 +30,11 @@ export type FilterChipGroupMode = 'single' | 'multi';
  *   a name per WAI-ARIA. Without one, AT users navigating by landmark
  *   see an unnamed group. Omit only when the surrounding context already
  *   names the group.
+ * @prop {string} name - Identifier used by composition parents to bind
+ *   this group's selection to a filter column. `civ-filterable-list`
+ *   reads it to map the group's `civ-change` event to `data-filter-{name}`
+ *   on the items it filters. Not a form-field name — the group isn't
+ *   form-associated.
  *
  * @fires civ-change - `{ value: string | string[] }` when selection changes
  *
@@ -46,6 +51,7 @@ export type FilterChipGroupMode = 'single' | 'multi';
 export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) mode: FilterChipGroupMode = 'multi';
   @property({ type: String }) label = '';
+  @property({ type: String }) name = '';
 
   private _mutationObserver: MutationObserver | null = null;
 

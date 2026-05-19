@@ -5454,13 +5454,6 @@
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
     },
     {
-      "story": "InlineNow",
-      "name": "Inline ",
-      "category": "Forms/Inputs/Time Picker",
-      "html": "<civ-time-picker\n      label=\"Pickup time\"\n      name=\"pickup_time\"\n      mode=\"combo\"\n      minute-step=\"15\"\n      inline-now\n    ></civ-time-picker>",
-      "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
-    },
-    {
       "story": "MinNow",
       "name": "min=",
       "category": "Forms/Inputs/Time Picker",

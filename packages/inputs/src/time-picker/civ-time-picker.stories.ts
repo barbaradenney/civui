@@ -255,23 +255,3 @@ export const WithNowButton: Story = {
   `,
 };
 
-export const InlineNow: Story = {
-  name: 'Inline "Now" shortcut (combo mode)',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Add `inline-now` to render a "Now" button as a sibling of the combobox input, joined edge-to-edge inside an input-group. Same handler as the footer Now button (`show-now-button`) — snaps to the nearest in-range slot honoring `minute-step` and `min`/`max`. Combo mode only.',
-      },
-    },
-  },
-  render: () => html`
-    <civ-time-picker
-      label="Pickup time"
-      name="pickup_time"
-      mode="combo"
-      minute-step="15"
-      inline-now
-    ></civ-time-picker>
-  `,
-};

@@ -15,6 +15,4 @@
 | `period-label` | `string` | `''` | Custom label for the AM/PM select (select mode only) |
 | `show-now-button` | `boolean` | `false` | Show the "Now" quick-button. Defaults to false — opt in only on forms where "current time" is a meaningful default (callback scheduling, incident reports, forward-looking appointments with `min="now"`). |
 | `now-button-label` | `string` | `''` | Override the "Now" button label. Defaults to the locale-aware `timePickerNowButton` string ("Now" in English). |
-| `inline-now` | `boolean` | `false` | Render an inline "Now" shortcut button next to the combobox input (combo mode only). Lets users jump to the current time without opening the picker. Disabled when host is disabled/readonly. Text and select modes are unsupported in v1 — use `show-now-button` for the standalone footer affordance instead. |
-| `inline-now-label` | `string` | `''` | Override the inline "Now" button label. Defaults to the locale-aware "Now". |
 | `disabled-slots` | `array` | `[]` | Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots). Disabled slots stay visible in the dropdown so users see the unavailability; arrow-key nav skips them and "snap-to-nearest" picks the closest available neighbor. Defaults to an empty array. |

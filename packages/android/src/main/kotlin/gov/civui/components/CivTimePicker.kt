@@ -34,8 +34,6 @@ fun CivTimePicker(
     periodLabel: String = "",
     showNowButton: Boolean = false,
     nowButtonLabel: String = "",
-    inlineNow: Boolean = false,
-    inlineNowLabel: String = "",
     disabledSlots: List<String> = emptyList(),
     hint: String = "",
     error: String = "",

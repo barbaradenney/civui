@@ -77,18 +77,6 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'now-button-label',
     },
-    inlineNow: {
-      type: 'boolean',
-      description: 'Render an inline "Now" shortcut button next to the combobox input (combo mode only). Lets users jump to the current time without opening the picker. Disabled when host is disabled/readonly. Text and select modes are unsupported in v1 — use `show-now-button` for the standalone footer affordance instead.',
-      default: false,
-      attribute: 'inline-now',
-    },
-    inlineNowLabel: {
-      type: 'string',
-      description: 'Override the inline "Now" button label. Defaults to the locale-aware "Now".',
-      default: '',
-      attribute: 'inline-now-label',
-    },
     disabledSlots: {
       type: 'array',
       description: 'Combo-mode only: 24-hour `HH:MM` strings to render as disabled / non-selectable (e.g. booked appointment slots). Disabled slots stay visible in the dropdown so users see the unavailability; arrow-key nav skips them and "snap-to-nearest" picks the closest available neighbor. Defaults to an empty array.',

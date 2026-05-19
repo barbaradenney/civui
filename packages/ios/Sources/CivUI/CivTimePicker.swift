@@ -25,8 +25,6 @@ public struct CivTimePicker: View {
     public var periodLabel: String
     public var showNowButton: Bool
     public var nowButtonLabel: String
-    public var inlineNow: Bool
-    public var inlineNowLabel: String
     public var disabledSlots: [String]
     public var hint: String?
     public var error: String?
@@ -51,8 +49,6 @@ public struct CivTimePicker: View {
         periodLabel: String = "",
         showNowButton: Bool = false,
         nowButtonLabel: String = "",
-        inlineNow: Bool = false,
-        inlineNowLabel: String = "",
         disabledSlots: [String] = [],
         hint: String? = nil,
         error: String? = nil,
@@ -76,8 +72,6 @@ public struct CivTimePicker: View {
         self.periodLabel = periodLabel
         self.showNowButton = showNowButton
         self.nowButtonLabel = nowButtonLabel
-        self.inlineNow = inlineNow
-        self.inlineNowLabel = inlineNowLabel
         self.disabledSlots = disabledSlots
         self.hint = hint
         self.error = error

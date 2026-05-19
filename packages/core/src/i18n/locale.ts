@@ -274,8 +274,10 @@ export interface CivLocaleStrings {
   minSelectionsHint: string; // "Select at least {min}"
   minSelectionsError: string; // "Please select at least {min} options"
   clearButton: string;
-  passwordReveal: string; // aria-label for the show-password button
-  passwordHide: string;   // aria-label when the password is currently revealed
+  passwordReveal: string;      // aria-label for the show-password button
+  passwordHide: string;        // aria-label when the password is currently revealed
+  passwordRevealShort: string; // visible text on the reveal button ("Show")
+  passwordHideShort: string;   // visible text on the reveal button when revealed ("Hide")
 
   // Progress steps
   progressStepsLabel: string;
@@ -993,6 +995,8 @@ const defaultStrings: CivLocaleStrings = {
   clearButton: 'Clear',
   passwordReveal: 'Show password',
   passwordHide: 'Hide password',
+  passwordRevealShort: 'Show',
+  passwordHideShort: 'Hide',
 
   nameFirst: 'First name or given name',
   nameMiddle: 'Middle name',

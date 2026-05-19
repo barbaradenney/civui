@@ -600,11 +600,11 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
           : nothing}${needsRevealButton
           ? html`<button
               type="button"
-              class="civ-input-action"
+              class="civ-input-inline-action"
               aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
               aria-pressed="${this._passwordRevealed}"
               @click="${this._onTogglePasswordReveal}"
-            ><civ-icon name="${this._passwordRevealed ? 'visibility-off' : 'visibility'}" aria-hidden="true"></civ-icon></button>`
+            >${this._passwordRevealed ? t('passwordHideShort') : t('passwordRevealShort')}</button>`
           : nothing}${needsTrailingActionSlot
           ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
           : nothing}${hasSuffix

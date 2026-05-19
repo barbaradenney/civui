@@ -42,6 +42,49 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Readonly visual treatment for non-text controls (toggle, yes-no)
+
+- **Surfaced:** Inputs/compound audit, 2026-05-19. During the
+  readonly-cascade audit.
+- **Scope:** `civ-toggle` (`packages/inputs/src/toggle/civ-toggle.ts`)
+  and `civ-yes-no` (`packages/inputs/src/yes-no/civ-yes-no.ts`).
+  Both compute a readonly state and pass it through to ARIA
+  (`aria-disabled` on the toggle's switch button; `aria-readonly`
+  on yes-no's radios) — and the click handlers correctly no-op
+  when `readonly` is true — but there is **no CSS treatment** for
+  either ARIA attribute. The user sees a fully interactive-looking
+  control that silently ignores clicks.
+- **What `civ-text-input` does for readonly** (the established
+  pattern): `[readonly] .civ-input` strips border + background +
+  padding so the field reads like plain inline text. That's the
+  "viewable but not editable" idiom government forms expect — NOT
+  the disabled aesthetic (`opacity-50` + `not-allowed` cursor).
+- **Why deferred:** Picking the right treatment is a design call:
+  - Should a readonly toggle render as static "On" / "Off" text
+    instead of the toggle UI? That matches the text-input pattern
+    but changes the visual baseline drastically.
+  - Or should the toggle/radios stay rendered but with a subtle
+    non-interactive cue (cursor change, suppressed hover state)?
+  - For yes-no specifically: `aria-readonly` on `role="radio"` is
+    ambiguous in the ARIA spec (radios are a tristate input, and
+    spec says aria-readonly applies to widgets that *would* be
+    user-editable). The current behavior — both radios still
+    appear checkable but click is suppressed — is technically
+    correct per the spec but visually misleading.
+- **Tried in this audit, then reverted:** applying
+  `.civ-toggle-track[aria-disabled="true"]` to inherit the
+  disabled visual (opacity-50 + not-allowed cursor). Reverted
+  because it equates readonly with disabled, which contradicts
+  civ-text-input's pattern (where readonly renders differently
+  from disabled).
+- **What to watch for in the meantime:** consumers using
+  `<civ-toggle readonly>` or `<civ-yes-no readonly>` in summary /
+  review views won't see a visual cue. Prefer rendering the
+  static value as plain text inside `<civ-data-field>` for those
+  surfaces until the visual pattern is settled.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

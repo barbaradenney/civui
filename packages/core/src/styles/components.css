@@ -1089,6 +1089,22 @@
     @apply civ-px-4 civ-py-2 civ-font-sans civ-font-medium civ-border
            civ-bg-white civ-text-base-darkest civ-border-base civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);
+    /* Connected controls — middle/last segments drop their start border
+       and rely on the previous segment's end border as the divider.
+       When a segment takes focus, the focus halo (outline + box-shadow
+       from the global :focus rule) extends past the segment's box and
+       into the neighbor's territory. Without a stacking bump, the
+       neighbor's background paints over the halo on that side, leaving
+       the focus indicator clipped to three sides. Same fix as Bootstrap
+       btn-group / USWDS button-group: position: relative seeds the
+       stacking ancestor, and z-index: 1 on :focus and on the checked
+       state lifts the active member above its siblings so the halo
+       and the primary border both stay visible all the way around. */
+    position: relative;
+  }
+  .civ-segment-btn:focus,
+  .civ-segment-btn[aria-checked="true"] {
+    z-index: 1;
   }
 
   /* ── File Upload ────────────────────────────────────────────── */
@@ -2975,6 +2991,22 @@
 
   .civ-button-group {
     @apply civ-inline-flex;
+  }
+
+  /* Same focus-clip fix as .civ-segment-btn (see comment there) —
+     toolbar buttons share borders along their flush edges, so the
+     focused member needs to stack above its neighbors for the focus
+     halo to render around the full perimeter rather than getting
+     clipped on the connecting sides. */
+  .civ-button-group button,
+  .civ-button-group--vertical button {
+    position: relative;
+  }
+  .civ-button-group button:focus,
+  .civ-button-group--vertical button:focus,
+  .civ-button-group button[aria-pressed="true"],
+  .civ-button-group--vertical button[aria-pressed="true"] {
+    z-index: 1;
   }
 
   .civ-button-group civ-action-button:not(:first-child) button {

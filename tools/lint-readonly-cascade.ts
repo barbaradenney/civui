@@ -109,7 +109,7 @@ async function* walk(dir: string): AsyncGenerator<string> {
  * file, returning the tag's start index, end index, and tag name.
  * Tags may span multiple lines.
  */
-function findOpenTags(content: string): Array<{ tag: string; start: number; end: number }> {
+export function findOpenTags(content: string): Array<{ tag: string; start: number; end: number }> {
   const tags: Array<{ tag: string; start: number; end: number }> = [];
   const re = /<(civ-[a-z-]+)\b/g;
   let m: RegExpExecArray | null;
@@ -137,11 +137,13 @@ function findOpenTags(content: string): Array<{ tag: string; start: number; end:
   return tags;
 }
 
-async function scanFile(file: string): Promise<Finding[]> {
-  const relative = path.relative(REPO_ROOT, file);
-  const content = await fs.readFile(file, 'utf-8');
+/**
+ * Pure-function scanner: given a file's text and its display path,
+ * return cascade gaps. Used by the file-walking entry point AND
+ * by the unit tests (so they don't need to write fixture files).
+ */
+export function findCascadeGaps(content: string, file = '<inline>'): Finding[] {
   const findings: Finding[] = [];
-
   for (const { tag, start, end } of findOpenTags(content)) {
     const opening = content.slice(start, end + 1);
     // Only flag when the host actually forwards disabled — opening
@@ -156,10 +158,15 @@ async function scanFile(file: string): Promise<Finding[]> {
     const line = content.slice(0, start).split('\n').length;
     const firstLine = opening.split('\n', 1)[0];
     const snippet = firstLine.length > 100 ? firstLine.slice(0, 100) + '…' : firstLine;
-    findings.push({ file: relative, line, tag, snippet });
+    findings.push({ file, line, tag, snippet });
   }
-
   return findings;
+}
+
+async function scanFile(file: string): Promise<Finding[]> {
+  const relative = path.relative(REPO_ROOT, file);
+  const content = await fs.readFile(file, 'utf-8');
+  return findCascadeGaps(content, relative);
 }
 
 async function main(): Promise<void> {

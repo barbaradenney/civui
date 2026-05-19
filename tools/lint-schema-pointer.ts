@@ -80,7 +80,7 @@ async function* walk(dir: string): AsyncGenerator<string> {
  * Returns the target path (verbatim from the comment) and the line
  * number it lives on.
  */
-function extractPointers(content: string): Array<{ target: string; line: number }> {
+export function extractPointers(content: string): Array<{ target: string; line: number }> {
   const out: Array<{ target: string; line: number }> = [];
   const lines = content.split('\n').slice(0, 10);
   for (let i = 0; i < lines.length; i++) {

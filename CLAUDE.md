@@ -42,9 +42,12 @@ pnpm test          # Run all tests (3600+ tests across packages)
 pnpm build         # Build all packages (respects dependency order)
 pnpm typecheck     # TypeScript type checking
 pnpm lint          # ESLint
-pnpm validate      # lint + typecheck + test (full CI check)
+pnpm validate      # lint + typecheck + test (full CI check, slow)
+pnpm preflight     # Fast pre-push: typecheck + lints + schema parity + doc-tables sync
 pnpm storybook     # Dev server on port 6006
-civui generate component <name>  # Scaffold new component across all 4 platforms
+pnpm scaffold:component <name>   # Scaffold a new component (web + iOS + Android + Drupal + schema + COVERED_COMPONENTS)
+pnpm generate:schema civ-<name>  # Bootstrap a schema from an existing Lit component
+civ generate component <name>    # Alternative scaffolder (also creates a schema) — equivalent for new components
 ```
 
 ## Architecture Patterns

@@ -16,13 +16,16 @@ LLMs are confident pattern-matchers. Where a codebase relies on tribal knowledge
 
 The full list lives in [Quality Gates](./quality-gates) — 12 drift lints, 5 schema-as-contract gates, the parity report, the consistency check, the doc-tables-sync gate, the Storybook build gate, and the native compile check. The lints in particular were each written in response to a real failure mode (a story attribute that wasn't a real prop, a `civ-text-base-darker` class that doesn't resolve to a token, a `@prop` JSDoc tag that drifted from its `@property` declaration). Together they form a tight feedback loop: an agent edits a file, runs `pnpm validate:lints`, and gets a precise error message instead of a silent regression.
 
-Run the full preflight before pushing:
+Run the fast preflight before pushing:
 
 ```bash
-pnpm validate              # lint + typecheck + test
-pnpm validate:lints        # the 12 drift lints (under a second total)
-pnpm parity:schema         # schema ↔ Lit ↔ iOS ↔ Android ↔ Drupal
+pnpm preflight             # typecheck + lints + schema parity + doc-tables sync (~30s)
+pnpm validate              # comprehensive — also runs the full test suite (slower)
 ```
+
+`preflight` covers 80% of regressions in under a minute. `validate` is the exhaustive option. Both are discoverable from `package.json`; agents that aren't sure which to run should default to `preflight`.
+
+When a lint fails, the failure output ends with a `→ see <path>#<anchor>` line that links to the rule documentation explaining the failure mode and the canonical fix. Jump straight there instead of grepping for the pattern.
 
 ## Schemas are the machine-readable contract
 
@@ -39,6 +42,23 @@ When an agent adds a prop to a component, the workflow is:
 5. Run `pnpm sync:doc-tables` and `pnpm sync:drupal` — the docs and Drupal SDCs regenerate from the schema.
 
 If step 2 or 3 is skipped, CI fails with a precise diff. No silent drift.
+
+### Scaffolding a new component
+
+Two equivalent commands produce a full scaffold — web source + test + story + iOS + Android + Drupal SDC + schema + `COVERED_COMPONENTS` registration:
+
+```bash
+pnpm scaffold:component civ-<name>      # tool-driven scaffolder (recommended)
+civ generate component <name>           # CLI alternative — same artefacts
+```
+
+Both create the schema alongside the platform stubs, so the contract is in place from the first commit. If you have an existing component without a schema:
+
+```bash
+pnpm generate:schema civ-<name>         # extract @property declarations → schema scaffold
+```
+
+The tool parses the Lit source, maps TypeScript types to schema types, preserves `attribute:` overrides, and emits a stub with `// TODO` markers for the bits it can't infer (enum values, ARIA role, event declarations).
 
 ## The AI guide and the rules folder
 
@@ -100,6 +120,7 @@ Patterns the codebase will catch if you violate them (non-exhaustive):
 - An `addEventListener` in `connectedCallback` without a matching `removeEventListener` (caught by `lint:event-listener-leak`).
 - Hardcoded motion durations, z-index values, or Tailwind arbitrary spacing (caught by `lint:hardcoded-tokens`).
 - A schema added without a matching test / story / contract page (caught by `lint:coverage-trinity`).
+- An iOS component with an `EmptyView()` body that isn't on the deferred-implementation allowlist (caught by `lint:ios-stub-allowlist`). Editing the allowlist requires a deliberate PR — see `.claude/rules/audit-debt.md`.
 - Drupal SDC YAML hand-edits that diverge from the regenerator (caught by `drupal-sync-clean`).
 - A doc table hand-edit that diverges from the schema (caught by `doc-tables-sync`).
 

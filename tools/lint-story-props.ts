@@ -28,6 +28,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
@@ -309,6 +310,7 @@ async function main(): Promise<void> {
     if (list.length > 3) console.error(`    … and ${list.length - 3} more`);
     console.error('');
   }
+  printRuleLink('story-props');
   process.exit(1);
 }
 

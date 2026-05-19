@@ -39,6 +39,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 
@@ -212,6 +213,7 @@ async function main(): Promise<void> {
     'If a file legitimately demonstrates these tokens, add it to ALLOWLIST\n' +
     'in tools/lint-muted-body-text.ts.',
   );
+  printRuleLink('muted-body-text');
   process.exit(1);
 }
 

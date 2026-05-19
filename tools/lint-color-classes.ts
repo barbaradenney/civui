@@ -34,6 +34,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const TOKENS_CSS = path.join(REPO_ROOT, 'packages/tokens/dist/css/tokens.css');
@@ -217,6 +218,7 @@ async function main(): Promise<void> {
     '  - Add the missing shade to the token JSON if the design calls for it.\n' +
     '  - Verify the family name is spelled correctly (e.g. `error`, not `danger`).',
   );
+  printRuleLink('color-classes');
   process.exit(1);
 }
 

@@ -5,6 +5,7 @@ vi.mock('node:fs', () => ({
   writeFileSync: vi.fn(),
   mkdirSync: vi.fn(),
   existsSync: vi.fn(),
+  readFileSync: vi.fn(() => ''),
 }));
 
 // Mock findRoot and other utils to avoid filesystem traversal
@@ -77,9 +78,22 @@ describe('generate', () => {
     );
   });
 
-  it('scaffolds across all 4 platforms (9 files: web src/test/stories/index, iOS swift, Android kt, Drupal yml/twig/stories)', async () => {
+  it('scaffolds across all 4 platforms + schema (10 files: web src/test/stories/index, iOS swift, Android kt, Drupal yml/twig/stories, schema)', async () => {
     await generate('component', ['date-picker'], {});
-    expect(mockWriteFileSync).toHaveBeenCalledTimes(9);
+    expect(mockWriteFileSync).toHaveBeenCalledTimes(10);
+  });
+
+  it('creates the schema file at packages/schema/src/components/', async () => {
+    await generate('component', ['date-picker'], {});
+    const schemaCall = mockWriteFileSync.mock.calls.find(
+      (call) =>
+        typeof call[0] === 'string' &&
+        (call[0] as string).includes('packages/schema/src/components/civ-date-picker.schema.ts'),
+    );
+    expect(schemaCall).toBeDefined();
+    const schemaContent = schemaCall![1] as string;
+    expect(schemaContent).toContain("name: 'civ-date-picker'");
+    expect(schemaContent).toContain('ComponentSchema');
   });
 
   it('creates the component source file with correct path', async () => {

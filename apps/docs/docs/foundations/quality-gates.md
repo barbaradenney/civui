@@ -158,7 +158,7 @@ A separate set of CI jobs guards against narrative and pattern drift across the 
 pnpm validate:lints
 ```
 
-Twelve fast static lints over the whole repo. Each parses source and exits in under a second:
+A bank of fast static lints over the whole repo. Each parses source and exits in under a second. Every failure ends with a `→ see <path>#<anchor>` line linking to the rule documentation that explains the pattern and how to fix it (mapping lives in `tools/lint-rule-links.ts`):
 
 - **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
 - **`lint:story-embeds`** — Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
@@ -172,6 +172,7 @@ Twelve fast static lints over the whole repo. Each parses source and exits in un
 - **`lint:hardcoded-tokens`** — Component source and CSS must use the token system instead of literals. Three sub-checks: motion durations must use `var(--civ-motion-duration-*)`, z-index above the single-layer-stack idiom must use `var(--civ-z-*)`, and Tailwind arbitrary values (`civ-p-[13px]`) are forbidden anywhere in component source.
 - **`lint:coverage-trinity`** — Every `@customElement('civ-X')` declaration must have a co-located `*.test.ts` and `*.stories.ts` (or a sibling file in the same directory that references the tag — paired components like radio + radio-group are allowed to share). Cross-platform components in `COVERED_COMPONENTS` must additionally have a schema at `packages/schema/src/components/civ-X.schema.ts`.
 - **`lint:event-listener-leak`** — Every `addEventListener` call inside `connectedCallback` or `firstUpdated` must have a matching `removeEventListener` somewhere in the same class. Catches the recurring leak shape where a component attaches a document-level keydown / click handler on mount and forgets to detach it on unmount — every reconnect cycle accumulates dead listeners and keeps the host alive.
+- **`lint:ios-stub-allowlist`** — Enforces the deferred-iOS-implementation allowlist in `tools/ios-stub-allowlist.ts`. Any iOS component whose `body: some View` is just `EmptyView()` must be on the list; any entry on the list whose body is no longer EmptyView is flagged stale. Editing the list is a deliberate human action — the rationale is in `.claude/rules/audit-debt.md` ("Native platform implementation pass"). Designed to stop AI agents from "completing" the stub bodies blind without device verification.
 
 The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-refs and color-classes) the long-form `.md` / `.mdx` / `.twig` files. They are not pattern-specific — adding a new component category gets the same coverage automatically.
 

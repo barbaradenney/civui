@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { findRoot, toPascalCase, success, header } from '../utils.js';
 
@@ -115,17 +115,117 @@ export async function generate(
   );
   success(`Created ${tagName}.drupal.stories.ts`);
 
-  console.log(`\nComponent scaffolded across 4 platforms:`);
+  // --- Schema ---
+  const schemaDir = resolve(root, 'packages/schema/src/components');
+  const schemaFile = resolve(schemaDir, `${tagName}.schema.ts`);
+  if (!existsSync(schemaFile)) {
+    mkdirSync(schemaDir, { recursive: true });
+    writeFileSync(schemaFile, schemaTemplate(tagName));
+    success(`Created schema: ${tagName}.schema.ts`);
+  }
+
+  // --- Register in tools/schema-parity.ts COVERED_COMPONENTS ---
+  const registered = registerInSchemaParity(root, tagName, className, name);
+  if (registered) {
+    success(`Registered ${tagName} in tools/schema-parity.ts`);
+  }
+
+  console.log(`\nComponent scaffolded across 4 platforms + schema:`);
   console.log(`  Web:     packages/forms/src/${name}/`);
   console.log(`  iOS:     packages/ios/Sources/CivUI/${className}.swift`);
   console.log(`  Android: packages/android/src/main/kotlin/gov/civui/components/${className}.kt`);
   console.log(`  Drupal:  packages/drupal/civui/components/${name}/`);
+  console.log(`  Schema:  packages/schema/src/components/${tagName}.schema.ts`);
   console.log(`\nNext steps:`);
   console.log(`  1. Implement the component in ${tagName}.ts`);
-  console.log(`  2. Add exports to packages/forms/src/index.ts`);
-  console.log(`  3. Write tests and stories`);
-  console.log(`  4. Implement native views in the iOS and Android stubs`);
-  console.log(`  5. Run: civui build forms && civui test --unit`);
+  console.log(`  2. Fill in component-specific props in the schema`);
+  console.log(`  3. Run: pnpm sync:drupal && pnpm sync:doc-tables`);
+  console.log(`  4. Run: pnpm parity:schema --platforms`);
+  console.log(`  5. Implement native views in the iOS and Android stubs`);
+}
+
+function registerInSchemaParity(
+  root: string,
+  tagName: string,
+  className: string,
+  name: string,
+): boolean {
+  const path = resolve(root, 'tools/schema-parity.ts');
+  if (!existsSync(path)) return false;
+  const src = readFileSync(path, 'utf-8');
+  if (src.includes(`name: '${tagName}'`)) return false;
+
+  const litPath = `packages/forms/src/${name}/${tagName}.ts`;
+  const iosPath = `packages/ios/Sources/CivUI/${className}.swift`;
+  const androidPath = `packages/android/src/main/kotlin/gov/civui/components/${className}.kt`;
+  const drupalPath = `packages/drupal/civui/components/${name}/${name}.component.yml`;
+  const entryLine = `  { name: '${tagName}', source: '${litPath}', ios: '${iosPath}', android: '${androidPath}', drupal: '${drupalPath}' },`;
+
+  const closingMatch = src.match(
+    /\nconst COVERED_COMPONENTS: ComponentSpec\[\] = \[[\s\S]*?\n(\];)/,
+  );
+  if (!closingMatch) return false;
+  const insertAt = src.lastIndexOf('];', closingMatch.index! + closingMatch[0].length);
+  const next = src.slice(0, insertAt) + entryLine + '\n' + src.slice(insertAt);
+  writeFileSync(path, next);
+  return true;
+}
+
+function schemaTemplate(tagName: string): string {
+  return `import type { ComponentSchema } from '../schema.types.js';
+
+const schema: ComponentSchema = {
+  $schema: '1.0',
+  name: '${tagName}',
+  description: 'TODO: one-paragraph contract — purpose, primary use case, notable composition. Match the description in the Lit source.',
+  category: 'form-control',
+  extends: 'CivFormElement',
+  isGroup: false,
+
+  props: {
+    // TODO: declare each component-specific prop here. Inherited form
+    // props (label, value, hint, error, required, disabled, readonly,
+    // touched, requiredMessage) are filtered automatically — don't add.
+    //
+    // Example shape:
+    //
+    //   variant: {
+    //     type: 'enum',
+    //     description: 'Visual variant — primary, secondary, tertiary.',
+    //     default: 'primary',
+    //     values: ['primary', 'secondary', 'tertiary'],
+    //   },
+  },
+
+  events: {
+    // TODO: declare any custom events the component dispatches.
+    // \`civ-input\` and \`civ-change\` are dispatched by the base class
+    // for form components — declare them here only if the component
+    // adds extra detail keys.
+  },
+
+  a11y: {
+    role: 'textbox',
+    requiredIndicator: 'asterisk',
+    errorAnnouncement: 'polite',
+  },
+
+  renderOrder: [
+    { type: 'label' },
+    { type: 'hint' },
+    { type: 'error' },
+    { type: 'input' },
+  ],
+
+  form: {
+    valueMode: 'string',
+    formAssociated: true,
+    resetBehavior: 'restore-default-value',
+  },
+};
+
+export default schema;
+`;
 }
 
 function componentTemplate(className: string, tagName: string): string {

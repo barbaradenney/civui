@@ -99,6 +99,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           name="${prefix}.branch"
           value="${this._data.branch}"
           error="${this.branchError}"
+          ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           data-service-branch
@@ -111,6 +112,7 @@ export class CivServiceHistory extends LegendHeadingMixin(CivCompoundElement) {
           name="${prefix}.startDate"
           value="${this._data.startDate}"
           error="${this.startDateError}"
+          ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
           @civ-input="${(e: CustomEvent) => this._onFieldInput('startDate', e)}"

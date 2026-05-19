@@ -539,6 +539,49 @@ three** alias maps: the workspace's `vitest.config.ts`, every
 
 ---
 
+## Multi-field compounds must cascade `required` to at least one leaf
+
+A multi-field compound with `showRequired: false` on its
+`renderLegend()` call deliberately suppresses the `(required)`
+mark on its own `<legend>` (because a section heading isn't
+actionable). The contract is that the compound then cascades
+`required` down to its primary leaf controls, where each leaf
+renders its own per-field `(required)`.
+
+If the compound forgets the cascade, the user sees **zero**
+`(required)` markers: the legend is suppressed and the leaves
+were never told they're required. The compound is required, but
+no UI signals it.
+
+```ts
+// ✗ silent — legend suppresses (required), nothing cascades
+<civ-text-input
+  label="Account number"
+  ?disabled="${this.disabled}"
+></civ-text-input>
+
+// ✓ leaf carries its own (required) marker
+<civ-text-input
+  label="Account number"
+  ?required="${this.required}"
+  ?disabled="${this.disabled}"
+></civ-text-input>
+```
+
+civ-direct-deposit, civ-service-history, and civ-signature
+shipped without the cascade for months and this audit caught
+them.
+
+**Caught by:** `pnpm lint:required-cascade` — fixtures each
+multi-field compound with `required`, walks its rendered DOM,
+and asserts at least one leaf form control received
+`required=true`. Wired into `pnpm validate:lints` and the
+drift-lints CI gate. To extend, add the new compound's tag to
+`COMPOUNDS` in
+`packages/compound/src/_lint/required-cascade.test.ts`.
+
+---
+
 ## Compound `formResetCallback` must reset `_data`, not just `value`
 
 Compounds extending `CivCompoundElement` render from an internal

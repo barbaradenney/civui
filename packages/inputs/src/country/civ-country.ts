@@ -67,6 +67,12 @@ export class CivCountry extends PresetInputWrapper {
   override render() {
     const label = this.label || t('countryLabel');
 
+    // No `autocomplete` attribute on the combobox — browser autofill
+    // dropdowns compete with the custom listbox and the saved value
+    // often doesn't match a real option, leaving the field in a
+    // broken state. civ-combobox always sets `autocomplete="off"` on
+    // its internal input; the `lint:combobox-no-autocomplete` lint
+    // prevents adding it back to any wrapper.
     return html`
       <civ-combobox
         label="${label}"
@@ -75,7 +81,6 @@ export class CivCountry extends PresetInputWrapper {
         hint="${this.hint}"
         error="${this.error}"
         .options="${this._options}"
-        autocomplete="country-name"
         ?required="${this.required}"
         required-message="${this.requiredMessage || ''}"
         ?disabled="${this.disabled}"

@@ -126,6 +126,17 @@
     display: block;
   }
 
+  /* Standalone civ-checkbox carries the standard 1rem form-field gap
+     so it visually matches civ-text-input, civ-select, etc. when used
+     alone (e.g., the "I don't have a permanent address" toggle in the
+     housing pattern). Inside civ-checkbox-group the tighter inner
+     `civ-mb-2` is enough — the host margin is suppressed via the
+     :not() exclusion. Tile-mode checkboxes (radio tile cards) also
+     manage their own spacing. */
+  civ-checkbox:not(civ-checkbox-group *):not([tile]) {
+    margin-bottom: 1rem;
+  }
+
   /* ── Shared form primitives ─────────────────────────────────── */
 
   .civ-label,
@@ -1387,6 +1398,40 @@
   }
 
   [data-civ-form-disclosures-slot] p:last-child {
+    @apply civ-mb-0;
+  }
+
+  /*
+   * Support-resources panel — appears on trauma-informed forms (housing
+   * pattern, crisis-line lookup) below the main form body. The panel
+   * surfaces crisis / housing / domestic-violence hotlines and similar
+   * help links so users in distress can leave the form for support.
+   *
+   * Subtle primary-tinted card so it reads as helpful, not alarming
+   * (no red — red is for errors). Sits below the form with a 1.5rem
+   * top margin to separate it from the submit button.
+   */
+  .civ-form-support-resources {
+    @apply civ-mt-6 civ-p-4 civ-rounded;
+    background: var(--civ-color-primary-lightest);
+    border-inline-start: 4px solid var(--civ-color-primary-dark);
+  }
+
+  .civ-form-support-resources__heading {
+    @apply civ-m-0 civ-mb-2 civ-font-bold;
+    font-size: var(--civ-typography-fontSize-base);
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-form-support-resources ul {
+    @apply civ-list-none civ-p-0 civ-m-0;
+  }
+
+  .civ-form-support-resources li {
+    @apply civ-mb-1;
+  }
+
+  .civ-form-support-resources li:last-child {
     @apply civ-mb-0;
   }
 

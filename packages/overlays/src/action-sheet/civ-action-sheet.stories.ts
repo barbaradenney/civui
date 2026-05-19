@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-action-sheet.js';
+import '@civui/actions';
 
 const meta: Meta = {
   title: 'Overlays/Action Sheet',
@@ -78,15 +79,17 @@ export const WithFocusTrap: Story = {
   name: 'With Focus Trap',
   render: () => {
     let open = false;
+    const findSheet = (e: Event) =>
+      (e.target as HTMLElement).closest('.action-sheet-demo')?.querySelector('civ-action-sheet') as any;
     const toggle = (e: Event) => {
       open = !open;
-      const sheet = (e.target as HTMLElement).closest('.action-sheet-demo')?.querySelector('civ-action-sheet') as any;
+      const sheet = findSheet(e);
       if (sheet) sheet.open = open;
     };
     const close = (e: Event) => {
       open = false;
-      const sheet = (e.target as HTMLElement) as any;
-      sheet.open = false;
+      const sheet = findSheet(e);
+      if (sheet) sheet.open = false;
     };
     return html`
       <div class="action-sheet-demo" style="position: relative;">

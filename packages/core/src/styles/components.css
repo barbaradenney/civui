@@ -1639,8 +1639,10 @@
   .civ-btn--primary {
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
-  .civ-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary-dark civ-border-primary-dark;
+  @media (hover: hover) {
+    .civ-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
+      @apply civ-bg-primary-dark civ-border-primary-dark;
+    }
   }
   .civ-btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary-darker civ-border-primary-darker;
@@ -1651,8 +1653,10 @@
     color: var(--civ-color-primary-dark);
     border-color: transparent;
   }
-  .civ-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
-    background-color: var(--civ-color-primary-lighter);
+  @media (hover: hover) {
+    .civ-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+      background-color: var(--civ-color-primary-lighter);
+    }
   }
   .civ-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
     background-color: var(--civ-color-primary-light);
@@ -1661,8 +1665,10 @@
   .civ-btn--tertiary {
     @apply civ-bg-transparent civ-text-primary-dark civ-border-primary-dark;
   }
-  .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-primary civ-text-white;
+  @media (hover: hover) {
+    .civ-btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
+      @apply civ-bg-primary civ-text-white;
+    }
   }
   .civ-btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-primary-dark civ-text-white civ-border-primary-dark;
@@ -1680,8 +1686,10 @@
   .civ-btn--primary-danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
-  .civ-btn--primary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-error-dark civ-border-error-dark;
+  @media (hover: hover) {
+    .civ-btn--primary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+      @apply civ-bg-error-dark civ-border-error-dark;
+    }
   }
   .civ-btn--primary-danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
@@ -1693,8 +1701,10 @@
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
-  .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    background-color: var(--civ-color-error-lighter);
+  @media (hover: hover) {
+    .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+      background-color: var(--civ-color-error-lighter);
+    }
   }
   .civ-btn--secondary-danger:active:not(:disabled):not([aria-disabled="true"]) {
     background-color: var(--civ-color-error-light);
@@ -1703,8 +1713,10 @@
   .civ-btn--tertiary-danger {
     @apply civ-bg-transparent civ-text-error civ-border-error;
   }
-  .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-bg-error civ-text-white;
+  @media (hover: hover) {
+    .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+      @apply civ-bg-error civ-text-white;
+    }
   }
   .civ-btn--tertiary-danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
@@ -1971,8 +1983,10 @@
   .civ-action-btn--primary {
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
-  .civ-action-btn--primary:hover:not(:disabled) {
-    @apply civ-bg-primary-dark civ-border-primary-dark;
+  @media (hover: hover) {
+    .civ-action-btn--primary:hover:not(:disabled) {
+      @apply civ-bg-primary-dark civ-border-primary-dark;
+    }
   }
 
   .civ-action-btn--secondary {
@@ -1980,8 +1994,10 @@
     color: var(--civ-color-primary-dark);
     border-color: transparent;
   }
-  .civ-action-btn--secondary:hover:not(:disabled) {
-    background-color: var(--civ-color-primary-lighter);
+  @media (hover: hover) {
+    .civ-action-btn--secondary:hover:not(:disabled) {
+      background-color: var(--civ-color-primary-lighter);
+    }
   }
 
   .civ-action-btn--tertiary {
@@ -1989,8 +2005,10 @@
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
   }
-  .civ-action-btn--tertiary:hover:not(:disabled) {
-    background-color: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-action-btn--tertiary:hover:not(:disabled) {
+      background-color: var(--civ-color-base-lightest);
+    }
   }
 
   .civ-action-btn[aria-pressed="true"] {
@@ -2001,8 +2019,10 @@
   .civ-action-btn--primary-danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
-  .civ-action-btn--primary-danger:hover:not(:disabled) {
-    @apply civ-bg-error-dark civ-border-error-dark;
+  @media (hover: hover) {
+    .civ-action-btn--primary-danger:hover:not(:disabled) {
+      @apply civ-bg-error-dark civ-border-error-dark;
+    }
   }
 
   .civ-action-btn--secondary-danger {
@@ -2010,16 +2030,20 @@
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
-  .civ-action-btn--secondary-danger:hover:not(:disabled) {
-    background-color: var(--civ-color-error-lighter);
+  @media (hover: hover) {
+    .civ-action-btn--secondary-danger:hover:not(:disabled) {
+      background-color: var(--civ-color-error-lighter);
+    }
   }
 
   .civ-action-btn--tertiary-danger {
     @apply civ-text-error civ-border-error;
     background-color: var(--civ-color-error-lightest);
   }
-  .civ-action-btn--tertiary-danger:hover:not(:disabled) {
-    background-color: var(--civ-color-error-lighter);
+  @media (hover: hover) {
+    .civ-action-btn--tertiary-danger:hover:not(:disabled) {
+      background-color: var(--civ-color-error-lighter);
+    }
   }
 
   /* Link mode — civ-action-button rendered as <a href>. Underlines
@@ -2108,8 +2132,10 @@
     font-size: var(--civ-typography-fontSize-base);
   }
 
-  .civ-menu-item__inner:hover:not(:disabled):not([aria-disabled='true']) {
-    background-color: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-menu-item__inner:hover:not(:disabled):not([aria-disabled='true']) {
+      background-color: var(--civ-color-base-lightest);
+    }
   }
 
   .civ-menu-item__inner:disabled,
@@ -2122,8 +2148,10 @@
     color: var(--civ-color-error-dark);
   }
 
-  .civ-menu-item__inner--destructive:hover:not(:disabled):not([aria-disabled='true']) {
-    background-color: var(--civ-color-error-lightest);
+  @media (hover: hover) {
+    .civ-menu-item__inner--destructive:hover:not(:disabled):not([aria-disabled='true']) {
+      background-color: var(--civ-color-error-lightest);
+    }
   }
 
   .civ-menu-item__icon {
@@ -2246,8 +2274,10 @@
     user-select: none;
   }
 
-  .civ-column-visibility__option:hover {
-    background-color: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-column-visibility__option:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
   }
 
   /* ── Data Grid ─────────────────────────────────────────────── */
@@ -2327,10 +2357,12 @@
     text-align: inherit;
   }
 
-  .civ-data-grid__sort-btn:hover {
-    color: var(--civ-color-primary-dark);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  @media (hover: hover) {
+    .civ-data-grid__sort-btn:hover {
+      color: var(--civ-color-primary-dark);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
   }
 
   .civ-data-grid__th--sortable[aria-sort='ascending'] .civ-data-grid__sort-btn,
@@ -2421,12 +2453,14 @@
     cursor: pointer;
   }
 
-  .civ-data-grid__tr--interactive:hover {
-    background-color: var(--civ-color-base-lightest);
-  }
+  @media (hover: hover) {
+    .civ-data-grid__tr--interactive:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
 
-  .civ-data-grid__tr--interactive.civ-data-grid__tr--selected:hover {
-    background-color: var(--civ-color-primary-lighter);
+    .civ-data-grid__tr--interactive.civ-data-grid__tr--selected:hover {
+      background-color: var(--civ-color-primary-lighter);
+    }
   }
 
   /* Expandable rows — leading chevron column + detail row directly below. */
@@ -2446,8 +2480,10 @@
     padding: 0;
   }
 
-  .civ-data-grid__expand-toggle:hover:not(:disabled) {
-    background-color: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-data-grid__expand-toggle:hover:not(:disabled) {
+      background-color: var(--civ-color-base-lightest);
+    }
   }
 
   .civ-data-grid__expand-toggle:disabled {
@@ -2496,8 +2532,10 @@
     --_civ-sticky-bg: var(--civ-color-primary-lightest);
   }
 
-  .civ-data-grid__tr--interactive:hover {
-    --_civ-sticky-bg: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-data-grid__tr--interactive:hover {
+      --_civ-sticky-bg: var(--civ-color-base-lightest);
+    }
   }
 
   .civ-data-grid--striped .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd) {
@@ -2553,8 +2591,10 @@
     inset-inline-start: 0;
   }
 
-  .civ-data-grid__group-toggle:hover {
-    background-color: var(--civ-color-base-lighter);
+  @media (hover: hover) {
+    .civ-data-grid__group-toggle:hover {
+      background-color: var(--civ-color-base-lighter);
+    }
   }
 
   .civ-data-grid__group-label {
@@ -2571,8 +2611,10 @@
     padding: 0;
   }
 
-  .civ-data-grid__td--editable:hover {
-    background-color: var(--civ-color-base-lightest);
+  @media (hover: hover) {
+    .civ-data-grid__td--editable:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
   }
 
   .civ-data-grid__edit-cell-trigger {
@@ -3080,8 +3122,10 @@
            civ-text-primary civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--primary:hover:not([aria-disabled="true"]) {
-    @apply civ-text-primary-dark;
+  @media (hover: hover) {
+    .civ-link--primary:hover:not([aria-disabled="true"]) {
+      @apply civ-text-primary-dark;
+    }
   }
 
   /* Secondary link — plain underlined link. Default variant. Works
@@ -3095,8 +3139,10 @@
            civ-text-primary civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
-    @apply civ-text-primary-dark;
+  @media (hover: hover) {
+    .civ-link--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+      @apply civ-text-primary-dark;
+    }
   }
 
   /* Back link — leading arrow, used for back-navigation */
@@ -3106,8 +3152,10 @@
            civ-text-primary civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--back:hover:not([aria-disabled="true"]) {
-    @apply civ-text-primary-dark;
+  @media (hover: hover) {
+    .civ-link--back:hover:not([aria-disabled="true"]) {
+      @apply civ-text-primary-dark;
+    }
   }
 
   /* ── Danger link variants ──────────────────────────────────── */
@@ -3118,8 +3166,10 @@
            civ-text-error civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
-    @apply civ-text-error-dark;
+  @media (hover: hover) {
+    .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
+      @apply civ-text-error-dark;
+    }
   }
 
   .civ-link--secondary-danger {
@@ -3128,8 +3178,10 @@
            civ-text-error civ-underline;
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
-    @apply civ-text-error-dark;
+  @media (hover: hover) {
+    .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
+      @apply civ-text-error-dark;
+    }
   }
 
   .civ-btn:disabled,
@@ -3269,8 +3321,10 @@
     @apply civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded-sm;
   }
 
-  button.civ-progress-segment:hover {
-    opacity: 0.8;
+  @media (hover: hover) {
+    button.civ-progress-segment:hover {
+      opacity: 0.8;
+    }
   }
 
   button.civ-progress-segment:focus {
@@ -3327,8 +3381,10 @@
   .civ-breadcrumb__link {
     @apply civ-text-primary civ-underline;
   }
-  .civ-breadcrumb__link:hover {
-    @apply civ-text-primary-dark;
+  @media (hover: hover) {
+    .civ-breadcrumb__link:hover {
+      @apply civ-text-primary-dark;
+    }
   }
 
   .civ-breadcrumb__current {
@@ -3349,8 +3405,10 @@
     color: var(--civ-color-base-darkest);
     font-size: var(--civ-typography-fontSize-base);
   }
-  .civ-nav__link:hover {
-    @apply civ-text-primary civ-underline;
+  @media (hover: hover) {
+    .civ-nav__link:hover {
+      @apply civ-text-primary civ-underline;
+    }
   }
 
   /* Active page: persistent underline + primary color so the current
@@ -3400,8 +3458,10 @@
     margin-bottom: -2px;
     border-bottom: 2px solid transparent;
   }
-  .civ-tab:hover:not(:disabled) {
-    @apply civ-text-primary;
+  @media (hover: hover) {
+    .civ-tab:hover:not(:disabled) {
+      @apply civ-text-primary;
+    }
   }
 
   .civ-tab--selected {
@@ -3492,9 +3552,11 @@
     border-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
   }
-  .civ-link-card--primary:hover {
-    background-color: var(--civ-color-primary-dark);
-    border-color: var(--civ-color-primary-dark);
+  @media (hover: hover) {
+    .civ-link-card--primary:hover {
+      background-color: var(--civ-color-primary-dark);
+      border-color: var(--civ-color-primary-dark);
+    }
   }
   .civ-link-card--primary:active {
     background-color: var(--civ-color-primary-darker);
@@ -3507,8 +3569,10 @@
     border-color: transparent;
     color: var(--civ-color-primary-dark);
   }
-  .civ-link-card--secondary:hover {
-    background-color: var(--civ-color-primary-lighter);
+  @media (hover: hover) {
+    .civ-link-card--secondary:hover {
+      background-color: var(--civ-color-primary-lighter);
+    }
   }
   .civ-link-card--secondary:active {
     background-color: var(--civ-color-primary-light);
@@ -3520,8 +3584,10 @@
     border-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-primary-dark);
   }
-  .civ-link-card--tertiary:hover {
-    background-color: var(--civ-color-primary-lightest);
+  @media (hover: hover) {
+    .civ-link-card--tertiary:hover {
+      background-color: var(--civ-color-primary-lightest);
+    }
   }
   .civ-link-card--tertiary:active {
     background-color: var(--civ-color-primary-lighter);
@@ -3533,8 +3599,10 @@
     border-color: var(--civ-color-warning-light);
     color: var(--civ-color-base-darkest);
   }
-  .civ-link-card--critical:hover {
-    filter: brightness(var(--civ-brightness-subtle));
+  @media (hover: hover) {
+    .civ-link-card--critical:hover {
+      filter: brightness(var(--civ-brightness-subtle));
+    }
   }
   .civ-link-card--critical:active {
     filter: brightness(var(--civ-brightness-hover));
@@ -3546,9 +3614,11 @@
     border-color: var(--civ-color-error-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
   }
-  .civ-link-card--danger:hover {
-    background-color: var(--civ-color-error-dark);
-    border-color: var(--civ-color-error-dark);
+  @media (hover: hover) {
+    .civ-link-card--danger:hover {
+      background-color: var(--civ-color-error-dark);
+      border-color: var(--civ-color-error-dark);
+    }
   }
   .civ-link-card--danger:active {
     background-color: var(--civ-color-error-dark);
@@ -4058,9 +4128,11 @@
     min-height: 1.5rem;
   }
 
-  .civ-filter-chip:hover:not(.civ-filter-chip--disabled) {
-    background-color: var(--civ-color-base-lightest);
-    border-color: var(--civ-color-base-darker);
+  @media (hover: hover) {
+    .civ-filter-chip:hover:not(.civ-filter-chip--disabled) {
+      background-color: var(--civ-color-base-lightest);
+      border-color: var(--civ-color-base-darker);
+    }
   }
 
   .civ-filter-chip--disabled {
@@ -4075,9 +4147,11 @@
     border-color: var(--civ-color-primary-dark);
   }
 
-  .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
-    background-color: var(--civ-color-primary-lighter);
-    border-color: var(--civ-color-primary-darker);
+  @media (hover: hover) {
+    .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
+      background-color: var(--civ-color-primary-lighter);
+      border-color: var(--civ-color-primary-darker);
+    }
   }
 
   .civ-filter-chip--style-secondary.civ-filter-chip--selected .civ-filter-chip__check {
@@ -4092,9 +4166,11 @@
     border-color: var(--civ-color-primary-DEFAULT);
   }
 
-  .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
-    background-color: var(--civ-color-primary-dark);
-    border-color: var(--civ-color-primary-dark);
+  @media (hover: hover) {
+    .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
+      background-color: var(--civ-color-primary-dark);
+      border-color: var(--civ-color-primary-dark);
+    }
   }
 
   .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__check {
@@ -4134,9 +4210,11 @@
     border-inline-start-color: rgba(255, 255, 255, 0.3);
   }
 
-  .civ-filter-chip__remove:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.08);
-    color: inherit;
+  @media (hover: hover) {
+    .civ-filter-chip__remove:hover:not(:disabled) {
+      background: rgba(0, 0, 0, 0.08);
+      color: inherit;
+    }
   }
 
   .civ-filter-chip__remove:disabled {
@@ -4412,8 +4490,10 @@
     @apply civ-px-1 civ-text-xs;
   }
 
-  .civ-toggle-btn:hover {
-    background-color: var(--civ-color-base-lighter);
+  @media (hover: hover) {
+    .civ-toggle-btn:hover {
+      background-color: var(--civ-color-base-lighter);
+    }
   }
 
   .civ-toggle-btn:active {

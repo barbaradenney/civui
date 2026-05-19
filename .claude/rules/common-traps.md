@@ -539,6 +539,37 @@ three** alias maps: the workspace's `vitest.config.ts`, every
 
 ---
 
+## Compound `formResetCallback` must reset `_data`, not just `value`
+
+Compounds extending `CivCompoundElement` render from an internal
+`_data` field, not from `value` directly. The default
+`CivFormElement.formResetCallback` resets `value` to its default,
+but **does not touch `_data`** — so the rendered sub-fields keep
+showing the stale values until the user reloads.
+
+Every compound must override `formResetCallback` to also reset
+`_data` and clear any sub-field error props:
+
+```ts
+override formResetCallback(): void {
+  this._data = { ...EMPTY_INCOME };
+  this._resetCompound(['amountError', 'frequencyError']);
+}
+```
+
+The civ-income compound shipped without this override for months
+and silently failed to reset inside `<civ-form>` reset flows. The
+behavior was subtle enough that no end-to-end test caught it.
+
+**Caught by:** `pnpm lint:form-reset-callback` — fixtures each
+compound with a non-empty value, calls `formResetCallback()`, and
+asserts `_data` returns to `_empty`. Wired into
+`pnpm validate:lints` and the drift-lints CI gate. To extend, add
+the new compound's tag + a non-empty sample value to `COMPOUNDS`
+in `packages/compound/src/_lint/form-reset-callback.test.ts`.
+
+---
+
 ## Compound `readonly` must cascade to every leaf control
 
 CivUI's `readonly` contract: when a compound parent

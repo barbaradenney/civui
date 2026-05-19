@@ -163,6 +163,11 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
       </fieldset>
     `;
   }
+
+  override formResetCallback(): void {
+    this._data = { ...EMPTY_INCOME };
+    this._resetCompound(['amountError', 'frequencyError']);
+  }
 }
 
 declare global {

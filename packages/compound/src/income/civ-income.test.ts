@@ -185,4 +185,19 @@ describe('civ-income', () => {
     await elementUpdated(el);
     expect((el.querySelector('civ-select') as any).options.length).toBe(2);
   });
+
+  it('formResetCallback restores _data and clears sub-field errors', async () => {
+    const el = await fixture<CivIncome>('<civ-income legend="Wages" name="wages"></civ-income>');
+    el.incomeValue = { amount: '5000', frequency: 'monthly' };
+    el.amountError = 'too high';
+    el.frequencyError = 'pick one';
+    await elementUpdated(el);
+
+    el.formResetCallback();
+    await elementUpdated(el);
+
+    expect(el.incomeValue).toEqual({ amount: '', frequency: '' });
+    expect(el.amountError).toBe('');
+    expect(el.frequencyError).toBe('');
+  });
 });

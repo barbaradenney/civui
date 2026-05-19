@@ -12,23 +12,29 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// All three stories read `open` directly from the action-sheet element
+// rather than holding it in a render-time closure. The closure pattern
+// silently desyncs the moment the sheet closes via Escape, backdrop tap,
+// or its own close button — the parent's `open` variable still reads
+// `true`, so the next toggle click flips it to `false` and the sheet
+// stays shut. Mirrors the pattern in civ-modal.stories.ts.
+
 export const Default: Story = {
   render: () => {
-    let open = false;
     const toggle = (e: Event) => {
-      open = !open;
-      const sheet = (e.target as HTMLElement).closest('.action-sheet-demo')?.querySelector('civ-action-sheet') as any;
-      if (sheet) sheet.open = open;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = !sheet.open;
     };
     const close = (e: Event) => {
-      open = false;
-      const sheet = (e.target as HTMLElement) as any;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
       sheet.open = false;
     };
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open action sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Choose an option" @civ-action-sheet-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm">Choose an option</p>
             <ul class="civ-list-none civ-p-0 civ-m-0">
@@ -46,21 +52,20 @@ export const Default: Story = {
 export const WithMaxHeight: Story = {
   name: 'Custom Max Height',
   render: () => {
-    let open = false;
     const toggle = (e: Event) => {
-      open = !open;
-      const sheet = (e.target as HTMLElement).closest('.action-sheet-demo')?.querySelector('civ-action-sheet') as any;
-      if (sheet) sheet.open = open;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = !sheet.open;
     };
     const close = (e: Event) => {
-      open = false;
-      const sheet = (e.target as HTMLElement) as any;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
       sheet.open = false;
     };
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open tall sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet max-height="70vh" @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Long list" max-height="70vh" @civ-action-sheet-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm">Long list</p>
             <ul class="civ-list-none civ-p-0 civ-m-0">
@@ -78,26 +83,23 @@ export const WithMaxHeight: Story = {
 export const WithFocusTrap: Story = {
   name: 'With Focus Trap',
   render: () => {
-    let open = false;
-    const findSheet = (e: Event) =>
-      (e.target as HTMLElement).closest('.action-sheet-demo')?.querySelector('civ-action-sheet') as any;
     const toggle = (e: Event) => {
-      open = !open;
-      const sheet = findSheet(e);
-      if (sheet) sheet.open = open;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = !sheet.open;
     };
     const close = (e: Event) => {
-      open = false;
-      const sheet = findSheet(e);
-      if (sheet) sheet.open = false;
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = false;
     };
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open modal sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet trap-focus @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Confirm action" trap-focus @civ-action-sheet-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm civ-mb-4">Confirm action</p>
-            <p class="civ-text-body civ-mb-4">Are you sure you want to delete this item?</p>
+            <p class="civ-mb-4">Are you sure you want to delete this item?</p>
             <div class="civ-button-row">
               <civ-button variant="secondary" label="Cancel" @click="${close}"></civ-button>
               <civ-button danger label="Delete" @click="${close}"></civ-button>

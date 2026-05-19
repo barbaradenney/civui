@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, isSafeHref } from '@civui/core';
+import { customElement, property } from 'lit/decorators.js';
+import { CivBaseElement, LightDomTextMixin, isSafeHref } from '@civui/core';
 
 /**
  * CivUI Menu Item
@@ -35,7 +35,7 @@ import { CivBaseElement, isSafeHref } from '@civui/core';
  * ```
  */
 @customElement('civ-menu-item')
-export class CivMenuItem extends CivBaseElement {
+export class CivMenuItem extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) destructive = false;
@@ -43,17 +43,11 @@ export class CivMenuItem extends CivBaseElement {
   @property({ type: String }) value = '';
   @property({ type: String }) icon = '';
 
-  @state() private _capturedText = '';
-
   override connectedCallback(): void {
-    // Capture authored text content BEFORE Lit's first render replaces
-    // the host's children. Light DOM means render() output overwrites
-    // the host's children, so any consumer-provided text would otherwise
-    // be lost.
-    if (!this._capturedText) {
-      const text = this.textContent?.trim() ?? '';
-      if (text) this._capturedText = text;
-    }
+    // LightDomTextMixin captures authored text content into `_initialText`
+    // AND clears it from the host before Lit's first render. Without the
+    // clear, the original text would sit alongside Lit's rendered button,
+    // duplicating the label visually ("Edit Edit" in each menu item).
     super.connectedCallback();
     this.setAttribute('role', 'menuitem');
     if (!this.hasAttribute('tabindex')) {
@@ -79,7 +73,7 @@ export class CivMenuItem extends CivBaseElement {
   }
 
   private get _displayLabel(): string {
-    return this.label || this._capturedText;
+    return this.label || this._initialText;
   }
 
   override render() {

@@ -158,6 +158,31 @@ export const FiveOptions: Story = {
   `,
 };
 
+// ── Mobile ────────────────────────────────────────────────────
+
+export const Mobile: Story = {
+  name: 'Mobile (full-width)',
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  render: () => html`
+    <p class="civ-mb-4 civ-text-sm">
+      Below 481px viewports, <code>civ-segmented-control</code> expands to fill its row
+      and the segments split the width evenly. Matches the design-system rule that
+      flips primary buttons (<code>.civ-btn</code>) and form sub-fields
+      (<code>civ-memorable-date</code>, <code>civ-time-picker</code> hour/minute) to
+      full width on narrow viewports — a full-width tap target with equal-size segments
+      is more accessible than the desktop "natural width" layout pinned to the start
+      of the row.
+    </p>
+    <civ-segmented-control legend="Report period" required name="period" value="quarterly">
+      <civ-segment label="Monthly" value="monthly"></civ-segment>
+      <civ-segment label="Quarterly" value="quarterly"></civ-segment>
+      <civ-segment label="Annual" value="annual"></civ-segment>
+    </civ-segmented-control>
+  `,
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentReportFilter: Story = {

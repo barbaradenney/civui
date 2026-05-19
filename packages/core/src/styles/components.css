@@ -435,41 +435,12 @@
     }
 
     /*
-     * Stretch the AM/PM segmented control to fill the full-width
-     * row, then split the two segments 50/50. The full chain has to
-     * be 100%-wide: host (civ-segmented-control) → its fieldset →
-     * the inner radiogroup div. Setting only the host or only the
-     * inner div leaves the fieldset between them sized to its
-     * content, which collapses the radiogroup back to the two
-     * buttons' natural width.
+     * AM/PM segmented control fills the full-width row underneath
+     * hour/minute. The full-width + equal-segment chain now lives
+     * on `civ-segmented-control` generically (see the rule next to
+     * .civ-segment-btn), so this block only owns the time-picker
+     * row composition (50/50 hour/minute, period below).
      */
-    .civ-time-picker-period civ-segmented-control,
-    .civ-time-picker-period civ-segmented-control fieldset,
-    .civ-time-picker-period [data-civ-segment-content] {
-      width: 100%;
-    }
-
-    .civ-time-picker-period [data-civ-segment-content] {
-      display: flex;
-    }
-
-    /*
-     * The flex children of [data-civ-segment-content] are the
-     * <civ-segment> custom elements, NOT the inner buttons — so
-     * `flex: 1` has to live on civ-segment to make each segment
-     * grow. The inner .civ-segment-btn is then stretched to 100%
-     * of its segment so the tap target fills the row width.
-     * Default `display: inline-block` on civ-segment is overridden
-     * here so width: 100% / flex: 1 work as expected.
-     */
-    .civ-time-picker-period civ-segment {
-      flex: 1;
-      display: block;
-    }
-
-    .civ-time-picker-period .civ-segment-btn {
-      width: 100%;
-    }
   }
 
   /* Fieldset header spacing — mirrors .civ-form-header for consistency */
@@ -1591,6 +1562,42 @@
   civ-segment[data-civ-segment-position="middle"] > .civ-segment-btn,
   civ-segment[data-civ-segment-position="last"] > .civ-segment-btn {
     @apply civ-border-s-0;
+  }
+
+  /*
+   * Mobile (≤480px) — segmented control expands to full width with each
+   * segment splitting the row evenly. Matches the design-system rule
+   * applied to primary buttons (`.civ-btn` flips to `width: 100%` on
+   * mobile) and to other form sub-fields (memorable-date, time-picker
+   * hour/minute, address line 2): on a narrow viewport, a full-width
+   * tap target with equal-size segments is more accessible than the
+   * desktop "natural width" layout pinned to the start of the row.
+   *
+   * The full chain needs to be 100%-wide: host
+   * (civ-segmented-control) → its <fieldset> → the inner radiogroup
+   * div. Setting only the host or only the inner div leaves the
+   * fieldset between them sized to its content, which collapses the
+   * radiogroup back to the segments' natural width. The radiogroup
+   * switches from inline-flex to flex so each civ-segment (flex: 1)
+   * grows equally; the inner .civ-segment-btn stretches to 100% of
+   * its segment so the tap target fills the row width.
+   */
+  @media (max-width: 480px) {
+    civ-segmented-control,
+    civ-segmented-control > .civ-fieldset,
+    civ-segmented-control [data-civ-segment-content] {
+      width: 100%;
+    }
+    civ-segmented-control [data-civ-segment-content] {
+      display: flex;
+    }
+    civ-segmented-control civ-segment {
+      flex: 1;
+      display: block;
+    }
+    civ-segmented-control .civ-segment-btn {
+      width: 100%;
+    }
   }
 
   /* Dropzone states */

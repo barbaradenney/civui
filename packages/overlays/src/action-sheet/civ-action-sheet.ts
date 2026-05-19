@@ -42,6 +42,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   private _clickOutside = clickOutside(this, () => this._requestClose());
   private _cleanupTrap: (() => void) | null = null;
   private _boundOnKeydown = this._onKeydown.bind(this);
+  private _previouslyFocused: Element | null = null;
 
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-action-sheet-content]' };
@@ -96,28 +97,60 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private async _onOpen(): Promise<void> {
+    this._previouslyFocused = document.activeElement;
+
     if (!this.noClickOutside) {
       this._clickOutside.add();
     }
     document.addEventListener('keydown', this._boundOnKeydown);
 
-    if (this.trapFocus) {
-      try {
-        await this.updateComplete;
+    try {
+      await this.updateComplete;
+
+      // Move focus into the sheet. Prefer the first focusable in the
+      // content slot (the consumer's interactive UI); fall back to the
+      // close button as a guaranteed focus target. Without this,
+      // keyboard users land nowhere when the sheet opens and have to
+      // Tab manually to reach the content. Uses a direct selector
+      // rather than the core getFocusableElements helper so the
+      // visibility check (which relies on offsetParent / computed
+      // style) doesn't reject elements in jsdom or in the brief
+      // moment after the sheet renders but before display:block lays
+      // out the dimensions.
+      const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const content = this.querySelector('[data-civ-action-sheet-content]');
+      const first = content?.querySelector<HTMLElement>(focusSelector);
+      if (first) {
+        first.focus();
+      } else {
+        const closeBtn = this.querySelector('.civ-close-btn') as HTMLElement | null;
+        closeBtn?.focus();
+      }
+
+      if (this.trapFocus) {
         const container = this.querySelector('[data-civ-action-sheet-content]');
         if (container instanceof HTMLElement) {
           this._cleanupTrap = runTrapFocus(container);
         }
-      } catch (err) {
-        // Surface focus-trap setup failure (e.g. no focusable children)
-        // rather than swallowing it as an unobserved promise rejection.
-        console.error('civ-action-sheet: failed to install focus trap', err);
       }
+    } catch (err) {
+      console.error('civ-action-sheet: failed to open', err);
     }
   }
 
   private _onClose(): void {
     this._teardown();
+
+    // Return focus to the element that opened the sheet so keyboard
+    // users don't get dumped at <body>. requestAnimationFrame defers
+    // until after the close render has flushed.
+    if (this._previouslyFocused instanceof HTMLElement) {
+      const target = this._previouslyFocused;
+      requestAnimationFrame(() => {
+        target?.focus();
+      });
+      this._previouslyFocused = null;
+    }
   }
 
   private _teardown(): void {

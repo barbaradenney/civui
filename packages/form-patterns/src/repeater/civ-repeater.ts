@@ -621,6 +621,23 @@ export class CivRepeater extends CivBaseElement {
     this._rowCount++;
     dispatch(this, 'civ-repeater-add', { index });
     announce(interpolate(t('repeaterItemAdded'), { item: this.itemLabel, index: String(index + 1) }));
+
+    // Move focus into the new row's first focusable so keyboard users
+    // (and AT) land where the new content is. Without this, focus
+    // stays on the "Add another" button and they have to Tab back up
+    // through the form to find the new fields. Mirrors the focus
+    // restoration in removeRow().
+    requestAnimationFrame(() => {
+      const container = this.querySelector('[data-civ-repeater-rows]');
+      const rows = container?.querySelectorAll(':scope > [data-civ-repeater-row]');
+      const newRow = rows?.[index];
+      if (newRow) {
+        const focusTarget = newRow.querySelector<HTMLElement>(
+          'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+        );
+        focusTarget?.focus();
+      }
+    });
   }
 
   private _appendRow(index: number): void {

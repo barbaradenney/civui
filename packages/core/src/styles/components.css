@@ -4150,6 +4150,18 @@
     box-shadow: none;
   }
 
+  /* Remove (X) button focus — can't reuse the chip-wrapper outline trick
+     above (which highlights the whole chip) because that would erase the
+     distinction between "Tab landed on the chip body" and "Tab landed on
+     the X to remove this filter". Drop the chip's overflow:hidden when
+     the remove button is focused so its natural focus ring renders
+     normally. The chip's content doesn't actually overflow the rounded
+     corners on its own — overflow:hidden was a defensive default — so
+     toggling it off momentarily for focus is visually safe. */
+  .civ-filter-chip:has(.civ-filter-chip__remove:focus) {
+    overflow: visible;
+  }
+
   .civ-filter-chip__action:disabled {
     cursor: not-allowed;
   }

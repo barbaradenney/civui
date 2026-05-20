@@ -73,7 +73,7 @@ export class CivDataField extends CivBaseElement {
                 href="${this.editHref}"
                 label="${editText}"
                 aria-label="${editText} ${displayLabel}"
-                variant="tertiary"
+                variant="secondary"
                 class="civ-data-field__edit"
               ></civ-link>`
             : nothing}

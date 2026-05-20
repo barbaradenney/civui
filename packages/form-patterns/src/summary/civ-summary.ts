@@ -142,7 +142,7 @@ export class CivSummary extends CivBaseElement {
             ${showHeaderEdit ? html`
               <civ-link
                 href="${sectionEditHref}"
-                variant="tertiary"
+                variant="secondary"
                 label="${sectionEditLabel}"
                 aria-label="${interpolate(t('summaryEditAriaLabel'), { section: section.heading })}"
                 data-civ-summary-section-index="${sectionIndex}"

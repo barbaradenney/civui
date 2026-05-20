@@ -375,6 +375,13 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
         return;
       }
 
+      // Skip fields hidden inside a civ-conditional. The user can't see
+      // them and shouldn't be blocked by required-validation errors on
+      // a branch that isn't visible. Mirrors civ-form's validate().
+      if (el.closest('[data-civ-conditional-content][aria-hidden="true"]')) {
+        return;
+      }
+
       // Check required fields for empty values
       if (el.hasAttribute('required')) {
         const value = el.value || el.getAttribute('value') || '';

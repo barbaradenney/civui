@@ -180,6 +180,32 @@ describe('civ-form-step', () => {
     expect((el as CivFormStep).current).toBe(0);
   });
 
+  it('skips required fields hidden inside a closed civ-conditional', async () => {
+    // The user can't see hidden-branch fields and shouldn't be blocked
+    // by them when advancing the step.
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <civ-yes-no legend="Have a phone?" name="hasPhone" value="no"></civ-yes-no>
+          <div data-civ-conditional-content aria-hidden="true">
+            <civ-text-input label="Phone" name="phone" required></civ-text-input>
+          </div>
+        </div>
+        <div data-step-label="Done">
+          <p>Done</p>
+        </div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
+    await elementUpdated(el);
+
+    // Hidden required field should not block advance.
+    expect((el as CivFormStep).current).toBe(1);
+  });
+
   it('uses Light DOM', async () => {
     const el = await fixture<CivFormStep>(threeSteps);
     expect(el.shadowRoot).toBeNull();

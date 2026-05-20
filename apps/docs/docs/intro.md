@@ -4,35 +4,41 @@ sidebar_position: 1
 title: Introduction
 ---
 
-# CivUI Design System
+# CivUI Component Library
 
 Accessibility-first web components for government applications. Built on Lit 3, Tailwind CSS, and W3C design tokens.
 
 ## Key Features
 
-- **76 Components** — form inputs, selection controls, layout, navigation, overlays, feedback, and compound fields, every one covered by a platform-neutral schema and CI-enforced parity check
+- **Components** — form inputs, selection controls, layout, navigation, overlays, feedback, and compound fields, every one covered by a platform-neutral schema and CI-enforced parity check
 - **WCAG 2.1 AA** — every component tested for accessibility compliance (satisfies Section 508)
-- **80 MCP Tools** — AI-powered form generation, validation, and testing via the bundled MCP server
-- **20 VA Forms** — complete form definitions ready to generate
-- **4 Platforms** — Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (74 SDCs for Drupal 10.3+/11)
+- **MCP server** — AI-powered form generation, validation, and testing via the bundled MCP server
+- **VA forms** — complete form definitions ready to generate
+- **Multi-platform** — Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (SDCs for Drupal 10.3+/11)
 - **Dark Mode** — automatic system preference detection with token-based colors
 - **Density Scale** — dense, default, and spacious modes via CSS custom properties
 - **Light DOM** — no Shadow DOM, external labels and ARIA work naturally
-- **SVG Icons** — 20 inline Material Icons, no fonts or external requests (Material Symbols font available as opt-in)
+- **Inline SVG icons** — Material Icons baked in, no fonts or external requests (Material Symbols font available as opt-in)
 - **Mobile-first** — popups become bottom sheets ≤480px, primary buttons go full-width, segmented controls expand to fill the row, hover styling gated to real pointer devices
 
 ## Quick Start
 
+Install the packages you need:
+
 ```bash
-npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns @civui/actions
+npm install @civui/tokens @civui/core @civui/inputs @civui/actions
 ```
 
+Import the stylesheet **and** the component modules:
+
 ```html
+<!-- Design tokens (CSS custom properties) -->
+<link rel="stylesheet" href="/node_modules/@civui/tokens/dist/css/tokens.css" />
+
+<!-- Component styles + element registration -->
 <script type="module">
+  import '@civui/core/styles';
   import '@civui/inputs';
-  import '@civui/controls';
-  import '@civui/compound';
-  import '@civui/form-patterns';
   import '@civui/actions';
 </script>
 
@@ -42,7 +48,20 @@ npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns @
   type="email"
   required
 ></civ-text-input>
+
+<civ-button label="Continue" variant="primary"></civ-button>
 ```
+
+In a bundler (Vite, Webpack, Next.js, etc.) the imports look the same and the
+tokens stylesheet can be imported via CSS:
+
+```css
+@import '@civui/tokens/css';
+```
+
+Skipping the stylesheet imports is the most common cause of unstyled components —
+the JS modules register custom elements, but the visual treatment comes from the
+two CSS imports above.
 
 ## Packages
 
@@ -59,10 +78,10 @@ npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns @
 | `@civui/compound` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |
 | `@civui/form-patterns` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
 | `@civui/feedback` | Feedback components (alert, badge, count) |
-| `@civui/drupal` | Drupal SDC module — 74 Single Directory Components for Drupal 10.3+/11 |
-| `@civui/cli` | CLI tooling (`civui generate component <name>` scaffolds across all 4 platforms) |
+| `@civui/drupal` | Drupal SDC module — Single Directory Components for Drupal 10.3+/11 |
+| `@civui/cli` | CLI tooling (`civui generate component <name>` scaffolds across all platforms) |
 | `@civui/content` | Content / copy management |
-| `@civui/mcp-server` | 80-tool MCP server for AI-assisted form generation |
+| `@civui/mcp-server` | MCP server for AI-assisted form generation |
 
 ## Design Philosophy
 
@@ -72,11 +91,3 @@ npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns @
 - **Border radius signals interactivity** — only clickable elements get rounded corners
 - **Underlines signal navigation** — links are underlined, action buttons are not
 - **Every byte is earned** — Lit is the only runtime dependency
-
-## Recent additions
-
-- **Navigation components** — `civ-breadcrumb`, `civ-nav`, and a full ARIA tabs pattern (`civ-tabs` / `civ-tab` / `civ-tab-panel`) with roving tabindex and arrow-key navigation.
-- **Admin data-grid** — `civ-data-grid` (semantic table with sort, selection, row-action menus, responsive stacked / scroll, empty + loading + error states), `civ-pagination` (USWDS-style), `civ-menu` + `civ-menu-item` (anchored kebab menu).
-- **Spacing scale `sm`** — compact 20-px form controls (`spacing="sm"`) for dense surfaces like data-grid cell editors and column-visibility panels.
-- **Password reveal toggle** — `reveal-password` prop on `civ-text-input` (`type="password"`) renders an inset show/hide affordance.
-- **Mobile focus + touch hardening** — iOS Safari focus ring on checkbox/radio tap, segmented control expands to full width, sticky-hover gated to real pointer devices, 44×44 minimum tap targets on input action buttons.

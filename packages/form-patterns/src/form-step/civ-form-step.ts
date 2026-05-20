@@ -218,7 +218,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
           ${this._shouldShowPause
             ? html`
                 <civ-link
-                  variant="tertiary"
+                  variant="secondary"
                   label="${this.pauseLabel || t('formStepPauseLabel')}"
                   data-civ-step-pause
                   @click="${this._onPause}"

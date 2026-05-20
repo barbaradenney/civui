@@ -103,3 +103,18 @@ Renders as a fixed bottom sheet:
 ## Design principle
 
 All popups, dropdowns, and dialogs in CivUI must use bottom sheets on mobile. The action sheet component enforces this automatically. Components that currently implement their own popup CSS (date picker, combobox) follow the same pattern.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/action-sheet/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:action-sheet' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`action-sheet.component.yml`](pathname:///civui/storybook/?path=/story/overlays-action-sheet-drupal-sdc--default) and the template in [`action-sheet.twig`](pathname:///civui/storybook/?path=/story/overlays-action-sheet-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="overlays-action-sheet-drupal-sdc--default" />
+

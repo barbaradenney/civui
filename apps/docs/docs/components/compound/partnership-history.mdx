@@ -129,3 +129,18 @@ between them by listening for `civ-input` on the wrapping repeater
 and copying the source's `marriageValue` to its peers. The
 [Storybook example](pathname:///civui/storybook/?path=/story/forms-compound-partnership-history--in-repeater)
 shows the listener in full.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/partnership-history/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:partnership-history' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`partnership-history.component.yml`](pathname:///civui/storybook/?path=/story/forms-compound-partnership-history-drupal-sdc--default) and the template in [`partnership-history.twig`](pathname:///civui/storybook/?path=/story/forms-compound-partnership-history-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-compound-partnership-history-drupal-sdc--default" />
+

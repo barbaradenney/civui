@@ -174,3 +174,18 @@ See the [Task List Hub pattern](/form-patterns/task-list-hub) for a full multi-c
 - Static rows render as a plain row with no anchor. Same visual rhythm, honest semantics — assistive tech doesn't announce them as links.
 - `<civ-list>` adds `role="list"` on its `<ul>` and `<civ-list-item>` carries `role="listitem"` on the host. The custom element doesn't render its own `<li>` (that would break the HTML spec, which requires `<li>` to be a direct child of `<ul>`/`<ol>`), but the accessibility tree still sees a proper list-item child via the role.
 - `current` on `<civ-list-item>` sets `aria-current="page"` for navigation patterns.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/list/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:list' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`list.component.yml`](pathname:///civui/storybook/?path=/story/layout-list-drupal-sdc--default) and the template in [`list.twig`](pathname:///civui/storybook/?path=/story/layout-list-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-list-drupal-sdc--default" />
+

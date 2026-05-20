@@ -112,3 +112,18 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
 <civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
 <civ-tag label="Archived" variant="gray"></civ-tag>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/tag/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:tag' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`tag.component.yml`](pathname:///civui/storybook/?path=/story/layout-tag-drupal-sdc--default) and the template in [`tag.twig`](pathname:///civui/storybook/?path=/story/layout-tag-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-tag-drupal-sdc--default" />
+

@@ -233,3 +233,18 @@ Use `mode="single"` with compact `spacing="sm"` chips to show available appointm
 ```
 
 Use `chip-style="primary"` for stronger visual emphasis on the selected time slot.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/filter-chip/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:filter-chip' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`filter-chip.component.yml`](pathname:///civui/storybook/?path=/story/actions-filter-chip-drupal-sdc--default) and the template in [`filter-chip.twig`](pathname:///civui/storybook/?path=/story/actions-filter-chip-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="actions-filter-chip-drupal-sdc--default" />
+

@@ -119,3 +119,18 @@ interface SummaryItem {
   ];
 </script>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/summary/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:summary' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`summary.component.yml`](pathname:///civui/storybook/?path=/story/forms-form-summary-drupal-sdc--default) and the template in [`summary.twig`](pathname:///civui/storybook/?path=/story/forms-form-summary-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-form-summary-drupal-sdc--default" />
+

@@ -90,3 +90,18 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
   </div>
 </civ-modal>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/modal/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:modal' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`modal.component.yml`](pathname:///civui/storybook/?path=/story/overlays-modal-drupal-sdc--default) and the template in [`modal.twig`](pathname:///civui/storybook/?path=/story/overlays-modal-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="overlays-modal-drupal-sdc--default" />
+

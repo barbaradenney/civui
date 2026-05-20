@@ -148,3 +148,18 @@ Use `hide-name` when the name is captured in a separate component:
 ```
 
 **Heads up: `show-name="false"` does NOT work.** HTML boolean attributes are truthy whenever present, so `show-name="false"` still reads as `true`. Use `hide-name` (no value) to disable from HTML, or bind the property directly in lit-html: `.showName=${false}`.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/relationship/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:relationship' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`relationship.component.yml`](pathname:///civui/storybook/?path=/story/forms-compound-relationship-drupal-sdc--default) and the template in [`relationship.twig`](pathname:///civui/storybook/?path=/story/forms-compound-relationship-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-compound-relationship-drupal-sdc--default" />
+

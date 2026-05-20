@@ -163,3 +163,18 @@ A structured container with header, body, and footer slot areas. The card provid
   </details>
 </civ-card>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/card/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:card' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`card.component.yml`](pathname:///civui/storybook/?path=/story/layout-card-drupal-sdc--default) and the template in [`card.twig`](pathname:///civui/storybook/?path=/story/layout-card-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-card-drupal-sdc--default" />
+

@@ -67,3 +67,18 @@ Displays an uploaded or referenced image at a readable size with optional filena
 - Renders as a `<figure>` with an `<img>` and optional `<figcaption>`.
 - The `alt` prop is required and should describe the image content meaningfully.
 - Images use `loading="lazy"` for performance.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/image-preview/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:image-preview' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`image-preview.component.yml`](pathname:///civui/storybook/?path=/story/layout-image-preview-drupal-sdc--default) and the template in [`image-preview.twig`](pathname:///civui/storybook/?path=/story/layout-image-preview-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-image-preview-drupal-sdc--default" />
+

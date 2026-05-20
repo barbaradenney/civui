@@ -238,3 +238,18 @@ forms), use [`<civ-form-autosave>`](./form-autosave.mdx) as a child of
 `civ-form`. The autosave element persists in-progress answers to
 `localStorage` / `sessionStorage` / a custom adapter and restores them on
 the next page load — automatically excluding PII-flagged fields.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/form/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:form' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`form.component.yml`](pathname:///civui/storybook/?path=/story/forms-form-form-drupal-sdc--default) and the template in [`form.twig`](pathname:///civui/storybook/?path=/story/forms-form-form-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-form-form-drupal-sdc--default" />
+

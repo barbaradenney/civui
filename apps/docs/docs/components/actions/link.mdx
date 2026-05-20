@@ -138,4 +138,17 @@ Use `<civ-link new-tab>` to open links in a new tab. This automatically sets `ta
 ></civ-link>
 ```
 
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/link/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:link' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`link.component.yml`](pathname:///civui/storybook/?path=/story/navigation-link-drupal-sdc--default) and the template in [`link.twig`](pathname:///civui/storybook/?path=/story/navigation-link-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="navigation-link-drupal-sdc--default" />
 

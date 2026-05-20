@@ -107,3 +107,18 @@ Children without a data attribute are placed in the heading area by default.
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/page-header/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:page-header' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`page-header.component.yml`](pathname:///civui/storybook/?path=/story/layout-page-header-drupal-sdc--default) and the template in [`page-header.twig`](pathname:///civui/storybook/?path=/story/layout-page-header-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-page-header-drupal-sdc--default" />
+

@@ -80,3 +80,18 @@ Stack buttons vertically when horizontal space is limited or the group represent
   <civ-action-button label="Option 3"></civ-action-button>
 </civ-button-group>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/button-group/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:button-group' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`button-group.component.yml`](pathname:///civui/storybook/?path=/story/layout-button-group-drupal-sdc--default) and the template in [`button-group.twig`](pathname:///civui/storybook/?path=/story/layout-button-group-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-button-group-drupal-sdc--default" />
+

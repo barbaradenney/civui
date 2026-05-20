@@ -241,3 +241,18 @@ All preset data is sourced from federal standards and regulations. Each preset i
 <!-- Using a preset -->
 <civ-select label="State" name="state" preset="us-state" required></civ-select>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/select/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:select' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`select.component.yml`](pathname:///civui/storybook/?path=/story/forms-inputs-select-drupal-sdc--default) and the template in [`select.twig`](pathname:///civui/storybook/?path=/story/forms-inputs-select-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-inputs-select-drupal-sdc--default" />
+

@@ -86,6 +86,12 @@ export const icons: Record<string, IconDef> = {
     ios: 'ellipsis',
     android: 'more_vert',
   },
+  'more-horiz': {
+    label: 'More actions',
+    path: 'M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
+    ios: 'ellipsis',
+    android: 'more_horiz',
+  },
   'unfold-more': {
     label: 'Sort',
     path: 'M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z',

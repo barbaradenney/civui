@@ -106,3 +106,18 @@ and the same value round-trips back into the input cleanly.
   </civ-fieldset>
 </civ-form>
 ```
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/text-input/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:text-input' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`text-input.component.yml`](pathname:///civui/storybook/?path=/story/forms-inputs-text-input-drupal-sdc--default) and the template in [`text-input.twig`](pathname:///civui/storybook/?path=/story/forms-inputs-text-input-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-inputs-text-input-drupal-sdc--default" />
+

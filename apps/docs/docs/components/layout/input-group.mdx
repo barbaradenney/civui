@@ -89,3 +89,18 @@ Buttons on both sides for increment/decrement controls.
 - **Standalone inputs** — if the input doesn't need an attached button, don't wrap it
 - **Multiple inputs** — input group is for one input with button(s), not for grouping multiple inputs together
 - **Decorative icons** — use the `icon-start` or `icon-end` props on the input itself instead
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/input-group/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:input-group' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`input-group.component.yml`](pathname:///civui/storybook/?path=/story/layout-input-group-drupal-sdc--default) and the template in [`input-group.twig`](pathname:///civui/storybook/?path=/story/layout-input-group-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="layout-input-group-drupal-sdc--default" />
+

@@ -96,7 +96,8 @@ async function collectKnownStories(): Promise<KnownStory[]> {
   const storyFiles = await walk(PACKAGES_DIR, '.stories.ts');
   const known: KnownStory[] = [];
   for (const file of storyFiles) {
-    if (file.includes('.drupal.stories.ts')) continue;
+    // .drupal.stories.ts files were previously excluded here; they're now
+    // included so the "Drupal SDC" section in component docs validates.
     const src = await fs.readFile(file, 'utf8');
     const titleMatch = META_TITLE_RE.exec(src);
     if (!titleMatch) continue;

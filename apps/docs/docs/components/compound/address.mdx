@@ -153,3 +153,18 @@ Fields automatically set appropriate `autocomplete` values:
 ## Related patterns
 
 - [Housing](/form-patterns/housing) — patterns for collecting addresses from people who may not have permanent housing, using address variants and composed components
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/address/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:address' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`address.component.yml`](pathname:///civui/storybook/?path=/story/forms-compound-address-drupal-sdc--default) and the template in [`address.twig`](pathname:///civui/storybook/?path=/story/forms-compound-address-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="forms-compound-address-drupal-sdc--default" />
+

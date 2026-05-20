@@ -101,3 +101,18 @@ Absolute-positioned over a relative parent. Pair with [`civ-badge-anchor`](./bad
 | Static status pill ("Approved") | [`civ-badge`](./badge) |
 | Notification dot (no number) | [`civ-badge`](./badge) with `dot` |
 | Categorization label | [`civ-tag`](../layout/tag) |
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/count/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:count' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`count.component.yml`](pathname:///civui/storybook/?path=/story/feedback-count-drupal-sdc--default) and the template in [`count.twig`](pathname:///civui/storybook/?path=/story/feedback-count-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="feedback-count-drupal-sdc--default" />
+

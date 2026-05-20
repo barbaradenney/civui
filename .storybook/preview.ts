@@ -2,6 +2,25 @@ import type { Preview } from '@storybook/web-components-vite';
 import '@civui/tokens/css';
 import '../packages/core/src/styles/civ.css';
 
+// Side-effect imports register every CivUI custom element globally for
+// all stories. Without these, Drupal-SDC stories — which render a Twig
+// template that emits `<civ-*>` markup but don't import the matching
+// `civ-*.ts` themselves — would show inert HTMLUnknownElements unless
+// the user happened to visit a regular component story first. Web
+// stories that re-import these packages get them for free; importing
+// from the barrel just no-ops on the second hit. The cost is a single
+// dev-time bundle that registers every element once on Storybook boot.
+import '@civui/core';
+import '@civui/actions';
+import '@civui/controls';
+import '@civui/feedback';
+import '@civui/layout';
+import '@civui/overlays';
+import '@civui/inputs';
+import '@civui/compound';
+import '@civui/form-patterns';
+import '@civui/data';
+
 /** Detect system color scheme preference. */
 function getSystemTheme(): 'light' | 'dark' {
   if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {

@@ -60,3 +60,18 @@ A visually hidden link that becomes visible on focus, allowing keyboard users to
 - When focused, it appears at the top of the viewport with high contrast.
 - After activation, focus moves to the target element.
 - Every government website must include a skip link per Section 508 / WCAG 2.4.1.
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/skip-link/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:skip-link' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`skip-link.component.yml`](pathname:///civui/storybook/?path=/story/navigation-skip-link-drupal-sdc--default) and the template in [`skip-link.twig`](pathname:///civui/storybook/?path=/story/navigation-skip-link-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="navigation-skip-link-drupal-sdc--default" />
+

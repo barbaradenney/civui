@@ -111,3 +111,18 @@ The `civ-badge-anchor` utility class sets `position: relative; display: inline-b
 | Notification count over an icon | [`civ-count`](./count) (with `overlay`) |
 | Categorization ("Healthcare", "Disability") | [`civ-tag`](../layout/tag) |
 | Interactive filter chip | [`civ-filter-chip`](../actions/filter-chip) |
+
+## Drupal SDC
+
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/badge/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+
+```twig
+{% include 'civui:badge' with {
+  // props mirror the Component-Specific Props table above
+} only %}
+```
+
+The component schema lives in [`badge.component.yml`](pathname:///civui/storybook/?path=/story/feedback-badge-drupal-sdc--default) and the template in [`badge.twig`](pathname:///civui/storybook/?path=/story/feedback-badge-drupal-sdc--default). The story below renders the SDC through Storybook's Twig plugin so you can see the exact output:
+
+<StoryEmbed id="feedback-badge-drupal-sdc--default" />
+

@@ -3061,6 +3061,28 @@
     @apply civ-inline-flex;
   }
 
+  /* Overflowed children stay in the DOM (so author-attached event
+     listeners keep firing when the overflow-panel proxy synthesizes
+     a click) but visually hide. `display: none` removes them from
+     the accessibility tree too, so AT only sees the More-button
+     trigger and the buttons inside the popover panel. */
+  .civ-button-group [data-civ-overflow],
+  .civ-button-group--vertical [data-civ-overflow] {
+    display: none;
+  }
+
+  /* Overflow panel — list of proxy buttons stacked vertically inside
+     the popover. Use full-width tertiary buttons (left-aligned label)
+     so each row is one tap target end-to-end, matching the bottom-
+     sheet idiom on mobile. */
+  .civ-button-group__overflow-panel {
+    @apply civ-flex civ-flex-col;
+    min-width: 12rem;
+  }
+  .civ-button-group__overflow-panel .civ-btn {
+    @apply civ-w-full civ-justify-start;
+  }
+
   /* Same focus-clip fix as .civ-segment-btn (see comment there) —
      toolbar buttons share borders along their flush edges, so the
      focused member needs to stack above its neighbors for the focus

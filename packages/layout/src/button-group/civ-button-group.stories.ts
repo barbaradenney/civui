@@ -70,3 +70,40 @@ export const AllVariants: Story = {
     </div>
   `,
 };
+
+export const WithOverflow: Story = {
+  name: 'With overflow',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When the toolbar is narrower than the sum of its buttons, trailing buttons collapse into a "More" popover (composed from `civ-popover`). The hidden originals stay in the DOM so author-attached click handlers fire when the proxy is clicked. Resize the container to see overflow re-pack live.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 280px; border: 1px dashed var(--civ-color-base-light); padding: 8px;">
+      <civ-button-group label="Row actions" allow-overflow>
+        <civ-action-button label="Edit" icon-start="edit"></civ-action-button>
+        <civ-action-button label="Duplicate" icon-start="content-copy"></civ-action-button>
+        <civ-action-button label="Move" icon-start="open-with"></civ-action-button>
+        <civ-action-button label="Archive" icon-start="archive"></civ-action-button>
+        <civ-action-button label="Remove" icon-start="delete"></civ-action-button>
+      </civ-button-group>
+    </div>
+  `,
+};
+
+export const WithOverflowAndDisabled: Story = {
+  name: 'Overflow respects disabled state',
+  render: () => html`
+    <div style="max-width: 280px; border: 1px dashed var(--civ-color-base-light); padding: 8px;">
+      <civ-button-group label="Row actions" allow-overflow>
+        <civ-action-button label="Edit" icon-start="edit"></civ-action-button>
+        <civ-action-button label="Duplicate" icon-start="content-copy"></civ-action-button>
+        <civ-action-button label="Archive" icon-start="archive" disabled></civ-action-button>
+        <civ-action-button label="Remove" icon-start="delete"></civ-action-button>
+      </civ-button-group>
+    </div>
+  `,
+};

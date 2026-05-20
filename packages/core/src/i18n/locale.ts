@@ -53,6 +53,11 @@ export interface CivLocaleStrings {
   // does not provide one. Announced by AT as the menu name.
   menuLabel: string;
 
+  // Button group overflow — label on the "More" trigger that opens the
+  // overflow popover when a civ-button-group with `allow-overflow`
+  // collapses trailing buttons.
+  buttonGroupOverflowLabel: string;
+
   // Pagination — labels for civ-pagination controls. Use {start}, {end},
   // {total}, {page}, {pageCount}, {size} interpolation tokens.
   paginationLabel: string;       // "Pagination"
@@ -788,6 +793,8 @@ const defaultStrings: CivLocaleStrings = {
   actionSheetLabel: 'Action sheet',
 
   menuLabel: 'Menu',
+
+  buttonGroupOverflowLabel: 'More',
 
   paginationLabel: 'Pagination',
   paginationPreviousLabel: 'Previous',

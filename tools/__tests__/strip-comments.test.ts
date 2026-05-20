@@ -1,22 +1,19 @@
 /**
- * Tests for tools/lint-hardcoded-tokens.ts — specifically the
- * `stripComments` helper.
+ * Tests for tools/lint-utils/strip-comments.ts.
  *
- * The lint scans CSS and TS files line-by-line for hardcoded
- * motion / z-index / arbitrary-Tailwind values. Without comment
- * stripping, prose inside `/* ... *\/` or `//` comments triggers
- * false positives: a design-decision comment like
+ * Multiple lints (hardcoded-tokens, readonly-cascade,
+ * combobox-no-autocomplete) scan source files line-by-line. Without
+ * comment stripping, prose inside block / line comments triggers
+ * false positives: a JSDoc example like
+ * `<civ-combobox autocomplete="off">` gets flagged as a violation,
+ * and a design-decision comment mentioning "z-index: 1 on :focus"
+ * gets flagged as a hardcoded value.
  *
- *   /* … and z-index: 1 on :focus lifts the active member … *\/
- *
- * matches the `z-index:` regex with a non-`1` value (because the
- * regex consumes through the next semicolon / newline, picking up
- * "1 on :focus lifts the active member"). The stripper replaces
- * comment bodies with spaces and preserves newlines so line numbers
- * stay accurate.
+ * The stripper replaces comment bodies with spaces and preserves
+ * newlines so line numbers stay accurate.
  */
 import { describe, it, expect } from 'vitest';
-import { stripComments } from '../lint-hardcoded-tokens.js';
+import { stripComments } from '../lint-utils/strip-comments.js';
 
 describe('stripComments', () => {
   it('strips a single-line CSS block comment', () => {

@@ -41,6 +41,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { stripComments } from './lint-utils/strip-comments.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 
@@ -112,7 +113,14 @@ async function scanFile(file: string): Promise<Finding[]> {
   const relative = path.relative(REPO_ROOT, file);
   if (ALLOWLIST.includes(relative)) return [];
 
-  const content = await fs.readFile(file, 'utf-8');
+  const raw = await fs.readFile(file, 'utf-8');
+  // Strip JS/TS comments so JSDoc examples like
+  // `<civ-combobox autocomplete="off">` inside `/* ... */` blocks
+  // don't get flagged. Only .ts / .tsx go through the stripper —
+  // .mdx and .twig use other comment forms and rarely show this
+  // pattern in their bodies.
+  const ext = path.extname(file);
+  const content = (ext === '.ts' || ext === '.tsx') ? stripComments(raw, '.ts') : raw;
   const findings: Finding[] = [];
 
   for (const tag of COMBOBOX_TAGS) {

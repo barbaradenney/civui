@@ -32,6 +32,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { stripComments } from './lint-utils/strip-comments.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
@@ -144,83 +145,6 @@ function checkArbitraryTw(line: string): { match: string } | null {
   const m = ARBITRARY_TW_RE.exec(line);
   if (!m) return null;
   return { match: m[0] };
-}
-
-/**
- * Replace the inside of every `/* ... *\/` block comment AND every
- * `//` line comment with spaces, preserving newlines so line numbers
- * stay aligned. Prevents the line-by-line scanners from matching on
- * prose like "stacking ancestor, and z-index: 1 on :focus" inside a
- * design-decision comment.
- *
- * Exported so the lint's unit tests can pin the stripping behavior.
- */
-export function stripComments(src: string, ext: '.ts' | '.css'): string {
-  let out = '';
-  let i = 0;
-  let inBlock = false;
-  let inLine = false;
-  let inStr: string | null = null;
-  while (i < src.length) {
-    const ch = src[i];
-    const next = src[i + 1];
-    if (inBlock) {
-      if (ch === '*' && next === '/') {
-        out += '  ';
-        i += 2;
-        inBlock = false;
-        continue;
-      }
-      out += ch === '\n' ? '\n' : ' ';
-      i++;
-      continue;
-    }
-    if (inLine) {
-      if (ch === '\n') {
-        out += '\n';
-        inLine = false;
-      } else {
-        out += ' ';
-      }
-      i++;
-      continue;
-    }
-    if (inStr) {
-      out += ch;
-      if (ch === '\\' && next !== undefined) {
-        out += next;
-        i += 2;
-        continue;
-      }
-      if (ch === inStr) inStr = null;
-      i++;
-      continue;
-    }
-    if (ch === '/' && next === '*') {
-      out += '  ';
-      i += 2;
-      inBlock = true;
-      continue;
-    }
-    // `//` line comments are only legal in TypeScript — CSS uses
-    // `/* ... */` exclusively. Strip them only for `.ts` files so
-    // CSS rules like `background: url(//cdn/…)` don't get clobbered.
-    if (ext === '.ts' && ch === '/' && next === '/') {
-      out += '  ';
-      i += 2;
-      inLine = true;
-      continue;
-    }
-    if (ch === '"' || ch === "'" || ch === '`') {
-      inStr = ch;
-      out += ch;
-      i++;
-      continue;
-    }
-    out += ch;
-    i++;
-  }
-  return out;
 }
 
 async function main(): Promise<void> {

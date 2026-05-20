@@ -43,6 +43,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { stripComments } from './lint-utils/strip-comments.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 
@@ -165,7 +166,10 @@ export function findCascadeGaps(content: string, file = '<inline>'): Finding[] {
 
 async function scanFile(file: string): Promise<Finding[]> {
   const relative = path.relative(REPO_ROOT, file);
-  const content = await fs.readFile(file, 'utf-8');
+  const raw = await fs.readFile(file, 'utf-8');
+  // Strip JSDoc / inline comments so example markup inside doc
+  // blocks (e.g. `<civ-select ?disabled="…">`) isn't flagged.
+  const content = stripComments(raw, '.ts');
   return findCascadeGaps(content, relative);
 }
 

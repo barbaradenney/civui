@@ -10,6 +10,36 @@ Drupal (Single Directory Components).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+> **Status:** early — `0.1.0`. The API is stabilising and we still make
+> occasional breaking changes (see [`CHANGELOG.md`](CHANGELOG.md)). The web
+> components, schemas, and Drupal SDCs are production-quality and have
+> ~3600 tests behind them; the iOS and Android implementations are at the
+> stub stage for many components (see
+> [`.claude/rules/audit-debt.md`](.claude/rules/audit-debt.md)).
+
+## Live demos
+
+- **Documentation** — <https://barbaradenney.github.io/civui/>
+- **Storybook** — <https://barbaradenney.github.io/civui/storybook/>
+
+## Why CivUI?
+
+Public-sector software has a specific shape: long, form-heavy flows; strict
+accessibility requirements; older browsers in the long tail of users; multiple
+delivery surfaces (a public website, a Drupal CMS, a native mobile app for
+field staff). Most general-purpose component libraries optimise for the
+*opposite* of that — short flows, latest-browser-only, single-platform.
+
+CivUI is opinionated about the parts that matter for civic forms:
+
+- Self-contained controls that render their own label / hint / error chrome,
+  so accessibility can't be skipped by accident.
+- Plain-language defaults — "(required)" instead of a red asterisk, error
+  messages that say what to do, not just what went wrong.
+- Multi-platform parity as a CI gate, not a manual checklist.
+- W3C standards (custom elements, ElementInternals, design tokens) over
+  framework lock-in.
+
 ## What's in the box
 
 - **60+ components** — form controls, compound fields (address, name, direct deposit),
@@ -104,6 +134,18 @@ pnpm preflight               # Faster pre-push check
 
 Requires **Node.js ≥ 20** and **pnpm 9**.
 
+## Browser support
+
+CivUI targets evergreen browsers and ships ES2022 output. Supported:
+
+- Chrome / Edge — last 2 versions
+- Firefox — last 2 versions
+- Safari (macOS / iOS) — 16.4 and newer
+
+The hard floor is set by [`ElementInternals` + `formAssociated`](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals)
+(Safari 16.4, Chrome 77, Firefox 98) and the `:has()` selector
+(Safari 15.4, Chrome 105, Firefox 121). Internet Explorer is not supported.
+
 ## Documentation
 
 - **Storybook** — interactive component catalog (`pnpm storybook`)
@@ -126,6 +168,23 @@ By participating, you agree to abide by our **[Code of Conduct](CODE_OF_CONDUCT.
 If you discover a security vulnerability, please follow the process in
 **[SECURITY.md](SECURITY.md)** — do not file a public issue.
 
+## Acknowledgements
+
+CivUI draws inspiration and patterns from several public-sector design
+systems that came before it:
+
+- [GOV.UK Design System](https://design-system.service.gov.uk/) — the
+  pattern of self-contained controls with rendered hint / error chrome,
+  and the focus-ring treatment.
+- [U.S. Web Design System (USWDS)](https://designsystem.digital.gov/) —
+  semantic colour tokens, accessibility-first defaults, and the
+  pagination pattern.
+- [VA.gov Design System](https://design.va.gov/) — patterns for
+  veteran-facing forms (memorable date, service history, dependent
+  relationships).
+- [Material Icons Outlined](https://fonts.google.com/icons) — icon paths.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
+

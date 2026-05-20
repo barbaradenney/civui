@@ -4754,26 +4754,42 @@
   /*
    * Block-mode default — fade-and-overlay trigger.
    *
-   * Applies only when the component is COLLAPSED (no `[expanded]`),
-   * in BLOCK mode (no `[inline]`), and the consumer hasn't opted out
-   * (no `[no-fade-trigger]`). The host becomes a positioning context,
-   * the teaser's bottom edge fades into `--civ-read-more-bg`, and the
+   * Applies to the component in BLOCK mode (no `[inline]`) when the
+   * consumer hasn't opted out (no `[no-fade-trigger]`). In the
+   * COLLAPSED state, the host becomes a positioning context, the
+   * teaser's bottom edge fades into `--civ-read-more-bg`, and the
    * trigger sits absolutely-centered at the bottom edge, visually
-   * integrating the affordance with the truncated text.
+   * integrating the affordance with the truncated text. In the
+   * EXPANDED state, the trigger flows below the rest content and
+   * stays horizontally centered — keeping its position constant
+   * across the toggle so it doesn't appear to jump sideways when the
+   * label flips from "Read more" to "Read less".
    *
-   * `--civ-read-more-bg` defaults to white so the fade is invisible
-   * on a white page background; override it on a colored card via
-   * inline style or a wrapper rule to match the surrounding fill.
+   * `--civ-read-more-bg` defaults to `--civ-color-white-DEFAULT`,
+   * which semantically swaps to the dark page color in dark mode via
+   * the dark token file — so the fade resolves to the correct
+   * surrounding color in both light and dark mode without an
+   * explicit dark-mode override. On a colored card, override
+   * `--civ-read-more-bg` via inline style or a wrapper rule to match
+   * the surrounding fill.
    *
    * `pointer-events: none` on the fade is critical — without it the
    * gradient overlay would swallow clicks on the trigger sitting on
    * top of it.
+   *
+   * Fade height is intentionally modest (~1.5 lines of body text).
+   * A taller fade buries too much readable text under the gradient
+   * when the teaser itself is short, while still giving a clear
+   * "more below" visual cue when the teaser is several lines.
    */
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+  civ-read-more:not([inline]):not([no-fade-trigger]) {
     --civ-read-more-bg: var(--civ-color-white-DEFAULT);
-    --civ-read-more-fade-height: 5em;
-    position: relative;
+    --civ-read-more-fade-height: 2.5em;
     display: block;
+  }
+
+  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+    position: relative;
   }
 
   civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
@@ -4801,6 +4817,20 @@
     transform: translateX(-50%);
     margin: 0;
     z-index: 1;
+  }
+
+  /*
+   * Expanded trigger sits below the rest content and stays
+   * horizontally centered. Without this rule the trigger reverts to
+   * `civ-toggle-btn`'s default `inline-flex` and lands left-aligned —
+   * the user perceives a sideways jump as they expand the disclosure.
+   * `width: fit-content` + `margin-inline: auto` centers the block
+   * without forcing it to span the full row.
+   */
+  civ-read-more[expanded]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
   }
 
   /*
@@ -4834,9 +4864,19 @@
     display: inline;
   }
   civ-read-more[inline] .civ-read-more__teaser,
-  civ-read-more[inline] .civ-read-more__rest {
+  civ-read-more[inline] .civ-read-more__rest:not([hidden]) {
     display: inline;
   }
+  /*
+   * Why `:not([hidden])` on the rest: the UA stylesheet sets
+   * `[hidden] { display: none }`, but `civ-read-more[inline] .civ-read-more__rest`
+   * has higher specificity than the bare `[hidden]` rule. Without
+   * the `:not([hidden])` qualifier, `display: inline` overrides
+   * `display: none` and the rest content stays visible in the
+   * collapsed state — the "inline option doesn't work" symptom,
+   * where the user sees the full text immediately followed by a
+   * "Read more" button that does nothing visible.
+   */
   /*
    * Inline trigger composes the shared `.civ-toggle-btn` palette
    * (filled background, semibold, rounded — so it reads as a button,
@@ -4932,10 +4972,6 @@
       color: var(--civ-color-base-lightest);
     }
 
-    civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
-      --civ-read-more-bg: var(--civ-color-base-darkest);
-    }
-
     .civ-action-sheet {
       background-color: var(--civ-color-base-darkest);
       border-color: var(--civ-color-base-dark);
@@ -4988,9 +5024,20 @@
     color: var(--civ-color-base-darkest);
   }
 
-  /* Dark-theme toolbar pairs with the @media rule above; in dark mode
-     the page is dark, so the fade should resolve to the dark token. */
-  :root[data-civ-theme="dark"] civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+  /*
+   * Storybook toolbar dark mode (`:root[data-civ-theme="dark"]`)
+   * does NOT swap design tokens — `tokens.css` only swaps inside
+   * `@media (prefers-color-scheme: dark)`. So in toolbar dark mode,
+   * `--civ-color-white-DEFAULT` stays at `#ffffff`, and the default
+   * `--civ-read-more-bg` would fade to white inside a dark page.
+   * Patch the custom property to a value that IS dark when tokens
+   * are at their light-mode resolution: `--civ-color-base-darkest`
+   * is `#1b1b1b` in light tokens, which matches the toolbar dark
+   * body background. (Under `@media (prefers-color-scheme: dark)`,
+   * tokens swap and the default already resolves correctly — no
+   * override needed there.)
+   */
+  :root[data-civ-theme="dark"] civ-read-more:not([inline]):not([no-fade-trigger]) {
     --civ-read-more-bg: var(--civ-color-base-darkest);
   }
 

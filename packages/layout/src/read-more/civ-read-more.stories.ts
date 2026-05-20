@@ -42,7 +42,12 @@ export const Default: Story = {
     <civ-read-more>
       <p>
         You may be eligible for a benefit if you meet certain service and
-        discharge criteria.
+        discharge criteria. Most benefits are available to veterans who
+        served on active duty for a minimum length of time and received a
+        discharge under honorable conditions. Some benefits also extend to
+        members of the Reserves and National Guard who completed a period
+        of active service, and to surviving family members of veterans who
+        died in service or from a service-connected condition.
       </p>
       <div data-rest>
         <p>

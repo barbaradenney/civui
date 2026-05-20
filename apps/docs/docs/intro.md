@@ -8,6 +8,15 @@ title: Introduction
 
 Accessibility-first web components for government applications. Built on Lit 3, Tailwind CSS, and W3C design tokens.
 
+Inspired by the public-sector design systems that came before it — the
+[U.S. Web Design System (USWDS)](https://designsystem.digital.gov/), the
+[GOV.UK Design System](https://design-system.service.gov.uk/), the
+[VA.gov Design System (VADS)](https://design.va.gov/), and the
+[CMS Design System](https://design.cms.gov/) — CivUI distills their
+shared patterns (self-contained form controls, plain-language defaults,
+WCAG 2.1 AA out of the box) into a framework-agnostic web-component
+library with parallel native and Drupal implementations.
+
 ## Key Features
 
 - **Components** — form inputs, selection controls, layout, navigation, overlays, feedback, and compound fields, every one covered by a platform-neutral schema and CI-enforced parity check

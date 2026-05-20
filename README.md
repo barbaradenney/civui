@@ -179,9 +179,12 @@ systems that came before it:
 - [U.S. Web Design System (USWDS)](https://designsystem.digital.gov/) —
   semantic colour tokens, accessibility-first defaults, and the
   pagination pattern.
-- [VA.gov Design System](https://design.va.gov/) — patterns for
+- [VA.gov Design System (VADS)](https://design.va.gov/) — patterns for
   veteran-facing forms (memorable date, service history, dependent
   relationships).
+- [CMS Design System](https://design.cms.gov/) — guidance on
+  healthcare-facing form patterns, plain-language error copy, and the
+  alert / notification taxonomy.
 - [Material Icons Outlined](https://fonts.google.com/icons) — icon paths.
 
 ## License

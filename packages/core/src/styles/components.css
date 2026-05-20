@@ -3629,6 +3629,11 @@
       border-bottom-color: var(--civ-color-primary-DEFAULT);
       border-bottom-width: 2px;
     }
+    /* Drop the trailing border under the final item so the stacked list
+       visually closes instead of reading like the list continues. */
+    civ-tab-nav-item:last-child .civ-tab-nav__link {
+      border-bottom: 0;
+    }
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */

@@ -13,6 +13,8 @@ import './nav/civ-nav-item.js';
 import './tabs/civ-tabs.js';
 import './tabs/civ-tab.js';
 import './tabs/civ-tab-panel.js';
+import './tab-nav/civ-tab-nav.js';
+import './tab-nav/civ-tab-nav-item.js';
 
 // Button
 export { CivButton } from './button/index.js';
@@ -49,3 +51,6 @@ export { CivNav, CivNavItem } from './nav/index.js';
 
 // Tabs
 export { CivTabs, CivTab, CivTabPanel } from './tabs/index.js';
+
+// Tab Nav
+export { CivTabNav, CivTabNavItem } from './tab-nav/index.js';

@@ -1,7 +1,7 @@
 {
   "name": "@civui/actions",
   "version": "0.1.0",
-  "description": "CivUI action + navigation affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink, Breadcrumb, Nav, Tabs",
+  "description": "CivUI action + navigation affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink, Breadcrumb, Nav, Tabs, TabNav",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -17,7 +17,8 @@
     "./skip-link": "./dist/skip-link/index.js",
     "./breadcrumb": "./dist/breadcrumb/index.js",
     "./nav": "./dist/nav/index.js",
-    "./tabs": "./dist/tabs/index.js"
+    "./tabs": "./dist/tabs/index.js",
+    "./tab-nav": "./dist/tab-nav/index.js"
   },
   "files": [
     "dist"

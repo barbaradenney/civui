@@ -4,7 +4,7 @@ sidebar_position: 1
 title: Introduction
 ---
 
-# CivUI Design System
+# CivUI Component Library
 
 Accessibility-first web components for government applications. Built on Lit 3, Tailwind CSS, and W3C design tokens.
 

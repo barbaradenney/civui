@@ -5,6 +5,17 @@ title: Design Principles
 
 # Design Principles
 
+## Forms-First
+
+The library is openly biased toward long, multi-step government flows: claim forms, eligibility checks, benefits applications. That bias shows up in:
+
+- **Compound fields** (address, name, direct deposit, signature, race-ethnicity, partnership history, service history) that wrap the messy multi-input affordances real government forms need
+- **Form orchestration components** (`civ-form`, `civ-form-step`, `civ-repeater`, `civ-conditional`, `civ-summary`, `civ-form-autosave`) for chaptered flows with branching logic, save-and-resume, and a final review step
+- **Per-field state tracking:** `touched` set on first blur, `error` set by server-side validation, automatic error summary with anchor links to each failing field
+- **Validation copy biased toward "say what to do":** the 16 built-in validators all return errors that name the expected format
+
+If you're building a short marketing form or a single-screen settings panel, you will find CivUI heavy. If you're building a 30-question claim form that has to survive a Section 508 audit and read cleanly in JAWS, the affordances are already there.
+
 ## Use the Platform
 
 CivUI uses native HTML elements (`<select>`, `<input>`, `<textarea>`, `<fieldset>`, `<button>`) not JavaScript re-implementations. Native elements get keyboard navigation, form participation, and screen reader support for free. Custom code is only added for components that don't exist natively (combobox, date picker).
@@ -19,6 +30,19 @@ Every component is designed for WCAG 2.2 AA compliance from the start, not retro
 - **Screen reader tested:** `announce()` utility for dynamic content, `aria-live` regions
 - **Error states:** never rely on color alone (text + border + icon)
 - **Focus visible:** applied globally by `civ.css` to every native interactive element
+
+## Plain-Language Defaults
+
+Visual hierarchy in government forms is fragile: the user is often distressed, in a hurry, or reading the page through a screen reader. CivUI's defaults bias toward plain text over visual codes.
+
+- **"(required)" rendered as text** on the label, not a red asterisk. Color and shape are not accessible labels.
+- **Error messages tell the user how to fix the field**, not just what went wrong: "Enter the date as MM/DD/YYYY" instead of "Invalid date".
+- **Hint text shows the expected format** *before* the user types, not after they fail.
+- **Field labels in plain language:** "Date of birth" instead of "DOB", "Social Security number" instead of "SSN".
+- **Color is never the sole indicator** of a status. Errors carry text + border + `role="alert"`; success carries an icon and a label.
+- **No gray body text.** Visual hierarchy comes from font size and weight, not color muting. Gray is reserved for hint text, placeholders, and disabled states.
+
+These rules are enforced by drift lints (`lint:muted-body-text`, `lint:missing-labels`, `lint:double-labels`, `lint:stacked-required`) and documented in [`.claude/rules/government-patterns.md`](https://github.com/barbaradenney/civui/blob/main/.claude/rules/government-patterns.md). Overriding the defaults is supported but deliberate work.
 
 ## One Thing Per Page
 
@@ -42,6 +66,23 @@ Text is only underlined when it navigates somewhere. Links get underlines; actio
 - If **all fields** in a fieldset are required → show "(required)" on the legend, hide on individual fields
 - If **some fields** are optional → show "(required)" on each required field individually
 - Components use `hide-required-indicator` to suppress the visual text while keeping validation active
+
+## Schemas Are the Source of Truth
+
+Every cross-platform component has a platform-neutral schema in [`@civui/schema`](https://github.com/barbaradenney/civui/tree/main/packages/schema/src/components): a single TypeScript file that declares the component's props, events, accessibility requirements, and form behavior in a form-agnostic way. The Lit web implementation is the canonical reference; the iOS (SwiftUI), Android (Compose), and Drupal SDC counterparts each satisfy the same contract.
+
+Everything that needs to know a component's surface reads the schema:
+
+- The **MCP server** exposes the schemas as resources, so AI agents generating forms read the same contract a human would
+- **`pnpm generate:schema <tag>`** bootstraps a starter schema from an existing Lit component
+- **`pnpm sync:drupal`** regenerates the Drupal SDC YAML + Twig from the schema (no hand-editing)
+- The **Props / Events tables** on these docs pages are auto-generated MDX partials produced by `pnpm sync:doc-tables` from the same schemas
+- The **Storybook Contract pages** are generated from the schemas by `pnpm storybook:contract`
+- A **CI gate** (`pnpm parity:schema --platforms`) fails the build if any platform drifts from the contract
+
+When you add a prop, you update the schema first. The parity check then tells you which platform implementations need a matching change. The contract is the floor; the implementations are interchangeable.
+
+See [AI-Agent-Friendly](../foundations/ai-agent-friendly) for how this same property makes CivUI tractable for LLM coding agents, and [`packages/schema/README.md`](https://github.com/barbaradenney/civui/blob/main/packages/schema/README.md) for the naming-convention map and the "how to add a new schema" walkthrough.
 
 ## CSS Over JavaScript
 

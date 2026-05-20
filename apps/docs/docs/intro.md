@@ -94,9 +94,9 @@ two CSS imports above.
 
 ## Design Philosophy
 
-- **Forms-first:** the library is openly biased toward long, multi-step government flows. That bias shows up in heavy investment in compound fields (address, name, direct deposit, signature), form orchestration (form, form-step, repeater, conditional, summary, autosave), per-field touched / error state, and validation copy that says what to do, not just what went wrong.
-- **Plain-language defaults:** "(required)" rendered as text instead of a red asterisk; error messages tell the user how to fix the field; hint text shows the expected format; "Date of birth" instead of "DOB". Color is never the sole indicator of an error.
-- **Schemas are the source of truth:** every cross-platform component has a platform-neutral schema in `@civui/schema`. Humans read the same contract that tools do (the MCP server, scaffolders, the Drupal SDC sync, the Props / Events tables on these docs pages). A CI gate enforces drift between the schema, the Lit reference implementation, and the iOS / Android / Drupal counterparts, so the contract stays trustworthy. See [AI-Agent-Friendly](./foundations/ai-agent-friendly) for the broader story.
+- **Forms-first:** biased toward long, multi-step government flows over single-screen panels
+- **Plain-language defaults:** "(required)" as text instead of red asterisks; errors that say what to do
+- **Schemas are the source of truth:** every cross-platform component has a single platform-neutral contract
 - **Use the platform:** native `<select>`, `<input>`, `<fieldset>`, `<button>` elements
 - **CSS over JavaScript:** states handled with attribute selectors, icons rendered as inline SVG
 - **System fonts:** zero network requests, no flash of unstyled text

@@ -1,0 +1,156 @@
+---
+title: Popover
+sidebar_position: 14
+sidebar_label: Popover
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PopoverProps from "./_popover.props.mdx";
+import PopoverEvents from "./_popover.events.mdx";
+
+# Popover
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-popover`](pathname:///civui/storybook/?path=/docs/contract-civ-popover--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-popover>`
+
+Low-level popover primitive: a trigger button anchored to a floating panel. Handles the scaffolding every "popup from a trigger" component needs — slotted trigger wiring, click-outside / Escape / Tab close, viewport-aware positioning with auto-flip, focus return, and the mobile bottom-sheet pattern (≤480px).
+
+:::caution Author-facing
+`civ-popover` deliberately ships **no semantics**. It doesn't choose a role for the panel or define keyboard navigation between children. Most end-user code should reach for a higher-level component instead — see [When to compose `civ-popover`](#when-to-compose-civ-popover).
+:::
+
+## Examples
+
+### Default
+
+<StoryEmbed id="overlays-popover--default" minHeight={260} />
+
+### `panel-role="menu"` (composed by `civ-menu`)
+
+<StoryEmbed id="overlays-popover--menu-role" minHeight={320} />
+
+### `no-tab-close` (panel has form controls)
+
+<StoryEmbed id="overlays-popover--no-tab-close" minHeight={320} />
+
+### `align="start"` (left-anchored)
+
+<StoryEmbed id="overlays-popover--align-start" minHeight={260} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/overlays-popover--default)
+
+## Props
+
+<PopoverProps />
+
+## Events
+
+<PopoverEvents />
+
+## When to compose `civ-popover`
+
+Before reaching for the primitive, check if one of the existing higher-level components already covers your case:
+
+| Need | Use |
+|------|-----|
+| Row-action / overflow menu (single-select list of actions) | `<civ-menu>` + `<civ-menu-item>` |
+| Toggleable column-visibility / filter chips (checkbox list) | `<civ-column-visibility>` |
+| Toolbar that collapses extra buttons into a "More" menu | `<civ-button-group allow-overflow>` |
+| Full-screen confirmation / form dialog | `<civ-modal>` |
+| Bottom-anchored mobile action list | `<civ-action-sheet>` |
+| Side-anchored navigation / settings drawer | `<civ-drawer>` |
+
+Compose `civ-popover` directly only when none of the above fits — typically a filter / settings / disclosure that doesn't map to "menu" semantics.
+
+## Composition pattern
+
+The trigger must carry `data-civ-popover-trigger` and be a focusable element (typically `<civ-button>` or `<button>`). The panel content is the default slot:
+
+```html
+<civ-popover panel-role="dialog" label="Filter results">
+  <civ-button data-civ-popover-trigger label="Filters" icon-end="chevron-down"></civ-button>
+  <div class="filter-list">
+    <!-- Your panel content -->
+  </div>
+</civ-popover>
+```
+
+The popover auto-wires `aria-haspopup`, `aria-expanded`, and `aria-controls` on the trigger.
+
+## Choosing `panel-role` and `triggerHaspopup`
+
+The two ARIA knobs that matter for screen-reader accuracy:
+
+| Panel content | `panel-role` | `triggerHaspopup` |
+|---------------|--------------|-------------------|
+| Action list (single-select, activate-and-close) | `menu` | `menu` |
+| Checkbox / settings panel | `group` | `true` |
+| Form / multi-control dialog | `dialog` | `dialog` |
+| Listbox (typeahead-style options) | `listbox` | `listbox` |
+
+When in doubt, `panel-role="dialog"` + `triggerHaspopup="true"` (the defaults) are safe — they announce as "popup, dialog" in screen readers and don't impose a keyboard model.
+
+## Keyboard
+
+| Key | Effect |
+|-----|--------|
+| **Enter / Space** on trigger | Toggle open / close |
+| **ArrowDown / ArrowUp** on trigger | Open and fire `civ-popover-trigger-arrow` for composers (e.g. `civ-menu` uses this to pre-focus first / last item) |
+| **Escape** | Close popover, return focus to the trigger (suppress with `no-escape-close`) |
+| **Click outside** | Close popover (suppress with `no-click-outside-close`) |
+| **Tab** | Close popover (suppress with `no-tab-close` — required when the panel contains form controls the user needs to Tab between) |
+
+Arrow-key navigation **between items inside the panel** is the consumer's job. `civ-popover` only handles the open/close + focus-return scaffolding.
+
+## Mobile (≤480px)
+
+Below 480px the panel renders as a bottom sheet via the shared `.civ-bottom-sheet` utility — a translucent backdrop fades in, the panel pins to the viewport bottom with rounded top corners, and the JS-computed desktop position is skipped. Tap outside the panel or the backdrop to dismiss.
+
+This matches every other CivUI popup affordance (`<civ-modal>`, `<civ-action-sheet>`, `<civ-menu>`, `<civ-column-visibility>` — they all compose this primitive or follow the same rule). The documented exception is `<civ-combobox>` (typing surface + soft keyboard).
+
+## Author notes — Lit composition
+
+Both `_captureChildren` (slot mixin) and `textContent` capture (text mixin) preserve Comment nodes since 2026-05-19, so simple Lit-templated children work:
+
+```ts
+// ✓ — outer re-render with unchanged popover content is safe.
+return html`
+  <civ-popover panel-role="dialog" label="Settings">
+    <civ-button data-civ-popover-trigger label="Settings"></civ-button>
+    <div class="panel-body">Static panel content</div>
+  </civ-popover>
+`;
+```
+
+But dynamic content directly under the popover — a `${items.map(...)}` whose array mutates on re-render — still requires a static wrapper element so the markers stay attached:
+
+```ts
+// ✓ — wrap the dynamic block in a static element.
+return html`
+  <civ-popover panel-role="group" label="Columns" no-tab-close>
+    <civ-button data-civ-popover-trigger label="Columns"></civ-button>
+    <div class="overflow-panel">
+      ${this.columns.map((c) => html`<civ-checkbox label=${c.label}></civ-checkbox>`)}
+    </div>
+  </civ-popover>
+`;
+```
+
+See the "LightDomSlotMixin composition with dynamic Lit children" entry in `.claude/rules/common-traps.md` for the underlying constraint. `<civ-column-visibility>` and `<civ-button-group allow-overflow>` both use this static-wrapper shape.
+
+## Programmatic control
+
+The popover manages its own open state by default. Reflect the `open` attribute / property for controlled scenarios:
+
+```ts
+const popover = document.querySelector('civ-popover')!;
+popover.open = true;   // open programmatically
+popover.open = false;  // close programmatically
+```
+
+Both transitions fire `civ-popover-open` / `civ-popover-close`.

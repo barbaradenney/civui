@@ -1,0 +1,13 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `open` | `boolean` | `false` | Controlled open state. When omitted the popover manages its own state. Reflects to the host attribute |
+| `label` | `string` | `''` | Accessible name applied to the panel (`aria-label`). Strongly recommended — without one, screen readers see an unnamed popup |
+| `align` | `'start'` \| `'end'` | `'end'` | Horizontal alignment of the panel relative to the trigger. `end` (default) anchors the panel's end edge to the trigger's end; `start` anchors to the start. Auto-flips when the chosen edge would clip the viewport |
+| `panel-role` | `string` | `'dialog'` | ARIA role applied to the panel. Defaults to `dialog`. Set to `menu`, `group`, `listbox`, etc. to match the panel's semantics. Used by `civ-menu` (menu), `civ-column-visibility` (group), and `civ-button-group` overflow (menu) |
+| `trigger-haspopup` | `string` | `'true'` | Value for `aria-haspopup` on the trigger. Defaults to `true`. Set to `menu` for a single-select menu, `dialog` / `listbox` to match the panel role |
+| `no-tab-close` | `boolean` | `false` | Disable closing on Tab. Default false (Tab closes — matches the menu pattern). Set true when the panel contains naturally-tabbable items (checkboxes, form controls) so the user can Tab between them without dismissing |
+| `no-click-outside-close` | `boolean` | `false` | Disable click-outside close. Default false. Set true when the panel anchors a long-lived disclosure that should only close via explicit affordance |
+| `no-escape-close` | `boolean` | `false` | Disable Escape close. Default false. Rare — usually only when Escape is bound to a panel-internal action |

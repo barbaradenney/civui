@@ -893,6 +893,38 @@ describe('text-input inline icons', () => {
       expect(el.querySelector('.civ-close-btn')).toBeNull();
       expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
     });
+
+    it('inset action and overlays share a single positioned wrapper so the input stays the rightmost flex item (for civ-input-group flush layout)', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Search" clearable value="hello"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      const wrap = el.querySelector('.civ-input-icon-wrap');
+      expect(wrap).not.toBeNull();
+      expect(wrap!.querySelector('.civ-close-btn')).not.toBeNull();
+      // Old flex-sibling wrapper class is gone.
+      expect(el.querySelector(':scope > div > .civ-flex:not(.civ-input-icon-wrap)')).toBeNull();
+      const input = el.querySelector('input')!;
+      expect(input.className).toContain('civ-input-with-trailing-action');
+    });
+
+    it('also renders the leading-icon overlay alongside the clear button (was previously dropped in the adjacent-wrapper path)', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Search" leading-icon="search" clearable value="hello"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      expect(el.querySelector('.civ-input-icon--leading')).not.toBeNull();
+      expect(el.querySelector('.civ-close-btn')).not.toBeNull();
+    });
+
+    it('reveal button uses the wider trailing-padding so "Show" / "Hide" text fits', async () => {
+      const el = await fixture<CivTextInput>(
+        '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
+      );
+      await elementUpdated(el);
+      const input = el.querySelector('input')!;
+      expect(input.className).toContain('civ-input-with-trailing-reveal');
+    });
   });
 
   describe('currency mask handlers', () => {

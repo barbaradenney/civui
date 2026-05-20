@@ -601,6 +601,25 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Suppress the browsers' user-agent clear button on
+     `<input type="search">` (`::-webkit-search-cancel-button` on
+     WebKit / Blink, `::-ms-clear` on legacy Edge / IE). The `clearable`
+     prop renders our own `.civ-close-btn`; without this reset the two
+     X buttons stack and the user sees a duplicate. */
+  .civ-input::-webkit-search-cancel-button,
+  .civ-input::-webkit-search-decoration,
+  .civ-input::-webkit-search-results-button,
+  .civ-input::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .civ-input::-ms-clear,
+  .civ-input::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
   /* Compact density — for dense surfaces (data-grid cell editors,
      column-toggle panels). Reduced vertical padding and slightly smaller
      font so the control fits a table-row height without wrapping. Used
@@ -749,6 +768,44 @@
 
   .civ-input-with-leading-icon { padding-inline-start: 2.25rem; }
   .civ-input-with-trailing-icon { padding-inline-end: 2.25rem; }
+
+  /* Reserve trailing padding when an inset action button (clear, password
+     reveal, or trailing-action slot) overlays the input on the right
+     edge. Used by `civ-text-input` when one of those affordances is
+     active and there's no `suffix` addon owning that edge. */
+  .civ-input-with-trailing-action { padding-inline-end: 2.75rem; }
+  /* The password-reveal button shows "Show" / "Hide" text — wider than
+     an icon button, so it needs more room. */
+  .civ-input-with-trailing-reveal { padding-inline-end: 4rem; }
+
+  /* Inset action buttons sit absolutely over the input's trailing edge
+     so the input element itself remains the rightmost visual of the
+     text-input wrapper. This keeps `civ-input-group` flush layout
+     correct (the input's right border can be stripped and the adjacent
+     button connects directly). Same pattern combobox / date-picker
+     already use for their clear buttons. */
+  .civ-input-icon-wrap > .civ-close-btn,
+  .civ-input-icon-wrap > .civ-input-inline-action,
+  .civ-input-icon-wrap > .civ-input-action-slot {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    inset-inline-end: 0.25rem;
+    z-index: 1;
+  }
+
+  /* When a suffix addon owns the trailing edge, fall back to flex-sibling
+     layout — overlaying the inset action absolutely would put it on top
+     of the suffix. Render order in `_wrapInput` already places the
+     action before the suffix in DOM, so flex flow puts them in the
+     expected visual order: input → action → suffix. */
+  .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-close-btn,
+  .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-input-inline-action,
+  .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-input-action-slot {
+    position: static;
+    transform: none;
+    inset-inline-end: auto;
+  }
 
   .civ-select-field {
     appearance: none;

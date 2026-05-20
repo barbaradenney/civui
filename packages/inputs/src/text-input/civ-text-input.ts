@@ -380,8 +380,14 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     // Inline icons defer to prefix/suffix, the clear button, the reveal button, and the slot on the same edge.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
     const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsRevealButton && !needsTrailingActionSlot;
+    // Inset action buttons (clear/reveal/slot) need trailing padding on
+    // the input so user-entered text doesn't slide under the absolutely-
+    // positioned button. When a suffix addon is also present, the action
+    // falls back to flex-sibling layout (see components.css) and the
+    // input doesn't need extra padding.
+    const insetActionAbsolute = (needsClearButton || needsRevealButton || needsTrailingActionSlot) && !hasSuffix;
 
-    const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon });
+    const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, needsRevealButton, insetActionAbsolute });
     const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency });
 
     const inner = html`
@@ -432,8 +438,10 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     hasSuffix: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
+    needsRevealButton?: boolean;
+    insetActionAbsolute?: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon } = opts;
+    const { widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, needsRevealButton, insetActionAbsolute } = opts;
     const isCurrency = this._isCurrency;
     const maskDef = this._maskDef;
     const pattern = this._activePattern;
@@ -448,6 +456,15 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
           : [];
 
     const isCompact = this.spacing === 'sm';
+    // Pick the trailing padding class. Reveal button is wider ("Show" /
+    // "Hide" text) so it needs more room than an icon-sized clear / slot
+    // button. Trailing icon and inset action are mutually exclusive
+    // (precedence rules in render()).
+    const trailingPaddingClass = insetActionAbsolute
+      ? (needsRevealButton ? 'civ-input-with-trailing-reveal' : 'civ-input-with-trailing-action')
+      : showTrailingIcon
+        ? 'civ-input-with-trailing-icon'
+        : '';
     const classes = inputClasses({
       extra: [
         widthClass,
@@ -456,7 +473,7 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
         ...roundingClasses,
         ...(isCurrency ? ['civ-text-end'] : []),
         ...(showLeadingIcon ? ['civ-input-with-leading-icon'] : []),
-        ...(showTrailingIcon ? ['civ-input-with-trailing-icon'] : []),
+        ...(trailingPaddingClass ? [trailingPaddingClass] : []),
       ],
     });
     const ariaLabel = isCompact ? (this.getAttribute('aria-label') || undefined) : undefined;
@@ -571,8 +588,16 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
   }
 
   /**
-   * Compose the input with prefix/suffix segments, a clear button, or icon
-   * overlays. Returns the bare input unchanged when none of those are needed.
+   * Compose the input with prefix/suffix addons, inset action buttons
+   * (clear / reveal / trailing-action slot), and / or icon overlays.
+   * Returns the bare input unchanged when none of those are needed.
+   *
+   * Single wrapper handles every combination: it's `position: relative`
+   * + flex, so prefix/suffix sit as flex siblings while icon overlays
+   * and inset action buttons position absolutely over the input.
+   * The text-input's outer right edge therefore stays anchored to the
+   * `<input>` element (when no suffix is present), which is what makes
+   * `civ-input-group` flush-border layout connect correctly.
    */
   private _wrapInput(inputEl: unknown, opts: {
     widthClass: string;
@@ -586,44 +611,38 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     isCurrency: boolean;
   }) {
     const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
-    const needsAdjacentWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || needsTrailingActionSlot;
-    const needsIconOverlay = !needsAdjacentWrapper && (showLeadingIcon || showTrailingIcon);
+    const needsWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || needsTrailingActionSlot || showLeadingIcon || showTrailingIcon;
 
-    if (needsAdjacentWrapper) {
-      return html`<div class="civ-flex ${widthClass} civ-max-w-full"
-        >${hasPrefix
-          ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
-          : nothing}${inputEl}${needsClearButton
-          ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
-              <civ-icon name="close"></civ-icon>
-            </button>`
-          : nothing}${needsRevealButton
-          ? html`<button
-              type="button"
-              class="civ-input-inline-action"
-              aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
-              aria-pressed="${this._passwordRevealed}"
-              @click="${this._onTogglePasswordReveal}"
-            >${this._passwordRevealed ? t('passwordHideShort') : t('passwordRevealShort')}</button>`
-          : nothing}${needsTrailingActionSlot
-          ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
-          : nothing}${hasSuffix
-          ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
-          : nothing}</div>`;
-    }
-    if (needsIconOverlay) {
-      return html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
-        >${inputEl}${showLeadingIcon
-          ? html`<span class="civ-input-icon civ-input-icon--leading"
-              ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}"></civ-icon
-            ></span>`
-          : nothing}${showTrailingIcon
-          ? html`<span class="civ-input-icon civ-input-icon--trailing"
-              ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}"></civ-icon
-            ></span>`
-          : nothing}</div>`;
-    }
-    return inputEl;
+    if (!needsWrapper) return inputEl;
+
+    return html`<div class="civ-input-icon-wrap ${widthClass} civ-max-w-full"
+      >${hasPrefix
+        ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
+        : nothing}${inputEl}${needsClearButton
+        ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
+            <civ-icon name="close"></civ-icon>
+          </button>`
+        : nothing}${needsRevealButton
+        ? html`<button
+            type="button"
+            class="civ-input-inline-action"
+            aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
+            aria-pressed="${this._passwordRevealed}"
+            @click="${this._onTogglePasswordReveal}"
+          >${this._passwordRevealed ? t('passwordHideShort') : t('passwordRevealShort')}</button>`
+        : nothing}${needsTrailingActionSlot
+        ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
+        : nothing}${hasSuffix
+        ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
+        : nothing}${showLeadingIcon
+        ? html`<span class="civ-input-icon civ-input-icon--leading"
+            ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}"></civ-icon
+          ></span>`
+        : nothing}${showTrailingIcon
+        ? html`<span class="civ-input-icon civ-input-icon--trailing"
+            ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}"></civ-icon
+          ></span>`
+        : nothing}</div>`;
   }
 
   /**

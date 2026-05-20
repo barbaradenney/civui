@@ -80,8 +80,24 @@ export function LightDomSlotMixin<T extends Constructor<LitElement>>(superClass:
         this._slottedChildren.set(key, []);
       }
 
-      // Sort each child into the matching slot
+      // Sort each child into the matching slot. Comment nodes are
+      // skipped — they're typically Lit's `<!---->` ChildPart marker
+      // anchors that the OUTER component inserted around an
+      // expression like `${html`<x-thing/>`}`. Capturing and removing
+      // them detaches the outer template's ChildPart from the DOM,
+      // and the next outer re-render throws "ChildPart has no
+      // parentNode". Leaving comments in place keeps the outer
+      // ChildPart anchored at the host root; relocated Elements
+      // still live in their slot targets, and Lit's no-op updates
+      // (re-render with unchanged content) work.
+      //
+      // Dynamic mutations of the slotted content (items array grows
+      // / shrinks via outer re-render) still misbehave because the
+      // moved Elements aren't at the marker position any more — but
+      // that case has always required the plain-DOM-panel workaround
+      // documented in .claude/rules/common-traps.md.
       for (const child of Array.from(this.childNodes)) {
+        if (child.nodeType === Node.COMMENT_NODE) continue;
         let matched = false;
         if (child instanceof Element) {
           for (const key of slotKeys) {

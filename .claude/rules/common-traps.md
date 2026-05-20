@@ -657,6 +657,74 @@ append its tag to `READONLY_TAGS` in
 
 ---
 
+## LightDomSlotMixin composition with dynamic Lit children
+
+Components built on `LightDomSlotMixin` (`civ-popover`, `civ-menu`,
+`civ-form`, `civ-fieldset`, `civ-button-group`, `civ-radio-group`,
+`civ-checkbox-group`, `civ-page-header`, `civ-list-item`,
+`civ-input-group`, and the compound parents) capture their
+authored children in `connectedCallback` and relocate them into
+rendered slot-target containers.
+
+**Comment-node preservation (since 2026-05-19):** `_captureChildren`
+SKIPS Comment nodes so Lit's `<!---->` ChildPart marker anchors
+stay at the host root. Without this, every outer re-render — even
+ones that didn't change the slotted content — threw "ChildPart
+has no parentNode" because the mixin had captured and removed
+Lit's markers along with the children.
+
+That fix handles the common case: outer component re-renders for
+unrelated reasons while the mixin component's content is unchanged
+("static slot, dynamic outer").
+
+**The remaining constraint** — fully dynamic slotted content:
+
+```ts
+// ⚠ still misbehaves on items-array mutation
+<civ-menu>
+  ${this.items.map((item) => html`
+    <civ-menu-item>${item.label}</civ-menu-item>
+  `)}
+</civ-menu>
+```
+
+If `this.items` actually mutates (push/splice on re-render), Lit
+tries to add or remove children at the marker position (the host
+root) — but the previously-captured items live in the slot-target
+container by then. The new items land at the root and don't get
+restyled; old ones in the target don't get removed. Visually:
+ghost duplicate items or new items missing entirely.
+
+This is fundamental to "move authored children" + "Light DOM, no
+`<slot>`". Fixing it would require Shadow DOM or a substantial
+projection layer; both rejected by CivUI's architecture.
+
+**Pattern when you need dynamic slotted content**: render a static
+wrapper that gets captured as a unit, with the `${...map(...)}`
+inside it. `civ-column-visibility` and `civ-button-group`'s
+overflow panel both follow this — they render a plain `<div>`
+containing the dynamic list, inside a `<civ-popover>`. The div
+gets relocated as one chunk and the markers inside it stay
+attached to the div (which doesn't itself capture children).
+
+```ts
+// ✓ — div is captured as one unit; markers inside stay attached
+<civ-popover>
+  <civ-button data-civ-popover-trigger>...</civ-button>
+  <div class="overflow-panel">
+    ${this.items.map(item => html`<civ-button>${item.label}</civ-button>`)}
+  </div>
+</civ-popover>
+```
+
+**Caught by:** runtime exception (rare now, after the comment-skip
+fix). If you see odd duplicate/missing children inside a
+LightDomSlotMixin component's slot target, check whether the
+content uses a dynamic `${...map(...)}` directly under the
+mixin-using element — and wrap it in a static container.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

@@ -575,6 +575,20 @@
       "source": "packages/layout/src/button-group/civ-button-group.stories.ts"
     },
     {
+      "story": "WithOverflow",
+      "name": "With overflow",
+      "category": "Layout/Button Group",
+      "html": "<div style=\"max-width: 280px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-button-group label=\"Row actions\" allow-overflow>\n        <civ-action-button label=\"Edit\" icon-start=\"edit\"></civ-action-button>\n        <civ-action-button label=\"Duplicate\" icon-start=\"content-copy\"></civ-action-button>\n        <civ-action-button label=\"Move\" icon-start=\"open-with\"></civ-action-button>\n        <civ-action-button label=\"Archive\" icon-start=\"archive\"></civ-action-button>\n        <civ-action-button label=\"Remove\" icon-start=\"delete\"></civ-action-button>\n      </civ-button-group>\n    </div>",
+      "source": "packages/layout/src/button-group/civ-button-group.stories.ts"
+    },
+    {
+      "story": "WithOverflowAndDisabled",
+      "name": "Overflow respects disabled state",
+      "category": "Layout/Button Group",
+      "html": "<div style=\"max-width: 280px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-button-group label=\"Row actions\" allow-overflow>\n        <civ-action-button label=\"Edit\" icon-start=\"edit\"></civ-action-button>\n        <civ-action-button label=\"Duplicate\" icon-start=\"content-copy\"></civ-action-button>\n        <civ-action-button label=\"Archive\" icon-start=\"archive\" disabled></civ-action-button>\n        <civ-action-button label=\"Remove\" icon-start=\"delete\"></civ-action-button>\n      </civ-button-group>\n    </div>",
+      "source": "packages/layout/src/button-group/civ-button-group.stories.ts"
+    },
+    {
       "story": "WithPressed",
       "name": "With Pressed State",
       "category": "Layout/Button Group",
@@ -3757,6 +3771,35 @@
       "source": "packages/inputs/src/phone/civ-phone.stories.ts"
     }
   ],
+  "civ-popover": [
+    {
+      "story": "AlignStart",
+      "name": "align=",
+      "category": "Overlays/Popover",
+      "html": "<civ-popover panel-role=\"dialog\" label=\"Notes\" align=\"start\">\n      <civ-button data-civ-popover-trigger label=\"Notes\" icon-end=\"chevron-down\"></civ-button>\n      <div class=\"civ-p-3\" style=\"min-width: 200px;\">\n        <p class=\"civ-m-0\">Panel anchors to the trigger's left edge.</p>\n      </div>\n    </civ-popover>",
+      "source": "packages/overlays/src/popover/civ-popover.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Overlays/Popover",
+      "html": "<civ-popover panel-role=\"dialog\" label=\"Filters\">\n      <civ-button data-civ-popover-trigger label=\"Filters\" icon-end=\"chevron-down\"></civ-button>\n      <div class=\"civ-p-4\" style=\"min-width: 240px;\">\n        <p class=\"civ-m-0 civ-mb-2\"><strong>Filter results</strong></p>\n        <p class=\"civ-m-0 civ-text-sm\">Panel content goes here. Slot whatever children the higher-level component needs — checkboxes, filter chips, a form.</p>\n      </div>\n    </civ-popover>",
+      "source": "packages/overlays/src/popover/civ-popover.stories.ts"
+    },
+    {
+      "story": "MenuRole",
+      "name": "panel-role=",
+      "category": "Overlays/Popover",
+      "html": "<civ-popover panel-role=\"menu\" trigger-haspopup=\"menu\" label=\"Row actions\">\n      <civ-button data-civ-popover-trigger label=\"Actions\" icon-end=\"chevron-down\"></civ-button>\n      <ul class=\"civ-m-0 civ-list-none civ-p-1\" role=\"presentation\">\n        <li role=\"presentation\"><button role=\"menuitem\" class=\"civ-w-full civ-text-start civ-px-3 civ-py-2 civ-bg-transparent civ-border-0\">Edit</button></li>\n        <li role=\"presentation\"><button role=\"menuitem\" class=\"civ-w-full civ-text-start civ-px-3 civ-py-2 civ-bg-transparent civ-border-0\">Duplicate</button></li>\n        <li role=\"presentation\"><button role=\"menuitem\" class=\"civ-w-full civ-text-start civ-px-3 civ-py-2 civ-bg-transparent civ-border-0\">Remove</button></li>\n      </ul>\n    </civ-popover>",
+      "source": "packages/overlays/src/popover/civ-popover.stories.ts"
+    },
+    {
+      "story": "NoTabClose",
+      "name": "no-tab-close (panel has form controls)",
+      "category": "Overlays/Popover",
+      "html": "<civ-popover panel-role=\"group\" label=\"Column visibility\" no-tab-close>\n      <civ-button data-civ-popover-trigger label=\"Columns\" icon-end=\"chevron-down\"></civ-button>\n      <div class=\"civ-p-3\" style=\"min-width: 200px;\">\n        <label class=\"civ-flex civ-gap-2 civ-items-center civ-py-1\"><input type=\"checkbox\" checked /> Name</label>\n        <label class=\"civ-flex civ-gap-2 civ-items-center civ-py-1\"><input type=\"checkbox\" checked /> Email</label>\n        <label class=\"civ-flex civ-gap-2 civ-items-center civ-py-1\"><input type=\"checkbox\" /> Phone</label>\n        <p class=\"civ-mt-2 civ-mb-0 civ-text-sm\">Tab cycles between checkboxes without dismissing the popover.</p>\n      </div>\n    </civ-popover>",
+      "source": "packages/overlays/src/popover/civ-popover.stories.ts"
+    }
+  ],
   "civ-progress-header": [
     {
       "story": "AllStates",
@@ -5074,6 +5117,38 @@
       "category": "Forms/Form/Support Resources",
       "html": "<civ-support-resources heading=\"Housing assistance\">\n      <p>If you are experiencing homelessness or at risk of losing your housing:</p>\n      <civ-link type=\"phone\" number=\"18774243838\" label=\"National Call Center for Homeless Veterans\"></civ-link>\n      <p class=\"civ-mt-2 civ-text-sm\">Available 24/7. Counselors can connect you with local housing resources, shelters, and VA programs.</p>\n    </civ-support-resources>",
       "source": "packages/form-patterns/src/support-resources/civ-support-resources.stories.ts"
+    }
+  ],
+  "civ-tab-nav": [
+    {
+      "story": "Default",
+      "category": "Navigation/Tab Nav",
+      "html": "<civ-tab-nav label=\"Repository sections\">\n      <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/actions\" label=\"Actions\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n    </civ-tab-nav>",
+      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+    },
+    {
+      "story": "MobileStacking",
+      "category": "Navigation/Tab Nav",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      At ≤480px the tabs stack vertically. Resize the viewport to see it.\n    </p>\n    <div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-tab-nav label=\"Repository sections\">\n        <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n      </civ-tab-nav>\n    </div>",
+      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+    },
+    {
+      "story": "NoCurrentItem",
+      "category": "Navigation/Tab Nav",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      With no <code>current</code> item, none of the links carry <code>aria-current</code>. Use this on landing pages that don't map to a single tab.\n    </p>\n    <civ-tab-nav label=\"Repository sections\">\n      <civ-tab-nav-item href=\"/repo\" label=\"Code\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n    </civ-tab-nav>",
+      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+    },
+    {
+      "story": "TwoItems",
+      "category": "Navigation/Tab Nav",
+      "html": "<civ-tab-nav label=\"Profile sections\">\n      <civ-tab-nav-item href=\"/profile\" label=\"About\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/profile/activity\" label=\"Activity\" current></civ-tab-nav-item>\n    </civ-tab-nav>",
+      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+    },
+    {
+      "story": "WithDisabled",
+      "category": "Navigation/Tab Nav",
+      "html": "<civ-tab-nav label=\"Account sections\">\n      <civ-tab-nav-item href=\"/account\" label=\"Overview\" current></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/account/billing\" label=\"Billing\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/account/admin\" label=\"Admin\" disabled></civ-tab-nav-item>\n    </civ-tab-nav>",
+      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
     }
   ],
   "civ-tabs": [

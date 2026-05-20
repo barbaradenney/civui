@@ -39,7 +39,14 @@ const config: Config = {
     colorMode: {
       defaultMode: 'light',
       disableSwitch: false,
-      respectPrefersColorScheme: false,
+      // Initial mode follows the OS preference; the user can still
+      // override via the navbar toggle, and that choice persists in
+      // localStorage. Without this, the docs chrome stayed light on
+      // dark-OS machines while embedded StoryEmbed iframes (which
+      // load CivUI tokens that use `@media (prefers-color-scheme: dark)`)
+      // auto-swapped to dark — the docs page chrome and the inline
+      // previews disagreed about the mode.
+      respectPrefersColorScheme: true,
     },
     navbar: {
       title: 'CivUI',

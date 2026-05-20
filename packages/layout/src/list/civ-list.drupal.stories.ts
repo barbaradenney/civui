@@ -31,7 +31,6 @@ export const Default: Story = {
 };
 
 export const ListItem: Story = {
-  name: 'List Item',
   render: () => {
     const badge = badgeTemplate({ label: 'Pending', variant: 'info' });
     return render(listItemTemplate, {
@@ -43,7 +42,6 @@ export const ListItem: Story = {
 };
 
 export const WithBadges: Story = {
-  name: 'With Badges',
   render: () => {
     const items = [
       listItemTemplate({ heading: 'Claim #1234', description: 'Submitted January 15, 2026', end: badgeTemplate({ label: 'Approved', variant: 'success' }) }),
@@ -55,7 +53,6 @@ export const WithBadges: Story = {
 };
 
 export const WithoutDividers: Story = {
-  name: 'Without Dividers',
   render: () => {
     const items = [
       listItemTemplate({ heading: 'Healthcare', description: 'Enrolled since 2020' }),

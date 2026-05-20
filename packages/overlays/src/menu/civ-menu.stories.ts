@@ -102,7 +102,6 @@ export const LinkItems: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6" style="min-height: 480px;">
       <div data-civ-scale="dense">

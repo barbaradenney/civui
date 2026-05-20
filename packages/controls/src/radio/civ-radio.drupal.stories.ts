@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const RadioGroup: Story = {
-  name: 'Radio Group',
   render: () => {
     const children = [
       radioTemplate({ label: 'Email', name: 'contact', value: 'email' }),

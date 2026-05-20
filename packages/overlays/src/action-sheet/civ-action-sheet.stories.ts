@@ -81,7 +81,6 @@ export const WithMaxHeight: Story = {
 };
 
 export const WithFocusTrap: Story = {
-  name: 'With Focus Trap',
   render: () => {
     const toggle = (e: Event) => {
       const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;

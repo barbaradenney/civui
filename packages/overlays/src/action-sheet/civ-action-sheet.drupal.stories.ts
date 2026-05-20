@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const TwoActions: Story = {
-  name: 'Two Actions',
   render: () => {
     const actions = [
       buttonTemplate({ label: 'Confirm', type: 'submit' }),
@@ -38,7 +37,6 @@ export const TwoActions: Story = {
 };
 
 export const DangerAction: Story = {
-  name: 'Danger Action',
   render: () => {
     const actions = [
       buttonTemplate({ label: 'Delete permanently', danger: true }),

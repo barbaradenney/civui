@@ -97,7 +97,6 @@ export const KeyboardNavigation: Story = {
 };
 
 export const AppointmentTimeSlots: Story = {
-  name: 'Appointment Time Slots',
   parameters: {
     docs: {
       description: {

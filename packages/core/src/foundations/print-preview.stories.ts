@@ -84,7 +84,6 @@ export default meta;
 type Story = StoryObj;
 
 export const TextInputs: Story = {
-  name: 'Text Inputs',
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Text Inputs — Print Preview</h2>
 
@@ -137,7 +136,6 @@ export const SelectionControls: Story = {
 };
 
 export const DateFields: Story = {
-  name: 'Date Fields',
   render: () => html`
     <h2 class="civ-text-lg civ-font-bold civ-mb-4">Date Fields — Print Preview</h2>
 

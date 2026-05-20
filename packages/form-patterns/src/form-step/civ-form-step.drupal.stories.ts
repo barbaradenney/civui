@@ -23,7 +23,6 @@ export const Default: Story = {
 };
 
 export const MultipleFields: Story = {
-  name: 'Multiple Fields',
   render: () => {
     const firstName = textInputTemplate({ name: 'firstName', required: true, label: 'First name' });
     const lastName = textInputTemplate({ name: 'lastName', required: true, label: 'Last name' });
@@ -33,7 +32,6 @@ export const MultipleFields: Story = {
 };
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => {
     const nameField = textInputTemplate({ name: 'fullName', required: true, label: 'Full name', error: 'Enter your full name' });
     return render({ default: nameField });

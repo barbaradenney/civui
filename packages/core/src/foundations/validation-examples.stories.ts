@@ -14,7 +14,6 @@ export default meta;
 type Story = StoryObj;
 
 export const DeclarativeValidation: Story = {
-  name: 'Declarative Validation',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-text-input label="Email" name="email" hint="We'll send your confirmation here" required validate="email"></civ-text-input>

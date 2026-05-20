@@ -82,14 +82,12 @@ export const CustomLabels: Story = {
 };
 
 export const WithUnsureOption: Story = {
-  name: 'With Unsure Option',
   render: () => html`
     <civ-yes-no legend="Do you have a service-connected disability?" hint="This includes any injury or illness incurred during military service" name="disability" unsure-label="I'm not sure"></civ-yes-no>
   `,
 };
 
 export const CustomThirdOption: Story = {
-  name: 'Custom Third Option',
   render: () => html`
     <civ-yes-no legend="Does this condition apply to your household?" name="condition" unsure-label="Does not apply" unsure-value="n/a"></civ-yes-no>
   `,
@@ -98,7 +96,6 @@ export const CustomThirdOption: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-yes-no legend="Normal (no selection)" name="normal"></civ-yes-no>
@@ -114,7 +111,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">

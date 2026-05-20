@@ -54,7 +54,6 @@ export const Success: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => {
     const info = template({ variant: 'info', heading: 'Information', label: 'Informational message.' });
     const warning = template({ variant: 'warning', heading: 'Warning', label: 'Warning message.' });

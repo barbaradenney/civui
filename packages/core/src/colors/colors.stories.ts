@@ -92,7 +92,6 @@ export const Base: Story = {
 };
 
 export const AllColors: Story = {
-  name: 'All Colors',
   render: () => html`
     <div class="civ-grid civ-gap-8" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
       ${paletteSection('Primary', [

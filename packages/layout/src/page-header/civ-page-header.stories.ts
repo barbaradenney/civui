@@ -22,7 +22,6 @@ export const Default: Story = {
 };
 
 export const WithEyebrow: Story = {
-  name: 'With Eyebrow',
   render: () => html`
     <civ-page-header>
       <span data-eyebrow>Benefits</span>
@@ -32,7 +31,6 @@ export const WithEyebrow: Story = {
 };
 
 export const WithSubheading: Story = {
-  name: 'With Subheading',
   render: () => html`
     <civ-page-header>
       <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
@@ -42,7 +40,6 @@ export const WithSubheading: Story = {
 };
 
 export const WithStatusBadge: Story = {
-  name: 'With Status Badge',
   render: () => html`
     <civ-page-header>
       <h1 data-heading class="civ-heading-xl">
@@ -55,7 +52,6 @@ export const WithStatusBadge: Story = {
 };
 
 export const AllSlotCombinations: Story = {
-  name: 'All Slot Combinations',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
@@ -103,7 +99,6 @@ export const AllSlotCombinations: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -170,7 +165,6 @@ export const ClaimDetailHeader: Story = {
 };
 
 export const Compact: Story = {
-  name: 'Compact',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>

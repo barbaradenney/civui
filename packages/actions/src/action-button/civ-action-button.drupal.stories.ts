@@ -51,7 +51,6 @@ export const Disabled: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => {
     const primary = template({ label: 'Primary', variant: 'primary' });
     const secondary = template({ label: 'Secondary', variant: 'secondary' });

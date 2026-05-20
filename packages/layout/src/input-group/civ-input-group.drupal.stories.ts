@@ -26,7 +26,6 @@ export const Default: Story = {
 };
 
 export const ThreeColumns: Story = {
-  name: 'Three Columns',
   render: () => {
     const city = textInputTemplate({ name: 'city', required: true, label: 'City' });
     const state = selectTemplate({ name: 'state', preset: 'us-state', required: true, label: 'State' });

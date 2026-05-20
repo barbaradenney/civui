@@ -717,11 +717,53 @@ attached to the div (which doesn't itself capture children).
 </civ-popover>
 ```
 
+**Conditional rendering of the mixin element itself** is also
+broken. Patterns like:
+
+```ts
+// ⚠ crashes with "Cannot read properties of null (reading 'nextSibling')"
+${this._open ? html`
+  <civ-modal>...children...</civ-modal>
+` : nothing}
+```
+
+…fail the same way when the outer template flips back and forth.
+The civ-modal element gets re-created each time, and lit-html's
+`_$clear` walk hits a detached marker. Two safe rewrites:
+
+1. **Always render, toggle a prop**: drop the conditional and use
+   `<civ-modal ?open="${this._open}">…</civ-modal>` so the same
+   element stays mounted. civ-address's address-validation modal
+   uses this — the modal is rendered unconditionally once
+   `validateAddress` is set; opening/closing is just a `?open`
+   toggle.
+2. **`keyed()` directive when the conditional MUST cover a different
+   set of slot children** (e.g. civ-radio-group with two distinct
+   radio vocabularies):
+
+   ```ts
+   import { keyed } from 'lit/directives/keyed.js';
+   ${keyed(vocab, html`
+     <civ-radio-group>
+       ${vocab === 'a' ? html`<civ-radio …/>…` : html`<civ-radio …/>…`}
+     </civ-radio-group>
+   `)}
+   ```
+
+   `keyed` tells lit-html to tear down the existing template and
+   create a fresh one when the key changes, so each civ-radio-group
+   instance captures its own static set of children on mount.
+   civ-partnership-history's marriage vs. partnership status radios
+   use this.
+
 **Caught by:** runtime exception (rare now, after the comment-skip
 fix). If you see odd duplicate/missing children inside a
-LightDomSlotMixin component's slot target, check whether the
-content uses a dynamic `${...map(...)}` directly under the
-mixin-using element — and wrap it in a static container.
+LightDomSlotMixin component's slot target, or `null.nextSibling`
+crashes from `ChildPart._$clear`, check whether the content uses
+a dynamic `${...map(...)}` directly under the mixin-using element
+— and wrap it in a static container, hoist the conditional out
+with `keyed(...)`, or render the element unconditionally and
+toggle a prop.
 
 ---
 

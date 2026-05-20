@@ -23,7 +23,6 @@ export const Default: Story = {
 };
 
 export const InlineMode: Story = {
-  name: 'Inline Mode',
   render: () => render({
     legend: 'Previous employers',
     name: 'employers',

@@ -70,7 +70,6 @@ export const Hidden: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">

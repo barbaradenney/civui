@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const WithSelections: Story = {
-  name: 'With Selections',
   render: () => {
     const chips = [
       filterChipTemplate({ label: 'Healthcare', name: 'filter', value: 'healthcare', checked: true }),

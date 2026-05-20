@@ -26,7 +26,6 @@ export const Default: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-gap-2 civ-items-center">
       <civ-action-button label="Primary" variant="primary"></civ-action-button>
@@ -101,7 +100,6 @@ export const ButtonGroupVertical: Story = {
 };
 
 export const DangerVariants: Story = {
-  name: 'Danger Variants',
   render: () => html`
     <div class="civ-flex civ-gap-2 civ-items-center">
       <civ-action-button label="Delete" variant="primary" danger></civ-action-button>
@@ -112,7 +110,6 @@ export const DangerVariants: Story = {
 };
 
 export const DangerButtonGroup: Story = {
-  name: 'Danger Button Group',
   render: () => html`
     <civ-button-group>
       <civ-action-button label="Keep" variant="tertiary"></civ-action-button>

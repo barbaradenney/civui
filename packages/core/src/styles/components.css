@@ -2329,12 +2329,24 @@
   }
 
   .civ-column-visibility__panel {
-    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
-           civ-rounded civ-shadow-lg civ-py-2;
+    @apply civ-absolute civ-flex civ-flex-col civ-bg-white civ-border
+           civ-border-base-light civ-rounded civ-shadow-lg civ-py-2;
     top: calc(100% + var(--civ-spacing-1));
     min-width: 14rem;
     max-width: 20rem;
     z-index: var(--civ-z-overlay);
+  }
+
+  /* Stack the option rows. The host `civ-checkbox` is `inline-block` at
+     `spacing="sm"` (intentional for inline data-grid cells), and that
+     attribute selector has higher specificity than `.civ-column-
+     visibility__option` alone — so without the flex-column container,
+     the options pack horizontally and wrap like a paragraph of words
+     instead of reading as a checkbox list. `align-items: stretch` (flex
+     default) plus an explicit width on each child gives each row the
+     full panel width and a stable hover hit-target. */
+  .civ-column-visibility__panel > .civ-column-visibility__option {
+    width: 100%;
   }
 
   .civ-column-visibility__panel--align-start {

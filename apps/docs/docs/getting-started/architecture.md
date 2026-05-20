@@ -7,7 +7,7 @@ title: Architecture
 
 ## Light DOM
 
-All CivUI components render to Light DOM — no Shadow DOM. This means:
+All CivUI components render to Light DOM. No Shadow DOM. This means:
 
 - External `<label>` elements work with `for` attributes
 - ARIA `id` references (`aria-describedby`, `aria-labelledby`) resolve across the page
@@ -28,19 +28,19 @@ class CivTextInput extends CivFormElement {
 ### CivBaseElement
 
 Base for all display components. Provides:
-- `generateId()` — unique ID generation for ARIA references
-- `sendAnalytics()` — PII-safe analytics events
+- `generateId()`: unique ID generation for ARIA references
+- `sendAnalytics()`: PII-safe analytics events
 - Light DOM rendering
 
 ### CivFormElement
 
 Extends `CivBaseElement` for form-participating components. Adds:
-- `static formAssociated = true` — ElementInternals form participation
+- `static formAssociated = true`: ElementInternals form participation
 - Standard props: `label`, `name`, `value`, `hint`, `error`, `required`, `disabled`
-- `updateFormValue()` — syncs value to the browser's form system
-- `formResetCallback()` — restores initial value on form reset
-- `formDisabledCallback()` — cascades disabled state
-- `hide-required-indicator` — suppresses "(required)" text while keeping validation
+- `updateFormValue()`: syncs value to the browser's form system
+- `formResetCallback()`: restores initial value on form reset
+- `formDisabledCallback()`: cascades disabled state
+- `hide-required-indicator`: suppresses "(required)" text while keeping validation
 
 ## Tailwind CSS
 

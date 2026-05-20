@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-progress-header',
-  description: 'Compact step counter for multi-step forms — renders "Step X of Y: Title" in three size variants. Pure display; no navigation logic. Pair with `civ-form-step` (which owns the back-button) or use standalone above a custom step UI.',
+  description: 'Compact step counter for multi-step forms. Renders "Step X of Y: Title" in three size variants. Pure display; no navigation logic. Pair with `civ-form-step` (which owns the back-button) or use standalone above a custom step UI.',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,

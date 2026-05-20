@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     headingLevel: {
       type: 'number',
-      description: 'Semantic heading level (2–6) for the modal heading. Web-only — native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics',
+      description: 'Semantic heading level (2–6) for the modal heading. Web-only. Native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics',
       default: 2,
       attribute: 'heading-level',
       webOnly: true,

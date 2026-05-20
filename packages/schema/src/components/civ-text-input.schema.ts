@@ -82,7 +82,7 @@ const schema: ComponentSchema = {
     },
     validateType: {
       type: 'enum',
-      description: 'Declarative validation preset — auto-validates on blur. Empty string means no validation',
+      description: 'Declarative validation preset. Auto-validates on blur. Empty string means no validation',
       default: '',
       values: ['', 'email', 'phone', 'phoneIntl', 'ssn', 'ein', 'routing', 'zip', 'zip4', 'usState', 'url', 'currency', 'alphanumeric'],
       attribute: 'validate',

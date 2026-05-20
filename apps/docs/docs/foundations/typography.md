@@ -82,8 +82,8 @@ Regular weight for supporting context, sub-sections, or form step descriptions.
 
 ### When to use each
 
-- **Primary** — page titles, fieldset legends, section headers that introduce new content
-- **Secondary** — step descriptions, contextual subheadings, follow-up text under a primary heading
+- **Primary:** page titles, fieldset legends, section headers that introduce new content
+- **Secondary:** step descriptions, contextual subheadings, follow-up text under a primary heading
 
 ```html
 <h1 class="civ-heading-xl">Step 2: Service history</h1>

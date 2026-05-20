@@ -28,7 +28,7 @@ const schema: ComponentSchema = {
     },
     trapFocus: {
       type: 'boolean',
-      description: 'Trap keyboard focus inside the sheet while open. Web-specific behavior — native platforms manage focus via the OS sheet primitive',
+      description: 'Trap keyboard focus inside the sheet while open. Web-specific behavior. Native platforms manage focus via the OS sheet primitive',
       default: false,
       attribute: 'trap-focus',
       webOnly: true,

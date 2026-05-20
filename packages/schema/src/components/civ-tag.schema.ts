@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-tag',
-  description: 'Inline keyword / category tag. Distinct from `civ-badge` (status indicators) — `civ-tag` is for descriptive labels (topics, categories). Renders as a small pill with optional leading icon.',
+  description: 'Inline keyword / category tag. Distinct from `civ-badge` (status indicators). `civ-tag` is for descriptive labels (topics, categories). Renders as a small pill with optional leading icon.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,

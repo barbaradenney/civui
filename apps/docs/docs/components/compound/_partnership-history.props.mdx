@@ -1,12 +1,12 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `legend` | `string` | `''` | Top-level legend rendered above the sub-fields |
 | `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
 | `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
-| `show-marriage-type` | `boolean` | `false` | Render the marriage-type selector (civil / religious / common-law / other). Default off — most forms only need date and location |
+| `show-marriage-type` | `boolean` | `false` | Render the marriage-type selector (civil / religious / common-law / other). Default off. Most forms only need date and location |
 | `status-assumed` | `string` | `''` | When set, suppresses the status sub-field and uses this value instead. Useful for "current spouse" contexts where status is implied |
 | `step` | `'who'` \| `'details'` \| `'status'` | — | Render only one section of the compound. Use to split the form across multiple form-step pages: "who" (partner name + type), "details" (date/location), "status" (current status + end-date). Default (unset) renders the full single-page form. |
 | `spouse-error` | `string` | `''` | Per-field error for the spouse-name input |

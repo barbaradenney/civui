@@ -11,13 +11,13 @@ import PropsTable from "./_support-resources.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-support-resources`](pathname:///civui/storybook/?path=/docs/contract-civ-support-resources--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-support-resources`](pathname:///civui/storybook/?path=/docs/contract-civ-support-resources--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-support-resources>`
 
-A structured container for support and crisis contact information. Renders as an `<aside>` landmark with a heading and slotted content for phone, email, and other contact links. Use at the bottom of sensitive forms — benefits, healthcare, housing — to provide crisis lines, helpdesk numbers, or support links.
+A structured container for support and crisis contact information. Renders as an `<aside>` landmark with a heading and slotted content for phone, email, and other contact links. Use at the bottom of sensitive forms (benefits, healthcare, housing) to provide crisis lines, helpdesk numbers, or support links.
 
 ## Examples
 
@@ -45,7 +45,7 @@ A structured container for support and crisis contact information. Renders as an
 
 ## Slots
 
-The default slot accepts any content — typically `civ-link` components with `type="phone"` / `"email"` for contact info:
+The default slot accepts any content. Typically `civ-link` components with `type="phone"` / `"email"` for contact info:
 
 ```html
 <civ-support-resources heading="If you need support">
@@ -67,12 +67,12 @@ You can also include paragraphs, lists, or any custom HTML:
 
 ## Accessibility
 
-- Renders as `<aside role="complementary">` — a landmark for screen reader navigation
+- Renders as `<aside role="complementary">`. A landmark for screen reader navigation
 - Heading uses `aria-labelledby` to label the landmark (no duplicate announcements)
 - Heading level is configurable to fit the page's heading hierarchy
-- Always visible — not hidden behind conditionals or collapsed sections
+- Always visible. Not hidden behind conditionals or collapsed sections
 
 ## Related
 
-- [Housing pattern](/form-patterns/housing) — pairs with support resources for housing-insecure forms
-- [`civ-link`](/components/actions/link) — with `type="phone"` / `"email"` / `"download"` for the contact links inside support resources
+- [Housing pattern](/form-patterns/housing). Pairs with support resources for housing-insecure forms
+- [`civ-link`](/components/actions/link). With `type="phone"` / `"email"` / `"download"` for the contact links inside support resources

@@ -12,13 +12,13 @@ import EventsTable from "./_link.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-link`](pathname:///civui/storybook/?path=/docs/contract-civ-link--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-link`](pathname:///civui/storybook/?path=/docs/contract-civ-link--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-link>`
 
-An accessible link component that always renders an `<a>` element. For a navigation affordance that should look like a button, use `<civ-button href="…">` — that renders an `<a>` with button chrome plus an underline so the link identity stays visible. All link variants are underlined for accessibility.
+An accessible link component that always renders an `<a>` element. For a navigation affordance that should look like a button, use `<civ-button href="…">`. That renders an `<a>` with button chrome plus an underline so the link identity stays visible. All link variants are underlined for accessibility.
 
 ## Examples
 
@@ -80,7 +80,7 @@ An accessible link component that always renders an `<a>` element. For a navigat
 
 ### Primary
 
-Bold underlined link with a trailing chevron-right caret. Most emphasis — use for the main next-step link in a section.
+Bold underlined link with a trailing chevron-right caret. Most emphasis. Use for the main next-step link in a section.
 
 ```html
 <civ-link href="/benefits" variant="primary" label="View all benefits"></civ-link>
@@ -140,7 +140,7 @@ Use `<civ-link new-tab>` to open links in a new tab. This automatically sets `ta
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/link/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/link/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:link' with {

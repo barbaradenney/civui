@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Event | Detail | Description |
 |-------|--------|-------------|
@@ -12,4 +12,4 @@
 | `civ-cell-edit-commit` | `{ rowId: string, columnKey: string, value: object, row: object }` | Fires when the user commits a valid new cell value (Enter / blur / click-outside). Consumers should update the underlying row data; the grid does not mutate `rows` directly. Validation errors block this event from firing |
 | `civ-cell-edit-cancel` | `{ rowId: string, columnKey: string, row: object }` | Fires when the user cancels an in-progress edit (Escape). The cell reverts to its previous displayed value without any consumer state change |
 | `civ-group-toggle` | `{ groupKey: string, expanded: boolean }` | Fires when the user clicks a group header's chevron. Consumers manage `expandedGroups` in response: add the key when `expanded === true`, remove it when `false` |
-| `civ-filter-change` | `{ filters: object, columnKey: string }` | Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own — use `applyGridFilters` from `@civui/data/filter` for the client-side default |
+| `civ-filter-change` | `{ filters: object, columnKey: string }` | Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own. Use `applyGridFilters` from `@civui/data/filter` for the client-side default |

@@ -121,7 +121,7 @@ form.dirty;             // Whether any field has been modified
 | `civ-invalid` | `{ errors: FormFieldError[] }` | Fires when validation fails |
 | `civ-dirty` | `{ dirty: boolean }` | Fires when dirty state changes |
 | `civ-submit-confirm` | `{ formData, data, proceed, cancel }` | Fires before `civ-submit` when `confirm-before-submit` is set. Call `proceed()` to fire the actual submit; `cancel()` to abort |
-| `civ-submit-cancelled` | — | Fires when `cancel()` was called on the matching `civ-submit-confirm` |
+| `civ-submit-cancelled` |. | Fires when `cancel()` was called on the matching `civ-submit-confirm` |
 
 ## Submission
 
@@ -206,7 +206,7 @@ For irreversible submissions (filing a claim, signing a tax return), add
 `confirm-before-submit`. After validation passes, the form dispatches
 `civ-submit-confirm` with `proceed()` and `cancel()` callbacks instead of
 firing `civ-submit` immediately. The consumer shows their own confirmation
-UI — a modal, a confirmation page, or an inline prompt — and decides
+UI (a modal, a confirmation page, or an inline prompt) and decides
 whether to proceed:
 
 ```html
@@ -226,7 +226,7 @@ whether to proceed:
 </civ-form>
 ```
 
-Repeat submit attempts while a confirmation is pending are deduped —
+Repeat submit attempts while a confirmation is pending are deduped.
 only the first `civ-submit-confirm` is authoritative. A second click
 no-ops until the consumer resolves the first one with `proceed()` or
 `cancel()`.
@@ -237,11 +237,11 @@ For multi-session form drafts (benefits applications, tax forms, immigration
 forms), use [`<civ-form-autosave>`](./form-autosave.mdx) as a child of
 `civ-form`. The autosave element persists in-progress answers to
 `localStorage` / `sessionStorage` / a custom adapter and restores them on
-the next page load — automatically excluding PII-flagged fields.
+the next page load. Automatically excluding PII-flagged fields.
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/form/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/form/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:form' with {

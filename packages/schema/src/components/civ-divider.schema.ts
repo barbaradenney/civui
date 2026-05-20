@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-divider',
-  description: 'Horizontal section divider. Two variants — `default` (subtle base-lighter line) and `primary` (slightly stronger emphasis). Use between sections; for list rows prefer the `dividers` prop on `civ-list`.',
+  description: 'Horizontal section divider. Two variants. `default` (subtle base-lighter line) and `primary` (slightly stronger emphasis). Use between sections; for list rows prefer the `dividers` prop on `civ-list`.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,

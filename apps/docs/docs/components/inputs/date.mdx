@@ -16,7 +16,7 @@ import DateRangePickerEvents from "./_date-range-picker.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-date-picker`](pathname:///civui/storybook/?path=/docs/contract-civ-date-picker--docs) · [`civ-date-range-picker`](pathname:///civui/storybook/?path=/docs/contract-civ-date-range-picker--docs) · [`civ-memorable-date`](pathname:///civui/storybook/?path=/docs/contract-civ-memorable-date--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-date-picker`](pathname:///civui/storybook/?path=/docs/contract-civ-date-picker--docs) · [`civ-date-range-picker`](pathname:///civui/storybook/?path=/docs/contract-civ-date-range-picker--docs) · [`civ-memorable-date`](pathname:///civui/storybook/?path=/docs/contract-civ-memorable-date--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -36,7 +36,7 @@ Three date components for different use cases:
 
 `<civ-memorable-date>`
 
-Three-field date input (month select + day + year) for dates the user knows from memory. Self-contained — pass `legend` directly; no external wrapper needed.
+Three-field date input (month select + day + year) for dates the user knows from memory. Self-contained. Pass `legend` directly; no external wrapper needed.
 
 ### Examples
 
@@ -122,7 +122,7 @@ ISO `YYYY-MM-DD` regardless of display locale.
 
 `<civ-date-range-picker>`
 
-Two linked date pickers that form a start/end range. Cross-validates so end can never precede start. Self-contained — pass `legend` directly; no external wrapper needed.
+Two linked date pickers that form a start/end range. Cross-validates so end can never precede start. Self-contained. Pass `legend` directly; no external wrapper needed.
 
 ### Examples
 
@@ -166,7 +166,7 @@ Automatically checks: end ≥ start, duration ≥ min-range-days, duration ≤ m
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/memorable-date/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/memorable-date/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:memorable-date' with {

@@ -1,9 +1,9 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them — useful for narrow viewports or full-width primary actions |
+| `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them. Useful for narrow viewports or full-width primary actions |
 | `allow-overflow` | `boolean` | `false` | Opt-in. When set on a horizontal group, measure available width on mount + resize and collapse trailing buttons that don't fit into a "More" popover-menu. The collapsed buttons stay in the DOM (hidden) so author-attached event listeners keep firing. Web-only because the overflow depends on DOM layout measurement (ResizeObserver) that doesn't translate to SwiftUI / Compose. |
-| `overflow-label` | `string` | `''` | Accessible name for the "More" trigger that opens the overflow menu. Defaults to the localized "More" string. Web-only — paired with `allowOverflow`. |
-| `overflow-icon` | `string` | `'more-horiz'` | Icon name on the "More" trigger. Defaults to `more-horiz`. Web-only — paired with `allowOverflow`. |
+| `overflow-label` | `string` | `''` | Accessible name for the "More" trigger that opens the overflow menu. Defaults to the localized "More" string. Web-only. Paired with `allowOverflow`. |
+| `overflow-icon` | `string` | `'more-horiz'` | Icon name on the "More" trigger. Defaults to `more-horiz`. Web-only. Paired with `allowOverflow`. |

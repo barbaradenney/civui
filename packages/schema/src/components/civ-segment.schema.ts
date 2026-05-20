@@ -17,14 +17,14 @@ const schema: ComponentSchema = {
   props: {
     selected: {
       type: 'boolean',
-      description: 'Whether this segment is the active option. Web-only — native platforms encode the active segment via the parent control\'s `value` binding pointing at one of its options',
+      description: 'Whether this segment is the active option. Web-only. Native platforms encode the active segment via the parent control\'s `value` binding pointing at one of its options',
       default: false,
       reflect: true,
       webOnly: true,
     },
     managedTabIndex: {
       type: 'number',
-      description: 'Tabindex assigned by the parent `civ-segmented-control` for roving-tabindex keyboard navigation. Web-only — set programmatically, never as an attribute',
+      description: 'Tabindex assigned by the parent `civ-segmented-control` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute',
       webOnly: true,
     },
   },

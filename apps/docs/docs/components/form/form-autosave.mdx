@@ -13,7 +13,7 @@ import MethodsTable from "./_form-autosave.methods.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-form-autosave`](pathname:///civui/storybook/?path=/docs/contract-civ-form-autosave--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-form-autosave`](pathname:///civui/storybook/?path=/docs/contract-civ-form-autosave--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -21,20 +21,20 @@ import MethodsTable from "./_form-autosave.methods.mdx";
 
 Drops inside a [`<civ-form>`](./form.mdx) to persist in-progress answers so
 users can return later and resume where they left off. Long government
-applications (benefits, immigration, tax) often span multiple sessions —
+applications (benefits, immigration, tax) often span multiple sessions.
 losing typed input to a page refresh, tab close, or network drop is one of
 the highest-impact paper cuts the design system can close.
 
 ## Lifecycle
 
-1. **On mount** — the configured adapter loads any saved snapshot for the
+1. **On mount:** the configured adapter loads any saved snapshot for the
    given `storage-key` and the host form's `prefillData` is populated.
    Every matching field is restored. The element announces "Resumed from
    your saved progress" politely (suppress with `silent-resume`).
-2. **On every `civ-input`** inside the form — the autosave element
+2. **On every `civ-input`** inside the form. The autosave element
    debounces (default 1s) and writes the form's current data to the
    adapter.
-3. **On `civ-submit`** — the saved snapshot is cleared so a fresh
+3. **On `civ-submit`:** the saved snapshot is cleared so a fresh
    application doesn't see stale draft data.
 
 PII-flagged fields (`data-civ-pii`) and explicitly-excluded fields
@@ -168,12 +168,12 @@ autosave.adapter = serverAdapter;
   silently. The form remains usable; the user just doesn't get this
   snapshot saved.
 - Custom adapters must enforce their own access control. Don't rely on
-  obscurity of the storage key — anyone with read access to the storage
+  obscurity of the storage key. Anyone with read access to the storage
   can list every key in the same scope.
 
 ## Accessibility
 
-- Renders no visible markup — the element is a controller, not a UI
+- Renders no visible markup. The element is a controller, not a UI
   surface.
 - On restore, announces "Resumed from your saved progress" through the
   shared screen-reader live region. Suppress with `silent-resume` if your

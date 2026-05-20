@@ -1,13 +1,13 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `legend` | `string` | `''` | Group legend text (rendered as `<legend>`). The component is self-contained — do not wrap in civ-fieldset. |
+| `legend` | `string` | `''` | Group legend text (rendered as `<legend>`). The component is self-contained. Do not wrap in civ-fieldset. |
 | `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
 | `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
 | `tight-hint` | `boolean` | `false` | Pull the hint visually flush with the controls below it. Useful for compact compounds where legend + hint should read as one stacked header. |
-| `tile` | `boolean` | `true` | Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment |
+| `tile` | `boolean` | `true` | Tile variant with bordered card styling for child checkboxes. Default true. Tiles are the standard treatment |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | Layout orientation for child checkboxes |
 | `variant` | `'auto'` \| `'card'` \| `'list'` | `'auto'` | Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only |
 | `show-select-all` | `boolean` | `false` | When true, renders a "Select all" / "Deselect all" toggle button above the group |

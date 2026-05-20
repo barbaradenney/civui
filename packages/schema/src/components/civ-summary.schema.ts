@@ -16,7 +16,7 @@ const schema: ComponentSchema = {
     },
     headingLevel: {
       type: 'number',
-      description: 'Semantic heading level (2–6) for the main heading on web — section headings auto-render one level below. Web-only: native platforms expose headings via `accessibilityAddTraits(.isHeader)` (iOS) or semantic headings (Android) without numeric levels',
+      description: 'Semantic heading level (2–6) for the main heading on web. Section headings auto-render one level below. Web-only: native platforms expose headings via `accessibilityAddTraits(.isHeader)` (iOS) or semantic headings (Android) without numeric levels',
       default: 2,
       attribute: 'heading-level',
       webOnly: true,
@@ -30,7 +30,7 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-edit': {
-      description: 'Fires (cancelable) when the user clicks any edit link. Call `preventDefault()` to suppress the default `<a>` navigation — useful for SPA routers. Detail includes the matched section, optional item, and the link href',
+      description: 'Fires (cancelable) when the user clicks any edit link. Call `preventDefault()` to suppress the default `<a>` navigation. Useful for SPA routers. Detail includes the matched section, optional item, and the link href',
       detail: {
         section: { type: 'object', description: 'The full SummarySection that was clicked' },
         item: { type: 'object', description: 'The clicked SummaryItem when the click was on an item-level edit link (omitted for section-level edit links)' },

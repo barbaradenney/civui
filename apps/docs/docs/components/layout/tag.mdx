@@ -11,13 +11,13 @@ import PropsTable from "./_tag.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-tag`](pathname:///civui/storybook/?path=/docs/contract-civ-tag--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-tag`](pathname:///civui/storybook/?path=/docs/contract-civ-tag--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-tag>`
 
-A small label rendered as a colored pill for **categorization** — topics, taxonomies, filter chips, metadata. For status indicators ("Approved", "Pending") or counts, use [`civ-badge`](../feedback/badge) instead.
+A small label rendered as a colored pill for **categorization**. Topics, taxonomies, filter chips, metadata. For status indicators ("Approved", "Pending") or counts, use [`civ-badge`](../feedback/badge) instead.
 
 ## Examples
 
@@ -88,7 +88,7 @@ Light background with dark text. Use for filter chips and metadata.
 | `purple` | Specialized program category |
 | `gray` | Archived, inactive, neutral metadata |
 
-Semantic colors (red/green/yellow/teal) are intentionally excluded — they're reserved for [`civ-badge`](../feedback/badge), which carries `role="status"` for assistive tech.
+Semantic colors (red/green/yellow/teal) are intentionally excluded. They're reserved for [`civ-badge`](../feedback/badge), which carries `role="status"` for assistive tech.
 
 ## Dark mode
 
@@ -115,7 +115,7 @@ Tag size is controlled by the density system. Wrap in a parent with `data-civ-sc
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/tag/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/tag/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:tag' with {

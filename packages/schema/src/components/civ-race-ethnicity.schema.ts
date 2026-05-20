@@ -52,7 +52,7 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Tile rendering variant forwarded to both inner groups. auto picks card for ≤4 options and list for 5+ — Race (6 options) renders as list, Ethnicity (3 options) stays card',
+      description: 'Tile rendering variant forwarded to both inner groups. auto picks card for ≤4 options and list for 5+. Race (6 options) renders as list, Ethnicity (3 options) stays card',
       default: 'auto',
       values: ['auto', 'card', 'list'],
     },

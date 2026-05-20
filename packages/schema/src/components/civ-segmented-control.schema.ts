@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Group legend text (rendered as `<legend>`). The component is self-contained — do not wrap in civ-fieldset.',
+      description: 'Group legend text (rendered as `<legend>`). The component is self-contained. Do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {

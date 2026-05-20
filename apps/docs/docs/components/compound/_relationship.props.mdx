@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -9,9 +9,9 @@
 | `preset` | `'general'` \| `'beneficiary'` \| `'dependent'` \| `'survivor'` | `'general'` | Built-in relationship-type preset. Determines which options appear in the relationship selector and which date fields are conditionally rendered |
 | `options` | `array` | — | Custom relationship-type configuration. When set, overrides the preset. Web: typed array of `{value, label, fields?}` objects (set as JS property, attribute: false). Native: passed as a JSON-encoded string for serialization. Conceptually the same data, different wire format per platform |
 | `show-name` | `boolean` | `true` | Render the relative-name input. Defaults to true. **HTML-boolean trap:** `show-name="false"` does NOT disable it (Lit treats any present boolean attribute as truthy). Use `hide-name` or bind the property directly in lit-html with `.showName=${false}`. |
-| `hide-name` | `boolean` | `false` | Inverse of `show-name` — present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship. |
+| `hide-name` | `boolean` | `false` | Inverse of `show-name`. Present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship. |
 | `show-deceased` | `boolean` | `false` | Render the "Is this person deceased?" toggle. When true, shows the date-of-death input |
-| `deceased-assumed` | `boolean` | `false` | Suppress the deceased toggle and treat all entries as deceased — used for survivor-only contexts |
+| `deceased-assumed` | `boolean` | `false` | Suppress the deceased toggle and treat all entries as deceased. Used for survivor-only contexts |
 | `show-divorce-date` | `boolean` | `false` | Render the divorce-date input when the relationship type is spouse-related |
 | `show-adoption-date` | `boolean` | `false` | Render the adoption-date input when the relationship type is child-related |
 | `name-error` | `string` | `''` | Compound-level error for the relative-name section |

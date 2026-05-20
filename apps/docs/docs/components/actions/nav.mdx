@@ -12,13 +12,13 @@ import NavItemProps from "./_nav-item.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-nav--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-nav--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-nav>` + `<civ-nav-item>`
 
-Top-level horizontal site navigation. The parent renders a `<nav>` landmark with a horizontal `<ul>` of `<civ-nav-item>` links. The active item should set `current` — it gets `aria-current="page"` plus a persistent underline so the current page reads as such even without keyboard focus. Items stack vertically on mobile (≤480px).
+Top-level horizontal site navigation. The parent renders a `<nav>` landmark with a horizontal `<ul>` of `<civ-nav-item>` links. The active item should set `current`. It gets `aria-current="page"` plus a persistent underline so the current page reads as such even without keyboard focus. Items stack vertically on mobile (≤480px).
 
 Single-level only. For dropdown submenus, use a separate menu component.
 
@@ -57,11 +57,11 @@ Single-level only. For dropdown submenus, use a separate menu component.
 </civ-nav>
 ```
 
-## Props — civ-nav
+## Props. Civ-nav
 
 <NavProps />
 
-## Props — civ-nav-item
+## Props. Civ-nav-item
 
 <NavItemProps />
 
@@ -70,7 +70,7 @@ Single-level only. For dropdown submenus, use a separate menu component.
 - Renders as a `<nav>` landmark. Always set `label` when a page has more than one nav so screen-reader landmark navigation can distinguish them.
 - Each link inherits the global focus ring from `civ.css`.
 - The active item uses `aria-current="page"` so the user's location is announced.
-- Disabled items render as a non-interactive `<span>` with `aria-disabled="true"` — a `disabled` `<a>` would still be focusable, so we drop the href entirely.
+- Disabled items render as a non-interactive `<span>` with `aria-disabled="true"`. A `disabled` `<a>` would still be focusable, so we drop the href entirely.
 
 ## When to use a different component
 

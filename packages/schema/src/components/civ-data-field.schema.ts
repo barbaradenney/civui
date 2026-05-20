@@ -11,13 +11,13 @@ const schema: ComponentSchema = {
   props: {
     href: {
       type: 'string',
-      description: 'When set, the value is rendered as a download link (web only — native platforms render the value as plain text)',
+      description: 'When set, the value is rendered as a download link (web only. Native platforms render the value as plain text)',
       default: '',
       webOnly: true,
     },
     values: {
       type: 'array',
-      description: 'Multi-value display — renders each entry on its own line. JS property only (no HTML attribute reflection)',
+      description: 'Multi-value display. Renders each entry on its own line. JS property only (no HTML attribute reflection)',
       webOnly: true,
     },
     editHref: {

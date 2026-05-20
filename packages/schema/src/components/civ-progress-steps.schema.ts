@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-progress-steps',
-  description: 'Multi-step progress indicator — renders a horizontal sequence of segments with completed / current / upcoming states. Used to show position in a form wizard.',
+  description: 'Multi-step progress indicator. Renders a horizontal sequence of segments with completed / current / upcoming states. Used to show position in a form wizard.',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,

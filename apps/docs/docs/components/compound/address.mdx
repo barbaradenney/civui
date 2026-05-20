@@ -12,13 +12,13 @@ import EventsTable from "./_address.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-address`](pathname:///civui/storybook/?path=/docs/contract-civ-address--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-address`](pathname:///civui/storybook/?path=/docs/contract-civ-address--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-address>`
 
-Structured address input with country selection, street, city, state, and ZIP/postal code fields. Adapts automatically based on the selected country — US addresses show a state dropdown (including military codes AA/AE/AP), other countries show a text input for state/province, and countries without states or postal codes hide those fields entirely.
+Structured address input with country selection, street, city, state, and ZIP/postal code fields. Adapts automatically based on the selected country. US addresses show a state dropdown (including military codes AA/AE/AP), other countries show a text input for state/province, and countries without states or postal codes hide those fields entirely.
 
 ## Examples
 
@@ -106,9 +106,9 @@ The form adapts based on the selected country:
 |---------|-----------|-------------|--------|
 | **United States** | Select dropdown (50 states + territories + AA/AE/AP) | Shown | "State", "ZIP code" |
 | **UK, Canada, etc.** | Text input | Shown | "State/Province/Region", "Postal code" |
-| **Hong Kong, Singapore, etc.** | Hidden (no states) | Hidden (no postal codes) | — |
+| **Hong Kong, Singapore, etc.** | Hidden (no states) | Hidden (no postal codes) |. |
 
-Military addresses use the standard form — select AA, AE, or AP from the State dropdown and enter APO, FPO, or DPO as the city.
+Military addresses use the standard form. Select AA, AE, or AP from the State dropdown and enter APO, FPO, or DPO as the city.
 
 ## Sub-field Autocomplete
 
@@ -152,11 +152,11 @@ Fields automatically set appropriate `autocomplete` values:
 
 ## Related patterns
 
-- [Housing](/form-patterns/housing) — patterns for collecting addresses from people who may not have permanent housing, using address variants and composed components
+- [Housing](/form-patterns/housing). Patterns for collecting addresses from people who may not have permanent housing, using address variants and composed components
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/address/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/address/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:address' with {

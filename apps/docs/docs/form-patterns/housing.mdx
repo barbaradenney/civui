@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Housing
 
-Patterns for collecting addresses from people who may not have permanent housing. These compose existing CivUI components — no custom component needed.
+Patterns for collecting addresses from people who may not have permanent housing. These compose existing CivUI components. No custom component needed.
 
 For the general "which address input do I reach for?" decision guide, see [Address](./address.mdx).
 
@@ -20,12 +20,12 @@ For the general "which address input do I reach for?" decision guide, see [Addre
 
 ## Language principles
 
-- **Never use "homeless"** in labels — use "permanent address" or "living situation"
-- **Don't make assumptions** — "I don't have a permanent address" is factual, not judgmental
-- **Explain why we ask** — "We ask this to connect you with the right services"
-- **Provide alternatives** — always give a path forward (general location + contact method)
-- **Use sensitive tone** — `civ-section-intro tone="sensitive"` before the questions
-- **Support resources** — link to housing assistance when appropriate
+- **Never use "homeless"** in labels. Use "permanent address" or "living situation"
+- **Don't make assumptions:** "I don't have a permanent address" is factual, not judgmental
+- **Explain why we ask:** "We ask this to connect you with the right services"
+- **Provide alternatives:** always give a path forward (general location + contact method)
+- **Use sensitive tone:** `civ-section-intro tone="sensitive"` before the questions
+- **Support resources:** link to housing assistance when appropriate
 
 ## Address variants
 
@@ -34,8 +34,8 @@ The `civ-address` component supports three variants that power the housing patte
 | Variant | Use case |
 |---------|----------|
 | `default` | Standard full address form |
-| `general-delivery` | USPS General Delivery — adds a hint about using the post office city/state/ZIP |
-| `contact` | No mail — simplified city/state + contact method |
+| `general-delivery` | USPS General Delivery. Adds a hint about using the post office city/state/ZIP |
+| `contact` | No mail. Simplified city/state + contact method |
 
 ## Simple (checkbox + conditional)
 

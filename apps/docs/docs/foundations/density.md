@@ -12,7 +12,7 @@ CivUI supports three density scales that adjust spacing, font sizes, and line he
 
 | Scale | Spacing factor | Base font | Line height | Use case |
 |-------|---------------|-----------|-------------|----------|
-| **Default** | 1x | 16-18px | 1.6 | Standard government forms — comfortable reading |
+| **Default** | 1x | 16-18px | 1.6 | Standard government forms. Comfortable reading |
 | **Dense** | 0.75x | 14px | 1.4 | Data-heavy layouts, admin dashboards, tables |
 | **Spacious** | 1.5x | 18-22px | 1.75 | Accessibility-focused layouts, large screens, kiosks |
 
@@ -40,9 +40,9 @@ Add `data-civ-scale` to any parent element:
 
 The density scale adjusts CSS custom properties for:
 
-- **Spacing tokens** — padding, margins, gaps scale by the spacing factor
-- **Font sizes** — all typographic scale steps adjust (xs through 5xl)
-- **Line heights** — body and heading line heights change per scale
+- **Spacing tokens:** padding, margins, gaps scale by the spacing factor
+- **Font sizes:** all typographic scale steps adjust (xs through 5xl)
+- **Line heights:** body and heading line heights change per scale
 
 Components that use CivUI tokens automatically respond to the active scale.
 
@@ -78,7 +78,7 @@ The token build pipeline generates CSS for each scale:
 
 ## Nesting scales
 
-Scales can be nested — the innermost `data-civ-scale` wins:
+Scales can be nested. The innermost `data-civ-scale` wins:
 
 ```html
 <div data-civ-scale="spacious">

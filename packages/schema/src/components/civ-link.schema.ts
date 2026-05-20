@@ -16,13 +16,13 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Visual emphasis. `primary` = bold underlined link with trailing caret (most prominent); `secondary` (default) = plain underlined link; `back` = back-navigation link with leading left chevron. For a navigation affordance that should look like a button, use `<civ-button href="…">` instead — that renders an `<a>` with button chrome plus an underline',
+      description: 'Visual emphasis. `primary` = bold underlined link with trailing caret (most prominent); `secondary` (default) = plain underlined link; `back` = back-navigation link with leading left chevron. For a navigation affordance that should look like a button, use `<civ-button href="…">` instead. That renders an `<a>` with button chrome plus an underline',
       default: 'secondary',
       values: ['primary', 'secondary', 'back'],
     },
     type: {
       type: 'enum',
-      description: 'Device-action type — auto-builds the href, leading icon, and default display text. `phone` → `tel:` with phone icon; `email` → `mailto:` with mail icon and optional subject; `download` → passthrough href with download icon and optional filename / file-size suffix',
+      description: 'Device-action type. Auto-builds the href, leading icon, and default display text. `phone` → `tel:` with phone icon; `email` → `mailto:` with mail icon and optional subject; `download` → passthrough href with download icon and optional filename / file-size suffix',
       values: ['phone', 'email', 'download'],
     },
     number: {
@@ -71,25 +71,25 @@ const schema: ComponentSchema = {
     },
     target: {
       type: 'string',
-      description: 'HTML `target` attribute. Web-only — use `new-tab` for the common "open in new tab" case',
+      description: 'HTML `target` attribute. Web-only. Use `new-tab` for the common "open in new tab" case',
       default: '',
       webOnly: true,
     },
     rel: {
       type: 'string',
-      description: 'HTML `rel` attribute. Web-only — `new-tab` automatically sets `rel="noopener noreferrer"`',
+      description: 'HTML `rel` attribute. Web-only. `new-tab` automatically sets `rel="noopener noreferrer"`',
       default: '',
       webOnly: true,
     },
     download: {
       type: 'string',
-      description: 'HTML `download` attribute (suggested filename). Web-only — native platforms handle downloads via OS share/save sheets',
+      description: 'HTML `download` attribute (suggested filename). Web-only. Native platforms handle downloads via OS share/save sheets',
       default: '',
       webOnly: true,
     },
     newTab: {
       type: 'boolean',
-      description: 'Open the link in a new tab/window. Sets `target="_blank"` + `rel="noopener noreferrer"` and adds an external-link icon. Web-only — native platforms route URLs through the OS, which has no "new tab" concept',
+      description: 'Open the link in a new tab/window. Sets `target="_blank"` + `rel="noopener noreferrer"` and adds an external-link icon. Web-only. Native platforms route URLs through the OS, which has no "new tab" concept',
       default: false,
       attribute: 'new-tab',
       webOnly: true,

@@ -6,7 +6,7 @@ sidebar_label: Icons
 
 # Icons
 
-CivUI ships 14 inline SVG icons based on Material Icons Outlined — only the icons CivUI's own components reference. No font files, no external requests, no pseudo-element hacks — just lightweight SVG paths inlined in the component. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
+CivUI ships 14 inline SVG icons based on Material Icons Outlined. Only the icons CivUI's own components reference. No font files, no external requests, no pseudo-element hacks. Just lightweight SVG paths inlined in the component. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
 
 ## How It Works
 
@@ -88,7 +88,7 @@ registerIcon('agency-seal', {
 });
 ```
 
-You can find SVG path data from [Material Icons](https://fonts.google.com/icons), [Lucide](https://lucide.dev/), or any SVG icon set — just extract the `d` attribute from the `<path>` element.
+You can find SVG path data from [Material Icons](https://fonts.google.com/icons), [Lucide](https://lucide.dev/), or any SVG icon set. Just extract the `d` attribute from the `<path>` element.
 
 For icons with multiple paths, separate them with `|||`:
 
@@ -105,7 +105,7 @@ If you need icons outside the built-in 14, you have two paths:
 
 **1. Register a custom SVG path icon** (recommended)
 
-Find the icon you need from any SVG icon library, extract the path data, and register it as shown above. This adds zero bundle size — just a string in your JavaScript.
+Find the icon you need from any SVG icon library, extract the path data, and register it as shown above. This adds zero bundle size. Just a string in your JavaScript.
 
 **2. Opt in to the Material Symbols font**
 
@@ -124,7 +124,7 @@ registerIcon('home', {
 });
 ```
 
-`material-symbols` is an optional peer dependency — install it (`npm install material-symbols`) only if you import the stylesheet. The font weighs ~3.9 MB.
+`material-symbols` is an optional peer dependency. Install it (`npm install material-symbols`) only if you import the stylesheet. The font weighs ~3.9 MB.
 
 ## Component Reference
 

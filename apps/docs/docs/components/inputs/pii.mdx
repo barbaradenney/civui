@@ -13,8 +13,8 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 Pre-configured text-input wrappers for the identifier fields that
 require extra protection: Social Security numbers, Employer
 Identification Numbers, and VA file numbers. Each component ships with
-the right mask, validator, default label, hint, and — for the
-PII-flagged identifiers (SSN and EIN) — the `data-civ-pii` attribute
+the right mask, validator, default label, hint, and. For the
+PII-flagged identifiers (SSN and EIN). The `data-civ-pii` attribute
 that the autosave system uses to keep sensitive values out of
 `localStorage`.
 
@@ -22,9 +22,9 @@ All three extend [`civ-text-input`](./text-input.mdx) and dispatch the
 same events (`civ-input`, `civ-change` with `{ value: string }`).
 
 :::tip Cross-cutting strategy
-For the full end-to-end story — autosave defaults, analytics
+For the full end-to-end story. Autosave defaults, analytics
 masking, anti-patterns, and the "Last 4 of SSN" minimization
-pattern — see [**Handling PII**](../../foundations/handling-pii.mdx)
+pattern. See [**Handling PII**](../../foundations/handling-pii.mdx)
 in Foundations.
 :::
 
@@ -45,7 +45,7 @@ DOM element. CivUI surfaces it in two places:
 | --- | --- | --- |
 | `<civ-ssn>` | ✓ | ✓ |
 | `<civ-ein>` | ✓ | ✓ |
-| `<civ-va-file-number>` | (no mask preset — uses validator only) | Mark with `data-persist-exclude` to opt in |
+| `<civ-va-file-number>` | (no mask preset. Uses validator only) | Mark with `data-persist-exclude` to opt in |
 
 If you collect a VA file number through `<civ-form-autosave>`, add
 `data-persist-exclude` to keep it out of the localStorage snapshot,
@@ -130,7 +130,7 @@ why they're being asked.
 
 ## Composition
 
-All three components emit raw, unmasked values — `123456789`, not
+All three components emit raw, unmasked values. `123456789`, not
 `123-45-6789`. Server-side handlers stay simple, and re-prefilling
 from a saved draft round-trips cleanly.
 
@@ -152,7 +152,7 @@ from a saved draft round-trips cleanly.
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/text-input/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/text-input/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:text-input' with {

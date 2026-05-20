@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-breadcrumb-item',
-  description: 'A single link in a `<civ-breadcrumb>` trail. Renders as `<a href>` for navigable steps and as a non-link `<span aria-current="page">` when `current` is set or `href` is omitted (the convention for the final crumb — the page the user is on). Item label may be set via the `label` prop or as initial child text.',
+  description: 'A single link in a `<civ-breadcrumb>` trail. Renders as `<a href>` for navigable steps and as a non-link `<span aria-current="page">` when `current` is set or `href` is omitted (the convention for the final crumb. The page the user is on). Item label may be set via the `label` prop or as initial child text.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,

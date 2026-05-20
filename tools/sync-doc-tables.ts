@@ -27,7 +27,7 @@ const SCHEMA_DIR = path.join(REPO_ROOT, 'packages/schema/src/components');
 const DOCS_DIR = path.join(REPO_ROOT, 'apps/docs/docs/components');
 
 const GENERATED_BANNER = `{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run \`pnpm sync:doc-tables\` to regenerate. */}\n\n`;
+    Do not edit by hand. Run \`pnpm sync:doc-tables\` to regenerate. */}\n\n`;
 
 /**
  * Render a description / detail string into an MDX table cell.

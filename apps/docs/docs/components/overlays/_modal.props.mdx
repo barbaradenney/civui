@@ -1,11 +1,11 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `open` | `boolean` | `false` | Whether the modal is currently visible. Reflects to the host attribute |
 | `heading` | `string` | `''` | Visible heading rendered inside the modal |
-| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the modal heading. Web-only — native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics |
+| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the modal heading. Web-only. Native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics |
 | `no-close-button` | `boolean` | `false` | Suppress the built-in close (×) button. Use when the consumer renders its own dismiss affordance |
 | `no-backdrop-close` | `boolean` | `false` | Disable click-outside-to-close. Useful when the modal contains required-action affordances |
 | `no-escape-close` | `boolean` | `false` | Disable Escape-key close. Pair with noBackdropClose to force users to the explicit affordance |

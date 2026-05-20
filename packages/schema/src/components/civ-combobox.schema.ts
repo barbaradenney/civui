@@ -43,7 +43,7 @@ const schema: ComponentSchema = {
     },
     spacing: {
       type: 'enum',
-      description: 'Density variant. `default` renders the full label/hint/error chrome. `sm` (compact) renders just the bare `<input>` with the host\'s `aria-label` propagated — used inside dense surfaces like data-grid cell editors. Web-only because the compact mode is specific to web data-grid cell-editing.',
+      description: 'Density variant. `default` renders the full label/hint/error chrome. `sm` (compact) renders just the bare `<input>` with the host\'s `aria-label` propagated. Used inside dense surfaces like data-grid cell editors. Web-only because the compact mode is specific to web data-grid cell-editing.',
       default: 'default',
       values: ['default', 'sm'],
       webOnly: true,

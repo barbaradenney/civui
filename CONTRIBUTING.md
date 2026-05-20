@@ -12,12 +12,12 @@ By participating, you agree to uphold its terms.
 
 ## Ways to contribute
 
-- **Report a bug** — open an issue using the bug report template.
-- **Propose a feature** — open an issue using the feature request template so we
+- **Report a bug:** open an issue using the bug report template.
+- **Propose a feature:** open an issue using the feature request template so we
   can discuss the design before code is written.
-- **Improve documentation** — fixes to the Docusaurus site (`apps/docs/`), the
+- **Improve documentation:** fixes to the Docusaurus site (`apps/docs/`), the
   Storybook stories, or the long-form guides under `docs/` are always welcome.
-- **Submit a pull request** — see the workflow below.
+- **Submit a pull request:** see the workflow below.
 
 ## Development setup
 
@@ -46,13 +46,13 @@ Highlights:
 
 - **Light DOM only.** `createRenderRoot()` returns `this`. No Shadow DOM.
 - **Tailwind with the `civ-` prefix.** Use semantic tokens (`civ-text-error`,
-  `civ-bg-primary`) — not hex codes, not gray text on body copy.
+  `civ-bg-primary`). Not hex codes, not gray text on body copy.
 - **Self-contained form controls.** Every input renders its own label / hint /
   error chrome from props. Do not wrap controls in `civ-fieldset` unless you're
   genuinely grouping multiple unrelated fields.
 - **Cross-package side-effect imports** (`import '@civui/inputs/text-input'`).
   Barrel imports are tree-shaken and silently drop custom-element registration.
-- **No hardcoded durations / colors / z-index values** — use the design tokens.
+- **No hardcoded durations / colors / z-index values:** use the design tokens.
 
 ## Tests
 
@@ -63,7 +63,7 @@ Highlights:
 
 ## Cross-platform parity
 
-CivUI ships the same components on four platforms — web (Lit), iOS (SwiftUI),
+CivUI ships the same components on four platforms. Web (Lit), iOS (SwiftUI),
 Android (Jetpack Compose), and Drupal (SDC). When you change a component's
 public API:
 
@@ -72,9 +72,9 @@ public API:
 3. Update the Android counterpart in
    `packages/android/src/main/kotlin/gov/civui/components/Civ<Name>.kt`.
 4. Run `pnpm sync:drupal` to regenerate the Drupal SDC YAML + Twig.
-5. Run `pnpm parity:schema --platforms` — this fails on any drift.
+5. Run `pnpm parity:schema --platforms`. This fails on any drift.
 
-If you don't have device access to test the iOS / Android changes, that's okay —
+If you don't have device access to test the iOS / Android changes, that's okay.
 the schema and stubs keep the contract honest, and someone with simulators can
 fill in the UI later. See `.claude/rules/audit-debt.md` for the native-stubs
 allowlist.
@@ -87,12 +87,12 @@ pnpm test            # full test suite
 ```
 
 `pnpm validate` runs the full CI gate locally if you want the strictest check
-(it's slow — ~5 min cold).
+(it's slow. ~5 min cold).
 
 ## Pull request workflow
 
 1. Fork the repo and create a topic branch from `main`.
-2. Make your change. Keep PRs focused — one logical change per PR.
+2. Make your change. Keep PRs focused. One logical change per PR.
 3. Write or update tests. New components need test coverage.
 4. Update the schema and native stubs if you changed a component's API
    (see "Cross-platform parity" above).
@@ -102,7 +102,7 @@ pnpm test            # full test suite
    Address failures or call out anything you intentionally deferred.
 
 We squash-merge PRs. Use a conventional-style summary (`feat:`, `fix:`,
-`docs:`, `refactor:`, `test:`, `chore:`) — see `CHANGELOG.md` for examples.
+`docs:`, `refactor:`, `test:`, `chore:`). See `CHANGELOG.md` for examples.
 
 ## Adding a new component
 

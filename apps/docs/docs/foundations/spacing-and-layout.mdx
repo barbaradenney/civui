@@ -152,13 +152,13 @@ For responsive grids, use inline styles for the template:
 </div>
 ```
 
-`civ-button-row` stacks the cluster on mobile so each button picks up the full-width-on-mobile rule from `.civ-btn`; the `civ-justify-end` modifier keeps the row right-aligned above 480px. For toolbar/flush clusters (text formatting, view toggles) use `<civ-button-group>` instead; for row-action clusters inside list items (Edit / Remove on a summary card), keep `civ-flex civ-gap-2` — those intentionally stay row-laid-out on mobile so destructive labels don't grow to consume the screen.
+`civ-button-row` stacks the cluster on mobile so each button picks up the full-width-on-mobile rule from `.civ-btn`; the `civ-justify-end` modifier keeps the row right-aligned above 480px. For toolbar/flush clusters (text formatting, view toggles) use `<civ-button-group>` instead; for row-action clusters inside list items (Edit / Remove on a summary card), keep `civ-flex civ-gap-2`. Those intentionally stay row-laid-out on mobile so destructive labels don't grow to consume the screen.
 
 ### List item
 
 <StoryEmbed id="foundations-layout-examples--list-item" height="250" />
 
-The `.civ-list-item` class provides a shared three-column layout for rows that show content with trailing actions — file lists, repeater summary cards, and similar patterns.
+The `.civ-list-item` class provides a shared three-column layout for rows that show content with trailing actions. File lists, repeater summary cards, and similar patterns.
 
 | Class | Purpose |
 |-------|---------|

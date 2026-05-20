@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Save & Resume
 
-Government benefit forms can take 30-60 minutes. Users may need to pause — to find a document, take a break, or step away from a difficult section. CivUI supports both client-side and server-side persistence.
+Government benefit forms can take 30-60 minutes. Users may need to pause. To find a document, take a break, or step away from a difficult section. CivUI supports both client-side and server-side persistence.
 
 ## Client-side persistence
 
@@ -25,7 +25,7 @@ Add `persist` to `civ-form` to auto-save field values to `sessionStorage` as the
 The persist key (`va-form-21-526ez`) scopes the storage so multiple forms on the same domain don't collide. The key is stored under `civ-form:${persist}` in `sessionStorage`.
 
 **Auto-excluded from persistence:**
-- Fields with `data-civ-pii` (e.g. `civ-ssn`, `civ-ein` — masked inputs flagged as PII)
+- Fields with `data-civ-pii` (e.g. `civ-ssn`, `civ-ein`. Masked inputs flagged as PII)
 - Fields with `data-persist-exclude` (consumer-applied opt-out)
 - `disabled` fields
 
@@ -45,7 +45,7 @@ For multi-step forms, `show-pause` adds a "Save and come back later" link next t
 </civ-form-step>
 ```
 
-The `sensitive` attribute auto-enables pause — users shouldn't feel trapped in emotionally difficult sections.
+The `sensitive` attribute auto-enables pause. Users shouldn't feel trapped in emotionally difficult sections.
 
 ## Server-side persistence
 
@@ -75,7 +75,7 @@ form.addEventListener('civ-step-pause', async (e) => {
 
 ## Restoring a draft
 
-On page load, hydrate the form from a saved draft by setting `prefillData` — a `Record<fieldName, { value, source, locked? }>` object:
+On page load, hydrate the form from a saved draft by setting `prefillData`. A `Record<fieldName, { value, source, locked? }>` object:
 
 ```js
 const draft = await fetch('/api/drafts/va-21-526ez').then(r => r.json());
@@ -116,5 +116,5 @@ For forms without `civ-form-step`, add a secondary save button:
 
 ## Components used
 
-- [`civ-form`](/components/form) — `persist` attribute for sessionStorage
-- [`civ-form-step`](/components/form/form-step) — `show-pause` for pause action, `sensitive` auto-enables pause
+- [`civ-form`](/components/form). `persist` attribute for sessionStorage
+- [`civ-form-step`](/components/form/form-step). `show-pause` for pause action, `sensitive` auto-enables pause

@@ -12,7 +12,7 @@ import EventsTable from "./_select.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-select`](pathname:///civui/storybook/?path=/docs/contract-civ-select--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-select`](pathname:///civui/storybook/?path=/docs/contract-civ-select--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -60,7 +60,7 @@ Accessible dropdown select using a native `<select>` element for maximum accessi
 
 ### Declarative `<option>` slot
 
-Populate options via slotted `<option>` and `<optgroup>` children — works without JavaScript and matches native `<select>` syntax.
+Populate options via slotted `<option>` and `<optgroup>` children. Works without JavaScript and matches native `<select>` syntax.
 
 <StoryEmbed id="forms-inputs-select--slotted-options" />
 <StoryEmbed id="forms-inputs-select--slotted-with-optgroup" />
@@ -97,22 +97,22 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 |--------|----------|-------------|
 | `us-state` | (default), `territories` | US states + DC. `territories` adds PR, GU, VI, AS, MP. |
 | `service-branch` | (default), `all` | Active-duty branches. `all` adds reserve, guard, and historical. |
-| `discharge-type` | — | Military discharge types |
-| `suffix` | — | Name suffixes (Jr., Sr., II, III, etc.) |
+| `discharge-type` |. | Military discharge types |
+| `suffix` |. | Name suffixes (Jr., Sr., II, III, etc.) |
 | `relationship-type` | (default), `dependent` | Relationship to veteran |
-| `marital-status` | — | Marital status options |
-| `ethnicity` | — | OMB ethnicity categories |
+| `marital-status` |. | Marital status options |
+| `ethnicity` |. | OMB ethnicity categories |
 | `gender` | (default), `binary` | Gender identity. `binary` limits to Male/Female. |
-| `language` | — | Preferred language (Census Bureau frequency) |
-| `housing-status` | — | Housing status (HUD/Census categories) |
-| `education-level` | — | Educational attainment (Census ACS / ISCED) |
-| `employment-status` | — | Employment status (BLS CPS categories) |
-| `income-source` | — | Income source (SSA/HUD benefits patterns) |
-| `veteran-status` | — | Veteran preference status (OPM 5 USC § 2108) |
-| `disability-type` | — | Disability categories (ADA / DOL CC-305) |
-| `citizenship-status` | — | Citizenship/work authorization (USCIS I-9) |
-| `pay-frequency` | — | Pay frequency (DOL FLSA / IRS Pub 15) |
-| `contact-preference` | — | Preferred contact method (USDS/18F patterns) |
+| `language` |. | Preferred language (Census Bureau frequency) |
+| `housing-status` |. | Housing status (HUD/Census categories) |
+| `education-level` |. | Educational attainment (Census ACS / ISCED) |
+| `employment-status` |. | Employment status (BLS CPS categories) |
+| `income-source` |. | Income source (SSA/HUD benefits patterns) |
+| `veteran-status` |. | Veteran preference status (OPM 5 USC § 2108) |
+| `disability-type` |. | Disability categories (ADA / DOL CC-305) |
+| `citizenship-status` |. | Citizenship/work authorization (USCIS I-9) |
+| `pay-frequency` |. | Pay frequency (DOL FLSA / IRS Pub 15) |
+| `contact-preference` |. | Preferred contact method (USDS/18F patterns) |
 
 ### US State
 
@@ -168,7 +168,7 @@ The `preset` prop pre-populates the select with a standard option list. Use `pre
 
 ### Customizing Presets
 
-Presets are a starting point — you can modify them or provide your own options entirely.
+Presets are a starting point. You can modify them or provide your own options entirely.
 
 **Override with your own options** (ignore presets):
 
@@ -199,19 +199,19 @@ document.querySelector('civ-select').options = filtered;
 
 The `resolvePresetOptions(preset, variant?)` function is exported from `@civui/core` and returns a plain array of `{ value, label }` objects that you can modify freely.
 
-> **Tip:** Presets also work on `<civ-radio-group>` and `<civ-checkbox-group>` — use the same `preset` and `preset-variant` attributes. This is useful when you want to present a shorter preset list as radio buttons or checkboxes instead of a dropdown.
+> **Tip:** Presets also work on `<civ-radio-group>` and `<civ-checkbox-group>`. Use the same `preset` and `preset-variant` attributes. This is useful when you want to present a shorter preset list as radio buttons or checkboxes instead of a dropdown.
 
 ### Data Sources
 
 All preset data is sourced from federal standards and regulations. Each preset includes a source citation in the source code. Key references:
 
-- **OMB Directive 15** — Race and ethnicity categories
-- **Census Bureau ACS** — Marital status, education, language
-- **BLS Current Population Survey** — Employment status
-- **OPM 5 USC § 2108** — Veteran preference categories
-- **ADA / DOL CC-305** — Disability categories
-- **USCIS I-9** — Citizenship/work authorization
-- **10 USC § 101** — Military service branches
+- **OMB Directive 15:** Race and ethnicity categories
+- **Census Bureau ACS:** Marital status, education, language
+- **BLS Current Population Survey:** Employment status
+- **OPM 5 USC § 2108:** Veteran preference categories
+- **ADA / DOL CC-305:** Disability categories
+- **USCIS I-9:** Citizenship/work authorization
+- **10 USC § 101:** Military service branches
 
 ## Usage
 
@@ -244,7 +244,7 @@ All preset data is sourced from federal standards and regulations. Each preset i
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/select/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/select/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:select' with {

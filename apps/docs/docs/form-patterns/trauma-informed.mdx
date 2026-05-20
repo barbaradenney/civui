@@ -8,20 +8,20 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Trauma-Informed Patterns
 
-Government forms often ask about difficult life events — death of a family member, military trauma, domestic violence, financial hardship. CivUI provides a set of patterns that help users navigate these sections with dignity, control, and clear expectations.
+Government forms often ask about difficult life events. Death of a family member, military trauma, domestic violence, financial hardship. CivUI provides a set of patterns that help users navigate these sections with dignity, control, and clear expectations.
 
-These patterns don't change the data collected — they change how it's presented.
+These patterns don't change the data collected. They change how it's presented.
 
 ## Principles
 
-1. **Set expectations** — tell users what's coming before they see it
-2. **Give control** — let users pause, skip, or opt out of specific questions
-3. **Don't assume** — avoid redundant or insensitive questions when context is clear
-4. **Keep help visible** — crisis resources should be accessible throughout
+1. **Set expectations:** tell users what's coming before they see it
+2. **Give control:** let users pause, skip, or opt out of specific questions
+3. **Don't assume:** avoid redundant or insensitive questions when context is clear
+4. **Keep help visible:** crisis resources should be accessible throughout
 
 ## Available patterns
 
-### 1. Section intro — set expectations
+### 1. Section intro. Set expectations
 
 `<civ-section-intro>` places a context panel before a sensitive section, explaining what's coming and why.
 
@@ -35,13 +35,13 @@ These patterns don't change the data collected — they change how it's presente
 ```
 
 **Tones:**
-- `info` (default) — neutral informational context
-- `sensitive` — visual and tonal softening for emotionally heavy sections
-- `neutral` — minimal styling, just the content
+- `info` (default). Neutral informational context
+- `sensitive`: visual and tonal softening for emotionally heavy sections
+- `neutral`: minimal styling, just the content
 
 **When to use:** Before any section that asks about death, trauma, abuse, financial hardship, or other sensitive topics.
 
-### 2. Form step sensitive — pause and resume
+### 2. Form step sensitive. Pause and resume
 
 Adding `sensitive` to `<civ-form-step>` enables two things:
 - A polite screen reader announcement: "This section asks personal questions. Your answers are saved as you go."
@@ -67,9 +67,9 @@ You can also use `show-pause` independently without `sensitive` if you want the 
 </civ-form-step>
 ```
 
-### 3. Skip affordance — prefer not to answer
+### 3. Skip affordance. Prefer not to answer
 
-`skipLabel` on `<civ-yes-no>` and `<civ-radio-group>` renders a "Prefer not to answer" link-button below the options. This is distinct from "unsure" — it's about opting out, not uncertainty.
+`skipLabel` on `<civ-yes-no>` and `<civ-radio-group>` renders a "Prefer not to answer" link-button below the options. This is distinct from "unsure". It's about opting out, not uncertainty.
 
 <StoryEmbed id="forms-patterns-trauma-informed--skip-affordance" />
 
@@ -96,7 +96,7 @@ You can also use `show-pause` independently without `sensitive` if you want the 
 
 **When to use:** Demographics, trauma screening, questions about abuse or violence, anything where disclosure is voluntary.
 
-### 4. Deceased assumed — don't ask what's already known
+### 4. Deceased assumed. Don't ask what's already known
 
 When a form is explicitly about someone who has died (burial benefits, survivor claims), don't ask "Is this person deceased?" Use `deceased-assumed` on `<civ-relationship>` to skip the yes/no and show the date of death directly.
 
@@ -118,9 +118,9 @@ When a form is explicitly about someone who has died (burial benefits, survivor 
 ></civ-relationship>
 ```
 
-Use `show-deceased` only when the form doesn't already establish that the person has died — for example, a dependency claim where some dependents may be living and others deceased.
+Use `show-deceased` only when the form doesn't already establish that the person has died. For example, a dependency claim where some dependents may be living and others deceased.
 
-### 5. Support resources — keep help visible
+### 5. Support resources. Keep help visible
 
 `supportResources` on `<civ-form>` renders a persistent, non-modal footer with crisis resource links. It stays visible across all form steps.
 
@@ -142,7 +142,7 @@ URL schemes are restricted to `http`, `https`, `tel`, `mailto`, `sms`, same-orig
 
 **When to use:** Any form touching mental health, self-harm risk, domestic violence, sexual trauma, or bereavement.
 
-### 6. Repeater form-steps sensitive — multi-item sensitive flows
+### 6. Repeater form-steps sensitive. Multi-item sensitive flows
 
 When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., adding multiple deceased dependents), pass `form-steps-sensitive` and `form-steps-show-pause` to enable trauma-informed affordances inside the form-steps sub-flow.
 

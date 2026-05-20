@@ -158,7 +158,7 @@ const schema: ComponentSchema = {
       },
     },
     'civ-file-upload-before-remove': {
-      description: 'Cancelable. Fires before a file is removed. `preventDefault()` aborts — listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail matches `civ-file-removed` so the listener has everything it needs to build the modal copy',
+      description: 'Cancelable. Fires before a file is removed. `preventDefault()` aborts. Listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail matches `civ-file-removed` so the listener has everything it needs to build the modal copy',
       detail: {
         index: { type: 'number', description: 'Index of the file being removed' },
         name: { type: 'string', description: 'File name' },

@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-column-visibility',
-  description: 'A popover that lets users toggle which columns of a `civ-data-grid` are visible. Renders a trigger button + checkbox panel; the consumer wires the panel\'s `civ-column-visibility-change` event back into the grid\'s `columns` array by flipping each entry\'s `hidden` flag. Multi-select semantics — the panel stays open while the user toggles several checkboxes (different from `civ-menu`, which is single-select and closes on click). Enforces a `minVisible` floor so the user can\'t hide every column.',
+  description: 'A popover that lets users toggle which columns of a `civ-data-grid` are visible. Renders a trigger button + checkbox panel; the consumer wires the panel\'s `civ-column-visibility-change` event back into the grid\'s `columns` array by flipping each entry\'s `hidden` flag. Multi-select semantics. The panel stays open while the user toggles several checkboxes (different from `civ-menu`, which is single-select and closes on click). Enforces a `minVisible` floor so the user can\'t hide every column.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -16,7 +16,7 @@ const schema: ComponentSchema = {
     },
     hiddenColumns: {
       type: 'array',
-      description: 'Keys of columns currently hidden. Controlled — the component never mutates this without dispatching `civ-column-visibility-change` first. Pass `[]` for "all visible"',
+      description: 'Keys of columns currently hidden. Controlled. The component never mutates this without dispatching `civ-column-visibility-change` first. Pass `[]` for "all visible"',
       webOnly: true,
     },
     label: {
@@ -26,7 +26,7 @@ const schema: ComponentSchema = {
     },
     minVisible: {
       type: 'number',
-      description: 'Minimum number of columns that must stay visible. Prevents the user from hiding everything by unchecking the last checkbox — the component refuses the toggle and re-renders to restore the checked state. Default `1`',
+      description: 'Minimum number of columns that must stay visible. Prevents the user from hiding everything by unchecking the last checkbox. The component refuses the toggle and re-renders to restore the checked state. Default `1`',
       default: 1,
       attribute: 'min-visible',
     },
@@ -46,7 +46,7 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-column-visibility-change': {
-      description: 'Fires when the user toggles a column\'s visibility checkbox. Consumers should update the underlying data-grid\'s `columns` array — typically by mapping over a master `allColumns` list and setting `hidden: detail.hiddenColumns.includes(c.key)`',
+      description: 'Fires when the user toggles a column\'s visibility checkbox. Consumers should update the underlying data-grid\'s `columns` array. Typically by mapping over a master `allColumns` list and setting `hidden: detail.hiddenColumns.includes(c.key)`',
       detail: {
         hiddenColumns: { type: 'string[]', description: 'Column keys now hidden after the toggle' },
         visibleColumns: { type: 'string[]', description: 'Column keys still visible after the toggle' },

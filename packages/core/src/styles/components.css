@@ -5065,6 +5065,47 @@
     border-color: var(--civ-color-base-lighter);
   }
 
+  /*
+   * The disclosure-family neutral toggle button (`.civ-toggle-btn`) —
+   * used by `civ-disclosure`, `civ-read-more`, and any future
+   * sibling. The base rule paints the button with `base-lightest`
+   * (light gray) and lets the label inherit the page text color.
+   * Under `@media (prefers-color-scheme: dark)` the tokens swap and
+   * the button comes out as `#2d2d2d` (dark gray) with light text —
+   * readable. But Storybook's toolbar dark mode doesn't swap tokens
+   * (`tokens.css` only swaps under the media query), so when the
+   * toolbar forces dark on a light OS, `base-lightest` stays at
+   * `#f0f0f0` (light gray) and the inherited light text turns into
+   * light-on-light: invisible.
+   *
+   * Scope the patch to that one combination: `@media (prefers-color-scheme: light)`
+   * + `:root[data-civ-theme="dark"]`. Skipping the media query would
+   * fire the rule under OS dark + Storybook "system" (which also
+   * sets `data-civ-theme="dark"`), where tokens HAVE already swapped
+   * — `base-darker` becomes `#e0e0e0` (very light), and we'd
+   * reintroduce the same invisibility we're trying to fix.
+   *
+   * Within the scope, mirror the swap by selecting darker palette
+   * steps that resolve to dark slate at the light-token resolution
+   * (`base-darker` = `#3d4551`). Hover / active step lighter,
+   * matching the OS dark mode interaction direction.
+   */
+  @media (prefers-color-scheme: light) {
+    :root[data-civ-theme="dark"] .civ-toggle-btn {
+      background-color: var(--civ-color-base-darker);
+    }
+
+    @media (hover: hover) {
+      :root[data-civ-theme="dark"] .civ-toggle-btn:hover {
+        background-color: var(--civ-color-base-dark);
+      }
+    }
+
+    :root[data-civ-theme="dark"] .civ-toggle-btn:active {
+      background-color: var(--civ-color-base-DEFAULT);
+    }
+  }
+
   /* ── Signature preview ────────────────────────────────────────
      Persistent signature line below the certify checkbox. Always
      rendered with a reserved height so typing the name doesn't push

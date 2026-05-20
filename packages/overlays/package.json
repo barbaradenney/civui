@@ -11,6 +11,7 @@
     "./modal": "./dist/modal/index.js",
     "./action-sheet": "./dist/action-sheet/index.js",
     "./drawer": "./dist/drawer/index.js",
+    "./popover": "./dist/popover/index.js",
     "./menu": "./dist/menu/index.js"
   },
   "files": [

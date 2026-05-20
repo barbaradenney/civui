@@ -1,6 +1,8 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, clickOutside, dispatch, generateId, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t } from '@civui/core';
+import type { SlotConfig } from '@civui/core';
+import '@civui/overlays/popover';
 import '@civui/controls/checkbox';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
 
@@ -33,20 +35,19 @@ import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
  * The bar is **controlled** — `hiddenColumns` is the source of truth;
  * the component never mutates it without dispatching first.
  *
- * **Why not built on civ-menu?** Menus are single-select with close-on-
- * click semantics. A column visibility panel is multi-select: the panel
- * stays open while the user toggles several checkboxes. Different
- * keyboard model (Space toggles, no Enter-to-select-and-close), so this
- * component renders its own popover.
+ * **Built on `civ-popover`.** All the trigger / panel / click-outside /
+ * positioning / mobile-sheet scaffolding lives in `civ-popover`. This
+ * component layers on the column-visibility-specific bits: rendering
+ * one checkbox per column, enforcing `minVisible`, and translating
+ * checkbox toggles into `civ-column-visibility-change` events.
  *
- * **Why a native `<button>` trigger and not `civ-action-button`?**
- * The trigger needs `aria-haspopup`, `aria-expanded`, and `aria-controls`
- * on the focusable element. Putting them on the host (`<civ-action-button>`)
- * leaves the focusable inner `<button>` without those ARIA attributes —
- * screen readers reading the focused button would hear "Columns, button"
- * with no popup affordance. Using a native `<button>` styled with the
- * existing `.civ-action-btn` utility classes gives the same visual with
- * the ARIA on the right element.
+ * **Why not built on `civ-menu`?** Menus are single-select with close-
+ * on-activation semantics. A column visibility panel is multi-select:
+ * the panel stays open while the user toggles several checkboxes. Both
+ * components now share the same `civ-popover` primitive, but they
+ * compose it with different panel roles (`menu` vs `group`) and
+ * different keyboard models (arrow-key navigation between menu-items
+ * vs. natural Tab through checkboxes).
  *
  * **Empty columns array.** When `columns` is `[]` the trigger still
  * renders and the panel opens to an empty group. Consumers are expected
@@ -65,7 +66,7 @@ import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
  * @fires civ-column-visibility-change - { hiddenColumns, visibleColumns } — user toggled a column.
  */
 @customElement('civ-column-visibility')
-export class CivColumnVisibility extends CivBaseElement {
+export class CivColumnVisibility extends LightDomSlotMixin(CivBaseElement) {
   @property({ attribute: false }) columns: GridColumn[] = [];
   @property({ attribute: false }) hiddenColumns: string[] = [];
   @property({ type: String }) label = '';
@@ -75,49 +76,13 @@ export class CivColumnVisibility extends CivBaseElement {
 
   @state() private _instanceId = generateId('civ-column-visibility');
 
-  private _clickOutside = clickOutside(this, () => this._close());
-  private _boundOnKeydown = this._onKeydown.bind(this);
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    document.addEventListener('keydown', this._boundOnKeydown);
-  }
-
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    document.removeEventListener('keydown', this._boundOnKeydown);
-    this._clickOutside.remove();
-  }
-
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
-    if (changed.has('open')) {
-      if (this.open) this._clickOutside.add();
-      else this._clickOutside.remove();
-    }
-  }
-
-  private _onKeydown(e: KeyboardEvent): void {
-    if (!this.open) return;
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      this._close(true);
-    }
-  }
-
-  private _close(returnFocus = false): void {
-    if (!this.open) return;
-    this.open = false;
-    if (returnFocus) {
-      const trigger = this.querySelector<HTMLElement>(
-        '.civ-column-visibility__trigger',
-      );
-      trigger?.focus?.();
-    }
-  }
-
-  private _toggle(): void {
-    this.open = !this.open;
+  override _getSlotConfig(): SlotConfig {
+    // Column-visibility doesn't accept authored children — everything
+    // is generated from `columns`. The mixin is still on the class so
+    // we get its `_relocateSlots` plumbing for the nested civ-popover
+    // (without an explicit slot config the mixin defaults to a
+    // single "default" bucket with no selector, which is a no-op).
+    return {};
   }
 
   private _isHidden(key: string): boolean {
@@ -159,50 +124,55 @@ export class CivColumnVisibility extends CivBaseElement {
     });
   }
 
+  private _onPopoverOpen = (e: Event): void => {
+    e.stopPropagation();
+    if (!this.open) this.open = true;
+  };
+
+  private _onPopoverClose = (e: Event): void => {
+    e.stopPropagation();
+    if (this.open) this.open = false;
+  };
+
   override render() {
     const labelText = this.label || t('columnVisibilityLabel');
-    const panelClasses = [
-      'civ-column-visibility__panel',
-      'civ-bottom-sheet',
-      `civ-column-visibility__panel--align-${this.align}`,
-    ].join(' ');
     const panelId = `${this._instanceId}-panel`;
     return html`
-      <button
-        type="button"
-        class="civ-action-btn civ-action-btn--tertiary civ-column-visibility__trigger"
-        aria-haspopup="true"
-        aria-expanded="${this.open ? 'true' : 'false'}"
-        aria-controls="${panelId}"
-        @click="${this._toggle}"
+      <civ-popover
+        ?open="${this.open}"
+        align="${this.align}"
+        panel-role="group"
+        trigger-haspopup="true"
+        label="${t('columnVisibilityPanelLabel')}"
+        no-tab-close
+        @civ-popover-open="${this._onPopoverOpen}"
+        @civ-popover-close="${this._onPopoverClose}"
       >
-        <civ-icon name="view-column" aria-hidden="true"></civ-icon>
-        <span class="civ-column-visibility__trigger-label">${labelText}</span>
-        <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
-      </button>
-      ${this.open
-        ? html`
-            <div
-              id="${panelId}"
-              class="${panelClasses}"
-              role="group"
-              aria-label="${t('columnVisibilityPanelLabel')}"
-            >
-              ${this.columns.map(
-                (col) => html`
-                  <civ-checkbox
-                    class="civ-column-visibility__option"
-                    spacing="sm"
-                    label="${col.header}"
-                    .checked="${!this._isHidden(col.key)}"
-                    disable-analytics
-                    @civ-change="${(e: Event) => this._onToggleColumn(col.key, e)}"
-                  ></civ-checkbox>
-                `,
-              )}
-            </div>
-          `
-        : nothing}
+        <button
+          data-civ-popover-trigger
+          type="button"
+          class="civ-action-btn civ-action-btn--tertiary civ-column-visibility__trigger"
+          aria-controls="${panelId}"
+        >
+          <civ-icon name="view-column" aria-hidden="true"></civ-icon>
+          <span class="civ-column-visibility__trigger-label">${labelText}</span>
+          <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
+        </button>
+        <div id="${panelId}" class="civ-column-visibility__options">
+          ${this.columns.map(
+            (col) => html`
+              <civ-checkbox
+                class="civ-column-visibility__option"
+                spacing="sm"
+                label="${col.header}"
+                .checked="${!this._isHidden(col.key)}"
+                disable-analytics
+                @civ-change="${(e: Event) => this._onToggleColumn(col.key, e)}"
+              ></civ-checkbox>
+            `,
+          )}
+        </div>
+      </civ-popover>
     `;
   }
 }

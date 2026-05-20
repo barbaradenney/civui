@@ -109,6 +109,7 @@ const config: StorybookConfig = {
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),
       '@civui/overlays/action-sheet': resolve(root, 'packages/overlays/src/action-sheet/index.ts'),
       '@civui/overlays/drawer': resolve(root, 'packages/overlays/src/drawer/index.ts'),
+      '@civui/overlays/popover': resolve(root, 'packages/overlays/src/popover/index.ts'),
       '@civui/overlays/menu': resolve(root, 'packages/overlays/src/menu/index.ts'),
       '@civui/overlays': resolve(root, 'packages/overlays/src/index.ts'),
       // Layout

@@ -17,7 +17,9 @@ const menuTemplate = `
 describe('civ-menu', () => {
   it('renders closed by default', async () => {
     const el = await fixture(menuTemplate);
-    const panel = el.querySelector('.civ-menu__panel') as HTMLElement;
+    // civ-menu composes civ-popover; the panel (and its role + aria-label)
+    // is rendered by the popover layer.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
     expect(panel.hasAttribute('hidden')).toBe(true);
   });
 
@@ -40,7 +42,9 @@ describe('civ-menu', () => {
     trigger.click();
     await elementUpdated(el);
 
-    const panel = el.querySelector('.civ-menu__panel') as HTMLElement;
+    // civ-menu composes civ-popover; the panel (and its role + aria-label)
+    // is rendered by the popover layer.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
     expect(panel.hasAttribute('hidden')).toBe(false);
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
   });
@@ -162,7 +166,9 @@ describe('civ-menu', () => {
 
   it('exposes role="menu" + aria-label on the panel', async () => {
     const el = await fixture(menuTemplate);
-    const panel = el.querySelector('.civ-menu__panel') as HTMLElement;
+    // civ-menu composes civ-popover; the panel (and its role + aria-label)
+    // is rendered by the popover layer.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
     expect(panel.getAttribute('role')).toBe('menu');
     expect(panel.getAttribute('aria-label')).toBe('Row actions');
   });
@@ -174,7 +180,9 @@ describe('civ-menu', () => {
         <civ-menu-item>A</civ-menu-item>
       </civ-menu>
     `);
-    const panel = el.querySelector('.civ-menu__panel') as HTMLElement;
+    // civ-menu composes civ-popover; the panel (and its role + aria-label)
+    // is rendered by the popover layer.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
     expect(panel.getAttribute('aria-label')).toBeTruthy();
     expect(panel.getAttribute('aria-label')!.length).toBeGreaterThan(0);
   });

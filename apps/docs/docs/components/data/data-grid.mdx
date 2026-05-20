@@ -12,19 +12,19 @@ import EventsTable from "./_data-grid.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-data-grid`](pathname:///civui/storybook/?path=/docs/contract-civ-data-grid--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-data-grid`](pathname:///civui/storybook/?path=/docs/contract-civ-data-grid--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-data-grid>`
 
-Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Compose with a sibling `<civ-pagination>` for paged data. On mobile (≤480px), rows collapse to vertical label/value blocks via CSS — no JavaScript re-template.
+Semantic `<table>`-based data grid for admin and back-office screens. Renders sortable column headers, selectable rows, and per-row action menus. Compose with a sibling `<civ-pagination>` for paged data. On mobile (≤480px), rows collapse to vertical label/value blocks via CSS. No JavaScript re-template.
 
-The grid is **controlled** — the consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, and `civ-row-action`; the consumer listens for `civ-page-change` directly on the pagination element.
+The grid is **controlled**. The consumer manages `rows`, `columns`, `sortBy`, `sortDirection`, `page`, and `pageSize`. The grid dispatches `civ-sort`, `civ-selection-change`, and `civ-row-action`; the consumer listens for `civ-page-change` directly on the pagination element.
 
 ## Accessibility foundation: semantic `<table>` by default, `role="grid"` on demand
 
-The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role="grid"` for predominantly readable tabular data — even when columns are sortable. CivUI's data grid follows that guidance **by default**:
+The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role="grid"` for predominantly readable tabular data. Even when columns are sortable. CivUI's data grid follows that guidance **by default**:
 
 - Native `<table>` + `<caption>` for the accessible name
 - `<th scope="col">` for column headers
@@ -33,7 +33,7 @@ The WAI-ARIA Authoring Practices Guide recommends semantic `<table>` over `role=
 - Row-action menus use `<civ-menu>` (WAI-ARIA Menu Button pattern)
 - Empty / loading / error states use `aria-live` / `role="alert"` so screen readers hear them
 
-For admin screens with many interactive cells — sort, expand, edit, select, row actions — Tabbing through every control becomes noisy. Set the `keyboardNav` prop and the grid promotes to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/). The whole grid becomes one tab stop; arrow keys move between cells; Enter / Space / F2 activate the cell's primary control. See the [Keyboard navigation](#keyboard-navigation) section below for the full key map.
+For admin screens with many interactive cells (sort, expand, edit, select, row actions) Tabbing through every control becomes noisy. Set the `keyboardNav` prop and the grid promotes to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/). The whole grid becomes one tab stop; arrow keys move between cells; Enter / Space / F2 activate the cell's primary control. See the [Keyboard navigation](#keyboard-navigation) section below for the full key map.
 
 ## Examples
 
@@ -148,7 +148,7 @@ interface GridColumn {
 
 ## Multi-column sort
 
-By default, the grid is single-sort: clicking a header cycles `asc → desc → none` on that column alone. Set `multiSort` to opt into stacked sort keys — the Excel / Sheets behavior where Shift-click adds a secondary key, then a tertiary, etc.
+By default, the grid is single-sort: clicking a header cycles `asc → desc → none` on that column alone. Set `multiSort` to opt into stacked sort keys. The Excel / Sheets behavior where Shift-click adds a secondary key, then a tertiary, etc.
 
 ```html
 <civ-data-grid caption="Applications" multi-sort></civ-data-grid>
@@ -170,17 +170,17 @@ grid.sortKeys = [
 ];
 ```
 
-`sortBy` / `sortDirection` continue to reflect the **primary** (first) key — the grid mirrors `sortKeys[0]` into them on every render when `multiSort` is on, so backward-compat readers see consistent state. **Writes** to `sortBy` / `sortDirection` while `multiSort` is on are overwritten on the next render; manage `sortKeys` and let the mirror fan out.
+`sortBy` / `sortDirection` continue to reflect the **primary** (first) key. The grid mirrors `sortKeys[0]` into them on every render when `multiSort` is on, so backward-compat readers see consistent state. **Writes** to `sortBy` / `sortDirection` while `multiSort` is on are overwritten on the next render; manage `sortKeys` and let the mirror fan out.
 
 ### Interaction model
 
-- **Plain click** on any header — replaces the stack with a single key on that column, cycling `asc → desc → none` if the column is already in the stack (at any position).
-- **Shift-click** on a header NOT in the stack — appends it (asc).
-- **Shift-click** on a header already in the stack — cycles its direction `asc → desc → removed`.
+- **Plain click** on any header. Replaces the stack with a single key on that column, cycling `asc → desc → none` if the column is already in the stack (at any position).
+- **Shift-click** on a header NOT in the stack. Appends it (asc).
+- **Shift-click** on a header already in the stack. Cycles its direction `asc → desc → removed`.
 
 Keyboard users get the same gestures: Enter / Space activate as a plain click, and **Shift+Enter / Shift+Space** acts as Shift-click. This works whether or not `keyboardNav` is on; with `keyboardNav` the focus stop is the cell itself, otherwise it's the inner sort button.
 
-Position badges (`1, 2, 3…`) render next to the chevron when the stack has more than one key, so the priority order is visible. A single-key stack omits the badge (no "1" on a column that's the only sort). Screen reader users hear the position in the sort button's `aria-label` — e.g. "Sort Status descending, sort priority 2".
+Position badges (`1, 2, 3…`) render next to the chevron when the stack has more than one key, so the priority order is visible. A single-key stack omits the badge (no "1" on a column that's the only sort). Screen reader users hear the position in the sort button's `aria-label`. E.g. "Sort Status descending, sort priority 2".
 
 ### Event detail
 
@@ -250,7 +250,7 @@ interface GridRowAction {
 ## Master-detail (interactive rows)
 
 Set `interactive` on the grid to make rows clickable. Clicks fire a
-`civ-row-activate` event with the row's data — wire it to a sibling
+`civ-row-activate` event with the row's data. Wire it to a sibling
 `civ-drawer` (or any other detail surface) to build a master-detail flow:
 
 ```ts
@@ -270,10 +270,10 @@ grid.addEventListener('civ-row-activate', (e) => {
 target is inside the selection checkbox cell, the row-actions cell, or
 any interactive descendant (`<a>`, `<button>`, `<input>`, `<select>`,
 `<textarea>`, `[role="button"]`). Those affordances retain their own
-behavior — toggling a checkbox doesn't also open the detail, and clicking
+behavior. Toggling a checkbox doesn't also open the detail, and clicking
 the kebab menu doesn't activate the row.
 
-**Disabled rows** (`row.disabled: true`) skip activation entirely — they
+**Disabled rows** (`row.disabled: true`) skip activation entirely. They
 get neither the interactive class nor the click handler.
 
 **Selection and activation are independent.** When `selectable` is set,
@@ -316,7 +316,7 @@ leading chevron column. Non-expandable rows get an empty cell in that
 column; expandable rows get a chevron button that toggles between
 `chevron-right` and `chevron-down`.
 
-The detail content comes from `grid.expandTemplate` — a function
+The detail content comes from `grid.expandTemplate`. A function
 `(row) => string | number | TemplateResult` you set as a JS property:
 
 ```ts
@@ -351,7 +351,7 @@ supporting documents). See the "Expandable rows → nested civ-data-grid"
 story for the pattern.
 
 **Disabled rows** with `expandable: true` get a disabled chevron button
-— same opacity treatment as the rest of the row, and the toggle does
+with the same opacity treatment as the rest of the row, and the toggle does
 not dispatch `civ-row-expand`.
 
 **Keyboard.** Unlike row activation, expand IS keyboard-accessible: the
@@ -405,7 +405,7 @@ non-empty string blocks `civ-cell-edit-commit`, keeps the cell in edit mode,
 and renders the error inline below the input with `role="alert"`.
 
 **Other events**: `civ-cell-edit-start` fires on click; `civ-cell-edit-cancel`
-fires on Escape. The grid never mutates `rows` — consumers reflect the new
+fires on Escape. The grid never mutates `rows`. Consumers reflect the new
 value back into their data and reassign `grid.rows`.
 
 **Edit mode and other features**:
@@ -433,12 +433,12 @@ grid.addEventListener('civ-group-toggle', (e) => {
 ```
 
 **Group order**: groups appear in the order their first member appears
-in `rows`. The grid does not re-sort rows for grouping — pre-sort your
+in `rows`. The grid does not re-sort rows for grouping. Pre-sort your
 data if you need a specific group order.
 
 **`expandedGroups` semantics**: when undefined (the default), all
 groups render expanded. Once you assign an array (even `[]`), you
-take control — only groups whose key is in the array stay expanded.
+take control. Only groups whose key is in the array stay expanded.
 
 **`groupLabel` callback**: optional `(groupKey, rows) => string`. When
 omitted, the header reads `{groupKey} ({count})`. Use this to render
@@ -449,7 +449,7 @@ to localize, or to embed aggregates.
 `undefined` are grouped under the empty-string key (`''`); the header
 falls back to the i18n `dataGridGroupNoValue` string (`(no value)`).
 
-**Tip — hide the redundant grouped column.** When you group by `type`,
+**Tip. Hide the redundant grouped column.** When you group by `type`,
 every data row's "Type" cell shows the same value as its group header.
 You can drop the duplicate column by marking it hidden:
 
@@ -459,7 +459,7 @@ grid.columns = columns.map((c) =>
 );
 ```
 
-The grid skips hidden columns (header + body) — same path
+The grid skips hidden columns (header + body). Same path
 `civ-column-visibility` uses.
 
 **Interaction with other features:**
@@ -484,7 +484,7 @@ The grid skips hidden columns (header + body) — same path
   ```
   Group boundaries are preserved because group order follows row-array
   insertion order.
-- **Selection** is per-row independently — there's no select-all-in-
+- **Selection** is per-row independently. There's no select-all-in-
   group affordance in v1.
 - **Expandable rows** work alongside groups: a row inside a group can
   still expand to show its detail panel.
@@ -507,11 +507,11 @@ Set `column.aggregate` on any column to render an aggregator footer. The grid cr
 { key: 'amount', header: 'Amount', aggregate: 'max' }   // largest finite value
 ```
 
-`sum` / `avg` / `min` / `max` parse cells via `Number()` and silently drop non-finite values (null, undefined, '', 'N/A', etc.) — matches Google Sheets / Excel. `count` counts cells that are present and non-empty (Excel `COUNTA`, not `COUNT`). `min` / `max` on an empty set return `0` rather than `±Infinity`.
+`sum` / `avg` / `min` / `max` parse cells via `Number()` and silently drop non-finite values (null, undefined, '', 'N/A', etc.). Matches Google Sheets / Excel. `count` counts cells that are present and non-empty (Excel `COUNTA`, not `COUNT`). `min` / `max` on an empty set return `0` rather than `±Infinity`.
 
 ### Custom aggregators (formatting, labels, weighted averages)
 
-For anything beyond a plain number — currency formatting, "Total:" prefixes, weighted averages, ratios — pass a function:
+For anything beyond a plain number (currency formatting, "Total:" prefixes, weighted averages, ratios) pass a function:
 
 ```ts
 import { sum, avg, count } from '@civui/data/aggregate';
@@ -532,7 +532,7 @@ const cols = [
 ];
 ```
 
-The function receives the row subset for the aggregate context (the whole grid for the footer; the group's rows for a group subtotal) plus the column definition. Return a string or number — the grid renders it verbatim, so the function is the right place to format.
+The function receives the row subset for the aggregate context (the whole grid for the footer; the group's rows for a group subtotal) plus the column definition. Return a string or number. The grid renders it verbatim, so the function is the right place to format.
 
 ### Per-group subtotals
 
@@ -540,7 +540,7 @@ When `groupBy` is set and any column has `aggregate`, each expanded group render
 
 ### Sticky footer
 
-`stickyFooter` pins the `<tfoot>` to the bottom of the scrolling container — useful for long tables where the totals would otherwise scroll off-screen. The grid is responsible for the sticky positioning of its own cells; the table must sit inside a scrollable element with a constrained height for the effect to engage.
+`stickyFooter` pins the `<tfoot>` to the bottom of the scrolling container. Useful for long tables where the totals would otherwise scroll off-screen. The grid is responsible for the sticky positioning of its own cells; the table must sit inside a scrollable element with a constrained height for the effect to engage.
 
 ```html
 <div style="max-height: 400px; overflow-y: auto;">
@@ -550,7 +550,7 @@ When `groupBy` is set and any column has `aggregate`, each expanded group render
 
 ### Aggregates + filters
 
-The footer aggregates **whatever rows the consumer hands to the grid** — there's no internal filter / paginate step. When you use `applyGridFilters` client-side, set `grid.rows` to the filtered set and aggregates recompute automatically:
+The footer aggregates **whatever rows the consumer hands to the grid**. There's no internal filter / paginate step. When you use `applyGridFilters` client-side, set `grid.rows` to the filtered set and aggregates recompute automatically:
 
 ```ts
 grid.addEventListener('civ-filter-change', (e) => {
@@ -560,15 +560,15 @@ grid.addEventListener('civ-filter-change', (e) => {
 });
 ```
 
-For server-side data, the consumer can also return per-column server-computed aggregates and surface them via custom function aggregators that ignore the `rows` arg and read from a separate state slot — useful when totals are computed across the full dataset, not just the current page.
+For server-side data, the consumer can also return per-column server-computed aggregates and surface them via custom function aggregators that ignore the `rows` arg and read from a separate state slot. Useful when totals are computed across the full dataset, not just the current page.
 
 ## Per-column filtering
 
 Set `column.filter` on any column to render a filter input in a row beneath the column headers. Three variants ship today:
 
-- `text` — case-insensitive substring match (one `<input type="text">`).
-- `select` — exact-match dropdown built from the supplied options.
-- `number-range` — pair of min / max number inputs.
+- `text`: case-insensitive substring match (one `<input type="text">`).
+- `select`: exact-match dropdown built from the supplied options.
+- `number-range`: pair of min / max number inputs.
 
 The grid is consumer-controlled: every keystroke / change dispatches `civ-filter-change` with the new full filter state, and the consumer applies the filter to its row data. For client-side filtering, the `applyGridFilters` utility from `@civui/data/filter` is the canonical implementation:
 
@@ -602,18 +602,18 @@ Cells in the filter row line up one-to-one with the header cells above:
 
 - Selection, expand, and row-actions columns render an empty placeholder cell.
 - Columns without a `filter` config also render an empty placeholder cell (so the visual grid stays aligned).
-- The cells that DO carry filters render the input directly inside the cell — no extra label / hint chrome, since the column header above already provides the label. The input's `aria-label` reads `"Filter <column>"` for screen readers.
+- The cells that DO carry filters render the input directly inside the cell. No extra label / hint chrome, since the column header above already provides the label. The input's `aria-label` reads `"Filter <column>"` for screen readers.
 
 ### Filter semantics (`applyGridFilters`)
 
-- **`text`** — `String(cell).toLowerCase().includes(value.toLowerCase())`. Empty input is a no-op.
-- **`select`** — `String(cell) === value`. Empty option (`value=""`) is the "All" no-op.
-- **`number-range`** — `min <= Number(cell) <= max` (both bounds inclusive, both optional). Cells whose value is `null` / `undefined` / `""` or doesn't parse to a finite number are **excluded** from any active range — matches Google Sheets / Excel behavior so blank cells don't sneak into "≥ 0" filters.
+- **`text`:** `String(cell).toLowerCase().includes(value.toLowerCase())`. Empty input is a no-op.
+- **`select`:** `String(cell) === value`. Empty option (`value=""`) is the "All" no-op.
+- **`number-range`:** `min <= Number(cell) <= max` (both bounds inclusive, both optional). Cells whose value is `null` / `undefined` / `""` or doesn't parse to a finite number are **excluded** from any active range. Matches Google Sheets / Excel behavior so blank cells don't sneak into "≥ 0" filters.
 - Multiple active filters **AND** together. A row must satisfy every filter to appear.
 
 ### Server-side filtering
 
-`civ-filter-change` is a target-state event — `e.detail.filters` is the full filter map, not a diff. Hand it to your query API:
+`civ-filter-change` is a target-state event. `e.detail.filters` is the full filter map, not a diff. Hand it to your query API:
 
 ```ts
 grid.addEventListener('civ-filter-change', async (e) => {
@@ -625,14 +625,14 @@ grid.addEventListener('civ-filter-change', async (e) => {
 });
 ```
 
-`e.detail.columnKey` is also provided when you need to know which column the user touched — useful for analytics or for debouncing per-column inputs.
+`e.detail.columnKey` is also provided when you need to know which column the user touched. Useful for analytics or for debouncing per-column inputs.
 
 ### Filters + sort + grouping
 
 The three composite features are orthogonal:
 
 - **Filters apply first** (when using `applyGridFilters` client-side), then the consumer sorts and groups the filtered set. The grid renders whatever rows you hand it.
-- The filter row sits in `<thead>` underneath the header row, above the body — sort indicators on column headers continue to function normally above their filter inputs.
+- The filter row sits in `<thead>` underneath the header row, above the body. Sort indicators on column headers continue to function normally above their filter inputs.
 - `groupBy` groups the rows that survive filtering. Empty groups disappear naturally.
 
 ### Filters + keyboard navigation
@@ -641,7 +641,7 @@ With `keyboardNav` on, filter cells participate in cell navigation. Pressing <kb
 
 ## Keyboard navigation {#keyboard-navigation}
 
-Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) — opt in to a single tab stop with arrow-key cell navigation, instead of the default tab-through-every-control behavior. The grid becomes a **single tab stop** — inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so Tab doesn't walk through every cell. Once focus is on the grid, arrow keys move between cells and Enter / Space activate the cell's primary control.
+Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key navigation per the [WAI-ARIA Grid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/). Opt in to a single tab stop with arrow-key cell navigation, instead of the default tab-through-every-control behavior. The grid becomes a **single tab stop**. Inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so Tab doesn't walk through every cell. Once focus is on the grid, arrow keys move between cells and Enter / Space activate the cell's primary control.
 
 ```html
 <civ-data-grid
@@ -663,9 +663,9 @@ Set `keyboardNav` to promote the table to `role="grid"` with 2D arrow-key naviga
 | <kbd>Ctrl</kbd>+<kbd>Home</kbd> | First cell of the grid (header row, first column). |
 | <kbd>Ctrl</kbd>+<kbd>End</kbd> | Last cell of the last body row. |
 | <kbd>PageDown</kbd> / <kbd>PageUp</kbd> | Jump ±10 rows (clamped to the grid). |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control — sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | Activate the cell's primary control. Sort the column, toggle the checkbox, open the action menu, start the edit, etc. On a plain cell of an `interactive` row, fires `civ-row-activate`. |
 | <kbd>F2</kbd> | Start edit on an editable cell (Excel convention). No-op on other cells. |
-| <kbd>Shift</kbd>+<kbd>Enter</kbd> / <kbd>Shift</kbd>+<kbd>Space</kbd> | When `multiSort` is on and the focused cell is a sortable header, adds it to (or cycles direction within) the multi-sort stack — the keyboard equivalent of mouse Shift-click. |
+| <kbd>Shift</kbd>+<kbd>Enter</kbd> / <kbd>Shift</kbd>+<kbd>Space</kbd> | When `multiSort` is on and the focused cell is a sortable header, adds it to (or cycles direction within) the multi-sort stack. The keyboard equivalent of mouse Shift-click. |
 | <kbd>Esc</kbd> | Inside an active edit, cancels the edit. From any inner control of a cell, returns focus to the cell (see [Escape returns focus to the cell](#escape-returns-focus-to-the-cell)). |
 
 ### Activation model
@@ -678,7 +678,7 @@ Enter / Space find the first focusable descendant of the focused cell (`button, 
 - Actions cells → clicks the kebab trigger → opens the menu.
 - Editable cells → clicks the cell trigger button → enters edit mode (focus moves to the input).
 
-When the cell has no focusable descendant **and** the row is `interactive`, Enter / Space fire `civ-row-activate` instead — so master-detail flows have a keyboard path even on rows that don't carry inline actions.
+When the cell has no focusable descendant **and** the row is `interactive`, Enter / Space fire `civ-row-activate` instead. So master-detail flows have a keyboard path even on rows that don't carry inline actions.
 
 ### Focus after edit
 
@@ -686,7 +686,7 @@ When `keyboardNav` is on and the user commits or cancels an edit, focus returns 
 
 ### Column memory across single-cell rows
 
-When `↑` / `↓` transit a row that only has one cell — a **group header**, an **expanded detail row** — focus collapses to col 0 (the only cell), but the user's preferred column is remembered. The next vertical move that reaches a multi-cell row restores their column. Matches Excel / Google Sheets behavior.
+When `↑` / `↓` transit a row that only has one cell (a **group header**, an **expanded detail row**) focus collapses to col 0 (the only cell), but the user's preferred column is remembered. The next vertical move that reaches a multi-cell row restores their column. Matches Excel / Google Sheets behavior.
 
 ```text
    Name   Type   Status
@@ -702,25 +702,25 @@ Explicit horizontal navigation (`←` / `→`, `Home` / `End`, mouse click) upda
 
 ### Escape returns focus to the cell
 
-When focus has moved off the cell onto an inner control — e.g. a sort button after clicking it, or the row-actions kebab after closing its menu — pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern.
+When focus has moved off the cell onto an inner control. E.g. a sort button after clicking it, or the row-actions kebab after closing its menu. Pressing `Esc` returns focus to the cell so arrow keys resume cell navigation. This is the WAI-ARIA "actionable cell" pattern.
 
 When a `<civ-menu>` is currently open inside a cell, the grid intentionally bails on `Esc` so the menu can close itself and restore focus to its trigger; the next `Esc` (now with the menu closed) walks the focus from the trigger back out to the cell. Two presses → cell focused → arrows resume.
 
-Arrow keys also continue to work directly from an inner control — the keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate vertically out of a sort button.
+Arrow keys also continue to work directly from an inner control. The keydown handler picks up the closest cell on every event, so the user doesn't have to press `Esc` first to navigate vertically out of a sort button.
 
 ### Screen reader mode
 
-`role="grid"` flips JAWS / NVDA / VoiceOver into "applications" or "forms" mode while focus is inside the grid: the standard table-reading shortcuts (T to jump tables, Ctrl+Alt+Arrow to move by row / column) are suppressed in favor of the application's own arrow-key handling — which is now the grid's. This is the intended WAI-ARIA Grid behavior. **Leave `keyboardNav` off for simple readable tables** so SR users keep their normal table-reading affordances.
+`role="grid"` flips JAWS / NVDA / VoiceOver into "applications" or "forms" mode while focus is inside the grid: the standard table-reading shortcuts (T to jump tables, Ctrl+Alt+Arrow to move by row / column) are suppressed in favor of the application's own arrow-key handling. Which is now the grid's. This is the intended WAI-ARIA Grid behavior. **Leave `keyboardNav` off for simple readable tables** so SR users keep their normal table-reading affordances.
 
 ### When to use it
 
 - ✅ Admin / back-office screens with sortable + editable + selectable + action-menu cells where Tab would walk through dozens of controls per page.
 - ✅ Power-user workflows where a keyboard-first review of many rows is faster than a mouse-driven one.
-- ❌ Simple readable tables (no inline editing, no row actions) — leave `keyboardNav` off so screen readers stay in normal table reading mode.
+- ❌ Simple readable tables (no inline editing, no row actions). Leave `keyboardNav` off so screen readers stay in normal table reading mode.
 
 ## Export to CSV / JSON
 
-`@civui/data/export` exports a `gridExport` utility — a pure function
+`@civui/data/export` exports a `gridExport` utility. A pure function
 that returns a `File` (a named `Blob`) the consumer can hand to an
 anchor download, `navigator.share`, or any other Blob-consuming path.
 No component, no event dispatch; the data-grid stays focused on
@@ -749,8 +749,8 @@ function downloadCsv(grid: HTMLElement & { rows: GridRow[]; columns: GridColumn[
 |---|---|---|
 | `format` | `'csv'` | `'csv'` (RFC 4180 quoting, CRLF line endings) or `'json'` (pretty-printed array of `row.cells` objects) |
 | `filename` | `'export.csv'` / `'export.json'` | Name on the returned `File`. MIME type is set automatically (`text/csv` / `application/json`). |
-| `includeHidden` | `false` | When `false`, columns with `hidden: true` are omitted — matches what the user is seeing. Set `true` to export every declared column. |
-| `useFormatter` | `false` (CSV only) | When `true`, the column's `formatter` callback produces the cell's text. Most formatters return `TemplateResult` which doesn't stringify usefully — only enable when you've authored plain-value formatters. |
+| `includeHidden` | `false` | When `false`, columns with `hidden: true` are omitted. Matches what the user is seeing. Set `true` to export every declared column. |
+| `useFormatter` | `false` (CSV only) | When `true`, the column's `formatter` callback produces the cell's text. Most formatters return `TemplateResult` which doesn't stringify usefully. Only enable when you've authored plain-value formatters. |
 | `selectedRowIds` | (all rows) | When provided, only rows whose `id` is in this array are exported. Pairs with `grid.selectedRowIds` for "export selection" flows. |
 
 **CSV quoting** follows RFC 4180: values containing `,`, `"`, or
@@ -759,14 +759,14 @@ values are emitted unquoted. Header cells follow the same rule.
 
 **JSON shape**: an array of `row.cells` subset objects keyed by the
 exported `column.key`. Native types are preserved (numbers stay
-numbers, booleans stay booleans) — unlike CSV where everything
+numbers, booleans stay booleans). Unlike CSV where everything
 stringifies.
 
 ## Sticky columns
 
 Set `column.sticky: 'start'` to pin a column to the leading edge or
 `'end'` to pin it to the trailing edge. Pinned columns stay visible
-while the rest of the table scrolls horizontally — useful for wide
+while the rest of the table scrolls horizontally. Useful for wide
 admin tables where the row-identity column (ID / name) needs to stay
 anchored.
 
@@ -794,17 +794,17 @@ grid.responsive = 'scroll';
 **Composition**: sticky columns work with `responsive="scroll"` (the
 intended pairing) and also with the default flow-table mode if the
 container is narrower than the table's natural width. Sticky doesn't
-interact with `responsive="stacked"` — on mobile the table collapses
+interact with `responsive="stacked"`. On mobile the table collapses
 to vertical blocks and column-level pinning isn't meaningful.
 
 ## Responsive behavior
 
 Two modes via the `responsive` prop:
 
-- **`stacked` (default)** — On ≤480px, each row collapses into a vertical block. Each `<td>` renders its column header (from `data-label`) inline next to the value. The USWDS stacked table pattern.
-- **`scroll`** — Wraps the table in a horizontally-scrollable region. Rows stay tabular at all viewport widths. Use when columns must stay in row order on small screens.
+- **`stacked` (default):** On ≤480px, each row collapses into a vertical block. Each `<td>` renders its column header (from `data-label`) inline next to the value. The USWDS stacked table pattern.
+- **`scroll`:** Wraps the table in a horizontally-scrollable region. Rows stay tabular at all viewport widths. Use when columns must stay in row order on small screens.
 
-Both modes preserve the same DOM — CSS does the work, so screen readers always see a proper `<table>`.
+Both modes preserve the same DOM. CSS does the work, so screen readers always see a proper `<table>`.
 
 ## Server-side data
 
@@ -848,11 +848,11 @@ pager.addEventListener('civ-page-change', (e) => {
 
 The web component is feature-complete for v1. Two convenience layers remain on the wishlist; pick them up when a consumer explicitly asks:
 
-- **Saved views / presets** — user-saveable named bundles of column visibility + filters + sort. Composes existing primitives; the only new piece is a storage abstraction (consumer-controlled by default).
-- **URL state persistence** — sync sort / filters / page to query params for shareable filtered views. Pure utility module; no component changes.
+- **Saved views / presets:** user-saveable named bundles of column visibility + filters + sort. Composes existing primitives; the only new piece is a storage abstraction (consumer-controlled by default).
+- **URL state persistence:** sync sort / filters / page to query params for shareable filtered views. Pure utility module; no component changes.
 
 The remaining real work is platform parity:
 
-- **Native iOS / Android implementations** — schema is in place; native bodies are placeholders. This is a dedicated implementation pass, not a feature pass — see `.claude/rules/audit-debt.md`.
+- **Native iOS / Android implementations:** schema is in place; native bodies are placeholders. This is a dedicated implementation pass, not a feature pass. See `.claude/rules/audit-debt.md`.
 
 Out of scope for this component (AG-Grid-Enterprise-tier features that government admin tools rarely need): column resizing, column reordering, row drag-reordering, virtual scrolling, cell-range selection, clipboard, header tooltips, truncation tooltips. Open an issue if a real consumer needs one.

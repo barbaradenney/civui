@@ -259,12 +259,12 @@ For multi-actor forms (e.g., representative delegation, reviewer approval):
 ```
 
 Workflow features are generated with:
-- `generate_workflow_ui` — Status banners and transition buttons
-- `generate_delegation_sections` — Representative/POA assignment
-- `generate_feedback_ui` — Inline reviewer comments
-- `generate_case_dashboard` — Combined status, progress, and history
-- `generate_audit_trail` — Change history timeline
-- `generate_lock_matrix` — Role-based field permissions
+- `generate_workflow_ui`: Status banners and transition buttons
+- `generate_delegation_sections`: Representative/POA assignment
+- `generate_feedback_ui`: Inline reviewer comments
+- `generate_case_dashboard`: Combined status, progress, and history
+- `generate_audit_trail`: Change history timeline
+- `generate_lock_matrix`: Role-based field permissions
 
 ## Component Reference
 

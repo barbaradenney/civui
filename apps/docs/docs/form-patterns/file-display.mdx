@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # File & Document Display
 
-After files are uploaded, they need to be displayed across the form lifecycle — on review pages, confirmation pages, and summary sections. CivUI provides components for each context.
+After files are uploaded, they need to be displayed across the form lifecycle. On review pages, confirmation pages, and summary sections. CivUI provides components for each context.
 
 ## Components
 
@@ -19,7 +19,7 @@ After files are uploaded, they need to be displayed across the form lifecycle �
 | `civ-image-preview` | Review & ID verification | Image display at configurable sizes |
 | `civ-summary` | Full review page | Structured sections with file metadata |
 
-## Review page — file list
+## Review page. File list
 
 Show uploaded documents as read-only fields with download links. Add a "Change" link that navigates back to the upload step.
 
@@ -32,7 +32,7 @@ Show uploaded documents as read-only fields with download links. Add a "Change" 
 <civ-data-field label="Medical records" value="medical-records.pdf (7.7 MB)" href="/files/medical.pdf"></civ-data-field>
 ```
 
-## Review page — image previews
+## Review page. Image previews
 
 For image uploads (ID documents, photos), show visual previews so the user can verify what they uploaded.
 
@@ -61,7 +61,7 @@ For image uploads (ID documents, photos), show visual previews so the user can v
 
 ## Confirmation page
 
-After submission, show what was submitted. No download links (the submission is done), no edit actions — purely informational.
+After submission, show what was submitted. No download links (the submission is done), no edit actions. Purely informational.
 
 <StoryEmbed id="forms-patterns-file-display--confirmation-page" />
 
@@ -123,11 +123,11 @@ Summary/print        → civ-summary with file metadata as text
 
 ## Components used
 
-- [`civ-file-upload`](/components/inputs/file-upload) — interactive upload
-- [`civ-data-field`](/components/form/data-field) — read-only file display with optional download link
-- [`civ-image-preview`](/components/layout/image-preview) — image display
-- [`civ-summary`](/components/form/summary) — structured review sections
-- [`civ-link`](/components/actions/link) — with `type="download"` for the receipt link
-- [`civ-alert`](/components/feedback/alert) — confirmation message
+- [`civ-file-upload`](/components/inputs/file-upload). Interactive upload
+- [`civ-data-field`](/components/form/data-field). Read-only file display with optional download link
+- [`civ-image-preview`](/components/layout/image-preview). Image display
+- [`civ-summary`](/components/form/summary). Structured review sections
+- [`civ-link`](/components/actions/link). With `type="download"` for the receipt link
+- [`civ-alert`](/components/feedback/alert). Confirmation message
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-file-display--review-page-files)

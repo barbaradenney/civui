@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-service-history',
-  description: 'Compound military-service record — branch (Army, Navy, Air Force, Marines, Coast Guard, Space Force), service start and end dates, discharge type, and optional service number. Used in VA benefits forms and similar veterans applications.',
+  description: 'Compound military-service record. Branch (Army, Navy, Air Force, Marines, Coast Guard, Space Force), service start and end dates, discharge type, and optional service number. Used in VA benefits forms and similar veterans applications.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -28,7 +28,7 @@ const schema: ComponentSchema = {
     },
     showServiceNumber: {
       type: 'boolean',
-      description: 'Render the service-number input. Default off — sensitive PII, only requested when the form actually needs it',
+      description: 'Render the service-number input. Default off. Sensitive PII, only requested when the form actually needs it',
       default: false,
       attribute: 'show-service-number',
     },

@@ -12,15 +12,15 @@ import TabNavItemProps from "./_tab-nav-item.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-tab-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-tab-nav--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-tab-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-tab-nav--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-tab-nav>` + `<civ-tab-nav-item>`
 
-Section navigation styled as tabs. Each item is a real `<a href>` that navigates the browser — use this when the URL is the source of truth for which tab is active (one route per tab, deep-linkable, back-button friendly). The active item should set `current` — it gets `aria-current="page"` plus the selected-tab visual. Items stack vertically on mobile (≤480px).
+Section navigation styled as tabs. Each item is a real `<a href>` that navigates the browser. Use this when the URL is the source of truth for which tab is active (one route per tab, deep-linkable, back-button friendly). The active item should set `current`. It gets `aria-current="page"` plus the selected-tab visual. Items stack vertically on mobile (≤480px).
 
-This is **not** the ARIA tabs pattern. There's no `role="tablist"`, no panels, no roving tabindex — the browser handles focus naturally because these are ordinary links. If you need in-page panel switching, use [`<civ-tabs>`](./tabs) instead.
+This is **not** the ARIA tabs pattern. There's no `role="tablist"`, no panels, no roving tabindex. The browser handles focus naturally because these are ordinary links. If you need in-page panel switching, use [`<civ-tabs>`](./tabs) instead.
 
 ## Examples
 
@@ -56,11 +56,11 @@ This is **not** the ARIA tabs pattern. There's no `role="tablist"`, no panels, n
 </civ-tab-nav>
 ```
 
-## Props — civ-tab-nav
+## Props. Civ-tab-nav
 
 <TabNavProps />
 
-## Props — civ-tab-nav-item
+## Props. Civ-tab-nav-item
 
 <TabNavItemProps />
 
@@ -69,8 +69,8 @@ This is **not** the ARIA tabs pattern. There's no `role="tablist"`, no panels, n
 - Renders as a `<nav>` landmark. Always set `label` when a page has more than one nav so screen-reader landmark navigation can distinguish them.
 - Each link inherits the global focus ring from `civ.css`.
 - The active item uses `aria-current="page"` so the user's location is announced.
-- Disabled items render as a non-interactive `<span aria-disabled="true">` — a `disabled` `<a>` would still be focusable and clickable, so we drop the href entirely.
-- No `role="tablist"` / `role="tab"` is applied — those roles imply an in-page tablist with associated panels, which is not what this component does.
+- Disabled items render as a non-interactive `<span aria-disabled="true">`. A `disabled` `<a>` would still be focusable and clickable, so we drop the href entirely.
+- No `role="tablist"` / `role="tab"` is applied. Those roles imply an in-page tablist with associated panels, which is not what this component does.
 
 ## Tab Nav vs Tabs vs Nav
 

@@ -29,7 +29,7 @@ const schema: ComponentSchema = {
     },
     headingLevel: {
       type: 'number',
-      description: 'Semantic heading level (2–6) for the alert heading. Web-only — native platforms use platform-idiomatic header semantics',
+      description: 'Semantic heading level (2–6) for the alert heading. Web-only. Native platforms use platform-idiomatic header semantics',
       default: 4,
       attribute: 'heading-level',
       webOnly: true,

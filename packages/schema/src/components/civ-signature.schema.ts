@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-signature',
-  description: 'Compound electronic-signature field — a name input plus a "I certify..." checkbox tied together. The statement prop renders the certification statement above the certify checkbox. JSON-serialized form value records both the typed name and a timestamp.',
+  description: 'Compound electronic-signature field. A name input plus a "I certify..." checkbox tied together. The statement prop renders the certification statement above the certify checkbox. JSON-serialized form value records both the typed name and a timestamp.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'enum',
-      description: 'Visual size of the legend. Defaults to `xl` because signatures are typically the prominent end-of-form legal affirmation — the large heading paired with the default card framing communicates the weight of the action',
+      description: 'Visual size of the legend. Defaults to `xl` because signatures are typically the prominent end-of-form legal affirmation. The large heading paired with the default card framing communicates the weight of the action',
       default: 'xl',
       values: ['sm', 'md', 'lg', 'xl'],
       webOnly: true,
@@ -46,7 +46,7 @@ const schema: ComponentSchema = {
     },
     card: {
       type: 'boolean',
-      description: 'Render the signature block as an outlined card. Defaults to true — signature blocks carry legal weight (statement of truth, certify-and-submit) and the card framing communicates that. Set false for a bare fieldset when nesting inside an already-bordered container',
+      description: 'Render the signature block as an outlined card. Defaults to true. Signature blocks carry legal weight (statement of truth, certify-and-submit) and the card framing communicates that. Set false for a bare fieldset when nesting inside an already-bordered container',
       default: true,
     },
   },

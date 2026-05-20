@@ -19,10 +19,10 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-change': {
-      description: 'Fires when any chip\'s selected state changes. The detail aggregates the group\'s current selection — single mode emits a string; multi mode emits a string array',
+      description: 'Fires when any chip\'s selected state changes. The detail aggregates the group\'s current selection. Single mode emits a string; multi mode emits a string array',
       detail: {
         value: { type: 'string', description: 'In single mode: the selected value (or empty). In multi mode: a string[] of selected values' },
-        aggregated: { type: 'boolean', description: 'Always true on the group event — distinguishes it from the underlying chip\'s civ-change' },
+        aggregated: { type: 'boolean', description: 'Always true on the group event. Distinguishes it from the underlying chip\'s civ-change' },
       },
     },
   },

@@ -20,7 +20,7 @@ const schema: ComponentSchema = {
   props: {
     href: {
       type: 'string',
-      description: 'When set, the row renders as an anchor that navigates on click. Sanitized — `javascript:` / `data:` schemes are rejected',
+      description: 'When set, the row renders as an anchor that navigates on click. Sanitized. `javascript:` / `data:` schemes are rejected',
       default: '',
     },
     current: {

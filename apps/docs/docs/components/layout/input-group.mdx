@@ -46,7 +46,7 @@ Input group is a layout-only container with no props. It applies CSS to remove i
 
 ### Search field
 
-The most common pattern — a text input with an adjacent search button.
+The most common pattern. A text input with an adjacent search button.
 
 ```html
 <civ-input-group>
@@ -80,19 +80,19 @@ Buttons on both sides for increment/decrement controls.
 
 ## When to use
 
-- **Search bars** — input paired with a search or filter button
-- **Prefix/suffix indicators** — currency symbols, units, or lookup actions
-- **Stepper controls** — increment/decrement buttons flanking a numeric input
+- **Search bars:** input paired with a search or filter button
+- **Prefix/suffix indicators:** currency symbols, units, or lookup actions
+- **Stepper controls:** increment/decrement buttons flanking a numeric input
 
 ## When NOT to use
 
-- **Standalone inputs** — if the input doesn't need an attached button, don't wrap it
-- **Multiple inputs** — input group is for one input with button(s), not for grouping multiple inputs together
-- **Decorative icons** — use the `icon-start` or `icon-end` props on the input itself instead
+- **Standalone inputs:** if the input doesn't need an attached button, don't wrap it
+- **Multiple inputs:** input group is for one input with button(s), not for grouping multiple inputs together
+- **Decorative icons:** use the `icon-start` or `icon-end` props on the input itself instead
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/input-group/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/input-group/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:input-group' with {

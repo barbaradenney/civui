@@ -6,7 +6,7 @@ sidebar_label: Motion
 
 # Motion
 
-CivUI uses design tokens for all transitions and animations. Hardcoded durations and easings are not allowed — every motion value comes from the token system so it can be adjusted globally and respects reduced-motion preferences.
+CivUI uses design tokens for all transitions and animations. Hardcoded durations and easings are not allowed. Every motion value comes from the token system so it can be adjusted globally and respects reduced-motion preferences.
 
 ## Duration tokens
 
@@ -51,7 +51,7 @@ Always use token variables instead of hardcoded values:
 | Checkbox | Check/indeterminate indicator | `fast` (100ms) | `ease-out` |
 | Progress bar | Width fill | `slow` (300ms) | `ease-out` |
 | Loader spinner | Continuous rotation | `slower` (500ms) | `linear` |
-| Link/Button | Background color on hover | `fast` (100ms) | — |
+| Link/Button | Background color on hover | `fast` (100ms) |. |
 
 ## Reduced motion (WCAG 2.1 AA)
 
@@ -70,7 +70,7 @@ CivUI globally disables all animations and transitions when the user has enabled
 }
 ```
 
-This is applied automatically — no opt-in required. Every CivUI component respects this setting. State changes still happen (toggling, checking, expanding), they just happen instantly instead of animating.
+This is applied automatically. No opt-in required. Every CivUI component respects this setting. State changes still happen (toggling, checking, expanding), they just happen instantly instead of animating.
 
 ### Testing reduced motion
 

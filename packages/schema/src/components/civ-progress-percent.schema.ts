@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-progress-percent',
-  description: 'Percentage progress bar — single horizontal track with a fill from 0 to 100. Used for upload progress, multi-step form completion percentage, or any continuous-progress metric.',
+  description: 'Percentage progress bar. Single horizontal track with a fill from 0 to 100. Used for upload progress, multi-step form completion percentage, or any continuous-progress metric.',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,

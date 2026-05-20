@@ -33,14 +33,14 @@ const schema: ComponentSchema = {
     },
     headingLevel: {
       type: 'number',
-      description: 'Semantic heading level (2–6) for the drawer heading. Web-only — native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics',
+      description: 'Semantic heading level (2–6) for the drawer heading. Web-only. Native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics',
       default: 2,
       attribute: 'heading-level',
       webOnly: true,
     },
     label: {
       type: 'string',
-      description: 'Accessible label for the drawer (announced as the dialog name). Use this when no visible `heading` is set — e.g. a slide-in main-nav drawer might use `label="Main menu"` with the nav itself as its only content.',
+      description: 'Accessible label for the drawer (announced as the dialog name). Use this when no visible `heading` is set. E.g. a slide-in main-nav drawer might use `label="Main menu"` with the nav itself as its only content.',
       default: '',
     },
     noCloseButton: {
@@ -63,13 +63,13 @@ const schema: ComponentSchema = {
     },
     noStickyHeader: {
       type: 'boolean',
-      description: 'When true, the header scrolls with the body content instead of sticking to the top of the drawer. Default is sticky — keeps the heading and close affordance visible while the user scrolls long content.',
+      description: 'When true, the header scrolls with the body content instead of sticking to the top of the drawer. Default is sticky. Keeps the heading and close affordance visible while the user scrolls long content.',
       default: false,
       attribute: 'no-sticky-header',
     },
     noStickyFooter: {
       type: 'boolean',
-      description: 'When true, the footer scrolls with the body content instead of sticking to the bottom of the drawer. Default is sticky — keeps action buttons (Apply, Save, Cancel) visible while the user scrolls long content.',
+      description: 'When true, the footer scrolls with the body content instead of sticking to the bottom of the drawer. Default is sticky. Keeps action buttons (Apply, Save, Cancel) visible while the user scrolls long content.',
       default: false,
       attribute: 'no-sticky-footer',
     },

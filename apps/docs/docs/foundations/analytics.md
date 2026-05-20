@@ -51,7 +51,7 @@ Every `civ-analytics` event includes this structure:
 
 ## PII safety
 
-Analytics events **never** include field values. The payload contains the component name, action, field name, and label — enough to track form completion funnels without capturing what the user typed. This is enforced by the base class implementation and verified by automated tests.
+Analytics events **never** include field values. The payload contains the component name, action, field name, and label. Enough to track form completion funnels without capturing what the user typed. This is enforced by the base class implementation and verified by automated tests.
 
 ## Opting out
 

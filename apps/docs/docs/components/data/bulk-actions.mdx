@@ -12,7 +12,7 @@ import EventsTable from "./_bulk-actions.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-bulk-actions`](pathname:///civui/storybook/?path=/docs/contract-civ-bulk-actions--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-bulk-actions`](pathname:///civui/storybook/?path=/docs/contract-civ-bulk-actions--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -20,7 +20,7 @@ import EventsTable from "./_bulk-actions.events.mdx";
 
 Selection-aware action bar that appears above or below a `civ-data-grid` (or any other component with a selection model) when one or more rows are selected. Shows `"{count} {itemName(s)} selected"` on the leading edge, action buttons in the default slot, and a Clear button on the trailing edge.
 
-Hidden via `display: none` when `count === 0` so the default-slot action buttons stay in the DOM across selection transitions — they don't get re-created every time the user selects/deselects.
+Hidden via `display: none` when `count === 0` so the default-slot action buttons stay in the DOM across selection transitions. They don't get re-created every time the user selects/deselects.
 
 ## Examples
 
@@ -98,7 +98,7 @@ The component appends `"s"` to `itemName` when `count !== 1`. For nouns that don
 
 ## Accessibility
 
-- The status `<p>` is the `aria-live="polite"` region — **not** the whole
+- The status `<p>` is the `aria-live="polite"` region. **not** the whole
   bar. Scoping the live region to the status text means screen readers
   announce only the count when it changes, not the Clear button label or
   any slotted action labels.
@@ -111,7 +111,7 @@ The component appends `"s"` to `itemName` when `count !== 1`. For nouns that don
 - Action buttons inside the default slot keep their own ARIA semantics.
   Idiomatic CivUI usage is `civ-action-button` (the same compact
   toolbar-context primitive the Clear button is built on); descriptive
-  labels — "Delete application", not just "Delete", per the row-action
+  labels. "Delete application", not just "Delete", per the row-action
   label guideline.
 - Use `hide-clear` when the consumer's actions inherently clear selection,
   so the trailing Clear button doesn't duplicate that affordance.

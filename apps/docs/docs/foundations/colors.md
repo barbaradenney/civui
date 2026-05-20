@@ -149,7 +149,7 @@ Default text, backgrounds, borders, and neutral elements.
 
 ## Dark mode
 
-Dark mode activates automatically via `prefers-color-scheme: dark`. All semantic tokens have dark-mode overrides — no code changes needed.
+Dark mode activates automatically via `prefers-color-scheme: dark`. All semantic tokens have dark-mode overrides. No code changes needed.
 
 ## CSS custom properties
 

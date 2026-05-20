@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -7,10 +7,10 @@
 | `position` | `'start'` \| `'end'` | `'start'` | Which viewport edge the drawer slides in from. `start` = left in LTR, right in RTL; `end` = right in LTR, left in RTL. Uses logical properties so layouts mirror automatically. |
 | `width` | `string` | `'min(320px, 90vw)'` | Drawer width as a CSS length (e.g. `320px`, `min(360px, 90vw)`). Mobile (≤480px) caps to the viewport width regardless of this value so content never overflows offscreen. |
 | `heading` | `string` | `''` | Visible heading rendered inside the drawer header |
-| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the drawer heading. Web-only — native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics |
-| `label` | `string` | `''` | Accessible label for the drawer (announced as the dialog name). Use this when no visible `heading` is set — e.g. a slide-in main-nav drawer might use `label="Main menu"` with the nav itself as its only content. |
+| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the drawer heading. Web-only. Native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics |
+| `label` | `string` | `''` | Accessible label for the drawer (announced as the dialog name). Use this when no visible `heading` is set. E.g. a slide-in main-nav drawer might use `label="Main menu"` with the nav itself as its only content. |
 | `no-close-button` | `boolean` | `false` | Suppress the built-in close (×) button. Use when the consumer renders its own dismiss affordance |
 | `no-backdrop-close` | `boolean` | `false` | Disable click-outside-to-close. Useful when the drawer contains required-action affordances |
 | `no-escape-close` | `boolean` | `false` | Disable Escape-key close. Pair with `noBackdropClose` to force users to the explicit affordance |
-| `no-sticky-header` | `boolean` | `false` | When true, the header scrolls with the body content instead of sticking to the top of the drawer. Default is sticky — keeps the heading and close affordance visible while the user scrolls long content. |
-| `no-sticky-footer` | `boolean` | `false` | When true, the footer scrolls with the body content instead of sticking to the bottom of the drawer. Default is sticky — keeps action buttons (Apply, Save, Cancel) visible while the user scrolls long content. |
+| `no-sticky-header` | `boolean` | `false` | When true, the header scrolls with the body content instead of sticking to the top of the drawer. Default is sticky. Keeps the heading and close affordance visible while the user scrolls long content. |
+| `no-sticky-footer` | `boolean` | `false` | When true, the footer scrolls with the body content instead of sticking to the bottom of the drawer. Default is sticky. Keeps action buttons (Apply, Save, Cancel) visible while the user scrolls long content. |

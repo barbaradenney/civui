@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-income',
-  description: 'Compound field for dollar amount + pay frequency. Pairs `civ-currency` (dollar input with mask + validation) with `civ-select` (frequency) inside a single fieldset. Use for any means-tested benefit application — wages, household income, expense estimates, support payments. The value is serialized to JSON as `{ amount, frequency }`; sub-fields are also exposed as `${name}.amount` and `${name}.frequency`.',
+  description: 'Compound field for dollar amount + pay frequency. Pairs `civ-currency` (dollar input with mask + validation) with `civ-select` (frequency) inside a single fieldset. Use for any means-tested benefit application. Wages, household income, expense estimates, support payments. The value is serialized to JSON as `{ amount, frequency }`; sub-fields are also exposed as `${name}.amount` and `${name}.frequency`.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -86,7 +86,7 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    // String transport — the structured `{ amount, frequency }` shape
+    // String transport. The structured `{ amount, frequency }` shape
     // is JSON-stringified into `value` for ElementInternals form
     // participation, matching the civ-address / civ-name convention.
     // Sub-fields are ALSO exposed as separate form values

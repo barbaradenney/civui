@@ -12,13 +12,13 @@ import EventsTable from "./_action-sheet.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-action-sheet`](pathname:///civui/storybook/?path=/docs/contract-civ-action-sheet--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-action-sheet`](pathname:///civui/storybook/?path=/docs/contract-civ-action-sheet--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-action-sheet>`
 
-A shared popup/overlay component that renders as an absolute dropdown on desktop and a fixed bottom sheet on mobile (≤480px). Use it for any popup content — menus, confirmations, option lists, or custom overlays.
+A shared popup/overlay component that renders as an absolute dropdown on desktop and a fixed bottom sheet on mobile (≤480px). Use it for any popup content. Menus, confirmations, option lists, or custom overlays.
 
 The parent component controls the `open` state. The action sheet fires `civ-action-sheet-close` when it wants to close and the parent decides whether to close.
 
@@ -63,8 +63,8 @@ Renders as a fixed bottom sheet:
 
 ### Keyboard
 
-- **Escape** — fires `civ-action-sheet-close`
-- **Tab** — cycles through focusable elements (when `trap-focus` is set)
+- **Escape:** fires `civ-action-sheet-close`
+- **Tab:** cycles through focusable elements (when `trap-focus` is set)
 
 ## Usage
 
@@ -106,7 +106,7 @@ All popups, dropdowns, and dialogs in CivUI must use bottom sheets on mobile. Th
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/action-sheet/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/action-sheet/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:action-sheet' with {

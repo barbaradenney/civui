@@ -71,7 +71,7 @@ node --experimental-strip-types tools/validate-drupal-sdc.ts
 
 ## Schema-as-Contract Gates
 
-In addition to the parity report (which extracts and compares APIs from all four platforms), CivUI maintains a fifth artifact per component: a **platform-neutral schema** in `@civui/schema` that describes the public contract — props, events, accessibility role, render order, form behavior. **62 of the cross-platform components are covered**; the schema is the source a contractor (or a new platform implementation) reads when writing equivalent native code.
+In addition to the parity report (which extracts and compares APIs from all four platforms), CivUI maintains a fifth artifact per component: a **platform-neutral schema** in `@civui/schema` that describes the public contract. Props, events, accessibility role, render order, form behavior. **62 of the cross-platform components are covered**; the schema is the source a contractor (or a new platform implementation) reads when writing equivalent native code.
 
 The Lit web implementation is the canonical reference. Four additional CI gates protect drift between the schema and the four implementations.
 
@@ -85,10 +85,10 @@ pnpm parity:schema --platforms
 
 Validates that for every covered component:
 
-1. **Lit ↔ schema match** — every `@property` in the Lit source is declared in the schema, and vice versa. Types and `attribute` overrides must match.
-2. **Cross-platform name coverage** — every non-`webOnly` schema prop appears on iOS (`Civ{Name}.swift` struct properties), Android (`Civ{Name}.kt` `@Composable` parameters), and Drupal (`{name}.component.yml` props). Naming conventions are normalized automatically (iOS `is`-prefix for booleans, Drupal snake_case, etc.).
-3. **Drupal SDC YAML type-drift** — when the schema declares `boolean`, the SDC YAML must declare `type: boolean`. Schema `enum` ↔ Drupal `string`, schema `number` ↔ Drupal `integer`. iOS / Android type-parsing is intentionally not enforced — Swift / Kotlin type expressions vary too much to diff reliably.
-4. **Event drift** — events dispatched by the Lit source (`dispatch(this, 'civ-...')` or raw `CustomEvent`) must match the events declared in the schema, including their detail-key shape.
+1. **Lit ↔ schema match:** every `@property` in the Lit source is declared in the schema, and vice versa. Types and `attribute` overrides must match.
+2. **Cross-platform name coverage:** every non-`webOnly` schema prop appears on iOS (`Civ{Name}.swift` struct properties), Android (`Civ{Name}.kt` `@Composable` parameters), and Drupal (`{name}.component.yml` props). Naming conventions are normalized automatically (iOS `is`-prefix for booleans, Drupal snake_case, etc.).
+3. **Drupal SDC YAML type-drift:** when the schema declares `boolean`, the SDC YAML must declare `type: boolean`. Schema `enum` ↔ Drupal `string`, schema `number` ↔ Drupal `integer`. iOS / Android type-parsing is intentionally not enforced. Swift / Kotlin type expressions vary too much to diff reliably.
+4. **Event drift:** events dispatched by the Lit source (`dispatch(this, 'civ-...')` or raw `CustomEvent`) must match the events declared in the schema, including their detail-key shape.
 
 Mark genuinely web-specific props (Tailwind size variants, ARIA `headingLevel`, JS-only callbacks like `loadOptions`/`beforeContinue`, anchor `href` semantics) with `webOnly: true` in the schema's `PropDef` to exclude them from cross-platform diffs.
 
@@ -106,7 +106,7 @@ Runs `validateAll()` from `@civui/schema/validate` over every `*.schema.ts`. Cat
 - Malformed `renderOrder` (unknown element types)
 - Missing required top-level fields
 
-The validator's accepted-value lists are imported from `schema.types.ts` `as const` arrays — adding a new category, render type, or value mode requires editing exactly one file (the type union and runtime check stay in sync).
+The validator's accepted-value lists are imported from `schema.types.ts` `as const` arrays. Adding a new category, render type, or value mode requires editing exactly one file (the type union and runtime check stay in sync).
 
 ### Drupal Sync Clean
 
@@ -116,7 +116,7 @@ The validator's accepted-value lists are imported from `schema.types.ts` `as con
 pnpm sync:drupal && git diff --exit-code
 ```
 
-Regenerates the Drupal SDC YAMLs and Twig templates from the schemas (idempotent), then fails if `git diff` produces any output. Catches hand-edits to Twig / SDC YAML that diverge from what the regenerator would emit — e.g. a boolean prop rendered as a value-bearing attribute, a missing slot block, a stale prop after a schema rename.
+Regenerates the Drupal SDC YAMLs and Twig templates from the schemas (idempotent), then fails if `git diff` produces any output. Catches hand-edits to Twig / SDC YAML that diverge from what the regenerator would emit. E.g. a boolean prop rendered as a value-bearing attribute, a missing slot block, a stale prop after a schema rename.
 
 ### Tool Tests
 
@@ -136,19 +136,19 @@ Without this gate, a broken parser could silently report drift as in-sync.
 
 ### Adding a new schema
 
-When you add a new cross-platform component, drop a schema next to its source in `packages/schema/src/components/civ-<name>.schema.ts`, add a `COVERED_COMPONENTS` entry in `tools/schema-parity.ts`, and add it to the `COMPONENTS` lists in `tools/sync-drupal-sdc.ts` and `tools/sync-drupal-twig.ts`. Run `pnpm sync:drupal` to auto-generate the missing Drupal SDC props, then `pnpm parity:schema --platforms` to verify the cross-platform check passes. The CI gates pick it up automatically — no workflow changes needed.
+When you add a new cross-platform component, drop a schema next to its source in `packages/schema/src/components/civ-<name>.schema.ts`, add a `COVERED_COMPONENTS` entry in `tools/schema-parity.ts`, and add it to the `COMPONENTS` lists in `tools/sync-drupal-sdc.ts` and `tools/sync-drupal-twig.ts`. Run `pnpm sync:drupal` to auto-generate the missing Drupal SDC props, then `pnpm parity:schema --platforms` to verify the cross-platform check passes. The CI gates pick it up automatically. No workflow changes needed.
 
 See [`packages/schema/README.md`](https://github.com/anthropics/civui/blob/main/packages/schema/README.md) for the full naming-convention map, the `webOnly` flag semantics, and the exhaustive list of out-of-scope wrappers.
 
 ### Generated contract reference
 
-The Storybook site includes a [Contract](pathname:///civui/storybook/?path=/docs/contract-civ-button--docs) section with one auto-generated page per component (53 pages, one per schema). Each page lists the component's props, events, accessibility role, form behavior, and the file path on each platform. Contract pages live in Storybook (alongside worked examples and the Storybook controls panel) rather than Docusaurus — developers reading a component's contract usually want to see the matching examples in the same context.
+The Storybook site includes a [Contract](pathname:///civui/storybook/?path=/docs/contract-civ-button--docs) section with one auto-generated page per component (53 pages, one per schema). Each page lists the component's props, events, accessibility role, form behavior, and the file path on each platform. Contract pages live in Storybook (alongside worked examples and the Storybook controls panel) rather than Docusaurus. Developers reading a component's contract usually want to see the matching examples in the same context.
 
-Pages are regenerated from `@civui/schema` on every `pnpm storybook` / `pnpm storybook:build` via the `prestorybook` hook (`pnpm storybook:contract`), so the documentation can never drift from the canonical schema. The generated directory (`.storybook/contract/`) is gitignored — pages are byproducts of the schema, not source. Each Docusaurus component page also carries an auto-injected admonition that links across to the matching Storybook contract page.
+Pages are regenerated from `@civui/schema` on every `pnpm storybook` / `pnpm storybook:build` via the `prestorybook` hook (`pnpm storybook:contract`), so the documentation can never drift from the canonical schema. The generated directory (`.storybook/contract/`) is gitignored. Pages are byproducts of the schema, not source. Each Docusaurus component page also carries an auto-injected admonition that links across to the matching Storybook contract page.
 
 ## Drift-Prevention Gates
 
-A separate set of CI jobs guards against narrative and pattern drift across the whole repo — typos in Tailwind colour classes, stale `<civ-X>` references in long-form docs, story attributes that don't match a real `@property`, JSDoc tags that lie about the API. These gates surfaced from the May 2026 form-pattern audit and they apply to every component, not just form patterns.
+A separate set of CI jobs guards against narrative and pattern drift across the whole repo. Typos in Tailwind colour classes, stale `<civ-X>` references in long-form docs, story attributes that don't match a real `@property`, JSDoc tags that lie about the API. These gates surfaced from the May 2026 form-pattern audit and they apply to every component, not just form patterns.
 
 ### Drift Lints
 
@@ -160,21 +160,21 @@ pnpm validate:lints
 
 A bank of fast static lints over the whole repo. Each parses source and exits in under a second. Every failure ends with a `→ see <path>#<anchor>` line linking to the rule documentation that explains the pattern and how to fix it (mapping lives in `tools/lint-rule-links.ts`):
 
-- **`lint:fieldsets`** — No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
-- **`lint:story-embeds`** — Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
-- **`lint:story-names`** — Every `StoryObj`'s export name and `name:` display title share at least one substantive token. Catches the failure mode where `export const WithError` had display name `"Custom Button Labels"`, so the Storybook panel title contradicted the rendered content.
-- **`lint:story-props`** — Every `<civ-*>` attribute used in any `*.stories.ts` corresponds to a declared `@property` on the underlying component (or one of its known base classes). Catches phantom attributes like `<civ-repeater add-label="...">` (no such prop — should be `item-label`) or `<civ-select preset="document-type">` (presets aren't a thing on civ-select).
-- **`lint:prose-refs`** — Every `<civ-X>` tag reference in long-form documentation (`CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, `apps/docs/docs/**/*.mdx`) resolves to a registered custom element. Catches narrative drift — e.g. a `civ-form-field` bullet that outlives the deleted component, or `civ-progress-bar` references that should be `civ-progress-percent`.
-- **`lint:color-classes`** — Every `civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}` class anywhere in the repo resolves to a real `--civ-color-*` token defined by `packages/tokens`. Catches shades that don't exist on a family — e.g. the `success` family only has `lightest / lighter / DEFAULT / dark / darkest`, so a `darker` suffix would silently render as plain inherited-coloured text rather than throwing.
-- **`lint:jsdoc-props`** — Every `@prop` tag in a component's class-level JSDoc names a declared `@property` on that class, or an inherited prop from a known base class (`CivFormElement`, `CivBooleanFormElement`, `CivCompoundElement`, `PresetInputWrapper`, `LegendHeadingMixin`). The lint normalises camelCase ↔ kebab-case automatically. Catches docstring drift like the `civ-action-sheet` `@prop trapFocus` that actually mapped to property `trapFocusProp`.
-- **`lint:jsdoc-events`** — Companion to `lint:jsdoc-props`, but for events. Every `@fires civ-X` tag in a component's class-level JSDoc must correspond to a real `dispatch(this, 'civ-X')` or `new CustomEvent('civ-X')` call in the same class. Inherited dispatches from `CivBaseElement.sendAnalytics()` and `CivFormElement._handleInput()/_handleChange()` are seeded automatically.
-- **`lint:safelist-stale`** — Every entry in `tailwind.config.ts` `safelist` must protect a class that Tailwind would otherwise purge. Flags entries that target classes already declared as plain CSS in `packages/core/src/styles/` (where Tailwind has no purge authority) or that no source file references — both shapes are dead weight that Tailwind itself only logs as a warning.
-- **`lint:hardcoded-tokens`** — Component source and CSS must use the token system instead of literals. Three sub-checks: motion durations must use `var(--civ-motion-duration-*)`, z-index above the single-layer-stack idiom must use `var(--civ-z-*)`, and Tailwind arbitrary values (`civ-p-[13px]`) are forbidden anywhere in component source.
-- **`lint:coverage-trinity`** — Every `@customElement('civ-X')` declaration must have a co-located `*.test.ts` and `*.stories.ts` (or a sibling file in the same directory that references the tag — paired components like radio + radio-group are allowed to share). Cross-platform components in `COVERED_COMPONENTS` must additionally have a schema at `packages/schema/src/components/civ-X.schema.ts`.
-- **`lint:event-listener-leak`** — Every `addEventListener` call inside `connectedCallback` or `firstUpdated` must have a matching `removeEventListener` somewhere in the same class. Catches the recurring leak shape where a component attaches a document-level keydown / click handler on mount and forgets to detach it on unmount — every reconnect cycle accumulates dead listeners and keeps the host alive.
-- **`lint:ios-stub-allowlist`** — Enforces the deferred-iOS-implementation allowlist in `tools/ios-stub-allowlist.ts`. Any iOS component whose `body: some View` is just `EmptyView()` must be on the list; any entry on the list whose body is no longer EmptyView is flagged stale. Editing the list is a deliberate human action — the rationale is in `.claude/rules/audit-debt.md` ("Native platform implementation pass"). Designed to stop AI agents from "completing" the stub bodies blind without device verification.
+- **`lint:fieldsets`:** No self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) is wrapped in `<civ-fieldset>`. Wrapping would produce nested fieldsets with double legends and broken slot relocation.
+- **`lint:story-embeds`:** Every `<StoryEmbed id="..."/>` in `apps/docs` resolves to a real story export. Catches renames, slug typos (note: Storybook's `startCase` inserts dashes between digits and letters, so `Step1_Hub` becomes `step-1-hub`), and references to deleted components.
+- **`lint:story-names`:** Every `StoryObj`'s export name and `name:` display title share at least one substantive token. Catches the failure mode where `export const WithError` had display name `"Custom Button Labels"`, so the Storybook panel title contradicted the rendered content.
+- **`lint:story-props`:** Every `<civ-*>` attribute used in any `*.stories.ts` corresponds to a declared `@property` on the underlying component (or one of its known base classes). Catches phantom attributes like `<civ-repeater add-label="...">` (no such prop. Should be `item-label`) or `<civ-select preset="document-type">` (presets aren't a thing on civ-select).
+- **`lint:prose-refs`:** Every `<civ-X>` tag reference in long-form documentation (`CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, `apps/docs/docs/**/*.mdx`) resolves to a registered custom element. Catches narrative drift. E.g. a `civ-form-field` bullet that outlives the deleted component, or `civ-progress-bar` references that should be `civ-progress-percent`.
+- **`lint:color-classes`:** Every `civ-{text|bg|border|ring|fill|stroke|divide|outline}-{family}-{shade}` class anywhere in the repo resolves to a real `--civ-color-*` token defined by `packages/tokens`. Catches shades that don't exist on a family. E.g. the `success` family only has `lightest / lighter / DEFAULT / dark / darkest`, so a `darker` suffix would silently render as plain inherited-coloured text rather than throwing.
+- **`lint:jsdoc-props`:** Every `@prop` tag in a component's class-level JSDoc names a declared `@property` on that class, or an inherited prop from a known base class (`CivFormElement`, `CivBooleanFormElement`, `CivCompoundElement`, `PresetInputWrapper`, `LegendHeadingMixin`). The lint normalises camelCase ↔ kebab-case automatically. Catches docstring drift like the `civ-action-sheet` `@prop trapFocus` that actually mapped to property `trapFocusProp`.
+- **`lint:jsdoc-events`:** Companion to `lint:jsdoc-props`, but for events. Every `@fires civ-X` tag in a component's class-level JSDoc must correspond to a real `dispatch(this, 'civ-X')` or `new CustomEvent('civ-X')` call in the same class. Inherited dispatches from `CivBaseElement.sendAnalytics()` and `CivFormElement._handleInput()/_handleChange()` are seeded automatically.
+- **`lint:safelist-stale`:** Every entry in `tailwind.config.ts` `safelist` must protect a class that Tailwind would otherwise purge. Flags entries that target classes already declared as plain CSS in `packages/core/src/styles/` (where Tailwind has no purge authority) or that no source file references. Both shapes are dead weight that Tailwind itself only logs as a warning.
+- **`lint:hardcoded-tokens`:** Component source and CSS must use the token system instead of literals. Three sub-checks: motion durations must use `var(--civ-motion-duration-*)`, z-index above the single-layer-stack idiom must use `var(--civ-z-*)`, and Tailwind arbitrary values (`civ-p-[13px]`) are forbidden anywhere in component source.
+- **`lint:coverage-trinity`:** Every `@customElement('civ-X')` declaration must have a co-located `*.test.ts` and `*.stories.ts` (or a sibling file in the same directory that references the tag. Paired components like radio + radio-group are allowed to share). Cross-platform components in `COVERED_COMPONENTS` must additionally have a schema at `packages/schema/src/components/civ-X.schema.ts`.
+- **`lint:event-listener-leak`:** Every `addEventListener` call inside `connectedCallback` or `firstUpdated` must have a matching `removeEventListener` somewhere in the same class. Catches the recurring leak shape where a component attaches a document-level keydown / click handler on mount and forgets to detach it on unmount. Every reconnect cycle accumulates dead listeners and keeps the host alive.
+- **`lint:ios-stub-allowlist`:** Enforces the deferred-iOS-implementation allowlist in `tools/ios-stub-allowlist.ts`. Any iOS component whose `body: some View` is just `EmptyView()` must be on the list; any entry on the list whose body is no longer EmptyView is flagged stale. Editing the list is a deliberate human action. The rationale is in `.claude/rules/audit-debt.md` ("Native platform implementation pass"). Designed to stop AI agents from "completing" the stub bodies blind without device verification.
 
-The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-refs and color-classes) the long-form `.md` / `.mdx` / `.twig` files. They are not pattern-specific — adding a new component category gets the same coverage automatically.
+The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-refs and color-classes) the long-form `.md` / `.mdx` / `.twig` files. They are not pattern-specific. Adding a new component category gets the same coverage automatically.
 
 ### Doc Tables Sync
 
@@ -184,7 +184,7 @@ The lints scan everything under `packages/`, `apps/docs/docs/`, and (for prose-r
 pnpm validate:doc-tables
 ```
 
-Regenerates the auto-generated `_<component>.props.mdx` and `_<component>.events.mdx` partials from `@civui/schema` (via `pnpm sync:doc-tables`), then fails if `git diff` produces any output. Catches hand-edits to a generated partial — the schema is the source of truth for the Props and Events tables on every component page.
+Regenerates the auto-generated `_<component>.props.mdx` and `_<component>.events.mdx` partials from `@civui/schema` (via `pnpm sync:doc-tables`), then fails if `git diff` produces any output. Catches hand-edits to a generated partial. The schema is the source of truth for the Props and Events tables on every component page.
 
 Split from the drift-lints job because it has a different remediation step: run `pnpm sync:doc-tables` locally and commit the diff.
 
@@ -198,7 +198,7 @@ pnpm storybook:build
 
 Builds the full Storybook static bundle on every PR. Catches story render-time errors that the static lints miss: a story whose `render()` throws, an import that fails to resolve, an MDX docs page with a syntax error, a Vite/Rollup module-resolution failure, or a contract-page generator that emits invalid markup.
 
-The `prestorybook:build` hook regenerates the contract MDX pages first, so this gate also covers the schema → contract page generator. Native bundle size is currently ~1MB ungzipped — the bundle-size CI gate tracks regressions on that separately.
+The `prestorybook:build` hook regenerates the contract MDX pages first, so this gate also covers the schema → contract page generator. Native bundle size is currently ~1MB ungzipped. The bundle-size CI gate tracks regressions on that separately.
 
 ### Native Compile Check
 
@@ -256,8 +256,8 @@ Fix the component source to follow the pattern described in the error message, t
 
 Every PR uses the template at `.github/PULL_REQUEST_TEMPLATE.md`, which includes:
 
-- **Platform checklist** — checkboxes for Web, iOS, Android, Drupal SDC, and Drupal story updates
-- **Testing checklist** — unit tests, Storybook verification, parity report
+- **Platform checklist:** checkboxes for Web, iOS, Android, Drupal SDC, and Drupal story updates
+- **Testing checklist:** unit tests, Storybook verification, parity report
 
 This ensures contributors don't forget to update native counterparts when changing component APIs.
 
@@ -267,7 +267,7 @@ This ensures contributors don't forget to update native counterparts when changi
 |-------|-----------|----------|
 | Parity report | 85% per component | Yes |
 | Schema parity (Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC) | 0 drift across 62 components | Yes |
-| Schema parity — Drupal SDC YAML type-drift | 0 type mismatches | Yes |
+| Schema parity. Drupal SDC YAML type-drift | 0 type mismatches | Yes |
 | Schema validate (structural correctness) | 0 errors | Yes |
 | Drupal sync clean (regenerator output matches commit) | 0 diff | Yes |
 | Tool tests (parity / sync helpers) | 59/59 pass | Yes |

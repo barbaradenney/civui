@@ -12,7 +12,7 @@ import EventsTable from "./_disclosure.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-disclosure`](pathname:///civui/storybook/?path=/docs/contract-civ-disclosure--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-disclosure`](pathname:///civui/storybook/?path=/docs/contract-civ-disclosure--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -26,8 +26,8 @@ Built on the native `<details>` / `<summary>` elements so it works without
 JavaScript and is announced as a disclosure widget by assistive tech.
 Content is passed via the default slot.
 
-The visual contract is fixed — chevron caret beside the label, 90° rotation on
-open, single button-like trigger size — so every disclosure on a page reads as
+The visual contract is fixed. Chevron caret beside the label, 90° rotation on
+open, single button-like trigger size. So every disclosure on a page reads as
 the same affordance.
 
 ## Examples
@@ -60,13 +60,13 @@ the same affordance.
 
 ## When to Use Disclosure
 
-- **"Why we ask?" next to PII fields** — Social Security number, date of
+- **"Why we ask?" next to PII fields:** Social Security number, date of
   birth, financial account info. Lets users understand the data request
   before they provide sensitive information.
-- **Definitions of jargon** — domestic partner, spouse equivalent, gross
+- **Definitions of jargon:** domestic partner, spouse equivalent, gross
   income vs net income. Avoids cluttering the form with parenthetical
   definitions.
-- **Optional deeper context** — eligibility requirements, edge cases that
+- **Optional deeper context:** eligibility requirements, edge cases that
   apply to a minority of users.
 
 Do **not** use a disclosure to hide required content. Anything the user MUST
@@ -102,16 +102,16 @@ opt in to extra detail.
 
 ## Accessibility
 
-- Built on native `<details>` / `<summary>` — the expand/collapse state and
+- Built on native `<details>` / `<summary>`. The expand/collapse state and
   associated content are announced as a disclosure widget by every modern
   screen reader. No `aria-controls` or `aria-expanded` is added (native
   semantics already cover this).
 - `civ-toggle` event fires on every state change but does NOT bubble or
-  compose — disclosures often live inside `civ-form` and form-level
+  compose. Disclosures often live inside `civ-form` and form-level
   listeners should not see disclosure events. Subscribe directly on the
   `civ-disclosure` element.
 - Keyboard accessible by default: Enter or Space on the summary toggles
   the content. Tab order is preserved.
 - The label is locale-aware. The default `"Why we ask?"` comes from
-  `t('disclosureDefaultLabel')` — override via the locale registry or
+  `t('disclosureDefaultLabel')`. Override via the locale registry or
   set the `label` prop directly.

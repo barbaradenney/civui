@@ -6,7 +6,7 @@ sidebar_label: Form Headings
 
 # Form Headings & Chrome
 
-Every CivUI form control renders its own label / legend / hint / error / required-indicator chrome from its own props. There is no separate wrapper component for single inputs — set `label="..."` (or `legend="..."` on group components) directly on the control.
+Every CivUI form control renders its own label / legend / hint / error / required-indicator chrome from its own props. There is no separate wrapper component for single inputs. Set `label="..."` (or `legend="..."` on group components) directly on the control.
 
 ```html
 <!-- Single input -->
@@ -25,15 +25,15 @@ Every CivUI form control renders its own label / legend / hint / error / require
 </civ-radio-group>
 ```
 
-The only wrapper that remains is [`<civ-fieldset>`](/components/form/fieldset), reserved for **multi-field grouping** — a custom block of several unrelated controls under one section heading (e.g. a hand-rolled address composed from individual `civ-text-input`s).
+The only wrapper that remains is [`<civ-fieldset>`](/components/form/fieldset), reserved for **multi-field grouping**. A custom block of several unrelated controls under one section heading (e.g. a hand-rolled address composed from individual `civ-text-input`s).
 
 ## Self-contained components
 
 These components render their own labels and do **not** need wrappers:
 
-- `<civ-checkbox>` and `<civ-toggle>` — inline labels
-- `<civ-address>`, `<civ-name>`, `<civ-direct-deposit>`, `<civ-signature>` — compound components that render their own internal chrome and sub-control labels
-- All self-contained group components (`<civ-radio-group>`, `<civ-checkbox-group>`, `<civ-segmented-control>`, `<civ-yes-no>`, `<civ-memorable-date>`, `<civ-date-range-picker>`) — pass `legend` directly; do NOT wrap in `<civ-fieldset>` (you'd get nested fieldsets with double legends)
+- `<civ-checkbox>` and `<civ-toggle>`. Inline labels
+- `<civ-address>`, `<civ-name>`, `<civ-direct-deposit>`, `<civ-signature>`. Compound components that render their own internal chrome and sub-control labels
+- All self-contained group components (`<civ-radio-group>`, `<civ-checkbox-group>`, `<civ-segmented-control>`, `<civ-yes-no>`, `<civ-memorable-date>`, `<civ-date-range-picker>`). Pass `legend` directly; do NOT wrap in `<civ-fieldset>` (you'd get nested fieldsets with double legends)
 
 ## Heading hierarchy
 
@@ -42,7 +42,7 @@ Government forms commonly follow the **VA.gov / GOV.UK "one question per page" p
 - Lets screen-reader users navigate forms by heading.
 - Satisfies WCAG 2.4.6 (Headings and Labels) and 2.4.10 (Section Headings).
 
-The `heading-level` prop adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved so click-to-focus and `for`/`aria-labelledby` still work — heading promotion is purely an accessibility-tree affordance. The `size` prop is independent: visual prominence and screen-reader semantics tune separately.
+The `heading-level` prop adds `role="heading"` + `aria-level=N` to the rendered `<label>`/`<legend>`. The native element is preserved so click-to-focus and `for`/`aria-labelledby` still work. Heading promotion is purely an accessibility-tree affordance. The `size` prop is independent: visual prominence and screen-reader semantics tune separately.
 
 **Rules:**
 

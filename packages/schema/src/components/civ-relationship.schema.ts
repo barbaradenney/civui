@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-relationship',
-  description: 'Compound family-relationship record — relationship type (spouse, child, parent, sibling, other), name of the related person, and conditional date fields per type (marriage date, divorce date, date of birth, adoption date, date of death). Drives common dependent / beneficiary patterns.',
+  description: 'Compound family-relationship record. Relationship type (spouse, child, parent, sibling, other), name of the related person, and conditional date fields per type (marriage date, divorce date, date of birth, adoption date, date of death). Drives common dependent / beneficiary patterns.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -49,7 +49,7 @@ const schema: ComponentSchema = {
     },
     hideName: {
       type: 'boolean',
-      description: 'Inverse of `show-name` — present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship.',
+      description: 'Inverse of `show-name`. Present in HTML disables the inner name fields. Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship.',
       default: false,
       attribute: 'hide-name',
     },
@@ -61,7 +61,7 @@ const schema: ComponentSchema = {
     },
     deceasedAssumed: {
       type: 'boolean',
-      description: 'Suppress the deceased toggle and treat all entries as deceased — used for survivor-only contexts',
+      description: 'Suppress the deceased toggle and treat all entries as deceased. Used for survivor-only contexts',
       default: false,
       attribute: 'deceased-assumed',
     },

@@ -11,13 +11,13 @@ import PropsTable from "./_icon.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-icon`](pathname:///civui/storybook/?path=/docs/contract-civ-icon--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-icon`](pathname:///civui/storybook/?path=/docs/contract-civ-icon--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-icon>`
 
-An inline SVG icon component using Material Icons Outlined paths. Each icon renders as an `<svg>` element with `fill="currentColor"` — no font files, no external requests.
+An inline SVG icon component using Material Icons Outlined paths. Each icon renders as an `<svg>` element with `fill="currentColor"`. No font files, no external requests.
 
 Icons inherit `color` and scale with `font-size`, so they automatically match surrounding text.
 
@@ -109,7 +109,7 @@ For anything outside this set, register your own SVG path with `registerIcon()` 
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/icon/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/icon/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:icon' with {

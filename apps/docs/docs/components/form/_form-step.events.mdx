@@ -1,9 +1,9 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Event | Detail | Description |
 |-------|--------|-------------|
-| `civ-step-change` | `{ current: number, total: number, label: string }` | Fires when the active step changes — covers both forward (continue) and backward (back) navigation as well as programmatic jumps |
+| `civ-step-change` | `{ current: number, total: number, label: string }` | Fires when the active step changes. Covers both forward (continue) and backward (back) navigation as well as programmatic jumps |
 | `civ-step-continue` | `{ from: number, to: number }` | Fires when the user advances to the next step |
 | `civ-step-back` | `{ from: number, to: number }` | Fires when the user navigates back to the previous step |
 | `civ-step-pause` | `{ current: number, label: string }` | Fires when the user clicks "Save and continue later" |

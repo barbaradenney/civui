@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     dividers: {
       type: 'boolean',
-      description: 'Render thin separators between rows. Mutually compatible with `spacing` — use both for dense, divided lists',
+      description: 'Render thin separators between rows. Mutually compatible with `spacing`. Use both for dense, divided lists',
       default: false,
     },
     spacing: {

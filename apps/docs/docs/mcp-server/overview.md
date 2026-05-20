@@ -25,7 +25,7 @@ Tools are organized into three tiers to manage context window usage:
 
 | Tier | Count | When Registered | Purpose |
 |------|-------|-----------------|---------|
-| **Essential** | 13 | Always | Core tools every LLM needs — form generation, parsing, validation |
+| **Essential** | 13 | Always | Core tools every LLM needs. Form generation, parsing, validation |
 | **Advanced** | ~25 | Standard + All modes | Feature generators, workflow tools, advanced validation |
 | **Internal** | ~42 | All mode only | Composed by other tools; hidden from direct LLM use |
 

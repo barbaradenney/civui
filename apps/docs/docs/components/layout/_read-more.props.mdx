@@ -1,12 +1,12 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `expanded` | `boolean` | `false` | Whether the rest region is currently visible |
-| `more-label` | `string` | `''` | Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…" — typographic ellipsis as a continuation hint). |
+| `more-label` | `string` | `''` | Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…". Typographic ellipsis as a continuation hint). |
 | `less-label` | `string` | `''` | Override the "Read less" trigger text. When empty, falls back to the locale-aware `readLessButton` string (English: "Read less"). |
-| `icon` | `string` | `''` | Optional icon name from the civ-icon library shown before the label. Empty by default — the trigger text alone is the affordance. Pass e.g. `chevron-down` for a 180° rotate-on-expand visual cue. |
+| `icon` | `string` | `''` | Optional icon name from the civ-icon library shown before the label. Empty by default. The trigger text alone is the affordance. Pass e.g. `chevron-down` for a 180° rotate-on-expand visual cue. |
 | `size` | `'default'` \| `'sm'` | `'default'` | Trigger text size |
-| `inline` | `boolean` | `false` | Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron) — the trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout. |
-| `no-fade-trigger` | `boolean` | `false` | Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout — plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way. |
+| `inline` | `boolean` | `false` | Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron). The trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout. |
+| `no-fade-trigger` | `boolean` | `false` | Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout. Plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way. |

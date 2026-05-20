@@ -1,16 +1,16 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `legend` | `string` | `''` | Top-level legend rendered above the repeated instances |
 | `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
 | `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
-| `item-label` | `string` | `'item'` | Singular noun for the repeated thing — interpolated into "Add another &lcub;item&rcub;" and remove labels |
+| `item-label` | `string` | `'item'` | Singular noun for the repeated thing. Interpolated into "Add another &lcub;item&rcub;" and remove labels |
 | `mode` | `'inline'` \| `'form-steps'` \| `'route'` | `'inline'` | Layout mode. `inline` = all rows visible at once; `form-steps` = summary cards with an in-place wizard on add/edit (same page); `route` = summary cards with Add/Edit linking to host-rendered routes (separate page, controlled `rows` prop) |
-| `form-steps-sensitive` | `boolean` | `false` | In form-steps mode, treat the repeater as a sensitive flow — auto-pause / save state on navigation away |
+| `form-steps-sensitive` | `boolean` | `false` | In form-steps mode, treat the repeater as a sensitive flow. Auto-pause / save state on navigation away |
 | `form-steps-show-pause` | `boolean` | `false` | In form-steps mode, render an explicit "Save and continue later" affordance on each step |
-| `min` | `number` | `0` | Minimum number of instances. Defaults to 0 — the repeater renders only the "Add" button until the user clicks to create the first instance. Set higher to render that many rows up front. Also acts as the floor for removal |
+| `min` | `number` | `0` | Minimum number of instances. Defaults to 0. The repeater renders only the "Add" button until the user clicks to create the first instance. Set higher to render that many rows up front. Also acts as the floor for removal |
 | `max` | `number` | `0` | Maximum number of instances. 0 = no limit. Above this, the "Add another" button is hidden |
 | `rows` | `array` | `[]` | Host-owned array of row objects. Only used in `mode="route"`. The repeater renders one summary card per entry and never mutates this array |
 | `add-href` | `string` | `''` | URL the "Add" affordance links to in `mode="route"`. Required when route mode is used |

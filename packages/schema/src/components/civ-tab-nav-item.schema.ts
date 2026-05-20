@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-tab-nav-item',
-  description: 'A single tab-styled link inside `<civ-tab-nav>`. Renders as `<a href>` by default and as a non-interactive `<span aria-disabled="true">` when `disabled` is set. The active item should set `current` — it gets `aria-current="page"` and the selected-tab visual (primary color + bottom-border indicator).',
+  description: 'A single tab-styled link inside `<civ-tab-nav>`. Renders as `<a href>` by default and as a non-interactive `<span aria-disabled="true">` when `disabled` is set. The active item should set `current`. It gets `aria-current="page"` and the selected-tab visual (primary color + bottom-border indicator).',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,

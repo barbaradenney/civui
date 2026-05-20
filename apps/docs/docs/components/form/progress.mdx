@@ -16,21 +16,21 @@ import ProgressPercentEvents from "./_progress-percent.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-progress-header`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-header--docs) · [`civ-progress-percent`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-percent--docs) · [`civ-progress-steps`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-steps--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-progress-header`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-header--docs) · [`civ-progress-percent`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-percent--docs) · [`civ-progress-steps`](pathname:///civui/storybook/?path=/docs/contract-civ-progress-steps--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 CivUI provides three progress indicator components for multi-step forms:
 
-- **`civ-progress-steps`** — segmented progress bar (one rectangle per step)
-- **`civ-progress-header`** — compact "Step X of Y: Title" text header
-- **`civ-progress-percent`** — percentage-based progress bar
+- **`civ-progress-steps`:** segmented progress bar (one rectangle per step)
+- **`civ-progress-header`:** compact "Step X of Y: Title" text header
+- **`civ-progress-percent`:** percentage-based progress bar
 
 All three are used by `civ-form-step` via the `progress` prop, or standalone.
 
 ## Segmented Progress (`civ-progress-steps`)
 
-Each step is a small rectangle — filled for completed, highlighted for current, and empty for upcoming. Compact at any screen size.
+Each step is a small rectangle. Filled for completed, highlighted for current, and empty for upcoming. Compact at any screen size.
 
 ### Default
 
@@ -100,15 +100,15 @@ Compact heading that pairs with progress-steps or progress-percent bars.
 
 <StoryEmbed id="forms-form-progress--header-with-percent" />
 
-### In Form Step — Primary
+### In Form Step. Primary
 
 <StoryEmbed id="forms-form-form-step--header-primary" />
 
-### In Form Step — Secondary
+### In Form Step. Secondary
 
 <StoryEmbed id="forms-form-form-step--header-secondary" />
 
-### In Form Step — Tertiary
+### In Form Step. Tertiary
 
 <StoryEmbed id="forms-form-form-step--header-tertiary" />
 
@@ -171,7 +171,7 @@ The back link is rendered consistently above all three indicators and is handled
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/progress-steps/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/progress-steps/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:progress-steps' with {

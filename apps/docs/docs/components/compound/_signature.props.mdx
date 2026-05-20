@@ -1,12 +1,12 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `legend` | `string` | `''` | Top-level legend rendered above the sub-fields |
 | `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
-| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | `'xl'` | Visual size of the legend. Defaults to `xl` because signatures are typically the prominent end-of-form legal affirmation — the large heading paired with the default card framing communicates the weight of the action |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | `'xl'` | Visual size of the legend. Defaults to `xl` because signatures are typically the prominent end-of-form legal affirmation. The large heading paired with the default card framing communicates the weight of the action |
 | `statement` | `string` | `''` | Certification statement rendered above the certify checkbox. May contain inline HTML (rendered via unsafeHTML for `<a>` links). Empty = no statement block |
 | `name-error` | `string` | `''` | Per-field error for the typed-name input |
 | `certify-error` | `string` | `''` | Per-field error for the certify checkbox |
-| `card` | `boolean` | `true` | Render the signature block as an outlined card. Defaults to true — signature blocks carry legal weight (statement of truth, certify-and-submit) and the card framing communicates that. Set false for a bare fieldset when nesting inside an already-bordered container |
+| `card` | `boolean` | `true` | Render the signature block as an outlined card. Defaults to true. Signature blocks carry legal weight (statement of truth, certify-and-submit) and the card framing communicates that. Set false for a bare fieldset when nesting inside an already-bordered container |

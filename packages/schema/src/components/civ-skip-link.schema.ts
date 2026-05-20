@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     href: {
       type: 'string',
-      description: 'Internal anchor target. Defaults to `#main-content`. Web-only — native platforms have no anchor concept; iOS uses a `targetId` + `onActivate` callback; Android uses `onActivate` to focus the next view',
+      description: 'Internal anchor target. Defaults to `#main-content`. Web-only. Native platforms have no anchor concept; iOS uses a `targetId` + `onActivate` callback; Android uses `onActivate` to focus the next view',
       default: '#main-content',
       webOnly: true,
     },

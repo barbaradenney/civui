@@ -6,7 +6,7 @@ sidebar_label: Horizontal Scroll
 
 # Horizontal Scroll
 
-A utility class — `.civ-scroll-x` — for content that needs to scroll horizontally on viewports too narrow to show it all: tab strips, filter chips, toolbar overflow, wide tables. The class adds the scroll behavior + visual affordances; the consumer is responsible for the inner flex layout and any keyboard / a11y wiring that the contained content needs.
+A utility class. `.civ-scroll-x`. For content that needs to scroll horizontally on viewports too narrow to show it all: tab strips, filter chips, toolbar overflow, wide tables. The class adds the scroll behavior + visual affordances; the consumer is responsible for the inner flex layout and any keyboard / a11y wiring that the contained content needs.
 
 ## Why a utility, not a component
 
@@ -21,7 +21,7 @@ The contained content varies too much to wrap in a single generic component:
 
 A generic wrapper component would either flatten those differences in ways that hurt accessibility, or grow into a configuration grab-bag. A utility class adds the visual + scroll behavior consistently while leaving each consumer responsible for their own keyboard semantics.
 
-Components that need horizontal scrolling for their built-in chrome — `civ-data-grid` — have their own scroll wrapper rather than composing this utility, so they can wire the keyboard / `role="region"` behavior in one place.
+Components that need horizontal scrolling for their built-in chrome (`civ-data-grid`) have their own scroll wrapper rather than composing this utility, so they can wire the keyboard / `role="region"` behavior in one place.
 
 ## Usage
 
@@ -40,11 +40,11 @@ Components that need horizontal scrolling for their built-in chrome — `civ-dat
 
 ## Scrollbar discoverability
 
-By default `.civ-scroll-x` forces a **thin always-visible scrollbar** (6px high on WebKit; `scrollbar-width: thin` on Firefox). This overrides the iOS / macOS Safari behavior of hiding scrollbars until the user is already scrolling — fine for page scroll where the user knows to scroll, but a problem for horizontal scroll regions where users routinely miss off-screen content because there's no affordance.
+By default `.civ-scroll-x` forces a **thin always-visible scrollbar** (6px high on WebKit; `scrollbar-width: thin` on Firefox). This overrides the iOS / macOS Safari behavior of hiding scrollbars until the user is already scrolling. Fine for page scroll where the user knows to scroll, but a problem for horizontal scroll regions where users routinely miss off-screen content because there's no affordance.
 
 The thumb uses `--civ-color-base-light`; hover darkens to `--civ-color-base`. The track is transparent so the scroller blends with whatever surface it sits on.
 
-If you genuinely need the native hidden-on-Safari behavior back (rare — usually only when the scroll region's edges are otherwise obvious), add `.civ-scroll-x--bare-scrollbar`:
+If you genuinely need the native hidden-on-Safari behavior back (rare. Usually only when the scroll region's edges are otherwise obvious), add `.civ-scroll-x--bare-scrollbar`:
 
 ```html
 <div class="civ-scroll-x civ-scroll-x--bare-scrollbar">…</div>
@@ -66,7 +66,7 @@ Add scroll-snap behavior so children align to the leading edge of the scroller a
 </div>
 ```
 
-The `--snap` variant uses `scroll-snap-type: x proximity`, which is the gentler option — `mandatory` can be jarring on touch devices.
+The `--snap` variant uses `scroll-snap-type: x proximity`, which is the gentler option. `mandatory` can be jarring on touch devices.
 
 ### `.civ-scroll-x--fade`
 
@@ -87,7 +87,7 @@ Override the fade width inline if needed:
 
 ## Accessibility
 
-The utility class itself does not add ARIA — the right roles depend on what's inside the scroller. Three patterns:
+The utility class itself does not add ARIA. The right roles depend on what's inside the scroller. Three patterns:
 
 ### Pattern A: The contained content is a table
 
@@ -106,7 +106,7 @@ The utility class itself does not add ARIA — the right roles depend on what's 
 
 ### Pattern B: The contained content has its own keyboard model
 
-When the inner content is itself a widget with its own keyboard navigation (a tablist with arrow-key navigation, a roving-tabindex toolbar), don't add `role="region"` or `tabindex` to the scroll wrapper — let the widget own its semantics. The scroll wrapper is purely visual, and browsers automatically scroll the focused descendant into view.
+When the inner content is itself a widget with its own keyboard navigation (a tablist with arrow-key navigation, a roving-tabindex toolbar), don't add `role="region"` or `tabindex` to the scroll wrapper. Let the widget own its semantics. The scroll wrapper is purely visual, and browsers automatically scroll the focused descendant into view.
 
 ### Pattern C: The contained content is a group of independent controls
 
@@ -122,9 +122,9 @@ Filter chips, button groups. Tab moves through each child normally. The scroll w
 
 Horizontal scroll is the lowest-priority responsive pattern. Prefer:
 
-1. **Stacking** — collapse the row into a column (most filter-chip groups and toolbars).
-2. **Truncation** — show the first N items + "More…" affordance.
-3. **Pagination** — for tabular data with many columns, consider a column-visibility menu instead of scrolling.
+1. **Stacking:** collapse the row into a column (most filter-chip groups and toolbars).
+2. **Truncation:** show the first N items + "More…" affordance.
+3. **Pagination:** for tabular data with many columns, consider a column-visibility menu instead of scrolling.
 
 Horizontal scroll is the right answer when:
 - Items must stay in horizontal order (a calendar week, a timeline).

@@ -11,7 +11,7 @@ import PropsTable from "./_badge.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-badge`](pathname:///civui/storybook/?path=/docs/contract-civ-badge--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-badge`](pathname:///civui/storybook/?path=/docs/contract-civ-badge--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -85,7 +85,7 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 ## Accessibility
 
 - Text badges and dots-with-label render `role="status"` so screen readers announce the badge value.
-- In **dot mode**, `label` becomes the `aria-label`. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region) — always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
+- In **dot mode**, `label` becomes the `aria-label`. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region). Always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
 - Restricted to semantic colors so visual meaning matches the announced value.
 
 ### Notification overlay
@@ -114,7 +114,7 @@ The `civ-badge-anchor` utility class sets `position: relative; display: inline-b
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/badge/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/badge/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:badge' with {

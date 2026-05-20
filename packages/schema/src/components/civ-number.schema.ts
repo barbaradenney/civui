@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-number',
-  description: 'Generic numeric input for quantities, counts, ages, and other non-currency numbers. Renders `<input type="text" inputmode="numeric">` (or `inputmode="decimal"` when `allow-decimal` is set) — more accessible than native `type="number"`, which has known issues with scroll-wheel mutation, locale decimal separators, and missing iOS spinners. For dollar amounts use `civ-currency`; for SSN, ZIP, EIN, phone, etc. use the dedicated preset components.',
+  description: 'Generic numeric input for quantities, counts, ages, and other non-currency numbers. Renders `<input type="text" inputmode="numeric">` (or `inputmode="decimal"` when `allow-decimal` is set). More accessible than native `type="number"`, which has known issues with scroll-wheel mutation, locale decimal separators, and missing iOS spinners. For dollar amounts use `civ-currency`; for SSN, ZIP, EIN, phone, etc. use the dedicated preset components.',
   category: 'form-control',
   extends: 'CivFormElement',
   isGroup: false,

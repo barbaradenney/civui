@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Filterable & Sortable Lists
 
-Patterns for the non-tabular case — directories, catalogs, FAQs, document libraries, glossaries. When the answer for "show me a list of things" isn't a spreadsheet-style table, reach for [`<civ-filterable-list>`](../components/data/filterable-list.mdx) and compose it with the filter and sort affordances on this page.
+Patterns for the non-tabular case. Directories, catalogs, FAQs, document libraries, glossaries. When the answer for "show me a list of things" isn't a spreadsheet-style table, reach for [`<civ-filterable-list>`](../components/data/filterable-list.mdx) and compose it with the filter and sort affordances on this page.
 
 For tabular admin / back-office screens (sortable columns, bulk operations, master-detail), see [Data Grid Patterns](./data-grid-patterns.mdx) instead.
 
@@ -16,15 +16,15 @@ For tabular admin / back-office screens (sortable columns, bulk operations, mast
 
 | Need | Component | Why |
 | --- | --- | --- |
-| Tabular rows with sortable column headers, multi-row selection, cell-level data | [`<civ-data-grid>`](../components/data/data-grid.mdx) | Spreadsheet-shaped data — comparison across columns is the primary value |
+| Tabular rows with sortable column headers, multi-row selection, cell-level data | [`<civ-data-grid>`](../components/data/data-grid.mdx) | Spreadsheet-shaped data. Comparison across columns is the primary value |
 | Cards / list rows with search + chip filters (directories, catalogs, FAQs) | [`<civ-filterable-list>`](../components/data/filterable-list.mdx) | Browsing by attribute or keyword; rows are self-contained items, not row-vs-row comparisons |
-| Plain semantic list with no filtering (action lists, summary lists) | [`<civ-list>`](../components/layout/list.mdx) | Just structure — no search, no sort, no interactive selection beyond per-row affordances |
+| Plain semantic list with no filtering (action lists, summary lists) | [`<civ-list>`](../components/layout/list.mdx) | Just structure. No search, no sort, no interactive selection beyond per-row affordances |
 
 If a list grows past ~50 visible items without an obvious mental model for browsing, that's the cue to switch from `civ-list` to `civ-filterable-list`. If users need to compare items column-by-column or operate on many at once, switch to `civ-data-grid`.
 
 ## Filter UX patterns
 
-`<civ-filterable-list>` is unopinionated about the filter UI — anything that fires `civ-input` or `civ-change` inside its `data-filterable-list-filters` slot becomes a live filter. Multiple filters compose with AND logic.
+`<civ-filterable-list>` is unopinionated about the filter UI. Anything that fires `civ-input` or `civ-change` inside its `data-filterable-list-filters` slot becomes a live filter. Multiple filters compose with AND logic.
 
 ### Search box
 
@@ -44,7 +44,7 @@ The most common starting point. A `<civ-text-input type="search">` (or any eleme
 
 ### Filter chips (single-pick or multi-pick)
 
-`<civ-filter-chip-group>` renders toggleable pills — ideal when there's a small, named taxonomy (5–15 categories) the user picks from.
+`<civ-filter-chip-group>` renders toggleable pills. Ideal when there's a small, named taxonomy (5–15 categories) the user picks from.
 
 <StoryEmbed id="actions-filter-chip-group--multi-select" />
 
@@ -102,17 +102,17 @@ For multi-pick taxonomies that don't fit as chips (longer labels, hierarchical g
 
 ### Combining filters
 
-Filters compose with AND — search-box query AND chip selection AND select choice must all match for an item to stay visible. Put higher-discoverability filters first (search box at top, chips below, select / checkbox groups underneath).
+Filters compose with AND. Search-box query AND chip selection AND select choice must all match for an item to stay visible. Put higher-discoverability filters first (search box at top, chips below, select / checkbox groups underneath).
 
 <StoryEmbed id="layout-filterable-list--organization-directory" />
 
 ## Sort UX patterns
 
-`<civ-filterable-list>` does **not** sort natively — it filters the slotted children in place but doesn't reorder them. Three approaches depending on whether sort order is fixed or user-controlled:
+`<civ-filterable-list>` does **not** sort natively. It filters the slotted children in place but doesn't reorder them. Three approaches depending on whether sort order is fixed or user-controlled:
 
 ### 1. Pre-sort the slotted children
 
-When sort order is fixed (alphabetical glossary, chronological history), sort the items on the server or at build time and slot them in the final order. No client-side sort code needed — `<civ-filterable-list>` keeps DOM order when filtering.
+When sort order is fixed (alphabetical glossary, chronological history), sort the items on the server or at build time and slot them in the final order. No client-side sort code needed. `<civ-filterable-list>` keeps DOM order when filtering.
 
 <StoryEmbed id="layout-filterable-list--glossary" />
 
@@ -146,11 +146,11 @@ When the user picks the sort key, put a `<civ-select>` outside the filters slot 
 </script>
 ```
 
-The filter pass re-runs automatically when items move — `<civ-filterable-list>` observes the slotted content and re-applies active filters after each mutation.
+The filter pass re-runs automatically when items move. `<civ-filterable-list>` observes the slotted content and re-applies active filters after each mutation.
 
 ### 3. Alphabetical groups (A–Z directory)
 
-For glossary / phonebook patterns, group items by first letter with sticky section headings. The Glossary story above shows this pattern — each `<li>` carries `data-filter-letter="A"`, and a sticky `<h3>` heading sits above each letter group. Filtering preserves the visible groups; if no items in a letter match, hide the heading too with `:has(li:not([hidden]))`.
+For glossary / phonebook patterns, group items by first letter with sticky section headings. The Glossary story above shows this pattern. Each `<li>` carries `data-filter-letter="A"`, and a sticky `<h3>` heading sits above each letter group. Filtering preserves the visible groups; if no items in a letter match, hide the heading too with `:has(li:not([hidden]))`.
 
 ```css
 .glossary-group:not(:has(li:not([hidden]))) { display: none; }
@@ -186,11 +186,11 @@ Names + roles + locations + contact info, each row a self-contained card. Search
 
 If the screen needs any of the following, `<civ-data-grid>` is the right surface, not `<civ-filterable-list>`:
 
-- **Column-by-column comparison** — readers scan across columns to compare two or more rows (case status table, claim list, transaction log).
-- **Built-in sortable column headers** — click a header to sort; data-grid does this natively, filterable-list doesn't.
-- **Multi-row selection and bulk operations** — checkbox column plus a bulk-actions bar above the grid.
-- **Pagination at scale** — once you're showing more than 100 rows at a time, pagination (which data-grid hands off to `<civ-pagination>`) keeps the DOM small.
-- **Per-row action menus** — kebab menus that open per-row drawers or fire row-level actions.
+- **Column-by-column comparison:** readers scan across columns to compare two or more rows (case status table, claim list, transaction log).
+- **Built-in sortable column headers:** click a header to sort; data-grid does this natively, filterable-list doesn't.
+- **Multi-row selection and bulk operations:** checkbox column plus a bulk-actions bar above the grid.
+- **Pagination at scale:** once you're showing more than 100 rows at a time, pagination (which data-grid hands off to `<civ-pagination>`) keeps the DOM small.
+- **Per-row action menus:** kebab menus that open per-row drawers or fire row-level actions.
 
 Filterable-list is for "browse a catalog of items"; data-grid is for "operate on a table of records." If the screen is a catalog with one or two interactive affordances per item, stay on filterable-list. If it's a workbench, move to data-grid.
 
@@ -198,13 +198,13 @@ Filterable-list is for "browse a catalog of items"; data-grid is for "operate on
 
 `<civ-filterable-list>` handles the accessibility plumbing automatically:
 
-- **Result-count announcement** — a polite `aria-live` region announces "12 of 48 results" after each filter pass (debounced ~300ms by `announce-delay` to avoid spamming).
-- **No-results state** — when all filters combine to zero matches, an empty-state message renders with `no-results-message` (override-able).
-- **Filter labels** — each filter control owns its label / legend like any other CivUI form control. Don't wrap them in a `<civ-fieldset>` (group components are self-contained).
-- **Search keyboard** — `type="search"` on the input gives users the native clear button on supporting browsers; `Escape` clears the field.
+- **Result-count announcement:** a polite `aria-live` region announces "12 of 48 results" after each filter pass (debounced ~300ms by `announce-delay` to avoid spamming).
+- **No-results state:** when all filters combine to zero matches, an empty-state message renders with `no-results-message` (override-able).
+- **Filter labels:** each filter control owns its label / legend like any other CivUI form control. Don't wrap them in a `<civ-fieldset>` (group components are self-contained).
+- **Search keyboard:** `type="search"` on the input gives users the native clear button on supporting browsers; `Escape` clears the field.
 
 ## Related patterns
 
-- [**Data Grid Patterns**](./data-grid-patterns.mdx) — when the list is actually a table (sortable columns, bulk ops, master-detail).
-- [**Conditional Reveal**](./conditional-reveal.mdx) — show advanced filters only when the user opts in.
-- [**Multi-Step Form**](./multi-step-form.mdx) — when the user's selection from a filterable list feeds into a downstream form step.
+- [**Data Grid Patterns**](./data-grid-patterns.mdx). When the list is actually a table (sortable columns, bulk ops, master-detail).
+- [**Conditional Reveal**](./conditional-reveal.mdx). Show advanced filters only when the user opts in.
+- [**Multi-Step Form**](./multi-step-form.mdx). When the user's selection from a filterable list feeds into a downstream form step.

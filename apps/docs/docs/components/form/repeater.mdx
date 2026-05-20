@@ -12,7 +12,7 @@ import EventsTable from "./_repeater.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-repeater`](pathname:///civui/storybook/?path=/docs/contract-civ-repeater--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-repeater`](pathname:///civui/storybook/?path=/docs/contract-civ-repeater--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -92,11 +92,11 @@ All rows and their fields are visible on the page simultaneously. The repeater c
 
 ### `form-steps`
 
-Rows render as compact summary cards. Clicking **Add** or **Edit** replaces the list with an in-place `civ-form-step` wizard — the user stays on the same page, the URL doesn't change. Best for items with 4–10 fields where page context matters (modal flows, sensitive flows, hosts without routing infrastructure).
+Rows render as compact summary cards. Clicking **Add** or **Edit** replaces the list with an in-place `civ-form-step` wizard. The user stays on the same page, the URL doesn't change. Best for items with 4–10 fields where page context matters (modal flows, sensitive flows, hosts without routing infrastructure).
 
 ### `route`
 
-Rows render as summary cards driven by a host-owned `rows` array. **Add** and **Edit** are real `<a href>` links pointing at host-rendered pages. Browser back, deep linking, right-click "open in new tab", and save-and-resume all work naturally. The repeater never mutates `rows` — **Remove** fires `civ-repeater-remove` and the host updates its array.
+Rows render as summary cards driven by a host-owned `rows` array. **Add** and **Edit** are real `<a href>` links pointing at host-rendered pages. Browser back, deep linking, right-click "open in new tab", and save-and-resume all work naturally. The repeater never mutates `rows`. **Remove** fires `civ-repeater-remove` and the host updates its array.
 
 Use route mode when each item is complex enough to deserve its own URL (8+ fields, multi-section items, items the user might want to bookmark and finish later). Slotted children are ignored in this mode; the form lives on the destination page.
 
@@ -108,7 +108,7 @@ Use route mode when each item is complex enough to deserve its own URL (8+ field
 
 ## Default empty list
 
-`min` defaults to `0`, so the repeater opens with **just the Add button** — the first row appears when the user clicks. Pass `min="1"` (or higher) to render that many rows up front. The minimum also acts as the floor for removal: rows can't be removed below `min`.
+`min` defaults to `0`, so the repeater opens with **just the Add button**. The first row appears when the user clicks. Pass `min="1"` (or higher) to render that many rows up front. The minimum also acts as the floor for removal: rows can't be removed below `min`.
 
 ## Template definition (inline / form-steps)
 
@@ -125,12 +125,12 @@ This produces fields named `dependents[0].firstName`, `dependents[0].lastName`, 
 
 ## Route mode (controlled rows)
 
-In route mode the repeater is **controlled** — the host owns the rows array. The repeater renders summary cards from `.rows` and emits `civ-repeater-remove` (with `{ index, id, row }`) when the user removes one. The host updates its own array and re-passes.
+In route mode the repeater is **controlled**. The host owns the rows array. The repeater renders summary cards from `.rows` and emits `civ-repeater-remove` (with `{ index, id, row }`) when the user removes one. The host updates its own array and re-passes.
 
 Summary text for each row is resolved through a fallback chain:
 
-1. `rowSummary` function — `(row, index) => string`, full programmatic control (JS-only).
-2. `summary-fields` attribute — comma-separated property names, joined with spaces. Works in HTML / Drupal / SSR contexts.
+1. `rowSummary` function. `(row, index) => string`, full programmatic control (JS-only).
+2. `summary-fields` attribute. Comma-separated property names, joined with spaces. Works in HTML / Drupal / SSR contexts.
 3. Falls back to `"{itemLabel} {index+1}"` when neither is set.
 
 ```html
@@ -147,13 +147,13 @@ Summary text for each row is resolved through a fallback chain:
 ></civ-repeater>
 ```
 
-**URL stability.** `edit-href-pattern` supports `{id}` (interpolated from `row[idField]`) and `{index}` (zero-based). Prefer `{id}` with stable identifiers — indexes shift when rows are removed, so bookmarks built from `{index}` will point at the wrong row after reorder/delete.
+**URL stability.** `edit-href-pattern` supports `{id}` (interpolated from `row[idField]`) and `{index}` (zero-based). Prefer `{id}` with stable identifiers. Indexes shift when rows are removed, so bookmarks built from `{index}` will point at the wrong row after reorder/delete.
 
 ## Per-row heading
 
 Every row renders a heading like "Dependent 1" as a visible group label (and the row's `aria-labelledby`). The heading element's tag is derived from `headingLevel` so the row sits one level deeper than the legend: when the legend isn't promoted to a heading the row uses `<h3>`; with `heading-level="3"` it's `<h4>`; clamped at `<h6>`.
 
-The text comes from `repeaterItemLabel` (e.g. "dependent 1") and is capitalized in CSS — keep your `item-label` lowercase so it composes naturally with the Add button ("Add another dependent") and announcements.
+The text comes from `repeaterItemLabel` (e.g. "dependent 1") and is capitalized in CSS. Keep your `item-label` lowercase so it composes naturally with the Add button ("Add another dependent") and announcements.
 
 ## Programmatic API
 
@@ -174,12 +174,12 @@ repeater.rows = repeater.rows.filter(r => r.id !== removedId);
 
 ## Adding confirmation to Remove
 
-The default Remove button is one-click — appropriate for short scratch
+The default Remove button is one-click. Appropriate for short scratch
 lists where re-entering data is trivial. For lists where removed
 content is harder to recover (entered dependent info, uploaded files,
 typed addresses), insert a confirmation step.
 
-CivUI's rule is **modal-only for destructive confirmations** — inline
+CivUI's rule is **modal-only for destructive confirmations**. Inline
 two-click patterns are an accessibility hazard. See
 [Destructive actions](/foundations/destructive-actions) for the
 full rationale.
@@ -204,7 +204,7 @@ repeater.addEventListener('civ-repeater-before-remove', (e) => {
 ```
 
 In **route mode**, the consumer already owns the rows array. There's
-no separate before-remove event — wrap the modal logic around your
+no separate before-remove event. Wrap the modal logic around your
 `civ-repeater-remove` handler, splicing the array only after confirm.
 
 ## Usage
@@ -263,7 +263,7 @@ no separate before-remove event — wrap the modal logic around your
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/repeater/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/repeater/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:repeater' with {

@@ -1,8 +1,8 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `heading` | `string` | `''` | Main heading rendered above the sections |
-| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the main heading on web — section headings auto-render one level below. Web-only: native platforms expose headings via `accessibilityAddTraits(.isHeader)` (iOS) or semantic headings (Android) without numeric levels |
+| `heading-level` | `number` | `2` | Semantic heading level (2–6) for the main heading on web. Section headings auto-render one level below. Web-only: native platforms expose headings via `accessibilityAddTraits(.isHeader)` (iOS) or semantic headings (Android) without numeric levels |
 | `sections` | `array` | — | Section definitions: `{ heading, editHref?, items: [{ label, value }] }`. Each platform passes a typed/native array (Lit: `SummarySection[]`; iOS: `[SummarySectionData]`; Android: `List<CivSummarySection>`). JS property only on web (no HTML attribute reflection) |

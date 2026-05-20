@@ -13,7 +13,7 @@ CivUI supports dark mode via the `prefers-color-scheme` media query. When the us
 1. **Light tokens** (`color.tokens.json`) define the default palette
 2. **Dark tokens** (`color-dark.tokens.json`) define the dark palette with the same token keys
 3. The token build pipeline generates `@media (prefers-color-scheme: dark)` CSS overrides
-4. Components use CSS custom properties — they automatically pick up the right values
+4. Components use CSS custom properties. They automatically pick up the right values
 
 No JavaScript is involved. Dark mode is pure CSS.
 
@@ -41,7 +41,7 @@ This prevents components from rendering with missing colors in dark mode.
 
 ## Dark palette
 
-The dark palette inverts the lightness scale — `lightest` becomes the darkest shade (for backgrounds), and `darker` becomes the lightest (for text):
+The dark palette inverts the lightness scale. `lightest` becomes the darkest shade (for backgrounds), and `darker` becomes the lightest (for text):
 
 | Token | Light | Dark | Use |
 |-------|-------|------|-----|
@@ -68,9 +68,9 @@ Focus ring colors switch to token-based values so they remain visible on dark ba
 
 Some components have dark-mode-specific CSS beyond just color swaps:
 
-- **Select dropdown arrow** — switches to a lighter SVG chevron for visibility
-- **Checkbox/Radio indicators** — border colors adjust for contrast
-- **Input borders** — lighten to remain visible against dark backgrounds
+- **Select dropdown arrow:** switches to a lighter SVG chevron for visibility
+- **Checkbox/Radio indicators:** border colors adjust for contrast
+- **Input borders:** lighten to remain visible against dark backgrounds
 
 ## Testing dark mode
 

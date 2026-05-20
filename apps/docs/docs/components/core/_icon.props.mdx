@@ -1,9 +1,9 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `name` | `string` | `''` | Icon name. Must match a key in the icon library (or a custom icon registered via `registerIcon()`) |
-| `size` | `string` | `''` | Size shorthand — `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android) — consumers pass the resolved value directly |
-| `rotate` | `number` | — | Rotation in degrees. Common values: 90, 180, 270. Web-only — native platforms expose rotation via the platform modifier (`.rotationEffect()` on iOS, `Modifier.rotate()` on Android); consumers apply it directly |
-| `flip` | `'horizontal'` \| `'vertical'` \| `'both'` | — | Mirror axis. `horizontal` flips left-right; `vertical` flips top-bottom; `both` flips both. Web-only — native platforms use platform-native flip modifiers |
+| `size` | `string` | `''` | Size shorthand. `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android). Consumers pass the resolved value directly |
+| `rotate` | `number` | — | Rotation in degrees. Common values: 90, 180, 270. Web-only. Native platforms expose rotation via the platform modifier (`.rotationEffect()` on iOS, `Modifier.rotate()` on Android); consumers apply it directly |
+| `flip` | `'horizontal'` \| `'vertical'` \| `'both'` | — | Mirror axis. `horizontal` flips left-right; `vertical` flips top-bottom; `both` flips both. Web-only. Native platforms use platform-native flip modifiers |

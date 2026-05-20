@@ -45,11 +45,11 @@ CivUI uses the W3C Two-Color Technique (C40) for focus indicators:
 
 - 3px solid outline
 - Halo shadow for additional contrast
-- Triggers on `:focus` (so it shows on click as well as keyboard) — matches GOV.UK Design System
+- Triggers on `:focus` (so it shows on click as well as keyboard). Matches GOV.UK Design System
 - Meets WCAG 2.2 SC 2.4.13 Focus Appearance
 
 The ring is applied automatically by a global rule in `civ.css` to every native
-interactive element — `button`, `[role="button"]`, `a[href]`, `input`, `select`,
+interactive element. `button`, `[role="button"]`, `a[href]`, `input`, `select`,
 `textarea`, `summary`, `[contenteditable]`, `[tabindex]:not([tabindex="-1"])`.
 You don't add a class:
 

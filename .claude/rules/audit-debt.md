@@ -42,6 +42,38 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Preset wrappers report inner control in civ-analytics
+
+- **Surfaced:** Inputs audit, 2026-05-19. After the readonly-cascade
+  pass.
+- **Scope:** All 9 preset wrappers — `civ-ssn`, `civ-ein`,
+  `civ-zip`, `civ-phone`, `civ-email`, `civ-currency`,
+  `civ-routing-number`, `civ-va-file-number`, `civ-country`.
+- **What today does:** When the user types into `<civ-ssn>`, the
+  inner `<civ-text-input>` fires `civ-analytics` with
+  `componentName: 'civ-text-input'` (its own `tagName`). The
+  `civ-analytics` event bubbles past the wrapper untouched —
+  `PresetInputWrapper._onChange` stops `civ-change` but not
+  `civ-analytics`. So analytics consumers see `civ-text-input` for
+  every preset, distinguishable only by `fieldName`.
+- **What you'd expect:** A field declared as `<civ-ssn>` reports
+  `componentName: 'civ-ssn'` so dashboards can pivot by component
+  type. The PII flag (`piiMasked: true`) does propagate correctly
+  via the inner control's mask logic, so PII detection works
+  regardless of which way this is decided.
+- **Why deferred:** The fix is a small change in
+  `PresetInputWrapper` (intercept `civ-analytics`, re-dispatch
+  with wrapper's `tagName`, preserve the `piiMasked` detail) BUT
+  it's a runtime behavior change for any consumer who already
+  filters on `componentName === 'civ-text-input'`. Needs a
+  coordinated rollout: announce, give consumers a release to
+  adapt dashboards, then ship.
+- **What to watch for in the meantime:** Analytics consumers may
+  already correlate via `fieldName` (e.g., `name="ssn"`), so the
+  current behavior isn't broken — just suboptimal.
+
+---
+
 ## Readonly visual treatment for non-text controls (toggle, yes-no)
 
 - **Surfaced:** Inputs/compound audit, 2026-05-19. During the

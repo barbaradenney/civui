@@ -323,6 +323,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               class="${classes}"
               id="${this._inputId}"
               type="text"
+              inputmode="numeric"
               .value="${this._inputValue}"
               placeholder="${this.placeholder || t('datePickerPlaceholder')}"
               ?disabled="${this.disabled}"

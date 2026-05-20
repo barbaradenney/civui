@@ -214,7 +214,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         ${this._renderTextField('city', t('addressCity'), 'address-level2', { error: this.cityError, required: this.required })}
         ${this._renderStateField()}
         ${this._showPostalCode
-          ? this._renderTextField('zip', this._data.country === 'US' ? t('addressZip') : t('addressPostalCode'), 'postal-code', { error: this.zipError, required: this.required })
+          ? this._renderTextField('zip', this._data.country === 'US' ? t('addressZip') : t('addressPostalCode'), 'postal-code', { error: this.zipError, required: this.required, inputmode: this._data.country === 'US' ? 'numeric' : '' })
           : nothing}
       </fieldset>
 
@@ -232,9 +232,9 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
     field: 'street1' | 'street2' | 'street3' | 'city' | 'state' | 'zip',
     label: string,
     autocomplete: string,
-    opts: { error?: string; required?: boolean } = {},
+    opts: { error?: string; required?: boolean; inputmode?: string } = {},
   ) {
-    const { error = '', required = false } = opts;
+    const { error = '', required = false, inputmode = '' } = opts;
     return html`
       <civ-text-input
         label="${label}"
@@ -242,6 +242,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         value="${this._data[field]}"
         error="${error}"
         autocomplete="${autocomplete}"
+        inputmode="${inputmode || nothing}"
         ?required="${required}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"

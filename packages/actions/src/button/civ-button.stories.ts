@@ -64,7 +64,6 @@ export const Tertiary: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
@@ -117,7 +116,6 @@ export const Disabled: Story = {
 };
 
 export const WithIcons: Story = {
-  name: 'With Icons',
   render: () => html`
     <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
       <civ-button icon-start="download">Download</civ-button>
@@ -154,7 +152,6 @@ export const AsLink: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -186,7 +183,6 @@ export const DensityScale: Story = {
 };
 
 export const FormActions: Story = {
-  name: 'Form Actions',
   render: () => html`
     <form
       @submit="${(e: Event) => {
@@ -224,7 +220,6 @@ export const FormActionsMobile: Story = {
 };
 
 export const ClaimActions: Story = {
-  name: 'Claim Actions',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>

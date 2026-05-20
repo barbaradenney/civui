@@ -124,7 +124,6 @@ export const WithError: Story = {
 };
 
 export const Required: Story = {
-  name: 'Required',
   render: () => html`
     <civ-time-picker
       label="Appointment time"
@@ -136,7 +135,6 @@ export const Required: Story = {
 };
 
 export const Disabled: Story = {
-  name: 'Disabled',
   render: () => html`
     <civ-time-picker
       label="Appointment time"

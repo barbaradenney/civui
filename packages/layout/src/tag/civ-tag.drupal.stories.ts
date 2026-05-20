@@ -49,7 +49,6 @@ export const Red: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => {
     const blue = template({ label: 'Blue', variant: 'blue' });
     const green = template({ label: 'Green', variant: 'green' });

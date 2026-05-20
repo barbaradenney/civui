@@ -11,7 +11,6 @@ export default meta;
 type Story = StoryObj;
 
 export const PrimaryHeadings: Story = {
-  name: 'Primary Headings',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <h1 class="civ-heading-xl">Heading XL — Apply for disability compensation</h1>
@@ -23,7 +22,6 @@ export const PrimaryHeadings: Story = {
 };
 
 export const SecondaryHeadings: Story = {
-  name: 'Secondary Headings',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <h1 class="civ-heading-xl-secondary">Heading XL Secondary — We'll guide you through each step</h1>
@@ -55,7 +53,6 @@ export const PrimaryAndSecondaryPaired: Story = {
 };
 
 export const BodyText: Story = {
-  name: 'Body Text',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <p class="civ-text-body">Body — Your application has been submitted successfully. You will receive a confirmation number by email.</p>
@@ -67,7 +64,6 @@ export const BodyText: Story = {
 };
 
 export const AllStyles: Story = {
-  name: 'All Styles',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
@@ -133,7 +129,6 @@ export const GovFormExample: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div data-civ-scale="dense">

@@ -33,7 +33,6 @@ export const Default: Story = {
 };
 
 export const Dependent: Story = {
-  name: 'Dependent',
   render: () => html`
     <civ-relationship
       size="lg" legend="About the dependent"
@@ -45,7 +44,6 @@ export const Dependent: Story = {
 };
 
 export const Survivor: Story = {
-  name: 'Survivor',
   render: () => html`
     <civ-relationship
       size="lg" legend="About the person who died"
@@ -70,7 +68,6 @@ export const BenefitsSurvivor: Story = {
 };
 
 export const Immigration: Story = {
-  name: 'Immigration',
   render: () => html`
     <civ-relationship
       size="lg" legend="About the person you are petitioning for"
@@ -116,7 +113,6 @@ export const Required: Story = {
 };
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => html`
     <civ-relationship
       size="lg" legend="About the dependent"
@@ -131,7 +127,6 @@ export const WithErrors: Story = {
 };
 
 export const AllPresets: Story = {
-  name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>

@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => {
     const nameField = textInputTemplate({ name: 'fullName', required: true, label: 'Full name', error: 'Enter your full name' });
     const emailField = textInputTemplate({ name: 'email', type: 'email', required: true, label: 'Email address', error: 'Enter a valid email address' });

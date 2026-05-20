@@ -71,7 +71,6 @@ export const Back: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
@@ -119,7 +118,6 @@ export const Disabled: Story = {
 };
 
 export const WithCustomIcons: Story = {
-  name: 'With Custom Icons',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-3">
       <civ-link href="#" icon-start="download">Download your form</civ-link>
@@ -132,7 +130,6 @@ export const WithCustomIcons: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -161,7 +158,6 @@ export const DensityScale: Story = {
 };
 
 export const InContext: Story = {
-  name: 'In Context',
   render: () => html`
     <p>
       You can <civ-link href="#">view your claim status</civ-link> online.
@@ -171,7 +167,6 @@ export const InContext: Story = {
 };
 
 export const BenefitsNavigation: Story = {
-  name: 'Benefits Navigation',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-3">
       <civ-link href="#/hub" variant="back" label="Back to VA benefits hub"></civ-link>
@@ -193,7 +188,6 @@ export const BenefitsNavigation: Story = {
 // Wrapped in <civ-demo-frame> so the navigation actually happens.
 
 export const BackNavigationDemo: Story = {
-  name: 'Back Navigation Demo',
   render: () => html`
     <civ-demo-frame initial-path="/claims/12345">
       <civ-demo-page path="/claims">
@@ -282,7 +276,6 @@ export const PhoneWithLabel: Story = {
 };
 
 export const PhoneInternational: Story = {
-  name: 'Phone International',
   render: () => html`
     <civ-link type="phone" number="+44 20 7946 0958"></civ-link>
   `,
@@ -347,7 +340,6 @@ export const AllDeviceActionTypes: Story = {
 };
 
 export const GovernmentContactSection: Story = {
-  name: 'Government Contact Section',
   render: () => html`
     <div style="max-width: 400px;">
       <h3 class="civ-mb-3 civ-font-semibold">Need help?</h3>

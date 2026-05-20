@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const CheckboxGroup: Story = {
-  name: 'Checkbox Group',
   render: () => {
     const children = [
       checkboxTemplate({ label: 'Healthcare', name: 'benefits', value: 'healthcare' }),

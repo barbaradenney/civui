@@ -55,7 +55,6 @@ export const Default: Story = {
 // ── Individual States ─────────────────────────────────────────
 
 export const WithMissingValues: Story = {
-  name: 'With Missing Values',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>
   `,
@@ -79,7 +78,6 @@ export const WithMissingValues: Story = {
 };
 
 export const WithoutEditLinks: Story = {
-  name: 'Without Edit Links',
   render: () => html`
     <civ-summary heading="Submission summary"></civ-summary>
   `,
@@ -101,7 +99,6 @@ export const WithoutEditLinks: Story = {
 };
 
 export const WithArrayValues: Story = {
-  name: 'With Array Values',
   render: () => html`
     <civ-summary heading="Review your selections"></civ-summary>
   `,
@@ -123,7 +120,6 @@ export const WithArrayValues: Story = {
 };
 
 export const EmptyState: Story = {
-  name: 'Empty State',
   render: () => html`
     <civ-summary heading="Review your information"></civ-summary>
   `,
@@ -132,7 +128,6 @@ export const EmptyState: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
@@ -168,7 +163,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">

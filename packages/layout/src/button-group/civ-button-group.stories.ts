@@ -47,7 +47,6 @@ export const WithPressed: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-gap-6 civ-items-start">
       <civ-button-group>

@@ -44,7 +44,6 @@ export const MultipleFields: Story = {
 };
 
 export const Compact: Story = {
-  name: 'Compact',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>

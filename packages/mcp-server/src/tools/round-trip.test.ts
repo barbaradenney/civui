@@ -8,7 +8,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateCivUI } from '../generator/index.js';
 import { formToSchema } from './form-to-schema.js';
-import type { FormSchema, FormField, FormSection } from '../schema/index.js';
+import type { FormSchema, FormField } from '../schema/index.js';
 
 /** Compare round-trippable properties of fields. */
 function compareField(original: FormField, recovered: FormField, context: string) {

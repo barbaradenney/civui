@@ -69,7 +69,6 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6" style="max-width: 480px;">
       <civ-routing-number name="normal"></civ-routing-number>
@@ -84,7 +83,6 @@ export const AllStates: Story = {
 // ── Government Form Example ──────────────────────────────────
 
 export const GovernmentFormExample: Story = {
-  name: 'Government Form Example',
   render: () => html`
     <div style="max-width: 480px;">
       <h3 class="civ-text-lg civ-font-semibold civ-mb-4">Direct Deposit Setup</h3>

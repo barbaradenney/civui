@@ -40,7 +40,6 @@ export const Default: Story = {
 };
 
 export const AllStyles: Story = {
-  name: 'All Styles',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card card-style="primary">
@@ -92,7 +91,6 @@ export const ColorPalettePrimary: Story = {
 };
 
 export const WithHeader: Story = {
-  name: 'With Header',
   render: () => html`
     <civ-card>
       <div data-card-header>
@@ -155,7 +153,6 @@ export const Small: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -213,7 +210,6 @@ export const DensityScale: Story = {
 };
 
 export const AppointmentCards: Story = {
-  name: 'Appointment Cards',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
@@ -256,7 +252,6 @@ export const AppointmentCards: Story = {
 };
 
 export const ClaimStatusCards: Story = {
-  name: 'Claim Status Cards',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
@@ -299,7 +294,6 @@ export const ClaimStatusCards: Story = {
 };
 
 export const DependentCard: Story = {
-  name: 'Dependent Card',
   render: () => html`
     <civ-card>
       <div data-card-header>

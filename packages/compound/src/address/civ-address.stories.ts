@@ -51,7 +51,6 @@ export const Default: Story = {
 // ── Individual States ─────────────────────────────────────────
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => html`
     <civ-address
       size="lg" legend="Mailing address"
@@ -88,7 +87,6 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-address legend="\1" size="lg" name="normal"></civ-address>
@@ -103,7 +101,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">

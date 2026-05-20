@@ -32,7 +32,6 @@ export const Default: Story = {
 };
 
 export const MiddleStep: Story = {
-  name: 'Middle Step',
   render: () => html`
     <civ-progress-header current="1" total="3" step-title="Address"></civ-progress-header>
     <civ-progress-steps
@@ -43,7 +42,6 @@ export const MiddleStep: Story = {
 };
 
 export const LastStep: Story = {
-  name: 'Last Step',
   render: () => html`
     <civ-progress-header current="2" total="3" step-title="Review"></civ-progress-header>
     <civ-progress-steps
@@ -90,7 +88,6 @@ export const ManySteps: Story = {
 };
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>

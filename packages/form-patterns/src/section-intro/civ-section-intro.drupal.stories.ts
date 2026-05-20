@@ -22,7 +22,6 @@ export const Default: Story = {
 };
 
 export const WithMultipleParagraphs: Story = {
-  name: 'With Multiple Paragraphs',
   render: () => render({
     heading: 'Military service',
     heading_level: 3,

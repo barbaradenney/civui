@@ -24,7 +24,6 @@ export const SpacousScale: Story = {
 };
 
 export const DefaultScale: Story = {
-  name: 'Default Scale',
   render: () => html`
     <div>
       <h2 class="civ-heading-lg">Apply for benefits</h2>
@@ -36,7 +35,6 @@ export const DefaultScale: Story = {
 };
 
 export const DenseScale: Story = {
-  name: 'Dense Scale',
   render: () => html`
     <div data-civ-scale="dense">
       <h2 class="civ-heading-lg">Case dashboard</h2>

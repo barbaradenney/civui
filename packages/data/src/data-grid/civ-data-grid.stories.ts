@@ -346,7 +346,6 @@ export const FullAdminLayout: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => {
     setTimeout(() => {
       ['dense', 'default', 'spacious'].forEach((scale) => {
@@ -562,7 +561,6 @@ export const ExpandableNestedGrid: Story = {
 };
 
 export const InlineCellEditing: Story = {
-  name: 'Inline Cell Editing',
   render: () => {
     setTimeout(() => {
       const grid = document.querySelector('civ-data-grid.story-edit') as any;
@@ -900,7 +898,6 @@ export const MultiColumnSort: Story = {
 };
 
 export const Aggregations: Story = {
-  name: 'Aggregations',
   render: () => {
     setTimeout(() => {
       const grid = document.querySelector('civ-data-grid.story-aggregate') as any;

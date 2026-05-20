@@ -2,7 +2,6 @@
   "civ-action-button": [
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Actions/Action Button",
       "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\">\n      <civ-action-button label=\"Primary\" variant=\"primary\"></civ-action-button>\n      <civ-action-button label=\"Secondary\" variant=\"secondary\"></civ-action-button>\n      <civ-action-button label=\"Tertiary\" variant=\"tertiary\"></civ-action-button>\n    </div>",
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
@@ -16,7 +15,6 @@
     },
     {
       "story": "DangerVariants",
-      "name": "Danger Variants",
       "category": "Actions/Action Button",
       "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\">\n      <civ-action-button label=\"Delete\" variant=\"primary\" danger></civ-action-button>\n      <civ-action-button label=\"Remove\" variant=\"secondary\" danger></civ-action-button>\n      <civ-action-button label=\"Cancel\" variant=\"tertiary\" danger></civ-action-button>\n    </div>",
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
@@ -51,7 +49,6 @@
   "civ-address": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Compound/Address",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"normal\"></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"hint\" hint=\"US addresses only\"></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"error\" error=\"Enter a complete address\" required></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"required\" required></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"disabled\" disabled></civ-address>\n    </div>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
@@ -65,7 +62,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Compound/Address",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"dense-addr\"></civ-address>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"default-addr\"></civ-address>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"spacious-addr\"></civ-address>\n      </div>\n    </div>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
@@ -104,7 +100,6 @@
     },
     {
       "story": "WithErrors",
-      "name": "With Errors",
       "category": "Forms/Compound/Address",
       "html": "<civ-address\n      size=\"lg\" legend=\"Mailing address\"\n      name=\"mailing\"\n      street-error=\"Enter a street address\"\n      city-error=\"Enter a city\"\n      state-error=\"Select a state\"\n      zip-error=\"Enter a ZIP code\"\n      required\n    ></civ-address>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
@@ -113,7 +108,6 @@
   "civ-alert": [
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert variant=\"info\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert variant=\"warning\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert variant=\"error\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert variant=\"success\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
@@ -127,7 +121,6 @@
     },
     {
       "story": "Compact",
-      "name": "Compact",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <civ-alert variant=\"info\" heading=\"Information\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <civ-alert variant=\"info\" heading=\"Information\" spacing=\"sm\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
@@ -147,7 +140,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-alert variant=\"info\" heading=\"Information\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-alert variant=\"info\" heading=\"Information\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-alert variant=\"info\" heading=\"Information\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
@@ -193,7 +185,6 @@
     },
     {
       "story": "PrimaryStyle",
-      "name": "Primary Style",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert variant=\"info\" alert-style=\"primary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert variant=\"warning\" alert-style=\"primary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert variant=\"error\" alert-style=\"primary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert variant=\"success\" alert-style=\"primary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
@@ -212,7 +203,6 @@
     },
     {
       "story": "TertiaryStyle",
-      "name": "Tertiary Style",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert variant=\"info\" alert-style=\"tertiary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert variant=\"warning\" alert-style=\"tertiary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert variant=\"error\" alert-style=\"tertiary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert variant=\"success\" alert-style=\"tertiary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
@@ -319,7 +309,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Bulk Actions",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-bulk-actions count=\"3\" item-name=\"application\">\n          <civ-action-button variant=\"secondary\" label=\"Archive\"></civ-action-button>\n          <civ-action-button variant=\"secondary\" danger label=\"Delete\"></civ-action-button>\n        </civ-bulk-actions>\n      </div>\n    </div>",
       "source": "packages/data/src/bulk-actions/civ-bulk-actions.stories.ts"
@@ -353,7 +342,6 @@
   "civ-button": [
     {
       "story": "ActionBar",
-      "name": "Action Bar",
       "category": "Foundations/Layout Examples",
       "html": "<!-- civ-button-row stacks the cluster on mobile (each button picks up\n         the full-width-on-mobile rule); civ-justify-end keeps the row\n         right-aligned at desktop widths. Primary is last here because\n         form actions typically put the affirmative action at the\n         visually-strongest position (right-most on desktop). -->\n    <div class=\"civ-button-row civ-justify-end\">\n      <civ-button variant=\"secondary\" label=\"Save draft\"></civ-button>\n      <civ-button label=\"Continue\"></civ-button>\n    </div>",
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
@@ -367,7 +355,6 @@
     },
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Actions/Button",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Standard</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\">Primary</civ-button>\n          <civ-button variant=\"secondary\">Secondary</civ-button>\n          <civ-button variant=\"tertiary\">Tertiary</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Danger</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\" danger>Primary</civ-button>\n          <civ-button variant=\"secondary\" danger>Secondary</civ-button>\n          <civ-button variant=\"tertiary\" danger>Tertiary</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Disabled</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\" disabled>Primary</civ-button>\n          <civ-button variant=\"secondary\" disabled>Secondary</civ-button>\n          <civ-button variant=\"tertiary\" disabled>Tertiary</civ-button>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
@@ -381,7 +368,6 @@
     },
     {
       "story": "ClaimActions",
-      "name": "Claim Actions",
       "category": "Actions/Button",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Upload evidence</p>\n        <div class=\"civ-button-row\">\n          <civ-button variant=\"primary\">Upload documents</civ-button>\n          <civ-button variant=\"tertiary\">Skip for now</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Manage dependents</p>\n        <div class=\"civ-button-row\">\n          <civ-button variant=\"secondary\">Add dependent</civ-button>\n          <civ-button variant=\"tertiary\" danger>Remove dependent</civ-button>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
@@ -418,7 +404,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Actions/Button",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\">Submit</civ-button>\n          <civ-button variant=\"secondary\">Save</civ-button>\n          <civ-button variant=\"tertiary\">Cancel</civ-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\">Submit</civ-button>\n          <civ-button variant=\"secondary\">Save</civ-button>\n          <civ-button variant=\"tertiary\">Cancel</civ-button>\n        </div>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n          <civ-button variant=\"primary\">Submit</civ-button>\n          <civ-button variant=\"secondary\">Save</civ-button>\n          <civ-button variant=\"tertiary\">Cancel</civ-button>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
@@ -438,7 +423,6 @@
     },
     {
       "story": "FormActions",
-      "name": "Form Actions",
       "category": "Actions/Button",
       "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        alert('Form submitted!');\n      }}\"\n    >\n      <p class=\"civ-mb-4\">Complete your VA benefits application and submit for review.</p>\n      <div class=\"civ-button-row\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n        <civ-button variant=\"secondary\">Save and continue later</civ-button>\n        <civ-button variant=\"tertiary\">Cancel</civ-button>\n      </div>\n    </form>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
@@ -505,14 +489,12 @@
     },
     {
       "story": "WithFocusTrap",
-      "name": "With Focus Trap",
       "category": "Overlays/Action Sheet",
       "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open modal sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Confirm action\" trap-focus @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Confirm action</p>\n            <p class=\"civ-mb-4\">Are you sure you want to delete this item?</p>\n            <div class=\"civ-button-row\">\n              <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n              <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
       "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
     },
     {
       "story": "WithIcons",
-      "name": "With Icons",
       "category": "Actions/Button",
       "html": "<div class=\"civ-flex civ-flex-wrap civ-gap-3 civ-items-center\">\n      <civ-button icon-start=\"download\">Download</civ-button>\n      <civ-button icon-end=\"arrow-right\" variant=\"primary\">Continue</civ-button>\n      <civ-button icon-start=\"edit\" variant=\"secondary\">Edit</civ-button>\n      <civ-button icon-start=\"print\" icon-end=\"external-link\" variant=\"tertiary\">Print form</civ-button>\n      <civ-button icon-start=\"trash\" variant=\"primary\" danger>Delete</civ-button>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
@@ -528,7 +510,6 @@
   "civ-button-group": [
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Layout/Button Group",
       "html": "<div class=\"civ-flex civ-gap-6 civ-items-start\">\n      <civ-button-group>\n        <civ-action-button label=\"One\" variant=\"primary\"></civ-action-button>\n        <civ-action-button label=\"Two\" variant=\"primary\"></civ-action-button>\n        <civ-action-button label=\"Three\" variant=\"primary\"></civ-action-button>\n      </civ-button-group>\n\n      <civ-button-group>\n        <civ-action-button label=\"One\" variant=\"secondary\"></civ-action-button>\n        <civ-action-button label=\"Two\" variant=\"secondary\"></civ-action-button>\n        <civ-action-button label=\"Three\" variant=\"secondary\"></civ-action-button>\n      </civ-button-group>\n\n      <civ-button-group>\n        <civ-action-button label=\"One\" variant=\"tertiary\"></civ-action-button>\n        <civ-action-button label=\"Two\" variant=\"tertiary\"></civ-action-button>\n        <civ-action-button label=\"Three\" variant=\"tertiary\"></civ-action-button>\n      </civ-button-group>\n    </div>",
       "source": "packages/layout/src/button-group/civ-button-group.stories.ts"
@@ -556,7 +537,6 @@
     },
     {
       "story": "DangerButtonGroup",
-      "name": "Danger Button Group",
       "category": "Actions/Action Button",
       "html": "<civ-button-group>\n      <civ-action-button label=\"Keep\" variant=\"tertiary\"></civ-action-button>\n      <civ-action-button label=\"Remove\" variant=\"tertiary\" danger></civ-action-button>\n    </civ-button-group>",
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
@@ -599,21 +579,18 @@
   "civ-card": [
     {
       "story": "AllStyles",
-      "name": "All Styles",
       "category": "Layout/Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-card card-style=\"primary\">\n        <div data-card-header><h3 class=\"civ-heading-md\">Primary</h3></div>\n        <p>Filled primary color background with white text.</p>\n      </civ-card>\n      <civ-card card-style=\"secondary\">\n        <div data-card-header><h3 class=\"civ-heading-md\">Secondary</h3></div>\n        <p>Light tint background.</p>\n      </civ-card>\n      <civ-card card-style=\"tertiary\">\n        <div data-card-header><h3 class=\"civ-heading-md\">Tertiary (Default)</h3></div>\n        <p>White background with border outline.</p>\n      </civ-card>\n    </div>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
     },
     {
       "story": "AppointmentCards",
-      "name": "Appointment Cards",
       "category": "Layout/Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-card>\n        <div data-card-header>\n          <civ-tag label=\"In person\" variant=\"blue\"></civ-tag>\n          <h3 class=\"civ-heading-md\">Primary care</h3>\n        </div>\n        <p>Dr. Smith — January 15, 2026 at 2:30 PM</p>\n        <p>VA Medical Center, Building 2</p>\n        <div data-card-footer>\n          <civ-button label=\"Check in now\"></civ-button>\n        </div>\n      </civ-card>\n\n      <civ-card>\n        <div data-card-header>\n          <civ-tag label=\"Video\" variant=\"purple\"></civ-tag>\n          <h3 class=\"civ-heading-md\">Mental health</h3>\n        </div>\n        <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>\n        <p>VA Video Connect</p>\n        <div data-card-footer>\n          <civ-link href=\"#\" variant=\"primary\">Join video session</civ-link>\n        </div>\n      </civ-card>\n\n      <civ-card>\n        <div data-card-header>\n          <civ-badge label=\"Completed\" variant=\"success\"></civ-badge>\n          <h3 class=\"civ-heading-md\">Lab work</h3>\n        </div>\n        <p>January 10, 2026</p>\n        <p>VA Medical Center, Lab</p>\n        <div data-card-footer>\n          <civ-link href=\"#\" variant=\"primary\">View results</civ-link>\n        </div>\n      </civ-card>\n    </div>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
     },
     {
       "story": "ClaimStatusCards",
-      "name": "Claim Status Cards",
       "category": "Layout/Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-card>\n        <div data-card-header>\n          <div class=\"civ-flex civ-justify-between civ-items-center\">\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n            <civ-action-button label=\"View details\" variant=\"tertiary\"></civ-action-button>\n          </div>\n          <civ-link href=\"#/claims/123\" class=\"civ-heading-md\">Disability compensation</civ-link>\n        </div>\n        <p>Filed: March 10, 2026</p>\n        <p>Step 3 of 5: Evidence gathering</p>\n      </civ-card>\n\n      <civ-card>\n        <div data-card-header>\n          <div class=\"civ-flex civ-justify-between civ-items-center\">\n            <civ-badge label=\"Decision made\" variant=\"success\"></civ-badge>\n            <civ-action-button label=\"View details\" variant=\"tertiary\"></civ-action-button>\n          </div>\n          <civ-link href=\"#/claims/456\" class=\"civ-heading-md\">Travel reimbursement</civ-link>\n        </div>\n        <p>Filed: February 28, 2026</p>\n        <p>Amount approved: $45.00</p>\n      </civ-card>\n\n      <civ-card>\n        <div data-card-header>\n          <div class=\"civ-flex civ-justify-between civ-items-center\">\n            <civ-badge label=\"Action needed\" variant=\"error\"></civ-badge>\n            <civ-action-button label=\"View details\" variant=\"tertiary\"></civ-action-button>\n          </div>\n          <civ-link href=\"#/claims/789\" class=\"civ-heading-md\">Education benefits</civ-link>\n        </div>\n        <p>Filed: January 5, 2026</p>\n        <p>Additional documents required</p>\n      </civ-card>\n    </div>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
@@ -641,14 +618,12 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-card>\n          <div data-card-header>\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n            <div class=\"civ-flex civ-justify-between civ-items-center\">\n              <civ-link href=\"#\" class=\"civ-heading-md\">Disability compensation</civ-link>\n              <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n            </div>\n          </div>\n          <p>Filed: March 10, 2026</p>\n          <div data-card-footer>\n            <civ-link href=\"#\" variant=\"primary\">View details</civ-link>\n          </div>\n        </civ-card>\n      </div>\n\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-card>\n          <div data-card-header>\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n            <div class=\"civ-flex civ-justify-between civ-items-center\">\n              <civ-link href=\"#\" class=\"civ-heading-md\">Disability compensation</civ-link>\n              <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n            </div>\n          </div>\n          <p>Filed: March 10, 2026</p>\n          <div data-card-footer>\n            <civ-link href=\"#\" variant=\"primary\">View details</civ-link>\n          </div>\n        </civ-card>\n      </div>\n\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-card>\n          <div data-card-header>\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n            <div class=\"civ-flex civ-justify-between civ-items-center\">\n              <civ-link href=\"#\" class=\"civ-heading-md\">Disability compensation</civ-link>\n              <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n            </div>\n          </div>\n          <p>Filed: March 10, 2026</p>\n          <div data-card-footer>\n            <civ-link href=\"#\" variant=\"primary\">View details</civ-link>\n          </div>\n        </civ-card>\n      </div>\n    </div>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
     },
     {
       "story": "DependentCard",
-      "name": "Dependent Card",
       "category": "Layout/Card",
       "html": "<civ-card>\n      <div data-card-header>\n        <div class=\"civ-flex civ-justify-between civ-items-center\">\n          <h3 class=\"civ-heading-md\">Dependent: Jane Doe</h3>\n          <div class=\"civ-flex civ-gap-2\">\n            <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n            <civ-action-button label=\"Remove\" variant=\"tertiary\" danger></civ-action-button>\n          </div>\n        </div>\n      </div>\n      <p>Relationship: Spouse</p>\n      <p>Date of birth: January 15, 1992</p>\n    </civ-card>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
@@ -676,7 +651,6 @@
     },
     {
       "story": "WithHeader",
-      "name": "With Header",
       "category": "Layout/Card",
       "html": "<civ-card>\n      <div data-card-header>\n        <h3 class=\"civ-heading-md\">Card title</h3>\n      </div>\n      <p>Card body content.</p>\n    </civ-card>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
@@ -699,7 +673,6 @@
   "civ-checkbox": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Controls/Checkbox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-checkbox label=\"Normal (unchecked)\" name=\"normal\"></civ-checkbox>\n      <civ-checkbox label=\"Checked\" name=\"checked\" checked></civ-checkbox>\n      <civ-checkbox label=\"With hint\" name=\"hint\" hint=\"Additional context for this option\"></civ-checkbox>\n      <civ-checkbox label=\"With error\" name=\"error\" error=\"You must select this option\" required></civ-checkbox>\n      <civ-checkbox label=\"Disabled (unchecked)\" name=\"disabled-off\" disabled></civ-checkbox>\n      <civ-checkbox label=\"Disabled (checked)\" name=\"disabled-on\" disabled checked></civ-checkbox>\n      <civ-checkbox label=\"Indeterminate\" name=\"indeterminate\" indeterminate></civ-checkbox>\n    </div>",
       "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
@@ -720,7 +693,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Controls/Checkbox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"dense-agree\"></civ-checkbox>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"default-agree\"></civ-checkbox>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"spacious-agree\"></civ-checkbox>\n      </div>\n    </div>",
       "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
@@ -861,7 +833,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Data/Column Visibility",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"min-height: 600px;\">\n        <div data-civ-scale=\"dense\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n          <civ-column-visibility class=\"story-density-dense\"></civ-column-visibility>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n          <civ-column-visibility class=\"story-density-default\"></civ-column-visibility>\n        </div>\n        <div data-civ-scale=\"spacious\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n          <civ-column-visibility class=\"story-density-spacious\"></civ-column-visibility>\n        </div>\n      </div>",
       "source": "packages/data/src/column-visibility/civ-column-visibility.stories.ts"
@@ -884,7 +855,6 @@
   "civ-combobox": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Combobox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-combobox label=\"Normal\" name=\"normal\" .options=\"${STATES}\"></civ-combobox>\n      <civ-combobox label=\"With hint\" name=\"hint\" hint=\"Type to search\" .options=\"${STATES}\"></civ-combobox>\n      <civ-combobox label=\"With error\" name=\"error\" error=\"Select a state\" required .options=\"${STATES}\"></civ-combobox>\n      <civ-combobox label=\"Required\" name=\"required\" required .options=\"${STATES}\"></civ-combobox>\n      <civ-combobox label=\"Disabled\" name=\"disabled\" value=\"TX\" .options=\"${STATES}\" disabled></civ-combobox>\n    </div>",
       "source": "packages/inputs/src/combobox/civ-combobox.stories.ts"
@@ -905,7 +875,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Combobox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Dense</p>\n        <civ-combobox label=\"State\" name=\"dense-state\" hint=\"Type to search\" .options=\"${STATES}\"></civ-combobox>\n      </div>\n      <div>\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Default</p>\n        <civ-combobox label=\"State\" name=\"default-state\" hint=\"Type to search\" .options=\"${STATES}\"></civ-combobox>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Spacious</p>\n        <civ-combobox label=\"State\" name=\"spacious-state\" hint=\"Type to search\" .options=\"${STATES}\"></civ-combobox>\n      </div>\n    </div>",
       "source": "packages/inputs/src/combobox/civ-combobox.stories.ts"
@@ -984,7 +953,6 @@
   "civ-country": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Country",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-country name=\"normal\"></civ-country>\n      <civ-country name=\"hint\" hint=\"Select your country of citizenship\"></civ-country>\n      <civ-country name=\"error\" error=\"Select a country\"></civ-country>\n      <civ-country name=\"required\" required></civ-country>\n      <civ-country name=\"disabled\" value=\"US\" disabled></civ-country>\n      <civ-country name=\"limited\" include=\"US,CA,MX,GB\" label=\"Country (limited)\"></civ-country>\n    </div>",
       "source": "packages/inputs/src/country/civ-country.stories.ts"
@@ -1025,7 +993,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/Country",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Country of Citizenship</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Select the country where you hold citizenship. If you hold dual\n        citizenship, select your primary country.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-country name=\"country\" required exclude=\"KP,IR,SY\"></civ-country>\n      </div>\n    </div>",
       "source": "packages/inputs/src/country/civ-country.stories.ts"
@@ -1066,7 +1033,6 @@
     },
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Currency",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-currency name=\"normal\"></civ-currency>\n      <civ-currency name=\"hint\" hint=\"Enter the total before taxes\"></civ-currency>\n      <civ-currency name=\"error\" error=\"Enter a valid dollar amount\"></civ-currency>\n      <civ-currency name=\"required\" required></civ-currency>\n      <civ-currency name=\"disabled\" value=\"1250.00\" disabled></civ-currency>\n    </div>",
       "source": "packages/inputs/src/currency/civ-currency.stories.ts"
@@ -1093,7 +1059,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/Currency",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Income Information</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Report your gross annual income from all sources. Include wages,\n        salary, tips, and investment income.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-currency name=\"annual-income\" label=\"Gross annual income\" required></civ-currency>\n        <civ-currency name=\"other-income\" label=\"Other income\"></civ-currency>\n      </div>\n    </div>",
       "source": "packages/inputs/src/currency/civ-currency.stories.ts"
@@ -1134,7 +1099,6 @@
   "civ-data-field": [
     {
       "story": "Compact",
-      "name": "Compact",
       "category": "Forms/Form/Data Field",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <civ-data-field label=\"Full name\" value=\"Jane A. Doe\"></civ-data-field>\n        <civ-data-field label=\"Date of birth\" value=\"January 15, 1990\"></civ-data-field>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <civ-data-field label=\"Full name\" value=\"Jane A. Doe\" spacing=\"sm\"></civ-data-field>\n        <civ-data-field label=\"Date of birth\" value=\"January 15, 1990\" spacing=\"sm\"></civ-data-field>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/data-field/civ-data-field.stories.ts"
@@ -1174,7 +1138,6 @@
   "civ-data-grid": [
     {
       "story": "Aggregations",
-      "name": "Aggregations",
       "category": "Layout/Data Grid",
       "html": "<div>\n        <p class=\"civ-mb-3\">\n          Each column with <code>aggregate</code> contributes a per-group\n          subtotal row plus a grand-total in the sticky <code>&lt;tfoot&gt;</code>.\n          Custom function aggregators do the formatting (currency,\n          decimals, \"Total:\" / \"Avg:\" prefixes).\n        </p>\n        <div style=\"max-height: 360px; overflow-y: auto; border: 1px solid var(--civ-color-base-lighter);\">\n          <civ-data-grid\n            class=\"story-aggregate\"\n            caption=\"Applications with subtotals\"\n            bordered\n          ></civ-data-grid>\n        </div>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
@@ -1201,7 +1164,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Data Grid",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n        <div data-civ-scale=\"dense\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n          <civ-data-grid class=\"story-density-dense\" caption=\"Applications (dense)\"></civ-data-grid>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n          <civ-data-grid class=\"story-density-default\" caption=\"Applications (default)\"></civ-data-grid>\n        </div>\n        <div data-civ-scale=\"spacious\">\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n          <civ-data-grid class=\"story-density-spacious\" caption=\"Applications (spacious)\"></civ-data-grid>\n        </div>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
@@ -1234,7 +1196,6 @@
     },
     {
       "story": "InlineCellEditing",
-      "name": "Inline Cell Editing",
       "category": "Layout/Data Grid",
       "html": "<div>\n        <p class=\"civ-mb-3\">\n          Click <strong>Applicant</strong> or <strong>Type</strong> cells to edit.\n          Enter or blur commits; Escape cancels. Applicant requires ≥3 characters.\n        </p>\n        <civ-data-grid class=\"story-edit\" caption=\"Applications (editable)\"></civ-data-grid>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
@@ -1335,7 +1296,6 @@
   "civ-date-picker": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Date Picker",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-date-picker label=\"Normal\" name=\"normal\"></civ-date-picker>\n      <civ-date-picker label=\"With hint\" name=\"hint\" hint=\"Use the calendar or type a date\"></civ-date-picker>\n      <civ-date-picker label=\"With error\" name=\"error\" error=\"Select a date\" required></civ-date-picker>\n      <civ-date-picker label=\"Required\" name=\"required\" required></civ-date-picker>\n      <civ-date-picker label=\"Disabled\" name=\"disabled\" value=\"2026-03-15\" disabled></civ-date-picker>\n    </div>",
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
@@ -1349,7 +1309,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Date Picker",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-date-picker label=\"Appointment date\" name=\"dense-date\" hint=\"Select an available date\"></civ-date-picker>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-date-picker label=\"Appointment date\" name=\"default-date\" hint=\"Select an available date\"></civ-date-picker>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-date-picker label=\"Appointment date\" name=\"spacious-date\" hint=\"Select an available date\"></civ-date-picker>\n      </div>\n    </div>",
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
@@ -1507,21 +1466,18 @@
   "civ-demo-frame": [
     {
       "story": "BackNavigationDemo",
-      "name": "Back Navigation Demo",
       "category": "Navigation/Link",
       "html": "<civ-demo-frame initial-path=\"/claims/12345\">\n      <civ-demo-page path=\"/claims\">\n        <h2 class=\"civ-heading-md\">Your claims</h2>\n        <ul>\n          <li><civ-link href=\"/claims/12345\" variant=\"primary\">Claim #12345 — Disability</civ-link></li>\n          <li><civ-link href=\"/claims/67890\" variant=\"primary\">Claim #67890 — Healthcare</civ-link></li>\n        </ul>\n      </civ-demo-page>\n\n      <civ-demo-page path=\"/claims/12345\">\n        <civ-link href=\"/claims\" variant=\"back\" label=\"Back to your claims\"></civ-link>\n        <h2 class=\"civ-heading-md civ-mt-2\">Claim #12345 — Disability compensation</h2>\n        <p>Filed January 15, 2026. Status: In Progress.</p>\n        <p>Click \"Back to your claims\" above to return to the list.</p>\n      </civ-demo-page>\n\n      <civ-demo-page path=\"/claims/67890\">\n        <civ-link href=\"/claims\" variant=\"back\" label=\"Back to your claims\"></civ-link>\n        <h2 class=\"civ-heading-md civ-mt-2\">Claim #67890 — Health care</h2>\n        <p>Filed February 3, 2026. Status: Decision made.</p>\n      </civ-demo-page>\n    </civ-demo-frame>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
     },
     {
       "story": "NavigationDemo",
-      "name": "Navigation Demo",
       "category": "Navigation/Link Card",
       "html": "<civ-demo-frame initial-path=\"/benefits\">\n      <civ-demo-page path=\"/benefits\">\n        <h2 class=\"civ-heading-md\">Choose a benefit</h2>\n        <div class=\"civ-flex civ-flex-col civ-gap-3 civ-max-w-lg\">\n          <civ-link-card\n            href=\"/benefits/disability\"\n            heading=\"Disability compensation\"\n            description=\"File a claim for a service-connected condition.\"\n          ></civ-link-card>\n          <civ-link-card\n            href=\"/benefits/healthcare\"\n            heading=\"Health care\"\n            description=\"Apply for VA health care benefits.\"\n            variant=\"secondary\"\n          ></civ-link-card>\n          <civ-link-card\n            href=\"/benefits/education\"\n            heading=\"Education benefits\"\n            description=\"Apply for GI Bill and other education programs.\"\n            variant=\"tertiary\"\n          ></civ-link-card>\n        </div>\n      </civ-demo-page>\n\n      <civ-demo-page path=\"/benefits/disability\">\n        <h2 class=\"civ-heading-md\">Disability compensation</h2>\n        <p>File a claim for a new or worsening service-connected condition.</p>\n        <p>This is the destination page the card linked to.</p>\n      </civ-demo-page>\n\n      <civ-demo-page path=\"/benefits/healthcare\">\n        <h2 class=\"civ-heading-md\">Health care</h2>\n        <p>Apply for VA health care benefits and manage appointments.</p>\n      </civ-demo-page>\n\n      <civ-demo-page path=\"/benefits/education\">\n        <h2 class=\"civ-heading-md\">Education benefits</h2>\n        <p>Apply for GI Bill and other VA education and training programs.</p>\n      </civ-demo-page>\n    </civ-demo-frame>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
     },
     {
       "story": "RouteMode",
-      "name": "Route Mode",
       "category": "Forms/Form/Repeater",
       "html": "<civ-demo-frame initial-path=\"/dependents\">\n        <civ-demo-page path=\"/dependents\">\n          <civ-repeater\n            legend=\"Your dependents\"\n            item-label=\"dependent\"\n            mode=\"route\"\n            add-href=\"/dependents/new\"\n            edit-href-pattern=\"/dependents/{id}/edit\"\n            id-field=\"id\"\n            summary-fields=\"firstName,lastName\"\n            .rows=${state.rows}\n            @civ-repeater-remove=${(e: CustomEvent) => {\n              state.rows = state.rows.filter((r) => r.id !== e.detail.id);\n              (e.currentTarget as { rows: Dependent[] }).rows = state.rows;\n            }}\n          ></civ-repeater>\n        </civ-demo-page>\n\n        <civ-demo-page path=\"/dependents/new\">\n          <h2 class=\"civ-heading-md\">Add a dependent</h2>\n          <civ-text-input label=\"First name\" name=\"firstName\"></civ-text-input>\n          <civ-text-input label=\"Last name\" name=\"lastName\"></civ-text-input>\n          <civ-text-input label=\"Relationship\" name=\"relationship\"></civ-text-input>\n          <div class=\"civ-mt-4 civ-flex civ-gap-2\">\n            <civ-link href=\"/dependents\" variant=\"primary\" label=\"Save\"></civ-link>\n            <civ-link href=\"/dependents\" variant=\"primary\" label=\"Cancel\"></civ-link>\n          </div>\n        </civ-demo-page>\n\n        <civ-demo-page path=\"/dependents/:id/edit\">\n          <h2 class=\"civ-heading-md\">Edit dependent</h2>\n          <p class=\"civ-text-sm\">Editing the row whose id matches the URL.</p>\n          <civ-text-input label=\"First name\" name=\"firstName\"></civ-text-input>\n          <civ-text-input label=\"Last name\" name=\"lastName\"></civ-text-input>\n          <civ-text-input label=\"Relationship\" name=\"relationship\"></civ-text-input>\n          <div class=\"civ-mt-4 civ-flex civ-gap-2\">\n            <civ-link href=\"/dependents\" variant=\"primary\" label=\"Save\"></civ-link>\n            <civ-link href=\"/dependents\" variant=\"primary\" label=\"Cancel\"></civ-link>\n          </div>\n        </civ-demo-page>\n      </civ-demo-frame>",
       "source": "packages/form-patterns/src/repeater/civ-repeater.stories.ts"
@@ -1542,7 +1498,6 @@
     },
     {
       "story": "SubmissionFlowDemo",
-      "name": "Submission Flow Demo",
       "category": "Forms/Form/Form",
       "html": "<civ-demo-frame initial-path=\"/inquiry\">\n      <civ-demo-page path=\"/inquiry\">\n        <h2 class=\"civ-heading-md\">Submit a general inquiry</h2>\n        <civ-form\n          @civ-submit=\"${(e: CustomEvent) => {\n            // Reset the form on submit so a \"Back to the form\" click after\n            // the confirmation page lands the user on a clean form —\n            // matches what a real .gov flow does on post-submit redirect.\n            // (Without this, the demo-page keeps the inputs mounted with\n            // the previously-submitted values, which reads confusingly.)\n            const form = e.currentTarget as CivForm;\n            form.reset();\n            const frame = form.closest('civ-demo-frame') as CivDemoFrame | null;\n            const ref = 'INQ-2026-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');\n            frame?.navigate(",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
@@ -1551,7 +1506,6 @@
   "civ-direct-deposit": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Compound/Direct Deposit",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Normal</h3>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"normal\"></civ-direct-deposit>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With errors</h3>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"errors\" type-error=\"Select account type\" routing-error=\"Enter routing number\" account-error=\"Enter account number\"></civ-direct-deposit>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Required</h3>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"required\" required></civ-direct-deposit>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Disabled</h3>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"disabled\" disabled></civ-direct-deposit>\n      </div>\n    </div>",
       "source": "packages/compound/src/direct-deposit/civ-direct-deposit.stories.ts"
@@ -1565,7 +1519,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Compound/Direct Deposit",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"dense-bank\"></civ-direct-deposit>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"default-bank\"></civ-direct-deposit>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-direct-deposit legend=\"Direct deposit\" size=\"lg\" name=\"spacious-bank\"></civ-direct-deposit>\n      </div>\n    </div>",
       "source": "packages/compound/src/direct-deposit/civ-direct-deposit.stories.ts"
@@ -1585,7 +1538,6 @@
     },
     {
       "story": "Prefilled",
-      "name": "Prefilled",
       "category": "Forms/Compound/Direct Deposit",
       "html": "<civ-direct-deposit legend=\"Direct deposit information\" size=\"lg\" name=\"bank\"></civ-direct-deposit>",
       "source": "packages/compound/src/direct-deposit/civ-direct-deposit.stories.ts"
@@ -1635,21 +1587,18 @@
   "civ-divider": [
     {
       "story": "AllStyles",
-      "name": "All Styles",
       "category": "Foundations/Typography",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-text-caption civ-mb-1\">Primary headings (bold)</p>\n        <h1 class=\"civ-heading-xl\">Heading XL (24px bold)</h1>\n        <h2 class=\"civ-heading-lg\">Heading LG (20px bold)</h2>\n        <h3 class=\"civ-heading-md\">Heading MD (18px bold)</h3>\n        <h4 class=\"civ-heading-sm\">Heading SM (16px bold)</h4>\n      </div>\n      <civ-divider></civ-divider>\n      <div>\n        <p class=\"civ-text-caption civ-mb-1\">Secondary headings (regular)</p>\n        <h1 class=\"civ-heading-xl-secondary\">Heading XL Secondary (24px regular)</h1>\n        <h2 class=\"civ-heading-lg-secondary\">Heading LG Secondary (20px regular)</h2>\n        <h3 class=\"civ-heading-md-secondary\">Heading MD Secondary (18px regular)</h3>\n        <h4 class=\"civ-heading-sm-secondary\">Heading SM Secondary (16px regular)</h4>\n      </div>\n      <civ-divider></civ-divider>\n      <div>\n        <p class=\"civ-text-caption civ-mb-1\">Body text</p>\n        <p class=\"civ-text-body\">Body (16px, darkest)</p>\n        <p class=\"civ-text-muted\">Muted (16px, lighter)</p>\n        <p class=\"civ-text-caption\">Caption (14px, dark)</p>\n        <p class=\"civ-text-small\">Small (12px, dark)</p>\n      </div>\n    </div>",
       "source": "packages/core/src/typography/typography.stories.ts"
     },
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Layout/Divider",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <p>Content above</p>\n        <civ-divider></civ-divider>\n        <p>Content below</p>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Primary</p>\n        <p>Content above</p>\n        <civ-divider variant=\"primary\"></civ-divider>\n        <p>Content below</p>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Small spacing</p>\n        <p>Content above</p>\n        <civ-divider spacing=\"sm\"></civ-divider>\n        <p>Content below</p>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Primary + Small spacing</p>\n        <p>Content above</p>\n        <civ-divider variant=\"primary\" spacing=\"sm\"></civ-divider>\n        <p>Content below</p>\n      </div>\n    </div>",
       "source": "packages/layout/src/divider/civ-divider.stories.ts"
     },
     {
       "story": "BenefitsSummary",
-      "name": "Benefits Summary",
       "category": "Layout/Divider",
       "html": "<div class=\"civ-max-w-lg\">\n      <h3>Disability compensation</h3>\n      <p>Monthly amount: $1,234.56</p>\n      <p>Combined rating: 70%</p>\n      <civ-divider></civ-divider>\n      <h3>Education benefits</h3>\n      <p>Post-9/11 GI Bill</p>\n      <p>Remaining entitlement: 24 months</p>\n      <civ-divider></civ-divider>\n      <h3>Health care</h3>\n      <p>Enrolled: Priority Group 1</p>\n      <p>Next appointment: January 15, 2026</p>\n    </div>",
       "source": "packages/layout/src/divider/civ-divider.stories.ts"
@@ -1662,21 +1611,18 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Foundations/Typography",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-text-caption civ-mb-2\">Dense</p>\n        <h2 class=\"civ-heading-lg\">Personal information</h2>\n        <h3 class=\"civ-heading-md-secondary\">Required for identity verification</h3>\n        <p class=\"civ-text-body\">Please provide your full legal name and date of birth.</p>\n        <p class=\"civ-text-caption\">All fields are required unless marked optional.</p>\n      </div>\n      <civ-divider></civ-divider>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">Default</p>\n        <h2 class=\"civ-heading-lg\">Personal information</h2>\n        <h3 class=\"civ-heading-md-secondary\">Required for identity verification</h3>\n        <p class=\"civ-text-body\">Please provide your full legal name and date of birth.</p>\n        <p class=\"civ-text-caption\">All fields are required unless marked optional.</p>\n      </div>\n      <civ-divider></civ-divider>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-text-caption civ-mb-2\">Spacious</p>\n        <h2 class=\"civ-heading-lg\">Personal information</h2>\n        <h3 class=\"civ-heading-md-secondary\">Required for identity verification</h3>\n        <p class=\"civ-text-body\">Please provide your full legal name and date of birth.</p>\n        <p class=\"civ-text-caption\">All fields are required unless marked optional.</p>\n      </div>\n    </div>",
       "source": "packages/core/src/typography/typography.stories.ts"
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Divider",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <p>Section one content</p>\n        <civ-divider></civ-divider>\n        <p>Section two content</p>\n        <civ-divider></civ-divider>\n        <p>Section three content</p>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <p>Section one content</p>\n        <civ-divider></civ-divider>\n        <p>Section two content</p>\n        <civ-divider></civ-divider>\n        <p>Section three content</p>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <p>Section one content</p>\n        <civ-divider></civ-divider>\n        <p>Section two content</p>\n        <civ-divider></civ-divider>\n        <p>Section three content</p>\n      </div>\n    </div>",
       "source": "packages/layout/src/divider/civ-divider.stories.ts"
     },
     {
       "story": "FormSections",
-      "name": "Form Sections",
       "category": "Layout/Divider",
       "html": "<div class=\"civ-max-w-lg\">\n      <h3>Personal information</h3>\n      <p>Name: John Doe</p>\n      <p>Date of birth: January 1, 1985</p>\n      <civ-divider spacing=\"sm\"></civ-divider>\n      <h3>Contact information</h3>\n      <p>Email: john.doe@example.com</p>\n      <p>Phone: (555) 123-4567</p>\n      <civ-divider spacing=\"sm\"></civ-divider>\n      <h3>Mailing address</h3>\n      <p>123 Main Street</p>\n      <p>Springfield, VA 22150</p>\n    </div>",
       "source": "packages/layout/src/divider/civ-divider.stories.ts"
@@ -1690,7 +1636,6 @@
     },
     {
       "story": "Primary",
-      "name": "Primary",
       "category": "Layout/Divider",
       "html": "<p>Content above</p>\n    <civ-divider variant=\"primary\"></civ-divider>\n    <p>Content below</p>",
       "source": "packages/layout/src/divider/civ-divider.stories.ts"
@@ -1706,7 +1651,6 @@
   "civ-ein": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/EIN",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-ein name=\"normal\"></civ-ein>\n      <civ-ein name=\"hint\" hint=\"Find this on your IRS determination letter\"></civ-ein>\n      <civ-ein name=\"error\" error=\"Enter a valid Employer Identification Number\"></civ-ein>\n      <civ-ein name=\"required\" required></civ-ein>\n      <civ-ein name=\"disabled\" value=\"123456789\" disabled></civ-ein>\n    </div>",
       "source": "packages/inputs/src/ein/civ-ein.stories.ts"
@@ -1733,7 +1677,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/EIN",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Business Information</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Provide the Employer Identification Number assigned to your\n        organization by the IRS.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-ein name=\"ein\" required></civ-ein>\n      </div>\n    </div>",
       "source": "packages/inputs/src/ein/civ-ein.stories.ts"
@@ -1760,7 +1703,6 @@
   "civ-email": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Email",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-email name=\"normal\"></civ-email>\n      <civ-email name=\"hint\" hint=\"Use your work email if available\"></civ-email>\n      <civ-email name=\"error\" error=\"Enter a valid email address\"></civ-email>\n      <civ-email name=\"required\" required></civ-email>\n      <civ-email name=\"disabled\" value=\"user@example.gov\" disabled></civ-email>\n    </div>",
       "source": "packages/inputs/src/email/civ-email.stories.ts"
@@ -1787,7 +1729,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/Email",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Contact Information</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        We will send application updates and decision letters to this\n        email address.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-email name=\"email\" required></civ-email>\n      </div>\n    </div>",
       "source": "packages/inputs/src/email/civ-email.stories.ts"
@@ -1874,7 +1815,6 @@
   "civ-file-upload": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/File Upload",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-file-upload label=\"Normal\" name=\"normal\"></civ-file-upload>\n      <civ-file-upload label=\"With hint\" hint=\"PDF files only, max 5 MB\" name=\"hint\" accept=\".pdf\"></civ-file-upload>\n      <civ-file-upload label=\"With error\" error=\"Upload a document\" name=\"error\" required></civ-file-upload>\n      <civ-file-upload label=\"Required\" name=\"required\" required></civ-file-upload>\n      <civ-file-upload label=\"Disabled\" name=\"disabled\" disabled></civ-file-upload>\n    </div>",
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
@@ -1914,7 +1854,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/File Upload",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-file-upload label=\"Upload document\" hint=\"PDF only\" name=\"dense-doc\" accept=\".pdf\"></civ-file-upload>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-file-upload label=\"Upload document\" hint=\"PDF only\" name=\"default-doc\" accept=\".pdf\"></civ-file-upload>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-file-upload label=\"Upload document\" hint=\"PDF only\" name=\"spacious-doc\" accept=\".pdf\"></civ-file-upload>\n      </div>\n    </div>",
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
@@ -2062,7 +2001,6 @@
     },
     {
       "story": "WithCounts",
-      "name": "With Counts",
       "category": "Actions/Filter Chip",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-filter-chip label=\"Healthcare\" value=\"health\" count=\"24\"></civ-filter-chip>\n      <civ-filter-chip label=\"Education\" value=\"education\" count=\"12\" selected></civ-filter-chip>\n      <civ-filter-chip label=\"Housing\" value=\"housing\" count=\"8\"></civ-filter-chip>\n      <civ-filter-chip label=\"Employment\" value=\"employment\" count=\"3\"></civ-filter-chip>\n    </div>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
@@ -2076,7 +2014,6 @@
     },
     {
       "story": "WithIcons",
-      "name": "With Icons",
       "category": "Actions/Filter Chip",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-filter-chip label=\"Personal\" value=\"personal\" icon-start=\"person\"></civ-filter-chip>\n      <civ-filter-chip label=\"Important\" value=\"important\" icon-start=\"star\" selected></civ-filter-chip>\n      <civ-filter-chip label=\"Mailed\" value=\"mail\" icon-start=\"mail\"></civ-filter-chip>\n      <civ-filter-chip label=\"Recent\" value=\"recent\" icon-start=\"calendar\"></civ-filter-chip>\n    </div>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
@@ -2092,7 +2029,6 @@
   "civ-filter-chip-group": [
     {
       "story": "AppointmentTimeSlots",
-      "name": "Appointment Time Slots",
       "category": "Actions/Filter Chip Group",
       "html": "<div style=\"display: grid; gap: 1.5rem; max-width: 480px;\">\n      <div>\n        <p style=\"margin: 0 0 0.5rem; font-weight: 700;\">Monday, May 5</p>\n        <civ-filter-chip-group mode=\"single\" label=\"Available times for May 5\">\n          <civ-filter-chip label=\"9:00 AM\" value=\"mon-0900\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"9:30 AM\" value=\"mon-0930\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"10:00 AM\" value=\"mon-1000\" spacing=\"sm\" disabled></civ-filter-chip>\n          <civ-filter-chip label=\"10:30 AM\" value=\"mon-1030\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"11:00 AM\" value=\"mon-1100\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"1:00 PM\" value=\"mon-1300\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"1:30 PM\" value=\"mon-1330\" spacing=\"sm\" disabled></civ-filter-chip>\n          <civ-filter-chip label=\"2:00 PM\" value=\"mon-1400\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"2:30 PM\" value=\"mon-1430\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"3:00 PM\" value=\"mon-1500\" spacing=\"sm\"></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n      <div>\n        <p style=\"margin: 0 0 0.5rem; font-weight: 700;\">Tuesday, May 6</p>\n        <civ-filter-chip-group mode=\"single\" label=\"Available times for May 6\">\n          <civ-filter-chip label=\"9:00 AM\" value=\"tue-0900\" spacing=\"sm\" disabled></civ-filter-chip>\n          <civ-filter-chip label=\"9:30 AM\" value=\"tue-0930\" spacing=\"sm\" disabled></civ-filter-chip>\n          <civ-filter-chip label=\"10:00 AM\" value=\"tue-1000\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"10:30 AM\" value=\"tue-1030\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"11:00 AM\" value=\"tue-1100\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"1:00 PM\" value=\"tue-1300\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"1:30 PM\" value=\"tue-1330\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"2:00 PM\" value=\"tue-1400\" spacing=\"sm\" disabled></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n      <div>\n        <p style=\"margin: 0 0 0.5rem; font-weight: 700;\">Wednesday, May 7</p>\n        <civ-filter-chip-group mode=\"single\" label=\"Available times for May 7\">\n          <civ-filter-chip label=\"9:00 AM\" value=\"wed-0900\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"10:00 AM\" value=\"wed-1000\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"11:00 AM\" value=\"wed-1100\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"2:00 PM\" value=\"wed-1400\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"3:00 PM\" value=\"wed-1500\" spacing=\"sm\"></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n    </div>",
       "source": "packages/actions/src/filter-chip-group/civ-filter-chip-group.stories.ts"
@@ -2176,7 +2112,6 @@
   "civ-form": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Form/Form",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-12\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Standard form</h3>\n        <civ-form form-label=\"Standard form\">\n          <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n          <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n          <civ-button type=\"submit\">Submit</civ-button>\n        </civ-form>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With errors displayed</h3>\n        <civ-form form-label=\"Form with errors\">\n          <civ-text-input label=\"Full name\" name=\"name\" error=\"Enter your full name\" required></civ-text-input>\n          <civ-text-input label=\"Email address\" name=\"email\" error=\"Enter a valid email\" required type=\"email\"></civ-text-input>\n          <civ-button type=\"submit\">Submit</civ-button>\n        </civ-form>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
@@ -2216,14 +2151,12 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Form/Form",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-form form-label=\"Dense form\">\n          <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n          <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n          <civ-button type=\"submit\">Submit</civ-button>\n        </civ-form>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-form form-label=\"Default form\">\n          <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n          <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n          <civ-button type=\"submit\">Submit</civ-button>\n        </civ-form>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-form form-label=\"Spacious form\">\n          <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n          <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n          <civ-button type=\"submit\">Submit</civ-button>\n        </civ-form>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
     },
     {
       "story": "DirtyTracking",
-      "name": "Dirty Tracking",
       "category": "Forms/Form/Form",
       "html": "<civ-form track-dirty form-label=\"Profile update\">\n      <p class=\"civ-text-sm civ-mb-4\">Modify any field to see the dirty state indicator appear on the form.</p>\n      <civ-text-input label=\"First name\" name=\"firstName\" value=\"Jane\"></civ-text-input>\n      <civ-text-input label=\"Last name\" name=\"lastName\" value=\"Doe\"></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" value=\"jane.doe@agency.gov\" type=\"email\"></civ-text-input>\n      <civ-button type=\"submit\">Save changes</civ-button>\n    </civ-form>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
@@ -2251,7 +2184,6 @@
     },
     {
       "story": "PersistDraft",
-      "name": "Persist Draft",
       "category": "Forms/Form/Form",
       "html": "<civ-form persist=\"demo-form\" form-label=\"Draft application\">\n      <p class=\"civ-text-sm civ-mb-4\">This form auto-saves your progress to session storage. Refresh the page to see your data restored.</p>\n      <civ-text-input label=\"Full name\" name=\"fullName\"></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" type=\"email\"></civ-text-input>\n      <civ-textarea label=\"Additional comments\" name=\"comments\"></civ-textarea>\n      <div class=\"civ-mt-4 civ-flex civ-gap-2\">\n        <civ-button type=\"submit\">Submit</civ-button>\n        <civ-button type=\"reset\" variant=\"secondary\">Clear saved draft</civ-button>\n      </div>\n    </civ-form>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
@@ -2286,7 +2218,6 @@
     },
     {
       "story": "SupportResources",
-      "name": "Support Resources",
       "category": "Forms/Patterns/Trauma-Informed",
       "html": "<civ-form\n      support-resources='[{\"label\":\"Veterans Crisis Line\",\"href\":\"tel:988\",\"description\":\"Call or text 988, then press 1\"},{\"label\":\"Crisis Text Line\",\"href\":\"sms:838255\",\"description\":\"Text HOME to 838255\"},{\"label\":\"Safe Helpline\",\"href\":\"tel:18779955247\",\"description\":\"For survivors of sexual assault\"}]'\n    >\n      <civ-text-input label=\"Your name\" name=\"name\" required></civ-text-input>\n      <civ-textarea label=\"Tell us about your situation\" name=\"details\"></civ-textarea>\n    </civ-form>",
       "source": "packages/form-patterns/src/patterns/trauma-informed-examples.stories.ts"
@@ -2341,7 +2272,6 @@
     },
     {
       "story": "WithValidation",
-      "name": "With Validation",
       "category": "Forms/Form/Form",
       "html": "<civ-form\n      @civ-submit=\"${(e: CustomEvent) => {\n        console.log('Form submitted!', e.detail);\n        alert('Form submitted successfully!');\n      }}\"\n      @civ-invalid=\"${(e: CustomEvent) => {\n        console.log('Validation failed:', e.detail.errors);\n      }}\"\n    >\n      <civ-text-input label=\"First name\" name=\"firstName\" required></civ-text-input>\n      <civ-text-input label=\"Last name\" name=\"lastName\" required></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" required type=\"email\" validate=\"email\"></civ-text-input>\n      <civ-text-input label=\"Phone number\" name=\"phone\" hint=\"For example: (555) 123-4567\" type=\"tel\"></civ-text-input>\n      <div class=\"civ-mt-4 civ-flex civ-gap-2\">\n        <civ-button type=\"submit\">Submit</civ-button>\n      </div>\n    </civ-form>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
@@ -2350,21 +2280,18 @@
   "civ-form-step": [
     {
       "story": "AllProgressModes",
-      "name": "All Progress Modes",
       "category": "Forms/Form/Form Step",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-12\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Minimal (default)</h3>\n        <civ-form-step>\n          <div data-step-label=\"Step 1\"><p>Content for step 1.</p></div>\n          <div data-step-label=\"Step 2\"><p>Content for step 2.</p></div>\n          <div data-step-label=\"Step 3\"><p>Content for step 3.</p></div>\n        </civ-form-step>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Step Circles</h3>\n        <civ-form-step progress=\"steps\">\n          <div data-step-label=\"Step 1\"><p>Content for step 1.</p></div>\n          <div data-step-label=\"Step 2\"><p>Content for step 2.</p></div>\n          <div data-step-label=\"Step 3\"><p>Content for step 3.</p></div>\n        </civ-form-step>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Progress Bar</h3>\n        <civ-form-step progress=\"bar\">\n          <div data-step-label=\"Step 1\"><p>Content for step 1.</p></div>\n          <div data-step-label=\"Step 2\"><p>Content for step 2.</p></div>\n          <div data-step-label=\"Step 3\"><p>Content for step 3.</p></div>\n        </civ-form-step>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
     },
     {
       "story": "AsyncValidation",
-      "name": "Async Validation",
       "category": "Forms/Form/Form Step",
       "html": "<civ-form-step\n        header-size=\"primary\"\n        step-title=\"Personal information\"\n        @civ-step-change=\"${setup}\"\n      >\n        <div data-step-label=\"Personal information\">\n          <p class=\"civ-mb-4 civ-text-sm\" style=\"color: var(--civ-color-base-dark)\">Click Continue to trigger a simulated server validation (1.5s delay, 50% chance of failing on step 1).</p>\n          <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n        </div>\n        <div data-step-label=\"Contact information\">\n          <civ-text-input label=\"Email address\" name=\"email\" required type=\"email\"></civ-text-input>\n        </div>\n        <div data-step-label=\"Review\">\n          <p>All validations passed. Review and submit.</p>\n        </div>\n      </civ-form-step>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
     },
     {
       "story": "CustomButtonLabels",
-      "name": "Custom Button Labels",
       "category": "Forms/Form/Form Step",
       "html": "<civ-form-step\n      continue-label=\"Next section\"\n      complete-label=\"Submit application\"\n    >\n      <div data-step-label=\"Part A\">\n        <p>Part A: Applicant information.</p>\n      </div>\n      <div data-step-label=\"Part B\">\n        <p>Part B: Supporting documents.</p>\n      </div>\n      <div data-step-label=\"Part C\">\n        <p>Part C: Certification and signature.</p>\n      </div>\n    </civ-form-step>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
@@ -2377,7 +2304,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Form/Form Step",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-form-step>\n          <div data-step-label=\"Personal info\"><p>Dense layout content.</p></div>\n          <div data-step-label=\"Review\"><p>Dense review.</p></div>\n        </civ-form-step>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-form-step>\n          <div data-step-label=\"Personal info\"><p>Default layout content.</p></div>\n          <div data-step-label=\"Review\"><p>Default review.</p></div>\n        </civ-form-step>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-form-step>\n          <div data-step-label=\"Personal info\"><p>Spacious layout content.</p></div>\n          <div data-step-label=\"Review\"><p>Spacious review.</p></div>\n        </civ-form-step>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
@@ -2433,7 +2359,6 @@
     },
     {
       "story": "TwoSteps",
-      "name": "Two Steps",
       "category": "Forms/Form/Form Step",
       "html": "<civ-form-step>\n      <div data-step-label=\"Eligibility\">\n        <p>Answer the following questions to determine your eligibility for benefits.</p>\n      </div>\n      <div data-step-label=\"Confirmation\">\n        <p>Based on your answers, you may be eligible. Review and confirm your responses.</p>\n      </div>\n    </civ-form-step>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
@@ -2454,7 +2379,6 @@
     },
     {
       "story": "WithProgressBar",
-      "name": "With Progress Bar",
       "category": "Forms/Form/Form Step",
       "html": "<civ-form-step progress=\"bar\">\n      <div data-step-label=\"Personal information\">\n        <p>Step 1: Personal information.</p>\n      </div>\n      <div data-step-label=\"Employment history\">\n        <p>Step 2: Employment history.</p>\n      </div>\n      <div data-step-label=\"Education\">\n        <p>Step 3: Education background.</p>\n      </div>\n      <div data-step-label=\"Review\">\n        <p>Step 4: Review and submit.</p>\n      </div>\n    </civ-form-step>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
@@ -2468,7 +2392,6 @@
     },
     {
       "story": "WithSegmentedSteps",
-      "name": "With Segmented Steps",
       "category": "Forms/Form/Form Step",
       "html": "<civ-form-step progress=\"steps\">\n      <div data-step-label=\"Eligibility\">\n        <p>Answer the following questions to determine eligibility.</p>\n      </div>\n      <div data-step-label=\"Personal Info\">\n        <p>Enter your personal details.</p>\n      </div>\n      <div data-step-label=\"Documents\">\n        <p>Upload supporting documents.</p>\n      </div>\n      <div data-step-label=\"Review\">\n        <p>Review and submit your application.</p>\n      </div>\n    </civ-form-step>",
       "source": "packages/form-patterns/src/form-step/civ-form-step.stories.ts"
@@ -2516,7 +2439,6 @@
     },
     {
       "story": "ListItem",
-      "name": "List Item",
       "category": "Foundations/Layout Examples",
       "html": "<ul class=\"civ-list-none civ-p-0 civ-space-y-1\" style=\"max-width: 480px;\">\n      <li class=\"civ-list-item civ-list-item--success\">\n        <div class=\"civ-list-item__content\">\n          <span class=\"civ-flex civ-items-center civ-gap-2\">\n            <civ-icon name=\"check-circle\" class=\"civ-text-success\"></civ-icon>\n            <span class=\"civ-font-semibold\">tax-return.pdf</span>\n            <span class=\"civ-ms-2\">(1.2 MB)</span>\n          </span>\n        </div>\n        <span class=\"civ-list-item__actions\">\n          <civ-action-button variant=\"tertiary\" danger label=\"Remove\"></civ-action-button>\n        </span>\n      </li>\n      <li class=\"civ-list-item civ-list-item--error\">\n        <div class=\"civ-list-item__content\">\n          <span class=\"civ-flex civ-items-center civ-gap-2\">\n            <civ-icon name=\"error\" class=\"civ-text-error\"></civ-icon>\n            <span class=\"civ-font-semibold\">w2-2025.pdf</span>\n            <span class=\"civ-ms-2\">(4.8 MB)</span>\n          </span>\n          <span class=\"civ-text-sm civ-text-error\">File exceeds 3 MB limit</span>\n        </div>\n        <span class=\"civ-list-item__actions\">\n          <civ-action-button variant=\"tertiary\" label=\"Retry\"></civ-action-button>\n          <civ-action-button variant=\"tertiary\" danger label=\"Remove\"></civ-action-button>\n        </span>\n      </li>\n      <li class=\"civ-list-item\">\n        <div class=\"civ-list-item__content\">\n          <span class=\"civ-font-semibold\">dd214.pdf</span>\n          <span class=\"civ-ms-2\">(800 KB)</span>\n        </div>\n        <span class=\"civ-list-item__actions\">\n          <civ-action-button variant=\"tertiary\" label=\"Edit\"></civ-action-button>\n          <civ-action-button variant=\"tertiary\" danger label=\"Remove\"></civ-action-button>\n        </span>\n      </li>\n    </ul>",
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
@@ -2676,7 +2598,6 @@
     },
     {
       "story": "WithSelect",
-      "name": "With Select",
       "category": "Layout/Input Group",
       "html": "<div class=\"civ-max-w-sm\">\n      <civ-input-group>\n        <civ-select label=\"State\" name=\"state\"></civ-select>\n        <civ-action-button label=\"Lookup\" variant=\"secondary\"></civ-action-button>\n      </civ-input-group>\n    </div>",
       "source": "packages/layout/src/input-group/civ-input-group.stories.ts"
@@ -2692,7 +2613,6 @@
     },
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Navigation/Link",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Standard</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\">Primary link</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\">Secondary link</civ-link>\n          <civ-link href=\"#\" variant=\"back\" label=\"Back\"></civ-link>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Danger</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\" danger>Primary danger</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\" danger>Secondary danger</civ-link>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Disabled</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\" disabled>Primary disabled</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\" disabled>Secondary disabled</civ-link>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2705,7 +2625,6 @@
     },
     {
       "story": "BenefitsNavigation",
-      "name": "Benefits Navigation",
       "category": "Navigation/Link",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <civ-link href=\"#/hub\" variant=\"back\" label=\"Back to VA benefits hub\"></civ-link>\n      <div class=\"civ-mt-4\">\n        <p class=\"civ-m-0 civ-mb-2\">Related links:</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-2\">\n          <civ-link href=\"#/disability\" variant=\"primary\">Disability compensation</civ-link>\n          <civ-link href=\"#/healthcare\" variant=\"primary\">Health care benefits</civ-link>\n          <civ-link href=\"#/education\" variant=\"primary\">Education benefits</civ-link>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2731,7 +2650,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Navigation/Link",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\">View claim</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\">Learn more</civ-link>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\">View claim</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\">Learn more</civ-link>\n        </div>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n          <civ-link href=\"#\" variant=\"primary\">View claim</civ-link>\n          <civ-link href=\"#\" variant=\"secondary\">Learn more</civ-link>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2777,14 +2695,12 @@
     },
     {
       "story": "GovernmentContactSection",
-      "name": "Government Contact Section",
       "category": "Navigation/Link",
       "html": "<div style=\"max-width: 400px;\">\n      <h3 class=\"civ-mb-3 civ-font-semibold\">Need help?</h3>\n      <div class=\"civ-flex civ-flex-col civ-gap-2\">\n        <civ-link type=\"phone\" number=\"8008271000\" label=\"Call us\"></civ-link>\n        <civ-link type=\"phone\" number=\"711\" label=\"TTY: 711\"></civ-link>\n        <civ-link type=\"email\" address=\"help@va.gov\" label=\"Email us\"></civ-link>\n        <civ-link type=\"download\" href=\"/guides/applying-for-benefits.pdf\" filename=\"applying-for-benefits.pdf\" file-size=\"850 KB\" label=\"Download the application guide\"></civ-link>\n      </div>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
     },
     {
       "story": "InContext",
-      "name": "In Context",
       "category": "Navigation/Link",
       "html": "<p>\n      You can <civ-link href=\"#\">view your claim status</civ-link> online.\n      If you need help, <civ-link href=\"#\" variant=\"secondary\">contact us</civ-link>.\n    </p>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2797,7 +2713,6 @@
     },
     {
       "story": "PhoneInternational",
-      "name": "Phone International",
       "category": "Navigation/Link",
       "html": "<civ-link type=\"phone\" number=\"+44 20 7946 0958\"></civ-link>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2872,7 +2787,6 @@
     },
     {
       "story": "WithCustomIcons",
-      "name": "With Custom Icons",
       "category": "Navigation/Link",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <civ-link href=\"#\" icon-start=\"download\">Download your form</civ-link>\n      <civ-link href=\"#\" icon-end=\"external-link\">Visit VA.gov</civ-link>\n      <civ-link href=\"#\" icon-start=\"print\" icon-end=\"external-link\">Print and mail</civ-link>\n      <civ-link href=\"#\" variant=\"primary\" icon-end=\"arrow-right\">Continue to next step</civ-link>\n      <civ-link href=\"#\" variant=\"back\" icon-start=\"home\">Back to homepage</civ-link>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
@@ -2881,21 +2795,18 @@
   "civ-link-card": [
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-link-card\n        href=\"#/benefits\"\n        heading=\"Apply for benefits\"\n        description=\"Start a new application for VA benefits.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/details\"\n        heading=\"View your claim details\"\n        description=\"Check the status of your open claims and appeals.\"\n        variant=\"secondary\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/history\"\n        heading=\"Payment history\"\n        description=\"View your past benefit payments and details.\"\n        variant=\"tertiary\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/action\"\n        heading=\"Action needed on your claim\"\n        description=\"Upload required documents to continue processing your claim.\"\n        variant=\"critical\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/cancel\"\n        heading=\"Cancel your application\"\n        description=\"This action cannot be undone.\"\n        variant=\"danger\"\n      ></civ-link-card>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
     },
     {
       "story": "BenefitsHub",
-      "name": "Benefits Hub",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-3 civ-max-w-lg\">\n      <civ-link-card\n        href=\"#/disability\"\n        heading=\"Disability compensation\"\n        description=\"File a claim for a new or worsening service-connected condition.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/healthcare\"\n        heading=\"Health care\"\n        description=\"Apply for VA health care benefits and manage your appointments.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/education\"\n        heading=\"Education benefits\"\n        description=\"Apply for GI Bill and other education and training programs.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/housing\"\n        heading=\"Housing assistance\"\n        description=\"Get a VA-backed home loan or find housing support.\"\n      ></civ-link-card>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
     },
     {
       "story": "CardGrid",
-      "name": "Card Grid",
       "category": "Foundations/Layout Examples",
       "html": "<div class=\"civ-grid civ-gap-4\" style=\"grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\">\n      <civ-link-card href=\"/benefits\" heading=\"Benefits\" description=\"View your benefits\"></civ-link-card>\n      <civ-link-card href=\"/claims\" heading=\"Claims\" description=\"Track your claims\"></civ-link-card>\n      <civ-link-card href=\"/profile\" heading=\"Profile\" description=\"Update your info\"></civ-link-card>\n    </div>",
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
@@ -2916,7 +2827,6 @@
     },
     {
       "story": "Compact",
-      "name": "Compact",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6 civ-max-w-lg\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <civ-link-card\n          href=\"#/benefits\"\n          heading=\"Apply for benefits\"\n          description=\"Start a new application for VA benefits.\"\n        ></civ-link-card>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <civ-link-card\n          href=\"#/benefits\"\n          heading=\"Apply for benefits\"\n          description=\"Start a new application for VA benefits.\"\n          spacing=\"sm\"\n        ></civ-link-card>\n      </div>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
@@ -2929,7 +2839,6 @@
     },
     {
       "story": "DashboardGrid",
-      "name": "Dashboard Grid",
       "category": "Navigation/Link Card",
       "html": "<div style=\"display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\" class=\"civ-gap-4\">\n      <civ-link-card\n        href=\"#/claims\"\n        heading=\"Check claim status\"\n        description=\"Track the progress of your open claims and appeals.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/appointments\"\n        heading=\"Appointments\"\n        description=\"Schedule and manage your VA health appointments.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/payments\"\n        heading=\"Payment history\"\n        description=\"View your VA benefit payment history and details.\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/letters\"\n        heading=\"Download letters\"\n        description=\"Get copies of your VA benefit letters and documents.\"\n      ></civ-link-card>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
@@ -2942,7 +2851,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3 civ-max-w-lg\">\n          <civ-link-card\n            href=\"#/disability\"\n            heading=\"Disability compensation\"\n            description=\"File a claim for a service-connected condition.\"\n          ></civ-link-card>\n          <civ-link-card\n            href=\"#/healthcare\"\n            heading=\"Health care\"\n            description=\"Apply for VA health care benefits.\"\n            variant=\"secondary\"\n          ></civ-link-card>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3 civ-max-w-lg\">\n          <civ-link-card\n            href=\"#/disability\"\n            heading=\"Disability compensation\"\n            description=\"File a claim for a service-connected condition.\"\n          ></civ-link-card>\n          <civ-link-card\n            href=\"#/healthcare\"\n            heading=\"Health care\"\n            description=\"Apply for VA health care benefits.\"\n            variant=\"secondary\"\n          ></civ-link-card>\n        </div>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3 civ-max-w-lg\">\n          <civ-link-card\n            href=\"#/disability\"\n            heading=\"Disability compensation\"\n            description=\"File a claim for a service-connected condition.\"\n          ></civ-link-card>\n          <civ-link-card\n            href=\"#/healthcare\"\n            heading=\"Health care\"\n            description=\"Apply for VA health care benefits.\"\n            variant=\"secondary\"\n          ></civ-link-card>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
@@ -2967,14 +2875,12 @@
     },
     {
       "story": "WithEyebrow",
-      "name": "With Eyebrow",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-2xl\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Eyebrow text</p>\n        <civ-link-card\n          href=\"#/benefits/disability\"\n          eyebrow=\"Benefits\"\n          heading=\"Disability compensation\"\n          description=\"File a claim for a service-connected disability.\"\n          variant=\"tertiary\"\n        ></civ-link-card>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Eyebrow + badge slot</p>\n        <civ-link-card\n          href=\"#/claims/123\"\n          eyebrow=\"Claim\"\n          heading=\"Claim #VA-2026-0847\"\n          description=\"Filed January 15, 2026\"\n          variant=\"tertiary\"\n        >\n          <civ-badge label=\"In Progress\" variant=\"warning\"></civ-badge>\n        </civ-link-card>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Eyebrow on primary variant</p>\n        <civ-link-card\n          href=\"#/healthcare\"\n          eyebrow=\"Healthcare\"\n          heading=\"Schedule an appointment\"\n          description=\"Book a visit with your primary care provider.\"\n        ></civ-link-card>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Eyebrow on critical variant</p>\n        <civ-link-card\n          href=\"#/action\"\n          eyebrow=\"Action required\"\n          heading=\"Upload missing documents\"\n          description=\"Your claim requires additional evidence before it can be processed.\"\n          variant=\"critical\"\n        ></civ-link-card>\n      </div>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
     },
     {
       "story": "WithIcons",
-      "name": "With Icons",
       "category": "Navigation/Link Card",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-link-card\n        href=\"#/benefits\"\n        heading=\"Disability compensation\"\n        description=\"File a claim for a service-connected disability.\"\n        icon-start=\"check-circle\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/education\"\n        heading=\"Education benefits\"\n        description=\"Apply for GI Bill and other education programs.\"\n        icon-start=\"document\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/details\"\n        heading=\"View full details\"\n        description=\"See your complete application history.\"\n        icon-end=\"chevron-right\"\n        variant=\"secondary\"\n      ></civ-link-card>\n      <civ-link-card\n        href=\"#/download\"\n        heading=\"Download documents\"\n        description=\"Get copies of your VA letters.\"\n        icon-start=\"download\"\n        icon-end=\"chevron-right\"\n        variant=\"tertiary\"\n      ></civ-link-card>\n    </div>",
       "source": "packages/actions/src/link-card/civ-link-card.stories.ts"
@@ -3145,7 +3051,6 @@
   "civ-memorable-date": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Memorable Date",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-memorable-date legend=\"Normal\" name=\"normal\"></civ-memorable-date>\n      <civ-memorable-date legend=\"With hint\" hint=\"For example: January 15 1990\" name=\"hint\"></civ-memorable-date>\n      <civ-memorable-date legend=\"With error\" error=\"Enter a valid date\" hint=\"For example: January 15 1990\" name=\"error\"></civ-memorable-date>\n      <civ-memorable-date legend=\"Required\" name=\"required\" required></civ-memorable-date>\n      <civ-memorable-date legend=\"Disabled\" name=\"disabled\" value=\"1990-07-04\" disabled></civ-memorable-date>\n    </div>",
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
@@ -3158,7 +3063,6 @@
     },
     {
       "story": "DateFields",
-      "name": "Date Fields",
       "category": "Foundations/Print Preview",
       "html": "<h2 class=\"civ-text-lg civ-font-bold civ-mb-4\">Date Fields — Print Preview</h2>\n\n    <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" required name=\"dob\" value=\"1990-01-15\"></civ-memorable-date>\n\n    <civ-date-picker label=\"Appointment date\" name=\"appointment\" value=\"2026-05-15\"></civ-date-picker>",
       "source": "packages/core/src/foundations/print-preview.stories.ts"
@@ -3172,7 +3076,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Memorable Date",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"dense-dob\"></civ-memorable-date>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"default-dob\"></civ-memorable-date>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"spacious-dob\"></civ-memorable-date>\n      </div>\n    </div>",
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
@@ -3231,7 +3134,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Overlays/Menu",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"min-height: 480px;\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-menu label=\"Row actions\" open>\n          <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"More\"></civ-button>\n          <civ-menu-item value=\"edit\" label=\"Edit\"></civ-menu-item>\n          <civ-menu-item value=\"duplicate\" label=\"Duplicate\"></civ-menu-item>\n          <civ-menu-item value=\"archive\" label=\"Archive\"></civ-menu-item>\n        </civ-menu>\n      </div>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
@@ -3264,7 +3166,6 @@
   "civ-name": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Compound/Name",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-name legend=\"Normal\" size=\"lg\" name=\"normal\"></civ-name>\n      <civ-name legend=\"With errors\" size=\"lg\" name=\"errors\" first-error=\"Enter a first name\" last-error=\"Enter a last name\"></civ-name>\n      <civ-name legend=\"Required\" size=\"lg\" name=\"required\" required></civ-name>\n      <civ-name legend=\"Disabled\" size=\"lg\" name=\"disabled\" disabled></civ-name>\n    </div>",
       "source": "packages/compound/src/name/civ-name.stories.ts"
@@ -3292,7 +3193,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Compound/Name",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-name legend=\"Your name\" size=\"lg\" name=\"dense-name\"></civ-name>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-name legend=\"Your name\" size=\"lg\" name=\"default-name\"></civ-name>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-name legend=\"Your name\" size=\"lg\" name=\"spacious-name\"></civ-name>\n      </div>\n    </div>",
       "source": "packages/compound/src/name/civ-name.stories.ts"
@@ -3312,7 +3212,6 @@
     },
     {
       "story": "InternationalFormat",
-      "name": "International Format",
       "category": "Forms/Compound/Name",
       "html": "<civ-name legend=\"Applicant's name\" size=\"lg\" name=\"applicantName\" required></civ-name>",
       "source": "packages/compound/src/name/civ-name.stories.ts"
@@ -3345,7 +3244,6 @@
     },
     {
       "story": "WithoutSuffix",
-      "name": "Without Suffix",
       "category": "Forms/Compound/Name",
       "html": "<civ-name legend=\"Your name\" size=\"lg\" name=\"n\"></civ-name>",
       "source": "packages/compound/src/name/civ-name.stories.ts"
@@ -3476,7 +3374,6 @@
   "civ-page-header": [
     {
       "story": "AllSlotCombinations",
-      "name": "All Slot Combinations",
       "category": "Layout/Page Header",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Heading only</p>\n        <civ-page-header>\n          <h1 data-heading class=\"civ-heading-xl\">Personal information</h1>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Eyebrow + Heading</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Heading + Subheading</p>\n        <civ-page-header>\n          <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Eyebrow + Heading + Subheading</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Stacked Tag + Eyebrow + Heading + Inline Badge + Subheading</p>\n        <civ-page-header>\n          <civ-tag data-tag label=\"Claim #12345678\" variant=\"gray\"></civ-tag>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"Decision made\" variant=\"success\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n    </div>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
@@ -3490,7 +3387,6 @@
     },
     {
       "story": "Compact",
-      "name": "Compact",
       "category": "Layout/Page Header",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <civ-page-header spacing=\"sm\">\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n    </div>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
@@ -3503,7 +3399,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Page Header",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-page-header>\n          <span data-eyebrow>Benefits</span>\n          <h1 data-heading class=\"civ-heading-xl\">\n            Disability compensation\n            <civ-badge label=\"In progress\" variant=\"info\"></civ-badge>\n          </h1>\n          <span data-subheading>VA Form 21-526EZ</span>\n        </civ-page-header>\n      </div>\n    </div>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
@@ -3524,21 +3419,18 @@
     },
     {
       "story": "WithEyebrow",
-      "name": "With Eyebrow",
       "category": "Layout/Page Header",
       "html": "<civ-page-header>\n      <span data-eyebrow>Benefits</span>\n      <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n    </civ-page-header>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
     },
     {
       "story": "WithStatusBadge",
-      "name": "With Status Badge",
       "category": "Layout/Page Header",
       "html": "<civ-page-header>\n      <h1 data-heading class=\"civ-heading-xl\">\n        Disability compensation claim\n        <civ-badge label=\"Decision made\" variant=\"success\"></civ-badge>\n      </h1>\n      <span data-subheading>Claim ID: 12345678</span>\n    </civ-page-header>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
     },
     {
       "story": "WithSubheading",
-      "name": "With Subheading",
       "category": "Layout/Page Header",
       "html": "<civ-page-header>\n      <h1 data-heading class=\"civ-heading-xl\">Apply for disability compensation</h1>\n      <span data-subheading>VA Form 21-526EZ</span>\n    </civ-page-header>",
       "source": "packages/layout/src/page-header/civ-page-header.stories.ts"
@@ -3559,7 +3451,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Pagination",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-pagination total-items=\"847\" page-size=\"25\" page=\"3\" item-name=\"application\"></civ-pagination>\n      </div>\n    </div>",
       "source": "packages/data/src/pagination/civ-pagination.stories.ts"
@@ -3697,7 +3588,6 @@
     },
     {
       "story": "WithErrors",
-      "name": "With Errors",
       "category": "Forms/Compound/Partnership History",
       "html": "<civ-partnership-history\n      legend=\"About this marriage\"\n      size=\"lg\"\n      name=\"marriage\"\n      required\n      spouse-error=\"Enter your spouse's name\"\n      marriage-date-error=\"Enter the date of marriage\"\n      status-error=\"Select the marriage status\"\n    ></civ-partnership-history>",
       "source": "packages/compound/src/partnership-history/civ-partnership-history.stories.ts"
@@ -3706,7 +3596,6 @@
   "civ-phone": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Phone",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-phone name=\"normal\"></civ-phone>\n      <civ-phone name=\"hint\" hint=\"We may call this number to verify your identity\"></civ-phone>\n      <civ-phone name=\"error\" error=\"Enter a valid 10-digit phone number\"></civ-phone>\n      <civ-phone name=\"required\" required></civ-phone>\n      <civ-phone name=\"disabled\" value=\"2025551234\" disabled></civ-phone>\n      <civ-phone name=\"intl\" international></civ-phone>\n    </div>",
       "source": "packages/inputs/src/phone/civ-phone.stories.ts"
@@ -3726,7 +3615,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/Phone",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Contact Information</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Provide a phone number where we can reach you about your application.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-phone name=\"phone\" required></civ-phone>\n      </div>\n    </div>",
       "source": "packages/inputs/src/phone/civ-phone.stories.ts"
@@ -3803,7 +3691,6 @@
   "civ-progress-header": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Form/Progress",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">First step</h3>\n        <civ-progress-header current=\"0\" total=\"3\" step-title=\"Personal Info\"></civ-progress-header>\n        <civ-progress-steps steps='${defaultSteps}' current=\"0\"></civ-progress-steps>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Middle step</h3>\n        <civ-progress-header current=\"1\" total=\"3\" step-title=\"Address\"></civ-progress-header>\n        <civ-progress-steps steps='${defaultSteps}' current=\"1\"></civ-progress-steps>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Last step</h3>\n        <civ-progress-header current=\"2\" total=\"3\" step-title=\"Review\"></civ-progress-header>\n        <civ-progress-steps steps='${defaultSteps}' current=\"2\"></civ-progress-steps>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With error</h3>\n        <civ-progress-header current=\"3\" total=\"4\" step-title=\"Review\"></civ-progress-header>\n        <civ-progress-steps steps='[\"Step 1\",\"Step 2\",\"Step 3\",\"Step 4\"]' current=\"3\" error-steps=\"[1]\"></civ-progress-steps>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Many steps</h3>\n        <civ-progress-header current=\"4\" total=\"8\" step-title=\"Income\"></civ-progress-header>\n        <civ-progress-steps steps='[\"A\",\"B\",\"C\",\"D\",\"E\",\"F\",\"G\",\"H\"]' current=\"4\"></civ-progress-steps>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
@@ -3843,7 +3730,6 @@
     },
     {
       "story": "LastStep",
-      "name": "Last Step",
       "category": "Forms/Form/Progress",
       "html": "<civ-progress-header current=\"2\" total=\"3\" step-title=\"Review\"></civ-progress-header>\n    <civ-progress-steps\n      steps='${defaultSteps}'\n      current=\"2\"\n    ></civ-progress-steps>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
@@ -3857,7 +3743,6 @@
     },
     {
       "story": "MiddleStep",
-      "name": "Middle Step",
       "category": "Forms/Form/Progress",
       "html": "<civ-progress-header current=\"1\" total=\"3\" step-title=\"Address\"></civ-progress-header>\n    <civ-progress-steps\n      steps='${defaultSteps}'\n      current=\"1\"\n    ></civ-progress-steps>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
@@ -3942,7 +3827,6 @@
   "civ-radio-group": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Controls/Radio",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-radio-group legend=\"Normal\" name=\"normal\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"With hint\" hint=\"Select one option\" name=\"hint\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"With error\" error=\"Select an option\" required name=\"error\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"Disabled\" name=\"disabled\" value=\"a\" disabled>\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n    </div>",
       "source": "packages/controls/src/radio/civ-radio.stories.ts"
@@ -3956,7 +3840,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Controls/Radio",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"dense-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"default-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"spacious-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n    </div>",
       "source": "packages/controls/src/radio/civ-radio.stories.ts"
@@ -3982,7 +3865,6 @@
     },
     {
       "story": "HorizontalRadioGroup",
-      "name": "Horizontal Radio Group",
       "category": "Foundations/Layout Examples",
       "html": "<civ-radio-group legend=\"Preferred language\" orientation=\"horizontal\">\n      <civ-radio label=\"English\" value=\"en\"></civ-radio>\n      <civ-radio label=\"Spanish\" value=\"es\"></civ-radio>\n    </civ-radio-group>",
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
@@ -4064,7 +3946,7 @@
     {
       "story": "Default",
       "category": "Layout/Read More",
-      "html": "<civ-read-more>\n      <p>\n        You may be eligible for a benefit if you meet certain service and\n        discharge criteria.\n      </p>\n      <div data-rest>\n        <p>\n          Specifically, you must have served at least 24 months of active duty\n          and been discharged under conditions other than dishonorable. Some\n          benefits also require a documented service-connected disability.\n        </p>\n        <p>\n          If you separated before the 24-month requirement due to a\n          service-connected disability or a hardship discharge, you may still\n          be eligible. Contact a Veterans Service Officer to confirm.\n        </p>\n      </div>\n    </civ-read-more>",
+      "html": "<civ-read-more>\n      <p>\n        You may be eligible for a benefit if you meet certain service and\n        discharge criteria. Most benefits are available to veterans who\n        served on active duty for a minimum length of time and received a\n        discharge under honorable conditions. Some benefits also extend to\n        members of the Reserves and National Guard who completed a period\n        of active service, and to surviving family members of veterans who\n        died in service or from a service-connected condition.\n      </p>\n      <div data-rest>\n        <p>\n          Specifically, you must have served at least 24 months of active duty\n          and been discharged under conditions other than dishonorable. Some\n          benefits also require a documented service-connected disability.\n        </p>\n        <p>\n          If you separated before the 24-month requirement due to a\n          service-connected disability or a hardship discharge, you may still\n          be eligible. Contact a Veterans Service Officer to confirm.\n        </p>\n      </div>\n    </civ-read-more>",
       "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     },
     {
@@ -4120,7 +4002,6 @@
   "civ-relationship": [
     {
       "story": "AllPresets",
-      "name": "All Presets",
       "category": "Forms/Compound/Relationship",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">General</p>\n        <civ-relationship legend=\"Person\" size=\"lg\" name=\"gen\" preset=\"general\"></civ-relationship>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Dependent</p>\n        <civ-relationship legend=\"Dependent\" size=\"lg\" name=\"dep\" preset=\"dependent\"></civ-relationship>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Survivor</p>\n        <civ-relationship legend=\"Deceased\" size=\"lg\" name=\"surv\" preset=\"survivor\"></civ-relationship>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Benefits Survivor</p>\n        <civ-relationship legend=\"Deceased worker\" size=\"lg\" name=\"ben-surv\" preset=\"benefits-survivor\"></civ-relationship>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Immigration</p>\n        <civ-relationship legend=\"Beneficiary\" size=\"lg\" name=\"imm\" preset=\"immigration\"></civ-relationship>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Tax</p>\n        <civ-relationship legend=\"Dependent\" size=\"lg\" name=\"tax\" preset=\"tax\"></civ-relationship>\n      </div>\n    </div>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
@@ -4147,14 +4028,12 @@
     },
     {
       "story": "Dependent",
-      "name": "Dependent",
       "category": "Forms/Compound/Relationship",
       "html": "<civ-relationship\n      size=\"lg\" legend=\"About the dependent\"\n      name=\"dependent\"\n      preset=\"dependent\"\n      show-adoption-date\n    ></civ-relationship>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
     },
     {
       "story": "Immigration",
-      "name": "Immigration",
       "category": "Forms/Compound/Relationship",
       "html": "<civ-relationship\n      size=\"lg\" legend=\"About the person you are petitioning for\"\n      name=\"beneficiary\"\n      preset=\"immigration\"\n      show-adoption-date\n    ></civ-relationship>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
@@ -4167,7 +4046,6 @@
     },
     {
       "story": "Survivor",
-      "name": "Survivor",
       "category": "Forms/Compound/Relationship",
       "html": "<civ-relationship\n      size=\"lg\" legend=\"About the person who died\"\n      name=\"deceased\"\n      preset=\"survivor\"\n      deceased-assumed\n    ></civ-relationship>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
@@ -4181,7 +4059,6 @@
     },
     {
       "story": "WithErrors",
-      "name": "With Errors",
       "category": "Forms/Compound/Relationship",
       "html": "<civ-relationship\n      size=\"lg\" legend=\"About the dependent\"\n      name=\"dep\"\n      preset=\"general\"\n      required\n      first-error=\"Enter the dependent's first name\"\n      last-error=\"Enter the dependent's last name\"\n      relationship-error=\"Select a relationship\"\n    ></civ-relationship>",
       "source": "packages/compound/src/relationship/civ-relationship.stories.ts"
@@ -4197,7 +4074,6 @@
   "civ-repeater": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Form/Repeater",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-repeater legend=\"Normal\" name=\"normal\" item-label=\"item\">\n        <civ-text-input label=\"Name\" name=\"name\"></civ-text-input>\n      </civ-repeater>\n      <civ-repeater legend=\"With hint\" name=\"hint\" item-label=\"item\" hint=\"Add items as needed\">\n        <civ-text-input label=\"Name\" name=\"name\"></civ-text-input>\n      </civ-repeater>\n      <civ-repeater legend=\"With error\" name=\"error\" item-label=\"item\" error=\"Complete each item before submitting.\" min=\"1\">\n        <civ-text-input label=\"Name\" name=\"name\" required></civ-text-input>\n      </civ-repeater>\n      <civ-repeater legend=\"Disabled\" name=\"disabled\" item-label=\"item\" disabled>\n        <civ-text-input label=\"Name\" name=\"name\"></civ-text-input>\n      </civ-repeater>\n    </div>",
       "source": "packages/form-patterns/src/repeater/civ-repeater.stories.ts"
@@ -4211,7 +4087,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Form/Repeater",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-repeater legend=\"Dependents\" name=\"dense-deps\" item-label=\"dependent\">\n          <civ-text-input label=\"Full name\" name=\"fullName\"></civ-text-input>\n        </civ-repeater>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-repeater legend=\"Dependents\" name=\"default-deps\" item-label=\"dependent\">\n          <civ-text-input label=\"Full name\" name=\"fullName\"></civ-text-input>\n        </civ-repeater>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-repeater legend=\"Dependents\" name=\"spacious-deps\" item-label=\"dependent\">\n          <civ-text-input label=\"Full name\" name=\"fullName\"></civ-text-input>\n        </civ-repeater>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/repeater/civ-repeater.stories.ts"
@@ -4273,7 +4148,6 @@
     },
     {
       "story": "FormStepsMode",
-      "name": "Form Steps Mode",
       "category": "Forms/Form/Repeater",
       "html": "<civ-repeater\n      legend=\"Dependents\"\n      name=\"dependents\"\n      item-label=\"dependent\"\n      mode=\"form-steps\"\n    >\n      <div data-step-label=\"Name\">\n        <civ-text-input label=\"First name\" name=\"firstName\" required></civ-text-input>\n        <civ-text-input label=\"Last name\" name=\"lastName\" required></civ-text-input>\n      </div>\n      <div data-step-label=\"Contact\">\n        <civ-text-input label=\"Email\" name=\"email\" type=\"email\"></civ-text-input>\n        <civ-text-input label=\"Phone\" name=\"phone\" type=\"tel\"></civ-text-input>\n      </div>\n    </civ-repeater>",
       "source": "packages/form-patterns/src/repeater/civ-repeater.stories.ts"
@@ -4378,7 +4252,6 @@
   "civ-routing-number": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Routing Number",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-routing-number name=\"normal\"></civ-routing-number>\n      <civ-routing-number name=\"hint\" hint=\"Find this on the bottom left of a check\"></civ-routing-number>\n      <civ-routing-number name=\"error\" error=\"Enter a valid 9-digit routing number\"></civ-routing-number>\n      <civ-routing-number name=\"required\" required></civ-routing-number>\n      <civ-routing-number name=\"disabled\" value=\"021000021\" disabled></civ-routing-number>\n    </div>",
       "source": "packages/inputs/src/routing-number/civ-routing-number.stories.ts"
@@ -4398,7 +4271,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/Routing Number",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Direct Deposit Setup</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Provide your bank routing number so we can deposit benefit\n        payments directly into your account.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-routing-number name=\"routing\" required></civ-routing-number>\n      </div>\n    </div>",
       "source": "packages/inputs/src/routing-number/civ-routing-number.stories.ts"
@@ -4474,7 +4346,6 @@
   "civ-segmented-control": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Controls/Segmented Control",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-segmented-control legend=\"Normal\" name=\"normal\" value=\"a\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"With hint\" hint=\"Choose one option\" name=\"hint\" value=\"a\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"With error\" error=\"Select an option\" required name=\"error\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"Disabled\" name=\"disabled\" value=\"a\" disabled>\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n    </div>",
       "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
@@ -4488,7 +4359,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Controls/Segmented Control",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-segmented-control legend=\"View mode\" name=\"dense-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-segmented-control legend=\"View mode\" name=\"default-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-segmented-control legend=\"View mode\" name=\"spacious-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n    </div>",
       "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
@@ -4541,14 +4411,12 @@
   "civ-select": [
     {
       "story": "AllPresets",
-      "name": "All Presets",
       "category": "Forms/Inputs/Select",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-2\" style=\"max-width: 480px;\">\n      <civ-select label=\"US State\" preset=\"us-state\"></civ-select>\n      <civ-select label=\"Branch of service\" preset=\"service-branch\"></civ-select>\n      <civ-select label=\"Discharge type\" preset=\"discharge-type\"></civ-select>\n      <civ-select label=\"Suffix\" preset=\"suffix\"></civ-select>\n      <civ-select label=\"Relationship\" preset=\"relationship-type\"></civ-select>\n      <civ-select label=\"Marital status\" preset=\"marital-status\"></civ-select>\n      <civ-select label=\"Ethnicity\" preset=\"ethnicity\"></civ-select>\n      <civ-select label=\"Gender\" preset=\"gender\"></civ-select>\n      <civ-select label=\"Preferred language\" preset=\"language\"></civ-select>\n      <civ-select label=\"Housing status\" preset=\"housing-status\"></civ-select>\n      <civ-select label=\"Education level\" preset=\"education-level\"></civ-select>\n      <civ-select label=\"Employment status\" preset=\"employment-status\"></civ-select>\n      <civ-select label=\"Income source\" preset=\"income-source\"></civ-select>\n      <civ-select label=\"Veteran status\" preset=\"veteran-status\"></civ-select>\n      <civ-select label=\"Disability type\" preset=\"disability-type\"></civ-select>\n      <civ-select label=\"Citizenship status\" preset=\"citizenship-status\"></civ-select>\n      <civ-select label=\"Pay frequency\" preset=\"pay-frequency\"></civ-select>\n      <civ-select label=\"Contact preference\" preset=\"contact-preference\"></civ-select>\n    </div>",
       "source": "packages/inputs/src/select/civ-select.stories.ts"
     },
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Select",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-select label=\"Normal\" name=\"normal\">\n          <option value=\"CA\">California</option>\n          <option value=\"NY\">New York</option>\n          <option value=\"TX\">Texas</option>\n        </civ-select>\n      <civ-select label=\"With hint\" name=\"hint\" hint=\"Select where you currently reside\">\n          <option value=\"CA\">California</option>\n          <option value=\"NY\">New York</option>\n        </civ-select>\n      <civ-select label=\"With error\" name=\"error\" error=\"Select a state\" required>\n          <option value=\"CA\">California</option>\n          <option value=\"NY\">New York</option>\n        </civ-select>\n      <civ-select label=\"Required\" name=\"required\" required>\n          <option value=\"CA\">California</option>\n        </civ-select>\n      <civ-select label=\"Disabled\" name=\"disabled\" value=\"NY\" disabled>\n          <option value=\"NY\">New York</option>\n        </civ-select>\n    </div>",
       "source": "packages/inputs/src/select/civ-select.stories.ts"
@@ -4568,7 +4436,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Select",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Dense</p>\n        <civ-select label=\"State\" name=\"dense-state\" hint=\"Select where you reside\">\n            <option value=\"CA\">California</option>\n            <option value=\"NY\">New York</option>\n            <option value=\"TX\">Texas</option>\n          </civ-select>\n      </div>\n      <div>\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Default</p>\n        <civ-select label=\"State\" name=\"default-state\" hint=\"Select where you reside\">\n            <option value=\"CA\">California</option>\n            <option value=\"NY\">New York</option>\n            <option value=\"TX\">Texas</option>\n          </civ-select>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-text-sm civ-font-semibold civ-mb-2\">Spacious</p>\n        <civ-select label=\"State\" name=\"spacious-state\" hint=\"Select where you reside\">\n            <option value=\"CA\">California</option>\n            <option value=\"NY\">New York</option>\n            <option value=\"TX\">Texas</option>\n          </civ-select>\n      </div>\n    </div>",
       "source": "packages/inputs/src/select/civ-select.stories.ts"
@@ -4821,14 +4688,12 @@
     },
     {
       "story": "WithErrors",
-      "name": "With Errors",
       "category": "Forms/Compound/Service History",
       "html": "<civ-service-history\n      legend=\"About this service period\"\n      size=\"lg\"\n      name=\"service\"\n      required\n      branch-error=\"Select a branch of service\"\n      start-date-error=\"Enter your service start date\"\n      discharge-error=\"Select your character of service\"\n    ></civ-service-history>",
       "source": "packages/compound/src/service-history/civ-service-history.stories.ts"
     },
     {
       "story": "WithServiceNumber",
-      "name": "With Service Number",
       "category": "Forms/Compound/Service History",
       "html": "<civ-service-history\n      legend=\"About this service period\"\n      size=\"lg\"\n      name=\"service\"\n      show-service-number\n    ></civ-service-history>",
       "source": "packages/compound/src/service-history/civ-service-history.stories.ts"
@@ -4837,7 +4702,6 @@
   "civ-signature": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Compound/Signature",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Normal</h3>\n        <civ-signature legend=\"Statement of truth\" name=\"sig-normal\"></civ-signature>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With statement text</h3>\n        <civ-signature legend=\"Statement of truth\" name=\"sig-statement\" statement=\"I certify this information is true.\"></civ-signature>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With errors</h3>\n        <civ-signature legend=\"Statement of truth\" name=\"sig-error\" name-error=\"Enter your name\" certify-error=\"You must certify\" required></civ-signature>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Disabled</h3>\n        <civ-signature legend=\"Statement of truth\" name=\"sig-disabled\" disabled></civ-signature>\n      </div>\n    </div>",
       "source": "packages/compound/src/signature/civ-signature.stories.ts"
@@ -4858,7 +4722,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Compound/Signature",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-signature legend=\"Statement of truth\" name=\"dense-sig\" statement=\"I certify this is true.\" required></civ-signature>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-signature legend=\"Statement of truth\" name=\"default-sig\" statement=\"I certify this is true.\" required></civ-signature>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-signature legend=\"Statement of truth\" name=\"spacious-sig\" statement=\"I certify this is true.\" required></civ-signature>\n      </div>\n    </div>",
       "source": "packages/compound/src/signature/civ-signature.stories.ts"
@@ -4933,14 +4796,12 @@
   "civ-ssn": [
     {
       "story": "AllPresets",
-      "name": "All Presets",
       "category": "Forms/Inputs/Text Input",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-2\" style=\"max-width: 480px;\">\n      <civ-ssn label=\"Social Security number\" name=\"ssn\"></civ-ssn>\n      <civ-ein label=\"Employer ID Number\" name=\"ein\"></civ-ein>\n      <civ-zip label=\"ZIP code\" name=\"zip\"></civ-zip>\n      <civ-phone label=\"Phone number\" name=\"phone\"></civ-phone>\n      <civ-email label=\"Email address\" name=\"email\"></civ-email>\n      <civ-currency label=\"Annual income\" name=\"income\"></civ-currency>\n      <civ-routing-number label=\"Routing number\" name=\"routing\"></civ-routing-number>\n      <civ-va-file-number label=\"VA file number\" name=\"vaFileNumber\"></civ-va-file-number>\n    </div>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/SSN",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-ssn name=\"normal\"></civ-ssn>\n      <civ-ssn name=\"hint\" hint=\"This is used to verify your identity\"></civ-ssn>\n      <civ-ssn name=\"error\" error=\"Enter a valid Social Security number\"></civ-ssn>\n      <civ-ssn name=\"required\" required></civ-ssn>\n      <civ-ssn name=\"disabled\" value=\"123456789\" disabled></civ-ssn>\n      <civ-ssn name=\"last4\" mode=\"last4\"></civ-ssn>\n    </div>",
       "source": "packages/inputs/src/ssn/civ-ssn.stories.ts"
@@ -4960,7 +4821,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/SSN",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Identity Verification</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        We need your Social Security number to verify your identity and\n        process your benefits application.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-ssn name=\"ssn\" required></civ-ssn>\n      </div>\n    </div>",
       "source": "packages/inputs/src/ssn/civ-ssn.stories.ts"
@@ -5015,7 +4875,6 @@
   "civ-summary": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Form/Summary",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-12\">\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">With edit links</h3>\n        <civ-summary heading=\"Editable summary\" id=\"summary-editable\"></civ-summary>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Read-only (no edit links)</h3>\n        <civ-summary heading=\"Confirmation summary\" id=\"summary-readonly\"></civ-summary>\n      </div>\n      <div>\n        <h3 class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Empty</h3>\n        <civ-summary heading=\"No data yet\"></civ-summary>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
@@ -5028,14 +4887,12 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Form/Summary",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-summary heading=\"Summary\" id=\"dense-summary\"></civ-summary>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-summary heading=\"Summary\" id=\"default-summary\"></civ-summary>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-summary heading=\"Summary\" id=\"spacious-summary\"></civ-summary>\n      </div>\n    </div>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
     },
     {
       "story": "EmptyState",
-      "name": "Empty State",
       "category": "Forms/Form/Summary",
       "html": "<civ-summary heading=\"Review your information\"></civ-summary>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
@@ -5070,21 +4927,18 @@
     },
     {
       "story": "WithArrayValues",
-      "name": "With Array Values",
       "category": "Forms/Form/Summary",
       "html": "<civ-summary heading=\"Review your selections\"></civ-summary>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
     },
     {
       "story": "WithMissingValues",
-      "name": "With Missing Values",
       "category": "Forms/Form/Summary",
       "html": "<civ-summary heading=\"Review your information\"></civ-summary>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
     },
     {
       "story": "WithoutEditLinks",
-      "name": "Without Edit Links",
       "category": "Forms/Form/Summary",
       "html": "<civ-summary heading=\"Submission summary\"></civ-summary>",
       "source": "packages/form-patterns/src/summary/civ-summary.stories.ts"
@@ -5186,14 +5040,12 @@
   "civ-tag": [
     {
       "story": "AllVariants",
-      "name": "All Variants",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Primary (high emphasis)</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Archived\" variant=\"gray\" tag-style=\"primary\"></civ-tag>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Secondary (low emphasis)</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\"></civ-tag>\n          <civ-tag label=\"Archived\" variant=\"gray\"></civ-tag>\n        </div>\n      </div>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
     },
     {
       "story": "Compact",
-      "name": "Compact",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\"></civ-tag>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\" spacing=\"sm\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\" spacing=\"sm\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\" spacing=\"sm\"></civ-tag>\n        </div>\n      </div>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
@@ -5206,14 +5058,12 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\"></civ-tag>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\"></civ-tag>\n        </div>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n          <civ-tag label=\"Healthcare\" variant=\"blue\" tag-style=\"primary\"></civ-tag>\n          <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n          <civ-tag label=\"Disability\" variant=\"purple\" tag-style=\"primary\"></civ-tag>\n        </div>\n      </div>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
     },
     {
       "story": "FilterChips",
-      "name": "Filter Chips",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <p class=\"civ-m-0 civ-font-semibold\">Filter results by category</p>\n      <div class=\"civ-flex civ-gap-2 civ-flex-wrap\">\n        <civ-tag label=\"Healthcare\" variant=\"blue\"></civ-tag>\n        <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n        <civ-tag label=\"Housing\" variant=\"purple\"></civ-tag>\n        <civ-tag label=\"Employment\" variant=\"gray\"></civ-tag>\n      </div>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
@@ -5226,14 +5076,12 @@
     },
     {
       "story": "Secondary",
-      "name": "Secondary",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-gap-2 civ-flex-wrap civ-items-center\">\n      <civ-tag label=\"Healthcare\" variant=\"blue\"></civ-tag>\n      <civ-tag label=\"Education\" variant=\"orange\"></civ-tag>\n      <civ-tag label=\"Disability\" variant=\"purple\"></civ-tag>\n      <civ-tag label=\"Archived\" variant=\"gray\"></civ-tag>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
     },
     {
       "story": "WithIcons",
-      "name": "With Icons",
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-gap-2 civ-flex-wrap civ-items-center\">\n      <civ-tag label=\"Personal\" variant=\"blue\" icon-start=\"person\"></civ-tag>\n      <civ-tag label=\"Important\" variant=\"purple\" icon-start=\"star\" tag-style=\"primary\"></civ-tag>\n      <civ-tag label=\"Mailed\" variant=\"orange\" icon-start=\"mail\"></civ-tag>\n      <civ-tag label=\"Locked\" variant=\"gray\" icon-start=\"lock\" tag-style=\"primary\"></civ-tag>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
@@ -5242,14 +5090,12 @@
   "civ-text-input": [
     {
       "story": "AllPresets",
-      "name": "All Presets",
       "category": "Foundations/Input Masks",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Phone number\" name=\"phone\" mask=\"phone-us\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"Social Security number\" name=\"ssn\" mask=\"ssn\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"ZIP code\" name=\"zip\" mask=\"zip\" inputmode=\"numeric\"></civ-text-input>\n      <civ-text-input label=\"ZIP+4\" name=\"zip4\" mask=\"zip4\" inputmode=\"numeric\"></civ-text-input>\n      <civ-text-input label=\"EIN\" name=\"ein\" mask=\"ein\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"Annual income\" name=\"income\" mask=\"currency\" inputmode=\"numeric\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/masks-examples.stories.ts"
     },
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Text Input",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-text-input label=\"Normal\" name=\"normal\"></civ-text-input>\n      <civ-text-input label=\"With hint\" name=\"hint\" hint=\"Provide your legal first and last name\"></civ-text-input>\n      <civ-text-input label=\"With error\" name=\"error\" error=\"Enter your full name\"></civ-text-input>\n      <civ-text-input label=\"Required\" name=\"required\" required></civ-text-input>\n      <civ-text-input label=\"Disabled\" name=\"disabled\" value=\"Cannot edit\" disabled></civ-text-input>\n    </div>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
@@ -5277,14 +5123,12 @@
     },
     {
       "story": "CustomPatterns",
-      "name": "Custom Patterns",
       "category": "Foundations/Input Masks",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Case number\" name=\"case\" hint=\"For example: AB-1234\" mask-pattern=\"AA-####\"></civ-text-input>\n      <civ-text-input label=\"License plate\" name=\"plate\" hint=\"For example: ABC-1234\" mask-pattern=\"AAA-####\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/masks-examples.stories.ts"
     },
     {
       "story": "DeclarativeValidation",
-      "name": "Declarative Validation",
       "category": "Foundations/Validation",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Email\" name=\"email\" hint=\"We'll send your confirmation here\" required validate=\"email\"></civ-text-input>\n      <civ-text-input label=\"Social Security number\" name=\"ssn\" required validate=\"ssn\" mask=\"ssn\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"ZIP code\" name=\"zip\" required validate=\"zip\" mask=\"zip\" inputmode=\"numeric\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/validation-examples.stories.ts"
@@ -5298,21 +5142,18 @@
     },
     {
       "story": "DefaultScale",
-      "name": "Default Scale",
       "category": "Foundations/Density Examples",
       "html": "<div>\n      <h2 class=\"civ-heading-lg\">Apply for benefits</h2>\n      <p class=\"civ-text-body civ-mb-4\">Complete the form below to apply.</p>\n      <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n      <civ-text-input label=\"Email\" name=\"email\" type=\"email\" class=\"civ-mt-4\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/density-examples.stories.ts"
     },
     {
       "story": "DenseScale",
-      "name": "Dense Scale",
       "category": "Foundations/Density Examples",
       "html": "<div data-civ-scale=\"dense\">\n      <h2 class=\"civ-heading-lg\">Case dashboard</h2>\n      <p class=\"civ-text-body civ-mb-4\">Review and manage active cases.</p>\n      <div class=\"civ-flex civ-gap-4\">\n        <civ-text-input label=\"Case ID\" name=\"caseId\" width=\"sm\"></civ-text-input>\n        <civ-text-input label=\"Claimant\" name=\"claimant\" width=\"sm\"></civ-text-input>\n      </div>\n    </div>",
       "source": "packages/core/src/foundations/density-examples.stories.ts"
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Text Input",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-text-input label=\"Full name\" name=\"dense-name\" hint=\"Legal first and last name\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-text-input label=\"Full name\" name=\"default-name\" hint=\"Legal first and last name\"></civ-text-input>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-text-input label=\"Full name\" name=\"spacious-name\" hint=\"Legal first and last name\"></civ-text-input>\n      </div>\n    </div>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
@@ -5359,7 +5200,6 @@
     },
     {
       "story": "MaskModes",
-      "name": "Mask Modes",
       "category": "Foundations/Input Masks",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Phone (blur mode — default)\" name=\"phone1\" hint=\"Type freely, formatted on blur\" mask=\"phone-us\" type=\"tel\"></civ-text-input>\n      <civ-text-input label=\"Phone (live mode)\" name=\"phone2\" hint=\"Formatted as you type\" mask=\"phone-us\" mask-mode=\"live\" type=\"tel\"></civ-text-input>\n    </div>",
       "source": "packages/core/src/foundations/masks-examples.stories.ts"
@@ -5373,7 +5213,6 @@
     },
     {
       "story": "Prefix",
-      "name": "Prefix",
       "category": "Forms/Inputs/Text Input",
       "html": "<civ-text-input label=\"Social handle\" name=\"handle\" prefix=\"@\" width=\"md\"></civ-text-input>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
@@ -5407,14 +5246,12 @@
     },
     {
       "story": "Suffix",
-      "name": "Suffix",
       "category": "Forms/Inputs/Text Input",
       "html": "<civ-text-input label=\"Weight\" name=\"weight\" suffix=\"lbs\" inputmode=\"decimal\" width=\"sm\"></civ-text-input>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "TextInputs",
-      "name": "Text Inputs",
       "category": "Foundations/Print Preview",
       "html": "<h2 class=\"civ-text-lg civ-font-bold civ-mb-4\">Text Inputs — Print Preview</h2>\n\n    <civ-text-input label=\"Full legal name\" name=\"name\" value=\"Jane A. Smith\" hint=\"As it appears on your government-issued ID\" required></civ-text-input>\n\n    <civ-text-input label=\"Email address\" name=\"email\" value=\"jane.smith@example.gov\" type=\"email\"></civ-text-input>\n\n    <civ-text-input label=\"Social Security number\" name=\"ssn\" value=\"***-**-6789\" hint=\"For example: 123-45-6789\" mask=\"ssn\"></civ-text-input>\n\n    <civ-text-input label=\"Phone number\" name=\"phone\" value=\"(555) 123-4567\" mask=\"phone-us\"></civ-text-input>",
       "source": "packages/core/src/foundations/print-preview.stories.ts"
@@ -5423,7 +5260,7 @@
       "story": "TrailingActionSlot",
       "name": "Inline: Trailing action slot (escape hatch)",
       "category": "Forms/Inputs/Text Input",
-      "html": "<civ-text-input label=\"API key\" name=\"api-key\" value=\"sk-abc123def456ghi789\">\n      <button\n        data-trailing-action\n        type=\"button\"\n        class=\"civ-input-action\"\n        aria-label=\"Copy API key\"\n        @click=${(e: Event) => {\n          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');\n          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));\n        }}\n      >\n        <civ-icon name=\"content_copy\" aria-hidden=\"true\"></civ-icon>\n      </button>\n    </civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Apply <code>.civ-input-action</code> to match the input chrome.\n    </p>",
+      "html": "<civ-text-input label=\"API key\" name=\"api-key\" value=\"sk-abc123def456ghi789\">\n      <button\n        data-trailing-action\n        type=\"button\"\n        class=\"civ-input-inline-action\"\n        @click=${(e: Event) => {\n          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');\n          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));\n        }}\n      >Copy</button>\n    </civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-input-inline-action</code> — \"Copy\", \"Paste\", \"Scan\" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.\n    </p>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
@@ -5455,7 +5292,6 @@
   "civ-textarea": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Textarea",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-textarea label=\"Normal\" name=\"normal\"></civ-textarea>\n      <civ-textarea label=\"With hint\" name=\"hint\" hint=\"Provide additional details about your situation\"></civ-textarea>\n      <civ-textarea label=\"With error\" name=\"error\" error=\"This field is required\" required></civ-textarea>\n      <civ-textarea label=\"Required\" name=\"required\" required></civ-textarea>\n      <civ-textarea label=\"Disabled\" name=\"disabled\" value=\"Cannot be edited\" disabled></civ-textarea>\n    </div>",
       "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
@@ -5469,7 +5305,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Textarea",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-textarea label=\"Additional comments\" name=\"dense-comments\" hint=\"Provide any relevant details\"></civ-textarea>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-textarea label=\"Additional comments\" name=\"default-comments\" hint=\"Provide any relevant details\"></civ-textarea>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-textarea label=\"Additional comments\" name=\"spacious-comments\" hint=\"Provide any relevant details\"></civ-textarea>\n      </div>\n    </div>",
       "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
@@ -5577,7 +5412,6 @@
     },
     {
       "story": "Disabled",
-      "name": "Disabled",
       "category": "Forms/Inputs/Time Picker",
       "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt\"\n      value=\"14:30\"\n      minute-step=\"15\"\n      disabled\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
@@ -5598,7 +5432,6 @@
     },
     {
       "story": "Required",
-      "name": "Required",
       "category": "Forms/Inputs/Time Picker",
       "html": "<civ-time-picker\n      label=\"Appointment time\"\n      name=\"appt\"\n      minute-step=\"15\"\n      required\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
@@ -5670,7 +5503,6 @@
   "civ-toggle": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Toggle",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-toggle label=\"Normal (off)\" name=\"normal\"></civ-toggle>\n      <civ-toggle label=\"Checked (on)\" name=\"checked\" checked></civ-toggle>\n      <civ-toggle label=\"With hint\" name=\"hint\" hint=\"Additional context about this setting\"></civ-toggle>\n      <civ-toggle label=\"With error\" name=\"error\" error=\"This setting is required\" required></civ-toggle>\n      <civ-toggle label=\"Disabled (off)\" name=\"disabled-off\" disabled></civ-toggle>\n      <civ-toggle label=\"Disabled (on)\" name=\"disabled-on\" disabled checked></civ-toggle>\n    </div>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
@@ -5684,7 +5516,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Toggle",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-toggle label=\"Email notifications\" name=\"dense-notif\" description=\"Receive weekly digest emails\"></civ-toggle>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-toggle label=\"Email notifications\" name=\"default-notif\" description=\"Receive weekly digest emails\"></civ-toggle>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-toggle label=\"Email notifications\" name=\"spacious-notif\" description=\"Receive weekly digest emails\"></civ-toggle>\n      </div>\n    </div>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
@@ -5756,7 +5587,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Layout/Toolbar",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-toolbar label=\"Applications toolbar (dense)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-toolbar label=\"Applications toolbar (default)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-toolbar label=\"Applications toolbar (spacious)\">\n          <civ-text-input label=\"Search\" type=\"search\"></civ-text-input>\n          <civ-button data-civ-toolbar-end variant=\"primary\" label=\"Add\"></civ-button>\n        </civ-toolbar>\n      </div>\n    </div>",
       "source": "packages/data/src/toolbar/civ-toolbar.stories.ts"
@@ -5798,7 +5628,6 @@
   "civ-va-file-number": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/VA File Number",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-va-file-number name=\"normal\"></civ-va-file-number>\n      <civ-va-file-number name=\"hint\" hint=\"This may be the same as your Social Security number\"></civ-va-file-number>\n      <civ-va-file-number name=\"error\" error=\"Enter a valid VA file number (8 or 9 digits)\"></civ-va-file-number>\n      <civ-va-file-number name=\"required\" required></civ-va-file-number>\n      <civ-va-file-number name=\"disabled\" value=\"123456789\" disabled></civ-va-file-number>\n    </div>",
       "source": "packages/inputs/src/va-file-number/civ-va-file-number.stories.ts"
@@ -5818,7 +5647,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/VA File Number",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Veteran Identification</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Your VA file number helps us locate your records. It is usually\n        the same as your Social Security number, but not always.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-va-file-number name=\"vaFileNumber\" required></civ-va-file-number>\n      </div>\n    </div>",
       "source": "packages/inputs/src/va-file-number/civ-va-file-number.stories.ts"
@@ -5859,7 +5687,6 @@
     },
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/Yes No",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-yes-no legend=\"Normal (no selection)\" name=\"normal\"></civ-yes-no>\n      <civ-yes-no legend=\"With hint\" hint=\"Additional context for this question\" name=\"hint\"></civ-yes-no>\n      <civ-yes-no legend=\"With error\" error=\"Select an answer\" required name=\"error\"></civ-yes-no>\n      <civ-yes-no legend=\"Required\" required name=\"required\"></civ-yes-no>\n      <civ-yes-no legend=\"Disabled\" name=\"disabled\" value=\"yes\" disabled></civ-yes-no>\n      <civ-yes-no legend=\"With unsure option\" name=\"unsure\" unsure-label=\"I'm not sure\"></civ-yes-no>\n    </div>",
       "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
@@ -5872,7 +5699,6 @@
     },
     {
       "story": "CustomThirdOption",
-      "name": "Custom Third Option",
       "category": "Forms/Inputs/Yes No",
       "html": "<civ-yes-no legend=\"Does this condition apply to your household?\" name=\"condition\" unsure-label=\"Does not apply\" unsure-value=\"n/a\"></civ-yes-no>",
       "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
@@ -5886,7 +5712,6 @@
     },
     {
       "story": "DensityScale",
-      "name": "Density Scale",
       "category": "Forms/Inputs/Yes No",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-yes-no legend=\"Are you a U.S. citizen?\" name=\"dense-citizen\"></civ-yes-no>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-yes-no legend=\"Are you a U.S. citizen?\" name=\"default-citizen\"></civ-yes-no>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-yes-no legend=\"Are you a U.S. citizen?\" name=\"spacious-citizen\"></civ-yes-no>\n      </div>\n    </div>",
       "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
@@ -5943,7 +5768,6 @@
     },
     {
       "story": "WithUnsureOption",
-      "name": "With Unsure Option",
       "category": "Forms/Inputs/Yes No",
       "html": "<civ-yes-no legend=\"Do you have a service-connected disability?\" hint=\"This includes any injury or illness incurred during military service\" name=\"disability\" unsure-label=\"I'm not sure\"></civ-yes-no>",
       "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
@@ -5952,7 +5776,6 @@
   "civ-zip": [
     {
       "story": "AllStates",
-      "name": "All States",
       "category": "Forms/Inputs/ZIP Code",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-zip name=\"normal\"></civ-zip>\n      <civ-zip name=\"hint\" hint=\"Enter the ZIP code for your mailing address\"></civ-zip>\n      <civ-zip name=\"error\" error=\"Enter a valid 5-digit ZIP code\"></civ-zip>\n      <civ-zip name=\"required\" required></civ-zip>\n      <civ-zip name=\"disabled\" value=\"20500\" disabled></civ-zip>\n      <civ-zip name=\"extended\" extended></civ-zip>\n    </div>",
       "source": "packages/inputs/src/zip/civ-zip.stories.ts"
@@ -5979,7 +5802,6 @@
     },
     {
       "story": "GovernmentFormExample",
-      "name": "Government Form Example",
       "category": "Forms/Inputs/ZIP Code",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Mailing Address</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Enter the ZIP code where you receive mail. We use this to\n        determine your regional office.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-zip name=\"zip\" required></civ-zip>\n      </div>\n    </div>",
       "source": "packages/inputs/src/zip/civ-zip.stories.ts"

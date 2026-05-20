@@ -54,7 +54,6 @@ export const Back: Story = {
 };
 
 export const NewTab: Story = {
-  name: 'New Tab',
   render: () => render({
     label: 'Visit VA.gov',
     href: 'https://www.va.gov',
@@ -64,7 +63,6 @@ export const NewTab: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => {
     const primary = template({ label: 'Primary', href: '#', variant: 'primary' });
     const secondary = template({ label: 'Secondary', href: '#', variant: 'secondary' });

@@ -22,7 +22,6 @@ export const Default: Story = {
 };
 
 export const WithoutDescription: Story = {
-  name: 'Without Description',
   render: () => render({
     href: '#/benefits/education',
     heading: 'Education Benefits',

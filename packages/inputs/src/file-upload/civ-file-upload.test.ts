@@ -422,7 +422,6 @@ describe('aria-required', () => {
     dropEvent.preventDefault = () => {};
     dropEvent.dataTransfer = { files: [file] };
 
-    const dropzone = el.querySelector('.civ-dropzone');
     el._onDrop(dropEvent);
     await el.updateComplete;
 

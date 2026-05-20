@@ -4,12 +4,9 @@ import './civ-repeater.js';
 import type { CivRepeater } from './civ-repeater.js';
 import {
   getRows,
-  getRow,
-  getRowsContainer,
   getAddButton,
   getRowRemoveButton,
   getRowEditLink,
-  getRowSummary,
   rowCount,
 } from './repeater-test-helpers.js';
 

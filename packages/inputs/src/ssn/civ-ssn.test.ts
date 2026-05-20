@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-ssn.js';
 import type { CivSsn } from './civ-ssn.js';
 

@@ -53,7 +53,6 @@ export const Default: Story = {
 // ── Individual States ─────────────────────────────────────────
 
 export const WithValidation: Story = {
-  name: 'With Validation',
   render: () => html`
     <civ-form
       @civ-submit="${(e: CustomEvent) => {
@@ -88,7 +87,6 @@ export const WithError: Story = {
 };
 
 export const PersistDraft: Story = {
-  name: 'Persist Draft',
   render: () => html`
     <civ-form persist="demo-form" form-label="Draft application">
       <p class="civ-text-sm civ-mb-4">This form auto-saves your progress to session storage. Refresh the page to see your data restored.</p>
@@ -104,7 +102,6 @@ export const PersistDraft: Story = {
 };
 
 export const DirtyTracking: Story = {
-  name: 'Dirty Tracking',
   render: () => html`
     <civ-form track-dirty form-label="Profile update">
       <p class="civ-text-sm civ-mb-4">Modify any field to see the dirty state indicator appear on the form.</p>
@@ -119,7 +116,6 @@ export const DirtyTracking: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
@@ -145,7 +141,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -344,7 +339,6 @@ export const SetServerErrors: Story = {
 // fill form → submit → land on /confirmation.
 
 export const SubmissionFlowDemo: Story = {
-  name: 'Submission Flow Demo',
   render: () => html`
     <civ-demo-frame initial-path="/inquiry">
       <civ-demo-page path="/inquiry">

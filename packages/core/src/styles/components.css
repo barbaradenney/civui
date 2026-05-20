@@ -1121,6 +1121,13 @@
     @apply civ-px-4 civ-py-2 civ-font-sans civ-font-medium civ-border
            civ-bg-white civ-text-base-darkest civ-border-base civ-cursor-pointer;
     font-size: var(--civ-typography-fontSize-base);
+    /* `<button>`'s browser-default `line-height: normal` resolves to
+       roughly 1.2 — shorter than `<input>` / `<select>`'s effective
+       1.5 with the same font / padding / border. Force 1.5 so a
+       segmented control sits flush on the same baseline as adjacent
+       text inputs and selects (e.g. the time-picker AM/PM next to
+       hour/minute selects). */
+    line-height: 1.5;
     /* Connected controls — middle/last segments drop their start border
        and rely on the previous segment's end border as the divider.
        When a segment takes focus, the focus halo (outline + box-shadow

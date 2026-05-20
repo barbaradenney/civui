@@ -240,18 +240,15 @@ export const TrailingActionSlot: Story = {
       <button
         data-trailing-action
         type="button"
-        class="civ-input-action"
-        aria-label="Copy API key"
+        class="civ-input-inline-action"
         @click=${(e: Event) => {
           const host = (e.currentTarget as HTMLElement).closest('civ-text-input');
           if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));
         }}
-      >
-        <civ-icon name="content_copy" aria-hidden="true"></civ-icon>
-      </button>
+      >Copy</button>
     </civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Apply <code>.civ-input-action</code> to match the input chrome.
+      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-input-inline-action</code> — "Copy", "Paste", "Scan" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.
     </p>
   `,
 };

@@ -344,7 +344,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
             ${showInlineToday ? html`
               <button
                 type="button"
-                class="civ-input-inline-action"
+                class="civ-text-btn civ-text-btn--inline"
                 ?disabled="${inlineTodayDisabled}"
                 @click="${this._onInlineTodayClick}"
               >${this.inlineTodayLabel || t('datePickerTodayButton')}</button>

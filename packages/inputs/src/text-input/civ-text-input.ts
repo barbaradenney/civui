@@ -625,7 +625,7 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
         : nothing}${needsRevealButton
         ? html`<button
             type="button"
-            class="civ-input-inline-action"
+            class="civ-text-btn civ-text-btn--inline"
             aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
             aria-pressed="${this._passwordRevealed}"
             @click="${this._onTogglePasswordReveal}"

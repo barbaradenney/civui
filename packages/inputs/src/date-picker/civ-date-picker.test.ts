@@ -902,12 +902,12 @@ describe('civ-date-picker', () => {
 
     it('does not render the inline Today button by default', async () => {
       const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
-      expect(el.querySelector('.civ-input-inline-action')).toBeNull();
+      expect(el.querySelector('.civ-text-btn--inline')).toBeNull();
     });
 
     it('renders the inline Today button when inline-today is set', async () => {
       const el = await fixture('<civ-date-picker label="When" inline-today></civ-date-picker>') as any;
-      const btn = el.querySelector('.civ-input-inline-action') as HTMLButtonElement | null;
+      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement | null;
       expect(btn).not.toBeNull();
       expect(btn!.textContent?.trim()).toBe('Today');
     });
@@ -917,7 +917,7 @@ describe('civ-date-picker', () => {
       let civChange: any = null;
       el.addEventListener('civ-change', ((e: CustomEvent) => { civChange = e.detail; }) as EventListener);
 
-      const btn = el.querySelector('.civ-input-inline-action') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
       btn.click();
       await elementUpdated(el);
 
@@ -931,32 +931,32 @@ describe('civ-date-picker', () => {
       future.setFullYear(future.getFullYear() + 1);
       const minIso = future.toISOString().slice(0, 10);
       const el = await fixture(`<civ-date-picker label="When" inline-today min="${minIso}"></civ-date-picker>`) as any;
-      const btn = el.querySelector('.civ-input-inline-action') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
       expect(btn.disabled).toBe(true);
     });
 
     it('disables the inline Today button when value already matches today', async () => {
       const el = await fixture(`<civ-date-picker label="When" inline-today value="${todayISO}"></civ-date-picker>`) as any;
-      const btn = el.querySelector('.civ-input-inline-action') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
       expect(btn.disabled).toBe(true);
     });
 
     it('hides the inline Today button when host is disabled or readonly', async () => {
       const elDisabled = await fixture('<civ-date-picker label="When" inline-today disabled></civ-date-picker>') as any;
-      expect(elDisabled.querySelector('.civ-input-inline-action')).toBeNull();
+      expect(elDisabled.querySelector('.civ-text-btn--inline')).toBeNull();
 
       const elReadonly = await fixture('<civ-date-picker label="When" inline-today readonly></civ-date-picker>') as any;
-      expect(elReadonly.querySelector('.civ-input-inline-action')).toBeNull();
+      expect(elReadonly.querySelector('.civ-text-btn--inline')).toBeNull();
     });
 
     it('hides the inline Today button in compact (spacing=sm) mode', async () => {
       const el = await fixture('<civ-date-picker label="When" inline-today spacing="sm"></civ-date-picker>') as any;
-      expect(el.querySelector('.civ-input-inline-action')).toBeNull();
+      expect(el.querySelector('.civ-text-btn--inline')).toBeNull();
     });
 
     it('honors a custom inline-today-label', async () => {
       const el = await fixture('<civ-date-picker label="When" inline-today inline-today-label="Hoy"></civ-date-picker>') as any;
-      const btn = el.querySelector('.civ-input-inline-action') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
       expect(btn.textContent?.trim()).toBe('Hoy');
     });
   });

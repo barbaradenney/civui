@@ -725,6 +725,51 @@ mixin-using element — and wrap it in a static container.
 
 ---
 
+## Text-button variant choice — chip vs. inline
+
+CivUI has one base class for low-chrome text buttons —
+`.civ-text-btn` — with two variants:
+
+- **`.civ-text-btn--chip`** — gray pill background, neutral text
+  color. A quiet *toggle disclosure*: "Show more / Hide / Open".
+  Used by `civ-disclosure` and `civ-read-more`. Deliberately
+  doesn't compete with a primary action in the same view.
+- **`.civ-text-btn--inline`** — transparent background,
+  primary-dark text color. A *one-shot action shortcut*:
+  "Today / Now / Copy". Used by `civ-date-picker`,
+  `civ-time-picker`, the password reveal in `civ-text-input`,
+  and the trailing-action slot escape hatch.
+
+Pick the variant by the *intent*:
+
+| Intent | Variant |
+|---|---|
+| Toggle a disclosure state | `--chip` |
+| Fire an action and move on | `--inline` |
+
+`.civ-text-btn--inline` also supports a transient `.is-success`
+state (green text + check icon) for "Copied ✓" / "Saved ✓"
+confirmations — toggle the class for ~1–2 seconds after the
+action completes, then remove.
+
+```html
+<!-- ✓ disclosure toggle -->
+<button class="civ-text-btn civ-text-btn--chip">Show more</button>
+
+<!-- ✓ one-shot action -->
+<button class="civ-text-btn civ-text-btn--inline">Copy</button>
+
+<!-- ✓ same button after the user clicks (~1.5 s) -->
+<button class="civ-text-btn civ-text-btn--inline is-success">Copied</button>
+```
+
+**Caught by:** test assertions in `civ-disclosure.test.ts` and
+`civ-read-more.test.ts` lock the `civ-text-btn` +
+`civ-text-btn--chip` composition. No lint covers the variant
+*choice* (chip vs inline) — that's a design call.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

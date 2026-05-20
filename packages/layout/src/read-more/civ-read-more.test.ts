@@ -215,20 +215,21 @@ describe('civ-read-more', () => {
       <civ-read-more size="sm"><p>Teaser</p></civ-read-more>
     `);
     const trigger = el.querySelector('.civ-read-more__trigger')!;
-    expect(trigger.classList.contains('civ-toggle-btn--sm')).toBe(true);
+    expect(trigger.classList.contains('civ-text-btn--sm')).toBe(true);
   });
 
-  it('composes the shared civ-toggle-btn class on the trigger', async () => {
+  it('composes the shared civ-text-btn chip palette on the trigger', async () => {
     // The disclosure family (civ-disclosure, civ-read-more, future
-    // siblings) all share the same secondary-button palette via the
-    // `civ-toggle-btn` utility. Asserting the class is present locks
-    // the composition — a refactor that removed it would silently
-    // strip the palette.
+    // siblings) all share the same chip-button palette via
+    // `civ-text-btn` + `civ-text-btn--chip`. Asserting both classes
+    // locks the composition — a refactor that removed either would
+    // silently strip the palette.
     const el = await fixture<CivReadMore>(`
       <civ-read-more><p>Teaser</p></civ-read-more>
     `);
     const trigger = el.querySelector('.civ-read-more__trigger')!;
-    expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
+    expect(trigger.classList.contains('civ-text-btn')).toBe(true);
+    expect(trigger.classList.contains('civ-text-btn--chip')).toBe(true);
   });
 
   it('chevron icon matches the expanded-state rotation selector', async () => {
@@ -260,10 +261,10 @@ describe('civ-read-more', () => {
       expect(el.hasAttribute('inline')).toBe(true);
     });
 
-    it('composes the toggle-btn palette and adds the --inline modifier', async () => {
-      // Inline mode keeps the `civ-toggle-btn` palette (filled
-      // background, semibold, rounded — the affordance reads as a
-      // button, not an underlined link) and adds the `--inline`
+    it('composes the chip palette and adds the --inline modifier', async () => {
+      // Inline mode keeps the chip palette (filled background,
+      // semibold, rounded — the affordance reads as a button, not an
+      // underlined link) and adds the component-specific `--inline`
       // modifier so CSS can trim padding and zero out the top margin
       // that otherwise pushes the inline-block button off the text
       // baseline.
@@ -271,7 +272,8 @@ describe('civ-read-more', () => {
         <civ-read-more inline>Teaser text.</civ-read-more>
       `);
       const trigger = el.querySelector('.civ-read-more__trigger')!;
-      expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
+      expect(trigger.classList.contains('civ-text-btn')).toBe(true);
+      expect(trigger.classList.contains('civ-text-btn--chip')).toBe(true);
       expect(trigger.classList.contains('civ-read-more__trigger--inline')).toBe(true);
     });
 

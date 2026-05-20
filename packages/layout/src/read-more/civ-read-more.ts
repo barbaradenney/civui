@@ -113,17 +113,18 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
     const moreText = this.moreLabel || t('readMoreButton');
     const lessText = this.lessLabel || t('readLessButton');
     const buttonText = this.expanded ? lessText : moreText;
-    const sizeClass = this.size === 'sm' ? 'civ-toggle-btn--sm' : '';
-    // Inline mode still uses the shared `civ-toggle-btn` palette so the
-    // affordance reads as a button (filled background, rounded, semibold)
-    // rather than as an underlined link. The `--inline` modifier trims
-    // padding and zeroes the trigger's top margin so it sits on the
-    // text baseline instead of being pushed off it by the block-mode
-    // `civ-mt-2` rule. Chevron icon is still suppressed inline — it
-    // breaks the text flow.
+    const sizeClass = this.size === 'sm' ? 'civ-text-btn--sm' : '';
+    // Inline mode still uses the shared `civ-text-btn civ-text-btn--chip`
+    // palette so the affordance reads as a button (filled background,
+    // rounded, semibold) rather than as an underlined link. The
+    // component's own `--inline` modifier trims padding and zeroes
+    // the trigger's top margin so it sits on the text baseline instead
+    // of being pushed off it by the block-mode `civ-mt-2` rule.
+    // Chevron icon is still suppressed inline — it breaks the text
+    // flow.
     const triggerClasses = this.inline
-      ? 'civ-toggle-btn civ-read-more__trigger civ-read-more__trigger--inline'
-      : `civ-toggle-btn civ-read-more__trigger ${sizeClass}`;
+      ? 'civ-text-btn civ-text-btn--chip civ-read-more__trigger civ-read-more__trigger--inline'
+      : `civ-text-btn civ-text-btn--chip civ-read-more__trigger ${sizeClass}`;
     return html`
       <div class="civ-read-more__teaser" data-civ-read-more-teaser></div>
       <div

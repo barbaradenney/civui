@@ -240,15 +240,42 @@ export const TrailingActionSlot: Story = {
       <button
         data-trailing-action
         type="button"
-        class="civ-input-inline-action"
+        class="civ-text-btn civ-text-btn--inline"
         @click=${(e: Event) => {
-          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');
-          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));
+          const btn = e.currentTarget as HTMLButtonElement;
+          const host = btn.closest('civ-text-input');
+          if (host && 'value' in host) {
+            navigator.clipboard?.writeText(String(host.value ?? ''));
+          }
+          // Transient "Copied ✓" confirmation. Past-tense label + green
+          // success color + leading check (from `.is-success` state on
+          // `--inline`). Reverts after 1.5s so the user sees the receipt
+          // without it becoming permanent state. Re-clicks during the
+          // success window restart the timer rather than stacking.
+          const original = btn.dataset.originalLabel ?? btn.textContent ?? 'Copy';
+          if (!btn.dataset.originalLabel) btn.dataset.originalLabel = original;
+          btn.classList.add('is-success');
+          btn.textContent = 'Copied';
+          btn.setAttribute('aria-label', 'Copied');
+          // Announce to screen readers — the visual change alone
+          // doesn't trigger an SR re-read on a same-button text swap.
+          btn.setAttribute('aria-live', 'polite');
+          const prev = (btn as any)._copiedTimer as number | undefined;
+          if (prev) clearTimeout(prev);
+          (btn as any)._copiedTimer = setTimeout(() => {
+            btn.classList.remove('is-success');
+            btn.textContent = original;
+            btn.removeAttribute('aria-label');
+            btn.removeAttribute('aria-live');
+          }, 1500);
         }}
       >Copy</button>
     </civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-input-inline-action</code> — "Copy", "Paste", "Scan" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.
+      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-text-btn.civ-text-btn--inline</code> — "Copy", "Paste", "Scan" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.
+    </p>
+    <p class="civ-mt-3 civ-text-sm">
+      For ephemeral confirmation, swap the label to past tense ("Copied", "Pasted", "Scanned") and add the <code>.is-success</code> state class for ~1–2 seconds. It prepends a check mark and flips the text to the success color. Add <code>aria-live="polite"</code> on the button during the swap so screen readers announce the receipt.
     </p>
   `,
 };

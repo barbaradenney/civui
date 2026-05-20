@@ -37,6 +37,8 @@ CivUI is opinionated about the parts that matter for civic forms:
 - Plain-language defaults: "(required)" instead of a red asterisk, and error
   messages that say what to do, not just what went wrong.
 - Multi-platform parity as a CI gate, not a manual checklist.
+- Schemas as the single source of truth, so humans, the MCP server,
+  scaffolders, and the Drupal SDC sync all read the same contract.
 - W3C standards (custom elements, ElementInternals, design tokens) over
   framework lock-in.
 

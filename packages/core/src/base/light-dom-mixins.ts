@@ -247,7 +247,20 @@ export function LightDomTextMixin<T extends Constructor<LitElement>>(superClass:
       // wipe the rendered template.
       if (!this._textCaptured) {
         this._initialText = this.textContent?.trim() || '';
-        this.textContent = '';
+        // Remove Text and Element children only — preserve Comment
+        // nodes so Lit's outer-template ChildPart markers
+        // (`<!---->` anchors that the outer template uses to track
+        // its render position) stay attached. Same rationale as
+        // LightDomSlotMixin._captureChildren — see the
+        // "LightDomSlotMixin composition with dynamic Lit children"
+        // entry in .claude/rules/common-traps.md. `textContent = ''`
+        // would clobber the markers and the outer re-render would
+        // throw "ChildPart has no parentNode."
+        for (const node of Array.from(this.childNodes)) {
+          if (node.nodeType !== Node.COMMENT_NODE) {
+            node.parentNode?.removeChild(node);
+          }
+        }
         this._textCaptured = true;
       }
       super.connectedCallback();

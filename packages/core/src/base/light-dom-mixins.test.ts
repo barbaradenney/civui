@@ -13,7 +13,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { LightDomSlotMixin, type SlotConfig } from './light-dom-mixins.js';
+import { LightDomSlotMixin, LightDomTextMixin, type SlotConfig } from './light-dom-mixins.js';
 
 @customElement('test-slot-host')
 class TestSlotHost extends LightDomSlotMixin(LitElement) {
@@ -108,5 +108,56 @@ describe('LightDomSlotMixin', () => {
     for (const c of comments) {
       expect(c.parentNode).not.toBeNull();
     }
+  });
+});
+
+@customElement('test-text-host')
+class TestTextHost extends LightDomTextMixin(LitElement) {
+  protected override createRenderRoot(): HTMLElement {
+    return this;
+  }
+  override render() {
+    return html`<button>${this._initialText}</button>`;
+  }
+}
+
+describe('LightDomTextMixin', () => {
+  afterEach(() => {
+    while (mounted.length) mounted.pop()!.remove();
+  });
+
+  it('captures the initial text content as _initialText', async () => {
+    const host = document.createElement('test-text-host') as TestTextHost;
+    host.textContent = 'Click me';
+    document.body.appendChild(host);
+    await host.updateComplete;
+    mounted.push(host);
+    expect(host._initialText).toBe('Click me');
+  });
+
+  it('clears Text/Element children but PRESERVES Comment nodes', async () => {
+    // Simulate an outer Lit template like
+    //   `<test-text-host>${label}</test-text-host>`
+    // which surrounds the rendered text with marker comments.
+    const host = document.createElement('test-text-host') as TestTextHost;
+    host.appendChild(document.createComment(''));
+    host.appendChild(document.createTextNode('Click me'));
+    host.appendChild(document.createComment(''));
+    document.body.appendChild(host);
+    await host.updateComplete;
+    mounted.push(host);
+
+    // Comment markers preserved — outer template's ChildPart can
+    // still update via these anchors on a future re-render.
+    const commentsAtRoot = Array.from(host.childNodes).filter(
+      (n) => n.nodeType === Node.COMMENT_NODE,
+    );
+    expect(commentsAtRoot.length).toBeGreaterThanOrEqual(2);
+    for (const c of commentsAtRoot) {
+      expect(c.parentNode).not.toBeNull();
+    }
+    // And the captured text is still the authored "Click me"
+    // (not a stringified Comment).
+    expect(host._initialText).toBe('Click me');
   });
 });

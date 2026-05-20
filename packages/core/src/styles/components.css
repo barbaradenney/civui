@@ -42,6 +42,7 @@
   civ-icon,
   civ-menu,
   civ-nav-item,
+  civ-popover,
   civ-segment,
   civ-tab {
     display: inline-block;
@@ -2134,60 +2135,58 @@
     text-decoration-color: currentColor;
   }
 
-  /* ── Menu (anchored kebab / row-action menu) ────────────────── */
+  /* ── Popover (shared trigger + floating panel scaffolding) ────── */
 
-  /* Host is `display: inline-block` + `position: relative` so the
-     absolutely-positioned panel anchors to the trigger. Set on the
-     element list above. */
-  civ-menu {
+  /* civ-popover is the primitive that civ-menu and civ-column-visibility
+     compose. Host is `display: inline-block` + `position: relative` so
+     the trigger anchors normally; the panel uses `position: fixed`
+     and is placed in JS (top/left) so it escapes any overflow /
+     transform ancestor (data-grid scroll wrapper, modal content,
+     transformed sidebar). The `civ-popover` element-display rule lives
+     in the host-display block near the top of this file. */
+  civ-popover {
     position: relative;
   }
 
-  .civ-menu__trigger {
+  .civ-popover__trigger {
     display: inline-flex;
   }
 
-  .civ-menu__panel {
+  .civ-popover__panel {
     @apply civ-fixed civ-bg-white civ-border civ-border-base-light
            civ-rounded civ-shadow-lg civ-py-1;
-    /* Position is computed in JS (top/left) on open — `position: fixed`
-       lets the panel escape any overflow / transform ancestor (the
-       data-grid scroll wrapper, a modal that scrolls its content, a
-       sidebar with `transform: translateZ(0)`). The CSS-only fallback
-       below pins the panel to the top-left corner; consumers should
-       rely on civ-menu's JS positioning. */
+    /* Position is computed in JS on open. The CSS-only fallback pins
+       the panel to the top-left corner; consumers should rely on the
+       JS positioning. */
     top: 0;
     left: 0;
     min-width: 12rem;
-    max-width: 18rem;
+    max-width: 20rem;
     z-index: var(--civ-z-overlay);
     display: none;
   }
 
-  .civ-menu__panel--open {
+  .civ-popover__panel--open {
     display: block;
   }
 
-  /* The align-* modifiers are now a HINT for the JS positioner about
-     the preferred horizontal alignment relative to the trigger. The
+  /* The align-* modifiers are a HINT for the JS positioner about the
+     preferred horizontal alignment relative to the trigger. The
      positioner auto-flips when the preferred side would clip the
-     viewport edge. No layout properties here — the JS sets top/left
-     inline. */
+     viewport edge — no layout properties here. */
 
-  .civ-menu__backdrop {
+  .civ-popover__backdrop {
     display: none;
   }
 
-  /* Mobile: bottom sheet pattern. Backdrop appears, panel fills
-     bottom-anchored fixed position via .civ-bottom-sheet shared rule.
-     The `top: auto; left: auto` reset is needed because the desktop
-     base rule sets `top: 0; left: 0` (the JS positioner overrides
-     them inline on desktop). Without the reset, the desktop defaults
-     would defeat .civ-bottom-sheet's `top: auto; bottom: 0` cascade
-     and the panel would render as a TOP-anchored 50vh sheet instead
-     of a bottom sheet. */
+  /* Mobile bottom-sheet pattern. Backdrop appears, panel fills the
+     bottom-anchored fixed position via the shared `.civ-bottom-sheet`
+     rule. The `top: auto; left: auto` reset is needed because the
+     desktop base rule sets `top: 0; left: 0`; without the reset the
+     panel would render as a top-anchored 50vh sheet instead of a
+     bottom sheet. */
   @media (max-width: 480px) {
-    .civ-menu__backdrop {
+    .civ-popover__backdrop {
       display: block;
       position: fixed;
       inset: 0;
@@ -2195,12 +2194,22 @@
       z-index: var(--civ-z-overlay-backdrop);
     }
 
-    .civ-menu__panel {
+    .civ-popover__panel {
       top: auto;
       left: auto;
       max-width: none;
       min-width: 0;
     }
+  }
+
+  /* ── Menu (anchored kebab / row-action menu) ────────────────── */
+
+  /* civ-menu composes civ-popover internally. The host is `display:
+     inline-block` (set on the element-display list above). No panel-
+     layout CSS here — that lives on `.civ-popover__panel`. The
+     `.civ-menu-item__*` blocks below own the menu-row chrome. */
+  civ-menu {
+    position: relative;
   }
 
   .civ-menu-item__inner {
@@ -2323,33 +2332,25 @@
 
   /* ── Column Visibility ──────────────────────────────────────── */
 
-  civ-column-visibility {
-    position: relative;
-    display: inline-block;
-  }
+  /* civ-column-visibility composes civ-popover. The shared `.civ-popover__panel`
+     CSS owns the panel chrome (background, border, shadow, mobile bottom-
+     sheet); the column-visibility-specific styling is just the
+     options-list stacking inside that panel. */
 
-  .civ-column-visibility__panel {
-    @apply civ-absolute civ-bg-white civ-border civ-border-base-light
-           civ-rounded civ-shadow-lg civ-py-2;
-    top: calc(100% + var(--civ-spacing-1));
-    min-width: 14rem;
-    max-width: 20rem;
-    z-index: var(--civ-z-overlay);
-  }
-
-  .civ-column-visibility__panel--align-start {
-    inset-inline-start: 0;
-  }
-
-  .civ-column-visibility__panel--align-end {
-    inset-inline-end: 0;
+  .civ-column-visibility__options {
+    @apply civ-flex civ-flex-col;
   }
 
   /* Each option is a <civ-checkbox spacing="sm">. The checkbox handles its
-     own input + label layout via .civ-check-row; this wrapper class adds the
-     panel-row padding and hover state. */
+     own input + label layout via .civ-check-row; this class adds the
+     panel-row padding and hover state. The host civ-checkbox is
+     `display: inline-block` at `spacing="sm"` (intentional for inline
+     data-grid cells), which has higher specificity than `civ-block` here
+     — `width: 100%` plus the parent flex-column container gives each
+     row the full panel width and a stable hover hit-target regardless. */
   .civ-column-visibility__option {
-    @apply civ-block civ-px-3 civ-py-2;
+    @apply civ-px-3 civ-py-2;
+    width: 100%;
     color: var(--civ-color-base-darkest);
     user-select: none;
   }

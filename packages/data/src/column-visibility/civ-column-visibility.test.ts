@@ -40,7 +40,10 @@ describe('civ-column-visibility', () => {
   it('starts with the panel closed', async () => {
     const el = await mount();
     expect(el.open).toBe(false);
-    expect(el.querySelector('.civ-column-visibility__panel')).toBeNull();
+    // The popover panel (`.civ-popover__panel`) is rendered hidden when
+    // closed — verify via the `open` state on the host.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement | null;
+    expect(panel?.hasAttribute('hidden')).toBe(true);
   });
 
   it('opens the panel when the trigger is clicked', async () => {
@@ -49,7 +52,9 @@ describe('civ-column-visibility', () => {
     triggerBtn.click();
     await elementUpdated(el);
     expect(el.open).toBe(true);
-    expect(el.querySelector('.civ-column-visibility__panel')).not.toBeNull();
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
+    expect(panel).not.toBeNull();
+    expect(panel.hasAttribute('hidden')).toBe(false);
   });
 
   it('renders one checkbox per column when open', async () => {
@@ -165,7 +170,8 @@ describe('civ-column-visibility', () => {
     await elementUpdated(el);
 
     expect(el.open).toBe(false);
-    expect(el.querySelector('.civ-column-visibility__panel')).toBeNull();
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement | null;
+    expect(panel?.hasAttribute('hidden')).toBe(true);
   });
 
   it('reflects the open attribute on the host', async () => {
@@ -228,14 +234,16 @@ describe('civ-column-visibility', () => {
     expect(labels).toEqual(['Application ID', 'Applicant', 'Status', 'Last updated', 'New column']);
   });
 
-  it('applies the align-start panel modifier when align="start"', async () => {
+  it('forwards align="start" to the underlying popover panel', async () => {
     const el = (await fixture('<civ-column-visibility align="start"></civ-column-visibility>')) as any;
     el.columns = COLUMNS;
     el.open = true;
     await elementUpdated(el);
-    const panel = el.querySelector('.civ-column-visibility__panel') as HTMLElement;
-    expect(panel.classList.contains('civ-column-visibility__panel--align-start')).toBe(true);
-    expect(panel.classList.contains('civ-column-visibility__panel--align-end')).toBe(false);
+    // align is forwarded to civ-popover, which applies the alignment
+    // hint class to its panel.
+    const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
+    expect(panel.classList.contains('civ-popover__panel--align-start')).toBe(true);
+    expect(panel.classList.contains('civ-popover__panel--align-end')).toBe(false);
   });
 
   it('uses Light DOM', async () => {

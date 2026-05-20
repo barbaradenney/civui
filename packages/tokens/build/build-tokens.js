@@ -37,20 +37,60 @@ function loadDarkTokens() {
   return JSON.parse(readFileSync(darkFile, 'utf-8'));
 }
 
-// Build dark mode CSS overrides wrapped in @media (prefers-color-scheme: dark)
-function buildDarkCSS(darkTokens) {
-  const flat = flattenTokens(darkTokens);
-  const lines = [
-    '',
-    '/* Dark mode — system preference */',
-    '@media (prefers-color-scheme: dark) {',
-    '  :root {',
-  ];
-  for (const token of flat) {
-    const varName = `--civ-${token.path}`;
-    lines.push(`    ${varName}: ${toCSSValue(token)};`);
+// Build dark mode CSS overrides — applied under EITHER the OS-level
+// `@media (prefers-color-scheme: dark)` preference OR an explicit
+// `:root[data-civ-theme="dark"]` attribute (set by Storybook's
+// toolbar toggle or by a host app's JS detector).
+//
+// The two emitted blocks duplicate the dark token values. CSS does
+// not provide a way to OR a media query with an attribute selector
+// in a single rule, so both paths are emitted side-by-side. The
+// attribute selector has higher specificity (`(0,2,0)` vs
+// `(0,1,0)` for `:root`), so it deterministically overrides the
+// @media block when both match — letting the toolbar attribute act
+// as a hard override that always wins, regardless of OS preference.
+//
+// `:root[data-civ-theme="light"]` re-asserts the light token values
+// from the base `:root` block. Without it, an explicit "Light"
+// toolbar choice on a dark-OS machine still inherits the @media
+// block's dark tokens — the inverse of the toolbar-dark-on-light-OS
+// bug this whole change exists to fix.
+function buildThemeCSS(lightTokens, darkTokens) {
+  const lightFlat = flattenTokens({ color: lightTokens.color });
+  const darkFlat = flattenTokens(darkTokens);
+  const lines = [];
+
+  // OS preference (existing behavior, preserved for backwards compat)
+  lines.push('');
+  lines.push('/* Dark mode — system preference */');
+  lines.push('@media (prefers-color-scheme: dark) {');
+  lines.push('  :root {');
+  for (const token of darkFlat) {
+    lines.push(`    --civ-${token.path}: ${toCSSValue(token)};`);
   }
   lines.push('  }', '}');
+
+  // Explicit toolbar / app override (new) — always wins via specificity
+  lines.push('');
+  lines.push('/* Dark mode — explicit override, beats @media via specificity */');
+  lines.push(':root[data-civ-theme="dark"] {');
+  for (const token of darkFlat) {
+    lines.push(`  --civ-${token.path}: ${toCSSValue(token)};`);
+  }
+  lines.push('}');
+
+  // Explicit "force light" override — restores light values when the
+  // user picks Light on a dark-OS machine. Only the color tokens that
+  // have dark counterparts need re-asserting; other tokens (spacing,
+  // typography, etc.) are mode-agnostic.
+  lines.push('');
+  lines.push('/* Light mode — explicit override, restores light values on dark OS */');
+  lines.push(':root[data-civ-theme="light"] {');
+  for (const token of lightFlat) {
+    lines.push(`  --civ-${token.path}: ${toCSSValue(token)};`);
+  }
+  lines.push('}');
+
   return lines.join('\n');
 }
 
@@ -932,8 +972,8 @@ function build() {
   // Compute contextual scale overrides
   const { css: scalesCss, js: scalesJs, rn: scalesRn } = buildScales(tokens, scalesConfig);
 
-  // Build dark mode CSS overrides
-  const darkCss = buildDarkCSS(darkTokens);
+  // Build dark mode CSS overrides (both @media and attribute-based)
+  const darkCss = buildThemeCSS(tokens, darkTokens);
 
   // Ensure output directories
   for (const dir of ['css', 'tailwind', 'js', 'react-native', 'swift', 'kotlin']) {

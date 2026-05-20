@@ -45,7 +45,8 @@
   civ-nav-item,
   civ-popover,
   civ-segment,
-  civ-tab {
+  civ-tab,
+  civ-tab-nav-item {
     display: inline-block;
   }
 
@@ -115,6 +116,7 @@
   civ-ssn,
   civ-summary,
   civ-support-resources,
+  civ-tab-nav,
   civ-tab-panel,
   civ-tabs,
   civ-text-input,
@@ -3575,6 +3577,58 @@
 
   .civ-tab-panel[hidden] {
     display: none;
+  }
+
+  /* ── Tab Nav (anchor-based tabs — one route per tab) ──────── */
+
+  .civ-tab-nav__list {
+    @apply civ-flex civ-flex-wrap civ-items-stretch civ-gap-0
+           civ-list-none civ-p-0 civ-m-0
+           civ-border-b-2 civ-border-base-light;
+  }
+
+  .civ-tab-nav__link {
+    @apply civ-inline-flex civ-items-center civ-px-4 civ-py-2
+           civ-font-bold civ-no-underline;
+    color: var(--civ-color-base-darkest);
+    font-size: var(--civ-typography-fontSize-base);
+    /* Pull the bottom border up so the selected indicator sits on the
+       tablist's bottom rule rather than below it. */
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+  }
+  @media (hover: hover) {
+    .civ-tab-nav__link:hover {
+      @apply civ-text-primary;
+    }
+  }
+
+  .civ-tab-nav__link--current {
+    color: var(--civ-color-primary-DEFAULT);
+    border-bottom-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  .civ-tab-nav__link--disabled {
+    @apply civ-cursor-not-allowed civ-no-underline;
+    opacity: var(--civ-opacity-disabled);
+  }
+  .civ-tab-nav__link--disabled:hover {
+    color: var(--civ-color-base-darkest);
+  }
+
+  @media (max-width: 480px) {
+    .civ-tab-nav__list {
+      @apply civ-flex-col civ-items-stretch civ-gap-0 civ-border-b-0;
+    }
+    .civ-tab-nav__link {
+      @apply civ-block civ-py-3;
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--civ-color-base-light);
+    }
+    .civ-tab-nav__link--current {
+      border-bottom-color: var(--civ-color-primary-DEFAULT);
+      border-bottom-width: 2px;
+    }
   }
 
   /* ── Skip Link ─────────────────────────────────────────────── */

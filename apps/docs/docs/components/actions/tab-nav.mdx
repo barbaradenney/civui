@@ -1,0 +1,82 @@
+---
+title: Tab Nav
+sidebar_position: 10
+sidebar_label: Tab Nav
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import TabNavProps from "./_tab-nav.props.mdx";
+import TabNavItemProps from "./_tab-nav-item.props.mdx";
+
+# Tab Nav
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-tab-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-tab-nav--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-tab-nav>` + `<civ-tab-nav-item>`
+
+Section navigation styled as tabs. Each item is a real `<a href>` that navigates the browser — use this when the URL is the source of truth for which tab is active (one route per tab, deep-linkable, back-button friendly). The active item should set `current` — it gets `aria-current="page"` plus the selected-tab visual. Items stack vertically on mobile (≤480px).
+
+This is **not** the ARIA tabs pattern. There's no `role="tablist"`, no panels, no roving tabindex — the browser handles focus naturally because these are ordinary links. If you need in-page panel switching, use [`<civ-tabs>`](./tabs) instead.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-tab-nav--default" />
+
+### Two items
+
+<StoryEmbed id="navigation-tab-nav--two-items" />
+
+### With disabled item
+
+<StoryEmbed id="navigation-tab-nav--with-disabled" />
+
+### No current item
+
+<StoryEmbed id="navigation-tab-nav--no-current-item" />
+
+### Mobile stacking
+
+<StoryEmbed id="navigation-tab-nav--mobile-stacking" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-tab-nav--default)
+
+## Usage
+
+```html
+<civ-tab-nav label="Repository sections">
+  <civ-tab-nav-item href="/repo" label="Code" current></civ-tab-nav-item>
+  <civ-tab-nav-item href="/repo/issues" label="Issues"></civ-tab-nav-item>
+  <civ-tab-nav-item href="/repo/pulls" label="Pull requests"></civ-tab-nav-item>
+</civ-tab-nav>
+```
+
+## Props — civ-tab-nav
+
+<TabNavProps />
+
+## Props — civ-tab-nav-item
+
+<TabNavItemProps />
+
+## Accessibility
+
+- Renders as a `<nav>` landmark. Always set `label` when a page has more than one nav so screen-reader landmark navigation can distinguish them.
+- Each link inherits the global focus ring from `civ.css`.
+- The active item uses `aria-current="page"` so the user's location is announced.
+- Disabled items render as a non-interactive `<span aria-disabled="true">` — a `disabled` `<a>` would still be focusable and clickable, so we drop the href entirely.
+- No `role="tablist"` / `role="tab"` is applied — those roles imply an in-page tablist with associated panels, which is not what this component does.
+
+## Tab Nav vs Tabs vs Nav
+
+| Use case | Component |
+|----------|-----------|
+| One URL per section, deep-linkable (GitHub-style Code / Issues / PRs) | `<civ-tab-nav>` |
+| In-page panel switching, same URL, JS-state-driven | `<civ-tabs>` |
+| Site-level primary navigation (header / footer) | `<civ-nav>` |
+| Trail showing the user's location in a hierarchy | `<civ-breadcrumb>` |

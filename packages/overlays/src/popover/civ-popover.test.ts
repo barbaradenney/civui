@@ -78,6 +78,13 @@ describe('civ-popover', () => {
     const el = (await fixture(template)) as any;
     el.open = true;
     await elementUpdated(el);
+    // Move focus into the panel so the post-close focus restoration is
+    // observable. Without this, document.activeElement is body before
+    // AND after the close — the assertion would pass for the wrong
+    // reason.
+    const innerBtn = el.querySelector('[data-testid="inner-btn"]') as HTMLElement;
+    innerBtn.focus();
+    expect(document.activeElement).toBe(innerBtn);
 
     const handler = vi.fn();
     el.addEventListener('civ-popover-close', handler);
@@ -87,6 +94,8 @@ describe('civ-popover', () => {
 
     expect(handler).toHaveBeenCalledOnce();
     expect(el.open).toBe(false);
+    const trigger = el.querySelector('[data-testid="trigger"]') as HTMLElement;
+    expect(document.activeElement).toBe(trigger);
   });
 
   it('does not close on Escape when no-escape-close is set', async () => {
@@ -125,6 +134,65 @@ describe('civ-popover', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
     await elementUpdated(el);
     expect(el.open).toBe(true);
+  });
+
+  it('flipping no-click-outside-close mid-open removes/adds the document listener', async () => {
+    const sibling = document.createElement('button');
+    document.body.appendChild(sibling);
+    const el = (await fixture(template)) as any;
+    el.open = true;
+    await elementUpdated(el);
+
+    // Flip mid-open: outside clicks should no longer close.
+    el.noClickOutsideClose = true;
+    await elementUpdated(el);
+    sibling.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await elementUpdated(el);
+    expect(el.open).toBe(true);
+
+    // Flip back: outside clicks close again.
+    el.noClickOutsideClose = false;
+    await elementUpdated(el);
+    sibling.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await elementUpdated(el);
+    expect(el.open).toBe(false);
+
+    sibling.remove();
+  });
+
+  it('skips JS placement on mobile (bottom-sheet pattern owns positioning)', async () => {
+    // jsdom's matchMedia returns `{ matches: false }` by default — patch
+    // it to return true so the `_repositionPanel` mobile branch runs.
+    // Without this branch, the popover would set `top`/`left` inline
+    // styles that fight `.civ-bottom-sheet`'s `bottom: 0` cascade.
+    const originalMatchMedia = window.matchMedia;
+    (window as any).matchMedia = (q: string) => ({
+      matches: q === '(max-width: 480px)',
+      media: q,
+      addEventListener() {},
+      removeEventListener() {},
+      addListener() {},
+      removeListener() {},
+      dispatchEvent() { return false; },
+      onchange: null,
+    });
+    try {
+      const el = (await fixture(template)) as any;
+      // Pre-seed inline placement so we can verify it gets cleared.
+      const panel = el.querySelector('.civ-popover__panel') as HTMLElement;
+      panel.style.top = '50px';
+      panel.style.left = '50px';
+
+      el.open = true;
+      await elementUpdated(el);
+      // Wait one more tick — _repositionPanel runs after updateComplete.
+      await new Promise((r) => queueMicrotask(() => r(undefined)));
+
+      expect(panel.style.top).toBe('');
+      expect(panel.style.left).toBe('');
+    } finally {
+      (window as any).matchMedia = originalMatchMedia;
+    }
   });
 
   it('respects panel-role and applies it as the panel role', async () => {

@@ -1,7 +1,6 @@
 import { html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t } from '@civui/core';
-import type { SlotConfig } from '@civui/core';
+import { customElement, property } from 'lit/decorators.js';
+import { CivBaseElement, dispatch, t } from '@civui/core';
 import '@civui/overlays/popover';
 import '@civui/controls/checkbox';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
@@ -66,24 +65,13 @@ import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
  * @fires civ-column-visibility-change - { hiddenColumns, visibleColumns } — user toggled a column.
  */
 @customElement('civ-column-visibility')
-export class CivColumnVisibility extends LightDomSlotMixin(CivBaseElement) {
+export class CivColumnVisibility extends CivBaseElement {
   @property({ attribute: false }) columns: GridColumn[] = [];
   @property({ attribute: false }) hiddenColumns: string[] = [];
   @property({ type: String }) label = '';
   @property({ type: Number, attribute: 'min-visible' }) minVisible = 1;
   @property({ type: String }) align: 'start' | 'end' = 'end';
   @property({ type: Boolean, reflect: true }) open = false;
-
-  @state() private _instanceId = generateId('civ-column-visibility');
-
-  override _getSlotConfig(): SlotConfig {
-    // Column-visibility doesn't accept authored children — everything
-    // is generated from `columns`. The mixin is still on the class so
-    // we get its `_relocateSlots` plumbing for the nested civ-popover
-    // (without an explicit slot config the mixin defaults to a
-    // single "default" bucket with no selector, which is a no-op).
-    return {};
-  }
 
   private _isHidden(key: string): boolean {
     return this.hiddenColumns.includes(key);
@@ -136,7 +124,10 @@ export class CivColumnVisibility extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const labelText = this.label || t('columnVisibilityLabel');
-    const panelId = `${this._instanceId}-panel`;
+    // `aria-haspopup` / `aria-expanded` / `aria-controls` on the trigger
+    // are wired by civ-popover (which knows the panel's id), so they're
+    // not authored here. The panel's `role="group"` + accessible name
+    // are forwarded via the `panel-role` and `label` props below.
     return html`
       <civ-popover
         ?open="${this.open}"
@@ -152,13 +143,12 @@ export class CivColumnVisibility extends LightDomSlotMixin(CivBaseElement) {
           data-civ-popover-trigger
           type="button"
           class="civ-action-btn civ-action-btn--tertiary civ-column-visibility__trigger"
-          aria-controls="${panelId}"
         >
           <civ-icon name="view-column" aria-hidden="true"></civ-icon>
           <span class="civ-column-visibility__trigger-label">${labelText}</span>
           <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
         </button>
-        <div id="${panelId}" class="civ-column-visibility__options">
+        <div class="civ-column-visibility__options">
           ${this.columns.map(
             (col) => html`
               <civ-checkbox

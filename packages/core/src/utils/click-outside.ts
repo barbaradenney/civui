@@ -34,7 +34,10 @@ export function clickOutside(host: Element, onClickOutside: () => void) {
   return {
     add: () => {
       if (active) return;
-      if (typeof window !== 'undefined' && (window as Window & { event?: Event }).event) {
+      // `window.event` is non-standard but universally supported; it
+      // returns the currently-dispatching event during sync event flow
+      // and is undefined otherwise.
+      if ((window as any).event) {
         skipNext = true;
       }
       document.addEventListener('click', handler);

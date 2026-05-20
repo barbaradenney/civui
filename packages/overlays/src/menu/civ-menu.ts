@@ -59,8 +59,23 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) align: 'start' | 'end' = 'end';
 
   @state() private _activeIndex = -1;
-  /** Set when arrow-down/up on the trigger requested an initial focus index. */
-  private _pendingFocusIndex = -1;
+  /**
+   * Initial focus index requested by ArrowDown / ArrowUp on the closed
+   * trigger, consumed after the panel renders. Stored as a literal:
+   *   - `'first'` → focus items[0]
+   *   - `'last'`  → focus items[items.length - 1]
+   *   - `null`    → default to items[0]
+   *
+   * Ordering invariant: `_onTriggerArrow` (which sets this) runs in the
+   * same synchronous click-handler chain as `_onPopoverOpen` (which
+   * reads it after `updateComplete`). Both come from civ-popover's
+   * keydown handler, which dispatches `civ-popover-open` *before*
+   * `civ-popover-trigger-arrow` — so the read happens after the write
+   * because the `updateComplete.then(...)` callback queues behind the
+   * remaining synchronous dispatch. Swapping that dispatch order would
+   * silently break keyboard focus management; tread carefully.
+   */
+  private _pendingFocusIndex: 'first' | 'last' | null = null;
 
   override _getSlotConfig(): SlotConfig {
     return {
@@ -155,15 +170,14 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     }
     dispatch(this, 'civ-menu-open');
     // After the panel renders, focus the first item (or whichever index
-    // ArrowUp/ArrowDown on the trigger preselected).
+    // ArrowUp/ArrowDown on the trigger preselected — see the
+    // _pendingFocusIndex docstring for the ordering invariant).
     void this.updateComplete.then(() => {
       const items = this._getItems();
       if (!items.length) return;
-      const idx = this._pendingFocusIndex >= 0
-        ? Math.min(this._pendingFocusIndex, items.length - 1)
-        : 0;
+      const idx = this._pendingFocusIndex === 'last' ? items.length - 1 : 0;
       this._activeIndex = idx;
-      this._pendingFocusIndex = -1;
+      this._pendingFocusIndex = null;
       items[idx]?.focus();
     });
   };
@@ -180,14 +194,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
   private _onTriggerArrow = (e: Event): void => {
     const detail = (e as CustomEvent<{ direction: 'up' | 'down' }>).detail;
     if (!detail) return;
-    if (detail.direction === 'up') {
-      // Focus the LAST item once the panel renders.
-      // Re-query items after open since the panel content isn't measurable
-      // until updateComplete resolves.
-      this._pendingFocusIndex = Number.MAX_SAFE_INTEGER;
-    } else {
-      this._pendingFocusIndex = 0;
-    }
+    this._pendingFocusIndex = detail.direction === 'up' ? 'last' : 'first';
   };
 
   private _boundOnItemKeydown = this._onItemKeydown.bind(this);

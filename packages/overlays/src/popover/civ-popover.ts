@@ -41,6 +41,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @fires civ-popover-open - When the popover opens.
  * @fires civ-popover-close - When the popover closes.
+ * @fires civ-popover-trigger-arrow - When ArrowDown / ArrowUp is pressed on the trigger. `detail.direction` is `'down'` or `'up'`. Composers (civ-menu) use this to pre-focus the first / last item once the panel renders.
  *
  * @slot data-civ-popover-trigger - The activator. Must be a focusable element (typically `<button>` or `<civ-button>`). The popover auto-wires click + keyboard handlers and ARIA on it.
  * @slot - Default slot: the panel content.
@@ -115,6 +116,12 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
     super.updated(changed);
     if (changed.has('open')) {
       this._syncOpenState();
+    } else if (changed.has('noClickOutsideClose') && this.open) {
+      // `_syncOpenState` runs only on open changes, so a mid-open flip
+      // of `noClickOutsideClose` wouldn't otherwise add or remove the
+      // document listener. Keep them in sync here.
+      if (this.noClickOutsideClose) this._clickOutside.remove();
+      else this._clickOutside.add();
     }
     // Re-evaluate the trigger on every render so ARIA reflects the
     // current `open` value and the current `triggerHaspopup` setting.

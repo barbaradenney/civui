@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { keyed } from 'lit/directives/keyed.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { SelectLike } from '@civui/core';
@@ -278,8 +279,16 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
     const isMarriageStatusVocab = !this.showMarriageType ||
       this._typeCategory === 'marriage' ||
       this._typeCategory === 'none';
+    // civ-radio-group uses LightDomSlotMixin — it captures its <civ-radio>
+    // children once on connect. Swapping the radio set inline when the
+    // vocabulary flips would leave the old radios in the slot target
+    // and put the new ones at the host root, and lit-html's diff walk
+    // then crashes on detached markers (see .claude/rules/common-traps.md,
+    // "LightDomSlotMixin composition with dynamic Lit children"). Keying
+    // by vocab forces a fresh civ-radio-group when the vocab changes, so
+    // each instance captures its own static set of radios.
     return html`
-      ${this.statusAssumed ? nothing : html`
+      ${this.statusAssumed ? nothing : keyed(isMarriageStatusVocab, html`
         <civ-radio-group
           legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
           name="${prefix}.status"
@@ -303,7 +312,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
             <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
           `}
         </civ-radio-group>
-      `}
+      `)}
 
       ${this._data.status && this._data.status !== 'current' ? html`
         <civ-memorable-date

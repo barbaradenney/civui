@@ -444,7 +444,10 @@ describe('civ-address validation modal', () => {
     await el.runValidation();
     await elementUpdated(el);
 
-    expect(el.querySelector('civ-modal')).toBeNull();
+    // The modal stays mounted once validateAddress is set (so its
+    // captured slot content doesn't shuffle around when shown/hidden);
+    // "closed" means `open` is false, not that the element is gone.
+    expect(el.querySelector('civ-modal[open]')).toBeNull();
   });
 });
 

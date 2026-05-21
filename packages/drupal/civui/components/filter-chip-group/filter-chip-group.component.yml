@@ -16,6 +16,10 @@ props:
       title: Label
       type: string
       description: 'Accessible group label'
+    name:
+      title: Name
+      type: string
+      description: 'Form field name (for form submission / state registration)'
 
 slots:
   default:

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 fun CivFilterChipGroup(
     mode: String = "multi",
     label: String = "",
+    name: String = "",
     onChange: ((List<String>) -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},

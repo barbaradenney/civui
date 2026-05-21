@@ -783,7 +783,27 @@ function generateReport(): string {
       // model itself, not as a callback. Same pattern as
       // loadOptions / beforeContinue / validateAddress already documented.
       'rowSummary',
+      // Combobox loadOptions is a JS-only async callback. The same
+      // file documents the pattern under `rowSummary`.
+      'loadOptions',
+      // Button-group overflow behavior depends on DOM layout
+      // measurement (ResizeObserver) and a popover-collapse pattern
+      // that doesn't translate to SwiftUI / Compose. Schema marks
+      // these `webOnly: true`.
+      'allowOverflow', 'overflowLabel', 'overflowIcon',
     ]);
+
+    // Per-component web-only props — for cases where the same prop
+    // name is a real native prop on some components but web-only on
+    // others (the global `webOnlyProps` set above can't distinguish).
+    const webOnlyPerComponent: Record<string, ReadonlySet<string>> = {
+      // combobox's `spacing="sm"` data-grid-cell-editor mode is a
+      // web-specific DOM-layout trick; native pickers use platform
+      // density tokens instead.
+      Combobox: new Set(['spacing']),
+    };
+    const isWebOnlyForThisComponent = (propName: string): boolean =>
+      webOnlyProps.has(propName) || (webOnlyPerComponent[displayName]?.has(propName) ?? false);
 
     // Props that are native-only and should not count as "missing on web"
     const nativeOnlyProps = new Set([
@@ -845,7 +865,7 @@ function generateReport(): string {
     let webItems = 0;
     let matchedItems = 0;
     allProps.forEach((v, name) => {
-      if (v.web && !webOnlyProps.has(name)) { webItems++; if (v.ios || v.android || v.drupal) matchedItems++; }
+      if (v.web && !isWebOnlyForThisComponent(name)) { webItems++; if (v.ios || v.android || v.drupal) matchedItems++; }
     });
     allEvents.forEach((v, name) => {
       // Only skip web-only events when no non-web platform has them
@@ -878,7 +898,7 @@ function generateReport(): string {
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       ${Array.from(allProps.entries()).map(([name, platforms]) => {
         const hasGap = (!platforms.web || !platforms.ios || !platforms.android || !platforms.drupal) && (platforms.web || platforms.ios || platforms.android || platforms.drupal);
-        const isExcluded = (webOnlyProps.has(name) && platforms.web && !platforms.ios && !platforms.android && !platforms.drupal) ||
+        const isExcluded = (isWebOnlyForThisComponent(name) && platforms.web && !platforms.ios && !platforms.android && !platforms.drupal) ||
                            (nativeOnlyProps.has(name) && !platforms.web && (platforms.ios || platforms.android || platforms.drupal));
         const rowClass = isExcluded ? 'excluded-row' : (hasGap ? 'gap-row' : '');
         return `<tr class="${rowClass}">
@@ -1021,6 +1041,13 @@ function mapEventName(name: string): string {
     onClose: 'civ-dismiss',
     onConfirm: 'civ-confirm',
     onToggle: 'civ-toggle',
+    onTabSelect: 'civ-tab-select',
+    onMenuOpen: 'civ-menu-open',
+    onMenuClose: 'civ-menu-close',
+    onMenuSelect: 'civ-menu-select',
+    onPopoverOpen: 'civ-popover-open',
+    onPopoverClose: 'civ-popover-close',
+    onPopoverTriggerArrow: 'civ-popover-trigger-arrow',
     onSubmitConfirm: 'civ-submit-confirm',
     onSubmitCancelled: 'civ-submit-cancelled',
     onAutosaveLoaded: 'civ-autosave-loaded',

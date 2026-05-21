@@ -59,6 +59,18 @@ public struct CivCurrency: View {
     /// Whether the field contains PII.
     public var isPii: Bool
 
+    /// Number of decimal places displayed (default 2 for cents).
+    public var decimals: Int
+
+    /// Inclusive minimum value, or nil for no lower bound.
+    public var min: Double?
+
+    /// Inclusive maximum value, or nil for no upper bound.
+    public var max: Double?
+
+    /// Whether to allow negative values (refunds / adjustments). Default false.
+    public var allowNegative: Bool
+
     // MARK: - Initializer
 
     public init(
@@ -75,7 +87,11 @@ public struct CivCurrency: View {
         formName: String? = nil,
         requiredMessage: String? = nil,
         formValidate: (() -> String?)? = nil,
-        isPii: Bool = false
+        isPii: Bool = false,
+        decimals: Int = 2,
+        min: Double? = nil,
+        max: Double? = nil,
+        allowNegative: Bool = false
     ) {
         self.label = label
         self._value = value
@@ -91,6 +107,10 @@ public struct CivCurrency: View {
         self.requiredMessage = requiredMessage
         self.formValidate = formValidate
         self.isPii = isPii
+        self.decimals = decimals
+        self.min = min
+        self.max = max
+        self.allowNegative = allowNegative
     }
 
     // MARK: - Body

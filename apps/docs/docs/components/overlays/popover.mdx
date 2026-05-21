@@ -12,16 +12,16 @@ import PopoverEvents from "./_popover.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-popover`](pathname:///civui/storybook/?path=/docs/contract-civ-popover--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-popover`](pathname:///civui/storybook/?path=/docs/contract-civ-popover--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-popover>`
 
-Low-level popover primitive: a trigger button anchored to a floating panel. Handles the scaffolding every "popup from a trigger" component needs — slotted trigger wiring, click-outside / Escape / Tab close, viewport-aware positioning with auto-flip, focus return, and the mobile bottom-sheet pattern (≤480px).
+Low-level popover primitive: a trigger button anchored to a floating panel. Handles the scaffolding every "popup from a trigger" component needs. Slotted trigger wiring, click-outside / Escape / Tab close, viewport-aware positioning with auto-flip, focus return, and the mobile bottom-sheet pattern (≤480px).
 
 :::caution Author-facing
-`civ-popover` deliberately ships **no semantics**. It doesn't choose a role for the panel or define keyboard navigation between children. Most end-user code should reach for a higher-level component instead — see [When to compose `civ-popover`](#when-to-compose-civ-popover).
+`civ-popover` deliberately ships **no semantics**. It doesn't choose a role for the panel or define keyboard navigation between children. Most end-user code should reach for a higher-level component instead. See [When to compose `civ-popover`](#when-to-compose-civ-popover).
 :::
 
 ## Examples
@@ -65,7 +65,7 @@ Before reaching for the primitive, check if one of the existing higher-level com
 | Bottom-anchored mobile action list | `<civ-action-sheet>` |
 | Side-anchored navigation / settings drawer | `<civ-drawer>` |
 
-Compose `civ-popover` directly only when none of the above fits — typically a filter / settings / disclosure that doesn't map to "menu" semantics.
+Compose `civ-popover` directly only when none of the above fits. Typically a filter / settings / disclosure that doesn't map to "menu" semantics.
 
 ## Composition pattern
 
@@ -93,7 +93,7 @@ The two ARIA knobs that matter for screen-reader accuracy:
 | Form / multi-control dialog | `dialog` | `dialog` |
 | Listbox (typeahead-style options) | `listbox` | `listbox` |
 
-When in doubt, `panel-role="dialog"` + `triggerHaspopup="true"` (the defaults) are safe — they announce as "popup, dialog" in screen readers and don't impose a keyboard model.
+When in doubt, `panel-role="dialog"` + `triggerHaspopup="true"` (the defaults) are safe. They announce as "popup, dialog" in screen readers and don't impose a keyboard model.
 
 ## Keyboard
 
@@ -103,17 +103,17 @@ When in doubt, `panel-role="dialog"` + `triggerHaspopup="true"` (the defaults) a
 | **ArrowDown / ArrowUp** on trigger | Open and fire `civ-popover-trigger-arrow` for composers (e.g. `civ-menu` uses this to pre-focus first / last item) |
 | **Escape** | Close popover, return focus to the trigger (suppress with `no-escape-close`) |
 | **Click outside** | Close popover (suppress with `no-click-outside-close`) |
-| **Tab** | Close popover (suppress with `no-tab-close` — required when the panel contains form controls the user needs to Tab between) |
+| **Tab** | Close popover (suppress with `no-tab-close`. Required when the panel contains form controls the user needs to Tab between) |
 
 Arrow-key navigation **between items inside the panel** is the consumer's job. `civ-popover` only handles the open/close + focus-return scaffolding.
 
 ## Mobile (≤480px)
 
-Below 480px the panel renders as a bottom sheet via the shared `.civ-bottom-sheet` utility — a translucent backdrop fades in, the panel pins to the viewport bottom with rounded top corners, and the JS-computed desktop position is skipped. Tap outside the panel or the backdrop to dismiss.
+Below 480px the panel renders as a bottom sheet via the shared `.civ-bottom-sheet` utility. A translucent backdrop fades in, the panel pins to the viewport bottom with rounded top corners, and the JS-computed desktop position is skipped. Tap outside the panel or the backdrop to dismiss.
 
-This matches every other CivUI popup affordance (`<civ-modal>`, `<civ-action-sheet>`, `<civ-menu>`, `<civ-column-visibility>` — they all compose this primitive or follow the same rule). The documented exception is `<civ-combobox>` (typing surface + soft keyboard).
+This matches every other CivUI popup affordance (`<civ-modal>`, `<civ-action-sheet>`, `<civ-menu>`, `<civ-column-visibility>`. They all compose this primitive or follow the same rule). The documented exception is `<civ-combobox>` (typing surface + soft keyboard).
 
-## Author notes — Lit composition
+## Author notes. Lit composition
 
 Both `_captureChildren` (slot mixin) and `textContent` capture (text mixin) preserve Comment nodes since 2026-05-19, so simple Lit-templated children work:
 
@@ -127,7 +127,7 @@ return html`
 `;
 ```
 
-But dynamic content directly under the popover — a `${items.map(...)}` whose array mutates on re-render — still requires a static wrapper element so the markers stay attached:
+But dynamic content directly under the popover. A `${items.map(...)}` whose array mutates on re-render. Still requires a static wrapper element so the markers stay attached:
 
 ```ts
 // ✓ — wrap the dynamic block in a static element.

@@ -5,6 +5,7 @@ import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 // @ts-ignore — no types for this plugin
 import twig from 'vite-plugin-twig-drupal';
+import remarkGfm from 'remark-gfm';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,7 +23,24 @@ const config: StorybookConfig = {
     // via the prestorybook hook). Gitignored.
     '../.storybook/contract/*.docs.mdx',
   ],
-  addons: [getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@storybook/addon-docs")],
+  addons: [
+    getAbsolutePath("@storybook/addon-a11y"),
+    {
+      name: getAbsolutePath("@storybook/addon-docs"),
+      options: {
+        // MDX 3 (Storybook 10's default) ships with CommonMark only.
+        // remark-gfm restores GitHub-Flavored Markdown tables, which the
+        // auto-generated contract pages under .storybook/contract/ rely
+        // on for the Props / Events / Cross-platform tables. Without
+        // this, those tables render as literal-pipe paragraphs.
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
+  ],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},

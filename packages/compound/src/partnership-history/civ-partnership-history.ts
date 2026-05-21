@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { keyed } from 'lit/directives/keyed.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import type { SelectLike } from '@civui/core';
@@ -278,56 +279,40 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
     const isMarriageStatusVocab = !this.showMarriageType ||
       this._typeCategory === 'marriage' ||
       this._typeCategory === 'none';
-    // Split the two vocabularies into two distinct outer templates so
-    // Lit treats them as separate `<civ-radio-group>` elements. When
-    // the vocabulary switches, Lit unmounts the old group and mounts
-    // a new one — its LightDomSlotMixin captures the fresh children
-    // on connectedCallback. A single radio-group with a dynamic
-    // children ternary would leave Lit's ChildPart markers orphaned
-    // after the mixin relocated the original children. See
-    // .claude/rules/common-traps.md → "LightDomSlotMixin composition
-    // with dynamic Lit children".
+    // civ-radio-group uses LightDomSlotMixin — it captures its <civ-radio>
+    // children once on connect. Swapping the radio set inline when the
+    // vocabulary flips would leave the old radios in the slot target
+    // and put the new ones at the host root, and lit-html's diff walk
+    // then crashes on detached markers (see .claude/rules/common-traps.md,
+    // "LightDomSlotMixin composition with dynamic Lit children"). Keying
+    // by vocab forces a fresh civ-radio-group when the vocab changes, so
+    // each instance captures its own static set of radios.
     return html`
-      ${this.statusAssumed
-        ? nothing
-        : isMarriageStatusVocab
-          ? html`
-            <civ-radio-group
-              legend="${t('marriageStatusLegend')}"
-              name="${prefix}.status"
-              value="${this._data.status}"
-              error="${this.statusError}"
-              variant="list"
-              ?disabled="${this.disabled}"
-              ?required="${this.required}"
-              data-marriage-status
-              @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
-              @civ-change="${this._onStatusChange}"
-            >
-              <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
-              <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
-              <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
-              <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
-            </civ-radio-group>
-          `
-          : html`
-            <civ-radio-group
-              legend="${t('partnershipStatusLegend')}"
-              name="${prefix}.status"
-              value="${this._data.status}"
-              error="${this.statusError}"
-              variant="list"
-              ?disabled="${this.disabled}"
-              ?required="${this.required}"
-              data-marriage-status
-              @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
-              @civ-change="${this._onStatusChange}"
-            >
-              <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
-              <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
-              <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
-            </civ-radio-group>
+      ${this.statusAssumed ? nothing : keyed(isMarriageStatusVocab, html`
+        <civ-radio-group
+          legend="${isMarriageStatusVocab ? t('marriageStatusLegend') : t('partnershipStatusLegend')}"
+          name="${prefix}.status"
+          value="${this._data.status}"
+          error="${this.statusError}"
+          variant="list"
+          ?disabled="${this.disabled}"
+          ?required="${this.required}"
+          data-marriage-status
+          @civ-input="${(e: CustomEvent) => e.stopPropagation()}"
+          @civ-change="${this._onStatusChange}"
+        >
+          ${isMarriageStatusVocab ? html`
+            <civ-radio label="${t('marriageStatusCurrent')}" value="current"></civ-radio>
+            <civ-radio label="${t('marriageStatusDivorced')}" value="divorced"></civ-radio>
+            <civ-radio label="${t('marriageStatusWidowed')}" value="widowed"></civ-radio>
+            <civ-radio label="${t('marriageStatusAnnulled')}" value="annulled"></civ-radio>
+          ` : html`
+            <civ-radio label="${t('partnershipStatusOngoing')}" value="current"></civ-radio>
+            <civ-radio label="${t('partnershipStatusEnded')}" value="ended"></civ-radio>
+            <civ-radio label="${t('partnershipStatusPartnerDeceased')}" value="partner-deceased"></civ-radio>
           `}
+        </civ-radio-group>
+      `)}
 
       ${this._data.status && this._data.status !== 'current' ? html`
         <civ-memorable-date

@@ -11,7 +11,7 @@ import PropsTable from "./_conditional.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-conditional`](pathname:///civui/storybook/?path=/docs/contract-civ-conditional--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-conditional`](pathname:///civui/storybook/?path=/docs/contract-civ-conditional--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -64,7 +64,7 @@ A declarative show/hide wrapper that reveals its content only when a named field
 - Content starts hidden (`display: none`, `aria-hidden="true"`).
 - The component listens for `civ-input` and `civ-change` events scoped to the nearest form ancestor (see "Event Scoping" below).
 - When the condition becomes true, the wrapper switches to `display: block` and `aria-hidden="false"`. When it becomes false, it flips back.
-- Hiding via `display: none` (rather than DOM removal) preserves child state — typed values, focus history, and uploaded files survive a hide/show cycle — and keeps screen readers from announcing the content while it's hidden.
+- Hiding via `display: none` (rather than DOM removal) preserves child state (typed values, focus history, and uploaded files survive a hide/show cycle) and keeps screen readers from announcing the content while it's hidden.
 - `civ-form` recognizes the hidden wrapper and excludes fields inside it from both `validate()` and form-data collection (`getFormData()` / `toFormData()`), so required fields in an inactive branch don't block submit or send stale values.
 
 ## Supported field types
@@ -74,7 +74,7 @@ A declarative show/hide wrapper that reveals its content only when a named field
 | Text input, select, yes-no | `{ value: string }` | `equals`, `not-equals`, `includes`, `has-value`, `matches` |
 | Checkbox, toggle | `{ checked: boolean, value: string }` | `equals="true"` (show when checked), `equals="false"` (show when unchecked) |
 | Checkbox group | `{ values: string[] }` | `equals="optionValue"` (show when that option is selected) |
-| Radio group | `{ value: string }` | Same as text input — matches the selected radio's value |
+| Radio group | `{ value: string }` | Same as text input. Matches the selected radio's value |
 
 ## Event Scoping
 
@@ -151,7 +151,7 @@ For performance, event listeners are scoped to the nearest ancestor:
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/conditional/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/conditional/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:conditional' with {

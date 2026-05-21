@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Repeating Sections
 
-Collect variable-length lists of items — dependents, service periods, previous addresses, employment history. `civ-repeater` has three modes; pick based on how much information you collect per item and whether each item deserves its own URL.
+Collect variable-length lists of items. Dependents, service periods, previous addresses, employment history. `civ-repeater` has three modes; pick based on how much information you collect per item and whether each item deserves its own URL.
 
 ## Inline mode (1–3 fields per item)
 
@@ -57,13 +57,13 @@ Set `mode="form-steps"`. Existing rows render as compact summary cards; clicking
 </civ-repeater>
 ```
 
-Form-steps mode also composes with the compound components — here, a dependents list that captures a name in step 1 and a relationship in step 2:
+Form-steps mode also composes with the compound components. Here, a dependents list that captures a name in step 1 and a relationship in step 2:
 
 <StoryEmbed id="forms-form-repeater--form-steps-with-relationship" />
 
 ## Route mode (separate page per item)
 
-Set `mode="route"`. The repeater is **controlled** — the host owns the `rows` array — and **Add** / **Edit** are real `<a href>` links pointing at host-rendered pages. Browser back, deep linking, "open in new tab", and save-and-resume all work naturally. Use this when each item is complex enough that filling it deserves its own page (8+ fields, multi-section items, items the user might come back to tomorrow).
+Set `mode="route"`. The repeater is **controlled** (the host owns the `rows` array) and **Add** / **Edit** are real `<a href>` links pointing at host-rendered pages. Browser back, deep linking, "open in new tab", and save-and-resume all work naturally. Use this when each item is complex enough that filling it deserves its own page (8+ fields, multi-section items, items the user might come back to tomorrow).
 
 <StoryEmbed id="forms-form-repeater--route-mode" />
 
@@ -81,7 +81,7 @@ Set `mode="route"`. The repeater is **controlled** — the host owns the `rows` 
 ></civ-repeater>
 ```
 
-Slotted children are ignored in this mode — the form lives on the destination page that the host renders. **Remove** fires `civ-repeater-remove` with `{ index, id, row }`; the host updates its own array and re-passes via `.rows`.
+Slotted children are ignored in this mode. The form lives on the destination page that the host renders. **Remove** fires `civ-repeater-remove` with `{ index, id, row }`; the host updates its own array and re-passes via `.rows`.
 
 ## Min and max constraints
 
@@ -118,11 +118,11 @@ Pre-built compositions for common government form sections:
 
 ## Confirming destructive removals
 
-The default Remove button is one-click — fine for short scratch lists. When removed content is harder to recover (typed dependent info, uploaded files), add a confirmation step. CivUI's rule is modal-only — see [Destructive actions](/foundations/destructive-actions) for the full pattern and the [repeater docs](/components/form/repeater#adding-confirmation-to-remove) for the wiring snippet.
+The default Remove button is one-click. Fine for short scratch lists. When removed content is harder to recover (typed dependent info, uploaded files), add a confirmation step. CivUI's rule is modal-only. See [Destructive actions](/foundations/destructive-actions) for the full pattern and the [repeater docs](/components/form/repeater#adding-confirmation-to-remove) for the wiring snippet.
 
 ## Components used
 
-- [`civ-repeater`](/components/form/repeater) — repeating section container
+- [`civ-repeater`](/components/form/repeater). Repeating section container
 - Compound components work inside repeaters: `civ-name`, `civ-address`, `civ-service-history`, `civ-relationship`
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-repeater--default)

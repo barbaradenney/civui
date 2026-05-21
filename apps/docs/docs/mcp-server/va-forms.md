@@ -181,9 +181,9 @@ To add a new VA form definition:
 2. **Define custom chapters** for form-specific sections with fields, types, and validation
 
 3. **Add the definition** to the appropriate batch file:
-   - `gov-form-registry.ts` — forms 1-10
-   - `gov-forms-batch2.ts` — forms 11-15
-   - `gov-forms-batch3.ts` — forms 16-20
+   - `gov-form-registry.ts`: forms 1-10
+   - `gov-forms-batch2.ts`: forms 11-15
+   - `gov-forms-batch3.ts`: forms 16-20
 
 4. **Include metadata**: OMB number, respondent burden, preparation items, next steps
 

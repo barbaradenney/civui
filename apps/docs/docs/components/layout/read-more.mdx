@@ -12,7 +12,7 @@ import EventsTable from "./_read-more.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-read-more`](pathname:///civui/storybook/?path=/docs/contract-civ-read-more--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-read-more`](pathname:///civui/storybook/?path=/docs/contract-civ-read-more--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -20,7 +20,7 @@ import EventsTable from "./_read-more.events.mdx";
 
 Two-stage content disclosure: a teaser paragraph stays visible at all times,
 and a "Read more" button reveals the rest of the content. Use it when the user
-needs enough context to decide whether to read on — eligibility fine print,
+needs enough context to decide whether to read on. Eligibility fine print,
 optional definitions, secondary explanations.
 
 The rest region stays in the DOM but carries the `hidden` attribute when
@@ -73,7 +73,7 @@ name always describes the action that will result from activating it.
 | Pattern | Use it when |
 | --- | --- |
 | **Read More** (`civ-read-more`) | You have a useful **teaser** the user should see at a glance, with extra detail behind a toggle. The user makes an informed choice about whether to expand. |
-| **Disclosure** (`civ-disclosure`) | The content is **entirely optional** — there's nothing useful to show by default. The button label alone tells the user what's behind it. |
+| **Disclosure** (`civ-disclosure`) | The content is **entirely optional**. There's nothing useful to show by default. The button label alone tells the user what's behind it. |
 
 If you find yourself authoring an empty teaser just to use `civ-read-more`,
 reach for `civ-disclosure` instead.
@@ -110,8 +110,8 @@ into the hidden region and revealed on toggle.
 For "...read more" patterns where the trigger should flow as the last words
 of a paragraph, set the `inline` attribute. The trigger sheds its button
 chrome (no background, no top margin, no chevron) and reads as underlined
-inline emphasis. Author the teaser as plain text — block elements inside an
-inline container defeat the layout — and wrap the rest content in
+inline emphasis. Author the teaser as plain text. Block elements inside an
+inline container defeat the layout. And wrap the rest content in
 `<span data-rest>` so the HTML stays valid inside the surrounding `<p>`:
 
 ```html
@@ -136,14 +136,14 @@ inline container defeat the layout — and wrap the rest content in
 - **`aria-controls` points at the rest region.** Generated `id` ensures
   the association is stable across re-renders.
 - **`hidden` on the rest region.** When collapsed, the rest region carries
-  the native `hidden` attribute so screen readers skip it entirely —
+  the native `hidden` attribute so screen readers skip it entirely.
   better than `aria-hidden`, which keeps the content reachable by
   keyboard.
 - **Button label toggles.** The accessible name on the button reads
   "Read more" when collapsed and "Read less" when expanded, so the user
   hears what activating it will do, not what state it's currently in.
 - **Locale-aware defaults.** The "Read more" / "Read less" strings come
-  from `t('readMoreButton')` and `t('readLessButton')` — override via the
+  from `t('readMoreButton')` and `t('readLessButton')`. Override via the
   locale registry or pass `more-label` / `less-label` directly.
 - **`civ-toggle` event is local.** Does NOT bubble or compose, so
   `civ-form`'s form-level event listeners don't see read-more toggles as

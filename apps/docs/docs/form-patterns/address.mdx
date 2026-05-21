@@ -16,14 +16,14 @@ For trauma-informed handling of applicants who may not have permanent housing, s
 
 | Question | Component | Why |
 | --- | --- | --- |
-| "What's your mailing / residential / billing address?" | [`<civ-address>`](../components/compound/address.mdx) | Country-adaptive — US shows state dropdown, others show free text |
+| "What's your mailing / residential / billing address?" | [`<civ-address>`](../components/compound/address.mdx) | Country-adaptive. US shows state dropdown, others show free text |
 | "What's your ZIP code?" (standalone, for lookups or eligibility) | [`<civ-zip>`](../components/inputs/text-input.mdx#zip-code-civ-zip) | Lightweight 5- or 9-digit input with leading-zero preservation |
 | "What country?" (citizenship, place of birth, employer country) | [`<civ-country>`](../components/inputs/combobox.mdx#country-preset) | Type-ahead combobox with US-first ordering |
-| International postal code (UK, Canada, etc.) | [`<civ-text-input>`](../components/inputs/text-input.mdx) with custom `mask-pattern` | International codes contain letters — a generic `civ-postal-code` preset doesn't exist yet |
+| International postal code (UK, Canada, etc.) | [`<civ-text-input>`](../components/inputs/text-input.mdx) with custom `mask-pattern` | International codes contain letters. A generic `civ-postal-code` preset doesn't exist yet |
 
 ## Full mailing address
 
-`<civ-address>` is the right answer for almost every government form that needs a place to send mail. It handles country selection, street lines, city, state, and ZIP/postal code in one compound — and it adapts the field shape based on which country the user picks.
+`<civ-address>` is the right answer for almost every government form that needs a place to send mail. It handles country selection, street lines, city, state, and ZIP/postal code in one compound. And it adapts the field shape based on which country the user picks.
 
 <StoryEmbed id="forms-compound-address--default" />
 
@@ -35,7 +35,7 @@ See [`<civ-address>` reference](../components/compound/address.mdx) for variants
 
 ## ZIP only
 
-When you just need a ZIP — facility finder, ZIP-based eligibility, store locator — reach for the standalone preset. It's a thin wrapper over `<civ-text-input>` with the right mask and validator.
+When you just need a ZIP (facility finder, ZIP-based eligibility, store locator) reach for the standalone preset. It's a thin wrapper over `<civ-text-input>` with the right mask and validator.
 
 <StoryEmbed id="forms-inputs-text-input--zip-code" />
 
@@ -71,7 +71,7 @@ See [`<civ-country>` reference](../components/inputs/combobox.mdx#country-preset
 
 ## International postal codes
 
-There is no general-purpose international postal-code preset today — UK (`SW1A 1AA`), Canada (`M5V 3L9`), and Netherlands (`1012 AB`) all use letters, so a numeric mask wouldn't apply. Use `<civ-text-input>` directly with a custom `mask-pattern`:
+There is no general-purpose international postal-code preset today. UK (`SW1A 1AA`), Canada (`M5V 3L9`), and Netherlands (`1012 AB`) all use letters, so a numeric mask wouldn't apply. Use `<civ-text-input>` directly with a custom `mask-pattern`:
 
 ```html
 <!-- UK postcode: AANN NAA or ANN NAA depending on area -->
@@ -83,7 +83,7 @@ There is no general-purpose international postal-code preset today — UK (`SW1A
 ></civ-text-input>
 ```
 
-When you collect addresses via `<civ-address>`, the compound switches the ZIP field to a free-text postal-code input automatically when the country isn't US — no custom mask needed.
+When you collect addresses via `<civ-address>`, the compound switches the ZIP field to a free-text postal-code input automatically when the country isn't US. No custom mask needed.
 
 ## Composition examples
 
@@ -99,7 +99,7 @@ Put `<civ-address>` on its own step when the form is long; the compound spans mu
 
 ### ZIP-only "find your nearest..." pattern
 
-A ZIP-only input is the right surface for facility-finder flows (find a clinic, find an office, find a service center). Pair it with a submit button that runs the lookup — no full address needed.
+A ZIP-only input is the right surface for facility-finder flows (find a clinic, find an office, find a service center). Pair it with a submit button that runs the lookup. No full address needed.
 
 ```html
 <civ-zip label="Find services near you" name="zip" hint="Enter your ZIP code to see options nearby" required></civ-zip>
@@ -124,6 +124,6 @@ When some applicants don't have a US address (e.g., overseas military, expats), 
 
 ## Related patterns
 
-- [**Housing**](./housing.mdx) — trauma-informed patterns for collecting addresses from applicants who may not have permanent housing. Uses the `general-delivery` and `contact` variants of `<civ-address>`.
-- [**Conditional Reveal**](./conditional-reveal.mdx) — show/hide address fields based on prior answers.
-- [**Multi-Step Form**](./multi-step-form.mdx) — when to give the address its own step.
+- [**Housing**](./housing.mdx). Trauma-informed patterns for collecting addresses from applicants who may not have permanent housing. Uses the `general-delivery` and `contact` variants of `<civ-address>`.
+- [**Conditional Reveal**](./conditional-reveal.mdx). Show/hide address fields based on prior answers.
+- [**Multi-Step Form**](./multi-step-form.mdx). When to give the address its own step.

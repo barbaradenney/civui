@@ -8,18 +8,27 @@ title: Introduction
 
 Accessibility-first web components for government applications. Built on Lit 3, Tailwind CSS, and W3C design tokens.
 
+CivUI is inspired by the public-sector design systems that came before it:
+the [U.S. Web Design System (USWDS)](https://designsystem.digital.gov/), the
+[GOV.UK Design System](https://design-system.service.gov.uk/), the
+[VA.gov Design System (VADS)](https://design.va.gov/), and the
+[CMS Design System](https://design.cms.gov/). It distills their shared
+patterns (self-contained form controls, plain-language defaults, WCAG 2.1 AA
+out of the box) into a framework-agnostic web-component library with parallel
+native and Drupal implementations.
+
 ## Key Features
 
-- **Components** — form inputs, selection controls, layout, navigation, overlays, feedback, and compound fields, every one covered by a platform-neutral schema and CI-enforced parity check
-- **WCAG 2.1 AA** — every component tested for accessibility compliance (satisfies Section 508)
-- **MCP server** — AI-powered form generation, validation, and testing via the bundled MCP server
-- **VA forms** — complete form definitions ready to generate
-- **Multi-platform** — Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (SDCs for Drupal 10.3+/11)
-- **Dark Mode** — automatic system preference detection with token-based colors
-- **Density Scale** — dense, default, and spacious modes via CSS custom properties
-- **Light DOM** — no Shadow DOM, external labels and ARIA work naturally
-- **Inline SVG icons** — Material Icons baked in, no fonts or external requests (Material Symbols font available as opt-in)
-- **Mobile-first** — popups become bottom sheets ≤480px, primary buttons go full-width, segmented controls expand to fill the row, hover styling gated to real pointer devices
+- **Components:** form inputs, selection controls, layout, navigation, overlays, feedback, and compound fields, every one covered by a platform-neutral schema and CI-enforced parity check
+- **WCAG 2.1 AA:** every component tested for accessibility compliance (satisfies Section 508)
+- **MCP server:** AI-powered form generation, validation, and testing via the bundled MCP server
+- **VA forms:** complete form definitions ready to generate
+- **Multi-platform:** Web (Lit), iOS (SwiftUI), Android (Compose), Drupal (SDCs for Drupal 10.3+/11)
+- **Dark Mode:** automatic system preference detection with token-based colors
+- **Density Scale:** dense, default, and spacious modes via CSS custom properties
+- **Light DOM:** no Shadow DOM, external labels and ARIA work naturally
+- **Inline SVG icons:** Material Icons baked in, no fonts or external requests (Material Symbols font available as opt-in)
+- **Mobile-first:** popups become bottom sheets ≤480px, primary buttons go full-width, segmented controls expand to fill the row, hover styling gated to real pointer devices
 
 ## Quick Start
 
@@ -59,7 +68,7 @@ tokens stylesheet can be imported via CSS:
 @import '@civui/tokens/css';
 ```
 
-Skipping the stylesheet imports is the most common cause of unstyled components —
+Skipping the stylesheet imports is the most common cause of unstyled components:
 the JS modules register custom elements, but the visual treatment comes from the
 two CSS imports above.
 
@@ -78,16 +87,19 @@ two CSS imports above.
 | `@civui/compound` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |
 | `@civui/form-patterns` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
 | `@civui/feedback` | Feedback components (alert, badge, count) |
-| `@civui/drupal` | Drupal SDC module — Single Directory Components for Drupal 10.3+/11 |
+| `@civui/drupal` | Drupal SDC module with Single Directory Components for Drupal 10.3+/11 |
 | `@civui/cli` | CLI tooling (`civui generate component <name>` scaffolds across all platforms) |
 | `@civui/content` | Content / copy management |
 | `@civui/mcp-server` | MCP server for AI-assisted form generation |
 
 ## Design Philosophy
 
-- **Use the platform** — native `<select>`, `<input>`, `<fieldset>`, `<button>` elements
-- **CSS over JavaScript** — states handled with attribute selectors, icons rendered as inline SVG
-- **System fonts** — zero network requests, no flash of unstyled text
-- **Border radius signals interactivity** — only clickable elements get rounded corners
-- **Underlines signal navigation** — links are underlined, action buttons are not
-- **Every byte is earned** — Lit is the only runtime dependency
+- **Forms-first:** biased toward long, multi-step government flows over single-screen panels
+- **Plain-language defaults:** "(required)" as text instead of red asterisks; errors that say what to do
+- **Schemas are the source of truth:** every cross-platform component has a single platform-neutral contract
+- **Use the platform:** native `<select>`, `<input>`, `<fieldset>`, `<button>` elements
+- **CSS over JavaScript:** states handled with attribute selectors, icons rendered as inline SVG
+- **System fonts:** zero network requests, no flash of unstyled text
+- **Border radius signals interactivity:** only clickable elements get rounded corners
+- **Underlines signal navigation:** links are underlined, action buttons are not
+- **Every byte is earned:** Lit is the only runtime dependency

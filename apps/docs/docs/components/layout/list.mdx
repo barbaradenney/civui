@@ -12,13 +12,13 @@ import ListItemProps from "./_list-item.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-list`](pathname:///civui/storybook/?path=/docs/contract-civ-list--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-list`](pathname:///civui/storybook/?path=/docs/contract-civ-list--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-list>` and `<civ-list-item>`
 
-Generic list primitives. Use for any vertical row collection — side navigation, settings menus, link collections, search results, and the **task list pattern** for multi-chapter government forms.
+Generic list primitives. Use for any vertical row collection. Side navigation, settings menus, link collections, search results, and the **task list pattern** for multi-chapter government forms.
 
 `<civ-list-item>` becomes a clickable anchor when `href` is set, and a static row otherwise. The host element carries `role="listitem"` so the parent `<civ-list>`'s `<ul role="list">` accessibility tree sees a proper list item. Both variants render with the same layout, so clickable and locked rows can sit in the same list with consistent visual rhythm.
 
@@ -116,9 +116,9 @@ For the **task list pattern** (status badges, sequential unlocking), see the
 | Slot | Attribute | Description |
 |------|-----------|-------------|
 | **start** | `data-list-item-start` | Leading content (icons, avatars, thumbnails) |
-| **heading** | `data-list-item-heading` | Rich heading — any `<h2>`-`<h6>`, links, custom styles. Overrides `heading` prop. |
-| **description** | `data-list-item-description` | Rich description — links, bold, HTML. Overrides `description` prop. |
-| **(default)** | — | Body content |
+| **heading** | `data-list-item-heading` | Rich heading. Any `<h2>`-`<h6>`, links, custom styles. Overrides `heading` prop. |
+| **description** | `data-list-item-description` | Rich description. Links, bold, HTML. Overrides `description` prop. |
+| **(default)** |. | Body content |
 | **end** | `data-list-item-end` | Trailing content (badges, action buttons) |
 
 ## Task list pattern
@@ -170,14 +170,14 @@ See the [Task List Hub pattern](/form-patterns/task-list-hub) for a full multi-c
 
 ## Accessibility
 
-- Each clickable row is a real `<a>` filling the row — works with keyboard, screen readers, and right-click "open in new tab".
-- Static rows render as a plain row with no anchor. Same visual rhythm, honest semantics — assistive tech doesn't announce them as links.
+- Each clickable row is a real `<a>` filling the row. Works with keyboard, screen readers, and right-click "open in new tab".
+- Static rows render as a plain row with no anchor. Same visual rhythm, honest semantics. Assistive tech doesn't announce them as links.
 - `<civ-list>` adds `role="list"` on its `<ul>` and `<civ-list-item>` carries `role="listitem"` on the host. The custom element doesn't render its own `<li>` (that would break the HTML spec, which requires `<li>` to be a direct child of `<ul>`/`<ol>`), but the accessibility tree still sees a proper list-item child via the role.
 - `current` on `<civ-list-item>` sets `aria-current="page"` for navigation patterns.
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/list/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/list/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:list' with {

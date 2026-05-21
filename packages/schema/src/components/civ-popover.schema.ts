@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-popover',
-  description: 'Low-level popover primitive: a slotted trigger anchored to a floating panel. Handles trigger ARIA wiring (`aria-haspopup`, `aria-expanded`, `aria-controls`), click-outside / Escape / Tab close with focus return, viewport-aware position with auto-flip, and the mobile bottom-sheet pattern (≤480px). Ships no semantics — consumers declare the panel\'s `panelRole` and provide their own keyboard model. Composed by `civ-menu`, `civ-column-visibility`, and `civ-button-group`\'s overflow.',
+  description: 'Low-level popover primitive: a slotted trigger anchored to a floating panel. Handles trigger ARIA wiring (`aria-haspopup`, `aria-expanded`, `aria-controls`), click-outside / Escape / Tab close with focus return, viewport-aware position with auto-flip, and the mobile bottom-sheet pattern (≤480px). Ships no semantics. Consumers declare the panel\'s `panelRole` and provide their own keyboard model. Composed by `civ-menu`, `civ-column-visibility`, and `civ-button-group`\'s overflow.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
     },
     label: {
       type: 'string',
-      description: 'Accessible name applied to the panel (`aria-label`). Strongly recommended — without one, screen readers see an unnamed popup',
+      description: 'Accessible name applied to the panel (`aria-label`). Strongly recommended. Without one, screen readers see an unnamed popup',
       default: '',
     },
     align: {
@@ -40,7 +40,7 @@ const schema: ComponentSchema = {
     },
     noTabClose: {
       type: 'boolean',
-      description: 'Disable closing on Tab. Default false (Tab closes — matches the menu pattern). Set true when the panel contains naturally-tabbable items (checkboxes, form controls) so the user can Tab between them without dismissing',
+      description: 'Disable closing on Tab. Default false (Tab closes. Matches the menu pattern). Set true when the panel contains naturally-tabbable items (checkboxes, form controls) so the user can Tab between them without dismissing',
       default: false,
       attribute: 'no-tab-close',
     },
@@ -52,7 +52,7 @@ const schema: ComponentSchema = {
     },
     noEscapeClose: {
       type: 'boolean',
-      description: 'Disable Escape close. Default false. Rare — usually only when Escape is bound to a panel-internal action',
+      description: 'Disable Escape close. Default false. Rare. Usually only when Escape is bound to a panel-internal action',
       default: false,
       attribute: 'no-escape-close',
     },

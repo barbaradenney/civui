@@ -6,7 +6,7 @@ sidebar_label: Print
 
 # Print Styles
 
-CivUI includes print-specific CSS rules that clean up form rendering for paper output. Government forms are frequently printed for records, mailing, or offline review — the print styles ensure forms look professional without interactive UI clutter.
+CivUI includes print-specific CSS rules that clean up form rendering for paper output. Government forms are frequently printed for records, mailing, or offline review. The print styles ensure forms look professional without interactive UI clutter.
 
 ## What gets hidden
 
@@ -35,7 +35,7 @@ Interactive elements that don't make sense on paper are hidden automatically:
 
 ## Checkbox and radio state
 
-Checkbox and radio states are preserved in print — checked items render their visual indicators so reviewers can see what was selected.
+Checkbox and radio states are preserved in print. Checked items render their visual indicators so reviewers can see what was selected.
 
 ## Page break control
 

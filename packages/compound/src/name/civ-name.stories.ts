@@ -80,7 +80,6 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <civ-name legend="Normal" size="lg" name="normal"></civ-name>
@@ -94,7 +93,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -127,7 +125,6 @@ export const WithoutMiddle: Story = {
 };
 
 export const WithoutSuffix: Story = {
-  name: 'Without Suffix',
   render: () => html`
     <civ-name legend="Your name" size="lg" name="n"></civ-name>
   `,
@@ -138,7 +135,6 @@ export const WithoutSuffix: Story = {
 };
 
 export const InternationalFormat: Story = {
-  name: 'International Format',
   render: () => html`
     <civ-name legend="Applicant's name" size="lg" name="applicantName" required></civ-name>
   `,

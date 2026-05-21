@@ -12,17 +12,17 @@ import EventsTable from "./_number.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-number`](pathname:///civui/storybook/?path=/docs/contract-civ-number--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-number`](pathname:///civui/storybook/?path=/docs/contract-civ-number--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 CivUI's numeric inputs. Three components covering the most common shapes:
 
-- [`<civ-number>`](#civ-number) — generic numeric input for quantities, counts, ages, percentages, measurements.
-- [`<civ-currency>`](#civ-currency) — US dollar amounts with automatic formatting, masking, and validation.
-- [`<civ-routing-number>`](#civ-routing-number) — 9-digit bank routing numbers with ABA mod-10 checksum validation.
+- [`<civ-number>`](#civ-number). Generic numeric input for quantities, counts, ages, percentages, measurements.
+- [`<civ-currency>`](#civ-currency). US dollar amounts with automatic formatting, masking, and validation.
+- [`<civ-routing-number>`](#civ-routing-number). 9-digit bank routing numbers with ABA mod-10 checksum validation.
 
-Identifier-shaped numeric fields (SSN, EIN, ZIP, phone) have their own dedicated presets — see [PII](./pii.mdx) and [Contact](./contact.mdx).
+Identifier-shaped numeric fields (SSN, EIN, ZIP, phone) have their own dedicated presets. See [PII](./pii.mdx) and [Contact](./contact.mdx).
 
 ## When to use which
 
@@ -34,7 +34,7 @@ Identifier-shaped numeric fields (SSN, EIN, ZIP, phone) have their own dedicated
 | Temperature, deltas | [`civ-number`](#civ-number) | `allow-negative` |
 | Dollar amount: income, expense, fee, refund | [`civ-currency`](#civ-currency) | Auto-format, `$` prefix, decimal handling |
 | Bank routing number | [`civ-routing-number`](#civ-routing-number) | 9-digit ABA mod-10 checksum, plain-language label |
-| Native `<input type="number">` | avoid | `civ-number` is the accessible replacement — no scroll-wheel mutation, no locale-specific decimals, no inconsistent iOS spinners |
+| Native `<input type="number">` | avoid | `civ-number` is the accessible replacement. No scroll-wheel mutation, no locale-specific decimals, no inconsistent iOS spinners |
 
 ---
 
@@ -43,7 +43,7 @@ Identifier-shaped numeric fields (SSN, EIN, ZIP, phone) have their own dedicated
 `<civ-number>`
 
 Generic numeric input. Renders `<input type="text" inputmode="numeric">` (or
-`inputmode="decimal"` when `allow-decimal` is set) — this is more accessible
+`inputmode="decimal"` when `allow-decimal` is set). This is more accessible
 than the native `<input type="number">`, which has known issues: scroll-wheel
 mutation, locale-specific decimal separators, and inconsistent iOS spinners.
 
@@ -73,7 +73,7 @@ mutation, locale-specific decimal separators, and inconsistent iOS spinners.
 
 <StoryEmbed id="forms-inputs-number--negative" />
 
-#### Government form example — household size
+#### Government form example. Household size
 
 <StoryEmbed id="forms-inputs-number--household-size" />
 
@@ -153,7 +153,7 @@ All form components share these props: `label`, `name`, `value`, `hint`,
 producing standard "Must be at least N", "Must be no more than N", or "Must
 be between N and M" error messages from the locale.
 
-Empty values skip range validation — required-field validation is handled
+Empty values skip range validation. Required-field validation is handled
 by `civ-form`. Lone `-`, `.`, or `-.` partials are cleared on blur so the
 form sees `""` instead of `NaN`.
 
@@ -163,7 +163,7 @@ form sees `""` instead of `NaN`.
   Mobile keyboards show the numeric keypad without the spinner UX of
   `type="number"`.
 - `aria-valuemin` / `aria-valuemax` are set when `min` / `max` are provided.
-- IME composition (CJK input methods) is respected — filtering pauses while
+- IME composition (CJK input methods) is respected. Filtering pauses while
   the user is composing.
 - Paste handler announces politely to assistive tech when clipboard content
   was filtered (e.g., pasting "$1,234.56" into an integer-only field).
@@ -176,7 +176,7 @@ form sees `""` instead of `NaN`.
 
 Pre-configured input for US dollar amounts with automatic formatting,
 masking, and validation. Use this for any field that captures a dollar
-value — income, expenses, fees, refunds, benefit amounts, claim amounts.
+value. Income, expenses, fees, refunds, benefit amounts, claim amounts.
 
 ### Examples
 
@@ -262,12 +262,12 @@ Defaults that differ from `<civ-text-input>`:
 with `mask="currency"`, `validate="currency"`, `inputmode="decimal"`, and a
 `$` prefix. The mask handles:
 
-- **Blur formatting** — typed `1234.5` becomes `1,234.50` when the user
+- **Blur formatting:** typed `1234.5` becomes `1,234.50` when the user
   leaves the field. Commas insert at thousands boundaries; decimals
   pad/truncate to exactly two places.
-- **Focus normalization** — re-entering the field shows the raw value
+- **Focus normalization:** re-entering the field shows the raw value
   (`1234.5`) so the user can edit without fighting the formatter.
-- **Storage format** — `el.value` is always the raw numeric string
+- **Storage format:** `el.value` is always the raw numeric string
   (`"1234.5"` or `"1234.50"`). Commas and the `$` prefix are display only.
 
 ### Validation
@@ -322,7 +322,7 @@ re-implementing the masking and validation.
 ### Accessibility
 
 - The `$` prefix is rendered as a visual `<span class="civ-input-prefix">`
-  marked `aria-hidden="true"` — screen readers announce the field as
+  marked `aria-hidden="true"`. Screen readers announce the field as
   "Amount" (the label) without the symbol leaking into the announcement.
 - `inputmode="decimal"` triggers the mobile decimal keyboard (digits
   plus `.`) on iOS and Android.
@@ -345,7 +345,7 @@ Three locale strings drive the default labels and messages:
 
 Override via `setLocale()` (global) or pass `label` / `hint` / `error`
 explicitly (per-component). Locales that use a different decimal
-separator (e.g. `,` in many European locales) require a separate effort —
+separator (e.g. `,` in many European locales) require a separate effort.
 the current implementation is hard-wired to US dollar conventions.
 
 ---

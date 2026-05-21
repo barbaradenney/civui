@@ -83,7 +83,6 @@ export const Critical: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-link-card
@@ -120,7 +119,6 @@ export const AllVariants: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -176,7 +174,6 @@ export const DensityScale: Story = {
 };
 
 export const BenefitsHub: Story = {
-  name: 'Benefits Hub',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-3 civ-max-w-lg">
       <civ-link-card
@@ -204,7 +201,6 @@ export const BenefitsHub: Story = {
 };
 
 export const DashboardGrid: Story = {
-  name: 'Dashboard Grid',
   render: () => html`
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));" class="civ-gap-4">
       <civ-link-card
@@ -232,7 +228,6 @@ export const DashboardGrid: Story = {
 };
 
 export const WithIcons: Story = {
-  name: 'With Icons',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-link-card
@@ -299,7 +294,6 @@ export const ColorsTint: Story = {
 };
 
 export const Compact: Story = {
-  name: 'Compact',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6 civ-max-w-lg">
       <div>
@@ -366,7 +360,6 @@ export const WithSlots: Story = {
 };
 
 export const WithEyebrow: Story = {
-  name: 'With Eyebrow',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-2xl">
       <div>
@@ -421,7 +414,6 @@ export const WithEyebrow: Story = {
 // nowhere when clicked.
 
 export const NavigationDemo: Story = {
-  name: 'Navigation Demo',
   render: () => html`
     <civ-demo-frame initial-path="/benefits">
       <civ-demo-page path="/benefits">

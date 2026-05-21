@@ -12,7 +12,7 @@ import EventsTable from "./_modal.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-modal`](pathname:///civui/storybook/?path=/docs/contract-civ-modal--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-modal`](pathname:///civui/storybook/?path=/docs/contract-civ-modal--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -60,7 +60,7 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 - Focus returns to the trigger element on close
 - Native `<dialog>` provides implicit `role="dialog"` and modal semantics
 - Use `label` prop for accessible name when no heading is set
-- **Escape** closes by default — use `no-escape-close` to prevent
+- **Escape** closes by default. Use `no-escape-close` to prevent
 - **Required decisions:** Combine `no-close-button`, `no-backdrop-close`, and `no-escape-close` to force the user to pick an action
 
 ## Usage
@@ -93,7 +93,7 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/modal/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/modal/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:modal' with {

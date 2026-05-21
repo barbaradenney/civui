@@ -58,7 +58,6 @@ export const Required: Story = {
 };
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => html`
     <civ-partnership-history
       legend="About this marriage"

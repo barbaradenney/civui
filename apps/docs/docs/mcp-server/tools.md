@@ -8,9 +8,9 @@ sidebar_label: Tools
 
 All 80 MCP tools organized by category. Each tool shows its tier:
 
-- **Essential** — Always available, core LLM workflow
-- **Advanced** — Available in standard/all modes, feature-specific
-- **Internal** — Composed by other tools, hidden in essential/standard modes
+- **Essential:** Always available, core LLM workflow
+- **Advanced:** Available in standard/all modes, feature-specific
+- **Internal:** Composed by other tools, hidden in essential/standard modes
 
 ## Gov Forms (5 tools)
 

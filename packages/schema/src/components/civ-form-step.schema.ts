@@ -51,7 +51,7 @@ const schema: ComponentSchema = {
     },
     sensitive: {
       type: 'boolean',
-      description: 'Mark the step as containing sensitive data — auto-pauses persistence on navigation away and warns before unload',
+      description: 'Mark the step as containing sensitive data. Auto-pauses persistence on navigation away and warns before unload',
       default: false,
       reflect: true,
     },
@@ -90,7 +90,7 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-step-change': {
-      description: 'Fires when the active step changes — covers both forward (continue) and backward (back) navigation as well as programmatic jumps',
+      description: 'Fires when the active step changes. Covers both forward (continue) and backward (back) navigation as well as programmatic jumps',
       detail: {
         current: { type: 'number', description: 'Index of the now-active step' },
         total: { type: 'number', description: 'Total step count' },

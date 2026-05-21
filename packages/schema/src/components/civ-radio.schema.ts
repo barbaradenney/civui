@@ -4,7 +4,7 @@ import type { ComponentSchema } from '../schema.types.js';
  * Child of `civ-radio-group`. Renders a single radio input with inline label,
  * optional description, and tile variant. Selection state (`checked`) is
  * managed by the parent group via roving tabindex; consumers should rarely
- * set `checked` directly — set `value` on the group instead.
+ * set `checked` directly. Set `value` on the group instead.
  */
 const schema: ComponentSchema = {
   $schema: '1.0',
@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
   props: {
     checked: {
       type: 'boolean',
-      description: 'Whether this radio is the selected option. Managed by the parent group — setting it directly is uncommon',
+      description: 'Whether this radio is the selected option. Managed by the parent group. Setting it directly is uncommon',
       default: false,
       reflect: true,
     },
@@ -28,13 +28,13 @@ const schema: ComponentSchema = {
     },
     tile: {
       type: 'boolean',
-      description: 'Tile variant with bordered card styling. Default is true — tiles are the standard treatment; opt out for blank inline radios',
+      description: 'Tile variant with bordered card styling. Default is true. Tiles are the standard treatment; opt out for blank inline radios',
       default: true,
       reflect: true,
     },
     managedTabIndex: {
       type: 'number',
-      description: 'Tabindex assigned by the parent `civ-radio-group` for roving-tabindex keyboard navigation. Web-only — set programmatically, never as an attribute',
+      description: 'Tabindex assigned by the parent `civ-radio-group` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute',
       webOnly: true,
     },
   },

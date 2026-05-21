@@ -14,7 +14,7 @@ import CheckboxGroupEvents from "./_checkbox-group.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-checkbox`](pathname:///civui/storybook/?path=/docs/contract-civ-checkbox--docs) · [`civ-checkbox-group`](pathname:///civui/storybook/?path=/docs/contract-civ-checkbox-group--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-checkbox`](pathname:///civui/storybook/?path=/docs/contract-civ-checkbox--docs) · [`civ-checkbox-group`](pathname:///civui/storybook/?path=/docs/contract-civ-checkbox-group--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -84,7 +84,7 @@ Set `spacing="sm"` to render the bare checkbox with no surrounding label / hint 
 
 ### Minimum Selections
 
-`min-selections` (when > 0) implicitly marks the group as required and surfaces a `valueMissing` validity error until the count is met. The hint chain auto-appends "Select at least N." Validation runs on submit / `checkValidity()` — checkboxes can still be unchecked mid-flow.
+`min-selections` (when > 0) implicitly marks the group as required and surfaces a `valueMissing` validity error until the count is met. The hint chain auto-appends "Select at least N." Validation runs on submit / `checkValidity()`. Checkboxes can still be unchecked mid-flow.
 
 <StoryEmbed id="forms-controls-checkbox--min-selections" />
 
@@ -172,7 +172,7 @@ Groups multiple `civ-checkbox` elements with a shared legend, hint, and error. U
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/checkbox/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/checkbox/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:checkbox' with {

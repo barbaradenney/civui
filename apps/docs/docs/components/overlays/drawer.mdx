@@ -12,13 +12,13 @@ import EventsTable from "./_drawer.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-drawer`](pathname:///civui/storybook/?path=/docs/contract-civ-drawer--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-drawer`](pathname:///civui/storybook/?path=/docs/contract-civ-drawer--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-drawer>`
 
-A side-anchored full-viewport-height dialog that slides in from the leading (`start`) or trailing (`end`) edge. Built on the native `<dialog>` element — inherits native focus trap, Escape-to-close, and top-layer stacking. Use for navigation menus, settings panels, filter trays, and any secondary content where a centered modal or bottom sheet would feel wrong.
+A side-anchored full-viewport-height dialog that slides in from the leading (`start`) or trailing (`end`) edge. Built on the native `<dialog>` element. Inherits native focus trap, Escape-to-close, and top-layer stacking. Use for navigation menus, settings panels, filter trays, and any secondary content where a centered modal or bottom sheet would feel wrong.
 
 ## When to use which overlay
 
@@ -76,12 +76,12 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 - **Position:** `start` slides in from the leading edge (left in LTR, right in RTL), `end` from the trailing edge. Uses CSS logical properties so RTL layouts mirror automatically.
 - **Height:** Spans the full viewport height regardless of content. Body region scrolls when content overflows.
 - **Width:** Controlled by the `width` prop (CSS length). Capped to `100vw` so it never overflows offscreen.
-- **Sticky header & footer (default):** Header and footer stick to the top and bottom of the drawer, respectively — content scrolls between them. Use `no-sticky-header` or `no-sticky-footer` to make either region scroll with the body content instead (e.g. for reading-mode drawers).
-- **Focus trap:** Native `<dialog>` behavior — focus is trapped inside and restored to the trigger on close.
+- **Sticky header & footer (default):** Header and footer stick to the top and bottom of the drawer, respectively. Content scrolls between them. Use `no-sticky-header` or `no-sticky-footer` to make either region scroll with the body content instead (e.g. for reading-mode drawers).
+- **Focus trap:** Native `<dialog>` behavior. Focus is trapped inside and restored to the trigger on close.
 - **Body scroll:** Locked when open, restored on close (preserves the host page's prior `overflow` value rather than clearing it).
 - **Mobile (≤480px):** Drawer keeps its side-anchored layout rather than collapsing to a bottom sheet. The bottom-sheet rule applies to trigger-anchored popups (action sheet, combobox-style listboxes); a slide-in nav needs the full viewport height the soft keyboard can't crush.
-- **Escape:** Closes by default — use `no-escape-close` to prevent.
-- **Backdrop click:** Closes by default — use `no-backdrop-close` to prevent.
+- **Escape:** Closes by default. Use `no-escape-close` to prevent.
+- **Backdrop click:** Closes by default. Use `no-backdrop-close` to prevent.
 
 ## Usage
 

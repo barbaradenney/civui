@@ -42,7 +42,6 @@ export const Danger: Story = {
 };
 
 export const DangerSecondary: Story = {
-  name: 'Danger Secondary',
   render: () => render({
     label: 'Remove item',
     variant: 'secondary',
@@ -59,7 +58,6 @@ export const Disabled: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => {
     const primary = template({ label: 'Primary', type: 'submit' });
     const secondary = template({ label: 'Secondary', variant: 'secondary' });

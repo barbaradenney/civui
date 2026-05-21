@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Multi-Step Form
 
-Break long government forms into manageable steps. Each step covers one concept (not one field) — group related inputs together to reduce page count without increasing cognitive load.
+Break long government forms into manageable steps. Each step covers one concept (not one field). Group related inputs together to reduce page count without increasing cognitive load.
 
 ## Live example
 
@@ -54,7 +54,7 @@ Use `progress="bar"` for a dynamic / unknown step count where a percentage reads
 
 <StoryEmbed id="forms-form-form-step--with-progress-bar" />
 
-The default (`progress="minimal"`, shown above as the first example) is just "Step N of M" text — appropriate for short forms where a visual progress indicator would feel heavy.
+The default (`progress="minimal"`, shown above as the first example) is just "Step N of M" text. Appropriate for short forms where a visual progress indicator would feel heavy.
 
 ## Step validation
 
@@ -68,7 +68,7 @@ For emotionally difficult sections, mark the step as `sensitive`. This adds a po
 
 <StoryEmbed id="forms-form-form-step--sensitive" />
 
-You can also opt into the pause affordance alone (without the trauma-informed announcement) by setting `show-pause` directly — useful for long but not emotionally heavy sections that users might want to save and resume:
+You can also opt into the pause affordance alone (without the trauma-informed announcement) by setting `show-pause` directly. Useful for long but not emotionally heavy sections that users might want to save and resume:
 
 <StoryEmbed id="forms-form-form-step--with-pause-and-resume" />
 
@@ -81,12 +81,12 @@ You can also opt into the pause affordance alone (without the trauma-informed an
 | Service | Branch, dates, discharge | One service period |
 | Review + Sign | Summary, signature, submit | One final confirmation |
 
-Avoid one-field-per-step — it creates 20+ page forms with high abandonment. Group by topic, not by field.
+Avoid one-field-per-step. It creates 20+ page forms with high abandonment. Group by topic, not by field.
 
 ## Components used
 
-- [`civ-form-step`](/components/form/form-step) — multi-step container with navigation
-- [`civ-progress`](/components/form/progress) — step indicator
-- [`civ-progress-percent`](/components/form/progress#progress-bar) — percentage indicator
+- [`civ-form-step`](/components/form/form-step). Multi-step container with navigation
+- [`civ-progress`](/components/form/progress). Step indicator
+- [`civ-progress-percent`](/components/form/progress#progress-bar). Percentage indicator
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-form-step--government-benefit-application)

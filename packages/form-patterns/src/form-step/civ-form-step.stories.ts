@@ -40,7 +40,6 @@ export const Default: Story = {
 // ── Individual States ─────────────────────────────────────────
 
 export const WithProgressBar: Story = {
-  name: 'With Progress Bar',
   render: () => html`
     <civ-form-step progress="bar">
       <div data-step-label="Personal information">
@@ -60,7 +59,6 @@ export const WithProgressBar: Story = {
 };
 
 export const WithSegmentedSteps: Story = {
-  name: 'With Segmented Steps',
   render: () => html`
     <civ-form-step progress="steps">
       <div data-step-label="Eligibility">
@@ -154,7 +152,6 @@ export const WithError: Story = {
 };
 
 export const CustomButtonLabels: Story = {
-  name: 'Custom Button Labels',
   render: () => html`
     <civ-form-step
       continue-label="Next section"
@@ -174,7 +171,6 @@ export const CustomButtonLabels: Story = {
 };
 
 export const TwoSteps: Story = {
-  name: 'Two Steps',
   render: () => html`
     <civ-form-step>
       <div data-step-label="Eligibility">
@@ -204,7 +200,6 @@ export const NavDisabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllProgressModes: Story = {
-  name: 'All Progress Modes',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-12">
       <div>
@@ -238,7 +233,6 @@ export const AllProgressModes: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -397,7 +391,6 @@ export const HeaderTertiary: Story = {
 };
 
 export const AsyncValidation: Story = {
-  name: 'Async Validation',
   parameters: {
     docs: {
       description: {

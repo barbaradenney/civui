@@ -60,9 +60,9 @@ const bad = validate.ssn('000-12-3456');
 
 `<civ-form>` coordinates validation across all its child fields:
 
-1. **Validate on submit, not on blur** — government form users often tab through fields to understand the form first.
-2. **Error summary at top** — renders automatically with anchor links to each invalid field.
-3. **Custom required messages** — use `required-message` for field-specific instructions.
+1. **Validate on submit, not on blur:** government form users often tab through fields to understand the form first.
+2. **Error summary at top:** renders automatically with anchor links to each invalid field.
+3. **Custom required messages:** use `required-message` for field-specific instructions.
 
 <StoryEmbed id="foundations-validation--form-validation" />
 
@@ -104,7 +104,7 @@ formEl.clearErrors();
 
 ## Input masks
 
-Input masking for formatted fields. CivUI uses blur-mode by default — the mask is applied on blur and raw input is shown on focus.
+Input masking for formatted fields. CivUI uses blur-mode by default. The mask is applied on blur and raw input is shown on focus.
 
 ### Presets
 
@@ -144,7 +144,7 @@ Input masking for formatted fields. CivUI uses blur-mode by default — the mask
 ### Mask modes
 
 - **`blur`** (default): Mask applied on blur. Most accessible.
-- **`live`**: Formats as user types. Use sparingly — has cursor-jumping tradeoffs.
+- **`live`**: Formats as user types. Use sparingly. Has cursor-jumping tradeoffs.
 
 <StoryEmbed id="foundations-input-masks--mask-modes" />
 

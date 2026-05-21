@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -9,9 +9,9 @@
 | `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend. md/lg/xl step up through the typography scale for use as a section/page heading |
 | `show-street2` | `boolean` | `true` | Render the optional second address line |
 | `show-street3` | `boolean` | `false` | Render the optional third address line |
-| `show-country` | `boolean` | `false` | Render the country selector. Defaults off — most government forms collect US-only addresses |
+| `show-country` | `boolean` | `false` | Render the country selector. Defaults off. Most government forms collect US-only addresses |
 | `street-error` | `string` | `''` | Per-field error for the street line, surfaced via the inner civ-text-input |
 | `city-error` | `string` | `''` | Per-field error for the city input |
 | `state-error` | `string` | `''` | Per-field error for the state select |
 | `zip-error` | `string` | `''` | Per-field error for the ZIP input |
-| `validate-address` | `string` | — | Async validator function `(addr: AddressValue) => Promise<{valid: boolean; suggestion?: AddressValue; error?: string}>`. Set programmatically (not as an attribute) — wires into the address-validation flow |
+| `validate-address` | `string` | — | Async validator function `(addr: AddressValue) => Promise<{valid: boolean; suggestion?: AddressValue; error?: string}>`. Set programmatically (not as an attribute). Wires into the address-validation flow |

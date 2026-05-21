@@ -14,7 +14,7 @@ import GroupEvents from "./_filter-chip-group.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-filter-chip`](pathname:///civui/storybook/?path=/docs/contract-civ-filter-chip--docs) · [`civ-filter-chip-group`](pathname:///civui/storybook/?path=/docs/contract-civ-filter-chip-group--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-filter-chip`](pathname:///civui/storybook/?path=/docs/contract-civ-filter-chip--docs) · [`civ-filter-chip-group`](pathname:///civui/storybook/?path=/docs/contract-civ-filter-chip-group--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -24,7 +24,7 @@ An interactive, button-like control for filter selection. Click to toggle the ch
 
 For static categorization labels use [`civ-tag`](../layout/tag); for status indicators use [`civ-badge`](../feedback/badge); for primary CTAs use [`civ-button`](./button).
 
-When you have more than two or three chips, wrap them in `<civ-filter-chip-group>` to get keyboard navigation and (optionally) single-select coordination — see [the group section](#group) below.
+When you have more than two or three chips, wrap them in `<civ-filter-chip-group>` to get keyboard navigation and (optionally) single-select coordination. See [the group section](#group) below.
 
 ## Examples
 
@@ -78,7 +78,7 @@ When you have more than two or three chips, wrap them in `<civ-filter-chip-group
 
 - The chip renders a non-interactive `<span role="presentation">` wrapper containing one or two real `<button>` elements (toggle + optional remove). This avoids the "interactive content nested inside a `<button>`" anti-pattern.
 - In default `chip-role="toggle"` mode the action button uses `aria-pressed`. In `chip-role="radio"` (set by a single-select group) it uses `role="radio"` + `aria-checked`. Re-clicking an already-selected radio is a no-op (matches platform radio semantics).
-- The remove `×` is its own real `<button>` with `aria-label="Remove {label} filter"` — Enter and Space activate it natively. Clicking it does not toggle the chip.
+- The remove `×` is its own real `<button>` with `aria-label="Remove {label} filter"`. Enter and Space activate it natively. Clicking it does not toggle the chip.
 - Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.
 - `disabled` propagates to both inner buttons.
 
@@ -144,7 +144,7 @@ Use `removable` to show currently-active filters that the user can dismiss:
 
 <StoryEmbed id="actions-filter-chip-group--appointment-time-slots" />
 
-#### Appointment — Pre-selected
+#### Appointment. Pre-selected
 
 <StoryEmbed id="actions-filter-chip-group--appointment-with-selection" />
 
@@ -166,7 +166,7 @@ Use `removable` to show currently-active filters that the user can dismiss:
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `value` | `string \| string[]` | Currently selected value(s). Single mode returns a string (or `''` if none); multi mode returns an array. **Settable** — assigning updates each child chip's `selected` flag to match. |
+| `value` | `string \| string[]` | Currently selected value(s). Single mode returns a string (or `''` if none); multi mode returns an array. **Settable**. Assigning updates each child chip's `selected` flag to match. |
 
 ### Keyboard
 
@@ -236,7 +236,7 @@ Use `chip-style="primary"` for stronger visual emphasis on the selected time slo
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/filter-chip/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/filter-chip/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:filter-chip' with {

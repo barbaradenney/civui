@@ -87,7 +87,6 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-text-input label="Normal" name="normal"></civ-text-input>
@@ -102,7 +101,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -297,14 +295,12 @@ export const BelowActionSlot: Story = {
 // ── Prefix / Suffix ─────────────────────────────────────────
 
 export const Prefix: Story = {
-  name: 'Prefix',
   render: () => html`
     <civ-text-input label="Social handle" name="handle" prefix="@" width="md"></civ-text-input>
   `,
 };
 
 export const Suffix: Story = {
-  name: 'Suffix',
   render: () => html`
     <civ-text-input label="Weight" name="weight" suffix="lbs" inputmode="decimal" width="sm"></civ-text-input>
   `,
@@ -392,7 +388,6 @@ export const VAFileNumber: Story = {
 };
 
 export const AllPresets: Story = {
-  name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2" style="max-width: 480px;">
       <civ-ssn label="Social Security number" name="ssn"></civ-ssn>

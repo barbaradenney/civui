@@ -27,7 +27,6 @@ export const Default: Story = {
 };
 
 export const TwoButtons: Story = {
-  name: 'Two Buttons',
   render: () => {
     const children = [
       buttonTemplate({ label: 'Submit', type: 'submit' }),
@@ -38,7 +37,6 @@ export const TwoButtons: Story = {
 };
 
 export const WithDanger: Story = {
-  name: 'With Danger',
   render: () => {
     const children = [
       buttonTemplate({ label: 'Delete', danger: true }),

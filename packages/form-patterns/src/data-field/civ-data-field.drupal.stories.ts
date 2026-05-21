@@ -22,7 +22,6 @@ export const Default: Story = {
 };
 
 export const WithoutEditLink: Story = {
-  name: 'Without Edit Link',
   render: () => render({
     label: 'Date of birth',
     value: 'January 15, 1990',
@@ -30,7 +29,6 @@ export const WithoutEditLink: Story = {
 };
 
 export const MultipleFields: Story = {
-  name: 'Multiple Fields',
   render: () => {
     const field1 = template({ label: 'Full name', value: 'Jane Doe', href: '#/edit' });
     const field2 = template({ label: 'Email', value: 'jane@agency.gov', href: '#/edit' });

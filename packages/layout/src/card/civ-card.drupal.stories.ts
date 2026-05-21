@@ -21,7 +21,6 @@ export const Default: Story = {
 };
 
 export const WithoutHeading: Story = {
-  name: 'Without Heading',
   render: () => render({
     default: '<p>A simple card with content only.</p>',
   }),

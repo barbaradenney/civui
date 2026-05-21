@@ -12,13 +12,13 @@ import EventsTable from "./_toolbar.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-toolbar`](pathname:///civui/storybook/?path=/docs/contract-civ-toolbar--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-toolbar`](pathname:///civui/storybook/?path=/docs/contract-civ-toolbar--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-toolbar>`
 
-Horizontal layout container for the row of controls above a list, grid, or filtered collection — search input, filter chips, density toggle, "Add new" button. Children land on the leading edge by default; add `data-civ-toolbar-end` on a child to align it to the trailing edge.
+Horizontal layout container for the row of controls above a list, grid, or filtered collection. Search input, filter chips, density toggle, "Add new" button. Children land on the leading edge by default; add `data-civ-toolbar-end` on a child to align it to the trailing edge.
 
 Renders as `<div role="group">` with the `label` prop applied as `aria-label`. Stacks vertically on viewports ≤480px so the controls stay reachable on mobile.
 
@@ -54,7 +54,7 @@ Renders as `<div role="group">` with the `label` prop applied as `aria-label`. S
 
 ## Usage
 
-The toolbar is purely a layout primitive — it doesn't introduce any built-in controls. Compose with whatever children fit the use case:
+The toolbar is purely a layout primitive. It doesn't introduce any built-in controls. Compose with whatever children fit the use case:
 
 ```html
 <civ-toolbar label="Applications toolbar">
@@ -88,7 +88,7 @@ search.addEventListener('civ-input', (e) => {
 - `role="group"` is applied to the wrapper so AT announces the grouping
   without implying the arrow-key navigation contract of `role="toolbar"`.
 - `label` is rendered as `aria-label` on the group. Set it whenever
-  the toolbar contains more than one or two controls — without it, screen
+  the toolbar contains more than one or two controls. Without it, screen
   readers announce only an unnamed group.
 - Children inside the toolbar keep their own ARIA semantics and Tab-stop
   behavior. The toolbar doesn't intercept focus or keyboard handling.

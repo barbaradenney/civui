@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained — do not wrap in civ-fieldset.',
+      description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained. Do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {

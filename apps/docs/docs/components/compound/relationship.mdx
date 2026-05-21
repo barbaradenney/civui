@@ -12,13 +12,13 @@ import EventsTable from "./_relationship.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-relationship`](pathname:///civui/storybook/?path=/docs/contract-civ-relationship--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-relationship`](pathname:///civui/storybook/?path=/docs/contract-civ-relationship--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-relationship>`
 
-Compound component for capturing a person and their relationship to the applicant. Includes conditional follow-up fields based on the relationship category — spousal types show marriage date, child types show date of birth, etc.
+Compound component for capturing a person and their relationship to the applicant. Includes conditional follow-up fields based on the relationship category. Spousal types show marriage date, child types show date of birth, etc.
 
 Use the `preset` prop for pre-defined option lists, or pass custom `options` to override.
 
@@ -151,7 +151,7 @@ Use `hide-name` when the name is captured in a separate component:
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/relationship/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/relationship/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:relationship' with {

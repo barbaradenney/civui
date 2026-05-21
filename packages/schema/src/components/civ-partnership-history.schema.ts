@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-partnership-history',
-  description: 'Compound marriage record — captures spouse name, marriage date, location (city/state/jurisdiction), optional cohabitation start, status (current / divorced / widowed / annulled), and end date when applicable. Used in benefits applications that require dependent or beneficiary documentation.',
+  description: 'Compound marriage record. Captures spouse name, marriage date, location (city/state/jurisdiction), optional cohabitation start, status (current / divorced / widowed / annulled), and end date when applicable. Used in benefits applications that require dependent or beneficiary documentation.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -28,7 +28,7 @@ const schema: ComponentSchema = {
     },
     showMarriageType: {
       type: 'boolean',
-      description: 'Render the marriage-type selector (civil / religious / common-law / other). Default off — most forms only need date and location',
+      description: 'Render the marriage-type selector (civil / religious / common-law / other). Default off. Most forms only need date and location',
       default: false,
       attribute: 'show-marriage-type',
     },

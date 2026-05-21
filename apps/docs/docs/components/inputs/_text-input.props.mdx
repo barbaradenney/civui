@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -16,7 +16,7 @@
 | `mask` | `''` \| `'ssn'` \| `'phone-us'` \| `'zip'` \| `'zip4'` \| `'ein'` \| `'currency'` | `''` | Built-in mask preset (blur-mode formatting). Empty string means no mask |
 | `mask-pattern` | `string` | `''` | Custom mask pattern: # = digit, A = letter, * = any printable char. Other chars are literal inserts |
 | `mask-mode` | `'blur'` \| `'live'` | `'blur'` | Mask formatting mode. blur (default) is accessible; live formats as user types |
-| `validate` | `''` \| `'email'` \| `'phone'` \| `'phoneIntl'` \| `'ssn'` \| `'ein'` \| `'routing'` \| `'zip'` \| `'zip4'` \| `'usState'` \| `'url'` \| `'currency'` \| `'alphanumeric'` | `''` | Declarative validation preset — auto-validates on blur. Empty string means no validation |
+| `validate` | `''` \| `'email'` \| `'phone'` \| `'phoneIntl'` \| `'ssn'` \| `'ein'` \| `'routing'` \| `'zip'` \| `'zip4'` \| `'usState'` \| `'url'` \| `'currency'` \| `'alphanumeric'` | `''` | Declarative validation preset. Auto-validates on blur. Empty string means no validation |
 | `prefix` | `string` | `''` | Inline prefix label rendered to the left of the input (e.g. "$"). Mutually exclusive with leadingIcon |
 | `suffix` | `string` | `''` | Inline suffix label rendered to the right of the input (e.g. ".com"). Mutually exclusive with trailingIcon and the clear button |
 | `clearable` | `boolean` | `false` | When true and the value is non-empty, renders a clear button on the trailing edge |

@@ -23,7 +23,6 @@ export const Default: Story = {
 };
 
 export const WithServiceNumber: Story = {
-  name: 'With Service Number',
   render: () => html`
     <civ-service-history
       legend="About this service period"
@@ -46,7 +45,6 @@ export const Required: Story = {
 };
 
 export const WithErrors: Story = {
-  name: 'With Errors',
   render: () => html`
     <civ-service-history
       legend="About this service period"

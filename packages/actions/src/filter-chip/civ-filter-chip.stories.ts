@@ -174,7 +174,6 @@ export const Spacing: Story = {
 };
 
 export const WithIcons: Story = {
-  name: 'With Icons',
   parameters: {
     docs: {
       description: {
@@ -194,7 +193,6 @@ export const WithIcons: Story = {
 };
 
 export const WithCounts: Story = {
-  name: 'With Counts',
   parameters: {
     docs: {
       description: {

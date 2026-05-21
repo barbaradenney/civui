@@ -12,13 +12,13 @@ import EventsTable from "./_pagination.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-pagination`](pathname:///civui/storybook/?path=/docs/contract-civ-pagination--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-pagination`](pathname:///civui/storybook/?path=/docs/contract-civ-pagination--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-pagination>`
 
-USWDS-style pagination control. Renders a status range (`Showing X–Y of Z`), a page-size selector, Previous/Next buttons, and a truncated list of numbered page buttons. The component is controlled — listen for `civ-page-change` to drive your data fetch.
+USWDS-style pagination control. Renders a status range (`Showing X–Y of Z`), a page-size selector, Previous/Next buttons, and a truncated list of numbered page buttons. The component is controlled. Listen for `civ-page-change` to drive your data fetch.
 
 On viewports ≤480px the numbered buttons hide, leaving only Previous, Next, and the page-size selector. The status range still announces.
 
@@ -88,8 +88,8 @@ The component is **controlled**: it dispatches events; the consumer updates prop
 
 ## Accessibility
 
-- Renders as `<nav aria-label="Pagination">` — a navigation landmark
+- Renders as `<nav aria-label="Pagination">`. A navigation landmark
 - "Showing X–Y of Z" is wrapped in an `aria-live="polite"` region so screen readers announce the new range when paging
 - The current page is marked with `aria-current="page"` and has a more descriptive `aria-label` ("Page 3 of 34, current page")
 - Disabled Previous/Next buttons use the native `disabled` attribute (not just CSS)
-- All controls are real `<button>` elements — focus ring applies automatically via the global focus rule
+- All controls are real `<button>` elements. Focus ring applies automatically via the global focus rule

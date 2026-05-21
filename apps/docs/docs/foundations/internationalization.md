@@ -29,7 +29,7 @@ That's it. All components reading via `t()` immediately pick up the new strings.
 
 | Function | Description |
 |----------|-------------|
-| `setLocaleStrings(partial)` | Merge custom translations into the active locale. Only override what you need — unset keys fall back to English. |
+| `setLocaleStrings(partial)` | Merge custom translations into the active locale. Only override what you need. Unset keys fall back to English. |
 | `t(key)` | Get the current translated string for a key. Used internally by all components. |
 | `getLocaleStrings()` | Returns all current locale strings (for inspection/debugging). |
 | `resetLocaleStrings()` | Reset to the default English strings. |

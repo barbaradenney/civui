@@ -141,7 +141,6 @@ export const DeceasedAssumed: Story = {
 };
 
 export const SupportResources: Story = {
-  name: 'Support Resources',
   render: () => html`
     <civ-form
       support-resources='[{"label":"Veterans Crisis Line","href":"tel:988","description":"Call or text 988, then press 1"},{"label":"Crisis Text Line","href":"sms:838255","description":"Text HOME to 838255"},{"label":"Safe Helpline","href":"tel:18779955247","description":"For survivors of sexual assault"}]'

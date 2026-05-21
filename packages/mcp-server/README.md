@@ -1,6 +1,6 @@
 # @civui/mcp-server
 
-MCP (Model Context Protocol) server that exposes ~80 tools for AI agents working with CivUI — component discovery, form generation, validation, accessibility auditing, and structured introspection of the design system.
+MCP (Model Context Protocol) server that exposes ~80 tools for AI agents working with CivUI. Component discovery, form generation, validation, accessibility auditing, and structured introspection of the design system.
 
 ## What this gives an AI agent
 
@@ -22,9 +22,9 @@ The server exposes ~80 tools total. The `CIV_MCP_TIER` environment variable cont
 
 | Tier        | Count | Use when                                                                    |
 | ----------- | ----- | --------------------------------------------------------------------------- |
-| `essential` | ~12   | Working in a low-context client — only the most-used tools.                 |
+| `essential` | ~12   | Working in a low-context client. Only the most-used tools.                 |
 | `standard`  | ~35   | Most agent setups. Essential + advanced (specific feature generators).      |
-| `all`       | ~80   | Full catalogue. Default — backwards compatible.                             |
+| `all`       | ~80   | Full catalogue. Default. Backwards compatible.                             |
 
 The full categorised registry lives in `src/tool-registry.ts`; the `discover_tools` MCP tool returns it at runtime.
 
@@ -59,10 +59,10 @@ End-to-end conversion from a government form number into a working CivUI app:
 
 Generate self-contained CivUI markup or React TSX from a structured `FormSchema`:
 
-- **Conversion** — `parse_html_form`, `parse_pdf_form`, `generate_civui_form`, `generate_react_form`, `scaffold_from_template`.
-- **Page-level** — `generate_intro_page`, `generate_confirmation_page`, `generate_form_steps`, `generate_progress_bar`, `generate_section_progress`.
-- **Feature blocks** — `generate_address_block`, `generate_signature_block`, `generate_document_checklist`, `generate_eligibility_screener`, `generate_repeatable_section`, `generate_conditional_reveal`, `generate_save_resume_ui`, `generate_timeout_warning`, `generate_help_panel`, `generate_error_messages`, `generate_decision_notice`, `generate_email_template`, `generate_pdf_notice`, `generate_amendment_flow`, `generate_form_chain`.
-- **Multi-actor / workflow** — see *Workflow* below.
+- **Conversion:** `parse_html_form`, `parse_pdf_form`, `generate_civui_form`, `generate_react_form`, `scaffold_from_template`.
+- **Page-level:** `generate_intro_page`, `generate_confirmation_page`, `generate_form_steps`, `generate_progress_bar`, `generate_section_progress`.
+- **Feature blocks:** `generate_address_block`, `generate_signature_block`, `generate_document_checklist`, `generate_eligibility_screener`, `generate_repeatable_section`, `generate_conditional_reveal`, `generate_save_resume_ui`, `generate_timeout_warning`, `generate_help_panel`, `generate_error_messages`, `generate_decision_notice`, `generate_email_template`, `generate_pdf_notice`, `generate_amendment_flow`, `generate_form_chain`.
+- **Multi-actor / workflow:** see *Workflow* below.
 
 ### Validation (5 tools)
 
@@ -109,7 +109,7 @@ Schema introspection, code generation, contrast checks, burden estimation, etc.:
 
 ## Tool discoverability at runtime
 
-Every tool registered with the server is queryable via `discover_tools`. The response includes the tool name, tier, category, and one-line description — useful for an agent that needs to scan capabilities before deciding which tool to call.
+Every tool registered with the server is queryable via `discover_tools`. The response includes the tool name, tier, category, and one-line description. Useful for an agent that needs to scan capabilities before deciding which tool to call.
 
 For the full schema (input / output types), call any tool's MCP discovery endpoint (`tools/list` in the protocol).
 
@@ -122,13 +122,13 @@ For the full schema (input / output types), call any tool's MCP discovery endpoi
 
 ## What this is not
 
-- **Not a UI library** — install `@civui/inputs`, `@civui/controls`, `@civui/compound`, etc. for the actual web components.
-- **Not a runtime dependency for apps** — tools are agent-time helpers, not browser code.
-- **Not a substitute for the schemas** — `@civui/schema` is the canonical contract. Tools read from it; they don't replace it.
+- **Not a UI library:** install `@civui/inputs`, `@civui/controls`, `@civui/compound`, etc. for the actual web components.
+- **Not a runtime dependency for apps:** tools are agent-time helpers, not browser code.
+- **Not a substitute for the schemas:** `@civui/schema` is the canonical contract. Tools read from it; they don't replace it.
 
 ## See also
 
-- `CLAUDE.md` (repo root) — architecture and conventions.
-- `docs/ai-guide.md` — long-form component catalogue for agents.
-- `apps/docs/docs/foundations/ai-agent-friendly.md` — what makes CivUI AI-agent-friendly overall.
-- `packages/schema/README.md` — the schema authoring guide and naming conventions.
+- `CLAUDE.md` (repo root). Architecture and conventions.
+- `docs/ai-guide.md`: long-form component catalogue for agents.
+- `apps/docs/docs/foundations/ai-agent-friendly.md`: what makes CivUI AI-agent-friendly overall.
+- `packages/schema/README.md`: the schema authoring guide and naming conventions.

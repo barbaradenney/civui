@@ -17,19 +17,19 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'string',
-      description: 'Size shorthand — `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android) — consumers pass the resolved value directly',
+      description: 'Size shorthand. `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android). Consumers pass the resolved value directly',
       default: '',
       reflect: true,
       webOnly: true,
     },
     rotate: {
       type: 'number',
-      description: 'Rotation in degrees. Common values: 90, 180, 270. Web-only — native platforms expose rotation via the platform modifier (`.rotationEffect()` on iOS, `Modifier.rotate()` on Android); consumers apply it directly',
+      description: 'Rotation in degrees. Common values: 90, 180, 270. Web-only. Native platforms expose rotation via the platform modifier (`.rotationEffect()` on iOS, `Modifier.rotate()` on Android); consumers apply it directly',
       webOnly: true,
     },
     flip: {
       type: 'enum',
-      description: 'Mirror axis. `horizontal` flips left-right; `vertical` flips top-bottom; `both` flips both. Web-only — native platforms use platform-native flip modifiers',
+      description: 'Mirror axis. `horizontal` flips left-right; `vertical` flips top-bottom; `both` flips both. Web-only. Native platforms use platform-native flip modifiers',
       values: ['horizontal', 'vertical', 'both'],
       webOnly: true,
     },

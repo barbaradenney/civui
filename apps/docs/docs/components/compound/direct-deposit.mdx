@@ -12,7 +12,7 @@ import EventsTable from "./_direct-deposit.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-direct-deposit`](pathname:///civui/storybook/?path=/docs/contract-civ-direct-deposit--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-direct-deposit`](pathname:///civui/storybook/?path=/docs/contract-civ-direct-deposit--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -130,7 +130,7 @@ deposit.depositValue; // { accountType: 'checking', routingNumber: '123456789', 
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/direct-deposit/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/direct-deposit/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:direct-deposit' with {

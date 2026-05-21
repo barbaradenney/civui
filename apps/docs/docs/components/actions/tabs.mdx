@@ -14,13 +14,13 @@ import TabEvents from "./_tab.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-tabs`](pathname:///civui/storybook/?path=/docs/contract-civ-tabs--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-tabs`](pathname:///civui/storybook/?path=/docs/contract-civ-tabs--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-tabs>` + `<civ-tab>` + `<civ-tab-panel>`
 
-ARIA tab pattern — a tablist with associated panels. Tabs and panels are paired by `value`. Keyboard navigation follows the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) tabs pattern: roving tabindex, `ArrowLeft` / `ArrowRight` to move between tabs, `Home` / `End` to jump to first / last. Disabled tabs are skipped.
+ARIA tab pattern. A tablist with associated panels. Tabs and panels are paired by `value`. Keyboard navigation follows the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) tabs pattern: roving tabindex, `ArrowLeft` / `ArrowRight` to move between tabs, `Home` / `End` to jump to first / last. Disabled tabs are skipped.
 
 **Activation is manual.** Pressing a tab (Enter / Space / click) selects it; arrow-key navigation also selects to keep the keyboard and pointer behaviors aligned. This is safer than automatic follow-focus when panel content is expensive to render or fetch.
 
@@ -78,19 +78,19 @@ Listen for `civ-change` on the parent to react to tab changes:
 </script>
 ```
 
-## Props — civ-tabs
+## Props. Civ-tabs
 
 <TabsProps />
 
-## Events — civ-tabs
+## Events. Civ-tabs
 
 <TabsEvents />
 
-## Props — civ-tab
+## Props. Civ-tab
 
 <TabProps />
 
-## Events — civ-tab
+## Events. Civ-tab
 
 <TabEvents />
 
@@ -104,5 +104,5 @@ Listen for `civ-change` on the parent to react to tab changes:
 
 ## When to use a different component
 
-- For navigation that updates the URL (one page per tab), use `<civ-nav>` with `<a href>` items — the URL is the source of truth, no JS state needed.
+- For navigation that updates the URL (one page per tab), use `<civ-nav>` with `<a href>` items. The URL is the source of truth, no JS state needed.
 - For mutually-exclusive selection inside a single form question, use `<civ-segmented-control>` or `<civ-radio-group>`.

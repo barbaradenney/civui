@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-nav',
-  description: 'Top-level horizontal site navigation. Renders a `<nav>` landmark containing a horizontal `<ul>` of `<civ-nav-item>` links. Stacks vertically on mobile (≤480px). Single-level only — submenus and dropdowns are deliberately out of scope; use a separate menu component for those.',
+  description: 'Top-level horizontal site navigation. Renders a `<nav>` landmark containing a horizontal `<ul>` of `<civ-nav-item>` links. Stacks vertically on mobile (≤480px). Single-level only. Submenus and dropdowns are deliberately out of scope; use a separate menu component for those.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,

@@ -154,7 +154,6 @@ export const CustomMinVisible: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => {
     setTimeout(() => {
       ['dense', 'default', 'spacious'].forEach((scale) => {

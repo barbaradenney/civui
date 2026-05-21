@@ -11,13 +11,13 @@ import PropsTable from "./_count.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-count`](pathname:///civui/storybook/?path=/docs/contract-civ-count--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-count`](pathname:///civui/storybook/?path=/docs/contract-civ-count--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-count>`
 
-A numeric annotation — match counts on filter chips, item counts in navigation, notification counters. Lighter chrome than [`civ-badge`](./badge) so it composes inside other components without competing visually.
+A numeric annotation. Match counts on filter chips, item counts in navigation, notification counters. Lighter chrome than [`civ-badge`](./badge) so it composes inside other components without competing visually.
 
 For status text or dot indicators use [`civ-badge`](./badge). For categorization labels use [`civ-tag`](../layout/tag).
 
@@ -55,7 +55,7 @@ For status text or dot indicators use [`civ-badge`](./badge). For categorization
 
 ## Modes
 
-### Inline (default — secondary style)
+### Inline (default. Secondary style)
 
 Bare colored text that inherits its parent's color. Sits inside chips, list items, navigation links without adding chrome.
 
@@ -66,7 +66,7 @@ Bare colored text that inherits its parent's color. Sits inside chips, list item
 
 ### Pill (primary style)
 
-Filled rounded pill — for standalone counters or notification badges.
+Filled rounded pill. For standalone counters or notification badges.
 
 ```html
 <civ-count count="5" variant="info" count-style="primary"></civ-count>
@@ -87,7 +87,7 @@ Absolute-positioned over a relative parent. Pair with [`civ-badge-anchor`](./bad
 ## Accessibility
 
 - Counts are static annotations by default (`live="off"`), so they don't add live-region noise to nearby labels.
-- Set `live="polite"` for **inbox-style counters** that change as data arrives — screen readers will announce "Inbox 13" when the value updates.
+- Set `live="polite"` for **inbox-style counters** that change as data arrives. Screen readers will announce "Inbox 13" when the value updates.
 - Set `live="assertive"` for urgent updates (use sparingly).
 - The numeric value uses `font-variant-numeric: tabular-nums` so digit widths align across renders.
 
@@ -104,7 +104,7 @@ Absolute-positioned over a relative parent. Pair with [`civ-badge-anchor`](./bad
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/count/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/count/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:count' with {

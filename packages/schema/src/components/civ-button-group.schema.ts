@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     orientation: {
       type: 'enum',
-      description: 'Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them — useful for narrow viewports or full-width primary actions',
+      description: 'Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them. Useful for narrow viewports or full-width primary actions',
       default: 'horizontal',
       values: ['horizontal', 'vertical'],
     },
@@ -24,14 +24,14 @@ const schema: ComponentSchema = {
     },
     overflowLabel: {
       type: 'string',
-      description: 'Accessible name for the "More" trigger that opens the overflow menu. Defaults to the localized "More" string. Web-only — paired with `allowOverflow`.',
+      description: 'Accessible name for the "More" trigger that opens the overflow menu. Defaults to the localized "More" string. Web-only. Paired with `allowOverflow`.',
       default: '',
       attribute: 'overflow-label',
       webOnly: true,
     },
     overflowIcon: {
       type: 'string',
-      description: 'Icon name on the "More" trigger. Defaults to `more-horiz`. Web-only — paired with `allowOverflow`.',
+      description: 'Icon name on the "More" trigger. Defaults to `more-horiz`. Web-only. Paired with `allowOverflow`.',
       default: 'more-horiz',
       attribute: 'overflow-icon',
       webOnly: true,

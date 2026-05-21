@@ -96,7 +96,6 @@ export const WithDescription: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-toggle label="Normal (off)" name="normal"></civ-toggle>
@@ -112,7 +111,6 @@ export const AllStates: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">

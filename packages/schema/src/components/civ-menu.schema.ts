@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
     },
     label: {
       type: 'string',
-      description: 'Accessible name for the menu (`aria-label` on the `role="menu"` container). Strongly recommended — without one, screen reader users see an unnamed menu',
+      description: 'Accessible name for the menu (`aria-label` on the `role="menu"` container). Strongly recommended. Without one, screen reader users see an unnamed menu',
       default: '',
     },
     align: {

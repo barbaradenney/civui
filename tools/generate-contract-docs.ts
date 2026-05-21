@@ -178,7 +178,7 @@ function renderPage(schema: ComponentSchema): string {
   out.push('');
   out.push(`# ${schema.name}`);
   out.push('');
-  out.push(`> **Auto-generated from \`packages/schema/src/components/${schema.name}.schema.ts\`** — do not hand-edit. Run \`pnpm storybook:contract\` (or rebuild Storybook) to regenerate.`);
+  out.push(`> **Auto-generated from \`packages/schema/src/components/${schema.name}.schema.ts\`.** Do not hand-edit. Run \`pnpm storybook:contract\` (or rebuild Storybook) to regenerate.`);
   out.push('');
   // Body description, with MDX-significant chars escaped.
   out.push(schema.description.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\{/g, '\\{').replace(/\}/g, '\\}'));
@@ -304,7 +304,7 @@ function injectContractLinkIntoComponentPage(
   const block = [
     CONTRACT_LINK_MARKER_START,
     '',
-    `> **Contract reference:** ${links} — auto-generated structured contract for cross-platform implementation.`,
+    `> **Contract reference:** ${links}. Auto-generated structured contract for cross-platform implementation.`,
     '',
     CONTRACT_LINK_MARKER_END,
   ].join('\n');

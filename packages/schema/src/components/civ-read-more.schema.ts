@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-read-more',
-  description: 'Two-stage content disclosure: an always-visible teaser paragraph with a "Read more" button that reveals additional content kept hidden in the DOM until expansion. Differs from `civ-disclosure`, which hides ALL content behind a trigger — `civ-read-more` keeps a teaser visible so the user can decide whether to expand. Trigger is a real `<button>` with `aria-expanded` and `aria-controls`; the rest region carries the `hidden` attribute when collapsed so screen readers skip it entirely.',
+  description: 'Two-stage content disclosure: an always-visible teaser paragraph with a "Read more" button that reveals additional content kept hidden in the DOM until expansion. Differs from `civ-disclosure`, which hides ALL content behind a trigger. `civ-read-more` keeps a teaser visible so the user can decide whether to expand. Trigger is a real `<button>` with `aria-expanded` and `aria-controls`; the rest region carries the `hidden` attribute when collapsed so screen readers skip it entirely.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -17,7 +17,7 @@ const schema: ComponentSchema = {
     },
     moreLabel: {
       type: 'string',
-      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…" — typographic ellipsis as a continuation hint).',
+      description: 'Override the "Read more" trigger text. When empty, falls back to the locale-aware `readMoreButton` string (English: "Read more…". Typographic ellipsis as a continuation hint).',
       default: '',
       attribute: 'more-label',
     },
@@ -29,7 +29,7 @@ const schema: ComponentSchema = {
     },
     icon: {
       type: 'string',
-      description: 'Optional icon name from the civ-icon library shown before the label. Empty by default — the trigger text alone is the affordance. Pass e.g. `chevron-down` for a 180° rotate-on-expand visual cue.',
+      description: 'Optional icon name from the civ-icon library shown before the label. Empty by default. The trigger text alone is the affordance. Pass e.g. `chevron-down` for a 180° rotate-on-expand visual cue.',
       default: '',
     },
     size: {
@@ -40,13 +40,13 @@ const schema: ComponentSchema = {
     },
     inline: {
       type: 'boolean',
-      description: 'Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron) — the trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout.',
+      description: 'Render inline so the trigger flows as the last words of the teaser text. Drops the button chrome (no background, no top margin, no chevron). The trigger reads as underlined inline emphasis rather than a block-level affordance. Author the teaser as plain text (no `<p>` wrapper) since block elements inside an inline container defeat the layout.',
       default: false,
       reflect: true,
     },
     noFadeTrigger: {
       type: 'boolean',
-      description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout — plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way.',
+      description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the text. Setting this prop reverts to the older layout. Plain button stacked below the teaser. Inline mode and the expanded state are unaffected either way.',
       default: false,
       reflect: true,
       attribute: 'no-fade-trigger',
@@ -65,7 +65,7 @@ const schema: ComponentSchema = {
       detail: {
         componentName: { type: 'string', description: 'Tag name of the dispatcher' },
         action: { type: 'string', description: 'The user action (`change`)' },
-        details: { type: 'object', description: '{ expanded: boolean } — the resulting state' },
+        details: { type: 'object', description: '{ expanded: boolean }. The resulting state' },
       },
     },
   },

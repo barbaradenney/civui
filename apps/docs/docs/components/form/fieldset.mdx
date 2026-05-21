@@ -10,11 +10,11 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 `<civ-fieldset>`
 
-Native fieldset wrapper with legend, hint, and error support for multi-field grouping — several related controls sharing one section heading (e.g. a manually composed address block of street / city / state, where each child input carries its own `label`).
+Native fieldset wrapper with legend, hint, and error support for multi-field grouping. Several related controls sharing one section heading (e.g. a manually composed address block of street / city / state, where each child input carries its own `label`).
 
 Uses native `<fieldset>` for automatic `disabled` cascade to all child form elements. Absorbs `civ-error-change` events from children so a child control's internal validation state (e.g. `civ-memorable-date` rejecting an unparseable typed value) surfaces in the wrapper's error slot.
 
-Do **not** wrap a single input or a self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) in this — those already render their own chrome, so you'd get nested fieldsets with double legends. The `lint:fieldsets` CI check enforces this.
+Do **not** wrap a single input or a self-contained group component (`civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`, `civ-yes-no`, `civ-memorable-date`, `civ-date-range-picker`) in this. Those already render their own chrome, so you'd get nested fieldsets with double legends. The `lint:fieldsets` CI check enforces this.
 
 ## Examples
 
@@ -50,7 +50,7 @@ Do **not** wrap a single input or a self-contained group component (`civ-radio-g
 | `required` | `boolean` | `false` | Whether the fieldset is required |
 | `disabled` | `boolean` | `false` | Disable all child form elements via native cascade |
 | `tight-hint` | `boolean` | `false` | Pull the hint flush with the controls below by removing the default 16px gap. Useful for compact compounds where the legend + hint read as one stacked header. |
-| `heading-level` | `1`–`6` | — | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
+| `heading-level` | `1`–`6` |. | Promote the legend to a heading via `role="heading"` + `aria-level=N`. See [Heading hierarchy](/components/form/form-group#heading-hierarchy). |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'sm'` | Visual size. `sm` = body size; `md`/`lg`/`xl` step up for section/page heading use. |
 
 ## Disabled Cascade
@@ -85,7 +85,7 @@ Setting `disabled` on `civ-fieldset` uses the native `<fieldset disabled>` behav
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/fieldset/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/fieldset/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:fieldset' with {

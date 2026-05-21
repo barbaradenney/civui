@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     caption: {
       type: 'string',
-      description: 'Accessible name for the table, rendered as `<caption>`. Strongly recommended — the caption serves as the table\'s accessible name for screen readers',
+      description: 'Accessible name for the table, rendered as `<caption>`. Strongly recommended. The caption serves as the table\'s accessible name for screen readers',
       default: '',
     },
     captionHidden: {
@@ -51,7 +51,7 @@ const schema: ComponentSchema = {
     },
     sortKeys: {
       type: 'array',
-      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]` — each entry is `{ key: string, direction: \'asc\' | \'desc\' }`. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
+      description: 'Multi-column sort stack (controlled). Typed as `GridSortKey[]`. Each entry is `{ key: string, direction: \'asc\' | \'desc\' }`. Entries earlier in the array are higher-priority. Update in response to `civ-sort`',
       webOnly: true,
     },
     responsive: {
@@ -74,7 +74,7 @@ const schema: ComponentSchema = {
     },
     selectedRowIds: {
       type: 'array',
-      description: 'IDs of currently-selected rows. Controlled — update in response to `civ-selection-change`',
+      description: 'IDs of currently-selected rows. Controlled. Update in response to `civ-selection-change`',
       webOnly: true,
     },
     loading: {
@@ -111,23 +111,23 @@ const schema: ComponentSchema = {
     },
     expandedRowIds: {
       type: 'array',
-      description: 'IDs of currently-expanded rows. Controlled — update in response to `civ-row-expand`. Pass `[]` for "none expanded". Only takes effect on rows whose `expandable` flag is true',
+      description: 'IDs of currently-expanded rows. Controlled. Update in response to `civ-row-expand`. Pass `[]` for "none expanded". Only takes effect on rows whose `expandable` flag is true',
       webOnly: true,
     },
     expandTemplate: {
       type: 'string',
-      description: 'Render callback for expanded-row detail content. `(row) => string | number | TemplateResult`. Required when any row has `expandable: true` — without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific)',
+      description: 'Render callback for expanded-row detail content. `(row) => string | number | TemplateResult`. Required when any row has `expandable: true`. Without it the detail row renders empty. Web-only (Lit `TemplateResult` is web-specific)',
       webOnly: true,
     },
     groupBy: {
       type: 'string',
-      description: 'When set to a column key, rows are grouped by `row.cells[groupBy]` and each group gets a collapsible header row spanning all columns. Groups appear in the order their first member appears in `rows` — pre-sort to control group order. Pass empty string to disable grouping',
+      description: 'When set to a column key, rows are grouped by `row.cells[groupBy]` and each group gets a collapsible header row spanning all columns. Groups appear in the order their first member appears in `rows`. Pre-sort to control group order. Pass empty string to disable grouping',
       default: '',
       attribute: 'group-by',
     },
     expandedGroups: {
       type: 'array',
-      description: 'Group keys currently expanded. Controlled — update in response to `civ-group-toggle`. When undefined (the default), all groups render expanded; pass an array (even `[]`) to take control',
+      description: 'Group keys currently expanded. Controlled. Update in response to `civ-group-toggle`. When undefined (the default), all groups render expanded; pass an array (even `[]`) to take control',
       webOnly: true,
     },
     groupLabel: {
@@ -137,14 +137,14 @@ const schema: ComponentSchema = {
     },
     keyboardNav: {
       type: 'boolean',
-      description: 'Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. Inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so the whole grid becomes a single tab stop; Enter / Space activate the cell\'s primary control, F2 enters edit mode on editable cells, Home / End move to row bounds, Ctrl+Home / Ctrl+End move to grid corners, PageUp / PageDown step ±10 rows. Web-only — native platforms have their own focus models and the `role="grid"` promotion is HTML-specific',
+      description: 'Promote the table to `role="grid"` with 2D arrow-key navigation per the WAI-ARIA Grid Pattern. Inner controls (sort buttons, expand toggles, action menus, edit triggers, checkboxes) drop to `tabindex="-1"` so the whole grid becomes a single tab stop; Enter / Space activate the cell\'s primary control, F2 enters edit mode on editable cells, Home / End move to row bounds, Ctrl+Home / Ctrl+End move to grid corners, PageUp / PageDown step ±10 rows. Web-only. Native platforms have their own focus models and the `role="grid"` promotion is HTML-specific',
       default: false,
       attribute: 'keyboard-nav',
       webOnly: true,
     },
     filters: {
       type: 'string',
-      description: 'Active filter values keyed by column.key. Typed as `Record<string, GridFilterValue>` — passed as an object literal, not a string (the type is `string` here only because the schema doesn\'t model object literals; the actual runtime shape is `{ [columnKey]: { type: \'text\' | \'select\' | \'number-range\', value?, min?, max? } }`). Controlled — update in response to `civ-filter-change`. Set `column.filter = { type, options?, placeholder? }` to opt a column into the filter row. The filter row renders inside `<thead>` beneath the column headers; columns without a filter config get an empty placeholder cell so the row stays aligned. Use the `applyGridFilters` utility from `@civui/data/filter` for client-side filtering, or wire it to your server query',
+      description: 'Active filter values keyed by column.key. Typed as `Record<string, GridFilterValue>`. Passed as an object literal, not a string (the type is `string` here only because the schema doesn\'t model object literals; the actual runtime shape is `{ [columnKey]: { type: \'text\' | \'select\' | \'number-range\', value?, min?, max? } }`). Controlled. Update in response to `civ-filter-change`. Set `column.filter = { type, options?, placeholder? }` to opt a column into the filter row. The filter row renders inside `<thead>` beneath the column headers; columns without a filter config get an empty placeholder cell so the row stays aligned. Use the `applyGridFilters` utility from `@civui/data/filter` for client-side filtering, or wire it to your server query',
       webOnly: true,
     },
     stickyFooter: {
@@ -228,11 +228,11 @@ const schema: ComponentSchema = {
       description: 'Fires when the user clicks a group header\'s chevron. Consumers manage `expandedGroups` in response: add the key when `expanded === true`, remove it when `false`',
       detail: {
         groupKey: { type: 'string', description: 'The stringified group key (the value of `row.cells[groupBy]` for the group)' },
-        expanded: { type: 'boolean', description: 'The target expanded state (not the previous state) — reducer-friendly' },
+        expanded: { type: 'boolean', description: 'The target expanded state (not the previous state). Reducer-friendly' },
       },
     },
     'civ-filter-change': {
-      description: 'Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own — use `applyGridFilters` from `@civui/data/filter` for the client-side default',
+      description: 'Fires when the user changes a per-column filter input. Detail carries the new full filter state (already merged) plus which column changed. Consumers should set `grid.filters` and re-filter `grid.rows` accordingly. The grid does not filter data on its own. Use `applyGridFilters` from `@civui/data/filter` for the client-side default',
       detail: {
         filters: { type: 'object', description: 'New full filter state (record keyed by column.key)' },
         columnKey: { type: 'string', description: 'The column.key whose filter changed' },

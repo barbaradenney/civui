@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-direct-deposit',
-  description: 'Compound bank-account field for direct-deposit enrollment — routing number, account number, and account type (checking/savings). Uses the routing-number preset for inline validation. JSON-serialized form value.',
+  description: 'Compound bank-account field for direct-deposit enrollment. Routing number, account number, and account type (checking/savings). Uses the routing-number preset for inline validation. JSON-serialized form value.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,

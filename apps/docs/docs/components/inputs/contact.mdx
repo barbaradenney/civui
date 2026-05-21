@@ -13,7 +13,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 Pre-configured text-input wrappers for the two contact fields most
 gov forms collect: phone number and email address. Each component
 ships with the right mask, validator, `inputmode`, default label, and
-hint — so the consumer writes a single tag and gets the canonical
+hint. So the consumer writes a single tag and gets the canonical
 treatment.
 
 Both extend [`civ-text-input`](./text-input.mdx) and dispatch the
@@ -46,10 +46,10 @@ Default label: "Phone number"
 
 <StoryEmbed id="forms-inputs-text-input--phone-international" />
 
-International mode is **deliberately a single input** — no country picker, no flag, no separate `+CC` field. Three reasons:
+International mode is **deliberately a single input**. No country picker, no flag, no separate `+CC` field. Three reasons:
 
 - **Autofill compatibility.** `autocomplete="tel"` matches a browser-saved phone in one shot. The split `tel-country-code` + `tel-national` pattern has spotty cross-browser support (Safari and Firefox often drop the country code), so most users would lose their saved value.
-- **Permissive client-side validation.** The `phoneIntl` validator accepts `+44 7700 900123`, `0044 7700 900123`, and `7700 900123` — anything 7–15 digits with optional `+` or `00` prefix. Strict E.164 normalization is a **server-side** job using libphonenumber; the client just checks "looks like a phone number."
+- **Permissive client-side validation.** The `phoneIntl` validator accepts `+44 7700 900123`, `0044 7700 900123`, and `7700 900123`. Anything 7–15 digits with optional `+` or `00` prefix. Strict E.164 normalization is a **server-side** job using libphonenumber; the client just checks "looks like a phone number."
 - **No mask.** Phone-number formats vary too much across countries to assume a fixed shape. Users type freely; the validator runs on blur.
 
 ### Usage
@@ -66,7 +66,7 @@ International mode is **deliberately a single input** — no country picker, no 
 
 Pre-configured input for email addresses with built-in validation and
 plain-language labeling. Sets `type="email"`, `inputmode="email"`, and
-the `email` validator — so blur surfaces "Enter a valid email address"
+the `email` validator. So blur surfaces "Enter a valid email address"
 without a server round-trip.
 
 Default label: "Email address"
@@ -94,7 +94,7 @@ accessibility contract:
 ## Composition
 
 Both components emit raw, unmasked values via `civ-input` /
-`civ-change` — the consumer always sees `1234567890` (digits only),
+`civ-change`. The consumer always sees `1234567890` (digits only),
 never `(123) 456-7890`. That means server-side handlers stay simple
 and the same value round-trips back into the input cleanly.
 
@@ -109,7 +109,7 @@ and the same value round-trips back into the input cleanly.
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/text-input/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/text-input/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:text-input' with {

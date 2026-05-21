@@ -39,7 +39,6 @@ export const Small: Story = {
 };
 
 export const Primary: Story = {
-  name: 'Primary',
   render: () => html`
     <p>Content above</p>
     <civ-divider variant="primary"></civ-divider>
@@ -48,7 +47,6 @@ export const Primary: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
@@ -80,7 +78,6 @@ export const AllVariants: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -112,7 +109,6 @@ export const DensityScale: Story = {
 };
 
 export const BenefitsSummary: Story = {
-  name: 'Benefits Summary',
   render: () => html`
     <div class="civ-max-w-lg">
       <h3>Disability compensation</h3>
@@ -131,7 +127,6 @@ export const BenefitsSummary: Story = {
 };
 
 export const FormSections: Story = {
-  name: 'Form Sections',
   render: () => html`
     <div class="civ-max-w-lg">
       <h3>Personal information</h3>

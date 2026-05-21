@@ -47,7 +47,6 @@ export const Primary: Story = {
 };
 
 export const Secondary: Story = {
-  name: 'Secondary',
   render: () => html`
     <div class="civ-flex civ-gap-2 civ-flex-wrap civ-items-center">
       <civ-tag label="Healthcare" variant="blue"></civ-tag>
@@ -59,7 +58,6 @@ export const Secondary: Story = {
 };
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <div>
@@ -85,7 +83,6 @@ export const AllVariants: Story = {
 };
 
 export const WithIcons: Story = {
-  name: 'With Icons',
   parameters: {
     docs: {
       description: {
@@ -105,7 +102,6 @@ export const WithIcons: Story = {
 };
 
 export const FilterChips: Story = {
-  name: 'Filter Chips',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-3">
       <p class="civ-m-0 civ-font-semibold">Filter results by category</p>
@@ -120,7 +116,6 @@ export const FilterChips: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -152,7 +147,6 @@ export const DensityScale: Story = {
 };
 
 export const Compact: Story = {
-  name: 'Compact',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>

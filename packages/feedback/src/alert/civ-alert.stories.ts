@@ -88,7 +88,6 @@ export const Success: Story = {
 // ── All Variants ──────────────────────────────────────────────
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" heading="Information">
@@ -110,7 +109,6 @@ export const AllVariants: Story = {
 // ── Style Variants ────────────────────────────────────────────
 
 export const PrimaryStyle: Story = {
-  name: 'Primary Style',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" alert-style="primary" heading="Information">
@@ -130,7 +128,6 @@ export const PrimaryStyle: Story = {
 };
 
 export const TertiaryStyle: Story = {
-  name: 'Tertiary Style',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-alert variant="info" alert-style="tertiary" heading="Information">
@@ -171,7 +168,6 @@ export const Dismissible: Story = {
 // ── Density Scale ─────────────────────────────────────────────
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -226,7 +222,6 @@ export const GovernmentFormValidation: Story = {
 // ── Compact ──────────────────────────────────────────────────
 
 export const Compact: Story = {
-  name: 'Compact',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>

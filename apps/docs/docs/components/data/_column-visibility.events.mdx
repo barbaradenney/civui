@@ -1,6 +1,6 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Event | Detail | Description |
 |-------|--------|-------------|
-| `civ-column-visibility-change` | `{ hiddenColumns: string[], visibleColumns: string[] }` | Fires when the user toggles a column's visibility checkbox. Consumers should update the underlying data-grid's `columns` array — typically by mapping over a master `allColumns` list and setting `hidden: detail.hiddenColumns.includes(c.key)` |
+| `civ-column-visibility-change` | `{ hiddenColumns: string[], visibleColumns: string[] }` | Fires when the user toggles a column's visibility checkbox. Consumers should update the underlying data-grid's `columns` array. Typically by mapping over a master `allColumns` list and setting `hidden: detail.hiddenColumns.includes(c.key)` |

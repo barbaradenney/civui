@@ -28,7 +28,7 @@ const schema: ComponentSchema = {
     },
     itemLabel: {
       type: 'string',
-      description: 'Singular noun for the repeated thing — interpolated into "Add another {item}" and remove labels',
+      description: 'Singular noun for the repeated thing. Interpolated into "Add another {item}" and remove labels',
       default: 'item',
       attribute: 'item-label',
     },
@@ -40,7 +40,7 @@ const schema: ComponentSchema = {
     },
     formStepsSensitive: {
       type: 'boolean',
-      description: 'In form-steps mode, treat the repeater as a sensitive flow — auto-pause / save state on navigation away',
+      description: 'In form-steps mode, treat the repeater as a sensitive flow. Auto-pause / save state on navigation away',
       default: false,
       attribute: 'form-steps-sensitive',
     },
@@ -52,7 +52,7 @@ const schema: ComponentSchema = {
     },
     min: {
       type: 'number',
-      description: 'Minimum number of instances. Defaults to 0 — the repeater renders only the "Add" button until the user clicks to create the first instance. Set higher to render that many rows up front. Also acts as the floor for removal',
+      description: 'Minimum number of instances. Defaults to 0. The repeater renders only the "Add" button until the user clicks to create the first instance. Set higher to render that many rows up front. Also acts as the floor for removal',
       default: 0,
     },
     max: {
@@ -70,7 +70,7 @@ const schema: ComponentSchema = {
         // Row shape is host-defined; `id` is the only field the repeater
         // itself reads (via `idField`). Anything else is consumed by
         // `summaryFields` / `rowSummary` on the consumer side.
-        id: { type: 'string', description: 'Stable identifier — property name is configurable via `id-field`. Other row fields are host-defined' },
+        id: { type: 'string', description: 'Stable identifier. Property name is configurable via `id-field`. Other row fields are host-defined' },
       },
     },
     addHref: {
@@ -124,7 +124,7 @@ const schema: ComponentSchema = {
       },
     },
     'civ-repeater-before-remove': {
-      description: 'Cancelable. Fires before an instance is removed (inline / form-steps modes). `preventDefault()` aborts — listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeRow(index, { skipConfirm: true })` from the confirm handler. Route mode does not need this event because the repeater never mutates the host\'s `rows` array; the consumer wraps confirmation around their own array update in the `civ-repeater-remove` handler',
+      description: 'Cancelable. Fires before an instance is removed (inline / form-steps modes). `preventDefault()` aborts. Listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeRow(index, { skipConfirm: true })` from the confirm handler. Route mode does not need this event because the repeater never mutates the host\'s `rows` array; the consumer wraps confirmation around their own array update in the `civ-repeater-remove` handler',
       detail: {
         index: { type: 'number', description: 'Index of the instance being removed' },
       },
@@ -133,7 +133,7 @@ const schema: ComponentSchema = {
       description: 'Fires when an instance is removed',
       detail: {
         index: { type: 'number', description: 'Index of the removed instance' },
-        id: { type: 'string', description: 'Stable id of the removed row (route mode only — value of `row[idField]`)' },
+        id: { type: 'string', description: 'Stable id of the removed row (route mode only. Value of `row[idField]`)' },
         row: { type: 'object', description: 'The full row object that was removed (route mode only)' },
       },
     },
@@ -145,7 +145,7 @@ const schema: ComponentSchema = {
       },
     },
     'civ-repeater-form-steps-close': {
-      description: 'Fires when the form-steps editor closes — either via Save or Cancel',
+      description: 'Fires when the form-steps editor closes. Either via Save or Cancel',
       detail: {
         index: { type: 'number', description: 'Index of the instance being closed' },
         action: { type: 'string', description: 'Either "save" (committed) or "cancel" (aborted, edits discarded)' },
@@ -155,7 +155,7 @@ const schema: ComponentSchema = {
 
   a11y: {
     role: 'group',
-    // The repeater is a list manager, not a form control — it does not
+    // The repeater is a list manager, not a form control. It does not
     // mark itself "(required)" on the legend. List-level constraints
     // come from `min`, field-level constraints come from the inner
     // fields' own `required` markers.

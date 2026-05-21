@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-link-card',
-  description: 'Interactive card-shaped link — entire card surface is clickable. Renders a heading, description, optional eyebrow text, and leading / trailing icons. Use for navigation hubs (gov.uk task list pattern, dashboard tiles).',
+  description: 'Interactive card-shaped link. Entire card surface is clickable. Renders a heading, description, optional eyebrow text, and leading / trailing icons. Use for navigation hubs (gov.uk task list pattern, dashboard tiles).',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,

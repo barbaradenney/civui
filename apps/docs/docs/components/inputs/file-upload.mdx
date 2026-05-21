@@ -12,7 +12,7 @@ import EventsTable from "./_file-upload.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-file-upload`](pathname:///civui/storybook/?path=/docs/contract-civ-file-upload--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-file-upload`](pathname:///civui/storybook/?path=/docs/contract-civ-file-upload--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -148,10 +148,10 @@ const controller = upload.getAbortController(0);
 
 The default Remove (✕) button next to each file is one-click. Real
 .gov flows often involve uploads that took the user real time and
-effort to produce — a 12 MB DD-214, an evidence packet — and an
+effort to produce (a 12 MB DD-214, an evidence packet) and an
 accidental click loses that work. Insert a confirmation step.
 
-CivUI's rule is **modal-only for destructive confirmations** — inline
+CivUI's rule is **modal-only for destructive confirmations**. Inline
 two-click patterns are an accessibility hazard. See
 [Destructive actions](/foundations/destructive-actions) for the
 full rationale.
@@ -215,7 +215,7 @@ backend in the same confirm handler.
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/file-upload/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/file-upload/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:file-upload' with {

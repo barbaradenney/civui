@@ -8,7 +8,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 # Categorized File Upload
 
-Government forms often require uploaded documents to be categorized — the user selects a document type before uploading the file. This ensures every attachment is properly labeled for processing and prevents uncategorized documents from reaching caseworkers.
+Government forms often require uploaded documents to be categorized. The user selects a document type before uploading the file. This ensures every attachment is properly labeled for processing and prevents uncategorized documents from reaching caseworkers.
 
 ## The pattern
 
@@ -39,7 +39,7 @@ Government forms often require uploaded documents to be categorized — the user
 </civ-repeater>
 ```
 
-There is no `document-type` preset baked into `civ-select` — provide the categories your form needs as inline `<option>` children, or pass an `options` array via JS.
+There is no `document-type` preset baked into `civ-select`. Provide the categories your form needs as inline `<option>` children, or pass an `options` array via JS.
 
 ## Why category first
 
@@ -151,16 +151,16 @@ summary.sections = [
 
 ## Accessibility
 
-- The category select has a visible label and is required — screen readers announce "Document type, required"
+- The category select has a visible label and is required. Screen readers announce "Document type, required"
 - The file upload's label describes what to upload, reinforced by the `hint` text
 - The conditional reveal hides the upload until a category is chosen, reducing cognitive load
 - Each repeater entry is announced with its index ("document 1", "document 2")
 
 ## Components used
 
-- [`civ-select`](/components/inputs/select) — category dropdown
-- [`civ-file-upload`](/components/inputs/file-upload) — file input
-- [`civ-conditional`](/components/form/conditional) — show upload after category selection
-- [`civ-repeater`](/components/form/repeater) — multiple categorized uploads
-- [`civ-data-field`](/components/form/data-field) — read-only file display on review pages
-- [`civ-fieldset`](/components/form/fieldset) — group category + upload together
+- [`civ-select`](/components/inputs/select). Category dropdown
+- [`civ-file-upload`](/components/inputs/file-upload). File input
+- [`civ-conditional`](/components/form/conditional). Show upload after category selection
+- [`civ-repeater`](/components/form/repeater). Multiple categorized uploads
+- [`civ-data-field`](/components/form/data-field). Read-only file display on review pages
+- [`civ-fieldset`](/components/form/fieldset). Group category + upload together

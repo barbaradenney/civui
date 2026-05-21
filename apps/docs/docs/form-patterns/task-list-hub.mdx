@@ -10,7 +10,7 @@ import StoryEmbed from "@site/src/components/StoryEmbed";
 
 For large applications with multiple chapters (personal info, service history, documents, etc.), the task list hub is the user's home base. It shows all sections with their completion status and lets users work through them in any order.
 
-Based on the [GDS Task List pattern](https://design-system.service.gov.uk/components/task-list/) adapted for government benefit applications. Composed from `<civ-list>` + `<civ-list-item>` + `<civ-badge>` — there's no dedicated task-list component.
+Based on the [GDS Task List pattern](https://design-system.service.gov.uk/components/task-list/) adapted for government benefit applications. Composed from `<civ-list>` + `<civ-list-item>` + `<civ-badge>`. There's no dedicated task-list component.
 
 ## Live example
 
@@ -71,7 +71,7 @@ Based on the [GDS Task List pattern](https://design-system.service.gov.uk/compon
 </civ-list>
 ```
 
-Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor. Omit `href` for locked rows — the row still renders with the same layout but is no longer a link, which is honest both visually and to assistive tech.
+Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor. Omit `href` for locked rows. The row still renders with the same layout but is no longer a link, which is honest both visually and to assistive tech.
 
 ## Status badges
 
@@ -88,7 +88,7 @@ Setting `href` on a `<civ-list-item>` makes the whole row a clickable anchor. Om
 
 ## Sequential unlocking
 
-Lock later sections until prerequisites are complete by **omitting the `href`** on `<civ-list-item>`. Without an `href`, the row renders without an anchor — visually identical, but no longer a click target. Pair with the `cannot-start` badge so users see why the row is locked.
+Lock later sections until prerequisites are complete by **omitting the `href`** on `<civ-list-item>`. Without an `href`, the row renders without an anchor. Visually identical, but no longer a click target. Pair with the `cannot-start` badge so users see why the row is locked.
 
 ```html
 <civ-list-item>
@@ -137,17 +137,17 @@ Hub → Chapter (multi-step) → Hub (updated status)
 
 ## Accessibility
 
-- Each clickable row is a real `<a>` filling the row — works with keyboard, screen readers, and right-click "open in new tab".
-- Static (locked) rows render without an anchor — assistive tech doesn't announce them as links. The `<civ-list-item>` host carries `role="listitem"` so the parent `<ul role="list">` accessibility tree sees a proper list item either way.
+- Each clickable row is a real `<a>` filling the row. Works with keyboard, screen readers, and right-click "open in new tab".
+- Static (locked) rows render without an anchor. Assistive tech doesn't announce them as links. The `<civ-list-item>` host carries `role="listitem"` so the parent `<ul role="list">` accessibility tree sees a proper list item either way.
 - Section headings are real `<h3>` elements that screen readers can navigate to as landmarks.
 - `<civ-badge>` carries `role="status"` so status changes are announced.
 - Progress bar announces completion percentage.
 
 ## Components used
 
-- [`civ-list`](/components/layout/list) — generic list container with optional `dividers`
-- [`civ-list-item`](/components/layout/list) — list row; set `href` to make the whole row clickable, omit for locked rows
-- `civ-badge` — semantic status indicator with `role="status"` and `with-icon` for the variant's icon
-- `civ-progress-percent` — overall completion
+- [`civ-list`](/components/layout/list). Generic list container with optional `dividers`
+- [`civ-list-item`](/components/layout/list). List row; set `href` to make the whole row clickable, omit for locked rows
+- `civ-badge`: semantic status indicator with `role="status"` and `with-icon` for the variant's icon
+- `civ-progress-percent`: overall completion
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-patterns-task-list-hub--va-disability-application)

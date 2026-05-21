@@ -39,6 +39,24 @@ describe('civ-address', () => {
     expect(inputs.length).toBe(5); // country (combobox) + street1 + street2 + city + zip
   });
 
+  it('sets inputmode="numeric" on the ZIP field for US country (mobile number keypad)', async () => {
+    const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
+
+    const zipInput = el.querySelector('input[autocomplete="postal-code"]') as HTMLInputElement;
+    expect(zipInput).not.toBeNull();
+    expect(zipInput.getAttribute('inputmode')).toBe('numeric');
+  });
+
+  it('does not set inputmode on the postal-code field for non-US countries (codes can be alphanumeric)', async () => {
+    const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr" show-country></civ-address>');
+    (el as any).addressValue = { country: 'CA', street1: '', street2: '', street3: '', city: '', state: '', zip: '' };
+    await elementUpdated(el);
+
+    const zipInput = el.querySelector('input[autocomplete="postal-code"]') as HTMLInputElement;
+    expect(zipInput).not.toBeNull();
+    expect(zipInput.getAttribute('inputmode')).toBeNull();
+  });
+
   it('hides street2 when showStreet2 is false', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
     (el as any).showStreet2 = false;
@@ -426,7 +444,10 @@ describe('civ-address validation modal', () => {
     await el.runValidation();
     await elementUpdated(el);
 
-    expect(el.querySelector('civ-modal')).toBeNull();
+    // The modal stays mounted once validateAddress is set (so its
+    // captured slot content doesn't shuffle around when shown/hidden);
+    // "closed" means `open` is false, not that the element is gone.
+    expect(el.querySelector('civ-modal[open]')).toBeNull();
   });
 });
 

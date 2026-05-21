@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-name',
-  description: 'Compound name field — first / middle / last with optional suffix selector. Renders bare text inputs (no inline labels) so the parent legend names the whole field. JSON-serialized form value.',
+  description: 'Compound name field. First / middle / last with optional suffix selector. Renders bare text inputs (no inline labels) so the parent legend names the whole field. JSON-serialized form value.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,

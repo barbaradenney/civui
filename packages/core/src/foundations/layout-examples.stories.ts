@@ -65,7 +65,6 @@ export const IconText: Story = {
 };
 
 export const CardGrid: Story = {
-  name: 'Card Grid',
   render: () => html`
     <div class="civ-grid civ-gap-4" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
       <civ-link-card href="/benefits" heading="Benefits" description="View your benefits"></civ-link-card>
@@ -76,7 +75,6 @@ export const CardGrid: Story = {
 };
 
 export const ActionBar: Story = {
-  name: 'Action Bar',
   render: () => html`
     <!-- civ-button-row stacks the cluster on mobile (each button picks up
          the full-width-on-mobile rule); civ-justify-end keeps the row
@@ -91,7 +89,6 @@ export const ActionBar: Story = {
 };
 
 export const ListItem: Story = {
-  name: 'List Item',
   render: () => html`
     <ul class="civ-list-none civ-p-0 civ-space-y-1" style="max-width: 480px;">
       <li class="civ-list-item civ-list-item--success">
@@ -135,7 +132,6 @@ export const ListItem: Story = {
 };
 
 export const HorizontalRadioGroup: Story = {
-  name: 'Horizontal Radio Group',
   render: () => html`
     <civ-radio-group legend="Preferred language" orientation="horizontal">
       <civ-radio label="English" value="en"></civ-radio>

@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-pagination',
-  description: 'USWDS-style pagination control. Renders a status range (Showing X–Y of Z), a page-size selector, Previous/Next buttons, and a truncated list of page-number buttons. The component is controlled — listen for `civ-page-change` to drive the consumer\'s data fetch. On viewports ≤480px, page-number buttons collapse to leave only Prev/Next + page-size visible.',
+  description: 'USWDS-style pagination control. Renders a status range (Showing X–Y of Z), a page-size selector, Previous/Next buttons, and a truncated list of page-number buttons. The component is controlled. Listen for `civ-page-change` to drive the consumer\'s data fetch. On viewports ≤480px, page-number buttons collapse to leave only Prev/Next + page-size visible.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -45,7 +45,7 @@ const schema: ComponentSchema = {
     },
     itemName: {
       type: 'string',
-      description: 'Singular noun used in status text (e.g. "row", "application"). Surface-level — meaningful labels improve clarity for assistive tech',
+      description: 'Singular noun used in status text (e.g. "row", "application"). Surface-level. Meaningful labels improve clarity for assistive tech',
       default: 'item',
       attribute: 'item-name',
     },
@@ -53,11 +53,11 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-page-change': {
-      description: 'Fires when the user navigates to a different page — via Previous, Next, a numbered button, or by picking a different page size (in which case `page` resets to 1). The consumer should update its `page` and `pageSize` props in response',
+      description: 'Fires when the user navigates to a different page. Via Previous, Next, a numbered button, or by picking a different page size (in which case `page` resets to 1). The consumer should update its `page` and `pageSize` props in response',
       detail: {
         page: { type: 'number', description: 'The new 1-based page' },
         pageSize: { type: 'number', description: 'The page size in effect at the time of the change' },
-        offset: { type: 'number', description: 'Zero-based offset of the first item on the new page — useful for server-side slicing' },
+        offset: { type: 'number', description: 'Zero-based offset of the first item on the new page. Useful for server-side slicing' },
       },
     },
   },

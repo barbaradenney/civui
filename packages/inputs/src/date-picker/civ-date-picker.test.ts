@@ -14,6 +14,13 @@ describe('civ-date-picker', () => {
       expect(input).not.toBeNull();
     });
 
+    it('sets inputmode="numeric" so mobile shows a number keypad for mm/dd/yyyy entry', async () => {
+      const el = await fixture('<civ-date-picker label="Date" name="date"></civ-date-picker>');
+
+      const input = el.querySelector('input[type="text"]') as HTMLInputElement;
+      expect(input.getAttribute('inputmode')).toBe('numeric');
+    });
+
     it('renders a calendar button', async () => {
       const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>');
 

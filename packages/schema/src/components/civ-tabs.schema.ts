@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-tabs',
-  description: 'ARIA tab pattern — a tablist with associated panels. Children are `<civ-tab>` (selectable headers) and `<civ-tab-panel>` (content regions). Tabs and panels are paired by `value`. Keyboard: roving tabindex, `ArrowLeft`/`ArrowRight` move between tabs, `Home`/`End` jump to first/last; disabled tabs are skipped. Activation is manual (pressing a tab selects it) — the safer default per ARIA APG for tabs that may trigger expensive content loads.',
+  description: 'ARIA tab pattern. A tablist with associated panels. Children are `<civ-tab>` (selectable headers) and `<civ-tab-panel>` (content regions). Tabs and panels are paired by `value`. Keyboard: roving tabindex, `ArrowLeft`/`ArrowRight` move between tabs, `Home`/`End` jump to first/last; disabled tabs are skipped. Activation is manual (pressing a tab selects it). The safer default per ARIA APG for tabs that may trigger expensive content loads.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,

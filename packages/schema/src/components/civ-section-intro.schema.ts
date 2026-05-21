@@ -16,7 +16,7 @@ const schema: ComponentSchema = {
     },
     headingLevel: {
       type: 'number',
-      description: 'Semantic heading level (2–6). Web-only — native platforms expose headings via accessibility traits',
+      description: 'Semantic heading level (2–6). Web-only. Native platforms expose headings via accessibility traits',
       default: 3,
       attribute: 'heading-level',
       webOnly: true,

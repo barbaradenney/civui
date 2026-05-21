@@ -51,7 +51,6 @@ export const ButtonsBothSides: Story = {
 };
 
 export const WithSelect: Story = {
-  name: 'With Select',
   render: () => html`
     <div class="civ-max-w-sm">
       <civ-input-group>

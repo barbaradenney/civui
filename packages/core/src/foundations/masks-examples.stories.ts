@@ -12,7 +12,6 @@ export default meta;
 type Story = StoryObj;
 
 export const AllPresets: Story = {
-  name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-text-input label="Phone number" name="phone" mask="phone-us" type="tel"></civ-text-input>
@@ -26,7 +25,6 @@ export const AllPresets: Story = {
 };
 
 export const CustomPatterns: Story = {
-  name: 'Custom Patterns',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-text-input label="Case number" name="case" hint="For example: AB-1234" mask-pattern="AA-####"></civ-text-input>
@@ -36,7 +34,6 @@ export const CustomPatterns: Story = {
 };
 
 export const MaskModes: Story = {
-  name: 'Mask Modes',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4 civ-max-w-lg">
       <civ-text-input label="Phone (blur mode — default)" name="phone1" hint="Type freely, formatted on blur" mask="phone-us" type="tel"></civ-text-input>

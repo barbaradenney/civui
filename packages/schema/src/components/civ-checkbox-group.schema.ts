@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Group legend text (rendered as `<legend>`). The component is self-contained — do not wrap in civ-fieldset.',
+      description: 'Group legend text (rendered as `<legend>`). The component is self-contained. Do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {
@@ -35,7 +35,7 @@ const schema: ComponentSchema = {
     },
     tile: {
       type: 'boolean',
-      description: 'Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment',
+      description: 'Tile variant with bordered card styling for child checkboxes. Default true. Tiles are the standard treatment',
       default: true,
       reflect: true,
     },

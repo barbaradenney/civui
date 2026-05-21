@@ -1,5 +1,5 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
-    Do not edit by hand — run `pnpm sync:doc-tables` to regenerate. */}
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -10,7 +10,7 @@
 | `progress` | `'minimal'` \| `'steps'` \| `'bar'` | `'minimal'` | Progress affordance rendered above the step content. minimal = "Step N of M" text only; steps = horizontal step indicator; bar = single progress bar |
 | `before-continue` | `string` | — | Async hook `(stepEl, stepIndex) => Promise<boolean> \| boolean` invoked before advancing. Return false to block navigation (e.g. server-side validation failed). Set programmatically (not as an attribute) |
 | `validate` | `boolean` | `true` | Run native form validation on Continue. When false, lets users advance with invalid fields (used for save-and-resume drafts) |
-| `sensitive` | `boolean` | `false` | Mark the step as containing sensitive data — auto-pauses persistence on navigation away and warns before unload |
+| `sensitive` | `boolean` | `false` | Mark the step as containing sensitive data. Auto-pauses persistence on navigation away and warns before unload |
 | `step-title` | `string` | `''` | Optional in-step title rendered above the form fields |
 | `header-size` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Size of the step title heading |
 | `heading-level` | `number` | `2` | Aria-level for the step title heading |

@@ -23,7 +23,6 @@ export const Default: Story = {
 };
 
 export const WithoutFileInfo: Story = {
-  name: 'Without File Info',
   render: () => render({
     src: 'https://picsum.photos/seed/civui2/400/300',
     alt: 'Uploaded photo',
@@ -31,7 +30,6 @@ export const WithoutFileInfo: Story = {
 };
 
 export const MultipleImages: Story = {
-  name: 'Multiple Images',
   render: () => {
     const img1 = template({ src: 'https://picsum.photos/seed/doc1/400/300', alt: 'Document 1', filename: 'dd214-page1.jpg', file_size: '1.2 MB' });
     const img2 = template({ src: 'https://picsum.photos/seed/doc2/400/300', alt: 'Document 2', filename: 'dd214-page2.jpg', file_size: '0.9 MB' });

@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     legend: {
       type: 'string',
-      description: 'Group legend rendered as `<legend>`. The component is self-contained — do not wrap in civ-fieldset.',
+      description: 'Group legend rendered as `<legend>`. The component is self-contained. Do not wrap in civ-fieldset.',
       default: '',
     },
     headingLevel: {
@@ -101,7 +101,7 @@ const schema: ComponentSchema = {
     'civ-input': {
       description: 'Fires on every change to either the start or end date',
       detail: {
-        value: { type: 'object', description: '`{ start: string, end: string }` — ISO yyyy-mm-dd dates; either may be empty if not yet picked' },
+        value: { type: 'object', description: '`{ start: string, end: string }`. ISO yyyy-mm-dd dates; either may be empty if not yet picked' },
       },
     },
     'civ-change': {
@@ -130,7 +130,7 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    // Submits as `${name}.start` and `${name}.end` — multiple FormData entries.
+    // Submits as `${name}.start` and `${name}.end`. Multiple FormData entries.
     valueMode: 'multi',
     formAssociated: true,
     resetBehavior: 'restore-default-value',

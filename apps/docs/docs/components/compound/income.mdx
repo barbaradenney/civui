@@ -12,7 +12,7 @@ import EventsTable from "./_income.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-income`](pathname:///civui/storybook/?path=/docs/contract-civ-income--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-income`](pathname:///civui/storybook/?path=/docs/contract-civ-income--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
@@ -21,7 +21,7 @@ import EventsTable from "./_income.events.mdx";
 Compound field for dollar amount + pay frequency. Pairs
 [`<civ-currency>`](../inputs/number.mdx#civ-currency) (dollar input with mask and
 validation) with [`<civ-select>`](../inputs/select.mdx) (frequency) inside a
-single `<fieldset>`. Use for any means-tested benefit application — wages,
+single `<fieldset>`. Use for any means-tested benefit application. Wages,
 household income, expense estimates, support payments.
 
 Value shape: `{ amount: string, frequency: IncomeFrequency }`. The compound
@@ -51,7 +51,7 @@ that prefer flat keys.
 
 <StoryEmbed id="forms-compound-income--with-errors" />
 
-### In a real form — household income
+### In a real form. Household income
 
 <StoryEmbed id="forms-compound-income--form-example" />
 
@@ -84,7 +84,7 @@ The default seven frequencies, in order:
 | `annually`     | Once a year          |
 | `one-time`     | One-time payment     |
 
-Restrict the list with the `frequencies` prop — pass a JSON array attribute
+Restrict the list with the `frequencies` prop. Pass a JSON array attribute
 in HTML, or set the array directly in JavaScript:
 
 ```html
@@ -128,7 +128,7 @@ in HTML, or set the array directly in JavaScript:
 
 ## Form Submission
 
-The compound is a single form field — `civ-form.getFormData()` returns the
+The compound is a single form field. `civ-form.getFormData()` returns the
 JSON-stringified value under `${name}`:
 
 ```js
@@ -155,7 +155,7 @@ parsing can use whichever is convenient.
 
 ## Accessibility
 
-`civ-income` is a **multi-field grouping compound** — the legend is a
+`civ-income` is a **multi-field grouping compound**. The legend is a
 section heading, not the question the user answers. When `required` is set,
 the `(required)` indicator renders on each leaf control (amount + frequency),
 not on the legend itself. This matches the section-legend rule used by

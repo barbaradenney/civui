@@ -11,13 +11,13 @@ import PropsTable from "./_service-history.props.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-service-history`](pathname:///civui/storybook/?path=/docs/contract-civ-service-history--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-service-history`](pathname:///civui/storybook/?path=/docs/contract-civ-service-history--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-service-history>`
 
-Compound component for a single military service period — branch, dates, discharge type, and optional service number. Designed to be used inside a `civ-repeater` for multiple service periods.
+Compound component for a single military service period. Branch, dates, discharge type, and optional service number. Designed to be used inside a `civ-repeater` for multiple service periods.
 
 ## Examples
 
@@ -61,7 +61,7 @@ Honorable, General (under honorable conditions), Other than honorable, Bad condu
 
 ## Drupal SDC
 
-This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/service-history/`. Include it from any Twig template — the SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
+This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/service-history/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:
 
 ```twig
 {% include 'civui:service-history' with {

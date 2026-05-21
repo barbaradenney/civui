@@ -94,7 +94,6 @@ export const Disabled: Story = {
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {
-  name: 'All States',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-select label="Normal" name="normal">
@@ -214,7 +213,6 @@ export const WidthVariants: Story = {
 };
 
 export const DensityScale: Story = {
-  name: 'Density Scale',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
@@ -419,7 +417,6 @@ export const PresetContactPreference: Story = {
 // ── All Presets ──────────────────────────────────────────────
 
 export const AllPresets: Story = {
-  name: 'All Presets',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2" style="max-width: 480px;">
       <civ-select label="US State" preset="us-state"></civ-select>

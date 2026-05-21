@@ -24,7 +24,6 @@ export const Default: Story = {
 };
 
 export const ProgressBar: Story = {
-  name: 'Progress Bar',
   render: () => render(progressBarTemplate, {
     value: 40,
     label: 'Progress',
@@ -33,14 +32,12 @@ export const ProgressBar: Story = {
 };
 
 export const MidProgress: Story = {
-  name: 'Mid Progress',
   render: () => render(progressStepsTemplate, {
     current: 3,
   }),
 };
 
 export const ProgressBarFull: Story = {
-  name: 'Progress Bar Full',
   render: () => render(progressBarTemplate, {
     value: 100,
     label: 'Progress',
@@ -49,7 +46,6 @@ export const ProgressBarFull: Story = {
 };
 
 export const ProgressBarEmpty: Story = {
-  name: 'Progress Bar Empty',
   render: () => render(progressBarTemplate, {
     value: 0,
     label: 'Progress',

@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-address',
-  description: 'Compound address field — renders street, optional second/third address lines, city, state (USPS preset), ZIP, and optional country selector. JSON-serialized form value.',
+  description: 'Compound address field. Renders street, optional second/third address lines, city, state (USPS preset), ZIP, and optional country selector. JSON-serialized form value.',
   category: 'form-group',
   extends: 'CivFormElement',
   isGroup: true,
@@ -46,7 +46,7 @@ const schema: ComponentSchema = {
     },
     showCountry: {
       type: 'boolean',
-      description: 'Render the country selector. Defaults off — most government forms collect US-only addresses',
+      description: 'Render the country selector. Defaults off. Most government forms collect US-only addresses',
       default: false,
       attribute: 'show-country',
     },
@@ -76,7 +76,7 @@ const schema: ComponentSchema = {
     },
     validateAddress: {
       type: 'string',
-      description: 'Async validator function `(addr: AddressValue) => Promise<{valid: boolean; suggestion?: AddressValue; error?: string}>`. Set programmatically (not as an attribute) — wires into the address-validation flow',
+      description: 'Async validator function `(addr: AddressValue) => Promise<{valid: boolean; suggestion?: AddressValue; error?: string}>`. Set programmatically (not as an attribute). Wires into the address-validation flow',
       webOnly: true,
     },
   },

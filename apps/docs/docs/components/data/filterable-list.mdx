@@ -12,13 +12,13 @@ import EventsTable from "./_filterable-list.events.mdx";
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-filterable-list`](pathname:///civui/storybook/?path=/docs/contract-civ-filterable-list--docs) — auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-filterable-list`](pathname:///civui/storybook/?path=/docs/contract-civ-filterable-list--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
 `<civ-filterable-list>`
 
-A filtering controller that coordinates slotted filter controls with a slotted list of items. The component handles search matching, named attribute filtering, AND composition, result counts, and screen-reader announcements — while the consumer provides any filter UI they want.
+A filtering controller that coordinates slotted filter controls with a slotted list of items. The component handles search matching, named attribute filtering, AND composition, result counts, and screen-reader announcements. While the consumer provides any filter UI they want.
 
 ## How it works
 
@@ -64,7 +64,7 @@ A filtering controller that coordinates slotted filter controls with a slotted l
 | Slot | Attribute | Description |
 |------|-----------|-------------|
 | `filters` | `data-filterable-list-filters` | Consumer-provided filter controls (search, chips, etc.) |
-| `default` | — | The list content (typically `<civ-list>` with `<civ-list-item>`) |
+| `default` |. | The list content (typically `<civ-list>` with `<civ-list-item>`) |
 
 ## JavaScript API
 
@@ -87,7 +87,7 @@ list.totalCount;  // Total filterable items
 
 Any `<civ-text-input type="search">` or element with `data-filterable-list-search` in the filter zone triggers text matching. Text is matched case-insensitively against:
 
-1. The item's `data-filter` attribute (primary — can include hidden keywords)
+1. The item's `data-filter` attribute (primary. Can include hidden keywords)
 2. The item's `heading` property
 3. The item's `textContent` (fallback)
 
@@ -103,7 +103,7 @@ Controls with a `name` attribute (chip groups, selects) trigger attribute matchi
 
 ### AND composition
 
-Multiple active filters compose with AND logic — an item must pass ALL active filters to remain visible.
+Multiple active filters compose with AND logic. An item must pass ALL active filters to remain visible.
 
 ## Accessibility
 

@@ -10,7 +10,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Text button that fires an action and shows a transient ✓ confirmation before reverting. Use for fire-and-forget actions whose feedback should appear inline without yanking the user to a toast — Copy, Paste, Scan, Generate. For two-state toggle controls (Show / Hide password) see the Toggle Button component.',
+          'Text button that fires an action and shows a transient ✓ confirmation before reverting. Use for fire-and-forget actions whose feedback should appear inline without yanking the user to a toast — Copy, Paste, Scan, Generate. For toggleable two-state controls (Show / Hide password) use civ-toggle-button.',
       },
     },
   },

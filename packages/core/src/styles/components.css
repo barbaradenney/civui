@@ -47,7 +47,8 @@
   civ-popover,
   civ-segment,
   civ-tab,
-  civ-tab-nav-item {
+  civ-tab-nav-item,
+  civ-toggle-button {
     display: inline-block;
   }
 

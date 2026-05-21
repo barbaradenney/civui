@@ -144,6 +144,15 @@ props:
       title: Inline today label
       type: string
       description: 'Override the inline "Today" button label. Defaults to the locale-aware "Today"'
+    show_today_shortcut:
+      title: Show today shortcut
+      type: boolean
+      default: false
+      description: 'Render a "Today" shortcut chip in a helper row directly below the input (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matc...'
+    today_shortcut_label:
+      title: Today shortcut label
+      type: string
+      description: 'Override the "Today" shortcut chip label. Defaults to the locale-aware "Today"'
 
 libraryOverrides:
   dependencies:

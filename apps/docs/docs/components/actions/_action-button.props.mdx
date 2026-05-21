@@ -1,0 +1,17 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `variant` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'tertiary'` | Visual emphasis. Same scale as civ-button but defaults to `tertiary` (text-only) for inline contexts |
+| `danger` | `boolean` | `false` | Apply destructive-action styling |
+| `pressed` | `boolean` | — | Tri-state pressed/active indicator. `true` = active (e.g. favorited); `false` = inactive but toggle-aware (sets aria-pressed="false"); omitted = no toggle semantics |
+| `type` | `'button'` \| `'submit'` \| `'reset'` | `'button'` | HTML button type |
+| `icon-start` | `string` | `''` | Leading icon name |
+| `icon-end` | `string` | `''` | Trailing icon name |
+| `icon-only` | `boolean` | `false` | Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconStart` / `iconEnd` to be set |
+| `href` | `string` | `''` | When set, renders as `<a href>` instead of `<button>`. For navigation affordances that visually belong with other action buttons (e.g. an Edit link next to a Remove button in a list row). The label gets underlined so the link identity stays visible |
+| `target` | `string` | `''` | HTML `target` attribute (link mode only). Web-only. Use `new-tab` for the common "open in new tab" case |
+| `rel` | `string` | `''` | HTML `rel` attribute (link mode only). Web-only. `new-tab` automatically sets `rel="noopener noreferrer"` |
+| `download` | `string` | `''` | HTML `download` attribute (link mode only, suggested filename). Web-only. Native platforms handle downloads via OS share/save sheets |
+| `new-tab` | `boolean` | `false` | Open the link in a new tab/window (link mode only). Sets `target="_blank"` + `rel="noopener noreferrer"`. Web-only. Native platforms route URLs through the OS, which has no "new tab" concept |

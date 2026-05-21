@@ -1,12 +1,6 @@
 // CivUI — CivToggleButton for Jetpack Compose
-// Two-state persistent toggle ("Show" ↔ "Hide"). Mirrors the web
-// civ-toggle-button component.
-//
-// Placeholder body — the prop surface satisfies schema parity. The
-// implementation should render a button with `Modifier.semantics { toggleableState }`
-// reflecting `pressed`, swap the label between [label] and [pressedLabel]
-// on each tap, and emit [onToggle] with the NEW pressed state. See
-// audit-debt.md for status.
+// Two-state persistent toggle ("Show" ↔ "Hide"). Mirrors civ-toggle-button.
+// Placeholder body — see audit-debt.md for native implementation status.
 
 package gov.civui.components
 

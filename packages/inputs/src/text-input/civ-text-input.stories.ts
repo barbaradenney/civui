@@ -228,7 +228,7 @@ export const PasswordReveal: Story = {
       reveal-password
     ></civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Click the <strong>Show</strong> / <strong>Hide</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+      Click the <strong>Show password</strong> / <strong>Hide password</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
     </p>
     <p class="civ-mt-3 civ-text-sm">
       The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.

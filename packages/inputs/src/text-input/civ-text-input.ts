@@ -403,8 +403,8 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
           ${needsRevealButton ? html`
             <civ-toggle-button
               variant="chip"
-              label="${t('passwordRevealShort')}"
-              pressed-label="${t('passwordHideShort')}"
+              label="${t('passwordReveal')}"
+              pressed-label="${t('passwordHide')}"
               ?pressed="${this._passwordRevealed}"
               @civ-toggle="${this._onPasswordToggle}"
             ></civ-toggle-button>

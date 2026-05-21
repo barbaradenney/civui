@@ -96,7 +96,7 @@ Set `clearable` to render an inline "×" button on the trailing edge whenever th
 
 ### Password Reveal
 
-Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide** toggle chip in the helper row below the input. Clicking it flips the rendered input type between `password` and `text`; the host's `type` prop stays `password` so the field's semantic identity doesn't change. Suppressed when `type` is anything other than `password`.
+Set `reveal-password` on a `type="password"` input to render a **Show password** / **Hide password** toggle chip in the helper row below the input. Clicking it flips the rendered input type between `password` and `text`; the host's `type` prop stays `password` so the field's semantic identity doesn't change. Suppressed when `type` is anything other than `password`.
 
 ```html
 <civ-text-input label="Password" name="password" type="password" reveal-password></civ-text-input>
@@ -106,7 +106,7 @@ Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide
 
 The reveal toggle lives **below** the input rather than inset for two reasons. (1) The only affordance that stays inset is the clear button — a destructive control that operates on the value and stays tightly bound to the input's visual box. (2) USWDS, GOV.UK, and Material all place "Show password" below the field; an inset Show/Hide text label on mobile overlaps the typed value and competes with the clear button for the same tap region.
 
-Reveal coexists cleanly with `clearable`: the × clear button stays inset on the trailing edge, the Show / Hide toggle sits in the helper row below. They never collide.
+Reveal coexists cleanly with `clearable`: the × clear button stays inset on the trailing edge, the Show password / Hide password toggle sits in the helper row below. They never collide.
 
 ### Below-Action Slot
 

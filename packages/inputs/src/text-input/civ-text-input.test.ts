@@ -788,8 +788,8 @@ describe('text-input inline icons', () => {
       const toggle = el.querySelector('civ-toggle-button') as any;
       expect(toggle).not.toBeNull();
       expect(toggle.pressed).toBe(false);
-      expect(toggle.label).toBe('Show');
-      expect(toggle.pressedLabel).toBe('Hide');
+      expect(toggle.label).toBe('Show password');
+      expect(toggle.pressedLabel).toBe('Hide password');
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.type).toBe('password');
     });
@@ -936,7 +936,7 @@ describe('text-input inline icons', () => {
     it('reveal toggle renders in the helper row below the input, not inset', async () => {
       // Old behavior: reveal toggle sat inset and the input got
       // extra trailing padding (`civ-input-with-trailing-reveal`) so
-      // the "Show" / "Hide" text didn't overlap the value.
+      // the "Show password" / "Hide password" text didn't overlap the value.
       // New behavior: reveal moved to the helper row below — no
       // trailing padding needed on the input.
       const el = await fixture<CivTextInput>(

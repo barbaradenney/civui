@@ -340,6 +340,14 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
 
   private _renderValidationModal() {
     if (!this._showValidationModal) return nothing;
+    // Wrap dynamic content in stable body / footer containers so the
+    // modal's LightDomSlotMixin captures them as fixed units. Inner
+    // template swaps (loading → suggestion) then happen inside the
+    // captured wrappers, with Lit's ChildPart markers anchored to
+    // the wrappers themselves — not at the modal's host root, which
+    // would put them on the wrong side of the slot-target relocate.
+    // See .claude/rules/common-traps.md → "LightDomSlotMixin
+    // composition with dynamic Lit children".
     return html`
       <civ-modal
         ?open="${this._showValidationModal}"
@@ -348,28 +356,36 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         no-close-button
         @civ-modal-close="${this._onValidationKeepOriginal}"
       >
-        ${this._validating ? html`
-          <p class="civ-text-body">${t('addressValidationLoading')}</p>
-        ` : this._suggestion ? html`
-          <div class="civ-flex civ-flex-col civ-gap-6">
-            <div>
-              <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
-              <p class="civ-text-body civ-m-0">${this._data.street1}</p>
-              ${this._data.street2 ? html`<p class="civ-text-body civ-m-0">${this._data.street2}</p>` : nothing}
-              <p class="civ-text-body civ-m-0">${this._data.city}, ${this._data.state} ${this._data.zip}</p>
-            </div>
-            <div>
-              <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
-              <p class="civ-text-body civ-m-0">${this._suggestion.street1}</p>
-              ${this._suggestion.street2 ? html`<p class="civ-text-body civ-m-0">${this._suggestion.street2}</p>` : nothing}
-              <p class="civ-text-body civ-m-0">${this._suggestion.city}, ${this._suggestion.state} ${this._suggestion.zip}</p>
-            </div>
-          </div>
-          <div data-modal-footer>
-            <civ-button variant="secondary" label="${t('addressValidationUseOriginal')}" @click="${this._onValidationKeepOriginal}"></civ-button>
-            <civ-button label="${t('addressValidationUseSuggested')}" @click="${this._onValidationUseSuggested}"></civ-button>
-          </div>
-        ` : nothing}
+        <div>
+          ${this._validating
+            ? html`<p class="civ-text-body">${t('addressValidationLoading')}</p>`
+            : this._suggestion
+              ? html`
+                <div class="civ-flex civ-flex-col civ-gap-6">
+                  <div>
+                    <p class="civ-font-semibold civ-mb-1">${t('addressValidationOriginalLabel')}</p>
+                    <p class="civ-text-body civ-m-0">${this._data.street1}</p>
+                    ${this._data.street2 ? html`<p class="civ-text-body civ-m-0">${this._data.street2}</p>` : nothing}
+                    <p class="civ-text-body civ-m-0">${this._data.city}, ${this._data.state} ${this._data.zip}</p>
+                  </div>
+                  <div>
+                    <p class="civ-font-semibold civ-mb-1">${t('addressValidationSuggestedLabel')}</p>
+                    <p class="civ-text-body civ-m-0">${this._suggestion.street1}</p>
+                    ${this._suggestion.street2 ? html`<p class="civ-text-body civ-m-0">${this._suggestion.street2}</p>` : nothing}
+                    <p class="civ-text-body civ-m-0">${this._suggestion.city}, ${this._suggestion.state} ${this._suggestion.zip}</p>
+                  </div>
+                </div>
+              `
+              : nothing}
+        </div>
+        <div data-modal-footer>
+          ${!this._validating && this._suggestion
+            ? html`
+              <civ-button variant="secondary" label="${t('addressValidationUseOriginal')}" @click="${this._onValidationKeepOriginal}"></civ-button>
+              <civ-button label="${t('addressValidationUseSuggested')}" @click="${this._onValidationUseSuggested}"></civ-button>
+            `
+            : nothing}
+        </div>
       </civ-modal>
     `;
   }

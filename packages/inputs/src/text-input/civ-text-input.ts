@@ -23,6 +23,7 @@ import {
 } from '@civui/core';
 import type { InputWidth, MaskDefinition, SlotConfig } from '@civui/core';
 import { dispatch } from '@civui/core';
+import '@civui/actions/toggle-button';
 
 export type TextInputType = 'text' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'url';
 export type TextInputMask = 'ssn' | 'phone-us' | 'zip' | 'zip4' | 'ein' | 'currency' | '';
@@ -626,13 +627,13 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
             <civ-icon name="close"></civ-icon>
           </button>`
         : nothing}${needsRevealButton
-        ? html`<button
-            type="button"
-            class="civ-text-btn civ-text-btn--inline"
-            aria-label="${this._passwordRevealed ? t('passwordHide') : t('passwordReveal')}"
-            aria-pressed="${this._passwordRevealed}"
-            @click="${this._onTogglePasswordReveal}"
-          >${this._passwordRevealed ? t('passwordHideShort') : t('passwordRevealShort')}</button>`
+        ? html`<civ-toggle-button
+            variant="inline"
+            label="${t('passwordRevealShort')}"
+            pressed-label="${t('passwordHideShort')}"
+            ?pressed="${this._passwordRevealed}"
+            @civ-toggle="${this._onPasswordToggle}"
+          ></civ-toggle-button>`
         : nothing}${hasSuffix
         ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
         : nothing}${showLeadingIcon
@@ -674,8 +675,8 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
    * on the next update. The host's `type` prop is unchanged — only
    * the rendered attribute swaps.
    */
-  private _onTogglePasswordReveal(): void {
-    this._passwordRevealed = !this._passwordRevealed;
+  private _onPasswordToggle(e: CustomEvent<{ pressed: boolean }>): void {
+    this._passwordRevealed = e.detail.pressed;
   }
 
   /**

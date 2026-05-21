@@ -217,7 +217,7 @@ export const Clearable: Story = {
 };
 
 export const PasswordReveal: Story = {
-  name: 'Inline: Password reveal',
+  name: 'Inset: Password reveal',
   render: () => html`
     <civ-text-input
       label="Password"
@@ -228,7 +228,10 @@ export const PasswordReveal: Story = {
       reveal-password
     ></civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Click the eye button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+      Click the <strong>Show</strong> / <strong>Hide</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+    </p>
+    <p class="civ-mt-3 civ-text-sm">
+      Password reveal is one of the two affordances that <em>stay inset</em> inside the input chrome (the other is the close / × clear button). Both operate on how the input itself behaves — they're controls on the chrome, not shortcuts that act on the value. Value shortcuts (Copy, Today, Now, custom trailing-action chips) sit in a helper row <em>below</em> the input — see the <code>BelowActionSlot</code> story.
     </p>
   `,
 };
@@ -237,47 +240,23 @@ export const BelowActionSlot: Story = {
   name: 'Below-input action slot (escape hatch)',
   render: () => html`
     <civ-text-input label="API key" name="api-key" value="sk-abc123def456ghi789">
-      <button
+      <civ-confirm-button
         data-below-action
-        type="button"
-        class="civ-text-btn civ-text-btn--chip"
-        @click=${(e: Event) => {
-          const btn = e.currentTarget as HTMLButtonElement;
-          const host = btn.closest('civ-text-input');
+        label="Copy"
+        success-label="Copied"
+        @civ-confirm=${(e: Event) => {
+          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');
           if (host && 'value' in host) {
             navigator.clipboard?.writeText(String(host.value ?? ''));
           }
-          // Transient "Copied ✓" confirmation. Past-tense label + green
-          // success color + leading check (the `--inline.is-success`
-          // state — applied to the chip just for the success window,
-          // which gives us the green/check decoration without changing
-          // the chip's base layout).
-          const original = btn.dataset.originalLabel ?? btn.textContent ?? 'Copy';
-          if (!btn.dataset.originalLabel) btn.dataset.originalLabel = original;
-          btn.classList.add('civ-text-btn--inline', 'is-success');
-          btn.classList.remove('civ-text-btn--chip');
-          btn.textContent = 'Copied';
-          btn.setAttribute('aria-label', 'Copied');
-          // Announce to screen readers — the visual change alone
-          // doesn't trigger an SR re-read on a same-button text swap.
-          btn.setAttribute('aria-live', 'polite');
-          const prev = (btn as any)._copiedTimer as number | undefined;
-          if (prev) clearTimeout(prev);
-          (btn as any)._copiedTimer = setTimeout(() => {
-            btn.classList.remove('civ-text-btn--inline', 'is-success');
-            btn.classList.add('civ-text-btn--chip');
-            btn.textContent = original;
-            btn.removeAttribute('aria-label');
-            btn.removeAttribute('aria-live');
-          }, 1500);
         }}
-      >Copy</button>
+      ></civ-confirm-button>
     </civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Use the <code>data-below-action</code> slot for value-shortcuts the design system doesn't ship as props (copy, paste, scan, generate, units toggle). The button renders in a helper row directly under the input — a larger, clearer tap target than an inset button inside the input's chrome. Style with <code>.civ-text-btn.civ-text-btn--chip</code> so it reads as a quiet affordance, not a primary action.
+      Use the <code>data-below-action</code> slot for value-shortcuts the design system doesn't ship as first-class props (copy, paste, scan, generate). The slot renders in a helper row directly under the input — a larger, clearer tap target than an inset button inside the input's chrome.
     </p>
     <p class="civ-mt-3 civ-text-sm">
-      For ephemeral confirmation, swap the label to past tense ("Copied", "Pasted") and apply <code>.civ-text-btn--inline.is-success</code> for ~1–2 seconds. The state prepends a check mark and flips the text to the success color. Add <code>aria-live="polite"</code> on the button during the swap so screen readers announce the receipt.
+      For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the "Copy → Copied ✓ → Copy" feedback loop, keeps padding stable across the swap, and wires <code>aria-live="polite"</code> so screen readers announce the receipt. Consumer does the actual work in the <code>civ-confirm</code> listener.
     </p>
     <p class="civ-mt-3 civ-text-sm">
       The inset action region is reserved for controls that operate on the input chrome itself — the close / × clear button and the password reveal toggle. Anything that acts on the value belongs in the below-input helper row.

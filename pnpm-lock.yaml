@@ -469,6 +469,9 @@ importers:
 
   packages/inputs:
     dependencies:
+      '@civui/actions':
+        specifier: workspace:*
+        version: link:../actions
       '@civui/controls':
         specifier: workspace:*
         version: link:../controls

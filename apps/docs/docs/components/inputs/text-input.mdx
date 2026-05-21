@@ -94,13 +94,32 @@ Set `clearable` to render an inline "×" button on the trailing edge whenever th
 
 <StoryEmbed id="forms-inputs-text-input--clearable" />
 
+### Password Reveal
+
+Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide** text button inset on the trailing edge. Clicking it flips the rendered input type between `password` and `text`; the host's `type` prop stays `password` so the field's semantic identity doesn't change. Suppressed when `type` is anything other than `password`.
+
+```html
+<civ-text-input label="Password" name="password" type="password" reveal-password></civ-text-input>
+```
+
+<StoryEmbed id="forms-inputs-text-input--password-reveal" />
+
+Password reveal is one of two affordances that stay **inset** inside the input chrome (the close / × clear button is the other). Both are *controls on the chrome* — they govern how the input itself behaves, not what the value is. Reveal flips the display mode; clear empties the value. Neither produces a separate action a user would interpret as "apply this to the value and move on."
+
+Value-shortcuts (Copy, Today, Now, custom trailing-action chips) follow the opposite rule — they sit in a helper row **below** the input. See the [Below-Action Slot](#below-action-slot) section.
+
 ### Below-Action Slot
 
-For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, generate, units toggle — pass a child element with the `data-below-action` attribute. The button renders in a helper row directly under the input (not inset inside the input chrome). Style with `.civ-text-btn.civ-text-btn--chip` so it reads as a quiet, separate affordance rather than competing with the input's own bounding box. The slot is **web-only** (Light DOM design system; iOS/Android/Drupal do not project this) and is intentionally an escape hatch — if a use case becomes common, we'll promote it to a first-class prop.
+For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, generate — pass a child element with the `data-below-action` attribute. The child renders in a helper row directly under the input (not inset inside the input chrome). Drop in `<civ-confirm-button>` for the common "Copy → Copied ✓" pattern, or pass any styled `<button class="civ-text-btn civ-text-btn--chip">` if you need full control. The slot is **web-only** (Light DOM design system; iOS/Android/Drupal do not project this) and is intentionally an escape hatch — if a use case becomes common, we'll promote it to a first-class prop.
 
 ```html
 <civ-text-input label="API key" name="apiKey" value="sk-...">
-  <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
+  <civ-confirm-button
+    data-below-action
+    label="Copy"
+    success-label="Copied"
+    @civ-confirm="${onCopy}"
+  ></civ-confirm-button>
 </civ-text-input>
 ```
 

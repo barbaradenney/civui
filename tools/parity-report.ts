@@ -1019,6 +1019,7 @@ function mapEventName(name: string): string {
     onPrefillApplied: 'civ-prefill-applied',
     onInvalid: 'civ-invalid',
     onClose: 'civ-dismiss',
+    onConfirm: 'civ-confirm',
     onToggle: 'civ-toggle',
     onSubmitConfirm: 'civ-submit-confirm',
     onSubmitCancelled: 'civ-submit-cancelled',

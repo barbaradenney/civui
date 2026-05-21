@@ -936,6 +936,13 @@
       "source": "packages/inputs/src/combobox/civ-combobox.stories.ts"
     },
     {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Combobox",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-combobox label=\"State\" name=\"state-default\" hint=\"Type to search\" .options=\"${STATES}\"></civ-combobox>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input + listbox, no chrome. The outer surface (data-grid row, summary card) provides the accessible name via the host's <code>aria-label</code>.</p>\n        <civ-combobox spacing=\"sm\" aria-label=\"State\" name=\"state-compact\" .options=\"${STATES}\"></civ-combobox>\n      </div>\n    </div>",
+      "source": "packages/inputs/src/combobox/civ-combobox.stories.ts"
+    },
+    {
       "story": "WidthVariants",
       "name": "Width variants",
       "category": "Forms/Inputs/Combobox",
@@ -5410,7 +5417,7 @@
       "story": "PasswordReveal",
       "name": "Inset: Password reveal",
       "category": "Forms/Inputs/Text Input",
-      "html": "<civ-text-input\n      label=\"Password\"\n      name=\"password\"\n      type=\"password\"\n      autocomplete=\"current-password\"\n      value=\"hunter2-supersecret\"\n      reveal-password\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Click the <strong>Show</strong> / <strong>Hide</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.\n    </p>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.\n    </p>",
+      "html": "<civ-text-input\n      label=\"Password\"\n      name=\"password\"\n      type=\"password\"\n      autocomplete=\"current-password\"\n      value=\"hunter2-supersecret\"\n      reveal-password\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Click the <strong>Show password</strong> / <strong>Hide password</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.\n    </p>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.\n    </p>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
@@ -5432,6 +5439,13 @@
       "category": "Foundations/Density Examples",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-text-caption civ-mb-2\">Spacious (1.5x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"spacious\" hint=\"Public-facing, large touch targets\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">Default (1x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"default\" hint=\"Standard forms and applications\"></civ-text-input>\n      </div>\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-text-caption civ-mb-2\">Dense (0.75x spacing)</p>\n        <civ-text-input label=\"Full name\" name=\"dense\" hint=\"Dashboards and admin panels\"></civ-text-input>\n      </div>\n    </div>",
       "source": "packages/core/src/foundations/density-examples.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-text-input label=\"Full name\" name=\"name-default\" hint=\"Legal first and last name\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input, no chrome. The outer surface (data-grid row, summary card) provides the accessible name via the host's <code>aria-label</code>.</p>\n        <civ-text-input spacing=\"sm\" aria-label=\"Full name\" name=\"name-compact\"></civ-text-input>\n      </div>\n    </div>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "Spacing",

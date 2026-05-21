@@ -26,15 +26,15 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Visual emphasis. `primary` = solid filled with strong contrast; `secondary` = bordered',
+      description: 'Visual treatment. `primary` (default) = solid fill; `secondary` = light fill; `tertiary` = bordered with no fill; `critical` / `danger` = emphasized error treatments',
       default: 'primary',
-      values: ['primary', 'secondary'],
+      values: ['primary', 'secondary', 'tertiary', 'critical', 'danger'],
     },
     color: {
       type: 'enum',
-      description: 'Color palette. Empty = default; semantic tokens for category emphasis',
+      description: 'Color palette. Empty (default) inherits from the variant; the other values are aesthetic colors (not semantic status). Same palette as civ-tag and civ-card so categorization carries across components',
       default: '',
-      values: ['', 'primary', 'success', 'warning', 'error', 'info'],
+      values: ['', 'blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'],
     },
     spacing: {
       type: 'enum',

@@ -39,9 +39,9 @@ props:
     alert_style:
       title: Alert style
       type: string
-      enum: ['primary', 'secondary']
+      enum: ['primary', 'secondary', 'tertiary']
       default: 'secondary'
-      description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background'
+      description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background (default); `tertiary` = transparent with a colored leading border'
     spacing:
       title: Spacing
       type: string

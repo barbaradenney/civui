@@ -17,9 +17,9 @@ const schema: ComponentSchema = {
     },
     alertStyle: {
       type: 'enum',
-      description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background',
+      description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background (default); `tertiary` = transparent with a colored leading border',
       default: 'secondary',
-      values: ['primary', 'secondary'],
+      values: ['primary', 'secondary', 'tertiary'],
       attribute: 'alert-style',
     },
     heading: {

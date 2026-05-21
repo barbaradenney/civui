@@ -11,9 +11,9 @@ const schema: ComponentSchema = {
   props: {
     variant: {
       type: 'enum',
-      description: 'Color palette. `gray` is neutral; the others map to semantic palettes for category emphasis',
+      description: 'Color palette for categorization. `gray` is the neutral default; the other values are aesthetic colors (not semantic status) — use them to distinguish category groupings, not to encode meaning (success/error)',
       default: 'gray',
-      values: ['gray', 'primary', 'info', 'success', 'warning', 'error'],
+      values: ['blue', 'orange', 'purple', 'gray'],
     },
     tagStyle: {
       type: 'enum',

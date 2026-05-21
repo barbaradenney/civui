@@ -11,9 +11,9 @@ const schema: ComponentSchema = {
   props: {
     color: {
       type: 'enum',
-      description: 'Background tint. Empty = no fill; semantic tokens for status emphasis',
+      description: 'Background tint. Empty (default) = no fill; the other values are aesthetic colors (not semantic status). Same palette as civ-tag and civ-link-card so categorization carries across components',
       default: '',
-      values: ['', 'primary', 'success', 'warning', 'error', 'info'],
+      values: ['', 'blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'],
     },
     cardStyle: {
       type: 'enum',

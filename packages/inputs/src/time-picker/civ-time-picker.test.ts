@@ -978,7 +978,7 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
       const el = await fixture<CivTimePicker>(
         '<civ-time-picker label="When" show-now-button minute-step="30" disabled-slots=\'["09:00"]\'></civ-time-picker>'
       );
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.value).toBe('09:30');
     });
@@ -989,7 +989,7 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
       const el = await fixture<CivTimePicker>(
         '<civ-time-picker label="When" show-now-button minute-step="15" disabled-slots=\'["09:00","09:15","09:30"]\'></civ-time-picker>'
       );
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.value).toBe('09:45');
     });
@@ -1003,7 +1003,7 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
       const el = await fixture<CivTimePicker>(
         '<civ-time-picker label="When" show-now-button min="09:00" max="09:45" minute-step="15" disabled-slots=\'["09:45"]\'></civ-time-picker>'
       );
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.value).toBe('09:45');
     });
@@ -1014,7 +1014,7 @@ describe('civ-time-picker — Now button avoids disabled slots (combo mode)', ()
       const el = await fixture<CivTimePicker>(
         '<civ-time-picker label="When" show-now-button minute-step="30" disabled-slots=\'["09:30","10:00"]\'></civ-time-picker>'
       );
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.value).toBe('09:00');
     });
@@ -1229,34 +1229,34 @@ describe('civ-time-picker — noon / midnight annotations (combo mode)', () => {
 describe('civ-time-picker — "Now" quick-button', () => {
   it('does NOT render the Now button by default', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When"></civ-time-picker>');
-    expect(el.querySelector('.civ-time-picker-now-btn')).toBeNull();
+    expect(el.querySelector('.civ-input-helper-row .civ-text-btn--chip')).toBeNull();
   });
 
   it('renders the Now button via `show-now-button` in combo mode', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button></civ-time-picker>');
-    const btn = el.querySelector('.civ-time-picker-now-btn');
+    const btn = el.querySelector('.civ-input-helper-row .civ-text-btn--chip');
     expect(btn).not.toBeNull();
     expect(btn!.textContent).toContain('Now');
   });
 
   it('renders the Now button via `show-now-button` in select mode', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="select" legend="When" show-now-button></civ-time-picker>');
-    expect(el.querySelector('.civ-time-picker-now-btn')).not.toBeNull();
+    expect(el.querySelector('.civ-input-helper-row .civ-text-btn--chip')).not.toBeNull();
   });
 
   it('renders the Now button via `show-now-button` in text mode', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" show-now-button></civ-time-picker>');
-    expect(el.querySelector('.civ-time-picker-now-btn')).not.toBeNull();
+    expect(el.querySelector('.civ-input-helper-row .civ-text-btn--chip')).not.toBeNull();
   });
 
   it('hides in readonly mode even when `show-now-button` is set', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button readonly></civ-time-picker>');
-    expect(el.querySelector('.civ-time-picker-now-btn')).toBeNull();
+    expect(el.querySelector('.civ-input-helper-row .civ-text-btn--chip')).toBeNull();
   });
 
   it('overrides the label via `now-button-label`', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button now-button-label="Use current time"></civ-time-picker>');
-    const btn = el.querySelector('.civ-time-picker-now-btn');
+    const btn = el.querySelector('.civ-input-helper-row .civ-text-btn--chip');
     expect(btn!.textContent).toContain('Use current time');
   });
 
@@ -1270,7 +1270,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
     };
     try {
       const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button minute-step="15"></civ-time-picker>');
-      const btn = el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement;
       btn.click();
       await elementUpdated(el);
       // 14:23 → snapped to 14:15 (closest 15-min slot — round to 15).
@@ -1290,7 +1290,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
     };
     try {
       const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button min="09:00" max="17:00" minute-step="30"></civ-time-picker>');
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       // 06:00 < min → clamped to 09:00.
       expect(el.value).toBe('09:00');
@@ -1308,7 +1308,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
     };
     try {
       const el = await fixture<CivTimePicker>('<civ-time-picker mode="text" label="When" show-now-button></civ-time-picker>');
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.value).toBe('14:37');
     } finally {
@@ -1327,7 +1327,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
       const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button></civ-time-picker>');
       const handler = vi.fn();
       el.addEventListener('civ-change', handler as EventListener);
-      (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+      (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(handler).toHaveBeenCalledTimes(1);
       const detail = (handler.mock.calls[0][0] as CustomEvent).detail;
@@ -1341,7 +1341,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
 
   it('no-ops when disabled', async () => {
     const el = await fixture<CivTimePicker>('<civ-time-picker label="When" show-now-button disabled></civ-time-picker>');
-    const btn = el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement;
+    const btn = el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     btn.click();
     await elementUpdated(el);
@@ -1359,7 +1359,7 @@ describe('civ-time-picker — "Now" quick-button', () => {
     await elementUpdated(el);
     expect(el.error).toBeTruthy();
 
-    (el.querySelector('.civ-time-picker-now-btn') as HTMLButtonElement).click();
+    (el.querySelector('.civ-input-helper-row .civ-text-btn--chip') as HTMLButtonElement).click();
     await elementUpdated(el);
     expect(el.error).toBe('');
   });

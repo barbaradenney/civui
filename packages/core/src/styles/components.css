@@ -825,7 +825,6 @@
     .civ-input-action,
     .civ-text-btn--inline,
     .civ-datepicker-today-btn,
-    .civ-time-picker-now-btn,
     .civ-file-cancel-btn,
     .civ-file-retry-btn {
       min-width: 44px;
@@ -1497,21 +1496,11 @@
    * row, left-aligned (the inputs are left-aligned too; the
    * date picker footer right-aligns because its dialog is wider).
    */
-  .civ-time-picker-footer {
-    @apply civ-mt-1 civ-flex civ-justify-start;
-  }
-  .civ-time-picker-now-btn {
-    @apply civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
-           civ-text-primary civ-bg-transparent civ-border-0 civ-cursor-pointer;
-  }
-  @media (hover: hover) {
-    .civ-time-picker-now-btn:hover:not(:disabled) {
-      @apply civ-bg-primary-lightest;
-    }
-  }
-  .civ-time-picker-now-btn:disabled {
-    @apply civ-text-base-light civ-cursor-not-allowed;
-  }
+  /* civ-time-picker's "Now" shortcut renders into the shared
+     `.civ-input-helper-row` and uses `.civ-text-btn--chip`. No
+     time-picker-specific button class is needed — the helper-row
+     primitive supplies layout + mobile full-width, and the chip
+     palette supplies the visual treatment. */
 
   .civ-datepicker-cal-btn {
     @apply civ-border civ-border-s-0 civ-border-base civ-rounded-e

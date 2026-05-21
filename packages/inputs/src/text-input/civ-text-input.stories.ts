@@ -402,31 +402,3 @@ export const AllPresets: Story = {
   `,
 };
 
-// ── spacing="sm" — compact mode for dense surfaces ────────────
-
-export const Spacing: Story = {
-  name: 'Spacing — default vs sm',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '`spacing="sm"` renders just the bare `<input>` with no label / hint / error chrome. ' +
-          'The host\'s `aria-label` is propagated to the inner control so screen readers still hear a name. ' +
-          'For dense surfaces like data-grid cell editors. Mask + validate behavior is preserved.',
-      },
-    },
-  },
-  render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-6">
-      <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
-        <civ-text-input label="Applicant name" name="name-default" hint="First and last"></civ-text-input>
-      </div>
-      <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
-        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input, no chrome. aria-label on the host names the control for AT.</p>
-        <civ-text-input spacing="sm" aria-label="Applicant name" name="name-compact"></civ-text-input>
-      </div>
-    </div>
-  `,
-};

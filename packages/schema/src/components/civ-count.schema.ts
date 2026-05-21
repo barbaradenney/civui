@@ -26,9 +26,9 @@ const schema: ComponentSchema = {
     },
     countStyle: {
       type: 'enum',
-      description: 'Visual treatment. `primary` = solid; `secondary` = subtle',
+      description: 'Visual treatment. `primary` = solid fill; `secondary` (default) = subtle background; `tertiary` = outlined',
       default: 'secondary',
-      values: ['primary', 'secondary'],
+      values: ['primary', 'secondary', 'tertiary'],
       attribute: 'count-style',
     },
     spacing: {

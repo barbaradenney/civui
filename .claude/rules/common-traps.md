@@ -371,6 +371,50 @@ prop from one of the known base classes). Wired into
 
 ---
 
+## Schema enum `values:` must match the Lit source TS union
+
+A schema in `packages/schema/src/components/civ-*.schema.ts` may
+declare an enum prop with a `values:` array that doesn't actually
+match the source type union. The schema-parity CI gate
+(`pnpm parity:schema`) only checks prop *names* across platforms,
+not enum *values*, so drift like this slips through:
+
+```ts
+// packages/layout/src/tag/civ-tag.ts
+export type TagVariant = 'blue' | 'orange' | 'purple' | 'gray';
+
+// packages/schema/src/components/civ-tag.schema.ts
+variant: {
+  type: 'enum',
+  values: ['gray', 'primary', 'info', 'success', 'warning', 'error'], // ✗ drifts
+}
+```
+
+The auto-generated Props tables in
+`apps/docs/docs/components/**/_<slug>.props.mdx` import from the
+schema, so the docs surface the wrong allowed values to anyone
+implementing the iOS / Android / Drupal platforms — including
+contractors who treat the schema as the contract.
+
+Five schemas were silently wrong before this lint shipped
+(civ-alert.alertStyle, civ-alert.variant, civ-tag.variant,
+civ-link-card.{variant,color}, civ-card.color, civ-count.countStyle,
+civ-filter-chip.chipRole). All have been corrected.
+
+**Caught by:** `pnpm lint:schema-enum-values` — for every schema in
+`COVERED_COMPONENTS` (in `tools/schema-parity.ts`), parses the Lit
+source's `@property` type annotation and any `export type X = …`
+alias it references, resolves the union to a string-literal list,
+and compares against the schema's `values:` array. Reports missing
+values in both directions ("source accepts but schema doesn't list"
+and "schema lists but source rejects"). Wired into
+`pnpm validate:lints` and the drift-lints CI gate. Sources whose
+type is bare `string` (or any non-literal union) are skipped — the
+schema is documenting beyond what the type system enforces, which
+is intentional for some props.
+
+---
+
 ## Section legends don't carry (required); leaf inputs do
 
 CivUI distinguishes two kinds of `<legend>`:

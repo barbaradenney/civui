@@ -38,9 +38,9 @@ props:
     chip_role:
       title: Chip role
       type: string
-      enum: ['toggle', 'select']
+      enum: ['toggle', 'radio']
       default: 'toggle'
-      description: 'Interaction model. `toggle` = standalone on/off; `select` = single member of a multi-select group'
+      description: 'Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity)'
     spacing:
       title: Spacing
       type: string

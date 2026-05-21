@@ -30,9 +30,9 @@ const schema: ComponentSchema = {
     },
     chipRole: {
       type: 'enum',
-      description: 'Interaction model. `toggle` = standalone on/off; `select` = single member of a multi-select group',
+      description: 'Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity)',
       default: 'toggle',
-      values: ['toggle', 'select'],
+      values: ['toggle', 'radio'],
       attribute: 'chip-role',
     },
     spacing: {

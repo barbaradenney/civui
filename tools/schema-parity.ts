@@ -78,7 +78,7 @@ interface ComponentSpec {
   drupal?: string;
 }
 
-const COVERED_COMPONENTS: ComponentSpec[] = [
+export const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-text-input',        source: 'packages/inputs/src/text-input/civ-text-input.ts',                                        ios: 'packages/ios/Sources/CivUI/CivTextInput.swift',        android: 'packages/android/src/main/kotlin/gov/civui/components/CivTextInput.kt',        drupal: 'packages/drupal/civui/components/text-input/text-input.component.yml' },
   { name: 'civ-checkbox',          source: 'packages/controls/src/checkbox/civ-checkbox.ts',           isBoolean: true,                ios: 'packages/ios/Sources/CivUI/CivCheckbox.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivCheckbox.kt',         drupal: 'packages/drupal/civui/components/checkbox/checkbox.component.yml' },
   { name: 'civ-radio-group',       source: 'packages/controls/src/radio/civ-radio-group.ts',                                          ios: 'packages/ios/Sources/CivUI/CivRadio.swift',                                                                                                drupal: 'packages/drupal/civui/components/radio-group/radio-group.component.yml' },
@@ -165,7 +165,7 @@ import {
  * bracket pairs so nested objects, generics, and array literals are
  * handled correctly. Returns null if no balanced match.
  */
-function extractBraceBlock(src: string, openIndex: number): { body: string; endIndex: number } | null {
+export function extractBraceBlock(src: string, openIndex: number): { body: string; endIndex: number } | null {
   if (src[openIndex] !== '{') return null;
   let depth = 0;
   let stringChar: string | null = null;

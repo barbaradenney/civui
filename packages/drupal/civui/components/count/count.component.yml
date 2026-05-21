@@ -26,9 +26,9 @@ props:
     count_style:
       title: Count style
       type: string
-      enum: ['primary', 'secondary']
+      enum: ['primary', 'secondary', 'tertiary']
       default: 'secondary'
-      description: 'Visual treatment. `primary` = solid; `secondary` = subtle'
+      description: 'Visual treatment. `primary` = solid fill; `secondary` (default) = subtle background; `tertiary` = outlined'
     spacing:
       title: Spacing
       type: string

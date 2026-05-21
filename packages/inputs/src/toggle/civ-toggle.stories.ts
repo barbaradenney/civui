@@ -93,6 +93,58 @@ export const WithDescription: Story = {
   `,
 };
 
+export const DescriptionVsHint: Story = {
+  name: 'Description vs Hint',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`description` and `hint` are two distinct text affordances and read differently. ' +
+          '**Description** is the expanded "what this setting actually does" narrative — darker color (base-dark) for stronger emphasis. ' +
+          '**Hint** is a smaller clarification / format / availability cue — lighter color (base-default) and reads as secondary. ' +
+          'Use description when the user needs explanation; use hint for short qualifiers (e.g. "Beta", "Requires sign-in").',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-toggle
+        label="Description only"
+        name="desc-only"
+        description="Receive weekly summary emails about activity on your account, including new messages and benefits updates"
+      ></civ-toggle>
+      <civ-toggle
+        label="Hint only"
+        name="hint-only"
+        hint="Beta feature"
+      ></civ-toggle>
+      <civ-toggle
+        label="Both description and hint"
+        name="both"
+        description="Auto-saves your form progress every 30 seconds so you don't lose work if your session times out"
+        hint="Stored locally — never sent to our servers"
+      ></civ-toggle>
+    </div>
+  `,
+};
+
+export const Readonly: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`readonly` is distinct from `disabled`. The toggle still shows its current value at full contrast and is announced to screen readers via `aria-readonly`. Click is suppressed and the cursor changes to the default arrow (instead of the pointer hand) to signal "this is informational, not interactive." Use for review / summary surfaces where the value should be visible but not editable.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <civ-toggle label="Notifications (off)" name="ro-off" readonly></civ-toggle>
+      <civ-toggle label="Notifications (on)" name="ro-on" readonly checked></civ-toggle>
+    </div>
+  `,
+};
+
 // ── All States ────────────────────────────────────────────────
 
 export const AllStates: Story = {

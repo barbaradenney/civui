@@ -1162,33 +1162,124 @@
 
   /* ── Toggle ─────────────────────────────────────────────────── */
 
+  /*
+   * Sizing notes:
+   * - Dimensions are in `rem` so the track stays a fixed visual size
+   *   regardless of the parent's font-size (em-units made the toggle
+   *   visibly resize when the surrounding label inherited a smaller
+   *   or larger scale).
+   * - `flex-shrink: 0` keeps the track at its full width even when
+   *   the sibling label text is long enough to wrap on narrow
+   *   viewports. Without this the flex row squeezed the toggle into
+   *   a sliver on mobile.
+   * - Thumb centered with `top: 50%; translateY(-50%)` so the gap
+   *   above and below the thumb is identical regardless of border /
+   *   padding choices.
+   */
   .civ-toggle-track {
     @apply civ-relative civ-inline-flex civ-items-center
            civ-rounded-full civ-border civ-transition-colors
-           civ-bg-base-light civ-border-base civ-cursor-pointer;
-    width: 3em;
-    height: 1.75em;
+           civ-bg-base-lightest civ-border-base civ-cursor-pointer;
+    width: 3rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+  }
+
+  /*
+   * Tap-target expansion. The visible pill is 48×28 — wide enough
+   * for WCAG 2.5.5 (Enhanced, AAA) horizontally but only 28 tall,
+   * which fails the 44px floor. A transparent `::before` extends
+   * the hit area to a full 44×44 without changing the visible
+   * size; touch events on the expanded region propagate to the
+   * button. The expansion is constrained to roughly the toggle's
+   * own row (8px above and below the pill) — the small overlap
+   * with the row's bottom margin is acceptable because the next
+   * form control below is typically the next focusable item, not
+   * another toggle.
+   *
+   * The sibling `<label for="…">` still toggles when tapped on the
+   * label text — both regions toggle, never overlapping.
+   */
+  .civ-toggle-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 2.75rem; /* 44px floor — meets WCAG 2.5.5 Enhanced */
+    min-width: 2.75rem;
+  }
+
+  /* Explicit focus rule on the rounded track. The global button:focus
+     in civ.css applies an outline + box-shadow, but on the rounded-
+     full shape the outline reads as a rectangle around the pill which
+     visually disconnects from the control. A `box-shadow` ring keeps
+     the focus indicator hugging the actual pill outline. */
+  .civ-toggle-track:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 var(--civ-focus-outline-width) var(--civ-focus-shadow-color),
+      0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
+  }
+
+  /* Hover affordance — only on devices with a real pointer (mouse /
+     trackpad). Skipped on touch so a tap doesn't leave the toggle
+     stuck in the hover color. Both states (off / on) get a subtle
+     darken so the user knows the toggle is interactive. The
+     `:not(:disabled)` guard keeps disabled toggles inert under
+     mouseover. */
+  @media (hover: hover) {
+    .civ-toggle-track:not(:disabled):hover {
+      background-color: var(--civ-color-base-lighter);
+      border-color: var(--civ-color-base-dark);
+    }
+    .civ-toggle-track[aria-checked="true"]:not(:disabled):hover {
+      background-color: var(--civ-color-primary-dark);
+      border-color: var(--civ-color-primary-dark);
+    }
   }
 
   .civ-toggle-thumb {
-    @apply civ-absolute civ-bg-white civ-rounded-full civ-shadow-sm;
+    @apply civ-absolute civ-bg-white civ-rounded-full civ-border civ-border-base;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.375em;
-    height: 1.375em;
-    top: 0.125em;
-    inset-inline-start: 0.125em;
+    width: 1.375rem;
+    height: 1.375rem;
+    top: 50%;
+    inset-inline-start: 0.125rem;
+    transform: translateY(-50%);
     transition: inset-inline-start var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-toggle-thumb--checked {
-    inset-inline-start: 1.375em;
+    inset-inline-start: calc(3rem - 1.375rem - 0.125rem);
   }
 
   .civ-toggle-check {
-    font-size: 0.7em;
+    font-size: 1rem;
     color: var(--civ-color-primary-DEFAULT);
+  }
+
+  /* Error state. Mirrors the .civ-fieldset[aria-invalid="true"]
+     treatment so the in-error boundary on a toggle reads the same
+     as the in-error boundary on a fieldset / input group. The error
+     text below the toggle still reads independently (red, with the
+     filled-circle icon); the left border is the visual anchor that
+     "this row" is in error. */
+  .civ-toggle-row--error {
+    @apply civ-border-s-4 civ-border-error civ-ps-3;
+  }
+
+  /* Label block — wraps label + description + hint in a single
+     `<label for="…">` so all three are clickable (tapping anywhere
+     on the text block toggles the switch, not just the label).
+     Matches civ-checkbox's `.civ-check-row` pattern. `display: flex
+     column` stacks the three lines vertically; `cursor: pointer` is
+     a visual affordance that the whole region is interactive. */
+  .civ-toggle-label-block {
+    @apply civ-flex civ-flex-col civ-cursor-pointer;
   }
 
   /* ── Segment ────────────────────────────────────────────────── */
@@ -1679,6 +1770,32 @@
     @apply civ-opacity-50 civ-cursor-not-allowed;
   }
 
+  /* Readonly: distinct from disabled per WCAG / ARIA conventions.
+     The control still shows its current value (on / off) at full
+     contrast, and screen readers announce it via `aria-readonly`.
+     The visual cue is the cursor — `default` (arrow) instead of
+     `pointer` (hand) — to communicate "this is informational, not
+     interactive." Mirrors the `civ-text-input[readonly]` pattern,
+     which de-chromes the field while keeping the value visible. */
+  .civ-toggle-track[aria-readonly="true"] {
+    cursor: default;
+  }
+  /* Suppress hover affordance under readonly (mouse + trackpad
+     devices). The pointer change alone is subtle; without this the
+     track would still darken on mouseover and the user would think
+     the toggle is editable. */
+  @media (hover: hover) {
+    .civ-toggle-track[aria-readonly="true"]:hover,
+    .civ-toggle-track[aria-readonly="true"][aria-checked="true"]:hover {
+      background-color: var(--civ-color-base-lightest);
+      border-color: var(--civ-color-base-DEFAULT);
+    }
+    .civ-toggle-track[aria-readonly="true"][aria-checked="true"]:hover {
+      background-color: var(--civ-color-primary-DEFAULT);
+      border-color: var(--civ-color-primary-DEFAULT);
+    }
+  }
+
   /* Segment selected */
   .civ-segment-btn[aria-checked="true"] {
     @apply civ-bg-primary civ-text-white civ-border-primary;
@@ -1843,6 +1960,18 @@
   }
   .civ-btn--yesno[aria-checked="true"] {
     @apply civ-bg-primary civ-text-white civ-border-primary;
+  }
+
+  /* Readonly: distinct from disabled per WCAG / ARIA conventions.
+     Mirrors `.civ-toggle-track[aria-readonly="true"]`. The radio
+     buttons still show the current selection at full contrast; the
+     visual cue is the cursor flip — `default` (arrow) instead of
+     `pointer` (hand) — to communicate "this is informational, not
+     interactive." Click is already suppressed in `_select` /
+     `_selectSkip` and keyboard navigation in `_onKeydown`. */
+  .civ-btn--yesno[aria-readonly="true"],
+  .civ-yes-no__skip[aria-readonly="true"] {
+    cursor: default;
   }
 
   /* ── Danger variants ───────────────────────────────────────── */

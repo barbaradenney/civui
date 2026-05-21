@@ -390,5 +390,24 @@ describe('civ-yes-no', () => {
         expect(option.hasAttribute('aria-readonly')).toBe(true);
       }
     });
+
+    it('sets aria-readonly on the skip affordance when readonly + skipLabel is set', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="OK?" name="ok" skip-label="Prefer not to answer" readonly></civ-yes-no>',
+      );
+      const skip = el.querySelector('.civ-yes-no__skip') as HTMLButtonElement;
+      expect(skip).not.toBeNull();
+      expect(skip.hasAttribute('aria-readonly')).toBe(true);
+    });
+
+    it('clicking the skip affordance does not change value when readonly', async () => {
+      const el = await fixture(
+        '<civ-yes-no legend="OK?" name="ok" value="yes" skip-label="Prefer not to answer" readonly></civ-yes-no>',
+      ) as any;
+      const skip = el.querySelector('.civ-yes-no__skip') as HTMLButtonElement;
+      skip.click();
+      await elementUpdated(el);
+      expect(el.value).toBe('yes');
+    });
   });
 });

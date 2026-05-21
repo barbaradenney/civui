@@ -69,6 +69,20 @@ export const Disabled: Story = {
   `,
 };
 
+export const Readonly: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`readonly` is distinct from `disabled`. Each radio button is exposed to assistive tech with `aria-readonly="true"`, the current selection is visible at full contrast, and click + keyboard navigation are suppressed. The visual cue is the cursor change (default arrow instead of pointer hand) — communicating "informational, not interactive." Use for review / summary surfaces where the value should be visible but not editable.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-yes-no legend="Have you served in the military?" name="military-ro" value="yes" readonly></civ-yes-no>
+  `,
+};
+
 export const Preselected: Story = {
   render: () => html`
     <civ-yes-no legend="Have you served in the military?" name="military" value="no"></civ-yes-no>

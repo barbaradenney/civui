@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@civui/core';
+import { CivBooleanFormElement, devWarn, dispatch, renderHint, renderError, t } from '@civui/core';
 
 /**
  * CivUI Toggle
@@ -16,10 +16,24 @@ import { CivBooleanFormElement, dispatch, renderHint, renderError, t } from '@ci
 export class CivToggle extends CivBooleanFormElement {
   protected override get _anchorSelector(): string { return 'button'; }
 
+  private _warnedMissingLabel = false;
+
   override render() {
+    const ariaLabel = this.getAttribute('aria-label');
+    if (!this.label && !ariaLabel && !this._warnedMissingLabel) {
+      devWarn(
+        'civ-toggle',
+        'civ-toggle requires either `label` or `aria-label` so screen-reader users hear what the toggle is for. Without one, the control is unlabeled to AT.',
+      );
+      this._warnedMissingLabel = true;
+    }
+    const rowClass = this.error
+      ? 'civ-flex civ-items-center civ-gap-3 civ-toggle-row--error'
+      : 'civ-flex civ-items-center civ-gap-3';
     return html`
       <div class="civ-mb-4">
-        <div class="civ-flex civ-items-center civ-gap-3">
+        ${renderError(this._errorId, this.error)}
+        <div class="${rowClass}">
           <button
             type="button"
             role="switch"
@@ -27,7 +41,7 @@ export class CivToggle extends CivBooleanFormElement {
             aria-checked="${this.checked ? 'true' : 'false'}"
             aria-required="${this.required || nothing}"
             aria-invalid="${this.error ? 'true' : nothing}"
-            aria-disabled="${this.readonly || nothing}"
+            aria-readonly="${this.readonly || nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
             ?disabled="${this.disabled}"
             @click="${this._onToggle}"
@@ -39,19 +53,18 @@ export class CivToggle extends CivBooleanFormElement {
                 : nothing}
             </span>
           </button>
-          <div>
-            <label class="civ-check-label" for="${this._inputId}">
+          <label class="civ-toggle-label-block" for="${this._inputId}">
+            <span class="civ-check-label">
               ${this.label}
               ${this.required
                 ? html`<span class="civ-required-mark">${t('required')}</span>`
                 : nothing}
-            </label>
+            </span>
             ${this.description
               ? html`<span id="${this._descriptionId}" class="civ-check-description">${this.description}</span>`
               : nothing}
             ${renderHint(this._hintId, this.hint)}
-            ${renderError(this._errorId, this.error)}
-          </div>
+          </label>
         </div>
       </div>
     `;

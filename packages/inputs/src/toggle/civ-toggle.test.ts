@@ -232,9 +232,43 @@ describe('civ-toggle', () => {
     expect(el.checked).toBe(true);
   });
 
-  it('readonly: exposes aria-disabled="true" on the switch button', async () => {
+  it('readonly: exposes aria-readonly="true" on the switch button (not aria-disabled — readonly is a distinct state)', async () => {
     const el = await fixture('<civ-toggle label="Opt in" readonly></civ-toggle>') as any;
     const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
-    expect(btn.getAttribute('aria-disabled')).toBe('true');
+    expect(btn.getAttribute('aria-readonly')).toBe('true');
+    expect(btn.getAttribute('aria-disabled')).toBeNull();
+  });
+
+  it('error state applies the civ-toggle-row--error class to the row wrapper', async () => {
+    const el = await fixture(
+      '<civ-toggle label="Terms" error="You must accept"></civ-toggle>',
+    );
+    const row = el.querySelector('.civ-toggle-row--error');
+    expect(row).not.toBeNull();
+    // And the same row should not be flagged when error is absent.
+    const clean = await fixture('<civ-toggle label="Terms"></civ-toggle>');
+    expect(clean.querySelector('.civ-toggle-row--error')).toBeNull();
+  });
+
+  it('label-block is a <label for="..."> that toggles when description or hint is clicked', async () => {
+    const el = await fixture(
+      '<civ-toggle label="Notifications" description="Push to your device" hint="Beta feature"></civ-toggle>',
+    ) as any;
+    const btn = el.querySelector('button[role="switch"]') as HTMLButtonElement;
+    const block = el.querySelector('label.civ-toggle-label-block') as HTMLLabelElement;
+    expect(block).not.toBeNull();
+    expect(block.getAttribute('for')).toBe(btn.id);
+
+    // Description-click toggles
+    const description = el.querySelector('.civ-check-description') as HTMLElement;
+    description.click();
+    await elementUpdated(el);
+    expect(el.checked).toBe(true);
+
+    // Hint-click toggles back
+    const hint = el.querySelector('.civ-hint') as HTMLElement;
+    hint.click();
+    await elementUpdated(el);
+    expect(el.checked).toBe(false);
   });
 });

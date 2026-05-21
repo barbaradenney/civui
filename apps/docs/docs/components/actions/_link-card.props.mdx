@@ -6,8 +6,8 @@
 | `href` | `string` | `''` | Card destination |
 | `heading` | `string` | `''` | Card heading (primary text) |
 | `description` | `string` | `''` | Body text rendered below the heading |
-| `variant` | `'primary'` \| `'secondary'` | `'primary'` | Visual emphasis. `primary` = solid filled with strong contrast; `secondary` = bordered |
-| `color` | `''` \| `'primary'` \| `'success'` \| `'warning'` \| `'error'` \| `'info'` | `''` | Color palette. Empty = default; semantic tokens for category emphasis |
+| `variant` | `'primary'` \| `'secondary'` \| `'tertiary'` \| `'critical'` \| `'danger'` | `'primary'` | Visual treatment. `primary` (default) = solid fill; `secondary` = light fill; `tertiary` = bordered with no fill; `critical` / `danger` = emphasized error treatments |
+| `color` | `''` \| `'blue'` \| `'teal'` \| `'red'` \| `'green'` \| `'yellow'` \| `'orange'` \| `'purple'` \| `'gray'` | `''` | Color palette. Empty (default) inherits from the variant; the other values are aesthetic colors (not semantic status). Same palette as civ-tag and civ-card so categorization carries across components |
 | `spacing` | `'default'` \| `'sm'` | `'default'` | Inner padding density |
 | `icon-start` | `string` | `''` | Leading icon name |
 | `icon-end` | `string` | `''` | Trailing icon name (defaults to chevron / arrow on most variants) |

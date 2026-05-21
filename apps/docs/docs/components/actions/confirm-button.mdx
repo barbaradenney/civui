@@ -1,0 +1,87 @@
+---
+title: Confirm Button
+sidebar_position: 11
+sidebar_label: Confirm Button
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import ConfirmButtonProps from "./_confirm-button.props.mdx";
+import ConfirmButtonEvents from "./_confirm-button.events.mdx";
+
+# Confirm Button
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-confirm-button`](pathname:///civui/storybook/?path=/docs/contract-civ-confirm-button--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-confirm-button>`
+
+Text button that fires an action and shows a transient ✓ confirmation before reverting. Used for fire-and-forget actions whose feedback should be visible inline without yanking the user to a toast — Copy, Paste, Scan, Generate.
+
+The consumer does the actual work in the `civ-confirm` event listener; the component manages the success-window timing and visual swap. **Padding stays stable across states** (the variant class is held constant; only `.is-success` is added), so the button doesn't visibly shrink mid-confirmation.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-confirm-button--default" minHeight={120} />
+
+### Inline variant (transparent text-link style)
+
+<StoryEmbed id="actions-confirm-button--inline" minHeight={120} />
+
+### Custom duration
+
+<StoryEmbed id="actions-confirm-button--custom-duration" minHeight={120} />
+
+### Inside an input helper row (typical usage)
+
+<StoryEmbed id="actions-confirm-button--in-helper-row" minHeight={220} />
+
+### Disabled
+
+<StoryEmbed id="actions-confirm-button--disabled" minHeight={100} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-confirm-button--default)
+
+## Props
+
+<ConfirmButtonProps />
+
+## Events
+
+<ConfirmButtonEvents />
+
+## When to use vs. not
+
+| Need | Use |
+|---|---|
+| Fire-and-forget action with receipt (Copy, Paste, Scan, Generate) | `<civ-confirm-button>` |
+| Two-state toggle (Show / Hide, mute / unmute) | `<civ-toggle-button>` |
+| Primary form CTA (Submit, Continue) | `<civ-button>` |
+| Toolbar action (Edit, Delete, …) | `<civ-action-button>` |
+| Bare text button with no built-in behavior | `<button class="civ-text-btn civ-text-btn--chip">` |
+
+## Handling failure
+
+`civ-confirm` fires synchronously the moment the user clicks, and the success window starts immediately. If the consumer's work (clipboard write, network request) might fail asynchronously, call `.reset()` from the rejection path to dismiss the receipt early:
+
+```ts
+const btn = document.querySelector('civ-confirm-button')!;
+btn.addEventListener('civ-confirm', async () => {
+  try {
+    await someAsyncWork();
+  } catch (err) {
+    btn.reset();
+    showError(err);
+  }
+});
+```
+
+## Accessibility
+
+- The button receives `aria-live="polite"` during the success window so screen readers re-announce the receipt label — a same-button text swap doesn't otherwise trigger an SR re-read.
+- The check-icon decoration is a CSS `::before` mask with no semantic role; the label text carries the meaning.
+- The success color (`--civ-color-success-dark`) hits AA contrast on the surrounding chip background. Don't rely on color alone — the label text changes too.

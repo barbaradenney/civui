@@ -26,6 +26,8 @@ export default defineConfig({
       '@civui/overlays/modal': resolve(__dirname, '../overlays/src/modal/index.ts'),
       '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
       '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
+      '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
+      '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       // Resolve test-utils to source so the lint:double-labels test
       // works in CI without a prebuilt @civui/test-utils dist (the

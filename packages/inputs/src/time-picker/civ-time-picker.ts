@@ -507,10 +507,10 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     if (!this.showNowButton || this.readonly) return nothing;
     const label = this.nowButtonLabel || t('timePickerNowButton');
     return html`
-      <div class="civ-time-picker-footer">
+      <div class="civ-input-helper-row">
         <button
           type="button"
-          class="civ-time-picker-now-btn"
+          class="civ-text-btn civ-text-btn--chip"
           ?disabled="${this.disabled}"
           @click="${this._onNowClick}"
         >${label}</button>

@@ -777,38 +777,43 @@ describe('text-input inline icons', () => {
         '<civ-text-input label="Email" type="email" reveal-password value="hello"></civ-text-input>'
       );
       await elementUpdated(el);
-      expect(el.querySelector('button[aria-label="Show password"], button[aria-label="Hide password"]')).toBeNull();
+      expect(el.querySelector('civ-toggle-button')).toBeNull();
     });
 
-    it('renders the reveal button when type="password" and reveal-password is set', async () => {
+    it('renders a civ-toggle-button when type="password" and reveal-password is set', async () => {
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
-      const btn = el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement | null;
-      expect(btn).not.toBeNull();
+      const toggle = el.querySelector('civ-toggle-button') as any;
+      expect(toggle).not.toBeNull();
+      expect(toggle.pressed).toBe(false);
+      expect(toggle.label).toBe('Show password');
+      expect(toggle.pressedLabel).toBe('Hide password');
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.type).toBe('password');
     });
 
-    it('flips the rendered input type to "text" on click and back on second click', async () => {
+    it('flips the rendered input type to "text" on toggle and back on second toggle', async () => {
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
 
-      const btn = el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement;
-      btn.click();
+      const innerBtn = el.querySelector('civ-toggle-button button') as HTMLButtonElement;
+      innerBtn.click();
       await elementUpdated(el);
 
       const input = el.querySelector('input') as HTMLInputElement;
       expect(input.type).toBe('text');
-      // Re-query: the aria-label flips
-      expect(el.querySelector('button[aria-label="Hide password"]')).not.toBeNull();
+      // Re-query: toggle is now pressed
+      const toggle = el.querySelector('civ-toggle-button') as any;
+      expect(toggle.pressed).toBe(true);
 
-      (el.querySelector('button[aria-label="Hide password"]') as HTMLButtonElement).click();
+      (el.querySelector('civ-toggle-button button') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect((el.querySelector('input') as HTMLInputElement).type).toBe('password');
+      expect((el.querySelector('civ-toggle-button') as any).pressed).toBe(false);
     });
 
     it('host `type` prop stays "password" through the toggle', async () => {
@@ -816,19 +821,21 @@ describe('text-input inline icons', () => {
         '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
-      (el.querySelector('button[aria-label="Show password"]') as HTMLButtonElement).click();
+      (el.querySelector('civ-toggle-button button') as HTMLButtonElement).click();
       await elementUpdated(el);
       expect(el.type).toBe('password'); // host prop unchanged
     });
 
-    it('clear button takes precedence over reveal button when both apply', async () => {
+    it('clear button (inset) and reveal toggle (below) coexist when both apply', async () => {
+      // Old behavior: clear took precedence and hid the inset reveal.
+      // New behavior: clear stays inset, reveal moved to the helper
+      // row below — no collision, so both render simultaneously.
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password clearable value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
-      // Reveal button hidden when clear is showing
-      expect(el.querySelector('button[aria-label="Show password"]')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row civ-toggle-button')).not.toBeNull();
     });
 
     it('hides the reveal button when host is disabled or readonly', async () => {
@@ -836,62 +843,71 @@ describe('text-input inline icons', () => {
         '<civ-text-input label="Password" type="password" reveal-password value="x" disabled></civ-text-input>'
       );
       await elementUpdated(elDisabled);
-      expect(elDisabled.querySelector('button[aria-label="Show password"]')).toBeNull();
+      expect(elDisabled.querySelector('civ-toggle-button')).toBeNull();
 
       const elReadonly = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password value="x" readonly></civ-text-input>'
       );
       await elementUpdated(elReadonly);
-      expect(elReadonly.querySelector('button[aria-label="Show password"]')).toBeNull();
+      expect(elReadonly.querySelector('civ-toggle-button')).toBeNull();
     });
   });
 
-  describe('trailing-action slot (escape hatch)', () => {
-    it('relocates a [data-trailing-action] child into the rendered slot container', async () => {
+  describe('below-action slot (escape hatch)', () => {
+    it('relocates a [data-below-action] child into the helper row below the input', async () => {
       const el = await fixture<CivTextInput>(`
         <civ-text-input label="API key" value="abc">
-          <button data-trailing-action type="button" class="civ-input-action" aria-label="Copy">copy</button>
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
-      const container = el.querySelector('[data-civ-trailing-action]');
+      const container = el.querySelector('[data-civ-below-action]');
       expect(container).not.toBeNull();
-      const button = container!.querySelector('button[data-trailing-action]');
+      expect(container!.classList.contains('civ-input-helper-row')).toBe(true);
+      const button = container!.querySelector('button[data-below-action]');
       expect(button).not.toBeNull();
-      expect(button!.textContent).toBe('copy');
+      expect(button!.textContent).toBe('Copy');
     });
 
-    it('suppresses trailing-icon when the slot has content', async () => {
+    it('helper row renders OUTSIDE the input chrome (sibling, not inset)', async () => {
+      // Verifies the move from inset to below: the slotted button
+      // must NOT sit inside an `.civ-input-icon-wrap` (the inset
+      // chrome wrapper) and MUST be a descendant of the helper-row
+      // sibling. Previously the slot rendered inside the wrap so
+      // click-targets overlapped the input bounding box.
+      // Use clearable to force the wrap to exist so the "wrap is
+      // present but does not contain the slot" assertion is real.
       const el = await fixture<CivTextInput>(`
-        <civ-text-input label="API key" trailing-icon="info">
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+        <civ-text-input label="API key" clearable value="abc">
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
-      expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+      const wrap = el.querySelector('.civ-input-icon-wrap');
+      expect(wrap).not.toBeNull();
+      expect(wrap!.querySelector('[data-below-action]')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row [data-below-action]')).not.toBeNull();
     });
 
-    it('clear button takes precedence over the slot when value is non-empty', async () => {
+    it('coexists with the clear button — both render simultaneously', async () => {
+      // The old inset slot had clear-button precedence (clear hid
+      // the slot). Now the slot lives below so there is no
+      // collision: clear stays inset on the right, Copy chip sits
+      // below.
       const el = await fixture<CivTextInput>(`
         <civ-text-input label="API key" clearable value="hello">
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action]')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row [data-below-action]')).not.toBeNull();
     });
 
-    it('shows the slot once the value is cleared (clear no longer applies)', async () => {
-      const el = await fixture<CivTextInput>(`
-        <civ-text-input label="API key" clearable>
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
-        </civ-text-input>
-      `);
+    it('does not render the helper row when no [data-below-action] child is slotted', async () => {
+      const el = await fixture<CivTextInput>(`<civ-text-input label="Plain" value="abc"></civ-text-input>`);
       await elementUpdated(el);
-      expect(el.querySelector('.civ-close-btn')).toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+      expect(el.querySelector('.civ-input-helper-row')).toBeNull();
     });
 
     it('inset action and overlays share a single positioned wrapper so the input stays the rightmost flex item (for civ-input-group flush layout)', async () => {
@@ -917,13 +933,21 @@ describe('text-input inline icons', () => {
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
     });
 
-    it('reveal button uses the wider trailing-padding so "Show" / "Hide" text fits', async () => {
+    it('reveal toggle renders in the helper row below the input, not inset', async () => {
+      // Old behavior: reveal toggle sat inset and the input got
+      // extra trailing padding (`civ-input-with-trailing-reveal`) so
+      // the "Show password" / "Hide password" text didn't overlap the value.
+      // New behavior: reveal moved to the helper row below — no
+      // trailing padding needed on the input.
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
       const input = el.querySelector('input')!;
-      expect(input.className).toContain('civ-input-with-trailing-reveal');
+      expect(input.className).not.toContain('civ-input-with-trailing-reveal');
+      expect(el.querySelector('.civ-input-helper-row civ-toggle-button')).not.toBeNull();
+      // Toggle is NOT a child of the inset chrome.
+      expect(el.querySelector('.civ-input-icon-wrap civ-toggle-button')).toBeNull();
     });
   });
 

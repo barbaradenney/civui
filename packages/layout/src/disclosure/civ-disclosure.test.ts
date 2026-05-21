@@ -115,15 +115,16 @@ describe('civ-disclosure', () => {
     expect(summary.hasAttribute('aria-controls')).toBe(false);
   });
 
-  it('composes the shared civ-toggle-btn class on the trigger', async () => {
+  it('composes the shared civ-text-btn chip palette on the trigger', async () => {
     // The disclosure family (civ-disclosure, civ-read-more, future
-    // siblings) all share the same secondary-button palette via the
-    // `civ-toggle-btn` utility. Asserting the class is present locks
-    // the composition — a refactor that removed it would silently
-    // strip the palette.
+    // siblings) all share the same chip-button palette via
+    // `civ-text-btn` + `civ-text-btn--chip`. Asserting both classes
+    // locks the composition — a refactor that removed either would
+    // silently strip the palette.
     const el = await fixture<CivDisclosure>('<civ-disclosure>Text</civ-disclosure>');
     const trigger = el.querySelector('.civ-disclosure__trigger')!;
-    expect(trigger.classList.contains('civ-toggle-btn')).toBe(true);
+    expect(trigger.classList.contains('civ-text-btn')).toBe(true);
+    expect(trigger.classList.contains('civ-text-btn--chip')).toBe(true);
   });
 
   it('default chevron icon matches the open-state rotation selector', async () => {

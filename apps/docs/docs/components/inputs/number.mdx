@@ -81,6 +81,12 @@ mutation, locale-specific decimal separators, and inconsistent iOS spinners.
 
 <StoryEmbed id="forms-inputs-number--with-error" />
 
+#### Spacing — default vs compact
+
+Set `spacing="sm"` to render just the bare numeric `<input>` with no surrounding label / hint / error chrome and no prefix/suffix decoration. The host's `aria-label` is propagated to the inner control. The numeric input filter (digit-only typing, optional decimal/negative) is preserved. Used by data-grid cell editors for number columns.
+
+<StoryEmbed id="forms-inputs-number--spacing" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-number--default)
 
 ### Shared Props

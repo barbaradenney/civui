@@ -28,6 +28,7 @@
 export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivActionSheet.swift',
   'CivBadge.swift',
+  'CivConfirmButton.swift',
   'CivCount.swift',
   'CivCountry.swift',
   'CivDateRangePicker.swift',
@@ -46,4 +47,5 @@ export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivRelationship.swift',
   'CivServiceHistory.swift',
   'CivTimePicker.swift',
+  'CivToggleButton.swift',
 ]);

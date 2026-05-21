@@ -52,6 +52,12 @@ Use combobox when the option list is long (more than 15 items) or when users ben
 
 <StoryEmbed id="forms-inputs-combobox--density-scale" />
 
+### Spacing — default vs compact
+
+Set `spacing="sm"` to render just the bare combobox input + listbox with no surrounding label / hint / error chrome. The host's `aria-label` is propagated to the inner control. Type-ahead filtering, keyboard navigation, and `civ-change` events are preserved. Used by data-grid cell editors and other dense surfaces.
+
+<StoryEmbed id="forms-inputs-combobox--spacing" />
+
 ### Option Groups
 
 <StoryEmbed id="forms-inputs-combobox--option-groups" minHeight={350} />

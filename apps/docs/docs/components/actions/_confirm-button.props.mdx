@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | Resting label ("Copy", "Generate", "Scan"). Required — there is no fallback because the verb is intent-specific |
+| `success-label` | `string` | `''` | Transient receipt label shown during the success window ("Copied", "Generated"). Defaults to the localized "Done" |
+| `success-ms` | `number` | `1500` | How long the success state stays visible, in milliseconds. Default 1500. Re-clicks during the window restart the timer (no stacking) |
+| `variant` | `'chip'` \| `'inline'` | `'chip'` | Picks the text-btn modifier. `chip` (default) renders the prominent gray pill — typical for helper-row Copy buttons. `inline` renders the transparent text-link style — typical when the button needs to read as quiet inside denser surfaces |

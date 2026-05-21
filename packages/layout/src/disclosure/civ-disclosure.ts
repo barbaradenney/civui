@@ -53,7 +53,7 @@ export class CivDisclosure extends LightDomSlotMixin(CivBaseElement) {
         ?open="${this.open}"
         @toggle="${this._onToggle}"
       >
-        <summary class="civ-toggle-btn civ-disclosure__trigger">
+        <summary class="civ-text-btn civ-text-btn--chip civ-disclosure__trigger">
           <civ-icon name="chevron-right" class="civ-disclosure__icon" aria-hidden="true"></civ-icon>
           <span class="civ-disclosure__label">${labelText}</span>
         </summary>

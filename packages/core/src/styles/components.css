@@ -40,13 +40,15 @@
   civ-breadcrumb-item,
   civ-button,
   civ-column-visibility,
+  civ-confirm-button,
   civ-icon,
   civ-menu,
   civ-nav-item,
   civ-popover,
   civ-segment,
   civ-tab,
-  civ-tab-nav-item {
+  civ-tab-nav-item,
+  civ-toggle-button {
     display: inline-block;
   }
 
@@ -698,30 +700,109 @@
     font-size: inherit;
   }
 
-  /* Inline text-button affordance inset in an input (e.g. date-picker
-     "Today", time-picker "Now"). Distinct from `.civ-input-action` which
-     is icon-only and circular. The button has no border or fill — it
-     reads as a text shortcut inside the input chrome. */
-  .civ-input-inline-action {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded;
+  /* ── Input helper row ─────────────────────────────────────────
+   *
+   * A short flex row that sits directly under an input chrome,
+   * inside the same `civ-mb-4` wrapper. Hosts action shortcuts
+   * (Copy, Today, Now) and consumer-defined chips that need to
+   * read as "this acts on the input above" without competing
+   * with the input's own bounding box.
+   *
+   * Replaces the older `data-trailing-action` inset slot, which
+   * conflated "shortcut for the value" with "control on the
+   * input chrome" — see the audit note in
+   * `.claude/rules/common-traps.md` → "Action shortcuts go below
+   * the input, not inset". Inset controls (close/×, password
+   * reveal) still belong inside `.civ-input-icon-wrap`.
+   *
+   * Layout: row on ≥481px, full-width chip on mobile. The chip
+   * itself uses `.civ-text-btn.civ-text-btn--chip`.
+   */
+  .civ-input-helper-row {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-2 civ-mt-1;
+  }
+  @media (max-width: 480px) {
+    .civ-input-helper-row > .civ-text-btn {
+      @apply civ-w-full civ-justify-center;
+    }
+  }
+
+  /* ── Text button — shared base ────────────────────────────────
+   *
+   * A button with no fill / no border that reads as inline text. Two
+   * variants:
+   *
+   * - `--chip` — gray pill, neutral color. Quiet toggle disclosure
+   *   ("Show more / Hide / Open"). Used by `civ-disclosure` and
+   *   `civ-read-more`. Doesn't compete with a primary action in
+   *   the same view.
+   *
+   * - `--inline` — transparent, primary-dark color. Fire-and-forget
+   *   action shortcut ("Today / Now / Copy"). Used by date-picker,
+   *   time-picker, and the text-input trailing-action slot.
+   *
+   * Decision: chip for state-toggling; inline for one-shot actions.
+   * See `.claude/rules/common-traps.md` → "Text-button variant choice".
+   *
+   * `:focus` falls through to the global focus rule in `civ.css` so we
+   * don't repeat the outline/box-shadow here.
+   */
+  .civ-text-btn {
+    @apply civ-inline-flex civ-items-center civ-cursor-pointer
+           civ-border-0 civ-rounded civ-font-semibold;
+  }
+  .civ-text-btn:disabled {
+    @apply civ-cursor-not-allowed;
+    opacity: var(--civ-opacity-disabled);
+  }
+
+  /* Chip variant — gray pill, neutral text color. */
+  .civ-text-btn--chip {
+    @apply civ-gap-1 civ-px-2 civ-py-1 civ-text-sm;
+    background-color: var(--civ-color-base-lightest);
+    color: inherit;
+  }
+  @media (hover: hover) {
+    .civ-text-btn--chip:hover { background-color: var(--civ-color-base-lighter); }
+  }
+  .civ-text-btn--chip:active { background-color: var(--civ-color-base-light); }
+
+  /* Compact size for chip — used inside dense prose / read-more. */
+  .civ-text-btn--sm {
+    @apply civ-px-1 civ-text-xs;
+  }
+
+  /* Inline variant — transparent, primary color, text-shortcut feel. */
+  .civ-text-btn--inline {
+    @apply civ-justify-center civ-bg-transparent;
     color: var(--civ-color-primary-dark);
     padding: 0 0.5em;
     font-size: var(--civ-typography-fontSize-sm);
-    font-weight: 600;
     white-space: nowrap;
   }
   @media (hover: hover) {
-    .civ-input-inline-action:hover { background: rgba(0, 0, 0, 0.05); }
+    .civ-text-btn--inline:hover { background: rgba(0, 0, 0, 0.05); }
   }
-  .civ-input-inline-action:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
+
+  /* Transient success state — flip to green with a leading check
+     icon ("Copy" → "Copied ✓"). Works on any text-btn variant; the
+     consumer keeps the variant stable across the state change so
+     padding stays consistent (avoids the visible "button shrinks
+     when it flips" bug from the earlier draft that swapped variants
+     mid-state). Check icon ships inline so consumers don't have to
+     juggle a civ-icon swap. */
+  .civ-text-btn.is-success {
+    color: var(--civ-color-success-dark);
+    gap: 0.25em;
   }
-  .civ-input-inline-action:disabled {
-    @apply civ-cursor-not-allowed;
-    opacity: var(--civ-opacity-disabled);
+  .civ-text-btn.is-success::before {
+    content: '';
+    display: inline-block;
+    width: 0.875em;
+    height: 0.875em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
   }
   @media (hover: hover) {
     .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
@@ -746,9 +827,7 @@
      so it isn't repeated here. */
   @media (max-width: 480px) {
     .civ-input-action,
-    .civ-input-inline-action,
     .civ-datepicker-today-btn,
-    .civ-time-picker-now-btn,
     .civ-file-cancel-btn,
     .civ-file-retry-btn {
       min-width: 44px;
@@ -788,8 +867,13 @@
      correct (the input's right border can be stripped and the adjacent
      button connects directly). Same pattern combobox / date-picker
      already use for their clear buttons. */
+  /* Only the close / × clear button sits inset inside the input
+     chrome now. Password reveal moved to the helper row below
+     (see civ-text-input + .civ-input-helper-row) — that simplifies
+     the chrome to a single inset affordance with a universally-
+     understood glyph. Value-shortcuts and other custom buttons
+     also live in the helper row via the data-below-action slot. */
   .civ-input-icon-wrap > .civ-close-btn,
-  .civ-input-icon-wrap > .civ-input-inline-action,
   .civ-input-icon-wrap > .civ-input-action-slot {
     position: absolute;
     top: 50%;
@@ -804,7 +888,6 @@
      action before the suffix in DOM, so flex flow puts them in the
      expected visual order: input → action → suffix. */
   .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-close-btn,
-  .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-input-inline-action,
   .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-input-action-slot {
     position: static;
     transform: none;
@@ -1420,21 +1503,11 @@
    * row, left-aligned (the inputs are left-aligned too; the
    * date picker footer right-aligns because its dialog is wider).
    */
-  .civ-time-picker-footer {
-    @apply civ-mt-1 civ-flex civ-justify-start;
-  }
-  .civ-time-picker-now-btn {
-    @apply civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
-           civ-text-primary civ-bg-transparent civ-border-0 civ-cursor-pointer;
-  }
-  @media (hover: hover) {
-    .civ-time-picker-now-btn:hover:not(:disabled) {
-      @apply civ-bg-primary-lightest;
-    }
-  }
-  .civ-time-picker-now-btn:disabled {
-    @apply civ-text-base-light civ-cursor-not-allowed;
-  }
+  /* civ-time-picker's "Now" shortcut renders into the shared
+     `.civ-input-helper-row` and uses `.civ-text-btn--chip`. No
+     time-picker-specific button class is needed — the helper-row
+     primitive supplies layout + mobile full-width, and the chip
+     palette supplies the visual treatment. */
 
   .civ-datepicker-cal-btn {
     @apply civ-border civ-border-s-0 civ-border-base civ-rounded-e
@@ -4664,40 +4737,10 @@
   }
 
   /*
-   * Shared toggle-button styling for the disclosure family
-   * (`.civ-disclosure__trigger`, `.civ-read-more__trigger`, and any
-   * future siblings). Neutral-gray palette — a button-like
-   * affordance that doesn't compete with a true primary action.
-   * The text color inherits from the page (`base-darkest`); the
-   * button reads as a quiet toggle, not a CTA.
-   *
-   * Compose by adding `civ-toggle-btn` to the component-specific
-   * class on the trigger element. Per-component triggers keep their
-   * own class for selectors, marker-suppression, and icon-rotation
-   * rules that don't generalize.
+   * Disclosure trigger composes the shared `civ-text-btn civ-text-btn--chip`
+   * palette. Component-specific class survives for marker suppression
+   * and icon-rotation rules below that don't generalize.
    */
-  .civ-toggle-btn {
-    @apply civ-inline-flex civ-items-center civ-gap-1 civ-cursor-pointer
-           civ-px-2 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
-           civ-border-0;
-    background-color: var(--civ-color-base-lightest);
-    color: inherit;
-  }
-
-  .civ-toggle-btn--sm {
-    @apply civ-px-1 civ-text-xs;
-  }
-
-  @media (hover: hover) {
-    .civ-toggle-btn:hover {
-      background-color: var(--civ-color-base-lighter);
-    }
-  }
-
-  .civ-toggle-btn:active {
-    background-color: var(--civ-color-base-light);
-  }
-
   .civ-disclosure__trigger {
     list-style: none;
   }
@@ -4741,9 +4784,9 @@
   /*
    * Two-stage disclosure. Teaser is always visible; rest is
    * `hidden` until expanded. Trigger uses the shared
-   * `.civ-toggle-btn` palette (see disclosure section above) plus a
-   * top margin to space it from the content above; only the chevron
-   * rotation is component-specific.
+   * `.civ-text-btn.civ-text-btn--chip` palette plus a top margin to
+   * space it from the content above; only the chevron rotation is
+   * component-specific.
    *
    * In block mode, the DEFAULT presentation overlays the trigger on
    * a gradient fade at the bottom of the teaser (rules further down).
@@ -4829,7 +4872,7 @@
   /*
    * Expanded trigger sits below the rest content and stays
    * horizontally centered. Without this rule the trigger reverts to
-   * `civ-toggle-btn`'s default `inline-flex` and lands left-aligned —
+   * `civ-text-btn`'s default `inline-flex` and lands left-aligned —
    * the user perceives a sideways jump as they expand the disclosure.
    * `width: fit-content` + `margin-inline: auto` centers the block
    * without forcing it to span the full row.
@@ -4885,10 +4928,10 @@
    * "Read more" button that does nothing visible.
    */
   /*
-   * Inline trigger composes the shared `.civ-toggle-btn` palette
-   * (filled background, semibold, rounded — so it reads as a button,
-   * not an underlined link) and overrides only what the inline flow
-   * needs:
+   * Inline trigger composes the shared `.civ-text-btn.civ-text-btn--chip`
+   * palette (filled background, semibold, rounded — so it reads as a
+   * button, not an underlined link) and overrides only what the inline
+   * flow needs:
    *
    * - `margin-top: 0` cancels `.civ-read-more__trigger`'s `civ-mt-2`.
    *   Without this, the button is `display: inline-block` (browser

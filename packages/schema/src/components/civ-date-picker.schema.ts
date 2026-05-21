@@ -113,17 +113,17 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'hide-today-button',
     },
-    inlineToday: {
+    showTodayShortcut: {
       type: 'boolean',
-      description: 'Render an inline "Today" shortcut inset in the input chrome (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today',
+      description: 'Render a "Today" shortcut chip in a helper row directly below the input (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today. Renamed from `inline-today`; the prior inset position created touch-target conflicts and was moved below per the value-shortcut audit',
       default: false,
-      attribute: 'inline-today',
+      attribute: 'show-today-shortcut',
     },
-    inlineTodayLabel: {
+    todayShortcutLabel: {
       type: 'string',
-      description: 'Override the inline "Today" button label. Defaults to the locale-aware "Today"',
+      description: 'Override the "Today" shortcut chip label. Defaults to the locale-aware "Today"',
       default: '',
-      attribute: 'inline-today-label',
+      attribute: 'today-shortcut-label',
     },
     invalidFormatMessage: {
       type: 'string',

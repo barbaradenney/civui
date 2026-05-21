@@ -58,6 +58,11 @@ export interface CivLocaleStrings {
   // collapses trailing buttons.
   buttonGroupOverflowLabel: string;
 
+  // Confirm button — generic fallback receipt label when the consumer
+  // does not provide an explicit `success-label` on a
+  // `<civ-confirm-button>`. Announced by AT during the success window.
+  confirmButtonSuccess: string;
+
   // Pagination — labels for civ-pagination controls. Use {start}, {end},
   // {total}, {page}, {pageCount}, {size} interpolation tokens.
   paginationLabel: string;       // "Pagination"
@@ -279,10 +284,8 @@ export interface CivLocaleStrings {
   minSelectionsHint: string; // "Select at least {min}"
   minSelectionsError: string; // "Please select at least {min} options"
   clearButton: string;
-  passwordReveal: string;      // aria-label for the show-password button
-  passwordHide: string;        // aria-label when the password is currently revealed
-  passwordRevealShort: string; // visible text on the reveal button ("Show")
-  passwordHideShort: string;   // visible text on the reveal button when revealed ("Hide")
+  passwordReveal: string;      // label for the show-password toggle ("Show password")
+  passwordHide: string;        // label when the password is currently revealed ("Hide password")
 
   // Progress steps
   progressStepsLabel: string;
@@ -796,6 +799,8 @@ const defaultStrings: CivLocaleStrings = {
 
   buttonGroupOverflowLabel: 'More',
 
+  confirmButtonSuccess: 'Done',
+
   paginationLabel: 'Pagination',
   paginationPreviousLabel: 'Previous',
   paginationNextLabel: 'Next',
@@ -1002,8 +1007,6 @@ const defaultStrings: CivLocaleStrings = {
   clearButton: 'Clear',
   passwordReveal: 'Show password',
   passwordHide: 'Hide password',
-  passwordRevealShort: 'Show',
-  passwordHideShort: 'Hide',
 
   nameFirst: 'First name or given name',
   nameMiddle: 'Middle name',

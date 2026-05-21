@@ -82,7 +82,13 @@ Calendar dialog implementing the W3C APG Dialog + Grid pattern. Combines text in
 <StoryEmbed id="forms-inputs-date-picker--with-min-max" minHeight={450} />
 <StoryEmbed id="forms-inputs-date-picker--government-appointment-scheduler" minHeight={450} />
 <StoryEmbed id="forms-inputs-date-picker--year-jump" minHeight={450} />
-<StoryEmbed id="forms-inputs-date-picker--inline-today" minHeight={450} />
+<StoryEmbed id="forms-inputs-date-picker--show-today-shortcut" minHeight={450} />
+
+#### Spacing — default vs compact
+
+Set `spacing="sm"` to render just the bare input + trigger button with no surrounding label / hint / error chrome. The host's `aria-label` is propagated to the inner control. Used by data-grid cell editors and other dense surfaces where the row or card around the picker already names the field.
+
+<StoryEmbed id="forms-inputs-date-picker--spacing" minHeight={450} />
 
 ### Props
 

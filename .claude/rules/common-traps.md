@@ -371,6 +371,50 @@ prop from one of the known base classes). Wired into
 
 ---
 
+## Schema enum `values:` must match the Lit source TS union
+
+A schema in `packages/schema/src/components/civ-*.schema.ts` may
+declare an enum prop with a `values:` array that doesn't actually
+match the source type union. The schema-parity CI gate
+(`pnpm parity:schema`) only checks prop *names* across platforms,
+not enum *values*, so drift like this slips through:
+
+```ts
+// packages/layout/src/tag/civ-tag.ts
+export type TagVariant = 'blue' | 'orange' | 'purple' | 'gray';
+
+// packages/schema/src/components/civ-tag.schema.ts
+variant: {
+  type: 'enum',
+  values: ['gray', 'primary', 'info', 'success', 'warning', 'error'], // ✗ drifts
+}
+```
+
+The auto-generated Props tables in
+`apps/docs/docs/components/**/_<slug>.props.mdx` import from the
+schema, so the docs surface the wrong allowed values to anyone
+implementing the iOS / Android / Drupal platforms — including
+contractors who treat the schema as the contract.
+
+Five schemas were silently wrong before this lint shipped
+(civ-alert.alertStyle, civ-alert.variant, civ-tag.variant,
+civ-link-card.{variant,color}, civ-card.color, civ-count.countStyle,
+civ-filter-chip.chipRole). All have been corrected.
+
+**Caught by:** `pnpm lint:schema-enum-values` — for every schema in
+`COVERED_COMPONENTS` (in `tools/schema-parity.ts`), parses the Lit
+source's `@property` type annotation and any `export type X = …`
+alias it references, resolves the union to a string-literal list,
+and compares against the schema's `values:` array. Reports missing
+values in both directions ("source accepts but schema doesn't list"
+and "schema lists but source rejects"). Wired into
+`pnpm validate:lints` and the drift-lints CI gate. Sources whose
+type is bare `string` (or any non-literal union) are skipped — the
+schema is documenting beyond what the type system enforces, which
+is intentional for some props.
+
+---
+
 ## Section legends don't carry (required); leaf inputs do
 
 CivUI distinguishes two kinds of `<legend>`:
@@ -764,6 +808,146 @@ a dynamic `${...map(...)}` directly under the mixin-using element
 — and wrap it in a static container, hoist the conditional out
 with `keyed(...)`, or render the element unconditionally and
 toggle a prop.
+
+---
+
+## Confirm vs Toggle button — pick by intent
+
+CivUI has two small action-component patterns with overlapping
+visuals but different ARIA + behavioral contracts:
+
+- **`<civ-confirm-button>`** — fire-and-forget action with a
+  transient receipt ("Copy" → "Copied ✓" → "Copy"). Use for
+  Copy, Paste, Scan, Generate. Consumer does the work in the
+  `civ-confirm` listener; the component owns the success-window
+  timing and visual swap.
+- **`<civ-toggle-button>`** — two-state persistent toggle
+  ("Show" ↔ "Hide"). Use for password reveal, mute/unmute,
+  expand/collapse on a custom control. Uses `aria-pressed` and
+  reflects `pressed` for two-way binding.
+
+```html
+<!-- ✓ Confirm: action + receipt -->
+<civ-confirm-button label="Copy" success-label="Copied" @civ-confirm=${copyHandler}>
+</civ-confirm-button>
+
+<!-- ✓ Toggle: two persistent labels -->
+<civ-toggle-button label="Show" pressed-label="Hide" @civ-toggle=${onToggle}>
+</civ-toggle-button>
+```
+
+**Padding stability**: both components hold the variant class
+stable across state changes — `.is-success` (confirm) and
+`[pressed]` (toggle) only add a state flag, never swap variants.
+This avoids the "button visibly shrinks when it transitions" bug
+that hand-rolled implementations hit when they swap
+`.civ-text-btn--chip` for `.civ-text-btn--inline` mid-state.
+
+**Do not use** these components for:
+
+| Need | Use |
+|---|---|
+| Primary form CTA (Submit, Continue) | `<civ-button>` |
+| Toolbar / row action | `<civ-action-button>` |
+| Disclosure section open/close | `<civ-disclosure>` (native `<details>`) |
+| Read-more expansion | `<civ-read-more>` |
+| Bare text button with no behavior | `<button class="civ-text-btn civ-text-btn--chip">` |
+
+**Caught by:** no lint covers the choice — review-time decision
+based on intent. Tests in each component lock the state-transition
+behavior; misuse would be a design bug, not a regression.
+
+---
+
+## Action shortcuts go below the input, not inset
+
+The trailing inset region inside a `civ-text-input` is reserved
+for exactly **one** component-rendered control: the close / ×
+clear button. It operates on the value but has universally-
+understood semantics and stays tightly coupled to the field's
+visual box.
+
+Everything else — Copy, Today, Now, Show / Hide password, custom
+trailing-action chips — belongs in the helper row below the
+input. `civ-text-input` renders the password reveal toggle there
+automatically when `reveal-password` is set; consumers can drop
+in arbitrary chips via the `data-below-action` slot:
+
+```html
+<civ-text-input label="API key" value="…">
+  <!-- ✓ helper-row chip directly under the input -->
+  <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">
+    Copy
+  </button>
+</civ-text-input>
+```
+
+Why:
+
+- **Touch-target conflicts**. An inset button shares the input's
+  bounding box on mobile. Users reaching for the input field
+  hit the action instead. 44×44 mobile floors mitigate *missed*
+  taps but not *misdirected* ones.
+- **Cognitive ambiguity**. An inset button reads as part of the
+  input chrome — users hesitate to figure out whether it
+  modifies the value, submits the form, or just hides text.
+- **Industry precedent**. USWDS and most accessibility-forward
+  systems render "Show password" / "Copy" affordances below
+  the field for the same reason.
+
+The previous `data-trailing-action` slot (which rendered inset)
+was renamed to `data-below-action` in this refactor — hard
+break, no alias, since the inset position was the bug.
+
+**Caught by:** test in `civ-text-input.test.ts` asserts the
+helper-row slot is a sibling of `.civ-input-icon-wrap`, not a
+descendant. No lint covers the design rule "value shortcuts go
+below the input" — that's a review-time call when adding a new
+inset button.
+
+---
+
+## Text-button variant choice — chip vs. inline
+
+CivUI has one base class for low-chrome text buttons —
+`.civ-text-btn` — with two variants:
+
+- **`.civ-text-btn--chip`** — gray pill background, neutral text
+  color. A quiet *toggle disclosure*: "Show more / Hide / Open".
+  Used by `civ-disclosure` and `civ-read-more`. Deliberately
+  doesn't compete with a primary action in the same view.
+- **`.civ-text-btn--inline`** — transparent background,
+  primary-dark text color. A *one-shot action shortcut*:
+  "Today / Now / Copy". Used by `civ-date-picker` and
+  `civ-time-picker` helper-row shortcuts.
+
+Pick the variant by the *intent*:
+
+| Intent | Variant |
+|---|---|
+| Toggle a disclosure state | `--chip` |
+| Fire an action and move on | `--inline` |
+
+`.civ-text-btn--inline` also supports a transient `.is-success`
+state (green text + check icon) for "Copied ✓" / "Saved ✓"
+confirmations — toggle the class for ~1–2 seconds after the
+action completes, then remove.
+
+```html
+<!-- ✓ disclosure toggle -->
+<button class="civ-text-btn civ-text-btn--chip">Show more</button>
+
+<!-- ✓ one-shot action -->
+<button class="civ-text-btn civ-text-btn--inline">Copy</button>
+
+<!-- ✓ same button after the user clicks (~1.5 s) -->
+<button class="civ-text-btn civ-text-btn--inline is-success">Copied</button>
+```
+
+**Caught by:** test assertions in `civ-disclosure.test.ts` and
+`civ-read-more.test.ts` lock the `civ-text-btn` +
+`civ-text-btn--chip` composition. No lint covers the variant
+*choice* (chip vs inline) — that's a design call.
 
 ---
 

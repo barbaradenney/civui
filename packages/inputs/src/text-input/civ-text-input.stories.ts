@@ -119,6 +119,36 @@ export const DensityScale: Story = {
   `,
 };
 
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare `<input>` with no label / hint / error chrome. ' +
+          'The host\'s `aria-label` is propagated to the inner control so assistive tech still ' +
+          'gets a name. Mask and validation behavior are preserved. Used by data-grid cell editors ' +
+          'and other dense surfaces where the surrounding row already names the field.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-text-input label="Full name" name="name-default" hint="Legal first and last name"></civ-text-input>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input, no chrome. The outer surface (data-grid row, summary card) provides the accessible name via the host's <code>aria-label</code>.</p>
+        <civ-text-input spacing="sm" aria-label="Full name" name="name-compact"></civ-text-input>
+      </div>
+    </div>
+  `,
+};
+
 // ── Width Variants ────────────────────────────────────────────
 
 export const WidthVariants: Story = {
@@ -215,7 +245,7 @@ export const Clearable: Story = {
 };
 
 export const PasswordReveal: Story = {
-  name: 'Inline: Password reveal',
+  name: 'Inset: Password reveal',
   render: () => html`
     <civ-text-input
       label="Password"
@@ -226,27 +256,38 @@ export const PasswordReveal: Story = {
       reveal-password
     ></civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Click the eye button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+      Click the <strong>Show password</strong> / <strong>Hide password</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
+    </p>
+    <p class="civ-mt-3 civ-text-sm">
+      The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.
     </p>
   `,
 };
 
-export const TrailingActionSlot: Story = {
-  name: 'Inline: Trailing action slot (escape hatch)',
+export const BelowActionSlot: Story = {
+  name: 'Below-input action slot (escape hatch)',
   render: () => html`
     <civ-text-input label="API key" name="api-key" value="sk-abc123def456ghi789">
-      <button
-        data-trailing-action
-        type="button"
-        class="civ-input-inline-action"
-        @click=${(e: Event) => {
+      <civ-confirm-button
+        data-below-action
+        label="Copy"
+        success-label="Copied"
+        @civ-confirm=${(e: Event) => {
           const host = (e.currentTarget as HTMLElement).closest('civ-text-input');
-          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));
+          if (host && 'value' in host) {
+            navigator.clipboard?.writeText(String(host.value ?? ''));
+          }
         }}
-      >Copy</button>
+      ></civ-confirm-button>
     </civ-text-input>
     <p class="civ-mt-3 civ-text-sm">
-      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-input-inline-action</code> — "Copy", "Paste", "Scan" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.
+      Use the <code>data-below-action</code> slot for value-shortcuts the design system doesn't ship as first-class props (copy, paste, scan, generate). The slot renders in a helper row directly under the input — a larger, clearer tap target than an inset button inside the input's chrome.
+    </p>
+    <p class="civ-mt-3 civ-text-sm">
+      For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the "Copy → Copied ✓ → Copy" feedback loop, keeps padding stable across the swap, and wires <code>aria-live="polite"</code> so screen readers announce the receipt. Consumer does the actual work in the <code>civ-confirm</code> listener.
+    </p>
+    <p class="civ-mt-3 civ-text-sm">
+      The inset action region is reserved for one control: the close / × clear button. Anything else — Copy, Today, Now, Show / Hide password, custom shortcuts — belongs in the below-input helper row.
     </p>
   `,
 };
@@ -361,31 +402,3 @@ export const AllPresets: Story = {
   `,
 };
 
-// ── spacing="sm" — compact mode for dense surfaces ────────────
-
-export const Spacing: Story = {
-  name: 'Spacing — default vs sm',
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '`spacing="sm"` renders just the bare `<input>` with no label / hint / error chrome. ' +
-          'The host\'s `aria-label` is propagated to the inner control so screen readers still hear a name. ' +
-          'For dense surfaces like data-grid cell editors. Mask + validate behavior is preserved.',
-      },
-    },
-  },
-  render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-6">
-      <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
-        <civ-text-input label="Applicant name" name="name-default" hint="First and last"></civ-text-input>
-      </div>
-      <div>
-        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
-        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input, no chrome. aria-label on the host names the control for AT.</p>
-        <civ-text-input spacing="sm" aria-label="Applicant name" name="name-compact"></civ-text-input>
-      </div>
-    </div>
-  `,
-};

@@ -12,6 +12,8 @@ export default defineConfig({
       '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
       '@civui/controls/segmented-control': resolve(__dirname, '../controls/src/segmented-control/index.ts'),
       '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
+      '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
+      '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
     },
   },
 });

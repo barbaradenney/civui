@@ -1,0 +1,87 @@
+---
+title: Toggle Button
+sidebar_position: 12
+sidebar_label: Toggle Button
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import ToggleButtonProps from "./_toggle-button.props.mdx";
+import ToggleButtonEvents from "./_toggle-button.events.mdx";
+
+# Toggle Button
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-toggle-button`](pathname:///civui/storybook/?path=/docs/contract-civ-toggle-button--docs) — auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-toggle-button>`
+
+Text button with two persistent labels and an `aria-pressed` state. Click flips `pressed` and swaps the visible label. Use for show/hide toggles where each state has a clear name — password reveal (Show / Hide), mute / unmute, expand / collapse on a custom surface.
+
+The `pressed` property reflects to the host attribute, so consumers can two-way bind by setting `.pressed` externally or by listening for `civ-toggle`. Padding stays stable across the swap — the variant class is held constant; only the label text and `aria-pressed` flip.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-toggle-button--default" minHeight={100} />
+
+### Chip variant (prominent pill)
+
+<StoryEmbed id="actions-toggle-button--chip" minHeight={100} />
+
+### Pre-pressed state
+
+<StoryEmbed id="actions-toggle-button--pressed" minHeight={100} />
+
+### Password reveal pattern
+
+<StoryEmbed id="actions-toggle-button--password-reveal-pattern" minHeight={200} />
+
+### Disabled
+
+<StoryEmbed id="actions-toggle-button--disabled" minHeight={100} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-toggle-button--default)
+
+## Props
+
+<ToggleButtonProps />
+
+## Events
+
+<ToggleButtonEvents />
+
+## When to use vs. not
+
+| Need | Use |
+|---|---|
+| Two persistent labels with a press state (Show / Hide, Mute / Unmute) | `<civ-toggle-button>` |
+| Fire-and-forget action with receipt (Copy / Paste / Scan) | `<civ-confirm-button>` |
+| Native disclosure (open/closed `<details>`) | `<civ-disclosure>` |
+| Read-more expansion of prose | `<civ-read-more>` |
+| Primary form CTA (Submit, Continue) | `<civ-button>` |
+
+## Two-way binding
+
+The `pressed` property reflects to the host attribute, so:
+
+```ts
+const btn = document.querySelector('civ-toggle-button')!;
+// React to clicks
+btn.addEventListener('civ-toggle', (e) => {
+  console.log('now pressed:', e.detail.pressed);
+});
+// Or drive it externally
+btn.pressed = true;
+```
+
+Setting `pressed` programmatically updates the rendered label and `aria-pressed` immediately — it doesn't fire `civ-toggle` (the event signifies a user-initiated transition, not a state sync).
+
+## Accessibility
+
+- The inner `<button>` carries `aria-pressed="true"` or `"false"` — never absent. This is the standard ARIA toggle-button pattern.
+- Both labels are required; there's no icon-only mode because a glyph alone leaves AT users without a name for the pressed state.
+- Disabled buttons set both `disabled` and ignore clicks (no `pressed` flip, no `civ-toggle` event).

@@ -45,14 +45,14 @@
 </head>
 <body>
 <h1>CivUI Platform Parity Report</h1>
-<p class="subtitle">Auto-generated 5/16/2026 — extracted from source code</p>
+<p class="subtitle">Auto-generated 5/21/2026 — extracted from source code</p>
 
 <div class="summary">
-  <div class="summary-card"><div class="num">73</div><div class="label">Components</div></div>
-  <div class="summary-card"><div class="num">70</div><div class="label">Web (Lit)</div></div>
-  <div class="summary-card"><div class="num">73</div><div class="label">iOS (SwiftUI)</div></div>
-  <div class="summary-card"><div class="num">73</div><div class="label">Android (Compose)</div></div>
-  <div class="summary-card"><div class="num">72</div><div class="label">Drupal (SDC)</div></div>
+  <div class="summary-card"><div class="num">89</div><div class="label">Components</div></div>
+  <div class="summary-card"><div class="num">85</div><div class="label">Web (Lit)</div></div>
+  <div class="summary-card"><div class="num">77</div><div class="label">iOS (SwiftUI)</div></div>
+  <div class="summary-card"><div class="num">77</div><div class="label">Android (Compose)</div></div>
+  <div class="summary-card"><div class="num">74</div><div class="label">Drupal (SDC)</div></div>
 </div>
 
 <div class="component">
@@ -123,6 +123,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>iconOnly</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
           <td><strong>href</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -586,6 +592,94 @@
 </div>
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Breadcrumb
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/breadcrumb/civ-breadcrumb.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    BreadcrumbItem
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/breadcrumb/civ-breadcrumb-item.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>href</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>current</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="excluded-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     Button
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
@@ -647,6 +741,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
+          <td><strong>iconOnly</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
           <td><strong>href</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -698,8 +798,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:40%"></span></span>
+    <span style="font-size:12px;color:#71767a;">40%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -723,6 +823,24 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>allowOverflow</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>overflowLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>overflowIcon</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -853,6 +971,12 @@
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
           <td><strong>label</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -1102,8 +1226,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:91%"></span></span>
-    <span style="font-size:12px;color:#71767a;">91%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:83%"></span></span>
+    <span style="font-size:12px;color:#71767a;">83%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -1145,6 +1269,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>loadOptions</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -1330,6 +1460,77 @@
     <table>
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    ConfirmButton
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/confirm-button/civ-confirm-button.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivConfirmButton.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivConfirmButton.kt
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>successLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>successMs</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>variant</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">ConfirmButtonVariant</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">ConfirmButtonVariant</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-confirm</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
     </table>
   </div>
 </div>
@@ -1530,8 +1731,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:20%"></span></span>
+    <span style="font-size:12px;color:#71767a;">20%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -1544,6 +1745,30 @@
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       <tr class="gap-row">
+          <td><strong>decimals</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>min</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>max</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>allowNegative</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
           <td><strong>label</strong></td>
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -1740,6 +1965,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>weekStartsOn</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
@@ -1818,6 +2049,18 @@
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
+          <td><strong>showTodayShortcut</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>todayShortcutLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>invalidFormatMessage</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -1888,6 +2131,18 @@
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>inlineToday</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>inlineTodayLabel</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr>
     </table>
@@ -2240,18 +2495,6 @@
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="">
-          <td><strong>icon</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="">
-          <td><strong>size</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
-          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -2311,6 +2554,113 @@
     <table>
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
       
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Drawer
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:91%"></span></span>
+    <span style="font-size:12px;color:#71767a;">91%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/overlays/src/drawer/civ-drawer.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivDrawer.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivDrawer.kt
+      <br>Drupal: packages/drupal/civui/components/drawer/drawer.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="">
+          <td><strong>open</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>position</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>width</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>heading</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>headingLevel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>noCloseButton</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>noBackdropClose</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>noEscapeClose</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>noStickyHeader</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>noStickyFooter</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-drawer-close</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-dismiss</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
     </table>
   </div>
 </div>
@@ -2829,7 +3179,7 @@
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     FilterableList
-    <span class="badge yes">Web</span>
+    <span class="badge no">No Web</span>
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
@@ -2838,7 +3188,7 @@
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
-      Web: packages/layout/src/filterable-list/civ-filterable-list.ts
+      
       <br>iOS: packages/ios/Sources/CivUI/CivFilterableList.swift
       <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivFilterableList.kt
       <br>Drupal: packages/drupal/civui/components/filterable-list/filterable-list.component.yml
@@ -2846,33 +3196,33 @@
     <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
     <table>
       <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
-      <tr class="">
+      <tr class="gap-row">
           <td><strong>label</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>noResultsMessage</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>announceDelay</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
           <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>resultCountHidden</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
-        </tr><tr class="">
+        </tr><tr class="gap-row">
           <td><strong>filterAttribute</strong></td>
-          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
@@ -2881,13 +3231,7 @@
     <div class="section-label">Events / Callbacks</div>
     <table>
       <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
-      <tr class="excluded-row">
-          <td><strong>civ-filter</strong></td>
-          <td><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr>
+      
     </table>
   </div>
 </div>
@@ -3017,8 +3361,8 @@
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
-    <span style="font-size:12px;color:#71767a;">100%</span>
+    <span class="parity-meter"><span class="parity-fill mid" style="width:75%"></span></span>
+    <span style="font-size:12px;color:#71767a;">75%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -3042,6 +3386,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>name</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
         </tr>
     </table>
     <div class="section-label">Events / Callbacks</div>
@@ -4246,6 +4596,136 @@
 </div>
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Menu
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/overlays/src/menu/civ-menu.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>open</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>align</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-menu-open</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-menu-close</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-menu-select</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    MenuItem
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/overlays/src/menu/civ-menu-item.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>destructive</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>href</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>icon</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     Modal
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
@@ -4448,13 +4928,107 @@
 </div>
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Nav
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/nav/civ-nav.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    NavItem
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/nav/civ-nav-item.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>href</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>current</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="excluded-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     Number
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
     <span class="badge yes">Android</span>
     <span class="badge yes">Drupal</span>
-    <span class="parity-meter"><span class="parity-fill high" style="width:91%"></span></span>
-    <span style="font-size:12px;color:#71767a;">91%</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:92%"></span></span>
+    <span style="font-size:12px;color:#71767a;">92%</span>
   </div>
   <div class="component-body">
     <div class="file-path" style="padding:8px 12px;">
@@ -4491,6 +5065,12 @@
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
+          <td><strong>step</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
           <td><strong>placeholder</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -4514,6 +5094,12 @@
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
+        </tr><tr class="">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="gap-row">
           <td><strong>label</strong></td>
           <td><span class="cross">✗</span></td>
@@ -4941,6 +5527,101 @@
           <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Popover
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/overlays/src/popover/civ-popover.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>open</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>align</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>panelRole</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>triggerHaspopup</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>noTabClose</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>noClickOutsideClose</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>noEscapeClose</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-popover-trigger-arrow</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-popover-open</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-popover-close</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr>
     </table>
@@ -5493,6 +6174,89 @@
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    ReadMore
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge yes">Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/layout/src/read-more/civ-read-more.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivReadMore.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivReadMore.kt
+      <br>Drupal: packages/drupal/civui/components/read-more/read-more.component.yml
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="">
+          <td><strong>expanded</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>moreLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>lessLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>icon</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>size</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>inline</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>noFadeTrigger</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-toggle</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>
         </tr><tr class="gap-row">
           <td><strong>civ-analytics</strong></td>
@@ -6204,6 +6968,12 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>preset</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -6814,6 +7584,241 @@
 </div>
 <div class="component">
   <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Tab
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/tabs/civ-tab.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>selected</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-tab-select</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    TabNav
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/tab-nav/civ-tab-nav.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    TabNavItem
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/tab-nav/civ-tab-nav-item.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="excluded-row">
+          <td><strong>href</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>current</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="excluded-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    TabPanel
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/tabs/civ-tab-panel.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    Tabs
+    <span class="badge yes">Web</span>
+    <span class="badge no">No iOS</span>
+    <span class="badge no">No Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill low" style="width:0%"></span></span>
+    <span style="font-size:12px;color:#71767a;">0%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/tabs/civ-tabs.ts
+      
+      
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>value</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-change</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
     Tag
     <span class="badge yes">Web</span>
     <span class="badge yes">iOS</span>
@@ -6929,6 +7934,12 @@
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
           <td><strong>maxHeight</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>spacing</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -7059,6 +8070,12 @@
           <td><span class="check">✓</span> <span class="prop-type">CivInputWidth</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
         </tr><tr class="">
+          <td><strong>spacing</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
           <td><strong>placeholder</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -7125,6 +8142,12 @@
           <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
           <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="">
+          <td><strong>revealPassword</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
           <td><strong>leadingIcon</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -7160,6 +8183,30 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>decimals</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Int</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>min</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double?</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>max</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Number</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Double?</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">integer</span></td>
+        </tr><tr class="">
+          <td><strong>allowNegative</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
         </tr><tr class="gap-row">
           <td><strong>validateType</strong></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
@@ -7327,6 +8374,24 @@
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">String</span></td>
           <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>showNowButton</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">boolean</span></td>
+        </tr><tr class="">
+          <td><strong>nowButtonLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">string</span></td>
+        </tr><tr class="">
+          <td><strong>disabledSlots</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Array</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">[String]</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">List<String></span></td>
+          <td><span class="check">✓</span> <span class="prop-type">array</span></td>
         </tr><tr class="gap-row">
           <td><strong>value</strong></td>
           <td><span class="cross">✗</span></td>
@@ -7496,6 +8561,77 @@
         </tr><tr class="gap-row">
           <td><strong>civ-analytics</strong></td>
           <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+  </div>
+</div>
+<div class="component">
+  <div class="component-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    ToggleButton
+    <span class="badge yes">Web</span>
+    <span class="badge yes">iOS</span>
+    <span class="badge yes">Android</span>
+    <span class="badge no">No Drupal</span>
+    <span class="parity-meter"><span class="parity-fill high" style="width:100%"></span></span>
+    <span style="font-size:12px;color:#71767a;">100%</span>
+  </div>
+  <div class="component-body">
+    <div class="file-path" style="padding:8px 12px;">
+      Web: packages/actions/src/toggle-button/civ-toggle-button.ts
+      <br>iOS: packages/ios/Sources/CivUI/CivToggleButton.swift
+      <br>Android: packages/android/src/main/kotlin/gov/civui/components/CivToggleButton.kt
+      
+    </div>
+    <div class="section-label">Properties <button class="toggle-excluded" onclick="document.body.classList.toggle('show-excluded')">Toggle web-only / native-only props</button></div>
+    <table>
+      <tr><th>Property</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>label</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pressedLabel</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>pressed</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>variant</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">String</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">ToggleButtonVariant</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">ToggleButtonVariant</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>disabled</strong></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Bool</span></td>
+          <td><span class="check">✓</span> <span class="prop-type">Boolean</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+    </table>
+    <div class="section-label">Events / Callbacks</div>
+    <table>
+      <tr><th>Event</th><th>Web</th><th>iOS</th><th>Android</th><th>Drupal</th></tr>
+      <tr class="gap-row">
+          <td><strong>civ-toggle</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr><tr class="gap-row">
+          <td><strong>civ-analytics</strong></td>
+          <td><span class="cross">✗</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="check">✓</span></td>
           <td><span class="cross">✗</span></td>

@@ -6,7 +6,7 @@
 | `selected` | `boolean` | `false` | Active state. Reflects to the host attribute. In `select` role this is managed by the parent group |
 | `removable` | `boolean` | `false` | Render a trailing × button. Fires `civ-remove` when clicked |
 | `chip-style` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background |
-| `chip-role` | `'toggle'` \| `'select'` | `'toggle'` | Interaction model. `toggle` = standalone on/off; `select` = single member of a multi-select group |
+| `chip-role` | `'toggle'` \| `'radio'` | `'toggle'` | Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity) |
 | `spacing` | `'default'` \| `'sm'` | `'default'` | Padding density. `default` for standalone; `sm` for dense filter strips |
 | `icon-start` | `string` | `''` | Leading icon name (e.g. category emoji-replacement) |
 | `icon-end` | `string` | `''` | Trailing icon name (note: `removable` overrides this with a × icon) |

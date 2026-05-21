@@ -698,6 +698,33 @@
     font-size: inherit;
   }
 
+  /* ── Input helper row ─────────────────────────────────────────
+   *
+   * A short flex row that sits directly under an input chrome,
+   * inside the same `civ-mb-4` wrapper. Hosts action shortcuts
+   * (Copy, Today, Now) and consumer-defined chips that need to
+   * read as "this acts on the input above" without competing
+   * with the input's own bounding box.
+   *
+   * Replaces the older `data-trailing-action` inset slot, which
+   * conflated "shortcut for the value" with "control on the
+   * input chrome" — see the audit note in
+   * `.claude/rules/common-traps.md` → "Action shortcuts go below
+   * the input, not inset". Inset controls (close/×, password
+   * reveal) still belong inside `.civ-input-icon-wrap`.
+   *
+   * Layout: row on ≥481px, full-width chip on mobile. The chip
+   * itself uses `.civ-text-btn.civ-text-btn--chip`.
+   */
+  .civ-input-helper-row {
+    @apply civ-flex civ-flex-wrap civ-items-center civ-gap-2 civ-mt-1;
+  }
+  @media (max-width: 480px) {
+    .civ-input-helper-row > .civ-text-btn {
+      @apply civ-w-full civ-justify-center;
+    }
+  }
+
   /* ── Text button — shared base ────────────────────────────────
    *
    * A button with no fill / no border that reads as inline text. Two

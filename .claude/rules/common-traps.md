@@ -725,6 +725,52 @@ mixin-using element — and wrap it in a static container.
 
 ---
 
+## Action shortcuts go below the input, not inset
+
+The trailing inset region inside a `civ-text-input` is reserved
+for controls that operate **on the input chrome itself**: the
+close / × clear button and the password reveal toggle. Both
+have universally-understood semantics and stay tightly coupled
+to the field's visual box.
+
+Anything that operates **on the value** — Copy, Today, Now,
+custom trailing-action chips — belongs in the helper row below
+the input. Use the `data-below-action` slot:
+
+```html
+<civ-text-input label="API key" value="…">
+  <!-- ✓ helper-row chip directly under the input -->
+  <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">
+    Copy
+  </button>
+</civ-text-input>
+```
+
+Why:
+
+- **Touch-target conflicts**. An inset button shares the input's
+  bounding box on mobile. Users reaching for the input field
+  hit the action instead. 44×44 mobile floors mitigate *missed*
+  taps but not *misdirected* ones.
+- **Cognitive ambiguity**. An inset button reads as part of the
+  input chrome — users hesitate to figure out whether it
+  modifies the value, submits the form, or just hides text.
+- **Industry precedent**. USWDS and most accessibility-forward
+  systems render "Show password" / "Copy" affordances below
+  the field for the same reason.
+
+The previous `data-trailing-action` slot (which rendered inset)
+was renamed to `data-below-action` in this refactor — hard
+break, no alias, since the inset position was the bug.
+
+**Caught by:** test in `civ-text-input.test.ts` asserts the
+helper-row slot is a sibling of `.civ-input-icon-wrap`, not a
+descendant. No lint covers the design rule "value shortcuts go
+below the input" — that's a review-time call when adding a new
+inset button.
+
+---
+
 ## Text-button variant choice — chip vs. inline
 
 CivUI has one base class for low-chrome text buttons —

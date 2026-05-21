@@ -40,7 +40,7 @@ export type TextInputValidate = 'email' | 'phone' | 'phoneIntl' | 'ssn' | 'ein' 
 @customElement('civ-text-input')
 export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormElement)) {
   override _getSlotConfig(): SlotConfig {
-    return { 'data-trailing-action': '[data-civ-trailing-action]' };
+    return { 'data-below-action': '[data-civ-below-action]' };
   }
 
   @property({ type: String }) type: TextInputType = 'text';
@@ -373,25 +373,29 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     // type, but the host's `type` prop stays "password"). Clear button
     // takes precedence when both are active.
     const needsRevealButton = this.revealPassword && this.type === 'password' && !this.disabled && !this.readonly && !needsClearButton;
-    // Trailing-action slot is the consumer escape hatch. Precedence inside the
-    // trailing inset region: clear (when value present) > reveal > slot > trailing-icon.
-    const hasTrailingActionSlot = this._hasSlottedChildren('data-trailing-action');
-    const needsTrailingActionSlot = hasTrailingActionSlot && !needsClearButton && !needsRevealButton && !hasSuffix;
-    // Inline icons defer to prefix/suffix, the clear button, the reveal button, and the slot on the same edge.
+    // Inline icons defer to prefix/suffix, the clear button, and the
+    // reveal button on the same edge. The trailing-action slot now
+    // renders BELOW the input via `.civ-input-helper-row` — it no
+    // longer competes with the inset region.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
-    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsRevealButton && !needsTrailingActionSlot;
-    // Inset action buttons (clear/reveal/slot) need trailing padding on
+    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsRevealButton;
+    // Inset action buttons (clear / reveal) need trailing padding on
     // the input so user-entered text doesn't slide under the absolutely-
     // positioned button. When a suffix addon is also present, the action
     // falls back to flex-sibling layout (see components.css) and the
     // input doesn't need extra padding.
-    const insetActionAbsolute = (needsClearButton || needsRevealButton || needsTrailingActionSlot) && !hasSuffix;
+    const insetActionAbsolute = (needsClearButton || needsRevealButton) && !hasSuffix;
 
     const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, needsRevealButton, insetActionAbsolute });
-    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency });
+    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, showLeadingIcon, showTrailingIcon, isCurrency });
+
+    // Below-input action slot — fires acts ON THE VALUE (Copy, Today,
+    // Now, custom). Renders only when consumer slots something in.
+    const hasBelowAction = this._hasSlottedChildren('data-below-action');
 
     const inner = html`
       ${wrappedInput}
+      ${hasBelowAction ? html`<div class="civ-input-helper-row" data-civ-below-action></div>` : nothing}
       ${this._renderCharCount()}
     `;
 
@@ -605,13 +609,12 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     hasSuffix: boolean;
     needsClearButton: boolean;
     needsRevealButton: boolean;
-    needsTrailingActionSlot: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
     isCurrency: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, needsTrailingActionSlot, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
-    const needsWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || needsTrailingActionSlot || showLeadingIcon || showTrailingIcon;
+    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
+    const needsWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || showLeadingIcon || showTrailingIcon;
 
     if (!needsWrapper) return inputEl;
 
@@ -630,8 +633,6 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
             aria-pressed="${this._passwordRevealed}"
             @click="${this._onTogglePasswordReveal}"
           >${this._passwordRevealed ? t('passwordHideShort') : t('passwordRevealShort')}</button>`
-        : nothing}${needsTrailingActionSlot
-        ? html`<span class="civ-input-action-slot" data-civ-trailing-action></span>`
         : nothing}${hasSuffix
         ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
         : nothing}${showLeadingIcon

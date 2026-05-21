@@ -846,52 +846,61 @@ describe('text-input inline icons', () => {
     });
   });
 
-  describe('trailing-action slot (escape hatch)', () => {
-    it('relocates a [data-trailing-action] child into the rendered slot container', async () => {
+  describe('below-action slot (escape hatch)', () => {
+    it('relocates a [data-below-action] child into the helper row below the input', async () => {
       const el = await fixture<CivTextInput>(`
         <civ-text-input label="API key" value="abc">
-          <button data-trailing-action type="button" class="civ-input-action" aria-label="Copy">copy</button>
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
-      const container = el.querySelector('[data-civ-trailing-action]');
+      const container = el.querySelector('[data-civ-below-action]');
       expect(container).not.toBeNull();
-      const button = container!.querySelector('button[data-trailing-action]');
+      expect(container!.classList.contains('civ-input-helper-row')).toBe(true);
+      const button = container!.querySelector('button[data-below-action]');
       expect(button).not.toBeNull();
-      expect(button!.textContent).toBe('copy');
+      expect(button!.textContent).toBe('Copy');
     });
 
-    it('suppresses trailing-icon when the slot has content', async () => {
+    it('helper row renders OUTSIDE the input chrome (sibling, not inset)', async () => {
+      // Verifies the move from inset to below: the slotted button
+      // must NOT sit inside an `.civ-input-icon-wrap` (the inset
+      // chrome wrapper) and MUST be a descendant of the helper-row
+      // sibling. Previously the slot rendered inside the wrap so
+      // click-targets overlapped the input bounding box.
+      // Use clearable to force the wrap to exist so the "wrap is
+      // present but does not contain the slot" assertion is real.
       const el = await fixture<CivTextInput>(`
-        <civ-text-input label="API key" trailing-icon="info">
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+        <civ-text-input label="API key" clearable value="abc">
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
-      expect(el.querySelector('.civ-input-icon--trailing')).toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+      const wrap = el.querySelector('.civ-input-icon-wrap');
+      expect(wrap).not.toBeNull();
+      expect(wrap!.querySelector('[data-below-action]')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row [data-below-action]')).not.toBeNull();
     });
 
-    it('clear button takes precedence over the slot when value is non-empty', async () => {
+    it('coexists with the clear button — both render simultaneously', async () => {
+      // The old inset slot had clear-button precedence (clear hid
+      // the slot). Now the slot lives below so there is no
+      // collision: clear stays inset on the right, Copy chip sits
+      // below.
       const el = await fixture<CivTextInput>(`
         <civ-text-input label="API key" clearable value="hello">
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
+          <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
         </civ-text-input>
       `);
       await elementUpdated(el);
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action]')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row [data-below-action]')).not.toBeNull();
     });
 
-    it('shows the slot once the value is cleared (clear no longer applies)', async () => {
-      const el = await fixture<CivTextInput>(`
-        <civ-text-input label="API key" clearable>
-          <button data-trailing-action type="button" aria-label="Copy">copy</button>
-        </civ-text-input>
-      `);
+    it('does not render the helper row when no [data-below-action] child is slotted', async () => {
+      const el = await fixture<CivTextInput>(`<civ-text-input label="Plain" value="abc"></civ-text-input>`);
       await elementUpdated(el);
-      expect(el.querySelector('.civ-close-btn')).toBeNull();
-      expect(el.querySelector('[data-civ-trailing-action] button')).not.toBeNull();
+      expect(el.querySelector('.civ-input-helper-row')).toBeNull();
     });
 
     it('inset action and overlays share a single positioned wrapper so the input stays the rightmost flex item (for civ-input-group flush layout)', async () => {

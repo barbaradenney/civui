@@ -94,35 +94,38 @@ Set `clearable` to render an inline "×" button on the trailing edge whenever th
 
 <StoryEmbed id="forms-inputs-text-input--clearable" />
 
-### Trailing Action Slot
+### Below-Action Slot
 
-For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, generate, units toggle — pass a child element with the `data-trailing-action` attribute. Apply the `.civ-input-action` class so the button matches the input chrome (height, hover state, focus ring). Set `type="button"` and an `aria-label`. The slot is **web-only** (Light DOM design system; iOS/Android/Drupal do not project this) and is intentionally an escape hatch — if a use case becomes common, we'll promote it to a first-class prop.
+For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, generate, units toggle — pass a child element with the `data-below-action` attribute. The button renders in a helper row directly under the input (not inset inside the input chrome). Style with `.civ-text-btn.civ-text-btn--chip` so it reads as a quiet, separate affordance rather than competing with the input's own bounding box. The slot is **web-only** (Light DOM design system; iOS/Android/Drupal do not project this) and is intentionally an escape hatch — if a use case becomes common, we'll promote it to a first-class prop.
 
 ```html
 <civ-text-input label="API key" name="apiKey" value="sk-...">
-  <button data-trailing-action type="button" class="civ-input-action" aria-label="Copy API key">
-    <civ-icon name="content_copy" aria-hidden="true"></civ-icon>
-  </button>
+  <button data-below-action type="button" class="civ-text-btn civ-text-btn--chip">Copy</button>
 </civ-text-input>
 ```
 
-<StoryEmbed id="forms-inputs-text-input--trailing-action-slot" />
+<StoryEmbed id="forms-inputs-text-input--below-action-slot" />
 
-#### Trailing region order
+#### Why below the input, not inset?
 
-The trailing inset region inside the input holds at most one component-rendered button at a time, plus any consumer-provided slot content. **Component-rendered buttons follow this precedence** (highest wins):
+The inset region inside the input is reserved for controls that operate **on the input chrome itself** — the close / × clear button and the password-reveal toggle. Both have universally-understood semantics ("clear this value", "show what I typed") and stay tightly coupled to the field's visual box.
+
+Anything that operates **on the value** (Copy, Today, Now, generate, units toggle) sits in a helper row below the input. This separation:
+
+- Eliminates touch-target conflicts with the input's bounding box on mobile.
+- Removes the "does this button modify the value or submit it?" ambiguity.
+- Mirrors USWDS and other accessibility-forward patterns (e.g., "Show password" buttons below the field, not inset).
+
+#### Trailing inset region order
+
+The trailing inset region inside the input holds at most one component-rendered button at a time. **Component-rendered buttons follow this precedence** (highest wins):
 
 1. **Clear button** — when `clearable` is set and the value is non-empty
 2. **Reveal-password button** — when `reveal-password` is set and `type="password"`
-3. **Trailing-action slot** — consumer-provided children with `data-trailing-action`
-4. **Trailing icon** — passive icon from the `trailing-icon` prop
-5. **Suffix** — text label (mutually exclusive with all of the above; `suffix` always renders when set)
+3. **Trailing icon** — passive icon from the `trailing-icon` prop
+4. **Suffix** — text label (mutually exclusive with the trailing icon; `suffix` always renders when set)
 
-Two pragmatic consequences:
-- **Only one component-rendered button shows at a time.** Setting `clearable` + `reveal-password` together is fine — clear shows while the field has a value, reveal takes over when the field is empty.
-- **Slot content renders in source order.** If you pass multiple children with `data-trailing-action`, they appear left-to-right in DOM order, immediately to the left of any component-rendered button. There's no "slot 1" / "slot 2" API — just put your buttons in the order you want.
-
-The inline-action pattern (text-style buttons inset in the input chrome — `.civ-text-btn.civ-text-btn--inline`) is exclusive to `civ-text-input` and to component-managed buttons inside `civ-date-picker` (the "Today" shortcut). **Combobox-shaped fields** (`civ-combobox`, `civ-country`, `civ-time-picker` combo mode) already have a clear button plus a chevron/dropdown trigger and can't fit additional inline buttons without crowding. Reach for the footer-button pattern (`show-now-button` on time-picker, or a sibling `civ-button`) on those surfaces instead.
+Setting `clearable` + `reveal-password` together is fine — clear shows while the field has a value, reveal takes over when the field is empty.
 
 ### Prefix
 

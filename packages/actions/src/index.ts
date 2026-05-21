@@ -15,6 +15,7 @@ import './tabs/civ-tab.js';
 import './tabs/civ-tab-panel.js';
 import './tab-nav/civ-tab-nav.js';
 import './tab-nav/civ-tab-nav-item.js';
+import './confirm-button/civ-confirm-button.js';
 
 // Button
 export { CivButton } from './button/index.js';
@@ -54,3 +55,7 @@ export { CivTabs, CivTab, CivTabPanel } from './tabs/index.js';
 
 // Tab Nav
 export { CivTabNav, CivTabNavItem } from './tab-nav/index.js';
+
+// Confirm Button
+export { CivConfirmButton } from './confirm-button/index.js';
+export type { ConfirmButtonVariant } from './confirm-button/index.js';

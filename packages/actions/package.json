@@ -1,7 +1,7 @@
 {
   "name": "@civui/actions",
   "version": "0.1.0",
-  "description": "CivUI action + navigation affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink, Breadcrumb, Nav, Tabs, TabNav",
+  "description": "CivUI action + navigation affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink, Breadcrumb, Nav, Tabs, TabNav, ConfirmButton, ToggleButton",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -18,7 +18,9 @@
     "./breadcrumb": "./dist/breadcrumb/index.js",
     "./nav": "./dist/nav/index.js",
     "./tabs": "./dist/tabs/index.js",
-    "./tab-nav": "./dist/tab-nav/index.js"
+    "./tab-nav": "./dist/tab-nav/index.js",
+    "./confirm-button": "./dist/confirm-button/index.js",
+    "./toggle-button": "./dist/toggle-button/index.js"
   },
   "files": [
     "dist"

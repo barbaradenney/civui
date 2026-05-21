@@ -725,6 +725,54 @@ mixin-using element — and wrap it in a static container.
 
 ---
 
+## Confirm vs Toggle button — pick by intent
+
+CivUI has two small action-component patterns with overlapping
+visuals but different ARIA + behavioral contracts:
+
+- **`<civ-confirm-button>`** — fire-and-forget action with a
+  transient receipt ("Copy" → "Copied ✓" → "Copy"). Use for
+  Copy, Paste, Scan, Generate. Consumer does the work in the
+  `civ-confirm` listener; the component owns the success-window
+  timing and visual swap.
+- **`<civ-toggle-button>`** — two-state persistent toggle
+  ("Show" ↔ "Hide"). Use for password reveal, mute/unmute,
+  expand/collapse on a custom control. Uses `aria-pressed` and
+  reflects `pressed` for two-way binding.
+
+```html
+<!-- ✓ Confirm: action + receipt -->
+<civ-confirm-button label="Copy" success-label="Copied" @civ-confirm=${copyHandler}>
+</civ-confirm-button>
+
+<!-- ✓ Toggle: two persistent labels -->
+<civ-toggle-button label="Show" pressed-label="Hide" @civ-toggle=${onToggle}>
+</civ-toggle-button>
+```
+
+**Padding stability**: both components hold the variant class
+stable across state changes — `.is-success` (confirm) and
+`[pressed]` (toggle) only add a state flag, never swap variants.
+This avoids the "button visibly shrinks when it transitions" bug
+that hand-rolled implementations hit when they swap
+`.civ-text-btn--chip` for `.civ-text-btn--inline` mid-state.
+
+**Do not use** these components for:
+
+| Need | Use |
+|---|---|
+| Primary form CTA (Submit, Continue) | `<civ-button>` |
+| Toolbar / row action | `<civ-action-button>` |
+| Disclosure section open/close | `<civ-disclosure>` (native `<details>`) |
+| Read-more expansion | `<civ-read-more>` |
+| Bare text button with no behavior | `<button class="civ-text-btn civ-text-btn--chip">` |
+
+**Caught by:** no lint covers the choice — review-time decision
+based on intent. Tests in each component lock the state-transition
+behavior; misuse would be a design bug, not a regression.
+
+---
+
 ## Action shortcuts go below the input, not inset
 
 The trailing inset region inside a `civ-text-input` is reserved

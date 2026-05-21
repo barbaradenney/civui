@@ -58,6 +58,11 @@ export interface CivLocaleStrings {
   // collapses trailing buttons.
   buttonGroupOverflowLabel: string;
 
+  // Confirm button — generic fallback receipt label when the consumer
+  // does not provide an explicit `success-label` on a
+  // `<civ-confirm-button>`. Announced by AT during the success window.
+  confirmButtonSuccess: string;
+
   // Pagination — labels for civ-pagination controls. Use {start}, {end},
   // {total}, {page}, {pageCount}, {size} interpolation tokens.
   paginationLabel: string;       // "Pagination"
@@ -795,6 +800,8 @@ const defaultStrings: CivLocaleStrings = {
   menuLabel: 'Menu',
 
   buttonGroupOverflowLabel: 'More',
+
+  confirmButtonSuccess: 'Done',
 
   paginationLabel: 'Pagination',
   paginationPreviousLabel: 'Previous',

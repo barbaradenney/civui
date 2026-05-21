@@ -40,6 +40,7 @@
   civ-breadcrumb-item,
   civ-button,
   civ-column-visibility,
+  civ-confirm-button,
   civ-icon,
   civ-menu,
   civ-nav-item,
@@ -782,16 +783,18 @@
     .civ-text-btn--inline:hover { background: rgba(0, 0, 0, 0.05); }
   }
 
-  /* Transient success state for the inline variant — flip to green
-     with a leading check icon ("Copy" → "Copied ✓"). The consumer
-     toggles `.is-success` for ~1–2s after the action fires, then
-     reverts. Check icon ships inline so consumers don't have to
+  /* Transient success state — flip to green with a leading check
+     icon ("Copy" → "Copied ✓"). Works on any text-btn variant; the
+     consumer keeps the variant stable across the state change so
+     padding stays consistent (avoids the visible "button shrinks
+     when it flips" bug from the earlier draft that swapped variants
+     mid-state). Check icon ships inline so consumers don't have to
      juggle a civ-icon swap. */
-  .civ-text-btn--inline.is-success {
+  .civ-text-btn.is-success {
     color: var(--civ-color-success-dark);
     gap: 0.25em;
   }
-  .civ-text-btn--inline.is-success::before {
+  .civ-text-btn.is-success::before {
     content: '';
     display: inline-block;
     width: 0.875em;
@@ -872,6 +875,13 @@
     transform: translateY(-50%);
     inset-inline-end: 0.25rem;
     z-index: 1;
+  }
+  /* Text-style inline button (currently just the password reveal
+     Show/Hide toggle) needs more breathing room from the input's
+     right border than the icon-only close button — the bare text
+     reads cramped at 0.25rem. Bump to 0.5rem. */
+  .civ-input-icon-wrap > .civ-text-btn--inline {
+    inset-inline-end: 0.5rem;
   }
 
   /* When a suffix addon owns the trailing edge, fall back to flex-sibling

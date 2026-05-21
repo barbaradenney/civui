@@ -335,10 +335,21 @@ function checkJSDoc(comp: ComponentFile) {
 // Child components that are part of their parent on native (no separate file needed)
 // Components bundled inside another native file (no separate .swift/.kt needed)
 const CHILD_COMPONENTS = new Set([
-  'civ-segment',       // Inside CivSegmentedControl
-  'civ-radio-group',   // Inside CivRadio
-  'civ-button-group',  // Inside CivActionButton
-  'civ-list-item',     // Inside CivList
+  'civ-segment',          // Inside CivSegmentedControl
+  'civ-radio-group',      // Inside CivRadio
+  'civ-button-group',     // Inside CivActionButton
+  'civ-list-item',        // Inside CivList
+  // The following are sub-elements documented + tested as part of
+  // their parent container — the parent's *.test.ts file imports
+  // both and exercises the parent + child together (the only way to
+  // test the child meaningfully). No standalone *.test.ts file is
+  // expected for these.
+  'civ-breadcrumb-item',  // Tested in civ-breadcrumb.test.ts
+  'civ-nav-item',         // Tested in civ-nav.test.ts
+  'civ-tab-nav-item',     // Tested in civ-tab-nav.test.ts
+  'civ-tab',              // Tested in civ-tabs.test.ts
+  'civ-tab-panel',        // Tested in civ-tabs.test.ts
+  'civ-menu-item',        // Tested in civ-menu.test.ts
 ]);
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([

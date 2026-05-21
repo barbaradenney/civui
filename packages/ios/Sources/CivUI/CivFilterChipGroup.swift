@@ -23,6 +23,9 @@ public struct CivFilterChipGroup<Content: View>: View {
     /// Accessible label for the group.
     public var label: String
 
+    /// Form field name (for form submission / state registration).
+    public var name: String
+
     /// Called when the selection changes (parallels `civ-change` event).
     public var onChange: (([String]) -> Void)?
 
@@ -38,11 +41,13 @@ public struct CivFilterChipGroup<Content: View>: View {
     public init(
         mode: String = "multi",
         label: String = "",
+        name: String = "",
         onChange: (([String]) -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.mode = mode
         self.label = label
+        self.name = name
         self.onChange = onChange
         self.content = content()
     }

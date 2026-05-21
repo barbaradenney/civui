@@ -44,6 +44,10 @@ fun CivCurrency(
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",
     formState: CivFormState? = null,
+    decimals: Int = 2,
+    min: Double? = null,
+    max: Double? = null,
+    allowNegative: Boolean = false,
 ) {
     CivTextInput(
         label = label,

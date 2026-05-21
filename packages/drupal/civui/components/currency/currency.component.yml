@@ -35,6 +35,24 @@ props:
       title: Disabled
       type: boolean
       default: false
+    decimals:
+      title: Decimals
+      type: integer
+      default: 2
+      description: 'Number of decimal places displayed (default 2 for cents)'
+    min:
+      title: Min
+      type: number
+      description: 'Inclusive minimum value'
+    max:
+      title: Max
+      type: number
+      description: 'Inclusive maximum value'
+    allow_negative:
+      title: Allow negative
+      type: boolean
+      default: false
+      description: 'Allow negative values (refunds / adjustments)'
 
 libraryOverrides:
   dependencies:

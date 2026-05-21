@@ -231,7 +231,7 @@ export const PasswordReveal: Story = {
       Click the <strong>Show</strong> / <strong>Hide</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.
     </p>
     <p class="civ-mt-3 civ-text-sm">
-      Password reveal is one of the two affordances that <em>stay inset</em> inside the input chrome (the other is the close / × clear button). Both operate on how the input itself behaves — they're controls on the chrome, not shortcuts that act on the value. Value shortcuts (Copy, Today, Now, custom trailing-action chips) sit in a helper row <em>below</em> the input — see the <code>BelowActionSlot</code> story.
+      The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.
     </p>
   `,
 };
@@ -259,7 +259,7 @@ export const BelowActionSlot: Story = {
       For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the "Copy → Copied ✓ → Copy" feedback loop, keeps padding stable across the swap, and wires <code>aria-live="polite"</code> so screen readers announce the receipt. Consumer does the actual work in the <code>civ-confirm</code> listener.
     </p>
     <p class="civ-mt-3 civ-text-sm">
-      The inset action region is reserved for controls that operate on the input chrome itself — the close / × clear button and the password reveal toggle. Anything that acts on the value belongs in the below-input helper row.
+      The inset action region is reserved for one control: the close / × clear button. Anything else — Copy, Today, Now, Show / Hide password, custom shortcuts — belongs in the below-input helper row.
     </p>
   `,
 };

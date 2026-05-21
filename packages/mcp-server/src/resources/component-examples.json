@@ -955,6 +955,41 @@
       "source": "packages/inputs/src/combobox/civ-combobox.stories.ts"
     }
   ],
+  "civ-confirm-button": [
+    {
+      "story": "CustomDuration",
+      "name": "Custom duration (3 s)",
+      "category": "Actions/Confirm Button",
+      "html": "<civ-confirm-button\n      label=\"Generate token\"\n      success-label=\"Generated\"\n      success-ms=\"3000\"\n      @civ-confirm=${() => {}}\n    ></civ-confirm-button>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Actions/Confirm Button",
+      "html": "<civ-confirm-button\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    },
+    {
+      "story": "Disabled",
+      "category": "Actions/Confirm Button",
+      "html": "<civ-confirm-button label=\"Copy\" disabled></civ-confirm-button>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    },
+    {
+      "story": "InHelperRow",
+      "name": "Inside an input helper row (typical usage)",
+      "category": "Actions/Confirm Button",
+      "html": "<div style=\"max-width: 24rem;\">\n      <label class=\"civ-label\" for=\"api-key-demo\">API key</label>\n      <div class=\"civ-input-icon-wrap\"><input id=\"api-key-demo\" class=\"civ-input\" value=\"sk-abc123def456\" readonly /></div>\n      <div class=\"civ-input-helper-row\">\n        <civ-confirm-button\n          label=\"Copy\"\n          success-label=\"Copied\"\n          @civ-confirm=${(e: Event) => {\n            const input = (e.currentTarget as HTMLElement)\n              .closest('div.civ-input-helper-row')\n              ?.previousElementSibling\n              ?.querySelector('input');\n            if (input) navigator.clipboard?.writeText(input.value);\n          }}\n        ></civ-confirm-button>\n      </div>\n    </div>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Most common shape: <code>&lt;civ-confirm-button&gt;</code> sits inside an <code>.civ-input-helper-row</code> directly below the input. The chip's padding stays stable across the success swap — no visual jump.\n    </p>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    },
+    {
+      "story": "Inline",
+      "name": "Inline variant (transparent text-link style)",
+      "category": "Actions/Confirm Button",
+      "html": "<civ-confirm-button\n      variant=\"inline\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    }
+  ],
   "civ-count": [
     {
       "story": "Default",
@@ -1368,16 +1403,16 @@
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
     },
     {
-      "story": "InlineToday",
-      "name": "Inline today shortcut",
-      "category": "Forms/Inputs/Date Picker",
-      "html": "<civ-date-picker label=\"Visit date\" name=\"visit\" inline-today></civ-date-picker>",
-      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
-    },
-    {
       "story": "Required",
       "category": "Forms/Inputs/Date Picker",
       "html": "<civ-date-picker label=\"Appointment date\" name=\"appointment\" required></civ-date-picker>",
+      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
+    },
+    {
+      "story": "ShowTodayShortcut",
+      "name": "Today shortcut chip",
+      "category": "Forms/Inputs/Date Picker",
+      "html": "<civ-date-picker label=\"Visit date\" name=\"visit\" show-today-shortcut></civ-date-picker>",
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
     },
     {
@@ -5255,6 +5290,13 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "BelowActionSlot",
+      "name": "Below-input action slot (escape hatch)",
+      "category": "Forms/Inputs/Text Input",
+      "html": "<civ-text-input label=\"API key\" name=\"api-key\" value=\"sk-abc123def456ghi789\">\n      <civ-confirm-button\n        data-below-action\n        label=\"Copy\"\n        success-label=\"Copied\"\n        @civ-confirm=${(e: Event) => {\n          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');\n          if (host && 'value' in host) {\n            navigator.clipboard?.writeText(String(host.value ?? ''));\n          }\n        }}\n      ></civ-confirm-button>\n    </civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Use the <code>data-below-action</code> slot for value-shortcuts the design system doesn't ship as first-class props (copy, paste, scan, generate). The slot renders in a helper row directly under the input — a larger, clearer tap target than an inset button inside the input's chrome.\n    </p>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the \"Copy → Copied ✓ → Copy\" feedback loop, keeps padding stable across the swap, and wires <code>aria-live=\"polite\"</code> so screen readers announce the receipt. Consumer does the actual work in the <code>civ-confirm</code> listener.\n    </p>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      The inset action region is reserved for one control: the close / × clear button. Anything else — Copy, Today, Now, Show / Hide password, custom shortcuts — belongs in the below-input helper row.\n    </p>",
+      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
       "story": "CharacterCounter",
       "name": "Character counter",
       "category": "Forms/Inputs/Text Input",
@@ -5366,9 +5408,9 @@
     },
     {
       "story": "PasswordReveal",
-      "name": "Inline: Password reveal",
+      "name": "Inset: Password reveal",
       "category": "Forms/Inputs/Text Input",
-      "html": "<civ-text-input\n      label=\"Password\"\n      name=\"password\"\n      type=\"password\"\n      autocomplete=\"current-password\"\n      value=\"hunter2-supersecret\"\n      reveal-password\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Click the eye button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.\n    </p>",
+      "html": "<civ-text-input\n      label=\"Password\"\n      name=\"password\"\n      type=\"password\"\n      autocomplete=\"current-password\"\n      value=\"hunter2-supersecret\"\n      reveal-password\n    ></civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Click the <strong>Show</strong> / <strong>Hide</strong> button to toggle visibility. The rendered input type flips between <code>password</code> and <code>text</code>; the host's <code>type</code> prop stays <code>password</code>. Suppressed for non-password types.\n    </p>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      The Show / Hide toggle sits in a helper row <em>below</em> the input, not inset. The only affordance that stays inset is the × clear button. Reveal and clear can both be set together — clear stays on the trailing edge inside the input, reveal lives below.\n    </p>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
@@ -5418,13 +5460,6 @@
       "category": "Foundations/Print Preview",
       "html": "<h2 class=\"civ-text-lg civ-font-bold civ-mb-4\">Text Inputs — Print Preview</h2>\n\n    <civ-text-input label=\"Full legal name\" name=\"name\" value=\"Jane A. Smith\" hint=\"As it appears on your government-issued ID\" required></civ-text-input>\n\n    <civ-text-input label=\"Email address\" name=\"email\" value=\"jane.smith@example.gov\" type=\"email\"></civ-text-input>\n\n    <civ-text-input label=\"Social Security number\" name=\"ssn\" value=\"***-**-6789\" hint=\"For example: 123-45-6789\" mask=\"ssn\"></civ-text-input>\n\n    <civ-text-input label=\"Phone number\" name=\"phone\" value=\"(555) 123-4567\" mask=\"phone-us\"></civ-text-input>",
       "source": "packages/core/src/foundations/print-preview.stories.ts"
-    },
-    {
-      "story": "TrailingActionSlot",
-      "name": "Inline: Trailing action slot (escape hatch)",
-      "category": "Forms/Inputs/Text Input",
-      "html": "<civ-text-input label=\"API key\" name=\"api-key\" value=\"sk-abc123def456ghi789\">\n      <button\n        data-trailing-action\n        type=\"button\"\n        class=\"civ-input-inline-action\"\n        @click=${(e: Event) => {\n          const host = (e.currentTarget as HTMLElement).closest('civ-text-input');\n          if (host && 'value' in host) navigator.clipboard?.writeText(String(host.value ?? ''));\n        }}\n      >Copy</button>\n    </civ-text-input>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      Use the <code>data-trailing-action</code> slot for affordances we don't ship as props (copy, paste, scan, generate, units toggle). Prefer a <strong>text label</strong> with <code>.civ-input-inline-action</code> — \"Copy\", \"Paste\", \"Scan\" read faster than icons that require interpretation. The icon-only treatment (<code>.civ-input-action</code>) is reserved for affordances with a universally-understood glyph such as the close / × button.\n    </p>",
-      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
       "story": "TrailingIcon",
@@ -5725,6 +5760,41 @@
       "category": "Forms/Inputs/Toggle",
       "html": "<civ-toggle\n      label=\"Auto-save drafts\"\n      name=\"autosave\"\n      hint=\"Automatically saves your form progress every 30 seconds\"\n    ></civ-toggle>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
+    }
+  ],
+  "civ-toggle-button": [
+    {
+      "story": "Chip",
+      "name": "Chip variant (prominent pill)",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button variant=\"chip\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\"></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "Disabled",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\" disabled></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "PasswordRevealPattern",
+      "name": "Password reveal (typical usage)",
+      "category": "Actions/Toggle Button",
+      "html": "<div style=\"max-width: 24rem;\">\n      <label class=\"civ-label\" for=\"pw-demo\">Password</label>\n      <div class=\"civ-input-icon-wrap\">\n        <input id=\"pw-demo\" type=\"password\" class=\"civ-input civ-input-with-trailing-reveal\" value=\"hunter2-supersecret\" />\n        <civ-toggle-button\n          label=\"Show\"\n          pressed-label=\"Hide\"\n          @civ-toggle=${(e: CustomEvent<{ pressed: boolean }>) => {\n            const input = (e.currentTarget as HTMLElement).previousElementSibling as HTMLInputElement | null;\n            if (input) input.type = e.detail.pressed ? 'text' : 'password';\n          }}\n          style=\"position: absolute; inset-inline-end: 0.5rem; top: 50%; transform: translateY(-50%);\"\n        ></civ-toggle-button>\n      </div>\n    </div>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      The civ-text-input component uses this same toggle pattern internally when <code>reveal-password</code> is set — see the password-reveal story on the Text Input page. This story demonstrates the standalone usage outside of a CivUI input.\n    </p>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "Pressed",
+      "name": "Pre-pressed state",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\" pressed></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
     }
   ],
   "civ-toolbar": [

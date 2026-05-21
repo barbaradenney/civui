@@ -776,14 +776,16 @@ behavior; misuse would be a design bug, not a regression.
 ## Action shortcuts go below the input, not inset
 
 The trailing inset region inside a `civ-text-input` is reserved
-for controls that operate **on the input chrome itself**: the
-close / × clear button and the password reveal toggle. Both
-have universally-understood semantics and stay tightly coupled
-to the field's visual box.
+for exactly **one** component-rendered control: the close / ×
+clear button. It operates on the value but has universally-
+understood semantics and stays tightly coupled to the field's
+visual box.
 
-Anything that operates **on the value** — Copy, Today, Now,
-custom trailing-action chips — belongs in the helper row below
-the input. Use the `data-below-action` slot:
+Everything else — Copy, Today, Now, Show / Hide password, custom
+trailing-action chips — belongs in the helper row below the
+input. `civ-text-input` renders the password reveal toggle there
+automatically when `reveal-password` is set; consumers can drop
+in arbitrary chips via the `data-below-action` slot:
 
 ```html
 <civ-text-input label="API key" value="…">
@@ -830,9 +832,8 @@ CivUI has one base class for low-chrome text buttons —
   doesn't compete with a primary action in the same view.
 - **`.civ-text-btn--inline`** — transparent background,
   primary-dark text color. A *one-shot action shortcut*:
-  "Today / Now / Copy". Used by `civ-date-picker`,
-  `civ-time-picker`, the password reveal in `civ-text-input`,
-  and the trailing-action slot escape hatch.
+  "Today / Now / Copy". Used by `civ-date-picker` and
+  `civ-time-picker` helper-row shortcuts.
 
 Pick the variant by the *intent*:
 

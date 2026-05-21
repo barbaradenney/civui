@@ -35,7 +35,7 @@ export type ToggleButtonVariant = 'chip' | 'inline';
  * @prop {string} label - Unpressed label ("Show")
  * @prop {string} pressedLabel - Pressed label ("Hide"). Required — the swap label gives the toggle its meaning.
  * @prop {boolean} pressed - Reflected boolean state. Two-way bindable.
- * @prop {ToggleButtonVariant} variant - Picks the text-btn modifier. `inline` (default) is the transparent text-link style typical for input-inset controls (password reveal). `chip` is the prominent pill, for helper-row or standalone use.
+ * @prop {ToggleButtonVariant} variant - Picks the text-btn modifier. `chip` (default) is the prominent gray pill — the common case (helper rows, standalone toggles, password reveal). `inline` is the transparent text-link style for surfaces where the toggle should read as quiet.
  * @prop {boolean} disabled - Standard disabled state.
  *
  * @fires civ-toggle - On click. detail: { pressed: boolean } — the NEW state after the toggle.
@@ -58,7 +58,7 @@ export class CivToggleButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'pressed-label' }) pressedLabel = '';
   @property({ type: Boolean, reflect: true }) pressed = false;
-  @property({ type: String }) variant: ToggleButtonVariant = 'inline';
+  @property({ type: String }) variant: ToggleButtonVariant = 'chip';
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   private _onClick(): void {

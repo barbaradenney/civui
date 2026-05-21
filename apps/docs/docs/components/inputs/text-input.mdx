@@ -96,7 +96,7 @@ Set `clearable` to render an inline "×" button on the trailing edge whenever th
 
 ### Password Reveal
 
-Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide** text button inset on the trailing edge. Clicking it flips the rendered input type between `password` and `text`; the host's `type` prop stays `password` so the field's semantic identity doesn't change. Suppressed when `type` is anything other than `password`.
+Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide** toggle chip in the helper row below the input. Clicking it flips the rendered input type between `password` and `text`; the host's `type` prop stays `password` so the field's semantic identity doesn't change. Suppressed when `type` is anything other than `password`.
 
 ```html
 <civ-text-input label="Password" name="password" type="password" reveal-password></civ-text-input>
@@ -104,9 +104,9 @@ Set `reveal-password` on a `type="password"` input to render a **Show** / **Hide
 
 <StoryEmbed id="forms-inputs-text-input--password-reveal" />
 
-Password reveal is one of two affordances that stay **inset** inside the input chrome (the close / × clear button is the other). Both are *controls on the chrome* — they govern how the input itself behaves, not what the value is. Reveal flips the display mode; clear empties the value. Neither produces a separate action a user would interpret as "apply this to the value and move on."
+The reveal toggle lives **below** the input rather than inset for two reasons. (1) The only affordance that stays inset is the clear button — a destructive control that operates on the value and stays tightly bound to the input's visual box. (2) USWDS, GOV.UK, and Material all place "Show password" below the field; an inset Show/Hide text label on mobile overlaps the typed value and competes with the clear button for the same tap region.
 
-Value-shortcuts (Copy, Today, Now, custom trailing-action chips) follow the opposite rule — they sit in a helper row **below** the input. See the [Below-Action Slot](#below-action-slot) section.
+Reveal coexists cleanly with `clearable`: the × clear button stays inset on the trailing edge, the Show / Hide toggle sits in the helper row below. They never collide.
 
 ### Below-Action Slot
 
@@ -127,24 +127,23 @@ For affordances CivUI doesn't ship as props — copy-to-clipboard, paste, scan, 
 
 #### Why below the input, not inset?
 
-The inset region inside the input is reserved for controls that operate **on the input chrome itself** — the close / × clear button and the password-reveal toggle. Both have universally-understood semantics ("clear this value", "show what I typed") and stay tightly coupled to the field's visual box.
+The inset region inside the input is reserved for **one** component-rendered control: the close / × clear button. It has universally-understood semantics ("clear this value") and stays tightly coupled to the field's visual box.
 
-Anything that operates **on the value** (Copy, Today, Now, generate, units toggle) sits in a helper row below the input. This separation:
+Anything else (Copy, Today, Now, Show / Hide password, generate, units toggle) sits in a helper row below the input. This separation:
 
 - Eliminates touch-target conflicts with the input's bounding box on mobile.
 - Removes the "does this button modify the value or submit it?" ambiguity.
-- Mirrors USWDS and other accessibility-forward patterns (e.g., "Show password" buttons below the field, not inset).
+- Mirrors USWDS, GOV.UK, and Material — all place "Show password" below the field, not inset.
 
 #### Trailing inset region order
 
 The trailing inset region inside the input holds at most one component-rendered button at a time. **Component-rendered buttons follow this precedence** (highest wins):
 
 1. **Clear button** — when `clearable` is set and the value is non-empty
-2. **Reveal-password button** — when `reveal-password` is set and `type="password"`
-3. **Trailing icon** — passive icon from the `trailing-icon` prop
-4. **Suffix** — text label (mutually exclusive with the trailing icon; `suffix` always renders when set)
+2. **Trailing icon** — passive icon from the `trailing-icon` prop
+3. **Suffix** — text label (mutually exclusive with the trailing icon; `suffix` always renders when set)
 
-Setting `clearable` + `reveal-password` together is fine — clear shows while the field has a value, reveal takes over when the field is empty.
+The Show / Hide password toggle is **not** inset — it lives in the helper row below the input, so `clearable` and `reveal-password` can both be set without colliding.
 
 ### Prefix
 

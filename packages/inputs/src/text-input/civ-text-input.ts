@@ -371,32 +371,46 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     const needsClearButton = this.clearable && !!this.value;
     // Password-reveal toggle: only when reveal-password is set AND
     // type is "password" (or was — the toggle flips the rendered
-    // type, but the host's `type` prop stays "password"). Clear button
-    // takes precedence when both are active.
-    const needsRevealButton = this.revealPassword && this.type === 'password' && !this.disabled && !this.readonly && !needsClearButton;
-    // Inline icons defer to prefix/suffix, the clear button, and the
-    // reveal button on the same edge. The trailing-action slot now
-    // renders BELOW the input via `.civ-input-helper-row` — it no
-    // longer competes with the inset region.
+    // type, but the host's `type` prop stays "password"). Renders in
+    // the helper row BELOW the input alongside the data-below-action
+    // slot — see the helper-row composition below.
+    const needsRevealButton = this.revealPassword && this.type === 'password' && !this.disabled && !this.readonly;
+    // Inline icons defer to prefix/suffix and the clear button on the
+    // same edge. The password reveal toggle is no longer inset, so it
+    // doesn't suppress the trailing icon.
     const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
-    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton && !needsRevealButton;
-    // Inset action buttons (clear / reveal) need trailing padding on
-    // the input so user-entered text doesn't slide under the absolutely-
-    // positioned button. When a suffix addon is also present, the action
-    // falls back to flex-sibling layout (see components.css) and the
-    // input doesn't need extra padding.
-    const insetActionAbsolute = (needsClearButton || needsRevealButton) && !hasSuffix;
+    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton;
+    // Only the clear button stays inset on the trailing edge. When
+    // present (and no suffix addon owns that edge) the input needs
+    // trailing padding so user-entered text doesn't slide under the
+    // absolutely-positioned button.
+    const insetActionAbsolute = needsClearButton && !hasSuffix;
 
-    const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, needsRevealButton, insetActionAbsolute });
-    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, showLeadingIcon, showTrailingIcon, isCurrency });
+    const inputEl = this._renderInput({ widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, insetActionAbsolute });
+    const wrappedInput = this._wrapInput(inputEl, { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency });
 
-    // Below-input action slot — fires acts ON THE VALUE (Copy, Today,
-    // Now, custom). Renders only when consumer slots something in.
+    // Helper row below the input — hosts both the consumer's
+    // data-below-action slot AND the component-managed password
+    // reveal toggle (when reveal-password is set). Renders when
+    // either condition supplies content.
     const hasBelowAction = this._hasSlottedChildren('data-below-action');
+    const showHelperRow = hasBelowAction || needsRevealButton;
 
     const inner = html`
       ${wrappedInput}
-      ${hasBelowAction ? html`<div class="civ-input-helper-row" data-civ-below-action></div>` : nothing}
+      ${showHelperRow ? html`
+        <div class="civ-input-helper-row" data-civ-below-action>
+          ${needsRevealButton ? html`
+            <civ-toggle-button
+              variant="chip"
+              label="${t('passwordRevealShort')}"
+              pressed-label="${t('passwordHideShort')}"
+              ?pressed="${this._passwordRevealed}"
+              @civ-toggle="${this._onPasswordToggle}"
+            ></civ-toggle-button>
+          ` : nothing}
+        </div>
+      ` : nothing}
       ${this._renderCharCount()}
     `;
 
@@ -443,10 +457,9 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     hasSuffix: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
-    needsRevealButton?: boolean;
     insetActionAbsolute?: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, needsRevealButton, insetActionAbsolute } = opts;
+    const { widthClass, hasPrefix, hasSuffix, showLeadingIcon, showTrailingIcon, insetActionAbsolute } = opts;
     const isCurrency = this._isCurrency;
     const maskDef = this._maskDef;
     const pattern = this._activePattern;
@@ -461,12 +474,12 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
           : [];
 
     const isCompact = this.spacing === 'sm';
-    // Pick the trailing padding class. Reveal button is wider ("Show" /
-    // "Hide" text) so it needs more room than an icon-sized clear / slot
-    // button. Trailing icon and inset action are mutually exclusive
-    // (precedence rules in render()).
+    // Pick the trailing padding class. Only the clear button is inset
+    // now (password reveal lives in the helper row below the input).
+    // Trailing icon and inset clear are mutually exclusive (precedence
+    // rules in render()).
     const trailingPaddingClass = insetActionAbsolute
-      ? (needsRevealButton ? 'civ-input-with-trailing-reveal' : 'civ-input-with-trailing-action')
+      ? 'civ-input-with-trailing-action'
       : showTrailingIcon
         ? 'civ-input-with-trailing-icon'
         : '';
@@ -609,13 +622,12 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     hasPrefix: boolean;
     hasSuffix: boolean;
     needsClearButton: boolean;
-    needsRevealButton: boolean;
     showLeadingIcon: boolean;
     showTrailingIcon: boolean;
     isCurrency: boolean;
   }) {
-    const { widthClass, hasPrefix, hasSuffix, needsClearButton, needsRevealButton, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
-    const needsWrapper = hasPrefix || hasSuffix || needsClearButton || needsRevealButton || showLeadingIcon || showTrailingIcon;
+    const { widthClass, hasPrefix, hasSuffix, needsClearButton, showLeadingIcon, showTrailingIcon, isCurrency } = opts;
+    const needsWrapper = hasPrefix || hasSuffix || needsClearButton || showLeadingIcon || showTrailingIcon;
 
     if (!needsWrapper) return inputEl;
 
@@ -626,14 +638,6 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
         ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
             <civ-icon name="close"></civ-icon>
           </button>`
-        : nothing}${needsRevealButton
-        ? html`<civ-toggle-button
-            variant="inline"
-            label="${t('passwordRevealShort')}"
-            pressed-label="${t('passwordHideShort')}"
-            ?pressed="${this._passwordRevealed}"
-            @civ-toggle="${this._onPasswordToggle}"
-          ></civ-toggle-button>`
         : nothing}${hasSuffix
         ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
         : nothing}${showLeadingIcon

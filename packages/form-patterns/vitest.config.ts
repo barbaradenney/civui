@@ -19,6 +19,8 @@ export default defineConfig({
       '@civui/actions/link': resolve(__dirname, '../actions/src/link/index.ts'),
       '@civui/actions/link-card': resolve(__dirname, '../actions/src/link-card/index.ts'),
       '@civui/actions/skip-link': resolve(__dirname, '../actions/src/skip-link/index.ts'),
+      '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
+      '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
     },
   },

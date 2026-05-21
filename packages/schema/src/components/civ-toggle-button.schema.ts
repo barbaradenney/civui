@@ -28,8 +28,8 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Picks the text-btn modifier. `inline` (default) is the transparent text-link style typical for input-inset controls (password reveal). `chip` is the prominent gray pill, for helper-row or standalone use',
-      default: 'inline',
+      description: 'Picks the text-btn modifier. `chip` (default) is the prominent gray pill — the common case (helper rows, standalone toggles, password reveal). `inline` is the transparent text-link style for surfaces where the toggle should read as quiet',
+      default: 'chip',
       values: ['chip', 'inline'],
     },
   },

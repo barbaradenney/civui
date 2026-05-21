@@ -826,14 +826,16 @@ describe('text-input inline icons', () => {
       expect(el.type).toBe('password'); // host prop unchanged
     });
 
-    it('clear button takes precedence over reveal button when both apply', async () => {
+    it('clear button (inset) and reveal toggle (below) coexist when both apply', async () => {
+      // Old behavior: clear took precedence and hid the inset reveal.
+      // New behavior: clear stays inset, reveal moved to the helper
+      // row below — no collision, so both render simultaneously.
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password clearable value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
-      // Reveal button hidden when clear is showing
-      expect(el.querySelector('civ-toggle-button')).toBeNull();
+      expect(el.querySelector('.civ-input-helper-row civ-toggle-button')).not.toBeNull();
     });
 
     it('hides the reveal button when host is disabled or readonly', async () => {
@@ -931,13 +933,21 @@ describe('text-input inline icons', () => {
       expect(el.querySelector('.civ-close-btn')).not.toBeNull();
     });
 
-    it('reveal button uses the wider trailing-padding so "Show" / "Hide" text fits', async () => {
+    it('reveal toggle renders in the helper row below the input, not inset', async () => {
+      // Old behavior: reveal toggle sat inset and the input got
+      // extra trailing padding (`civ-input-with-trailing-reveal`) so
+      // the "Show" / "Hide" text didn't overlap the value.
+      // New behavior: reveal moved to the helper row below — no
+      // trailing padding needed on the input.
       const el = await fixture<CivTextInput>(
         '<civ-text-input label="Password" type="password" reveal-password value="hunter2"></civ-text-input>'
       );
       await elementUpdated(el);
       const input = el.querySelector('input')!;
-      expect(input.className).toContain('civ-input-with-trailing-reveal');
+      expect(input.className).not.toContain('civ-input-with-trailing-reveal');
+      expect(el.querySelector('.civ-input-helper-row civ-toggle-button')).not.toBeNull();
+      // Toggle is NOT a child of the inset chrome.
+      expect(el.querySelector('.civ-input-icon-wrap civ-toggle-button')).toBeNull();
     });
   });
 

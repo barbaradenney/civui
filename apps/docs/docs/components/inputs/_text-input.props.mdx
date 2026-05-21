@@ -20,7 +20,7 @@
 | `prefix` | `string` | `''` | Inline prefix label rendered to the left of the input (e.g. "$"). Mutually exclusive with leadingIcon |
 | `suffix` | `string` | `''` | Inline suffix label rendered to the right of the input (e.g. ".com"). Mutually exclusive with trailingIcon and the clear button |
 | `clearable` | `boolean` | `false` | When true and the value is non-empty, renders a clear button on the trailing edge |
-| `reveal-password` | `boolean` | `false` | When true and type="password", renders an inset eye/eye-slash button on the trailing edge that toggles the rendered input type between "password" and "text". Suppressed for non-password types. Clear button takes precedence when both are active |
+| `reveal-password` | `boolean` | `false` | When true and type="password", renders a Show / Hide toggle in the helper row below the input that flips the rendered input type between "password" and "text". The host's `type` prop stays `password` so the field's semantic identity does not change. Suppressed for non-password types. Coexists with `clearable` — clear stays inset, reveal sits below |
 | `leading-icon` | `string` | `''` | Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set |
 | `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden) |
 | `trailing-icon` | `string` | `''` | Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing |

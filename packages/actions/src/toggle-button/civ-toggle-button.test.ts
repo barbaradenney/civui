@@ -50,10 +50,10 @@ describe('civ-toggle-button', () => {
     expect(el.pressed).toBe(false);
   });
 
-  it('honors the variant prop on the rendered button class', async () => {
-    const inline = await fixture('<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>');
-    expect(inline.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
-    const chip = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="chip"></civ-toggle-button>');
+  it('honors the variant prop on the rendered button class (default chip)', async () => {
+    const chip = await fixture('<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>');
     expect(chip.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
+    const inline = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="inline"></civ-toggle-button>');
+    expect(inline.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
   });
 });

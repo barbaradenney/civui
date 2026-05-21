@@ -104,7 +104,7 @@ const schema: ComponentSchema = {
     },
     revealPassword: {
       type: 'boolean',
-      description: 'When true and type="password", renders an inset eye/eye-slash button on the trailing edge that toggles the rendered input type between "password" and "text". Suppressed for non-password types. Clear button takes precedence when both are active',
+      description: 'When true and type="password", renders a Show / Hide toggle in the helper row below the input that flips the rendered input type between "password" and "text". The host\'s `type` prop stays `password` so the field\'s semantic identity does not change. Suppressed for non-password types. Coexists with `clearable` — clear stays inset, reveal sits below',
       default: false,
       attribute: 'reveal-password',
     },

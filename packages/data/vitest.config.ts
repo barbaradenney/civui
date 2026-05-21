@@ -14,6 +14,8 @@ export default defineConfig({
       '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
       '@civui/actions/filter-chip': resolve(__dirname, '../actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(__dirname, '../actions/src/filter-chip-group/index.ts'),
+      '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
+      '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       '@civui/overlays/popover': resolve(__dirname, '../overlays/src/popover/index.ts'),
       '@civui/overlays/menu': resolve(__dirname, '../overlays/src/menu/index.ts'),

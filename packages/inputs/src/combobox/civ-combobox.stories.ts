@@ -145,6 +145,35 @@ export const DensityScale: Story = {
   `,
 };
 
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare combobox input + listbox with no label / hint / error chrome. ' +
+          'The host\'s `aria-label` is propagated to the inner control so assistive tech still gets an accessible name. ' +
+          'Type-ahead filtering, keyboard navigation, and `civ-change` events are preserved. Used by data-grid cell editors and other dense surfaces.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-combobox label="State" name="state-default" hint="Type to search" .options="${STATES}"></civ-combobox>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input + listbox, no chrome. The outer surface (data-grid row, summary card) provides the accessible name via the host's <code>aria-label</code>.</p>
+        <civ-combobox spacing="sm" aria-label="State" name="state-compact" .options="${STATES}"></civ-combobox>
+      </div>
+    </div>
+  `,
+};
+
 // ── Variants ──────────────────────────────────────────────────
 
 export const OptionGroups: Story = {

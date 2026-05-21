@@ -902,22 +902,22 @@ describe('civ-date-picker', () => {
 
     it('does not render the inline Today button by default', async () => {
       const el = await fixture('<civ-date-picker label="When"></civ-date-picker>') as any;
-      expect(el.querySelector('.civ-text-btn--inline')).toBeNull();
+      expect(el.querySelector('.civ-text-btn--chip')).toBeNull();
     });
 
-    it('renders the inline Today button when inline-today is set', async () => {
-      const el = await fixture('<civ-date-picker label="When" inline-today></civ-date-picker>') as any;
-      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement | null;
+    it('renders the inline Today button when show-today-shortcut is set', async () => {
+      const el = await fixture('<civ-date-picker label="When" show-today-shortcut></civ-date-picker>') as any;
+      const btn = el.querySelector('.civ-text-btn--chip') as HTMLButtonElement | null;
       expect(btn).not.toBeNull();
       expect(btn!.textContent?.trim()).toBe('Today');
     });
 
     it('selects today on click without opening the dialog', async () => {
-      const el = await fixture('<civ-date-picker label="When" inline-today></civ-date-picker>') as any;
+      const el = await fixture('<civ-date-picker label="When" show-today-shortcut></civ-date-picker>') as any;
       let civChange: any = null;
       el.addEventListener('civ-change', ((e: CustomEvent) => { civChange = e.detail; }) as EventListener);
 
-      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
+      const btn = el.querySelector('.civ-text-btn--chip') as HTMLButtonElement;
       btn.click();
       await elementUpdated(el);
 
@@ -930,33 +930,33 @@ describe('civ-date-picker', () => {
       const future = new Date();
       future.setFullYear(future.getFullYear() + 1);
       const minIso = future.toISOString().slice(0, 10);
-      const el = await fixture(`<civ-date-picker label="When" inline-today min="${minIso}"></civ-date-picker>`) as any;
-      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
+      const el = await fixture(`<civ-date-picker label="When" show-today-shortcut min="${minIso}"></civ-date-picker>`) as any;
+      const btn = el.querySelector('.civ-text-btn--chip') as HTMLButtonElement;
       expect(btn.disabled).toBe(true);
     });
 
     it('disables the inline Today button when value already matches today', async () => {
-      const el = await fixture(`<civ-date-picker label="When" inline-today value="${todayISO}"></civ-date-picker>`) as any;
-      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
+      const el = await fixture(`<civ-date-picker label="When" show-today-shortcut value="${todayISO}"></civ-date-picker>`) as any;
+      const btn = el.querySelector('.civ-text-btn--chip') as HTMLButtonElement;
       expect(btn.disabled).toBe(true);
     });
 
     it('hides the inline Today button when host is disabled or readonly', async () => {
-      const elDisabled = await fixture('<civ-date-picker label="When" inline-today disabled></civ-date-picker>') as any;
-      expect(elDisabled.querySelector('.civ-text-btn--inline')).toBeNull();
+      const elDisabled = await fixture('<civ-date-picker label="When" show-today-shortcut disabled></civ-date-picker>') as any;
+      expect(elDisabled.querySelector('.civ-text-btn--chip')).toBeNull();
 
-      const elReadonly = await fixture('<civ-date-picker label="When" inline-today readonly></civ-date-picker>') as any;
-      expect(elReadonly.querySelector('.civ-text-btn--inline')).toBeNull();
+      const elReadonly = await fixture('<civ-date-picker label="When" show-today-shortcut readonly></civ-date-picker>') as any;
+      expect(elReadonly.querySelector('.civ-text-btn--chip')).toBeNull();
     });
 
     it('hides the inline Today button in compact (spacing=sm) mode', async () => {
-      const el = await fixture('<civ-date-picker label="When" inline-today spacing="sm"></civ-date-picker>') as any;
-      expect(el.querySelector('.civ-text-btn--inline')).toBeNull();
+      const el = await fixture('<civ-date-picker label="When" show-today-shortcut spacing="sm"></civ-date-picker>') as any;
+      expect(el.querySelector('.civ-text-btn--chip')).toBeNull();
     });
 
-    it('honors a custom inline-today-label', async () => {
-      const el = await fixture('<civ-date-picker label="When" inline-today inline-today-label="Hoy"></civ-date-picker>') as any;
-      const btn = el.querySelector('.civ-text-btn--inline') as HTMLButtonElement;
+    it('honors a custom today-shortcut-label', async () => {
+      const el = await fixture('<civ-date-picker label="When" show-today-shortcut today-shortcut-label="Hoy"></civ-date-picker>') as any;
+      const btn = el.querySelector('.civ-text-btn--chip') as HTMLButtonElement;
       expect(btn.textContent?.trim()).toBe('Hoy');
     });
   });

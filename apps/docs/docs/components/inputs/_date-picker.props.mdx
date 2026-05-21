@@ -21,8 +21,8 @@
 | `clear-label` | `string` | `''` | Aria label for the clear (×) button when a value is set |
 | `today-button-label` | `string` | `''` | Visible label on the "today" shortcut button inside the calendar dialog |
 | `hide-today-button` | `boolean` | `false` | Suppress the "today" shortcut button. Useful for date-of-birth and other historical-only fields |
-| `inline-today` | `boolean` | `false` | Render an inline "Today" shortcut inset in the input chrome (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today |
-| `inline-today-label` | `string` | `''` | Override the inline "Today" button label. Defaults to the locale-aware "Today" |
+| `show-today-shortcut` | `boolean` | `false` | Render a "Today" shortcut chip in a helper row directly below the input (lets users jump to today without opening the picker dialog). Disabled when today is out of min/max range, when host is disabled/readonly, or when value already matches today. Renamed from `inline-today`; the prior inset position created touch-target conflicts and was moved below per the value-shortcut audit |
+| `today-shortcut-label` | `string` | `''` | Override the "Today" shortcut chip label. Defaults to the locale-aware "Today" |
 | `invalid-format-message` | `string` | `''` | Validation error shown when typed text doesn't parse as MM/DD/YYYY |
 | `date-range-message` | `string` | `''` | Validation error shown when selected date is outside min/max |
 | `min-date-message` | `string` | `''` | Validation error shown when selected date is before min (&lcub;min&rcub; interpolated) |

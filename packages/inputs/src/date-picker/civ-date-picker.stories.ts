@@ -178,18 +178,18 @@ export const TodayButtonDisabled: Story = {
   `,
 };
 
-export const InlineToday: Story = {
-  name: 'Inline today shortcut',
+export const ShowTodayShortcut: Story = {
+  name: 'Today shortcut chip',
   parameters: {
     docs: {
       description: {
         story:
-          'Add `inline-today` to render a "Today" shortcut button inset in the input chrome. The user can pick today without opening the dialog. Auto-disables when today is out of `min`/`max` range or already selected.',
+          'Add `show-today-shortcut` to render a "Today" chip in a helper row directly below the input. The user can pick today without opening the dialog. Auto-disables when today is out of `min`/`max` range or already selected. The chip sits below the input (not inset) so it does not compete with the input\'s tap target.',
       },
     },
   },
   render: () => html`
-    <civ-date-picker label="Visit date" name="visit" inline-today></civ-date-picker>
+    <civ-date-picker label="Visit date" name="visit" show-today-shortcut></civ-date-picker>
   `,
 };
 

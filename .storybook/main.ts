@@ -105,6 +105,8 @@ const config: StorybookConfig = {
       '@civui/actions/nav': resolve(root, 'packages/actions/src/nav/index.ts'),
       '@civui/actions/tabs': resolve(root, 'packages/actions/src/tabs/index.ts'),
       '@civui/actions/tab-nav': resolve(root, 'packages/actions/src/tab-nav/index.ts'),
+      '@civui/actions/confirm-button': resolve(root, 'packages/actions/src/confirm-button/index.ts'),
+      '@civui/actions/toggle-button': resolve(root, 'packages/actions/src/toggle-button/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),
       // Overlays
       '@civui/overlays/modal': resolve(root, 'packages/overlays/src/modal/index.ts'),

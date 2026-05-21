@@ -121,6 +121,36 @@ export const DensityScale: Story = {
   `,
 };
 
+// ── spacing="sm" — compact mode for dense surfaces ────────────
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` renders just the bare `<input>` with no label / hint / error chrome. ' +
+          'The host\'s `aria-label` is propagated to the inner control so assistive tech still ' +
+          'gets a name. Mask and validation behavior are preserved. Used by data-grid cell editors ' +
+          'and other dense surfaces where the surrounding row already names the field.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">Default</p>
+        <civ-text-input label="Full name" name="name-default" hint="Legal first and last name"></civ-text-input>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <p class="civ-m-0 civ-mb-2 civ-text-sm">Bare input, no chrome. The outer surface (data-grid row, summary card) provides the accessible name via the host's <code>aria-label</code>.</p>
+        <civ-text-input spacing="sm" aria-label="Full name" name="name-compact"></civ-text-input>
+      </div>
+    </div>
+  `,
+};
+
 // ── Width Variants ────────────────────────────────────────────
 
 export const WidthVariants: Story = {

@@ -54,8 +54,38 @@ export const WithHint: Story = {
 };
 
 export const WithError: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Group-level error rendered above the fieldset. Use when the date is invalid as a whole (e.g., "Feb 30") and the consumer wants one composed message. For per-field highlighting (which fields are wrong), see the **With Per-Field Errors** story below.',
+      },
+    },
+  },
   render: () => html`
     <civ-memorable-date legend="Date of birth" error="Enter a valid date of birth" hint="For example: January 15 1990" name="dob"></civ-memorable-date>
+  `,
+};
+
+export const WithPerFieldErrors: Story = {
+  name: 'With Per-Field Errors',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `month-error` / `day-error` / `year-error` to any truthy string to flag the corresponding field. The flagged field gets a red 4px inline-start border (matching `.civ-input[aria-invalid="true"]`) and `aria-invalid="true"` propagated to the native input/select — but no per-field error *text* renders. The group-level `error` carries the user-facing description (GOV.UK / USWDS convention: one composed message, multiple visual highlights). Use whatever flag value reads well in your validator (`"missing"`, `"out-of-range"`, etc.) — CivUI only treats it as a boolean.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-memorable-date
+      legend="Date of birth"
+      hint="For example: January 15 1990"
+      name="dob"
+      error="Date of birth must include a month and a valid day"
+      month-error="missing"
+      day-error="out-of-range"
+    ></civ-memorable-date>
   `,
 };
 

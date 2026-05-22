@@ -363,7 +363,18 @@
     }
   }
 
-  /* ── Income ───────────────────────────────────────────────── */
+  /* Per-field error indicator on civ-memorable-date.
+     `monthError` / `dayError` / `yearError` props flip the wrapper's
+     `data-civ-error` attribute. We apply the same red 4px inline-start
+     border treatment as `.civ-input[aria-invalid="true"]`, but driven
+     by the *wrapper* attribute so the inner control's own `error`
+     stays empty (no per-field error text renders below — the group
+     `error` message above the row carries the user-facing description,
+     matching GOV.UK / USWDS conventions). aria-invalid is propagated
+     to the native input/select via `_propagateAriaToChildren` for AT. */
+  :is(.civ-memorable-date-month, .civ-memorable-date-day, .civ-memorable-date-year)[data-civ-error="true"] .civ-input {
+    @apply civ-border-error civ-border-s-4;
+  }
 
   .civ-income-fields {
     @apply civ-flex civ-flex-wrap civ-items-end;

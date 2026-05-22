@@ -3158,6 +3158,13 @@
       "category": "Forms/Inputs/Memorable Date",
       "html": "<civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"dob\"></civ-memorable-date>",
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
+    },
+    {
+      "story": "WithPerFieldErrors",
+      "name": "With Per-Field Errors",
+      "category": "Forms/Inputs/Memorable Date",
+      "html": "<civ-memorable-date\n      legend=\"Date of birth\"\n      hint=\"For example: January 15 1990\"\n      name=\"dob\"\n      error=\"Date of birth must include a month and a valid day\"\n      month-error=\"missing\"\n      day-error=\"out-of-range\"\n    ></civ-memorable-date>",
+      "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
     }
   ],
   "civ-menu": [
@@ -5287,13 +5294,6 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
-      "story": "Spacing",
-      "name": "Spacing — default vs sm",
-      "category": "Forms/Inputs/Text Input",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default</p>\n        <civ-text-input label=\"Applicant name\" name=\"name-default\" hint=\"First and last\"></civ-text-input>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input, no chrome. aria-label on the host names the control for AT.</p>\n        <civ-text-input spacing=\"sm\" aria-label=\"Applicant name\" name=\"name-compact\"></civ-text-input>\n      </div>\n    </div>",
-      "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
-    },
-    {
       "story": "SpacousScale",
       "name": "Spacious Scale",
       "category": "Foundations/Density Examples",
@@ -5570,9 +5570,22 @@
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
     },
     {
+      "story": "DescriptionVsHint",
+      "name": "Description vs Hint",
+      "category": "Forms/Inputs/Toggle",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-toggle\n        label=\"Description only\"\n        name=\"desc-only\"\n        description=\"Receive weekly summary emails about activity on your account, including new messages and benefits updates\"\n      ></civ-toggle>\n      <civ-toggle\n        label=\"Hint only\"\n        name=\"hint-only\"\n        hint=\"Beta feature\"\n      ></civ-toggle>\n      <civ-toggle\n        label=\"Both description and hint\"\n        name=\"both\"\n        description=\"Auto-saves your form progress every 30 seconds so you don't lose work if your session times out\"\n        hint=\"Stored locally — never sent to our servers\"\n      ></civ-toggle>\n    </div>",
+      "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
+    },
+    {
       "story": "Disabled",
       "category": "Forms/Inputs/Toggle",
       "html": "<civ-toggle label=\"System preference (locked)\" name=\"locked\" disabled checked></civ-toggle>",
+      "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
+    },
+    {
+      "story": "Readonly",
+      "category": "Forms/Inputs/Toggle",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-toggle label=\"Notifications (off)\" name=\"ro-off\" readonly></civ-toggle>\n      <civ-toggle label=\"Notifications (on)\" name=\"ro-on\" readonly checked></civ-toggle>\n    </div>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
     },
     {
@@ -5816,6 +5829,12 @@
       "story": "Preselected",
       "category": "Forms/Inputs/Yes No",
       "html": "<civ-yes-no legend=\"Have you served in the military?\" name=\"military\" value=\"no\"></civ-yes-no>",
+      "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
+    },
+    {
+      "story": "Readonly",
+      "category": "Forms/Inputs/Yes No",
+      "html": "<civ-yes-no legend=\"Have you served in the military?\" name=\"military-ro\" value=\"yes\" readonly></civ-yes-no>",
       "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
     },
     {

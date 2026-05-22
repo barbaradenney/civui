@@ -65,6 +65,18 @@ public struct CivMemorableDate: View {
     /// Validation error shown when the entered date isn't a real date.
     public var invalidDateMessage: String
 
+    /// Per-field error flag for the Month sub-field. Any truthy string
+    /// flips a red border + `aria-invalid="true"` on the native control;
+    /// no per-field text renders (the group `error` carries the
+    /// description). Mirrors the web civ-memorable-date convention.
+    public var monthError: String
+
+    /// Per-field error flag for the Day sub-field. See `monthError`.
+    public var dayError: String
+
+    /// Per-field error flag for the Year sub-field. See `monthError`.
+    public var yearError: String
+
     /// Called when the date changes. Parameters: (value, month, day, year).
     public var onChange: ((String, String, String, String) -> Void)?
 
@@ -114,6 +126,9 @@ public struct CivMemorableDate: View {
         yearPlaceholder: String = "",
         dateSetMessage: String = "",
         invalidDateMessage: String = "",
+        monthError: String = "",
+        dayError: String = "",
+        yearError: String = "",
         onChange: ((String, String, String, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -138,6 +153,9 @@ public struct CivMemorableDate: View {
         self.yearPlaceholder = yearPlaceholder
         self.dateSetMessage = dateSetMessage
         self.invalidDateMessage = invalidDateMessage
+        self.monthError = monthError
+        self.dayError = dayError
+        self.yearError = yearError
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState

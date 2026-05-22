@@ -48,6 +48,22 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'invalid-date-message' }) invalidDateMessage = '';
   @property({ type: String }) locale = 'en-US';
 
+  /**
+   * Per-field error flags. When truthy, the matching sub-field gets a
+   * red inline-start border (mirrors `.civ-input[aria-invalid="true"]`)
+   * and the inner native input/select receives `aria-invalid="true"`.
+   * No field-level error text is rendered — the group-level `error`
+   * prop carries the user-facing description (GOV.UK / USWDS
+   * convention).
+   *
+   * Consumers (or the form orchestrator) set these after their own
+   * per-field validation. Use any truthy string (e.g., `"missing"`,
+   * `"out-of-range"`) as the value; CivUI treats it as a boolean flag.
+   */
+  @property({ type: String, attribute: 'month-error' }) monthError = '';
+  @property({ type: String, attribute: 'day-error' }) dayError = '';
+  @property({ type: String, attribute: 'year-error' }) yearError = '';
+
   @state() private _month = '';
   @state() private _day = '';
   @state() private _year = '';
@@ -80,7 +96,10 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('hint') || changed.has('error')) {
+    if (
+      changed.has('hint') || changed.has('error') ||
+      changed.has('monthError') || changed.has('dayError') || changed.has('yearError')
+    ) {
       this._propagateAriaToChildren();
     }
   }
@@ -88,7 +107,12 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
   /**
    * Propagate aria-describedby to inner native inputs so screen readers
    * that don't inherit fieldset-level described-by still announce
-   * hint/error text. Deferred to ensure child components have rendered.
+   * hint/error text. Also propagates `aria-invalid="true"` to the
+   * specific native input/select inside each field whose per-field
+   * error flag is set — gives screen-reader users an accurate
+   * per-field invalid state even though no per-field error text
+   * renders (GOV.UK / USWDS visual pattern). Deferred to ensure
+   * child components have rendered.
    */
   private _propagateAriaToChildren(): void {
     requestAnimationFrame(() => {
@@ -99,6 +123,21 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
           el.setAttribute('aria-describedby', describedBy);
         } else {
           el.removeAttribute('aria-describedby');
+        }
+      }
+
+      const fieldErrors: Array<[string, string]> = [
+        ['.civ-memorable-date-month select', this.monthError],
+        ['.civ-memorable-date-day input',    this.dayError],
+        ['.civ-memorable-date-year input',   this.yearError],
+      ];
+      for (const [selector, flag] of fieldErrors) {
+        const target = this.querySelector(selector);
+        if (!target) continue;
+        if (flag) {
+          target.setAttribute('aria-invalid', 'true');
+        } else {
+          target.removeAttribute('aria-invalid');
         }
       }
     });
@@ -170,7 +209,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
 
     const fields = html`
       <div class="civ-memorable-date-fields" data-civ-memorable-date>
-          <div class="civ-memorable-date-month">
+          <div class="civ-memorable-date-month" data-civ-error="${this.monthError ? 'true' : nothing}">
             <civ-select
               label="${monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
@@ -184,7 +223,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               disable-analytics
             ></civ-select>
           </div>
-          <div class="civ-memorable-date-day">
+          <div class="civ-memorable-date-day" data-civ-error="${this.dayError ? 'true' : nothing}">
             <civ-text-input
               label="${dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
@@ -202,7 +241,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               disable-analytics
             ></civ-text-input>
           </div>
-          <div class="civ-memorable-date-year">
+          <div class="civ-memorable-date-year" data-civ-error="${this.yearError ? 'true' : nothing}">
             <civ-text-input
               label="${yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"

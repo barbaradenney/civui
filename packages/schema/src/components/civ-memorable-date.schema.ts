@@ -79,6 +79,24 @@ const schema: ComponentSchema = {
       description: 'Locale for month name formatting',
       default: 'en-US',
     },
+    monthError: {
+      type: 'string',
+      description: 'Per-field error flag for the Month sub-field. Any truthy string applies a red inline-start border and sets `aria-invalid="true"` on the native select; no per-field error text renders (the group-level `error` carries the description, GOV.UK / USWDS convention). Use a value that reads in your validator (`"missing"`, `"invalid"`) — CivUI only treats it as a boolean',
+      default: '',
+      attribute: 'month-error',
+    },
+    dayError: {
+      type: 'string',
+      description: 'Per-field error flag for the Day sub-field. See `monthError` for semantics',
+      default: '',
+      attribute: 'day-error',
+    },
+    yearError: {
+      type: 'string',
+      description: 'Per-field error flag for the Year sub-field. See `monthError` for semantics',
+      default: '',
+      attribute: 'year-error',
+    },
   },
 
   events: {

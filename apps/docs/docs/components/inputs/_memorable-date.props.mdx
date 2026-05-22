@@ -15,3 +15,6 @@
 | `date-set-message` | `string` | `'Date set to {date}'` | Screen reader announcement when date is set (&lcub;date&rcub; interpolated) |
 | `invalid-date-message` | `string` | `'Enter a valid date'` | Error message for invalid date combinations |
 | `locale` | `string` | `'en-US'` | Locale for month name formatting |
+| `month-error` | `string` | `''` | Per-field error flag for the Month sub-field. Any truthy string applies a red inline-start border and sets `aria-invalid="true"` on the native select; no per-field error text renders (the group-level `error` carries the description, GOV.UK / USWDS convention). Use a value that reads in your validator (`"missing"`, `"invalid"`) — CivUI only treats it as a boolean |
+| `day-error` | `string` | `''` | Per-field error flag for the Day sub-field. See `monthError` for semantics |
+| `year-error` | `string` | `''` | Per-field error flag for the Year sub-field. See `monthError` for semantics |

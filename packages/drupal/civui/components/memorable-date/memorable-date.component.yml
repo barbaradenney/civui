@@ -75,8 +75,18 @@ props:
       title: Legend
       type: string
       description: 'Fieldset legend rendered above the date sub-fields. The component is self-contained — do not wrap in civ-fieldset.'
-
-
+    month_error:
+      title: Month error
+      type: string
+      description: 'Per-field error flag for the Month sub-field. Any truthy string applies a red inline-start border and sets `aria-invalid="true"` on the native select; no per-field error text renders (the group-level `error` carries the description, GOV....'
+    day_error:
+      title: Day error
+      type: string
+      description: 'Per-field error flag for the Day sub-field. See `monthError` for semantics'
+    year_error:
+      title: Year error
+      type: string
+      description: 'Per-field error flag for the Year sub-field. See `monthError` for semantics'
 
 libraryOverrides:
   dependencies:

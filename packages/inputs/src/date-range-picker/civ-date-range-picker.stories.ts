@@ -2,6 +2,7 @@ import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import './civ-date-range-picker.js';
 import '@civui/actions';
+import '@civui/form-patterns/form';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Date Range Picker',
@@ -146,12 +147,10 @@ export const AllStates: Story = {
 export const GovernmentLeaveRequest: Story = {
   name: 'Usage: Federal leave request',
   render: () => html`
-    <form
-      @submit="${(e: Event) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const data = new FormData(form);
-        alert(JSON.stringify(Object.fromEntries(data)));
+    <civ-form
+      form-label="Federal leave request"
+      @civ-submit="${(e: CustomEvent) => {
+        alert(JSON.stringify(e.detail.values));
       }}"
     >
       <civ-date-range-picker
@@ -163,6 +162,6 @@ export const GovernmentLeaveRequest: Story = {
         required
       ></civ-date-range-picker>
       <civ-button type="submit" class="civ-mt-4">Submit request</civ-button>
-    </form>
+    </civ-form>
   `,
 };

@@ -121,6 +121,7 @@ const config: StorybookConfig = {
       '@civui/controls/segmented-control': resolve(root, 'packages/controls/src/segmented-control/index.ts'),
       '@civui/controls': resolve(root, 'packages/controls/src/index.ts'),
       '@civui/compound': resolve(root, 'packages/compound/src/index.ts'),
+      '@civui/form-patterns/form': resolve(root, 'packages/form-patterns/src/form/index.ts'),
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),
       '@civui/feedback/alert': resolve(root, 'packages/feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),

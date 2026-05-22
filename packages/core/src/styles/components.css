@@ -409,8 +409,13 @@
 
   /* ── Time Picker ──────────────────────────────────────────── */
 
+  /* Align by the top so the field labels (Hour / Minute / AM/PM) line
+     up on the same row regardless of small height differences between
+     `<civ-select>` and `<civ-segmented-control>`. Aligning by the
+     bottom (the previous behavior) pulled the shorter AM/PM column
+     down and visibly broke the label row. */
   .civ-time-picker-fields {
-    @apply civ-flex civ-flex-wrap civ-items-end;
+    @apply civ-flex civ-flex-wrap civ-items-start;
     gap: var(--civ-spacing-4, 16px);
   }
 

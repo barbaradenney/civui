@@ -1252,8 +1252,14 @@
   }
 
   .civ-toggle-thumb--checked {
-    /* Track width (3.5em) minus thumb width (1.625em) minus inset (0.125em). */
-    inset-inline-start: calc(3.5em - 1.625em - 0.125em);
+    /* `100%` refers to the padding box of the absolutely-positioned
+       element's containing block (the .civ-toggle-track), which is
+       the visible track minus its 1px border on each side. Computing
+       the checked offset from 100% (rather than the literal `3.5em`
+       track width) keeps the right-side gap symmetric to the left-
+       side gap of the unchecked thumb — earlier the calc didn't
+       account for the borders and the thumb looked offset right. */
+    inset-inline-start: calc(100% - 1.625em - 0.125em);
   }
 
   .civ-toggle-check {

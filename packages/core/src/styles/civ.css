@@ -8,6 +8,20 @@
   @tailwind utilities;
 }
 
+/* `civ-text-base` is a font-size utility only. Tailwind would otherwise
+   emit a *color* rule under the same class name because the `base` key
+   collides between the colors and fontSize scales — that hidden color
+   emission grayed every consumer using `civ-text-base` for sizing
+   (file rows, list rows, table cells). CivUI policy: body text inherits
+   the default base-darkest color; gray is reserved for hint text
+   (.civ-hint), disabled states (.civ-opacity-disabled), and placeholder
+   text. For an explicit gray shade, use civ-text-base-{dark,darker,
+   darkest} — those are scoped color-only utilities that don't collide.
+   Unlayered so it wins over Tailwind's @layer civ utility emission. */
+.civ-text-base {
+  color: inherit;
+}
+
 /* Focus indicator: yellow outline paints flush against the element
    (outline-offset: 0) and the dark halo via box-shadow extends past
    the outline. Without offset there's no gap for the box-shadow's

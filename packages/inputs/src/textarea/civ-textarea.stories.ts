@@ -3,6 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import './civ-textarea.js';
 import '@civui/actions';
+import '@civui/form-patterns/form';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Textarea',
@@ -121,17 +122,15 @@ export const DensityScale: Story = {
 export const GovernmentAppealForm: Story = {
   name: 'Usage: Appeal Justification',
   render: () => html`
-    <form
-      @submit="${(e: Event) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const data = new FormData(form);
-        alert(JSON.stringify(Object.fromEntries(data)));
+    <civ-form
+      form-label="Appeal justification"
+      @civ-submit="${(e: CustomEvent) => {
+        alert(JSON.stringify(e.detail.values));
       }}"
     >
       <civ-textarea label="Reason for appeal" name="appeal-reason" hint="Explain why you believe the decision was incorrect. Include relevant dates and reference numbers." required maxlength="2000" rows="8"></civ-textarea>
       <civ-button type="submit" class="civ-mt-4">Submit appeal</civ-button>
-    </form>
+    </civ-form>
   `,
 };
 

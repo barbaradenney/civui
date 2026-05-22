@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-toggle.js';
 import '@civui/actions';
+import '@civui/form-patterns/form';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Toggle',
@@ -186,11 +187,10 @@ export const DensityScale: Story = {
 export const GovernmentNotificationSettings: Story = {
   name: 'Usage: Notification Preferences',
   render: () => html`
-    <form
-      @submit=${(e: Event) => {
-        e.preventDefault();
-        const fd = new FormData(e.target as HTMLFormElement);
-        const values = Array.from(fd.entries())
+    <civ-form
+      form-label="Communication preferences"
+      @civ-submit=${(e: CustomEvent) => {
+        const values = Object.entries(e.detail.values ?? {})
           .map(([k, v]) => `${k}=${v}`)
           .join(', ');
         alert('Saved: ' + values);
@@ -217,6 +217,6 @@ export const GovernmentNotificationSettings: Story = {
       <div class="civ-flex civ-gap-2 civ-mt-4">
         <civ-button type="submit">Save preferences</civ-button>
       </div>
-    </form>
+    </civ-form>
   `,
 };

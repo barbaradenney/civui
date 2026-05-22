@@ -44,6 +44,13 @@
       "category": "Actions/Action Button",
       "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\">\n      <civ-action-button label=\"Bold\" pressed></civ-action-button>\n      <civ-action-button label=\"Italic\"></civ-action-button>\n      <civ-action-button label=\"Underline\"></civ-action-button>\n    </div>",
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "name": "Spacing — default vs sm",
+      "category": "Actions/Action Button",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"default\"</p>\n        <div class=\"civ-flex civ-gap-2 civ-items-center\">\n          <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n          <civ-action-button label=\"Save\" variant=\"primary\"></civ-action-button>\n          <civ-action-button label=\"Remove\" variant=\"tertiary\" danger></civ-action-button>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\"</p>\n        <div class=\"civ-flex civ-gap-2 civ-items-center\">\n          <civ-action-button label=\"Edit\" variant=\"tertiary\" spacing=\"sm\"></civ-action-button>\n          <civ-action-button label=\"Save\" variant=\"primary\" spacing=\"sm\"></civ-action-button>\n          <civ-action-button label=\"Remove\" variant=\"tertiary\" danger spacing=\"sm\"></civ-action-button>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     }
   ],
   "civ-address": [
@@ -1362,13 +1369,6 @@
       "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
     },
     {
-      "story": "GovernmentAppointmentScheduler",
-      "name": "Usage: Schedule an Appointment",
-      "category": "Forms/Inputs/Date Picker",
-      "html": "<form @submit=${(e: Event) => {\n      e.preventDefault();\n      const fd = new FormData(e.target as HTMLFormElement);\n      alert('Appointment scheduled: ' + fd.get('date'));\n    }}>\n      <h3 class=\"civ-m-0 civ-mb-4 civ-text-xl\">Schedule your in-person appointment</h3>\n      <civ-date-picker label=\"Preferred date\" name=\"date\" hint=\"Appointments are available Monday through Friday, April 21 to June 30, 2026\" required min=\"2026-04-21\" max=\"2026-06-30\"></civ-date-picker>\n      <civ-button type=\"submit\" class=\"civ-mt-2\">Schedule appointment</civ-button>\n    </form>",
-      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
-    },
-    {
       "story": "Required",
       "category": "Forms/Inputs/Date Picker",
       "html": "<civ-date-picker label=\"Appointment date\" name=\"appointment\" required></civ-date-picker>",
@@ -1461,13 +1461,6 @@
       "story": "Disabled",
       "category": "Forms/Inputs/Date Range Picker",
       "html": "<civ-date-range-picker\n      label=\"Stay dates\"\n      name=\"stay\"\n      value='{\"start\":\"2026-05-01\",\"end\":\"2026-05-08\"}'\n      disabled\n    ></civ-date-range-picker>",
-      "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
-    },
-    {
-      "story": "GovernmentLeaveRequest",
-      "name": "Usage: Federal leave request",
-      "category": "Forms/Inputs/Date Range Picker",
-      "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        const form = e.target as HTMLFormElement;\n        const data = new FormData(form);\n        alert(JSON.stringify(Object.fromEntries(data)));\n      }}\"\n    >\n      <civ-date-range-picker\n        label=\"Leave dates\"\n        name=\"leave\"\n        min-range-days=\"1\"\n        max-range-days=\"30\"\n        hint=\"Provide the first and last day you'll be on leave\"\n        required\n      ></civ-date-range-picker>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit request</civ-button>\n    </form>",
       "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
     },
     {
@@ -2211,11 +2204,53 @@
       "source": "packages/core/src/foundations/validation-examples.stories.ts"
     },
     {
+      "story": "GovernmentAppealForm",
+      "name": "Usage: Appeal Justification",
+      "category": "Forms/Inputs/Textarea",
+      "html": "<civ-form\n      form-label=\"Appeal justification\"\n      @civ-submit=\"${(e: CustomEvent) => {\n        alert(JSON.stringify(e.detail.values));\n      }}\"\n    >\n      <civ-textarea label=\"Reason for appeal\" name=\"appeal-reason\" hint=\"Explain why you believe the decision was incorrect. Include relevant dates and reference numbers.\" required maxlength=\"2000\" rows=\"8\"></civ-textarea>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit appeal</civ-button>\n    </civ-form>",
+      "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
+    },
+    {
+      "story": "GovernmentAppointmentScheduler",
+      "name": "Usage: Schedule an Appointment",
+      "category": "Forms/Inputs/Date Picker",
+      "html": "<civ-form\n      form-label=\"Schedule appointment\"\n      @civ-submit=${(e: CustomEvent) => {\n        alert('Appointment scheduled: ' + (e.detail.values?.date ?? ''));\n      }}\n    >\n      <h3 class=\"civ-m-0 civ-mb-4 civ-text-xl\">Schedule your in-person appointment</h3>\n      <civ-date-picker label=\"Preferred date\" name=\"date\" hint=\"Appointments are available Monday through Friday, April 21 to June 30, 2026\" required min=\"2026-04-21\" max=\"2026-06-30\"></civ-date-picker>\n      <civ-button type=\"submit\" class=\"civ-mt-2\">Schedule appointment</civ-button>\n    </civ-form>",
+      "source": "packages/inputs/src/date-picker/civ-date-picker.stories.ts"
+    },
+    {
+      "story": "GovernmentEligibilityScreening",
+      "name": "Usage: Eligibility Screening",
+      "category": "Forms/Inputs/Yes No",
+      "html": "<civ-form\n      form-label=\"Eligibility screening\"\n      @civ-submit=${(e: CustomEvent) => {\n        const values = Object.entries(e.detail.values ?? {})\n          .map(([k, v]) =>",
+      "source": "packages/inputs/src/yes-no/civ-yes-no.stories.ts"
+    },
+    {
+      "story": "GovernmentIdentityVerification",
+      "name": "Usage: Identity Verification",
+      "category": "Forms/Inputs/Memorable Date",
+      "html": "<civ-form\n      form-label=\"Verify your identity\"\n      @civ-submit=\"${(e: CustomEvent) => {\n        alert(JSON.stringify(e.detail.values));\n      }}\"\n    >\n      <h3 class=\"civ-m-0 civ-mb-4 civ-text-xl\">Verify your identity</h3>\n      <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"dob\" required></civ-memorable-date>\n      <civ-memorable-date legend=\"Date of marriage (if applicable)\" hint=\"For example: June 10 2015\" name=\"marriage-date\"></civ-memorable-date>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Verify</civ-button>\n    </civ-form>",
+      "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
+    },
+    {
       "story": "GovernmentInquiryForm",
       "name": "Usage: Government Inquiry Form",
       "category": "Forms/Form/Form",
       "html": "<civ-form\n      form-label=\"General inquiry\"\n      @civ-submit=\"${() => {\n        alert('Inquiry submitted! Reference: INQ-2026-' + Math.floor(Math.random() * 9999));\n      }}\"\n    >\n      <h3 class=\"civ-heading-md\">Submit an inquiry</h3>\n      <civ-text-input label=\"Full name\" name=\"name\" required></civ-text-input>\n      <civ-text-input label=\"Email address\" name=\"email\" hint=\"For example: name@agency.gov\" required type=\"email\" validate=\"email\"></civ-text-input>\n      <civ-text-input label=\"Phone number\" name=\"phone\" hint=\"For example: (555) 123-4567\" type=\"tel\" mask=\"phone-us\"></civ-text-input>\n      <civ-textarea label=\"Describe your question or concern\" name=\"message\" hint=\"Provide as much detail as possible\" required maxlength=\"2000\"></civ-textarea>\n      <civ-checkbox label=\"I would like a response by email\" name=\"email-response\" checked></civ-checkbox>\n      <div class=\"civ-mt-4\">\n        <civ-button type=\"submit\">Submit inquiry</civ-button>\n      </div>\n    </civ-form>",
       "source": "packages/form-patterns/src/form/civ-form.stories.ts"
+    },
+    {
+      "story": "GovernmentLeaveRequest",
+      "name": "Usage: Federal leave request",
+      "category": "Forms/Inputs/Date Range Picker",
+      "html": "<civ-form\n      form-label=\"Federal leave request\"\n      @civ-submit=\"${(e: CustomEvent) => {\n        alert(JSON.stringify(e.detail.values));\n      }}\"\n    >\n      <civ-date-range-picker\n        label=\"Leave dates\"\n        name=\"leave\"\n        min-range-days=\"1\"\n        max-range-days=\"30\"\n        hint=\"Provide the first and last day you'll be on leave\"\n        required\n      ></civ-date-range-picker>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit request</civ-button>\n    </civ-form>",
+      "source": "packages/inputs/src/date-range-picker/civ-date-range-picker.stories.ts"
+    },
+    {
+      "story": "GovernmentNotificationSettings",
+      "name": "Usage: Notification Preferences",
+      "category": "Forms/Inputs/Toggle",
+      "html": "<civ-form\n      form-label=\"Communication preferences\"\n      @civ-submit=${(e: CustomEvent) => {\n        const values = Object.entries(e.detail.values ?? {})\n          .map(([k, v]) =>",
+      "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
     },
     {
       "story": "MultiStepForm",
@@ -3126,13 +3161,6 @@
       "story": "Disabled",
       "category": "Forms/Inputs/Memorable Date",
       "html": "<civ-memorable-date legend=\"Date of birth\" name=\"dob\" value=\"1990-07-04\" disabled></civ-memorable-date>",
-      "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
-    },
-    {
-      "story": "GovernmentIdentityVerification",
-      "name": "Usage: Identity Verification",
-      "category": "Forms/Inputs/Memorable Date",
-      "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        const data = new FormData(e.target as HTMLFormElement);\n        alert(JSON.stringify(Object.fromEntries(data)));\n      }}\"\n    >\n      <h3 class=\"civ-m-0 civ-mb-4 civ-text-xl\">Verify your identity</h3>\n      <civ-memorable-date legend=\"Date of birth\" hint=\"For example: January 15 1990\" name=\"dob\" required></civ-memorable-date>\n      <civ-memorable-date legend=\"Date of marriage (if applicable)\" hint=\"For example: June 10 2015\" name=\"marriage-date\"></civ-memorable-date>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Verify</civ-button>\n    </form>",
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
     },
     {
@@ -5362,13 +5390,6 @@
       "story": "Disabled",
       "category": "Forms/Inputs/Textarea",
       "html": "<civ-textarea label=\"Previous submission\" name=\"previous\" value=\"This field cannot be edited after submission.\" disabled></civ-textarea>",
-      "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
-    },
-    {
-      "story": "GovernmentAppealForm",
-      "name": "Usage: Appeal Justification",
-      "category": "Forms/Inputs/Textarea",
-      "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        const form = e.target as HTMLFormElement;\n        const data = new FormData(form);\n        alert(JSON.stringify(Object.fromEntries(data)));\n      }}\"\n    >\n      <civ-textarea label=\"Reason for appeal\" name=\"appeal-reason\" hint=\"Explain why you believe the decision was incorrect. Include relevant dates and reference numbers.\" required maxlength=\"2000\" rows=\"8\"></civ-textarea>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit appeal</civ-button>\n    </form>",
       "source": "packages/inputs/src/textarea/civ-textarea.stories.ts"
     },
     {

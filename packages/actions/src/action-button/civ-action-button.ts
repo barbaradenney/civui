@@ -4,6 +4,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, devWarn, sanitizeHref, t } from '@civui/core';
 
 export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
+export type ActionButtonSpacing = 'default' | 'sm';
 
 /**
  * CivUI Action Button
@@ -31,6 +32,7 @@ export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
  *
  * @prop {string} label - Button text
  * @prop {ActionButtonVariant} variant - Visual variant
+ * @prop {ActionButtonSpacing} spacing - Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` (compact form controls in data-grid cell editors, dense toolbars).
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  * @prop {boolean} pressed - Toggle pressed state (for toolbar toggles)
@@ -56,6 +58,7 @@ export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
 export class CivActionButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String }) variant: ActionButtonVariant = 'tertiary';
+  @property({ type: String }) spacing: ActionButtonSpacing = 'default';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) pressed: boolean | undefined = undefined;
@@ -94,6 +97,7 @@ export class CivActionButton extends CivBaseElement {
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-action-btn--link' : '',
       this.iconOnly ? 'civ-action-btn--icon-only' : '',
+      this.spacing === 'sm' ? 'civ-action-btn--sm' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
     ]
       .filter(Boolean)

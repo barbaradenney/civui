@@ -351,7 +351,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
           <button
             id="${this._buttonId}"
             type="button"
-            class="civ-action-btn civ-action-btn--tertiary"
+            class="civ-action-btn civ-action-btn--tertiary${isCompact ? ' civ-action-btn--sm' : ''}"
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"

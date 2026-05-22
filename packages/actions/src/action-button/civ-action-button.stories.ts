@@ -10,6 +10,7 @@ const meta: Meta = {
   argTypes: {
     label: { control: 'text' },
     variant: { control: 'select', options: ['primary', 'secondary', 'tertiary'] },
+    spacing: { control: 'select', options: ['default', 'sm'] },
     pressed: { control: 'boolean' },
     disabled: { control: 'boolean' },
     iconStart: { control: 'text' },
@@ -31,6 +32,38 @@ export const AllVariants: Story = {
       <civ-action-button label="Primary" variant="primary"></civ-action-button>
       <civ-action-button label="Secondary" variant="secondary"></civ-action-button>
       <civ-action-button label="Tertiary" variant="tertiary"></civ-action-button>
+    </div>
+  `,
+};
+
+export const Spacing: Story = {
+  name: 'Spacing — default vs sm',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`spacing="sm"` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` in dense surfaces like data-grid cell editors and compact input-groups.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-4">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="default"</p>
+        <div class="civ-flex civ-gap-2 civ-items-center">
+          <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+          <civ-action-button label="Save" variant="primary"></civ-action-button>
+          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+        </div>
+      </div>
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
+        <div class="civ-flex civ-gap-2 civ-items-center">
+          <civ-action-button label="Edit" variant="tertiary" spacing="sm"></civ-action-button>
+          <civ-action-button label="Save" variant="primary" spacing="sm"></civ-action-button>
+          <civ-action-button label="Remove" variant="tertiary" danger spacing="sm"></civ-action-button>
+        </div>
+      </div>
     </div>
   `,
 };

@@ -1210,7 +1210,7 @@ All Tailwind utilities use the \`civ-\` prefix:
 | \`civ-text-warning\` / \`civ-bg-warning\` | Warning messages |
 | \`civ-text-success\` / \`civ-bg-success\` | Success confirmations |
 | \`civ-text-info\` / \`civ-bg-info\` | Informational messages |
-| \`civ-text-base\` / \`civ-bg-base\` | Default text and backgrounds |
+| \`civ-bg-base\` / \`civ-border-base\` | Default neutral backgrounds and borders |
 
 Each color has shades: \`lightest\`, \`lighter\`, \`light\`, DEFAULT, \`vivid\` (primary only), \`dark\`, \`darker\`.
 

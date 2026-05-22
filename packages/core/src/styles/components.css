@@ -194,7 +194,7 @@
   /* ── File Item (matches civ-list-item__row layout) ──────────── */
 
   .civ-file-item {
-    @apply civ-flex civ-items-start civ-justify-between civ-gap-3 civ-py-3 civ-px-0 civ-text-base;
+    @apply civ-flex civ-items-center civ-justify-between civ-gap-3 civ-py-3 civ-px-0 civ-text-base;
   }
 
   .civ-file-item + .civ-file-item {
@@ -215,16 +215,10 @@
      defaults section above. Without it, borders don't paint on the
      `.civ-list--dividers` rule (custom elements default to inline). */
 
-  /* Row: vertical + horizontal padding, no color side-effect.
-     `civ-text-base` would emit `font-size: var(...base...)` AND
-     `color: var(--civ-color-base-DEFAULT)` because Tailwind generates
-     both a font-size utility and a color utility under the same name
-     (the `base` key collides between the colors and fontSize scales).
-     The color rule grayed every non-linked row's text. We want only
-     the font-size, so set it explicitly. */
+  /* Row: vertical + horizontal padding. The `civ-text-base` color
+     collision is neutralized globally in civ.css. */
   .civ-list-item__row {
-    @apply civ-py-3 civ-px-6;
-    font-size: var(--civ-typography-fontSize-base);
+    @apply civ-py-3 civ-px-6 civ-text-base;
   }
 
   /* Active-task indicator for task-list rows. Consumers that want a
@@ -250,7 +244,7 @@
      anything else upstream. */
   .civ-list-item:has(> .civ-list-item__content),
   .civ-list-item:has(> .civ-list-item__actions) {
-    @apply civ-flex civ-items-start civ-justify-between civ-gap-3;
+    @apply civ-flex civ-items-center civ-justify-between civ-gap-3;
     list-style: none;
     padding-inline-start: 0;
   }
@@ -415,8 +409,13 @@
 
   /* ── Time Picker ──────────────────────────────────────────── */
 
+  /* Align by the top so the field labels (Hour / Minute / AM/PM) line
+     up on the same row regardless of small height differences between
+     `<civ-select>` and `<civ-segmented-control>`. Aligning by the
+     bottom (the previous behavior) pulled the shorter AM/PM column
+     down and visibly broke the label row. */
   .civ-time-picker-fields {
-    @apply civ-flex civ-flex-wrap civ-items-end;
+    @apply civ-flex civ-flex-wrap civ-items-start;
     gap: var(--civ-spacing-4, 16px);
   }
 
@@ -2126,7 +2125,7 @@
   }
 
   .civ-modal__header {
-    @apply civ-flex civ-items-start civ-justify-between civ-mb-4;
+    @apply civ-flex civ-items-center civ-justify-between civ-mb-4;
   }
 
   .civ-modal__close {
@@ -2220,7 +2219,7 @@
   }
 
   .civ-drawer__header {
-    @apply civ-flex civ-items-start civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
+    @apply civ-flex civ-items-center civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
     background-color: var(--civ-drawer-bg);
   }
 
@@ -2303,6 +2302,16 @@
   .civ-action-btn--icon-only {
     aspect-ratio: 1 / 1;
     padding: var(--civ-spacing-1);
+  }
+
+  /* Compact size — pairs with `.civ-input--sm` so action buttons in
+     dense surfaces (data-grid cell editors, compact input-groups) match
+     the input height instead of towering over it. */
+  .civ-action-btn--sm {
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    min-width: 2rem;
+    min-height: 2rem;
+    font-size: var(--civ-typography-fontSize-sm);
   }
 
   .civ-action-btn--primary {
@@ -3472,6 +3481,15 @@
     @apply civ-py-2;
   }
 
+  /* `.civ-action-btn--sm` keeps its own compact vertical padding inside
+     an input-group so it lines up with `.civ-input--sm`. Higher specificity
+     than the bare `> button` rule above. */
+  .civ-input-group > civ-action-button button.civ-action-btn--sm,
+  .civ-input-group > button.civ-action-btn--sm {
+    padding-top: var(--civ-spacing-1);
+    padding-bottom: var(--civ-spacing-1);
+  }
+
   /* ── Link variants ─────────────────────────────────────────── */
   /* Two-tier scale — no button-shaped link variant. For navigation
      that should look like a button, use `<civ-button href>` (the
@@ -4395,8 +4413,7 @@
 
   /* Secondary — tinted background pill with semantic text */
   .civ-count--style-secondary {
-    @apply civ-px-1.5 civ-py-0;
-    border-radius: 0.625rem;
+    @apply civ-px-1.5 civ-py-0 civ-rounded-full;
     min-width: 1.25rem;
     line-height: 1.25rem;
     text-align: center;
@@ -4444,8 +4461,7 @@
   /* Primary — filled pill for standalone or notification counters. */
 
   .civ-count--style-primary {
-    @apply civ-px-1.5 civ-py-0;
-    border-radius: 0.625rem;
+    @apply civ-px-1.5 civ-py-0 civ-rounded-full;
     min-width: 1.25rem;
     text-align: center;
     line-height: 1.25rem;
@@ -4807,7 +4823,7 @@
 
   .civ-scroll-x::-webkit-scrollbar-thumb {
     background-color: var(--civ-color-base-light);
-    border-radius: 3px;
+    border-radius: var(--civ-border-radius-sm);
   }
 
   .civ-scroll-x::-webkit-scrollbar-thumb:hover {

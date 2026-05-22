@@ -10,6 +10,12 @@ public enum ActionButtonVariant: String, CaseIterable {
     case primary, secondary, tertiary
 }
 
+/// Density variant for an action button. `.sm` shrinks padding and
+/// font-size so the button matches the compact form-input height.
+public enum ActionButtonSpacing: String, CaseIterable {
+    case `default`, sm
+}
+
 /// Compact action button for toolbars, inline form controls, and secondary actions.
 ///
 /// Same variant system as `CivButton` but with smaller padding and font size.
@@ -32,6 +38,9 @@ public struct CivActionButton: View {
 
     /// Visual variant (primary, secondary, tertiary).
     public var variant: ActionButtonVariant
+
+    /// Density variant (default, sm).
+    public var spacing: ActionButtonSpacing
 
     /// Destructive action styling.
     public var isDanger: Bool
@@ -74,6 +83,7 @@ public struct CivActionButton: View {
     public init(
         label: String,
         variant: ActionButtonVariant = .tertiary,
+        spacing: ActionButtonSpacing = .default,
         isDanger: Bool = false,
         isDisabled: Bool = false,
         isPressed: Bool = false,
@@ -87,6 +97,7 @@ public struct CivActionButton: View {
     ) {
         self.label = label
         self.variant = variant
+        self.spacing = spacing
         self.isDanger = isDanger
         self.isDisabled = isDisabled
         self.isPressed = isPressed
@@ -104,10 +115,10 @@ public struct CivActionButton: View {
     public var body: some View {
         Button(action: handleTap) {
             Text(label)
-                .font(.system(size: CivTokens.Typography.FontSize.sm,
+                .font(.system(size: spacing == .sm ? CivTokens.Typography.FontSize.xs : CivTokens.Typography.FontSize.sm,
                               weight: CivTokens.Typography.FontWeight.semibold))
-                .padding(.horizontal, CivTokens.Spacing._3)
-                .padding(.vertical, CivTokens.Spacing._1_5)
+                .padding(.horizontal, spacing == .sm ? CivTokens.Spacing._2 : CivTokens.Spacing._3)
+                .padding(.vertical, spacing == .sm ? CivTokens.Spacing._1 : CivTokens.Spacing._1_5)
                 .foregroundColor(foregroundColor)
                 .background(backgroundColor)
                 .cornerRadius(CivTokens.Border.Radius.default_)

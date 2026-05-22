@@ -4,6 +4,8 @@ sidebar_position: 6
 sidebar_label: Accessibility
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Accessibility
 
 CivUI components are built for WCAG 2.1 AA compliance, which satisfies Section 508 requirements for government applications.
@@ -26,6 +28,10 @@ CivUI components are built for WCAG 2.1 AA compliance, which satisfies Section 5
 | 3.3.2 Labels or Instructions | Visible labels + hint text |
 | 3.3.3 Error Suggestion | Error messages include correction guidance |
 | 4.1.2 Name, Role, Value | ElementInternals + ARIA roles |
+
+## Keyboard-only flow
+
+<StoryEmbed id="foundations-accessibility--keyboard-only" />
 
 ## Keyboard Patterns
 
@@ -62,6 +68,16 @@ You don't add a class:
 
 Focus ring colors automatically invert in dark mode.
 
+<StoryEmbed id="foundations-accessibility--focus-ring" />
+
+### Inverse focus ring on dark surfaces
+
+<StoryEmbed id="foundations-accessibility--focus-ring-inverse" />
+
+### Skip link
+
+<StoryEmbed id="foundations-accessibility--skip-link-affordance" />
+
 ## Screen Reader Announcements
 
 Use the `announce` function from `@civui/core` to queue messages to `aria-live` regions:
@@ -79,6 +95,8 @@ announce('Error: payment declined', 'assertive');
 ```
 
 The announcement queue is capped at 10 messages with oldest-drop strategy.
+
+<StoryEmbed id="foundations-accessibility--screen-reader-announcer" />
 
 ## RTL Support
 
@@ -100,3 +118,5 @@ Components include `@media (forced-colors: active)` overrides for date pickers, 
 - Color is never the sole error indicator -- errors use text + border
 - Error text states what went wrong and how to fix it
 - Required fields render an asterisk and set `aria-required="true"`
+
+<StoryEmbed id="foundations-accessibility--error-identification" />

@@ -4,6 +4,8 @@ sidebar_position: 6.5
 sidebar_label: Handling PII
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Handling PII
 
 PII (personally identifiable information). Social Security numbers,
@@ -26,6 +28,10 @@ than this page covers. If you're collecting PHI, consult your
 CIO/CISO and treat the PII defaults below as a floor, not a ceiling.
 :::
 
+## PII-aware inputs at a glance
+
+<StoryEmbed id="foundations-handling-pii--ssn-full-mode" />
+
 ## What CivUI flags as PII
 
 A component is "PII-aware" when it carries the `data-civ-pii`
@@ -44,6 +50,8 @@ automatically for the built-in PII presets:
 VA file number is the one preset that doesn't carry the marker
 automatically (no mask preset; uses the validator instead). Add
 `data-persist-exclude` to keep its value out of autosave snapshots.
+
+<StoryEmbed id="foundations-handling-pii--va-file-number-requires-opt-in" />
 
 ## The four protection layers
 
@@ -94,13 +102,15 @@ with a `mode="last4"` opt-in that switches the mask to
 <civ-ssn label="Last 4 of Social Security number" name="ssn-last4" mode="last4" required></civ-ssn>
 ```
 
+<StoryEmbed id="foundations-handling-pii--ssn-last-4-pattern" />
+
 Same principle for other identifiers. Collect the minimum the
 business process actually requires. Document the "why we ask" inline
 with `<civ-disclosure>`:
 
 ```html
 <civ-ssn name="ssn" required></civ-ssn>
-<civ-disclosure summary="Why we ask">
+<civ-disclosure label="Why we ask">
   We use the last 4 digits to verify your identity with the IRS.
   We never share your full Social Security number.
 </civ-disclosure>
@@ -108,6 +118,12 @@ with `<civ-disclosure>`:
 
 See the [disclosure component](../components/layout/disclosure.mdx)
 for the full "Why we ask?" pattern.
+
+<StoryEmbed id="foundations-handling-pii--why-we-ask" />
+
+## Confirmation pages — never echo the full identifier
+
+<StoryEmbed id="foundations-handling-pii--masked-confirmation-display" />
 
 ## Anti-patterns
 

@@ -4,6 +4,8 @@ sidebar_position: 17
 sidebar_label: Horizontal Scroll
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Horizontal Scroll
 
 A utility class. `.civ-scroll-x`. For content that needs to scroll horizontally on viewports too narrow to show it all: tab strips, filter chips, toolbar overflow, wide tables. The class adds the scroll behavior + visual affordances; the consumer is responsible for the inner flex layout and any keyboard / a11y wiring that the contained content needs.
@@ -24,6 +26,8 @@ A generic wrapper component would either flatten those differences in ways that 
 Components that need horizontal scrolling for their built-in chrome (`civ-data-grid`) have their own scroll wrapper rather than composing this utility, so they can wire the keyboard / `role="region"` behavior in one place.
 
 ## Usage
+
+<StoryEmbed id="foundations-horizontal-scroll--default" />
 
 ```html
 <div class="civ-scroll-x">
@@ -56,6 +60,8 @@ If you genuinely need the native hidden-on-Safari behavior back (rare. Usually o
 
 Add scroll-snap behavior so children align to the leading edge of the scroller after each scroll gesture. Useful for tab strips and chip rows where each item should snap cleanly into view:
 
+<StoryEmbed id="foundations-horizontal-scroll--with-snap" />
+
 ```html
 <div class="civ-scroll-x civ-scroll-x--snap">
   <div class="civ-flex civ-gap-2" style="flex-wrap: nowrap;">
@@ -71,6 +77,8 @@ The `--snap` variant uses `scroll-snap-type: x proximity`, which is the gentler 
 ### `.civ-scroll-x--fade`
 
 Apply a CSS mask so the leading and trailing edges fade out, signalling that there's more content off-screen. The fade width comes from `--civ-spacing-6` so it scales with the density system:
+
+<StoryEmbed id="foundations-horizontal-scroll--with-fade" />
 
 ```html
 <div class="civ-scroll-x civ-scroll-x--fade">…</div>
@@ -90,6 +98,8 @@ Override the fade width inline if needed:
 The utility class itself does not add ARIA. The right roles depend on what's inside the scroller. Three patterns:
 
 ### Pattern A: The contained content is a table
+
+<StoryEmbed id="foundations-horizontal-scroll--table-scroll-pattern" />
 
 ```html
 <div

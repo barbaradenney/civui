@@ -4,6 +4,8 @@ sidebar_position: 13
 sidebar_label: Motion
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Motion
 
 CivUI uses design tokens for all transitions and animations. Hardcoded durations and easings are not allowed. Every motion value comes from the token system so it can be adjusted globally and respects reduced-motion preferences.
@@ -17,6 +19,8 @@ CivUI uses design tokens for all transitions and animations. Hardcoded durations
 | `--civ-motion-duration-normal` | `200ms` | Dropdowns, expanding panels |
 | `--civ-motion-duration-slow` | `300ms` | Progress bars, larger transitions |
 | `--civ-motion-duration-slower` | `500ms` | Loading spinners, complex animations |
+
+<StoryEmbed id="foundations-motion--duration-scale" />
 
 ## Easing tokens
 
@@ -53,6 +57,8 @@ Always use token variables instead of hardcoded values:
 | Loader spinner | Continuous rotation | `slower` (500ms) | `linear` |
 | Link/Button | Background color on hover | `fast` (100ms) |. |
 
+<StoryEmbed id="foundations-motion--component-motion" />
+
 ## Reduced motion (WCAG 2.1 AA)
 
 CivUI globally disables all animations and transitions when the user has enabled reduced motion in their OS settings:
@@ -71,6 +77,8 @@ CivUI globally disables all animations and transitions when the user has enabled
 ```
 
 This is applied automatically. No opt-in required. Every CivUI component respects this setting. State changes still happen (toggling, checking, expanding), they just happen instantly instead of animating.
+
+<StoryEmbed id="foundations-motion--reduced-motion" />
 
 ### Testing reduced motion
 

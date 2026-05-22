@@ -3,6 +3,8 @@ title: Destructive Actions
 sidebar_label: Destructive actions
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Destructive Actions in CivUI
 
 When an action **destroys user data or persistent state**, CivUI confirms
@@ -10,6 +12,10 @@ via a `civ-modal`. Never via an inline pattern (two-click confirm,
 hold-to-delete, swipe-to-delete). This rule exists for accessibility:
 inline patterns interact badly with screen readers, motor impairments,
 cognitive load, and mobile-SR gestures.
+
+## Live example — remove a dependent
+
+<StoryEmbed id="foundations-destructive-actions--confirm-remove" />
 
 ## What counts as "destructive"
 
@@ -90,6 +96,8 @@ analogous) bypass option on the imperative method.
 
 ## Wiring example
 
+<StoryEmbed id="foundations-destructive-actions--confirm-delete-file" />
+
 ```ts
 const repeater = document.querySelector('civ-repeater');
 const modal = document.querySelector('#confirm-remove-modal');
@@ -149,6 +157,8 @@ to type-to-confirm:
 This pattern is out of scope for `civ-repeater` (rows aren't high-stakes
 enough). Reserve it for application-level destructive actions where the
 user can't easily redo what they undid.
+
+<StoryEmbed id="foundations-destructive-actions--type-to-confirm" />
 
 ## Anti-patterns. Do not introduce
 

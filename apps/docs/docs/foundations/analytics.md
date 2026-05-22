@@ -4,9 +4,15 @@ sidebar_position: 11
 sidebar_label: Analytics
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Analytics
 
 CivUI includes a built-in analytics event system that tracks user interactions without exposing PII. Every interactive component fires a `civ-analytics` custom event that bubbles to the document root, making it easy to wire up any analytics provider with a single listener.
+
+## Watch the events fire
+
+<StoryEmbed id="foundations-analytics--interact-and-watch" />
 
 ## How it works
 
@@ -60,6 +66,8 @@ Add `disable-analytics` to any component to suppress its analytics events:
 ```html
 <civ-text-input name="ssn" disable-analytics></civ-text-input>
 ```
+
+<StoryEmbed id="foundations-analytics--opt-out" />
 
 ## Integration examples
 

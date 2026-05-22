@@ -108,6 +108,12 @@ async function buildComponentMap(): Promise<Map<string, ComponentMeta>> {
     const attrs = new Set<string>();
 
     // Inherited bases — seed prop sets for the known base classes.
+    // Every CivUI custom element extends CivBaseElement, which exposes
+    // disable-analytics.
+    const BASE_RE = /\b(CivBaseElement|CivFormElement|CivBooleanFormElement|CivCompoundElement|PresetInputWrapper)\b/;
+    if (BASE_RE.test(src)) {
+      attrs.add('disable-analytics');
+    }
     // CivFormElement and anything that walks through it carry the
     // standard form-control chrome attrs.
     const FORM_BASE_RE = /\b(CivFormElement|CivBooleanFormElement|CivCompoundElement|PresetInputWrapper)\b/;

@@ -4,9 +4,15 @@ sidebar_position: 5
 sidebar_label: Icons
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Icons
 
-CivUI ships 14 inline SVG icons based on Material Icons Outlined. Only the icons CivUI's own components reference. No font files, no external requests, no pseudo-element hacks. Just lightweight SVG paths inlined in the component. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
+CivUI ships ~40 inline SVG icons based on Material Icons Outlined. Only the icons CivUI's own components reference. No font files, no external requests, no pseudo-element hacks. Just lightweight SVG paths inlined in the component. For richer icon needs, the full Material Symbols catalog is available as an opt-in (see [Beyond the Built-In Set](#beyond-the-built-in-set) below).
+
+## Built-in gallery
+
+<StoryEmbed id="foundations-icons--gallery" />
 
 ## How It Works
 
@@ -57,12 +63,32 @@ Each icon renders as an inline `<svg>` element with Material Icons Outlined path
 
 You can also pass any CSS length value: `size="24px"`, `size="1.25rem"`.
 
+<StoryEmbed id="foundations-icons--sizes" />
+
+### Scales with `font-size`
+
+Because each icon uses `currentColor` fill and renders at `0.875em`, icons inherit the text size of their container. The same `<civ-icon>` markup renders differently inside small captions, body text, and large headings:
+
+<StoryEmbed id="foundations-icons--scales-with-font-size" />
+
+### Inherits color from `currentColor`
+
+Wrap the icon in a `civ-text-*` color utility (or apply one to a parent) — the icon picks up the same color:
+
+<StoryEmbed id="foundations-icons--inherits-color" />
+
 ## Accessibility
 
 - **Decorative icons** (no `label`): rendered with `aria-hidden="true"`. Screen readers ignore them.
 - **Meaningful icons** (with `label`): rendered with `role="img"` and `aria-label`. Screen readers announce the label.
 
 Always set `label` on icons that convey information the user needs, such as status indicators or icon-only buttons.
+
+<StoryEmbed id="foundations-icons--accessible-vs-decorative" />
+
+## In context
+
+<StoryEmbed id="foundations-icons--in-context" />
 
 ## Native Platform Mapping
 

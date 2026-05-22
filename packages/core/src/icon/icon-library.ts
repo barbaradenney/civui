@@ -164,6 +164,147 @@ export const icons: Record<string, IconDef> = {
     ios: 'exclamationmark.triangle',
     android: 'warning',
   },
+  // ─── Common UI actions ─────────────────────────────────────────
+  edit: {
+    label: 'Edit',
+    path: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',
+    ios: 'pencil',
+    android: 'edit',
+  },
+  trash: {
+    label: 'Delete',
+    path: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',
+    ios: 'trash',
+    android: 'delete',
+  },
+  copy: {
+    label: 'Copy',
+    path: 'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z',
+    ios: 'doc.on.doc',
+    android: 'content_copy',
+  },
+  print: {
+    label: 'Print',
+    path: 'M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z',
+    ios: 'printer',
+    android: 'print',
+  },
+  share: {
+    label: 'Share',
+    path: 'M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z',
+    ios: 'square.and.arrow.up',
+    android: 'share',
+  },
+  open: {
+    label: 'Open',
+    path: 'M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z',
+    ios: 'arrow.up.right.square',
+    android: 'open_in_new',
+  },
+  // ─── Navigation arrows ─────────────────────────────────────────
+  'arrow-back': {
+    label: 'Back',
+    path: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',
+    ios: 'arrow.left',
+    android: 'arrow_back',
+  },
+  'arrow-down': {
+    label: 'Down',
+    path: 'M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z',
+    ios: 'arrow.down',
+    android: 'arrow_downward',
+  },
+  'arrow-left': {
+    label: 'Left',
+    path: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',
+    ios: 'arrow.left',
+    android: 'arrow_back',
+  },
+  'arrow-right': {
+    label: 'Right',
+    path: 'M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z',
+    ios: 'arrow.right',
+    android: 'arrow_forward',
+  },
+  'arrow-up': {
+    label: 'Up',
+    path: 'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z',
+    ios: 'arrow.up',
+    android: 'arrow_upward',
+  },
+  // ─── Common content / chrome ──────────────────────────────────
+  home: {
+    label: 'Home',
+    path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z',
+    ios: 'house',
+    android: 'home',
+  },
+  menu: {
+    label: 'Menu',
+    path: 'M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z',
+    ios: 'line.3.horizontal',
+    android: 'menu',
+  },
+  minus: {
+    label: 'Remove',
+    path: 'M19 13H5v-2h14v2z',
+    ios: 'minus',
+    android: 'remove',
+  },
+  help: {
+    label: 'Help',
+    path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z',
+    ios: 'questionmark.circle',
+    android: 'help',
+  },
+  settings: {
+    label: 'Settings',
+    path: 'M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.09-.16-.26-.25-.44-.25-.06 0-.12.01-.17.03l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.06-.02-.12-.03-.18-.03-.17 0-.34.09-.43.25l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.09.16.26.25.44.25.06 0 .12-.01.17-.03l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.06.02.12.03.18.03.17 0 .34-.09.43-.25l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z',
+    ios: 'gearshape',
+    android: 'settings',
+  },
+  // ─── People / docs / time ─────────────────────────────────────
+  person: {
+    label: 'Person',
+    path: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',
+    ios: 'person',
+    android: 'person',
+  },
+  user: {
+    label: 'User',
+    path: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',
+    ios: 'person',
+    android: 'person',
+  },
+  document: {
+    label: 'Document',
+    path: 'M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8zm0 4h8v2H8z',
+    ios: 'doc.text',
+    android: 'description',
+  },
+  calendar: {
+    label: 'Calendar',
+    path: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z',
+    ios: 'calendar',
+    android: 'calendar_today',
+  },
+  // ─── Aliases ──────────────────────────────────────────────────
+  // Material Icons uses the abbreviated `more-vert` / `more-horiz`
+  // (already registered above). Several stories were authored with
+  // the longer English names; register aliases pointing at the same
+  // SVG paths so both spellings work.
+  'more-vertical': {
+    label: 'More',
+    path: 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
+    ios: 'ellipsis',
+    android: 'more_vert',
+  },
+  'more-horizontal': {
+    label: 'More',
+    path: 'M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
+    ios: 'ellipsis',
+    android: 'more_horiz',
+  },
 };
 
 /**
@@ -181,6 +322,14 @@ export function registerIcon(name: string, def: IconDef): void {
   icons[name] = def;
 }
 
+// Snapshot the built-in registry at module-load time so `resetIcons()`
+// can restore mutated entries (not just drop newly-added ones). A test
+// that calls `registerIcon('home', { path: '' })` was clobbering the
+// built-in `home` def, and `resetIcons()` only deleted *additions* —
+// the mutated built-in stayed broken for the next test.
+const _builtInIconSnapshot: Record<string, IconDef> = Object.fromEntries(
+  Object.entries(icons).map(([name, def]) => [name, { ...def }]),
+);
 const _builtInIconNames = new Set(Object.keys(icons));
 
 /** Reset icon registry to built-in icons only (for test isolation). */
@@ -188,6 +337,9 @@ export function resetIcons(): void {
   for (const key of Object.keys(icons)) {
     if (!_builtInIconNames.has(key)) {
       delete icons[key];
+    } else {
+      // Restore the original built-in def in case a test mutated it.
+      icons[key] = { ..._builtInIconSnapshot[key] };
     }
   }
 }

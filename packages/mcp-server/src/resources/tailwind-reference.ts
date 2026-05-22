@@ -78,7 +78,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lighter\`).
 | lightest | #f0f0f0 | #2d2d2d | \`civ-bg-base-lightest\` |
 | lighter | #dfe1e2 | #3d3d3d | \`civ-bg-base-lighter\` |
 | light | #a9aeb1 | #8a8a8a | \`civ-text-base-light\`, \`civ-border-base-light\` |
-| DEFAULT | #71767a | #a0a0a0 | \`civ-text-base\` |
+| DEFAULT | #71767a | #a0a0a0 | \`civ-bg-base\`, \`civ-border-base\` (NOT \`civ-text-base\` — that's a font-size utility) |
 | dark | #565c65 | #c4c4c4 | \`civ-text-base-dark\` |
 | darker | #3d4551 | #e0e0e0 | \`civ-text-base-darker\` |
 | darkest | #1b1b1b | #f0f0f0 | \`civ-text-base-darkest\` |

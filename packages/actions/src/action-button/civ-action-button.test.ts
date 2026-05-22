@@ -131,6 +131,18 @@ describe('civ-action-button', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
+  it('omits civ-action-btn--sm at default spacing', async () => {
+    const el = await fixture('<civ-action-button label="Edit"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.classList.contains('civ-action-btn--sm')).toBe(false);
+  });
+
+  it('applies civ-action-btn--sm when spacing="sm"', async () => {
+    const el = await fixture('<civ-action-button label="Edit" spacing="sm"></civ-action-button>');
+    const btn = el.querySelector('button');
+    expect(btn!.classList.contains('civ-action-btn--sm')).toBe(true);
+  });
+
   it('updates aria-pressed when pressed changes dynamically', async () => {
     const el = await fixture('<civ-action-button label="Bold"></civ-action-button>') as any;
     const btn = el.querySelector('button')!;

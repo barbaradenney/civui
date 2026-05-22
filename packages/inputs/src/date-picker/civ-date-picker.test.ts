@@ -1144,6 +1144,18 @@ describe('civ-date-picker', () => {
       const el = await fixture('<civ-date-picker spacing="sm" aria-label="x"></civ-date-picker>');
       expect(el.querySelector('input')!.classList.contains('civ-input--sm')).toBe(true);
     });
+
+    it('applies civ-action-btn--sm to the trigger button so it matches the compact input height', async () => {
+      const el = await fixture('<civ-date-picker spacing="sm" aria-label="x"></civ-date-picker>');
+      const trigger = el.querySelector('button[aria-haspopup="dialog"]')!;
+      expect(trigger.classList.contains('civ-action-btn--sm')).toBe(true);
+    });
+
+    it('omits civ-action-btn--sm from the trigger button at default spacing', async () => {
+      const el = await fixture('<civ-date-picker label="When" aria-label="x"></civ-date-picker>');
+      const trigger = el.querySelector('button[aria-haspopup="dialog"]')!;
+      expect(trigger.classList.contains('civ-action-btn--sm')).toBe(false);
+    });
   });
 });
 

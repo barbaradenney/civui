@@ -41,7 +41,7 @@ export function generateProgressBar(
     const isComplete = i < currentIndex;
     const isCurrent = i === currentIndex;
 
-    let statusClass = 'civ-bg-base-lighter civ-text-base';
+    let statusClass = 'civ-bg-base-lighter civ-text-base-darker';
     let indicator = `${i + 1}`;
     if (isComplete) {
       statusClass = 'civ-bg-success civ-text-white';

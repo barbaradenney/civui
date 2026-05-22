@@ -53,6 +53,12 @@ props:
       type: boolean
       default: false
       description: 'Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconSt...'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` in dense surfaces like data-grid cell editors or compact input-groups'
 
 libraryOverrides:
   dependencies:

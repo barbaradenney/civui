@@ -51,6 +51,7 @@ fun CivActionButton(
     label: String,
     modifier: Modifier = Modifier,
     variant: String = "tertiary",
+    spacing: String = "default",
     type: String = "button",
     iconStart: String = "",
     iconEnd: String = "",
@@ -102,7 +103,7 @@ fun CivActionButton(
                 Text(
                     text = label,
                     style = TextStyle(
-                        fontSize = CivTokens.Typography.FontSize.sm,
+                        fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -123,7 +124,7 @@ fun CivActionButton(
                     Text(
                         text = label,
                         style = TextStyle(
-                            fontSize = CivTokens.Typography.FontSize.sm,
+                            fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                             fontWeight = FontWeight.SemiBold,
                         ),
                     )
@@ -141,7 +142,7 @@ fun CivActionButton(
                     Text(
                         text = label,
                         style = TextStyle(
-                            fontSize = CivTokens.Typography.FontSize.sm,
+                            fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                             fontWeight = FontWeight.SemiBold,
                         ),
                     )
@@ -162,7 +163,7 @@ fun CivActionButton(
                 Text(
                     text = label,
                     style = TextStyle(
-                        fontSize = CivTokens.Typography.FontSize.sm,
+                        fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -183,7 +184,7 @@ fun CivActionButton(
                 Text(
                     text = label,
                     style = TextStyle(
-                        fontSize = CivTokens.Typography.FontSize.sm,
+                        fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -204,7 +205,7 @@ fun CivActionButton(
                 Text(
                     text = label,
                     style = TextStyle(
-                        fontSize = CivTokens.Typography.FontSize.sm,
+                        fontSize = if (spacing == "sm") CivTokens.Typography.FontSize.xs else CivTokens.Typography.FontSize.sm,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )

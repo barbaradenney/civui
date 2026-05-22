@@ -15,6 +15,12 @@ const schema: ComponentSchema = {
       default: 'tertiary',
       values: ['primary', 'secondary', 'tertiary'],
     },
+    spacing: {
+      type: 'enum',
+      description: 'Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` in dense surfaces like data-grid cell editors or compact input-groups',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     danger: {
       type: 'boolean',
       description: 'Apply destructive-action styling',

@@ -58,6 +58,21 @@ const config: StorybookConfig = {
     config.build.rollupOptions = config.build.rollupOptions || {};
     (config.build.rollupOptions as any).treeshake = false;
 
+    // Stub Node-only globals that the bundled `twig` library (3.0.0,
+    // pulled in via vite-plugin-twig-drupal) references when feature-
+    // detecting whether it can `require('fs')`. In the browser those
+    // references throw "ReferenceError: process is not defined" and
+    // log "Missing fs and path modules" on every Drupal SDC story
+    // load. Defining `process` as an empty env object lets the
+    // try/catch around the require silently fail, suppressing the
+    // noise. (The fs loader isn't used — the plugin feeds templates
+    // inline.)
+    config.define = {
+      ...(config.define as Record<string, string> | undefined),
+      'process.env': JSON.stringify({}),
+      process: JSON.stringify({ env: {}, browser: true }),
+    };
+
     // Twig plugin for Drupal SDC preview
     config.plugins = config.plugins || [];
     (config.plugins as any[]).push(twig({

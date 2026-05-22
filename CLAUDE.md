@@ -205,7 +205,7 @@ Input masking engine in `@civui/core` with blur-mode default (mask on blur, raw 
 
 ## Icon System
 
-14 inline SVG icons based on Material Icons Outlined — no font files, no external requests. Each icon is an SVG path in a 24×24 viewBox with `fill="currentColor"`, so icons inherit color and scale with font-size. Use `<civ-icon name="..." label="...">`.
+~40 inline SVG icons based on Material Icons Outlined — no font files, no external requests. Each icon is an SVG path in a 24×24 viewBox with `fill="currentColor"`, so icons inherit color and scale with font-size. Use `<civ-icon name="..." label="...">`. The registry is verified by `pnpm lint:icon-names` (component source) and the `every built-in icon has a label, path, and platform mappings` test in `civ-icon.test.ts`.
 
 Adding a new icon:
 1. Find the SVG path from [Material Icons](https://fonts.google.com/icons), [Lucide](https://lucide.dev/), or any SVG icon set.
@@ -281,7 +281,7 @@ That guide covers:
 - Preset inputs, compound fields, overlays, link variants, and form patterns
 - Validation system (16 validators, declarative `validate` attribute)
 - Mask system (blur-mode default, 6 presets)
-- Icon system (14 inline SVG icons from Material Icons Outlined, with optional font opt-in)
+- Icon system (~40 inline SVG icons from Material Icons Outlined, with optional font opt-in)
 - Platform support (iOS, Android, Drupal SDC — 4 platforms with 85%+ parity)
 - Component selection decision tables (checkbox vs toggle, select vs combobox, date picker vs memorable date)
 - Government design patterns (Section 508, plain language, form validation for .gov)

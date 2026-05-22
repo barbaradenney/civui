@@ -371,9 +371,21 @@
      stays empty (no per-field error text renders below — the group
      `error` message above the row carries the user-facing description,
      matching GOV.UK / USWDS conventions). aria-invalid is propagated
-     to the native input/select via `_propagateAriaToChildren` for AT. */
+     to the native input/select via `_propagateAriaToChildren` for AT.
+
+     Border color is set explicitly via `border-inline-start-color`
+     rather than via `civ-border-error` (which sets `border-color`
+     on all four sides). This is defensive: in dark mode the `.civ-input`
+     base sets `border-color: var(--civ-color-base-DEFAULT)` (gray) on
+     the top/right/bottom, and when both rules co-apply some browsers
+     resolved the inline-start side to the gray color from `.civ-input`
+     instead of the red from `civ-border-error`. Using the side-specific
+     property eliminates the ambiguity and the inline-start always
+     reads as error. */
   :is(.civ-memorable-date-month, .civ-memorable-date-day, .civ-memorable-date-year)[data-civ-error="true"] .civ-input {
-    @apply civ-border-error civ-border-s-4;
+    border-inline-start-width: 4px;
+    border-inline-start-style: solid;
+    border-inline-start-color: var(--civ-color-error-DEFAULT);
   }
 
   .civ-income-fields {
@@ -971,9 +983,18 @@
      when their `error` prop is set; without a style rule the error text
      showed in red but the group itself had no visible boundary marking it
      as in-error. Mirror the .civ-input red start-border treatment so the
-     boundary reads the same as a single input in error. */
+     boundary reads the same as a single input in error.
+
+     `border-inline-start-color` is set explicitly (rather than via the
+     `civ-border-error` shorthand which sets all four physical sides)
+     so the color always tracks the inline-start side specifically.
+     The dark-mode `--civ-color-error-DEFAULT` CSS var cascades the
+     value automatically. */
   .civ-fieldset[aria-invalid="true"] {
-    @apply civ-border-s-4 civ-border-error civ-ps-3;
+    @apply civ-ps-3;
+    border-inline-start-width: 4px;
+    border-inline-start-style: solid;
+    border-inline-start-color: var(--civ-color-error-DEFAULT);
   }
 
   .civ-group-layout--vertical {

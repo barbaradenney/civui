@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import '@civui/core';
 import './civ-date-picker.js';
 import '@civui/actions';
+import '@civui/form-patterns/form';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Date Picker',
@@ -117,15 +118,16 @@ export const DensityScale: Story = {
 export const GovernmentAppointmentScheduler: Story = {
   name: 'Usage: Schedule an Appointment',
   render: () => html`
-    <form @submit=${(e: Event) => {
-      e.preventDefault();
-      const fd = new FormData(e.target as HTMLFormElement);
-      alert('Appointment scheduled: ' + fd.get('date'));
-    }}>
+    <civ-form
+      form-label="Schedule appointment"
+      @civ-submit=${(e: CustomEvent) => {
+        alert('Appointment scheduled: ' + (e.detail.values?.date ?? ''));
+      }}
+    >
       <h3 class="civ-m-0 civ-mb-4 civ-text-xl">Schedule your in-person appointment</h3>
       <civ-date-picker label="Preferred date" name="date" hint="Appointments are available Monday through Friday, April 21 to June 30, 2026" required min="2026-04-21" max="2026-06-30"></civ-date-picker>
       <civ-button type="submit" class="civ-mt-2">Schedule appointment</civ-button>
-    </form>
+    </civ-form>
   `,
 };
 

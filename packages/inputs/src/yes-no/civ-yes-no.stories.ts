@@ -3,6 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import './civ-yes-no.js';
 import '@civui/actions';
+import '@civui/form-patterns/form';
 
 const meta: Meta = {
   title: 'Forms/Inputs/Yes No',
@@ -155,11 +156,10 @@ export const WithPreferNotToAnswer: Story = {
 export const GovernmentEligibilityScreening: Story = {
   name: 'Usage: Eligibility Screening',
   render: () => html`
-    <form
-      @submit=${(e: Event) => {
-        e.preventDefault();
-        const fd = new FormData(e.target as HTMLFormElement);
-        const values = Array.from(fd.entries())
+    <civ-form
+      form-label="Eligibility screening"
+      @civ-submit=${(e: CustomEvent) => {
+        const values = Object.entries(e.detail.values ?? {})
           .map(([k, v]) => `${k}=${v}`)
           .join(', ');
         alert('Submitted: ' + values);
@@ -172,6 +172,6 @@ export const GovernmentEligibilityScreening: Story = {
       <div class="civ-flex civ-gap-2 civ-mt-4">
         <civ-button type="submit">Check eligibility</civ-button>
       </div>
-    </form>
+    </civ-form>
   `,
 };

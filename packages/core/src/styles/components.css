@@ -3974,6 +3974,19 @@
     border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
   /*
+   * Inside a sublist, the active rail needs to overlay the
+   * sublist's gray guide line (which sits at the chevron column).
+   * Without this, the rail sits to the right of the line by the
+   * sublist's `padding-inline-start` + `border-inline-start` width
+   * (0.75rem + 1px). A negative margin pulls the link's border out
+   * to the line; the padding is compensated by the same amount so
+   * the text stays put.
+   */
+  .civ-side-nav__sublist .civ-side-nav__link--current {
+    margin-inline-start: calc(-0.75rem - 1px);
+    padding-inline-start: calc(0.75rem + 0.75rem + 1px);
+  }
+  /*
    * Disabled — rely on `opacity` alone for the muted treatment. The
    * base color (`base-darkest`) stays so the opacity-reduced text
    * still meets WCAG AA contrast against the surface background.

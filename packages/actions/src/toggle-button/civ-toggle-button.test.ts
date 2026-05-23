@@ -56,4 +56,23 @@ describe('civ-toggle-button', () => {
     const inline = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="inline"></civ-toggle-button>');
     expect(inline.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
   });
+
+  it('renders a leading icon when icon-start is set', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-toggle-button label="Expand" pressed-label="Collapse" icon-start="chevron-down"></civ-toggle-button>'
+    );
+    const icon = el.querySelector('civ-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('chevron-down');
+    expect(icon!.getAttribute('aria-hidden')).toBe('true');
+    // Icon precedes the label text in the button
+    expect(el.querySelector('button')!.firstElementChild).toBe(icon);
+  });
+
+  it('omits the icon when icon-start is empty', async () => {
+    const el = await fixture<HTMLElement>(
+      '<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>'
+    );
+    expect(el.querySelector('civ-icon')).toBeNull();
+  });
 });

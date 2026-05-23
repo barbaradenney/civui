@@ -4951,6 +4951,17 @@
    * - `primary` — same palette as secondary but with the larger
    *   padding and bolder type of `civ-btn--secondary` (main
    *   button family).
+   *
+   * Border color: `--civ-color-base-lighter` (softer gray) is
+   * used across all variants instead of `--civ-color-base-light`
+   * so accordion borders match the CivUI inter-item divider
+   * convention (`civ-card`, `civ-list--dividers`, file-item
+   * dividers) — keeps an accordion sitting inside a card
+   * visually integrated rather than having a darker frame
+   * inside a lighter one. `base-light` is reserved for floating
+   * overlay surfaces (combobox listbox, drawer, action-sheet,
+   * popover) where a stronger edge separates the floating
+   * element from the page underneath.
    */
 
   /* ── Tertiary variant (default) ───────────────────────────── */
@@ -4969,11 +4980,11 @@
    * CLAUDE.md warning).
    */
   .civ-accordion__inner--tertiary {
-    border: 1px solid var(--civ-color-base-light);
+    border: 1px solid var(--civ-color-base-lighter);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-light);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5009,7 +5020,7 @@
    * between them since their items butt directly otherwise.
    */
   .civ-accordion__inner--flush > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-light);
+    border-bottom: 1px solid var(--civ-color-base-lighter);
   }
   .civ-accordion__inner--flush > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5050,7 +5061,7 @@
    * than rows of a unified list.
    */
   .civ-accordion__inner--secondary > civ-accordion-item {
-    border: 1px solid var(--civ-color-base-light);
+    border: 1px solid var(--civ-color-base-lighter);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {

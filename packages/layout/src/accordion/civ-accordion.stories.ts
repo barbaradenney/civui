@@ -3,7 +3,9 @@ import { html } from 'lit';
 import './civ-accordion.js';
 import './civ-accordion-item.js';
 import '../card/civ-card.js';
+import '@civui/actions/toggle-button';
 import type { CivAccordion } from './civ-accordion.js';
+import type { CivToggleButton } from '@civui/actions/toggle-button';
 
 const meta: Meta = {
   title: 'Layout/Accordion',
@@ -225,32 +227,86 @@ export const ExpandCollapseAll: Story = {
         story: `
 \`<civ-accordion>\` exposes \`expandAll()\` and \`collapseAll()\`
 methods for "Show all" / "Hide all" affordances on FAQ pages,
-settings panels, and similar dense lists. In \`single\` mode,
-\`expandAll()\` opens only the first non-disabled item (the
-invariant forbids more). Disabled items are skipped by both
-methods — their state stays frozen.
+settings panels, and similar dense lists.
+
+The recommended UX is a **single toggle button** whose label
+swaps between "Expand all" and "Collapse all" based on the
+current accordion state: when every item is open, the button
+reads "Collapse all"; otherwise it reads "Expand all". A single
+control reduces visual noise and aligns with how users
+intuitively read the affordance — the label tells them what
+action the button will take next.
+
+In \`single\` mode, \`expandAll()\` opens only the first
+non-disabled item (the invariant forbids more). Disabled items
+are skipped by both methods — their state stays frozen.
         `,
       },
     },
   },
   render: () => {
-    function getAccordion(e: Event): CivAccordion {
-      const root = (e.currentTarget as HTMLElement).closest('[data-story]')!;
-      return root.querySelector<CivAccordion>('civ-accordion')!;
-    }
+    // Story-scoped setup: wires the toggle button to the accordion
+    // after the DOM mounts. Uses `setTimeout(..., 0)` (the task
+    // queue, not the microtask queue) so Lit's update cycle and
+    // `LightDomSlotMixin`'s item relocation both complete before
+    // we query for items — a `queueMicrotask` here would run
+    // BEFORE the mixin re-attaches the items to the inner
+    // container, and `querySelectorAll('civ-accordion-item')`
+    // would silently return 0 elements. The one-time `initialized`
+    // flag prevents re-renders (e.g. from Storybook controls)
+    // from stacking duplicate listeners.
+    setTimeout(() => {
+      const root = document.querySelector('[data-story="expand-collapse-all"]');
+      if (!(root instanceof HTMLElement)) return;
+      if (root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+
+      const accordion = root.querySelector<CivAccordion>('civ-accordion');
+      const toggle = root.querySelector<CivToggleButton>('civ-toggle-button');
+      if (!accordion || !toggle) return;
+
+      const allOpen = (): boolean => {
+        const items = Array.from(
+          accordion.querySelectorAll<HTMLElement & { open: boolean }>('civ-accordion-item'),
+        );
+        return items.length > 0 && items.every((i) => i.open);
+      };
+      const refresh = (): void => {
+        toggle.pressed = allOpen();
+      };
+
+      // Drive expandAll / collapseAll from the toggle's civ-toggle
+      // event. detail.pressed is the NEW state — true means the
+      // user wants "all open".
+      toggle.addEventListener('civ-toggle', (e) => {
+        const ev = e as CustomEvent<{ pressed: boolean }>;
+        if (ev.detail.pressed) accordion.expandAll();
+        else accordion.collapseAll();
+        // Defer re-sync so we read post-update state and undo any
+        // optimistic toggle if expandAll was a no-op (e.g. all items
+        // disabled).
+        requestAnimationFrame(refresh);
+      });
+
+      // Sync the toggle when individual items toggle. civ-toggle is
+      // non-bubbling per the component's design (matches
+      // civ-disclosure precedent so events don't leak into form-level
+      // listeners), so we attach to each item directly.
+      accordion.querySelectorAll('civ-accordion-item').forEach((item) => {
+        item.addEventListener('civ-toggle', refresh);
+      });
+
+      refresh();
+    }, 0);
+
     return html`
-      <div data-story class="civ-flex civ-flex-col civ-gap-3">
-        <div class="civ-flex civ-gap-2">
-          <button
-            type="button"
-            class="civ-text-btn civ-text-btn--chip"
-            @click="${(e: Event) => getAccordion(e).expandAll()}"
-          >Expand all</button>
-          <button
-            type="button"
-            class="civ-text-btn civ-text-btn--chip"
-            @click="${(e: Event) => getAccordion(e).collapseAll()}"
-          >Collapse all</button>
+      <div data-story="expand-collapse-all" class="civ-flex civ-flex-col civ-gap-3">
+        <div>
+          <civ-toggle-button
+            label="Expand all"
+            pressed-label="Collapse all"
+            icon-start="chevron-down"
+          ></civ-toggle-button>
         </div>
         <civ-accordion>
           <civ-accordion-item label="Eligibility requirements">

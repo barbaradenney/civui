@@ -1,4 +1,47 @@
 {
+  "civ-accordion": [
+    {
+      "story": "Default",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion>\n      <civ-accordion-item label=\"Who is eligible?\">\n        <p>\n          Veterans who served on active duty for at least 24 continuous\n          months, or the full period for which they were called or\n          ordered to active duty, may be eligible for VA health care.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"What documents do I need?\">\n        <p>Bring the following when you apply:</p>\n        <ul>\n          <li>DD-214 (separation papers)</li>\n          <li>Social Security number</li>\n          <li>Most recent tax return</li>\n          <li>Insurance card, if you have one</li>\n        </ul>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"How long does enrollment take?\">\n        <p>\n          Most applications are processed within 7 business days. You'll\n          receive a written notice of your enrollment decision in the mail.\n        </p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "LongContent",
+      "name": "With rich content",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion>\n      <civ-accordion-item label=\"Privacy policy summary\" open>\n        <p>\n          The Department of Veterans Affairs collects information from you\n          to determine your eligibility for VA benefits and services.\n        </p>\n        <h3 class=\"civ-heading-sm civ-mt-3\">How we use your information</h3>\n        <ul>\n          <li>Verify your eligibility for benefits</li>\n          <li>Process your claims and payments</li>\n          <li>Provide medical care and services</li>\n          <li>Communicate with you about your benefits</li>\n        </ul>\n        <h3 class=\"civ-heading-sm civ-mt-3\">When we share your information</h3>\n        <p>\n          We share your information only with authorized federal partners,\n          and only when required to deliver your benefits or comply with\n          the law.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Terms of service summary\">\n        <p>\n          By using VA.gov, you agree to the terms of service. The terms\n          cover acceptable use, your rights, and our obligations.\n        </p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "SingleOpen",
+      "name": "Single-open mode",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion single>\n      <civ-accordion-item label=\"What is the application deadline?\" open>\n        <p>\n          Initial enrollment must be received within 30 days of your\n          discharge or release from active duty.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Can I apply online?\">\n        <p>\n          Yes. Online applications are available through VA.gov. You'll\n          need to sign in with a Login.gov, ID.me, or DS Logon account.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"What happens after I apply?\">\n        <p>\n          You'll receive a written notice of your enrollment decision.\n          Once enrolled, you can schedule appointments and order\n          prescriptions.\n        </p>\n      </civ-accordion-item>\n    </civ-accordion>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      With <code>single</code>, opening one item closes any other open siblings.\n    </p>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "WithDisabledItem",
+      "name": "With a disabled item",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion>\n      <civ-accordion-item label=\"Available section\">\n        <p>This section can be expanded.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Not yet available\" disabled>\n        <p>You should not see this — the item is disabled.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Available section\">\n        <p>This section can be expanded too.</p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "WithHeadingLevel",
+      "name": "With semantic heading level",
+      "category": "Layout/Accordion",
+      "html": "<h2 class=\"civ-heading-lg civ-mb-3\">Frequently asked questions</h2>\n    <civ-accordion>\n      <civ-accordion-item heading-level=\"3\" label=\"Who is eligible?\">\n        <p>See the eligibility section above for details.</p>\n      </civ-accordion-item>\n      <civ-accordion-item heading-level=\"3\" label=\"How do I apply?\">\n        <p>You can apply online or in person at any VA medical center.</p>\n      </civ-accordion-item>\n      <civ-accordion-item heading-level=\"3\" label=\"What documents do I need?\">\n        <p>Your DD-214 and a government-issued photo ID.</p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "WithOpenItem",
+      "name": "With one item open",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion>\n      <civ-accordion-item label=\"First question\">\n        <p>This item starts closed.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Second question\" open>\n        <p>\n          This item starts open. Use the <code>open</code> attribute on\n          the item you want expanded on first load. Use sparingly — most\n          accordion items should default to closed so the page stays\n          scannable.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Third question\">\n        <p>This item starts closed.</p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    }
+  ],
   "civ-action-button": [
     {
       "story": "AllVariants",
@@ -668,6 +711,13 @@
       "category": "Layout/Card",
       "html": "<civ-card>\n      <div data-card-header>\n        <h3 class=\"civ-heading-md\">Disability compensation</h3>\n      </div>\n      <p>Filed: March 10, 2026</p>\n      <p>Step 3 of 5: Evidence gathering</p>\n      <div data-card-footer>\n        <civ-link href=\"#\" variant=\"primary\">View claim details</civ-link>\n      </div>\n    </civ-card>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
+    },
+    {
+      "story": "WithinCard",
+      "name": "Nested inside a card",
+      "category": "Layout/Accordion",
+      "html": "<civ-card>\n      <div data-card-header>\n        <h3 class=\"civ-heading-md\">Help and resources</h3>\n      </div>\n      <civ-accordion>\n        <civ-accordion-item label=\"Call us\">\n          <p>Call <strong>1-800-827-1000</strong>, Monday through Friday, 8 a.m. to 9 p.m. Eastern.</p>\n        </civ-accordion-item>\n        <civ-accordion-item label=\"Chat with us online\">\n          <p>Visit VA.gov and look for the chat icon in the bottom-right corner.</p>\n        </civ-accordion-item>\n        <civ-accordion-item label=\"Find your local office\">\n          <p>Use the VA facility locator to find the office nearest you.</p>\n        </civ-accordion-item>\n      </civ-accordion>\n    </civ-card>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
       "story": "WithTagAndActions",

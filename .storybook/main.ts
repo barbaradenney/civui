@@ -150,6 +150,7 @@ const config: StorybookConfig = {
       '@civui/overlays/menu': resolve(root, 'packages/overlays/src/menu/index.ts'),
       '@civui/overlays': resolve(root, 'packages/overlays/src/index.ts'),
       // Layout
+      '@civui/layout/accordion': resolve(root, 'packages/layout/src/accordion/index.ts'),
       '@civui/layout/card': resolve(root, 'packages/layout/src/card/index.ts'),
       '@civui/layout/divider': resolve(root, 'packages/layout/src/divider/index.ts'),
       '@civui/layout/input-group': resolve(root, 'packages/layout/src/input-group/index.ts'),

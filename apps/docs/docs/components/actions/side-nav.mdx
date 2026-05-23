@@ -1,0 +1,89 @@
+---
+title: Side Nav
+sidebar_position: 13
+sidebar_label: Side Nav
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import SideNavProps from "./_side-nav.props.mdx";
+import SideNavItemProps from "./_side-nav-item.props.mdx";
+
+# Side Nav
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-side-nav`](pathname:///civui/storybook/?path=/docs/contract-civ-side-nav--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-side-nav>` + `<civ-side-nav-item>`
+
+Vertical, hierarchical navigation — typically a left-rail in documentation pages, admin layouts, or any view with a stable secondary navigation. The parent renders a `<nav>` landmark with a vertical `<ul>` of `<civ-side-nav-item>` links. The active item should set `current` — that item gets `aria-current="page"` plus a leading-edge primary-color accent rail.
+
+Sub-sections are expressed by nesting `<civ-side-nav-item>` elements inside another item's default slot. Two levels of nesting is the typical pattern; deeper hierarchies are structurally supported but read as cluttered.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-side-nav--default" />
+
+### Nested items
+
+<StoryEmbed id="navigation-side-nav--nested" />
+
+### With disabled items
+
+<StoryEmbed id="navigation-side-nav--with-disabled" />
+
+### Documentation layout
+
+<StoryEmbed id="navigation-side-nav--documentation-layout" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-side-nav--default)
+
+## Usage
+
+```html
+<civ-side-nav label="Documentation">
+  <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
+  <civ-side-nav-item href="/components" label="Components" current>
+    <civ-side-nav-item href="/components/button" label="Button"></civ-side-nav-item>
+    <civ-side-nav-item href="/components/input" label="Input"></civ-side-nav-item>
+  </civ-side-nav-item>
+  <civ-side-nav-item href="/tokens" label="Design tokens"></civ-side-nav-item>
+</civ-side-nav>
+```
+
+## Props. Civ-side-nav
+
+<SideNavProps />
+
+## Props. Civ-side-nav-item
+
+<SideNavItemProps />
+
+## Mobile
+
+The side-nav stays as a vertical list at every breakpoint — it does **not** collapse into a drawer or hamburger automatically. On small screens, the consumer is responsible for the mobile presentation. Two typical patterns:
+
+- Wrap the rail in `<civ-drawer>` and surface a toggle button on mobile only.
+- Render the rail conditionally with a CSS media query (`@media (max-width: 480px)`) and provide a separate top-of-page nav for small screens.
+
+## Dynamic children
+
+`<civ-side-nav-item>` uses the `LightDomSlotMixin` to relocate nested items into the sublist. Per [common-traps.md](https://github.com/barbaradenney/civui/blob/main/.claude/rules/common-traps.md#lightdomslotmixin-composition-with-dynamic-lit-children), rendering items via `${items.map(...)}` directly inside a `<civ-side-nav-item>` can break on outer re-renders. If your nav structure is dynamic, wrap the dynamic items in a static container (a plain `<ul>` won't work since the host expects nested `<civ-side-nav-item>`s, so the cleanest workaround is to render the *whole side-nav* via `keyed()` when the structure changes).
+
+## Accessibility
+
+- Renders as a `<nav>` landmark. Always set `label` when a page contains more than one nav so screen-reader landmark navigation can distinguish them.
+- Each link inherits the global focus ring from `civ.css`.
+- The active item uses `aria-current="page"` so the user's location is announced.
+- Disabled items render as a non-interactive `<span>` with `aria-disabled="true"`. A `disabled` `<a>` would still be focusable, so we drop the href entirely.
+- Click activations dispatch `civ-analytics` from the host so consumer-level tracking can listen to navigation events.
+
+## When to use a different component
+
+- For top-of-page primary navigation (horizontal), use `<civ-nav>`.
+- For tab-style switching between views in the same context, use `<civ-tabs>`.
+- For in-page anchor navigation following the reader's scroll position, use `<civ-on-this-page>`.

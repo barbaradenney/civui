@@ -17,6 +17,11 @@ import './tab-nav/civ-tab-nav.js';
 import './tab-nav/civ-tab-nav-item.js';
 import './confirm-button/civ-confirm-button.js';
 import './toggle-button/civ-toggle-button.js';
+import './side-nav/civ-side-nav.js';
+import './side-nav/civ-side-nav-item.js';
+import './on-this-page/civ-on-this-page.js';
+import './on-this-page/civ-on-this-page-item.js';
+import './back-to-top/civ-back-to-top.js';
 
 // Button
 export { CivButton } from './button/index.js';
@@ -64,3 +69,12 @@ export type { ConfirmButtonVariant } from './confirm-button/index.js';
 // Toggle Button
 export { CivToggleButton } from './toggle-button/index.js';
 export type { ToggleButtonVariant } from './toggle-button/index.js';
+
+// Side Nav
+export { CivSideNav, CivSideNavItem } from './side-nav/index.js';
+
+// On This Page
+export { CivOnThisPage, CivOnThisPageItem } from './on-this-page/index.js';
+
+// Back to Top
+export { CivBackToTop } from './back-to-top/index.js';

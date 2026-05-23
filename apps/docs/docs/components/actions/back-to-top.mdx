@@ -1,0 +1,72 @@
+---
+title: Back to Top
+sidebar_position: 15
+sidebar_label: Back to Top
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import BackToTopProps from "./_back-to-top.props.mdx";
+
+# Back to Top
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-back-to-top`](pathname:///civui/storybook/?path=/docs/contract-civ-back-to-top--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-back-to-top>`
+
+Floating chip-style button anchored to the bottom-right viewport corner. Appears once the user has scrolled past `threshold` pixels; clicking smooth-scrolls back to the top.
+
+The component uses an `IntersectionObserver` against a 1 px sentinel inserted into the body at the threshold position — no `scroll` event listeners, so it stays performant on long pages.
+
+## Examples
+
+### Default (400 px threshold)
+
+<StoryEmbed id="navigation-back-to-top--default" />
+
+### Custom label
+
+<StoryEmbed id="navigation-back-to-top--custom-label" />
+
+### Lower threshold
+
+<StoryEmbed id="navigation-back-to-top--custom-threshold" />
+
+### Chip preview (no scroll required)
+
+<StoryEmbed id="navigation-back-to-top--chip-preview" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-back-to-top--default)
+
+## Usage
+
+```html
+<!-- Defaults: appears after 400 px scroll, label "Back to top" -->
+<civ-back-to-top></civ-back-to-top>
+
+<!-- Custom label + threshold -->
+<civ-back-to-top label="Return to top" threshold="800"></civ-back-to-top>
+```
+
+Place once per page — typically near the closing `</body>` tag. The button uses `position: fixed` so DOM order doesn't matter for positioning, but late placement keeps tab order predictable.
+
+Each `<civ-back-to-top>` instance installs its own 1px sentinel in `<body>`. Multiple instances on the same page work independently but waste resources — render only one per route.
+
+## Props
+
+<BackToTopProps />
+
+## Accessibility
+
+- Renders as a real `<button>` with an `aria-label` and `title` — picks up the global focus ring from `civ.css` automatically.
+- Honors `prefers-reduced-motion: reduce` — the scroll-to-top jump is instant for users who opted out of animations.
+- The icon is `aria-hidden="true"` since the visible label is conveyed via `aria-label`.
+- Stacks at `var(--civ-z-overlay)` so it sits above page content and below modal-class overlays.
+
+## When to use a different component
+
+- For navigation between sections of a page, use `<civ-on-this-page>`.
+- For navigation between pages, use `<civ-side-nav>` or `<civ-nav>`.

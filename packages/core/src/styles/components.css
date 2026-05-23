@@ -3951,6 +3951,10 @@
     @apply civ-block civ-no-underline civ-font-normal;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
+    /* Reserve the 2px rail width on every link so the layout
+       doesn't shift when a sibling item becomes current. Matches
+       tab-nav's `border-bottom: 2px solid transparent` pattern. */
+    border-inline-start: 2px solid transparent;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease), color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   @media (hover: hover) {
@@ -3959,14 +3963,15 @@
     }
   }
   /*
-   * Current item — primary color + bold text. No leading-edge rail
-   * any more: in sub-sections the sublist's leading line is the
-   * visual context, and the active item is marked by typography
-   * weight + color contrast.
+   * Current item — 2px primary-color leading-edge rail + bold text
+   * + primary color. Matches the tab-nav current-item treatment
+   * (which uses a 2px primary border-bottom on horizontal tabs)
+   * translated to the vertical axis.
    */
   .civ-side-nav__link--current {
     @apply civ-font-bold;
-    color: var(--civ-color-primary-dark);
+    color: var(--civ-color-primary-DEFAULT);
+    border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
   /*
    * Disabled — rely on `opacity` alone for the muted treatment. The
@@ -3989,9 +3994,15 @@
    */
   .civ-side-nav__trigger {
     @apply civ-flex civ-items-center civ-w-full civ-cursor-pointer civ-bg-transparent
-           civ-text-start civ-font-normal civ-border-0;
+           civ-text-start civ-font-normal;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
+    /* Match the 2px reserved-rail width on leaf links so the
+       chevron column lines up with the leaf link text column —
+       triggers don't have a current state, so the rail stays
+       transparent. */
+    border: 0;
+    border-inline-start: 2px solid transparent;
     gap: 0.5rem;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }

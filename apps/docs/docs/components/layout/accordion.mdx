@@ -12,6 +12,12 @@ import AccordionItemEvents from "./_accordion-item.events.mdx";
 
 # Accordion
 
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-accordion`](pathname:///civui/storybook/?path=/docs/contract-civ-accordion--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
 `<civ-accordion>` and `<civ-accordion-item>`
 
 A grouped stack of full-width expandable rows. Each item composes the
@@ -191,6 +197,12 @@ in a `<civ-conditional>` block bound to a separate state.
   like `civ-accordion-item[open]` are supported for styling hooks.
 - `disabled` on an item is reflected and prevents toggling. Programmatic
   attempts to set `open` while disabled are reverted.
-- `single` on the parent is reflected. Toggling `single` at runtime
-  does not retroactively collapse currently-open items; only the next
-  user-initiated open event triggers sibling coordination.
+- `single` on the parent is reflected. Setting it triggers a
+  reconciliation pass — if multiple items are currently open, the
+  first stays open and the rest collapse. Authored markup with
+  multiple `open` items inside `<civ-accordion single>` reconciles
+  the same way on first paint.
+- `disabled` on the parent cascades to every direct-child item
+  without mutating each item's own `disabled` prop. Re-enabling the
+  parent restores per-item disabled state from the items'
+  authored values.

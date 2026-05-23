@@ -12,15 +12,19 @@ import type { SlotConfig } from '@civui/core';
  * Vertical, hierarchical navigation panel — typically a left-rail
  * in documentation pages, admin layouts, or any view with a
  * stable secondary navigation. Renders a `<nav>` landmark with a
- * vertical `<ul>` of `<civ-side-nav-item>` links. The active item
- * should set `current` — that item renders with `aria-current="page"`
- * plus a leading-edge primary-color accent rail.
+ * vertical `<ul>` of `<civ-side-nav-item>` rows.
  *
- * Sub-sections are expressed by nesting `<civ-side-nav-item>`
- * elements inside another item's default slot. The nested items
- * render as an indented sub-list under the parent. Two levels of
- * nesting is the typical pattern; deeper hierarchies are
- * structurally supported but read as cluttered.
+ * The active page sets `current` on its **leaf** row — that row
+ * renders with `aria-current="page"` plus a leading-edge
+ * primary-color accent rail. Sub-sections are expressed by
+ * nesting `<civ-side-nav-item>` elements; a parent with nested
+ * children automatically renders as a disclosure (chevron caret
+ * + collapsible sublist) instead of a link. On first paint, any
+ * parent containing a descendant with `current` is automatically
+ * expanded so the active page is visible in the rail.
+ *
+ * Two levels of nesting is the typical pattern; deeper
+ * hierarchies are structurally supported but read as cluttered.
  *
  * @element civ-side-nav
  *
@@ -34,8 +38,8 @@ import type { SlotConfig } from '@civui/core';
  * ```html
  * <civ-side-nav label="Documentation">
  *   <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
- *   <civ-side-nav-item href="/components" label="Components" current>
- *     <civ-side-nav-item href="/components/button" label="Button"></civ-side-nav-item>
+ *   <civ-side-nav-item label="Components">
+ *     <civ-side-nav-item href="/components/button" label="Button" current></civ-side-nav-item>
  *     <civ-side-nav-item href="/components/input" label="Input"></civ-side-nav-item>
  *   </civ-side-nav-item>
  * </civ-side-nav>

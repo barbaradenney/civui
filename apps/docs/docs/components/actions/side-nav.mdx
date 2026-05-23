@@ -7,6 +7,7 @@ sidebar_label: Side Nav
 import StoryEmbed from "@site/src/components/StoryEmbed";
 import SideNavProps from "./_side-nav.props.mdx";
 import SideNavItemProps from "./_side-nav-item.props.mdx";
+import SideNavItemEvents from "./_side-nav-item.events.mdx";
 
 # Side Nav
 
@@ -18,21 +19,34 @@ import SideNavItemProps from "./_side-nav-item.props.mdx";
 
 `<civ-side-nav>` + `<civ-side-nav-item>`
 
-Vertical, hierarchical navigation — typically a left-rail in documentation pages, admin layouts, or any view with a stable secondary navigation. The parent renders a `<nav>` landmark with a vertical `<ul>` of `<civ-side-nav-item>` links. The active item should set `current` — that item gets `aria-current="page"` plus a leading-edge primary-color accent rail.
+Vertical, hierarchical navigation — typically a left-rail in documentation pages, admin layouts, or any view with a stable secondary navigation. The parent renders a `<nav>` landmark with a vertical `<ul>` of `<civ-side-nav-item>` rows.
 
-Sub-sections are expressed by nesting `<civ-side-nav-item>` elements inside another item's default slot. Two levels of nesting is the typical pattern; deeper hierarchies are structurally supported but read as cluttered.
+Each row renders in one of two modes, chosen automatically by the presence of nested children:
+
+- **Leaf row** (no nested children) — renders as `<a href>`. The active page sets `current` and that row gets `aria-current="page"` plus a leading-edge primary-color accent rail.
+- **Parent / section row** (has nested children) — renders as a `<button aria-expanded>` disclosure with a leading chevron caret that rotates 90° on open. Click anywhere on the row toggles. Parents are disclosure-only; setting `href` on a parent with children is ignored.
+
+On first paint, any parent containing a descendant with `current` is automatically expanded so the active page is visible in the rail. After that, the user (or the consumer, via the `open` prop) drives expand state. Each parent owns its own `open` — opening one section does not collapse others (multi-expand by default).
 
 ## Examples
 
-### Default
+### Default — flat list of leaf links
 
 <StoryEmbed id="navigation-side-nav--default" />
 
-### Nested items
+### Nested — auto-expands the active section
 
 <StoryEmbed id="navigation-side-nav--nested" />
 
-### With disabled items
+### Multiple sections open
+
+<StoryEmbed id="navigation-side-nav--multiple-sections-open" />
+
+### All sections collapsed
+
+<StoryEmbed id="navigation-side-nav--collapsed-by-default" />
+
+### With disabled rows
 
 <StoryEmbed id="navigation-side-nav--with-disabled" />
 
@@ -47,13 +61,15 @@ Sub-sections are expressed by nesting `<civ-side-nav-item>` elements inside anot
 ```html
 <civ-side-nav label="Documentation">
   <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
-  <civ-side-nav-item href="/components" label="Components" current>
-    <civ-side-nav-item href="/components/button" label="Button"></civ-side-nav-item>
+  <civ-side-nav-item label="Components">
+    <civ-side-nav-item href="/components/button" label="Button" current></civ-side-nav-item>
     <civ-side-nav-item href="/components/input" label="Input"></civ-side-nav-item>
   </civ-side-nav-item>
   <civ-side-nav-item href="/tokens" label="Design tokens"></civ-side-nav-item>
 </civ-side-nav>
 ```
+
+The **Components** parent has no `href` — it's automatically a disclosure because it has nested children. The `current` flag goes on the **leaf** (Button), and the parent auto-expands so the active page is visible.
 
 ## Props. Civ-side-nav
 
@@ -62,6 +78,10 @@ Sub-sections are expressed by nesting `<civ-side-nav-item>` elements inside anot
 ## Props. Civ-side-nav-item
 
 <SideNavItemProps />
+
+## Events. Civ-side-nav-item
+
+<SideNavItemEvents />
 
 ## Mobile
 

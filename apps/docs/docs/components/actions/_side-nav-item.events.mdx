@@ -1,4 +1,7 @@
 {/* Generated from @civui/schema by tools/sync-doc-tables.ts.
     Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
 
-_civ-side-nav-item does not fire any custom events._
+| Event | Detail | Description |
+|-------|--------|-------------|
+| `civ-toggle` | `{ open: boolean }` | Fires when a parent row's expand state changes (user click or programmatic). Non-bubbling and non-composed (mirrors civ-disclosure / civ-accordion-item) so the event stays scoped to the consumer's listener. |
+| `civ-analytics` | `{ componentName: string, action: string, details: object }` | Analytics tracking on link activation (leaf rows) or expand-state change (parent rows) |

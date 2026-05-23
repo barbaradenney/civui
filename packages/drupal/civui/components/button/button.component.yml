@@ -48,6 +48,16 @@ props:
       type: boolean
       default: false
       description: 'Render the `label` visually hidden so only the icon is visible; the label still provides the accessible name. Use for square icon buttons such as kebab triggers, close buttons, or compact toolbar actions. Requires at least one of `iconSt...'
+    loading:
+      title: Loading
+      type: boolean
+      default: false
+      description: 'Async-in-flight state. Swaps the leading icon for a spinner, disables the button, and sets `aria-busy`. Link-mode buttons (`href` set) ignore `loading`'
+    loading_label:
+      title: Loading label
+      type: string
+      default: 'Loading…'
+      description: 'Accessible name announced via the spinner''s polite live region while `loading` is true. Use an action-specific present-participle verb'
 
 slots:
   default:

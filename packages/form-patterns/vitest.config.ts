@@ -23,6 +23,7 @@ export default defineConfig({
       '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
       '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
+      '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
     },
   },
 });

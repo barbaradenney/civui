@@ -222,3 +222,52 @@ describe('CivButton icon-only mode', () => {
     expect(el.hasAttribute('icon-only')).toBe(true);
   });
 });
+
+describe('CivButton loading state', () => {
+  it('renders a civ-spinner in place of the leading icon when loading', async () => {
+    const el = await fixture('<civ-button loading icon-start="check" label="Save"></civ-button>');
+    expect(el.querySelector('civ-spinner')).not.toBeNull();
+    // The icon should NOT render while loading.
+    expect(el.querySelector('civ-icon[name="check"]')).toBeNull();
+  });
+
+  it('disables the underlying button while loading', async () => {
+    const el = await fixture('<civ-button loading label="Save"></civ-button>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.disabled).toBe(true);
+  });
+
+  it('sets aria-busy on the button while loading', async () => {
+    const el = await fixture('<civ-button loading label="Save"></civ-button>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.getAttribute('aria-busy')).toBe('true');
+  });
+
+  it('does NOT set aria-busy when not loading', async () => {
+    const el = await fixture('<civ-button label="Save"></civ-button>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('passes loadingLabel through to the spinner', async () => {
+    const el = await fixture(
+      '<civ-button loading loading-label="Saving your application…" label="Save"></civ-button>',
+    );
+    const spinner = el.querySelector('civ-spinner') as HTMLElement;
+    expect(spinner.getAttribute('label')).toBe('Saving your application…');
+  });
+
+  it('still renders the label text while loading', async () => {
+    const el = await fixture('<civ-button loading label="Save"></civ-button>');
+    const btn = el.querySelector('button')!;
+    expect(btn.textContent).toContain('Save');
+  });
+
+  it('ignores loading in link mode (href set)', async () => {
+    const el = await fixture(
+      '<civ-button loading href="/next" label="Continue"></civ-button>',
+    );
+    expect(el.querySelector('a')).not.toBeNull();
+    expect(el.querySelector('civ-spinner')).toBeNull();
+  });
+});

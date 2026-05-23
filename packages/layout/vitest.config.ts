@@ -18,6 +18,8 @@ export default defineConfig({
       '@civui/overlays/menu': resolve(__dirname, '../overlays/src/menu/index.ts'),
       '@civui/overlays': resolve(__dirname, '../overlays/src/index.ts'),
       '@civui/feedback/badge': resolve(__dirname, '../feedback/src/badge/index.ts'),
+      '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
+      '@civui/feedback/skeleton': resolve(__dirname, '../feedback/src/skeleton/index.ts'),
       '@civui/feedback': resolve(__dirname, '../feedback/src/index.ts'),
     },
   },

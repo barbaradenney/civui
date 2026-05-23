@@ -1,0 +1,78 @@
+---
+title: Spinner
+sidebar_position: 6
+sidebar_label: Spinner
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_spinner.props.mdx";
+
+# Spinner
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-spinner`](pathname:///civui/storybook/?path=/docs/contract-civ-spinner--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-spinner>`
+
+Indeterminate loading indicator for short waits (200ms–~1s) where the shape of incoming content is unknown — submit-in-flight, modal opening, inline cell refresh.
+
+For longer waits with a known content shape (lists, cards, table rows), use [`civ-skeleton`](./skeleton) instead. The two are complementary, not interchangeable.
+
+## When to use
+
+| Wait | Use |
+|------|-----|
+| Under 200ms | Nothing — the response will arrive before the user perceives a delay. |
+| 200ms to ~1s, unknown shape | `civ-spinner` |
+| Longer than ~1s, known shape | [`civ-skeleton`](./skeleton) |
+| Real percentage complete | [`civ-progress-percent`](../form/progress) |
+
+## Examples
+
+### Default
+
+<StoryEmbed id="feedback-spinner--default" />
+
+### Sizes
+
+<StoryEmbed id="feedback-spinner--sizes" />
+
+### Inherits color
+
+The SVG uses `currentColor`, so the spinner picks up its color from the surrounding text or parent element.
+
+<StoryEmbed id="feedback-spinner--inherits-color" />
+
+### Custom label
+
+Use an action-specific present-participle verb so screen-reader users hear what's happening.
+
+<StoryEmbed id="feedback-spinner--custom-label" />
+
+### Delayed appearance
+
+The `delay` prop suppresses the spinner until the work has been running for that many milliseconds. Fast responses never paint a spinner at all, avoiding the flash-then-disappear flicker.
+
+<StoryEmbed id="feedback-spinner--delayed-appearance" />
+
+## Accessibility
+
+- Host renders `role="status"` and `aria-live="polite"`. The first time the spinner becomes visible, the `label` is announced to assistive tech.
+- The SVG itself is `aria-hidden="true"` and `focusable="false"` — only the label is announced.
+- The label defaults to "Loading…" but should be replaced with an action-specific verb ("Saving your application…", "Submitting your form…").
+- Under `prefers-reduced-motion`, the spinner keeps rotating (slowed to 2s per revolution). This is the lone carve-out in CivUI's otherwise global motion-kill rule — the rotation is functional, conveying "the system isn't frozen" rather than decorative. Skeletons and other animations are disabled under reduced motion as usual.
+
+## Composition
+
+Use inside a `civ-button` with the `loading` prop — the button swaps its leading icon for a spinner, disables itself, and sets `aria-busy="true"`:
+
+```html
+<civ-button loading loading-label="Saving your application…" label="Save"></civ-button>
+```
+
+## Props
+
+<PropsTable />

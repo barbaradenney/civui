@@ -89,8 +89,14 @@ function namesMatch(jsdocName: string, propName: string): boolean {
 }
 
 // @property decorator. We need the name that comes AFTER the
-// decorator call (and any whitespace / typescript modifiers).
-const PROPERTY_DECL_RE = /@property\(([\s\S]*?)\)\s*(?:(?:readonly|public|private|protected|override)\s+)*([A-Za-z_][\w]*)/g;
+// decorator call (and any whitespace / typescript modifiers, plus
+// `get`/`set`/`accessor` for manual-accessor declarations like
+// `@property() get open() { ... }`).
+// `[^()]` disallows parens inside the options string so the
+// non-greedy match can't span adjacent @property blocks when the
+// immediately-following declaration uses `get`/`set`/`accessor` and
+// the regex would otherwise backtrack to find a later `)`.
+const PROPERTY_DECL_RE = /@property\(([^()]*?)\)\s*(?:(?:readonly|public|private|protected|override|get|set|accessor)\s+)*([A-Za-z_][\w]*)/g;
 const ATTRIBUTE_FALSE_RE = /attribute:\s*false/;
 
 interface Component {

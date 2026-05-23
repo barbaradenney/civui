@@ -4965,26 +4965,41 @@
    * `civ-disclosure` (chevron caret, 90° rotation on open) but
    * span the full row with a larger tap target. The outer
    * wrapper carries a rounded border; inter-item dividers come
-   * from each item's bottom-border. Items are real `<details>`
-   * elements so the disclosure semantics are native — keyboard,
-   * screen reader, and no-JS all work.
+   * from each host's bottom-border (placed on the
+   * `civ-accordion-item` element, not on the inner `<details>`
+   * class — `:last-child` and `[disabled]` selectors need to
+   * match the host, which has proper siblings and reflected
+   * attributes). Items are real `<details>` elements so the
+   * disclosure semantics are native — keyboard, screen reader,
+   * and no-JS all work.
    */
 
   .civ-accordion__inner {
     border: 1px solid var(--civ-color-base-light);
     border-radius: var(--civ-border-radius-DEFAULT);
-    overflow: hidden;
+    /*
+     * No `overflow: hidden` — combined with `border-radius` on a
+     * focusable-descendant container it would clip the global
+     * focus-ring `outline` + `box-shadow` halo on first/last
+     * item triggers (per the CLAUDE.md warning). The hover
+     * background on first/last items is briefly visible behind
+     * the rounded corner; this is preferred over a clipped
+     * focus indicator (WCAG 2.4.7).
+     */
   }
 
   /*
-   * Item — the `<details>` element. Inter-item divider is the
-   * bottom-border; last item suppresses its own border to avoid
-   * doubling with the outer wrapper's bottom edge.
+   * Inter-item divider lives on the HOST `civ-accordion-item`
+   * element, not on the inner `<details>` class. The inner
+   * `<details>` is always the sole/last child of its host so
+   * `.civ-accordion-item:last-child` would strip every item's
+   * border; the host elements, however, are real siblings under
+   * `.civ-accordion__inner` and `:last-child` works as intended.
    */
-  .civ-accordion-item {
+  civ-accordion-item {
     border-bottom: 1px solid var(--civ-color-base-light);
   }
-  .civ-accordion-item:last-child {
+  civ-accordion-item:last-child {
     border-bottom: none;
   }
 
@@ -5017,27 +5032,31 @@
   }
 
   /*
-   * Disabled — pointer events off, dimmed. The host's reflected
-   * `[disabled]` attribute carries the state so consumers can
-   * hang their own style hooks off `civ-accordion-item[disabled]`.
+   * Disabled — pointer events off, dimmed. Selector uses the
+   * `civ-accordion-item` element selector (not the class) because
+   * the reflected `[disabled]` attribute lives on the HOST, while
+   * the inner `<details>` carries the class. The host descendant
+   * combinator picks the trigger inside.
    */
-  .civ-accordion-item[disabled] .civ-accordion-item__trigger {
+  civ-accordion-item[disabled] .civ-accordion-item__trigger {
     pointer-events: none;
     opacity: var(--civ-opacity-disabled);
     cursor: not-allowed;
   }
 
   /*
-   * Chevron rotation. Same motion duration token as civ-disclosure
-   * so the two read as the same affordance. The global
-   * `prefers-reduced-motion` rule disables the transition for users
-   * who request reduced motion.
+   * Chevron rotation. Uses the BEM class on the icon (not an
+   * attribute selector on the icon name) so theme overrides and
+   * future leading-icon additions stay scoped. Same motion duration
+   * token as civ-disclosure so the two read as the same affordance.
+   * The global `prefers-reduced-motion` rule disables the
+   * transition for users who request reduced motion.
    */
-  .civ-accordion-item__trigger > civ-icon[name='chevron-right'] {
+  .civ-accordion-item__icon {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
     flex-shrink: 0;
   }
-  .civ-accordion-item[open] > .civ-accordion-item__trigger > civ-icon[name='chevron-right'] {
+  .civ-accordion-item[open] > .civ-accordion-item__trigger > .civ-accordion-item__icon {
     transform: rotate(90deg);
   }
 

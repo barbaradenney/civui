@@ -27,9 +27,10 @@ const schema: ComponentSchema = {
       reflect: true,
     },
     headingLevel: {
-      type: 'enum',
-      description: 'Wrap the label in an `<h1>`–`<h6>` for screen-reader navigation. Visual treatment stays constant across all levels; the heading element only affects assistive-tech rotor navigation. Omit for a plain `<span>` label.',
-      values: ['1', '2', '3', '4', '5', '6'],
+      type: 'number',
+      description: 'Wrap the label in an `<h1>`–`<h6>` for screen-reader rotor navigation. Accepts integers 1–6; values outside that range fall back to a plain `<span>` and trigger a dev-mode warning. Visual treatment stays constant across all levels — the heading element only affects assistive-tech navigation. Web-only; native platforms expose disclosure semantics through their own header conventions.',
+      attribute: 'heading-level',
+      webOnly: true,
     },
   },
 
@@ -51,6 +52,11 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
+    // Native composition: the outer `<details>` exposes `role="group"`
+    // and the inner `<summary>` exposes `role="button"` with the
+    // current expanded state. Native (iOS / Android) implementations
+    // must combine both — a container with disclosure semantics AND a
+    // button-role activator — to match the web reference.
     role: 'group',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',

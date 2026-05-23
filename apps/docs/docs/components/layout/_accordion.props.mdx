@@ -3,4 +3,4 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `single` | `boolean` | `false` | When true, opening one item collapses any other open siblings. Default behavior (omitted) allows multiple items open at once. |
+| `single` | `boolean` | `false` | When true, opening one item collapses any other open siblings. Default behavior (omitted) allows multiple items open at once. The single-open invariant is enforced on first paint AND when this prop transitions from false to true at runtime. |

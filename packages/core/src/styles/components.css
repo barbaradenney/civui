@@ -3932,9 +3932,18 @@
    * reads at a glance, with a leading-edge guide line that shows
    * "these items belong to the section above". Top-level
    * `.civ-side-nav__list` doesn't get the line.
+   *
+   * The 0.75rem margin-inline-start aligns the leading guide line
+   * with the parent trigger's chevron icon (which sits at the
+   * trigger's 0.75rem padding-inline-start). The 0.75rem
+   * padding-inline-start then leaves breathing room between the
+   * line and the child rows; combined with each child link's own
+   * 0.75rem padding, child labels end up aligned with the parent's
+   * label column (chevron + gap + label start).
    */
   .civ-side-nav__sublist {
-    padding-inline-start: 1rem;
+    margin-inline-start: 0.75rem;
+    padding-inline-start: 0.75rem;
     border-inline-start: 1px solid var(--civ-color-border);
   }
 
@@ -3942,6 +3951,10 @@
     @apply civ-block civ-no-underline civ-font-normal;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
+    /* Reserve the 2px rail width on every link so the layout
+       doesn't shift when a sibling item becomes current. Matches
+       tab-nav's `border-bottom: 2px solid transparent` pattern. */
+    border-inline-start: 2px solid transparent;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease), color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   @media (hover: hover) {
@@ -3950,14 +3963,15 @@
     }
   }
   /*
-   * Current item — primary color + bold text. No leading-edge rail
-   * any more: in sub-sections the sublist's leading line is the
-   * visual context, and the active item is marked by typography
-   * weight + color contrast.
+   * Current item — 2px primary-color leading-edge rail + bold text
+   * + primary color. Matches the tab-nav current-item treatment
+   * (which uses a 2px primary border-bottom on horizontal tabs)
+   * translated to the vertical axis.
    */
   .civ-side-nav__link--current {
     @apply civ-font-bold;
-    color: var(--civ-color-primary-dark);
+    color: var(--civ-color-primary-DEFAULT);
+    border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
   /*
    * Disabled — rely on `opacity` alone for the muted treatment. The
@@ -3980,9 +3994,15 @@
    */
   .civ-side-nav__trigger {
     @apply civ-flex civ-items-center civ-w-full civ-cursor-pointer civ-bg-transparent
-           civ-text-start civ-font-normal civ-border-0;
+           civ-text-start civ-font-normal;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
+    /* Match the 2px reserved-rail width on leaf links so the
+       chevron column lines up with the leaf link text column —
+       triggers don't have a current state, so the rail stays
+       transparent. */
+    border: 0;
+    border-inline-start: 2px solid transparent;
     gap: 0.5rem;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }

@@ -14,8 +14,11 @@ npm install @civui/core
 # Form components
 npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns
 
-# Action components (button, link, action-button, link-card, button-group)
+# Action components (button, link, action-button, link-card, button-group, filter-chip, skip-link, confirm-button, toggle-button)
 npm install @civui/actions
+
+# Navigation surfaces (breadcrumb, nav, side-nav, tabs, tab-nav, on-this-page, back-to-top)
+npm install @civui/navigation
 
 # Overlay components (modal, action-sheet)
 npm install @civui/overlays
@@ -23,7 +26,7 @@ npm install @civui/overlays
 # Layout components (card, divider, input-group, page-header, tag)
 npm install @civui/layout
 
-# Feedback components (alert, progress bar)
+# Feedback components (alert, badge, count, spinner, skeleton)
 npm install @civui/feedback
 ```
 
@@ -37,6 +40,7 @@ import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
   import '@civui/actions';
+  import '@civui/navigation';
   import '@civui/overlays';
   import '@civui/layout';
 </script>
@@ -60,6 +64,7 @@ import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
 import '@civui/actions';
+import '@civui/navigation';
 import '@civui/overlays';
 import '@civui/layout';
 

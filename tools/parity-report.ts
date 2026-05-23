@@ -19,6 +19,7 @@ const WEB_DIRS = [
   join(ROOT, 'packages/compound/src'),
   join(ROOT, 'packages/form-patterns/src'),
   join(ROOT, 'packages/actions/src'),
+  join(ROOT, 'packages/navigation/src'),
   join(ROOT, 'packages/overlays/src'),
   join(ROOT, 'packages/layout/src'),
   join(ROOT, 'packages/feedback/src'),

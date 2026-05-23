@@ -26,6 +26,13 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    variant: {
+      type: 'enum',
+      description: 'Visual variant. `tertiary` (default) is a bordered group with transparent triggers and inter-item dividers — list-like, quiet. `secondary` uses the same per-item style as tertiary (transparent trigger, gray hover, indented content) but each item is its own bordered/rounded box separated by gap — items read as discrete sections rather than rows of a unified list. `primary` renders as a filled primary-lightest (blue) button with the larger padding and bolder type of `civ-btn--secondary`; when open, trigger + content extend the colored bg as a single card.',
+      values: ['primary', 'secondary', 'tertiary'],
+      default: 'tertiary',
+      reflect: true,
+    },
   },
 
   methods: {

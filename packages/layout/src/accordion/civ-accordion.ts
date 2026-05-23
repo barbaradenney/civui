@@ -42,6 +42,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
  * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
+ * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (gray chip palette, smaller chrome), or `'primary'` (filled primary-lightest, larger/bolder)
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -54,6 +55,8 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  * </civ-accordion>
  * ```
  */
+export type AccordionVariant = 'primary' | 'secondary' | 'tertiary';
+
 @customElement('civ-accordion')
 export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   /** When true, opening one item closes any other open siblings. */
@@ -66,6 +69,28 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * here cascades automatically.
    */
   @property({ type: Boolean, reflect: true }) disabled = false;
+
+  /**
+   * Visual variant. Three levels of prominence:
+   *
+   * - `'tertiary'` (default) — bordered group with transparent
+   *   triggers and inter-item dividers. The quietest, list-like
+   *   affordance. Use for FAQ pages, help content, optional detail.
+   * - `'secondary'` — same per-item style as `tertiary`
+   *   (transparent trigger, gray hover, indented content), but
+   *   each item is its own bordered/rounded box separated by gap
+   *   rather than sharing a single outer border. Use when the
+   *   items should read as discrete sections instead of rows of
+   *   a unified list — e.g. a hub page listing distinct
+   *   workstreams that each happen to expand.
+   * - `'primary'` — filled primary-lightest button (the
+   *   `civ-btn--secondary` palette) with the larger padding and
+   *   bolder type of the main button family. When open, trigger
+   *   and content extend the colored bg as a single card. The
+   *   most prominent variant; use for hub-page sections or hero
+   *   CTAs.
+   */
+  @property({ type: String, reflect: true }) variant: AccordionVariant = 'tertiary';
 
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-accordion-content]' };
@@ -109,8 +134,9 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const variantClass = `civ-accordion__inner--${this.variant}`;
     return html`
-      <div class="civ-accordion__inner" data-civ-accordion-content></div>
+      <div class="civ-accordion__inner ${variantClass}" data-civ-accordion-content></div>
     `;
   }
 

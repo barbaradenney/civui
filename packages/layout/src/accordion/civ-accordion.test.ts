@@ -515,6 +515,57 @@ describe('civ-accordion', () => {
     }
   });
 
+  // ─── Variants ─────────────────────────────────────────────────
+
+  it('defaults to the tertiary variant', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>
+    `);
+    expect(el.variant).toBe('tertiary');
+    expect(el.getAttribute('variant')).toBe('tertiary');
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+  });
+
+  it.each(['primary', 'secondary', 'tertiary'] as const)(
+    'renders the %s variant inner class',
+    async (variant) => {
+      const el = await fixture<CivAccordion>(`
+        <civ-accordion variant="${variant}">
+          <civ-accordion-item label="X">B</civ-accordion-item>
+        </civ-accordion>
+      `);
+      expect(el.variant).toBe(variant);
+      expect(el.getAttribute('variant')).toBe(variant);
+      expect(el.querySelector(`.civ-accordion__inner--${variant}`)).not.toBeNull();
+    },
+  );
+
+  it('updates the inner class when variant changes at runtime', async () => {
+    // Tests must reference EACH resolved variant class as a literal
+    // string — Tailwind's content scanner only emits CSS for class
+    // names it sees in source. The parametric `it.each` test above
+    // constructs `civ-accordion__inner--${variant}` via template
+    // literal which Tailwind can't follow; checking all three
+    // resolved selectors here keeps every variant's CSS in the
+    // build output. See tailwind.config.ts for the cautionary tale.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>
+    `);
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--secondary')).toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--primary')).toBeNull();
+
+    el.variant = 'secondary';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--secondary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).toBeNull();
+
+    el.variant = 'primary';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--primary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--secondary')).toBeNull();
+  });
+
   it('re-enables children when parent disabled is cleared', async () => {
     const el = await fixture<CivAccordion>(`
       <civ-accordion disabled>

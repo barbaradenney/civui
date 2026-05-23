@@ -4960,72 +4960,160 @@
    * Full-width disclosure stack. A grouped collection of
    * expandable rows that compose the same visual language as
    * `civ-disclosure` (chevron caret, 90° rotation on open) but
-   * span the full row with a larger tap target. The outer
-   * wrapper carries a rounded border; inter-item dividers come
-   * from each host's bottom-border (placed on the
+   * span the full row with a larger tap target. Items are real
+   * `<details>` elements so the disclosure semantics are native
+   * — keyboard, screen reader, and no-JS all work.
+   *
+   * Three variants in increasing visual prominence:
+   * - `tertiary` (default) — bordered group, transparent
+   *   triggers, inter-item dividers. Quietest, list-like.
+   * - `secondary` — primary-lightest filled triggers using the
+   *   `civ-action-btn--secondary` palette + chrome scale.
+   * - `primary` — same palette as secondary but with the larger
+   *   padding and bolder type of `civ-btn--secondary` (main
+   *   button family).
+   */
+
+  /* ── Tertiary variant (default) ───────────────────────────── */
+
+  /*
+   * Outer wrapper carries the rounded border; inter-item dividers
+   * come from each host's bottom-border (placed on the
    * `civ-accordion-item` element, not on the inner `<details>`
    * class — `:last-child` and `[disabled]` selectors need to
    * match the host, which has proper siblings and reflected
-   * attributes). Items are real `<details>` elements so the
-   * disclosure semantics are native — keyboard, screen reader,
-   * and no-JS all work.
+   * attributes).
+   *
+   * No `overflow: hidden` — combined with `border-radius` on a
+   * focusable-descendant container it would clip the global
+   * focus-ring halo on first/last item triggers (per the
+   * CLAUDE.md warning).
    */
-
-  .civ-accordion__inner {
+  .civ-accordion__inner--tertiary {
     border: 1px solid var(--civ-color-base-light);
     border-radius: var(--civ-border-radius-DEFAULT);
-    /*
-     * No `overflow: hidden` — combined with `border-radius` on a
-     * focusable-descendant container it would clip the global
-     * focus-ring `outline` + `box-shadow` halo on first/last
-     * item triggers (per the CLAUDE.md warning). The hover
-     * background on first/last items is briefly visible behind
-     * the rounded corner; this is preferred over a clipped
-     * focus indicator (WCAG 2.4.7).
-     */
   }
-
-  /*
-   * Inter-item divider lives on the HOST `civ-accordion-item`
-   * element, not on the inner `<details>` class. The inner
-   * `<details>` is always the sole/last child of its host so
-   * `.civ-accordion-item:last-child` would strip every item's
-   * border; the host elements, however, are real siblings under
-   * `.civ-accordion__inner` and `:last-child` works as intended.
-   */
-  civ-accordion-item {
+  .civ-accordion__inner--tertiary > civ-accordion-item {
     border-bottom: 1px solid var(--civ-color-base-light);
   }
-  civ-accordion-item:last-child {
+  .civ-accordion__inner--tertiary > civ-accordion-item:last-child {
     border-bottom: none;
   }
 
   /*
-   * Trigger — the `<summary>` element. Full-width row, larger
-   * tap target than civ-disclosure's chip. Background stays
-   * transparent at rest so the row blends into the container
-   * until hover.
+   * Tertiary trigger — full-width row, transparent at rest so
+   * the row blends into the container until hover.
+   */
+  .civ-accordion__inner--tertiary .civ-accordion-item__trigger {
+    padding: 1rem;
+    background-color: transparent;
+    color: inherit;
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--tertiary .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
+  }
+  .civ-accordion__inner--tertiary .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  /* ── Secondary + primary variants (filled triggers) ───────── */
+
+  /*
+   * Secondary + primary stack their items with a small gap. The
+   * tertiary divider rules above are scoped to `--tertiary` so
+   * nothing leaks into these variants — items here start with no
+   * border by default.
+   */
+  .civ-accordion__inner--secondary,
+  .civ-accordion__inner--primary {
+    @apply civ-flex civ-flex-col civ-gap-2;
+  }
+
+  /*
+   * Secondary variant — same per-item style as tertiary
+   * (transparent trigger, gray hover, indented content), but each
+   * item is its own bordered/rounded box separated by gap rather
+   * than sharing a single outer border with inter-item dividers.
+   * Use when the items should read as discrete sections rather
+   * than rows of a unified list.
+   */
+  .civ-accordion__inner--secondary > civ-accordion-item {
+    border: 1px solid var(--civ-color-base-light);
+    border-radius: var(--civ-border-radius-DEFAULT);
+  }
+  .civ-accordion__inner--secondary .civ-accordion-item__trigger {
+    padding: 1rem;
+    background-color: transparent;
+    color: inherit;
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--secondary .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
+  }
+  .civ-accordion__inner--secondary .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  /*
+   * Primary variant — filled primary-lightest chip with the
+   * `civ-btn--secondary` palette and chrome scale (larger padding,
+   * bolder weight, slightly larger font). The most prominent
+   * variant; the trigger gets its own rounded corners so when
+   * closed it reads as a fully-rounded "button".
+   */
+  .civ-accordion__inner--primary .civ-accordion-item__trigger {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    padding: 1rem 1.25rem;
+    font-weight: 700;
+    font-size: var(--civ-typography-fontSize-lg, 1.125rem);
+    border-radius: var(--civ-border-radius-DEFAULT);
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--primary .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-primary-lighter);
+    }
+  }
+  .civ-accordion__inner--primary .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-primary-light);
+  }
+
+  /*
+   * Primary open: card pattern — trigger squares its bottom
+   * corners, content panel continues the colored bg with rounded
+   * bottom corners. The trigger + content pair read as a single
+   * filled card.
+   */
+  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__trigger {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__content {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
+    border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
+  }
+
+  /* ── Trigger base (all variants) ──────────────────────────── */
+
+  /*
+   * Trigger — the `<summary>` element. Variant rules above
+   * override colors and padding; this base owns layout, the
+   * cursor, and the native marker suppression.
    */
   .civ-accordion-item__trigger {
     @apply civ-flex civ-items-center civ-gap-2 civ-cursor-pointer civ-font-semibold civ-w-full;
-    padding: 1rem;
     list-style: none;
-    background-color: transparent;
-    color: inherit;
   }
   .civ-accordion-item__trigger::-webkit-details-marker {
     display: none;
   }
   .civ-accordion-item__trigger::marker {
     content: '';
-  }
-  @media (hover: hover) {
-    .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-base-lightest);
-    }
-  }
-  .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-base-lighter);
   }
 
   /*
@@ -5038,7 +5126,7 @@
    * The second rule cascades parent `<civ-accordion disabled>` to
    * every descendant item's trigger — matches the JS behavior in
    * `civ-accordion-item._effectivelyDisabled` so visual + behavior
-   * stay aligned.
+   * stay aligned. Applies across all variants.
    */
   civ-accordion-item[disabled] .civ-accordion-item__trigger,
   civ-accordion[disabled] civ-accordion-item .civ-accordion-item__trigger {
@@ -5080,7 +5168,8 @@
 
   /*
    * Content — indented under the label so prose lines up with
-   * the label text, not the chevron.
+   * the label text, not the chevron. Variant rules above add a
+   * matching bg color for secondary / primary.
    */
   .civ-accordion-item__content {
     padding: 0 1rem 1rem 2.5rem;

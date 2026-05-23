@@ -16,6 +16,7 @@ import './image-preview/civ-image-preview.js';
 
 // Accordion
 export { CivAccordion, CivAccordionItem } from './accordion/index.js';
+export type { AccordionVariant } from './accordion/index.js';
 
 // Callout
 export { CivCallout } from './callout/index.js';

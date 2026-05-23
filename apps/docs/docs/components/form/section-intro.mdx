@@ -47,24 +47,16 @@ Pair it with `civ-form-step` marked `sensitive` and with a `support-resources` f
 
 <StoryEmbed id="forms-form-section-intro--neutral-no-heading" />
 
-### Callout variants
-
-The `.civ-callout` CSS class can be applied to any element for a left-border accent. Use for important notices, tips, or contextual information outside of `civ-section-intro`.
-
-<StoryEmbed id="forms-form-section-intro--callout-variants" />
-
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-form-section-intro--default)
 
-## Callout CSS utility
+## Callout chrome
 
-The `.civ-callout` class is a shared utility that `civ-section-intro` uses internally. You can apply it directly to any element:
+`civ-section-intro` composes [`civ-callout`](../layout/callout) internally for its left-border accent. For a generic notice without a heading or section landmark, use `<civ-callout>` directly:
 
 ```html
-<div class="civ-callout">Default (primary blue border)</div>
-<div class="civ-callout civ-callout--info">Info</div>
-<div class="civ-callout civ-callout--warning">Warning</div>
-<div class="civ-callout civ-callout--error">Error</div>
-<div class="civ-callout civ-callout--success">Success</div>
+<civ-callout variant="warning">
+  <p>Your session will expire in 15 minutes. Save your progress.</p>
+</civ-callout>
 ```
 
 ## Props

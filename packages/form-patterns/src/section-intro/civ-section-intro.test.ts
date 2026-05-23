@@ -39,11 +39,24 @@ describe('civ-section-intro', () => {
     expect(heading.getAttribute('aria-level')).toBe('2');
   });
 
-  it('applies a tone class', async () => {
+  it('maps sensitive tone to the warning callout variant', async () => {
     const el = await fixture<CivSectionIntro>(
       '<civ-section-intro heading="X" tone="sensitive"><p>body</p></civ-section-intro>',
     );
-    expect(el.querySelector('.civ-section-intro--sensitive')).not.toBeNull();
+    await elementUpdated(el);
+    const callout = el.querySelector('civ-callout');
+    expect(callout).not.toBeNull();
+    expect(callout!.getAttribute('variant')).toBe('warning');
+  });
+
+  it('maps info and neutral tones to the default callout variant', async () => {
+    for (const tone of ['info', 'neutral'] as const) {
+      const el = await fixture<CivSectionIntro>(
+        `<civ-section-intro heading="X" tone="${tone}"><p>body</p></civ-section-intro>`,
+      );
+      await elementUpdated(el);
+      expect(el.querySelector('civ-callout')!.getAttribute('variant')).toBe('default');
+    }
   });
 
   it('preserves authored body content in Light DOM', async () => {

@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
+import '@civui/layout/callout';
 
 /**
  * CivUI Section Intro
@@ -52,16 +53,11 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const regionLabel = this.heading ? undefined : t('sectionIntroRegionLabel');
-    const toneClass =
-      this.tone === 'sensitive'
-        ? 'civ-section-intro--sensitive'
-        : this.tone === 'neutral'
-          ? 'civ-section-intro--neutral'
-          : 'civ-section-intro--info';
+    const variant = this.tone === 'sensitive' ? 'warning' : 'default';
 
     return html`
-      <section
-        class="civ-callout civ-section-intro ${toneClass}"
+      <civ-callout
+        variant="${variant}"
         role="region"
         aria-labelledby="${this.heading ? this._headingId : nothing}"
         aria-label="${regionLabel ?? nothing}"
@@ -75,7 +71,7 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
             >${this.heading}</p>`
           : nothing}
         <div class="civ-section-intro__body" data-civ-section-intro-body></div>
-      </section>
+      </civ-callout>
     `;
   }
 }

@@ -5,22 +5,22 @@ import './civ-support-resources.js';
 afterEach(cleanupFixtures);
 
 describe('civ-support-resources', () => {
-  it('renders as an aside landmark', async () => {
+  it('renders as a complementary landmark', async () => {
     const el = await fixture('<civ-support-resources heading="Support"></civ-support-resources>');
     await elementUpdated(el);
-    const aside = el.querySelector('aside');
-    expect(aside).not.toBeNull();
-    expect(aside!.getAttribute('role')).toBe('complementary');
+    const landmark = el.querySelector('[role="complementary"]');
+    expect(landmark).not.toBeNull();
+    expect(landmark!.tagName.toLowerCase()).toBe('civ-callout');
   });
 
   it('renders heading with aria-labelledby', async () => {
     const el = await fixture('<civ-support-resources heading="Need help?"></civ-support-resources>');
     await elementUpdated(el);
-    const aside = el.querySelector('aside');
+    const landmark = el.querySelector('[role="complementary"]');
     const heading = el.querySelector('[role="heading"]');
     expect(heading!.textContent).toContain('Need help?');
     expect(heading!.id).toBeTruthy();
-    expect(aside!.getAttribute('aria-labelledby')).toBe(heading!.id);
+    expect(landmark!.getAttribute('aria-labelledby')).toBe(heading!.id);
   });
 
   it('uses default heading from i18n when heading is empty', async () => {
@@ -30,11 +30,12 @@ describe('civ-support-resources', () => {
     expect(heading!.textContent).toBeTruthy();
   });
 
-  it('applies crisis tone class', async () => {
+  it('maps crisis tone to the error callout variant', async () => {
     const el = await fixture('<civ-support-resources heading="Crisis" tone="crisis"></civ-support-resources>');
     await elementUpdated(el);
-    const aside = el.querySelector('aside');
-    expect(aside!.classList.contains('civ-callout--error')).toBe(true);
+    const callout = el.querySelector('civ-callout');
+    expect(callout).not.toBeNull();
+    expect(callout!.getAttribute('variant')).toBe('error');
   });
 
   it('uses Light DOM', async () => {

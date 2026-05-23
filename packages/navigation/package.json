@@ -1,0 +1,42 @@
+{
+  "name": "@civui/navigation",
+  "version": "0.1.0",
+  "description": "CivUI navigation surfaces — Breadcrumb, Nav, SideNav, Tabs, TabNav, OnThisPage, BackToTop",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./breadcrumb": "./dist/breadcrumb/index.js",
+    "./nav": "./dist/nav/index.js",
+    "./tabs": "./dist/tabs/index.js",
+    "./tab-nav": "./dist/tab-nav/index.js",
+    "./side-nav": "./dist/side-nav/index.js",
+    "./on-this-page": "./dist/on-this-page/index.js",
+    "./back-to-top": "./dist/back-to-top/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@civui/core": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@civui/storybook-utils": "workspace:*",
+    "@civui/test-utils": "workspace:*",
+    "@civui/tokens": "workspace:*",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

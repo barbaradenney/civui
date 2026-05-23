@@ -41,6 +41,7 @@ export default [{
           { name: '@civui/inputs', message: 'Use sub-path imports: `import \'@civui/inputs/text-input\'`. Barrel imports register every component, defeating tree-shaking for consumers.' },
           { name: '@civui/controls', message: 'Use sub-path imports: `import \'@civui/controls/radio\'`. Barrel imports register every component.' },
           { name: '@civui/actions', message: 'Use sub-path imports: `import \'@civui/actions/button\'`.' },
+          { name: '@civui/navigation', message: 'Use sub-path imports: `import \'@civui/navigation/nav\'`.' },
           { name: '@civui/overlays', message: 'Use sub-path imports: `import \'@civui/overlays/modal\'`.' },
           { name: '@civui/layout', message: 'Use sub-path imports: `import \'@civui/layout/card\'`.' },
           { name: '@civui/feedback', message: 'Use sub-path imports: `import \'@civui/feedback/alert\'`.' },
@@ -49,7 +50,7 @@ export default [{
         ],
         patterns: [
           {
-            group: ['@civui/inputs', '@civui/inputs/*', '@civui/controls', '@civui/controls/*', '@civui/compound', '@civui/compound/*', '@civui/actions', '@civui/actions/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/feedback/*', '@civui/form-patterns', '@civui/form-patterns/*'],
+            group: ['@civui/inputs', '@civui/inputs/*', '@civui/controls', '@civui/controls/*', '@civui/compound', '@civui/compound/*', '@civui/actions', '@civui/actions/*', '@civui/navigation', '@civui/navigation/*', '@civui/overlays', '@civui/overlays/*', '@civui/layout', '@civui/layout/*', '@civui/feedback', '@civui/feedback/*', '@civui/form-patterns', '@civui/form-patterns/*'],
             importNamePattern: '^Civ',
             message: 'Named class imports get tree-shaken — custom-element registration is a side effect. Use a side-effect sub-path import instead: `import \'@civui/inputs/text-input\'`.',
           },

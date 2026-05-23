@@ -10,9 +10,9 @@ import '@civui/controls';
 import '@civui/compound';
 import '@civui/form-patterns';
 import '@civui/actions';
+import '@civui/navigation';
 import '@civui/overlays';
 import '@civui/layout';
-import '@civui/actions';
 import '@civui/feedback';
 
 // Force Vite to include form-step (tree-shaking workaround)

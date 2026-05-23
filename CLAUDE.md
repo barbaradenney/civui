@@ -14,13 +14,14 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → layout → actions, overlays → inputs → controls → compound → form-patterns`
+Build order: `tokens → core → layout → actions, navigation, overlays → inputs → controls → compound → form-patterns`
 
 | Package | Path | Description |
 |---------|------|-------------|
 | `@civui/tokens` | `packages/tokens/` | Design tokens (colors, spacing, typography) |
 | `@civui/core` | `packages/core/` | Base classes, a11y utilities, analytics, date utils, form-field wrappers |
-| `@civui/actions` | `packages/actions/` | Action + navigation affordances (button, action-button, button-group, filter-chip, link, link-card, skip-link). Polymorphism — buttons accept `href`, links accept `type` for device actions — means the boundary between "action" and "navigation" is a render-time detail, not a package split |
+| `@civui/actions` | `packages/actions/` | Polymorphic action + link affordances (button, action-button, filter-chip, filter-chip-group, link, link-card, skip-link, confirm-button, toggle-button). Buttons accept `href` and links accept `type` for device actions, so the boundary between "single action" and "single link" is a render-time detail — these stay one package |
+| `@civui/navigation` | `packages/navigation/` | Navigation surfaces (breadcrumb, nav, side-nav, tabs, tab-nav, on-this-page, back-to-top). Pulled out of `@civui/actions` once the cluster grew big enough — these are link/list containers, not single affordances, so the polymorphism argument that keeps button-and-link together doesn't apply |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet, drawer, menu) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, list, page-header, tag, pagination, data-grid) |
 | `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
@@ -246,7 +247,8 @@ Why schemas matter:
 - Progress + feedback: `civ-progress-steps`, `civ-progress-percent`, `civ-progress-header`, `civ-support-resources`, `civ-alert`, `civ-badge`, `civ-count`
 - Overlays: `civ-modal`, `civ-action-sheet`
 - Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`, `civ-icon`
-- Actions + navigation: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
+- Actions: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
+- Navigation: (none registered yet — schemas exist for `civ-nav`, `civ-breadcrumb`, `civ-tabs`, `civ-tab-nav`, `civ-side-nav`, `civ-on-this-page`, `civ-back-to-top` and their item sub-components, but native + Drupal stubs are deferred per `.claude/rules/audit-debt.md`)
 
 Five CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.

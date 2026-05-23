@@ -243,4 +243,304 @@ describe('civ-accordion', () => {
     expect(el.open).toBe(true);
     expect(handler).toHaveBeenCalledTimes(1);
   });
+
+  // ─── Keyboard navigation (ARIA APG pattern) ───────────────────
+
+  function focusSummary(item: CivAccordionItem): HTMLElement {
+    const summary = item.querySelector<HTMLElement>('summary')!;
+    summary.focus();
+    return summary;
+  }
+
+  function dispatchKeyOn(target: HTMLElement, key: string): KeyboardEvent {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    return event;
+  }
+
+  it('ArrowDown moves focus from one summary to the next', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    const summaryA = focusSummary(items[0]);
+    dispatchKeyOn(summaryA, 'ArrowDown');
+    expect(document.activeElement).toBe(items[1].querySelector('summary'));
+  });
+
+  it('ArrowUp moves focus to the previous summary', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    dispatchKeyOn(focusSummary(items[1]), 'ArrowUp');
+    expect(document.activeElement).toBe(items[0].querySelector('summary'));
+  });
+
+  it('ArrowDown wraps from the last item to the first', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    dispatchKeyOn(focusSummary(items[1]), 'ArrowDown');
+    expect(document.activeElement).toBe(items[0].querySelector('summary'));
+  });
+
+  it('ArrowUp wraps from the first item to the last', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    dispatchKeyOn(focusSummary(items[0]), 'ArrowUp');
+    expect(document.activeElement).toBe(items[1].querySelector('summary'));
+  });
+
+  it('Home jumps to the first item, End jumps to the last', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    dispatchKeyOn(focusSummary(items[1]), 'Home');
+    expect(document.activeElement).toBe(items[0].querySelector('summary'));
+    dispatchKeyOn(focusSummary(items[1]), 'End');
+    expect(document.activeElement).toBe(items[2].querySelector('summary'));
+  });
+
+  it('skips disabled items during arrow navigation', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B" disabled>B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    dispatchKeyOn(focusSummary(items[0]), 'ArrowDown');
+    // Skip the disabled middle item, land on C.
+    expect(document.activeElement).toBe(items[2].querySelector('summary'));
+  });
+
+  it('keyboard handler does not respond when focus is inside panel content', async () => {
+    // Users with text cursors inside an input shouldn't have ArrowDown
+    // hijacked — accordion navigation only applies when the SUMMARY
+    // itself is focused.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A" open><input data-test="input" /></civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    const input = el.querySelector<HTMLInputElement>('[data-test="input"]')!;
+    input.focus();
+    dispatchKeyOn(input, 'ArrowDown');
+    // Focus stays on the input — accordion didn't intercept.
+    expect(document.activeElement).toBe(input);
+    expect(document.activeElement).not.toBe(items[1].querySelector('summary'));
+  });
+
+  it('keyboard handler in outer accordion does not move focus when an inner accordion handles it', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion id="outer">
+        <civ-accordion-item label="Outer A" open>
+          <civ-accordion id="inner">
+            <civ-accordion-item label="Inner X">X</civ-accordion-item>
+            <civ-accordion-item label="Inner Y">Y</civ-accordion-item>
+          </civ-accordion>
+        </civ-accordion-item>
+      </civ-accordion>
+    `);
+    const innerItems = el.querySelectorAll<CivAccordionItem>('#inner > .civ-accordion__inner > civ-accordion-item');
+    dispatchKeyOn(focusSummary(innerItems[0]), 'ArrowDown');
+    // Focus moves to the next INNER item only — the outer handler's
+    // scope check (`target.closest('civ-accordion') !== this`) filters
+    // out events from grandchild items.
+    expect(document.activeElement).toBe(innerItems[1].querySelector('summary'));
+  });
+
+  // ─── expandAll / collapseAll methods ──────────────────────────
+
+  it('expandAll() opens every non-disabled direct-child item', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B" disabled>B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    el.expandAll();
+    await elementUpdated(el);
+    expect(items[0].open).toBe(true);
+    expect(items[1].open).toBe(false); // disabled, skipped
+    expect(items[2].open).toBe(true);
+  });
+
+  it('expandAll() in single mode opens only the first non-disabled item', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion single>
+        <civ-accordion-item label="A" disabled>A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    el.expandAll();
+    await elementUpdated(el);
+    expect(items[0].open).toBe(false); // disabled
+    expect(items[1].open).toBe(true);  // first non-disabled
+    expect(items[2].open).toBe(false); // single mode skips the rest
+  });
+
+  it('collapseAll() closes every non-disabled item', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A" open>A</civ-accordion-item>
+        <civ-accordion-item label="B" open>B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    el.collapseAll();
+    await elementUpdated(el);
+    expect(items[0].open).toBe(false);
+    expect(items[1].open).toBe(false);
+  });
+
+  it('collapseAll() does not touch disabled-open items (setter rejects)', async () => {
+    // Contract consistency: `disabled` freezes the item's state.
+    // collapseAll respects that — a disabled item that ships
+    // pre-authored as open stays open.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A" disabled open>A</civ-accordion-item>
+        <civ-accordion-item label="B" open>B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    el.collapseAll();
+    await elementUpdated(el);
+    expect(items[0].open).toBe(true);  // disabled, frozen
+    expect(items[1].open).toBe(false);
+  });
+
+  it('expandAll/collapseAll only touch direct-child items, not nested', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion id="outer">
+        <civ-accordion-item label="Outer A">
+          <civ-accordion id="inner">
+            <civ-accordion-item label="Inner X">X</civ-accordion-item>
+          </civ-accordion>
+        </civ-accordion-item>
+        <civ-accordion-item label="Outer B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const outerA = el.querySelector<CivAccordionItem>('#outer > .civ-accordion__inner > civ-accordion-item:nth-child(1)')!;
+    const outerB = el.querySelector<CivAccordionItem>('#outer > .civ-accordion__inner > civ-accordion-item:nth-child(2)')!;
+    const innerX = el.querySelector<CivAccordionItem>('#inner > .civ-accordion__inner > civ-accordion-item')!;
+
+    el.expandAll();
+    await elementUpdated(el);
+
+    expect(outerA.open).toBe(true);
+    expect(outerB.open).toBe(true);
+    expect(innerX.open).toBe(false); // grandchild, not touched
+  });
+
+  // ─── Parent disabled cascade ──────────────────────────────────
+
+  it('reflects disabled to host attribute', async () => {
+    const el = await fixture<CivAccordion>('<civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>');
+    expect(el.hasAttribute('disabled')).toBe(false);
+    el.disabled = true;
+    await elementUpdated(el);
+    expect(el.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('parent disabled rejects programmatic open on children', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion disabled>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const item = el.querySelector<CivAccordionItem>('civ-accordion-item')!;
+    item.open = true;
+    await elementUpdated(item);
+    expect(item.open).toBe(false);
+    expect(item.querySelector('details')!.open).toBe(false);
+  });
+
+  it('parent disabled reverts user-click toggles on children', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion disabled>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const item = el.querySelector<CivAccordionItem>('civ-accordion-item')!;
+    const details = item.querySelector('details')!;
+    details.open = true;
+    details.dispatchEvent(new Event('toggle'));
+    await elementUpdated(item);
+    expect(item.open).toBe(false);
+    expect(details.open).toBe(false);
+  });
+
+  it('parent disabled propagates aria-disabled and tabindex to child summaries', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion disabled>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    for (const item of el.querySelectorAll<CivAccordionItem>('civ-accordion-item')) {
+      const summary = item.querySelector('summary')!;
+      expect(summary.getAttribute('aria-disabled')).toBe('true');
+      expect(summary.getAttribute('tabindex')).toBe('-1');
+    }
+  });
+
+  it('re-enables children when parent disabled is cleared', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion disabled>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const item = el.querySelector<CivAccordionItem>('civ-accordion-item')!;
+
+    // While disabled — open is rejected
+    item.open = true;
+    await elementUpdated(item);
+    expect(item.open).toBe(false);
+
+    // Re-enable parent
+    el.disabled = false;
+    await elementUpdated(el);
+    await elementUpdated(item);
+
+    // aria-disabled/tabindex should be cleared on the child summary
+    const summary = item.querySelector('summary')!;
+    expect(summary.hasAttribute('aria-disabled')).toBe(false);
+    expect(summary.hasAttribute('tabindex')).toBe(false);
+
+    // open is now allowed
+    item.open = true;
+    await elementUpdated(item);
+    expect(item.open).toBe(true);
+  });
 });

@@ -26,7 +26,9 @@ import type { SlotConfig } from '@civui/core';
  * changes. While disabled, the trigger has `aria-disabled="true"`
  * and `tabindex="-1"`, removing it from the tab order; mouse and
  * keyboard activation are intercepted before the `<details>` paints
- * the expanded state.
+ * the expanded state. A parent `<civ-accordion disabled>` cascades
+ * the same disabled treatment to every direct-child item — the
+ * effective disabled state is `this.disabled || parent.disabled`.
  *
  * The component dispatches `civ-toggle` (non-bubbling, mirrors
  * civ-disclosure) on EVERY open-state transition — user-initiated
@@ -75,16 +77,18 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
    * Whether the panel is currently expanded.
    *
    * Uses a manual accessor so we can gate runtime programmatic
-   * changes on `disabled` — the auto-generated Lit setter would
-   * accept the change and let Lit reflect it to `<details>`,
-   * defeating the disabled contract. The gate only applies after
-   * `firstUpdated()` so initial markup (`<civ-accordion-item disabled open>`)
-   * paints in its authored state.
+   * changes on the effective disabled state — the auto-generated
+   * Lit setter would accept the change and let Lit reflect it to
+   * `<details>`, defeating the disabled contract. The gate only
+   * applies after `firstUpdated()` so initial markup
+   * (`<civ-accordion-item disabled open>`) paints in its authored
+   * state. The check also reads the parent accordion's `disabled`
+   * so `<civ-accordion disabled>` cascades to every child.
    */
   @property({ type: Boolean, reflect: true })
   get open(): boolean { return this._open; }
   set open(value: boolean) {
-    if (this._initialized && this.disabled && value !== this._open) {
+    if (this._initialized && this._effectivelyDisabled && value !== this._open) {
       // Reject runtime programmatic changes while disabled — the
       // user-click revert in `_onToggle` handles the equivalent
       // browser-initiated path.
@@ -94,6 +98,21 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
     if (old === value) return;
     this._open = value;
     this.requestUpdate('open', old);
+  }
+
+  /**
+   * Effective disabled state: the item is treated as disabled if
+   * EITHER its own `disabled` prop is true OR the nearest ancestor
+   * `<civ-accordion>` has `disabled` set. The parent ripples a
+   * `requestUpdate()` to children when its `disabled` flips so the
+   * computed state stays in sync.
+   */
+  private get _effectivelyDisabled(): boolean {
+    if (this.disabled) return true;
+    const parent = this.closest('civ-accordion') as
+      | (HTMLElement & { disabled?: boolean })
+      | null;
+    return !!parent?.disabled;
   }
 
   private _open = false;
@@ -142,6 +161,7 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const disabled = this._effectivelyDisabled;
     return html`
       <details
         class="civ-accordion-item"
@@ -150,8 +170,8 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
       >
         <summary
           class="civ-accordion-item__trigger"
-          aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}"
-          tabindex="${ifDefined(this.disabled ? '-1' : undefined)}"
+          aria-disabled="${ifDefined(disabled ? 'true' : undefined)}"
+          tabindex="${ifDefined(disabled ? '-1' : undefined)}"
         >
           <civ-icon name="chevron-right" class="civ-accordion-item__icon" aria-hidden="true"></civ-icon>
           ${this._renderLabel()}
@@ -202,7 +222,7 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
   private _onToggle(e: Event): void {
     const details = e.target as HTMLDetailsElement;
     if (details.open === this.open) return;
-    if (this.disabled) {
+    if (this._effectivelyDisabled) {
       details.open = this.open;
       return;
     }

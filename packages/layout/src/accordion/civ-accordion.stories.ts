@@ -3,6 +3,8 @@ import { html } from 'lit';
 import './civ-accordion.js';
 import './civ-accordion-item.js';
 import '../card/civ-card.js';
+import '@civui/actions/button';
+import type { CivAccordion } from './civ-accordion.js';
 
 const meta: Meta = {
   title: 'Layout/Accordion',
@@ -213,5 +215,124 @@ export const WithinCard: Story = {
         </civ-accordion-item>
       </civ-accordion>
     </civ-card>
+  `,
+};
+
+export const ExpandCollapseAll: Story = {
+  name: 'Expand all / collapse all',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+\`<civ-accordion>\` exposes \`expandAll()\` and \`collapseAll()\`
+methods for "Show all" / "Hide all" affordances on FAQ pages,
+settings panels, and similar dense lists. In \`single\` mode,
+\`expandAll()\` opens only the first non-disabled item (the
+invariant forbids more). Disabled items are skipped by both
+methods — their state stays frozen.
+        `,
+      },
+    },
+  },
+  render: () => {
+    function getAccordion(e: Event): CivAccordion {
+      const root = (e.currentTarget as HTMLElement).closest('[data-story]')!;
+      return root.querySelector<CivAccordion>('civ-accordion')!;
+    }
+    return html`
+      <div data-story class="civ-flex civ-flex-col civ-gap-3">
+        <div class="civ-flex civ-gap-2">
+          <civ-button
+            label="Expand all"
+            variant="secondary"
+            @click="${(e: Event) => getAccordion(e).expandAll()}"
+          ></civ-button>
+          <civ-button
+            label="Collapse all"
+            variant="secondary"
+            @click="${(e: Event) => getAccordion(e).collapseAll()}"
+          ></civ-button>
+        </div>
+        <civ-accordion>
+          <civ-accordion-item label="Eligibility requirements">
+            <p>Who qualifies for VA health care benefits.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="How to apply">
+            <p>Three ways to submit your application.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="What you'll need">
+            <p>DD-214, Social Security number, and recent tax return.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="After you apply">
+            <p>What to expect during enrollment review.</p>
+          </civ-accordion-item>
+        </civ-accordion>
+      </div>
+    `;
+  },
+};
+
+export const KeyboardNavigation: Story = {
+  name: 'Keyboard navigation',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Follows the ARIA APG accordion pattern. When focus is on an item
+header, **↓ / ↑** move to the next / previous header (wrapping at
+edges); **Home** and **End** jump to the first / last. Disabled
+items are skipped during arrow navigation. Tab moves focus through
+the accordion normally; the arrow-key behavior is additive.
+
+Click the first header below, then try the arrow keys.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <civ-accordion>
+      <civ-accordion-item label="One — focus me, then press ↓">
+        <p>Pressing the down-arrow moves focus to the next header.</p>
+      </civ-accordion-item>
+      <civ-accordion-item label="Two — disabled (skipped)" disabled>
+        <p>Disabled items are removed from the arrow-key navigation cycle.</p>
+      </civ-accordion-item>
+      <civ-accordion-item label="Three">
+        <p>Arrow keys jumped past the disabled item to land here.</p>
+      </civ-accordion-item>
+      <civ-accordion-item label="Four — press End from anywhere">
+        <p>Home / End jump to the first / last non-disabled item.</p>
+      </civ-accordion-item>
+    </civ-accordion>
+  `,
+};
+
+export const ParentDisabled: Story = {
+  name: 'Parent-level disabled',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Setting \`disabled\` on \`<civ-accordion>\` cascades to every
+direct-child item — both visually (dimmed, no pointer events) and
+behaviorally (programmatic \`item.open = true\` is rejected, user
+clicks are reverted, keyboard navigation skips). Individual items
+can still be disabled independently when the parent is enabled.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <civ-accordion disabled>
+      <civ-accordion-item label="Eligibility section">
+        <p>This entire accordion is parent-disabled.</p>
+      </civ-accordion-item>
+      <civ-accordion-item label="Application section">
+        <p>None of the items can be expanded.</p>
+      </civ-accordion-item>
+      <civ-accordion-item label="Review section">
+        <p>Useful while content is loading or the form is otherwise gated.</p>
+      </civ-accordion-item>
+    </civ-accordion>
   `,
 };

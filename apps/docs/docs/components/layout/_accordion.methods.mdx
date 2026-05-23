@@ -1,0 +1,7 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `expandAll()` | `void` | Open every direct-child item. In `single` mode, opens only the first non-disabled item (since "all open" would violate the invariant). Disabled items are skipped. |
+| `collapseAll()` | `void` | Close every direct-child item. Disabled items are skipped — their `open` setter rejects programmatic changes, matching the contract that `disabled` freezes the item state. |

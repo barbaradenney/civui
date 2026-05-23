@@ -21,6 +21,16 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  * items ship with `open`, the parent keeps the first and closes the
  * rest) and when `single` transitions from false to true at runtime.
  *
+ * **Keyboard navigation** follows the ARIA APG accordion pattern:
+ * when a summary has focus, `ArrowDown` / `ArrowUp` move between
+ * item headers (wraps at edges), and `Home` / `End` jump to the
+ * first / last item. Disabled items are skipped.
+ *
+ * **`disabled` cascades** to all direct-child items — both the
+ * visual treatment and the behavioral gate (programmatic opens
+ * rejected, user-clicks reverted). Individual items can also be
+ * disabled independently via their own `disabled` prop.
+ *
  * Nested accordions are supported: each `<civ-accordion>` only
  * coordinates the items that are its OWN direct descendants. Events
  * from grandchild items (in a nested accordion) are ignored.
@@ -31,6 +41,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  * @element civ-accordion
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
+ * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -48,6 +59,14 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   /** When true, opening one item closes any other open siblings. */
   @property({ type: Boolean, reflect: true }) single = false;
 
+  /**
+   * Disables every direct-child item. Children check their own
+   * `disabled` AND the nearest ancestor accordion's `disabled` when
+   * deciding whether to accept toggle attempts, so a true value
+   * here cascades automatically.
+   */
+  @property({ type: Boolean, reflect: true }) disabled = false;
+
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-accordion-content]' };
   }
@@ -55,10 +74,12 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('civ-accordion-item-toggle', this._onItemToggle as EventListener);
+    this.addEventListener('keydown', this._onKeydown);
   }
 
   override disconnectedCallback(): void {
     this.removeEventListener('civ-accordion-item-toggle', this._onItemToggle as EventListener);
+    this.removeEventListener('keydown', this._onKeydown);
     super.disconnectedCallback();
   }
 
@@ -70,14 +91,20 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /**
-   * Reconcile when `single` is toggled at runtime. If a consumer
-   * flips `single` to true on an accordion with multiple open
-   * items, keep the first open item and close the rest.
+   * Reconcile when `single` toggles at runtime. If `disabled`
+   * changes, ripple a re-render to every direct-child item so they
+   * pick up the new effective-disabled state (`aria-disabled`,
+   * `tabindex`, and the setter gate all read the live parent state).
    */
   override updated(changes: Map<PropertyKey, unknown>): void {
     super.updated(changes);
     if (changes.has('single') && this.single && changes.get('single') === false) {
       this._enforceSingleOpen();
+    }
+    if (changes.has('disabled')) {
+      for (const item of this._directChildItems()) {
+        item.requestUpdate();
+      }
     }
   }
 
@@ -85,6 +112,36 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <div class="civ-accordion__inner" data-civ-accordion-content></div>
     `;
+  }
+
+  /**
+   * Open every direct-child item. In `single` mode, opens only the
+   * first non-disabled item (since "all open" violates the
+   * invariant). Disabled items are skipped — the per-item `open`
+   * setter rejects programmatic changes while disabled, so a forced
+   * `item.open = true` would be a no-op anyway.
+   */
+  expandAll(): void {
+    const items = this._directChildItems().filter((i) => !i.disabled);
+    if (items.length === 0) return;
+    if (this.single) {
+      items[0].open = true;
+      return;
+    }
+    for (const item of items) {
+      item.open = true;
+    }
+  }
+
+  /**
+   * Close every direct-child item. Disabled items are skipped (their
+   * setter rejects the change), matching the contract that `disabled`
+   * freezes the item's state.
+   */
+  collapseAll(): void {
+    for (const item of this._directChildItems()) {
+      item.open = false;
+    }
   }
 
   /**
@@ -112,6 +169,45 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
         item.open = false;
       }
     }
+  };
+
+  /**
+   * ARIA APG keyboard pattern. ArrowDown / ArrowUp move between
+   * item headers; Home / End jump to first / last. Disabled items
+   * are skipped. Only acts when focus is on a `<summary>` belonging
+   * to one of THIS accordion's direct-child items — nested
+   * accordions' summaries are handled by their own listener.
+   */
+  private _onKeydown = (e: KeyboardEvent): void => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+    const target = e.target as Element | null;
+    if (!target || target.tagName !== 'SUMMARY') return;
+    const item = target.closest('civ-accordion-item') as CivAccordionItem | null;
+    if (!item || item.closest('civ-accordion') !== this) return;
+
+    const items = this._directChildItems().filter((i) => !i.disabled);
+    if (items.length === 0) return;
+    const currentIdx = items.indexOf(item);
+    if (currentIdx < 0) return;
+
+    let nextIdx = currentIdx;
+    switch (e.key) {
+      case 'ArrowDown':
+        nextIdx = (currentIdx + 1) % items.length;
+        break;
+      case 'ArrowUp':
+        nextIdx = (currentIdx - 1 + items.length) % items.length;
+        break;
+      case 'Home':
+        nextIdx = 0;
+        break;
+      case 'End':
+        nextIdx = items.length - 1;
+        break;
+    }
+
+    e.preventDefault();
+    items[nextIdx].querySelector<HTMLElement>('summary')?.focus();
   };
 
   /** Items whose closest accordion ancestor is THIS accordion. */

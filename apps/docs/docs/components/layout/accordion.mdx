@@ -49,6 +49,18 @@ reader.
 
 <StoryEmbed id="layout-accordion--within-card" />
 
+### Expand all / collapse all
+
+<StoryEmbed id="layout-accordion--expand-collapse-all" />
+
+### Keyboard navigation
+
+<StoryEmbed id="layout-accordion--keyboard-navigation" />
+
+### Parent-level disabled
+
+<StoryEmbed id="layout-accordion--parent-disabled" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-accordion--default)
 
 ## `civ-accordion` Props
@@ -58,6 +70,13 @@ reader.
 ## `civ-accordion` Events
 
 <AccordionEvents />
+
+## `civ-accordion` Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `expandAll()` | `void` | Open every direct-child item. In `single` mode, opens only the first non-disabled item. Disabled items are skipped. |
+| `collapseAll()` | `void` | Close every direct-child item. Disabled items are skipped — their state stays frozen. |
 
 ## `civ-accordion-item` Props
 
@@ -144,11 +163,18 @@ assistive-tech rotor navigation.
 - An internal bubbling event (`civ-accordion-item-toggle`) is used by
   the parent `<civ-accordion>` to coordinate `single`-open mode.
   Consumers should not rely on it.
-- Keyboard accessible by default. Enter or Space on the summary
-  toggles the panel. Tab order is preserved.
+- **Keyboard navigation** follows the ARIA APG accordion pattern.
+  Enter / Space on a summary toggles the panel. **↓ / ↑** move focus
+  between item headers (wraps at edges); **Home** / **End** jump to
+  the first / last header. Disabled items are skipped during arrow
+  navigation. Tab order is preserved — arrow-key navigation is
+  additive when focus is already on a summary.
 - Optional `heading-level` (1–6) wraps the label in an `<h1>`–`<h6>` so
   rotor navigation works. The visual treatment is held constant across
   all levels.
+- `<civ-accordion disabled>` cascades to every item — the summary gets
+  `aria-disabled="true"` and `tabindex="-1"`, so assistive technologies
+  announce the disabled state and keyboard users skip the items.
 
 ## Form fields inside an accordion
 

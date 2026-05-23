@@ -20,6 +20,23 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables every direct-child item. Each item checks the nearest ancestor accordion\'s `disabled` when deciding whether to accept a toggle; setting `disabled` here cascades to all items without mutating their own `disabled` prop. Individual items can also be disabled independently.',
+      default: false,
+      reflect: true,
+    },
+  },
+
+  methods: {
+    expandAll: {
+      description: 'Open every direct-child item. In `single` mode, opens only the first non-disabled item (since "all open" would violate the invariant). Disabled items are skipped.',
+      returns: 'void',
+    },
+    collapseAll: {
+      description: 'Close every direct-child item. Disabled items are skipped — their `open` setter rejects programmatic changes, matching the contract that `disabled` freezes the item state.',
+      returns: 'void',
+    },
   },
 
   // No own events. The accordion observes a bubbling internal event

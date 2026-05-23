@@ -95,6 +95,8 @@
   civ-list-item,
   civ-memorable-date,
   civ-menu-item,
+  civ-metric-group,
+  civ-metric-tile,
   civ-modal,
   civ-name,
   civ-nav,
@@ -4872,6 +4874,96 @@
   .civ-card__footer {
     @apply civ-mt-3 civ-pt-3;
     border-top: 1px solid var(--civ-color-border);
+  }
+
+  /* ── Metric Tile + Group ──────────────────────────────────────
+     Display-only dashboard tiles. The tile inverts civ-card's
+     hierarchy — value is the dominant element, label rides above
+     it as a small caption. The group is a responsive grid wrapper
+     that scales from 1 column on mobile up to `--civ-metric-group-cols`
+     on desktop. */
+
+  .civ-metric-tile {
+    @apply civ-flex civ-flex-col civ-gap-1 civ-p-4 civ-border civ-rounded;
+    background-color: var(--civ-color-surface);
+    border-color: var(--civ-color-border);
+    color: var(--civ-color-base-darkest);
+    min-width: 0;
+  }
+
+  .civ-metric-tile__header {
+    @apply civ-flex civ-items-center civ-gap-2;
+  }
+
+  .civ-metric-tile__icon {
+    @apply civ-flex-shrink-0;
+    color: var(--civ-color-base-dark);
+    font-size: 1.25em;
+  }
+
+  .civ-metric-tile__label {
+    @apply civ-text-sm civ-font-semibold;
+    color: var(--civ-color-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .civ-metric-tile__value-row {
+    @apply civ-flex civ-items-baseline civ-gap-2;
+  }
+
+  .civ-metric-tile__value {
+    @apply civ-font-bold;
+    font-size: var(--civ-typography-fontSize-3xl);
+    line-height: 1.1;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-metric-tile__unit {
+    @apply civ-text-sm;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-metric-tile__delta {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-text-sm civ-font-semibold;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-metric-tile__delta-icon {
+    font-size: 1em;
+  }
+
+  .civ-metric-tile__delta--positive {
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-metric-tile__delta--negative {
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-metric-tile__delta--neutral {
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-metric-tile__description {
+    @apply civ-text-sm civ-m-0;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-metric-group {
+    display: grid;
+    gap: var(--civ-spacing-3, 0.75rem);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 481px) {
+    .civ-metric-group {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) {
+    .civ-metric-group {
+      grid-template-columns: repeat(var(--civ-metric-group-cols, 4), minmax(0, 1fr));
+    }
   }
 
   /* ── Repeater row heading ─────────────────────────────────────

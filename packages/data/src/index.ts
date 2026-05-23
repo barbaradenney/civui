@@ -5,6 +5,8 @@ import './toolbar/civ-toolbar.js';
 import './bulk-actions/civ-bulk-actions.js';
 import './filterable-list/civ-filterable-list.js';
 import './column-visibility/civ-column-visibility.js';
+import './metric-tile/civ-metric-tile.js';
+import './metric-group/civ-metric-group.js';
 
 // Pagination
 export { CivPagination } from './pagination/index.js';
@@ -32,6 +34,13 @@ export { CivFilterableList } from './filterable-list/index.js';
 
 // Column Visibility
 export { CivColumnVisibility } from './column-visibility/index.js';
+
+// Metric Tile
+export { CivMetricTile } from './metric-tile/index.js';
+export type { MetricTrend, MetricIntent } from './metric-tile/index.js';
+
+// Metric Group
+export { CivMetricGroup } from './metric-group/index.js';
 
 // Export utility (no custom element — pure function)
 export { gridExport } from './export/index.js';

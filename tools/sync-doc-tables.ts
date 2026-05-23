@@ -184,6 +184,8 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-on-this-page-item': 'actions/on-this-page.mdx',
   // Time picker is documented on the shorter "Time" page filename.
   'civ-time-picker': 'inputs/time.mdx',
+  // Metric group is documented as a sub-section of the metric tile page.
+  'civ-metric-group': 'data/metric-tile.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

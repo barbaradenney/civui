@@ -30,6 +30,18 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Metric tile follow-ups
+
+- **Surfaced:** Metric tile landing, 2026-05-23. Branch `claude/tab-component-styling-Ndmic`.
+- **What landed:** Two new web components in `@civui/data` — `<civ-metric-tile>` (display-only dashboard tile with label / value / unit / icon / delta / trend / intent / description) and `<civ-metric-group>` (responsive grid wrapper that stacks to 1 col on mobile, 2 on tablet, up to `columns` on desktop). Schemas, tests (14 new tests), Storybook stories, and a Docusaurus page (`docs/components/data/metric-tile.mdx` — covers both components, per `HOST_PAGE_OVERRIDES`) all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Polymorphic clickable tile.** The tile is display-only — no `href` / `<a>` rendering. Consumers who want a drillable tile wrap the content in `<civ-link-card>` (which already exists for that pattern). Adding `href` to `<civ-metric-tile>` later is non-breaking if a real use case appears.
+  2. **Sparkline / inline trend chart.** No embedded SVG chart. Trend is conveyed by arrow + delta text only. A future sparkline variant would need a data-array prop and decisions about chart rendering library.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-metric-tile` and `civ-metric-group` and they validate cleanly + produce Props/Events partials, but neither is registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{MetricTile,MetricGroup}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{MetricTile,MetricGroup}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{metric-tile,metric-group}/{name}.component.yml`). Pattern: shape `civ-metric-tile` after `civ-card` (props-driven container with no children); shape `civ-metric-group` after `civ-list` (parent container, slot-projects children).
+- **Why deferred:** Same rationale as the existing native-stubs entry — responsive grid behavior (SwiftUI `LazyVGrid` with adaptive size classes, Compose `LazyVerticalGrid` with `GridCells.Adaptive`) needs device verification.
+
+---
+
 ## Navigation components follow-ups
 
 - **Surfaced:** Navigation components landing, 2026-05-18. Branch `claude/add-navigation-components-YikKk`.

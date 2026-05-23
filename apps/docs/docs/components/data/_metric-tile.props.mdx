@@ -1,0 +1,13 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | Small caption rendered above the value |
+| `value` | `string` | `''` | The primary figure — rendered large and bold |
+| `unit` | `string` | `''` | Optional unit string appended after the value (e.g. `ms`, `applications`) |
+| `icon` | `string` | `''` | Optional icon name from the CivUI icon library, rendered before the label |
+| `description` | `string` | `''` | Optional secondary text below the delta — extra context (e.g. "vs. last 30 days") |
+| `delta` | `string` | `''` | Optional delta string (e.g. "+12%", "-3.2%", "+248") |
+| `trend` | `''` \| `'up'` \| `'down'` \| `'flat'` | `''` | Arrow direction next to the delta. `up` renders an upward arrow, `down` a downward arrow, `flat` a horizontal minus. Empty omits the arrow. |
+| `intent` | `''` \| `'positive'` \| `'negative'` \| `'neutral'` | `''` | Color treatment for the delta. `positive` is green, `negative` is red, `neutral` is base color. Independent of `trend` because "up" can be good (active users) or bad (errors). |

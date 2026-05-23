@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `href` | `string` | `''` | Destination URL |
-| `current` | `boolean` | `false` | Mark as the active page. Sets `aria-current="page"` and applies the active visual style (leading-edge accent rail) |
-| `disabled` | `boolean` | `false` | Disabled state — strips the href, renders as a non-interactive `<span>` with `aria-disabled="true"`, and applies disabled styling |
+| `href` | `string` | `''` | Destination URL. Ignored when the item has nested children — parents are disclosure-only. |
+| `current` | `boolean` | `false` | Mark as the active page. Sets `aria-current="page"` on leaf rows and applies the active visual style (leading-edge accent rail). Also drives auto-expand of ancestor parents on first paint. |
+| `disabled` | `boolean` | `false` | Disabled state — strips the href on leaf rows, renders as a non-interactive `<span>` with `aria-disabled="true"`, and applies disabled styling. On parent rows, disables the disclosure trigger. |
+| `open` | `boolean` | `false` | Whether the disclosure panel is expanded. Only meaningful on parents with nested children. Auto-set to `true` on first paint if any descendant has `current` and `open` was not explicitly authored. |

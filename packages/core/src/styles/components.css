@@ -3960,6 +3960,48 @@
     opacity: var(--civ-opacity-disabled);
   }
 
+  /*
+   * Disclosure trigger — used when a side-nav-item has nested
+   * children. Full-row button with leading chevron + label.
+   * Chevron rotates 90° when the parent's `open` reflects.
+   *
+   * Padding/border are matched to .civ-side-nav__link so leaf and
+   * parent rows align visually in the same rail.
+   */
+  .civ-side-nav__trigger {
+    @apply civ-flex civ-items-center civ-w-full civ-cursor-pointer civ-bg-transparent
+           civ-text-start civ-font-normal civ-border-0;
+    padding: 0.5rem 0.75rem;
+    color: var(--civ-color-base-darkest);
+    /* Reserve the same rail width as leaf links so parent/leaf
+       rows visually align in the same column. */
+    border-inline-start: 4px solid transparent;
+    gap: 0.5rem;
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+  @media (hover: hover) {
+    .civ-side-nav__trigger:hover:not(:disabled) {
+      background-color: var(--civ-color-surface-hover);
+    }
+  }
+  .civ-side-nav__trigger:disabled,
+  .civ-side-nav__trigger--disabled {
+    cursor: not-allowed;
+    opacity: var(--civ-opacity-disabled);
+  }
+  .civ-side-nav__caret {
+    @apply civ-flex-shrink-0;
+    color: var(--civ-color-base-dark);
+    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+  .civ-side-nav__trigger[aria-expanded="true"] .civ-side-nav__caret {
+    transform: rotate(90deg);
+  }
+  .civ-side-nav__trigger-label {
+    flex: 1;
+    min-width: 0;
+  }
+
   /* ── On This Page (in-page anchor nav / table of contents) ─ */
 
   .civ-on-this-page {

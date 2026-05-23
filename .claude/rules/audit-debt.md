@@ -53,6 +53,20 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Chip family expansion (sibling components, not a rename)
+
+- **Surfaced:** Callout component landing, 2026-05-23. Branch `claude/callout-utility-component-AVY8b`. Filter-chip border was changed to fully-rounded (`civ-rounded-full`) in the same branch; the question of whether to broaden the component came up immediately after.
+- **Decision:** When other "rounded button"–shaped affordances are needed, **add sibling components** (`civ-action-chip`, `civ-input-chip`) rather than rename `civ-filter-chip` to a polymorphic `civ-chip`. Material's chip family follows the same pattern (`FilterChip` / `ActionChip` / `InputChip` are each distinct components) for the same reason: each chip type has a different contract — selection toggle vs. fire-and-forget action vs. user-entered tag with a remove handle.
+- **What the new siblings would be:**
+  1. **`civ-action-chip`** — fire-and-forget rounded button (no toggle state, no check icon). Use cases: quick filters that immediately re-fetch ("Last 30 days"), suggestion chips in a chat composer, secondary CTAs that need a less prominent shape than `civ-button`. Contract: single `label`, optional `iconStart`, single `civ-click` event. No `selected` state.
+  2. **`civ-input-chip`** — user-entered token with a remove handle (e.g. tag input, recipient list, applied-filter readouts). Distinct from `civ-filter-chip` because the chip *represents user-entered content*, not a toggleable filter option. Always has a remove `(X)`. Contract: `label`, `removable` (always true in practice), `civ-remove` event.
+- **What stays on `civ-filter-chip`:** the existing toggle behavior (`selected` state + check icon + optional remove). Don't merge.
+- **Shared CSS:** `civ-action-chip` and `civ-input-chip` can compose the same `.civ-filter-chip` wrapper styles (border-radius, padding, focus ring) via a shared BEM base class — likely rename the internal class to `.civ-chip` and have `.civ-filter-chip` / `.civ-action-chip` / `.civ-input-chip` be modifier classes off it. That refactor is internal-only; the public component tag names stay.
+- **Naming note:** if someone proposes renaming `civ-filter-chip` → `civ-chip` with a `role` / `chip-role` prop, push back: it forces every consumer to thread a prop to distinguish behaviors that are semantically different, and the runtime cost (validation, conditional rendering of the check icon and remove button) is higher than three small components.
+- **Why deferred:** No consumer has asked for the second chip type yet; the immediate filter-chip use case is fully served. Build a sibling when a real placement needs one.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

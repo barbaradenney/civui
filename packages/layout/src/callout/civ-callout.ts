@@ -15,9 +15,9 @@ const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
  * CivUI Callout
  *
  * A presentational primitive that frames slotted content with a left
- * accent border and consistent padding. Five color variants map to the
- * semantic palette: `default` (primary), `info`, `warning`, `error`,
- * `success`.
+ * accent border and consistent padding. Five color variants: `default`
+ * (neutral gray, no urgency) plus four semantic palette variants —
+ * `info`, `warning`, `error`, `success`.
  *
  * Use for important notices, tips, or contextual information. For
  * dismissible / live-region alerts (status + ARIA), use `civ-alert`

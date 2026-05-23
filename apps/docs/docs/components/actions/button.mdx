@@ -50,6 +50,16 @@ An accessible button component that always renders a `<button>` element. For lin
 
 <StoryEmbed id="actions-button--disabled" />
 
+### Loading
+
+Set `loading` while an async action is in flight. The button swaps its leading icon for a [`civ-spinner`](../feedback/spinner), disables itself, and sets `aria-busy="true"`. Use `loading-label` to set an action-specific verb the spinner announces ("Saving…", "Submitting…").
+
+```html
+<civ-button loading loading-label="Saving your application…" label="Save"></civ-button>
+```
+
+`loading` is ignored when the button is in link mode (`href` set) — navigation isn't a state we wait on.
+
 ### With Icons
 
 <StoryEmbed id="actions-button--with-icons" />

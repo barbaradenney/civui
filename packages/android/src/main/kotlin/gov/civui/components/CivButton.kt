@@ -67,6 +67,8 @@ fun CivButton(
     iconEnd: String = "",
     iconOnly: Boolean = false,
     href: String = "",
+    loading: Boolean = false,
+    loadingLabel: String = "Loading…",
     onClick: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

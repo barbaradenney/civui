@@ -29,6 +29,7 @@ export default defineConfig({
       '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
       '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
+      '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
       // Resolve test-utils to source so the lint:double-labels test
       // works in CI without a prebuilt @civui/test-utils dist (the
       // package's package.json points at dist/index.js, which fresh

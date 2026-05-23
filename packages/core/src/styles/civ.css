@@ -145,7 +145,12 @@ summary:focus,
   --civ-backdrop-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Reduced motion: disable all transitions and animations */
+/* Reduced motion: disable all transitions and animations.
+ *
+ * The spinner rotation is a documented exception (see civ-spinner):
+ * it conveys "system isn't frozen" and is functional, not decorative.
+ * It still slows down for reduced-motion users (longer duration) but
+ * doesn't stop entirely. Primer's Spinner takes the same position. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -154,6 +159,11 @@ summary:focus,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .civ-spinner__svg {
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
   }
 }
 

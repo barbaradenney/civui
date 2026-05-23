@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, devWarn, sanitizeHref, t } from '@civui/core';
+import '@civui/feedback/spinner';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 export type ButtonType = 'button' | 'submit' | 'reset';
@@ -30,6 +31,8 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  * @prop {ButtonVariant} variant - Visual variant
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
+ * @prop {boolean} loading - When true, swaps the leading icon area for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (form submit, save).
+ * @prop {string} loadingLabel - Accessible label for the spinner (default "Loading…"). Should be an action-specific present-participle verb ("Saving…", "Submitting…").
  * @prop {ButtonType} type - Button type attribute
  * @prop {string} iconStart - Leading icon name
  * @prop {string} iconEnd - Trailing icon name
@@ -48,6 +51,18 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) variant: ButtonVariant = 'primary';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /**
+   * Async-in-flight state. The button stays the same physical size, but
+   * the leading-icon area swaps for a `civ-spinner`, the host disables
+   * itself, and `aria-busy="true"` is announced to screen readers. Use
+   * `loading-label` to set an action-specific verb ("Saving…").
+   *
+   * Link-mode buttons (`href` set) do not get a spinner — navigation
+   * isn't a state we wait on. `loading` is silently ignored there.
+   */
+  @property({ type: Boolean, reflect: true }) loading = false;
+  /** Visually-hidden label announced by the spinner. Default "Loading…". */
+  @property({ type: String, attribute: 'loading-label' }) loadingLabel = 'Loading…';
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
@@ -75,6 +90,20 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
     return Boolean(this.href);
   }
 
+  /**
+   * `loading` only applies to actual buttons; link-mode navigation
+   * isn't a state we wait on, so loading is silently ignored when
+   * `href` is set.
+   */
+  private get _isLoading(): boolean {
+    return this.loading && !this._isLink;
+  }
+
+  /** Effective disabled state — `loading` implies disabled. */
+  private get _effectiveDisabled(): boolean {
+    return this.disabled || this._isLoading;
+  }
+
   private get _classes(): string {
     const variantClass = this.danger
       ? `civ-btn--${this.variant}-danger`
@@ -87,7 +116,7 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-btn--link' : '',
       this.iconOnly ? 'civ-btn--icon-only' : '',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
+      this._effectiveDisabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -117,7 +146,15 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
     const visibleText = this.iconOnly
       ? html`<span class="civ-sr-only">${this._text}</span>`
       : this._text;
-    const inner = html`${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${visibleText}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
+    // Loading state swaps the leading icon for a spinner. The spinner's
+    // own delay timer means fast responses (sub-200ms) never paint it,
+    // matching the field-consensus flash-protection pattern.
+    const leadingSlot = this._isLoading
+      ? html`<civ-spinner size="sm" delay="0" label="${this.loadingLabel}"></civ-spinner>`
+      : this.iconStart
+        ? html`<civ-icon name="${this.iconStart}"></civ-icon>`
+        : '';
+    const inner = html`${leadingSlot}${visibleText}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
 
     if (this._isLink) {
       if (this.disabled) {
@@ -150,7 +187,8 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
       <button
         type="${this.type}"
         class="${this._classes}"
-        ?disabled="${this.disabled}"
+        ?disabled="${this._effectiveDisabled}"
+        aria-busy="${this._isLoading ? 'true' : nothing}"
         @click="${this._onClick}"
       >${inner}</button>
     `;

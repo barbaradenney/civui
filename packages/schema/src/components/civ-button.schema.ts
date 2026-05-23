@@ -46,6 +46,18 @@ const schema: ComponentSchema = {
       attribute: 'icon-only',
       reflect: true,
     },
+    loading: {
+      type: 'boolean',
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Link-mode buttons (`href` set) ignore `loading` because navigation isn\'t a state we wait on',
+      default: false,
+      reflect: true,
+    },
+    loadingLabel: {
+      type: 'string',
+      description: 'Accessible name announced via the spinner\'s polite live region while `loading` is true. Use an action-specific present-participle verb ("Saving…", "Submitting your application…"). Defaults to "Loading…"',
+      default: 'Loading…',
+      attribute: 'loading-label',
+    },
     href: {
       type: 'string',
       description: 'When set, renders as `<a href>` instead of `<button>`. For navigation affordances that visually belong with other buttons (e.g. an "Add another" link styled as a secondary button). The label is underlined so the link identity stays visible',

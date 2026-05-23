@@ -1,0 +1,83 @@
+---
+title: Skeleton
+sidebar_position: 7
+sidebar_label: Skeleton
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_skeleton.props.mdx";
+
+# Skeleton
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-skeleton`](pathname:///civui/storybook/?path=/docs/contract-civ-skeleton--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-skeleton>`
+
+Content-shape placeholder for waits longer than ~1s where the incoming content's shape is known — lists, cards, table rows, page chrome.
+
+For shorter waits where the shape is unknown, use [`civ-spinner`](./spinner) instead.
+
+## When to use
+
+| Wait | Use |
+|------|-----|
+| Under 200ms | Nothing. |
+| 200ms to ~1s, unknown shape | [`civ-spinner`](./spinner) |
+| Longer than ~1s, known shape | `civ-skeleton` |
+
+Skeletons reduce perceived wait by ~20% when their geometry matches the real content that will replace them. Don't skeleton-load fast responses — it adds work for no payoff.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="feedback-skeleton--default" />
+
+### Variants
+
+Four shape variants — `text` (1em line), `heading` (1.75em line), `block` (rectangular media), `circle` (avatar / icon).
+
+<StoryEmbed id="feedback-skeleton--variants" />
+
+### Multi-line text
+
+When `lines > 1`, the last line shortens to 70% width to mimic a paragraph's natural ragged-right edge.
+
+<StoryEmbed id="feedback-skeleton--multiline-text" />
+
+### Composed card placeholder
+
+Real placeholders are compositions of multiple skeleton primitives. The parent region carries `aria-busy="true"`:
+
+<StoryEmbed id="feedback-skeleton--composed-card" />
+
+### Composed list-row placeholder
+
+<StoryEmbed id="feedback-skeleton--composed-list-row" />
+
+## Accessibility
+
+- The skeleton element itself carries `aria-hidden="true"` — screen readers never announce it. Adding a live region to the skeleton would cause it to announce on every shimmer tick.
+- The **parent region** is what signals loading to assistive tech. Set `aria-busy="true"` on the region while skeletons are visible, and flip to `false` when real content lands:
+
+  ```html
+  <section aria-busy="true">
+    <civ-skeleton variant="heading"></civ-skeleton>
+    <civ-skeleton variant="text" lines="3"></civ-skeleton>
+  </section>
+  ```
+
+- Under `prefers-reduced-motion`, the shimmer animation is disabled (the shape stays — only the moving gradient stops). The static layout reservation is what matters for accessibility; the shimmer is decorative.
+- Don't fire a "Loaded" announcement when `aria-busy` flips to false — too chatty across a page with multiple regions. Let the content itself announce (e.g. a results count, a success message).
+
+## Composition guidance
+
+There is no `civ-skeleton-page` orchestrator — page layouts diverge too much to abstract. Build skeleton compositions directly in the consumer's template, matching the actual layout shape.
+
+## Props
+
+<PropsTable />

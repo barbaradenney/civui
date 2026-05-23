@@ -67,6 +67,18 @@ const config: Config = {
         black: {
           DEFAULT: 'var(--civ-color-black-DEFAULT)',
         },
+        // Semantic surface tokens — neutral card / panel / input
+        // backgrounds (and their hover / active states). Source of
+        // truth is the `--civ-color-surface*` CSS vars. Mirrors the
+        // root tailwind.config.ts so `civ-bg-surface` (referenced via
+        // `@apply` in packages/core/src/styles/components.css)
+        // resolves in the docs-site build the same way it does for
+        // Storybook.
+        surface: {
+          DEFAULT: 'var(--civ-color-surface)',
+          hover: 'var(--civ-color-surface-hover)',
+          active: 'var(--civ-color-surface-active)',
+        },
         accent: {
           cool: {
             lightest: 'var(--civ-color-accent-cool-lightest)',

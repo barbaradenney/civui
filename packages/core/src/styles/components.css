@@ -5091,16 +5091,19 @@
   /*
    * Primary variant — filled primary-lightest chip with the
    * `civ-btn--secondary` palette and chrome scale (larger padding,
-   * bolder weight, slightly larger font). The most prominent
-   * variant; the trigger gets its own rounded corners so when
-   * closed it reads as a fully-rounded "button".
+   * bolder weight). The most prominent variant; the trigger gets
+   * its own rounded corners so when closed it reads as a
+   * fully-rounded "button". Font-size stays at the base token
+   * inherited from the trigger base rule — bold weight + colored
+   * fill + larger padding already provide enough emphasis; a
+   * larger font-size would push primary into "section header"
+   * territory and read out of scale on a button-like trigger.
    */
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
     padding: 1rem 1.25rem;
     font-weight: 700;
-    font-size: var(--civ-typography-fontSize-lg, 1.125rem);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   @media (hover: hover) {

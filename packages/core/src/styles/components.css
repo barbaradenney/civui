@@ -44,7 +44,9 @@
   civ-icon,
   civ-menu,
   civ-nav-item,
+  civ-on-this-page-item,
   civ-popover,
+  civ-side-nav-item,
   civ-segment,
   civ-tab,
   civ-tab-nav-item,
@@ -90,6 +92,7 @@
   civ-input-group,
   civ-link-card,
   civ-list,
+  civ-back-to-top,
   civ-list-item,
   civ-memorable-date,
   civ-menu-item,
@@ -97,6 +100,8 @@
   civ-name,
   civ-nav,
   civ-number,
+  civ-on-this-page,
+  civ-side-nav,
   civ-page-header,
   civ-pagination,
   civ-partnership-history,
@@ -3887,6 +3892,133 @@
        visually closes instead of reading like the list continues. */
     civ-tab-nav-item:last-child .civ-tab-nav__link {
       border-bottom: 0;
+    }
+  }
+
+  /* ── Side Nav (vertical hierarchical navigation) ──────────── */
+
+  .civ-side-nav {
+    display: block;
+  }
+  .civ-side-nav__list,
+  .civ-side-nav__sublist {
+    @apply civ-flex civ-flex-col civ-list-none civ-p-0 civ-m-0;
+    gap: 0;
+  }
+  /*
+   * Hide empty sub-lists so an item with no nested children
+   * doesn't render a stray empty <ul>. `:empty` matches an
+   * element with no children, including text — `civ-side-nav-item`
+   * always renders the <ul> in its template so this rule decides
+   * visibility based on whether the LightDomSlotMixin moved
+   * anything into it.
+   */
+  .civ-side-nav__sublist:empty {
+    display: none;
+  }
+  /* Nested sub-list — indented under the parent link so the
+     hierarchy reads at a glance. */
+  .civ-side-nav__sublist {
+    padding-inline-start: 1rem;
+  }
+
+  .civ-side-nav__link {
+    @apply civ-block civ-no-underline civ-font-normal;
+    padding: 0.5rem 0.75rem;
+    color: var(--civ-color-base-darkest);
+    /* Reserve the rail width even at rest so the layout doesn't
+       shift when a sibling item becomes current. The transparent
+       border occupies the same space the primary-color rail will. */
+    border-inline-start: 4px solid transparent;
+    padding-inline-start: calc(0.75rem - 4px + 4px);
+  }
+  @media (hover: hover) {
+    .civ-side-nav__link:hover {
+      background-color: var(--civ-color-surface-hover);
+    }
+  }
+  /*
+   * Current item — leading-edge primary-color rail + bold text.
+   * The rail width was reserved as transparent on the base rule
+   * so flipping the color doesn't cause layout shift.
+   */
+  .civ-side-nav__link--current {
+    @apply civ-font-bold;
+    color: var(--civ-color-primary-dark);
+    border-inline-start-color: var(--civ-color-primary-DEFAULT);
+  }
+  .civ-side-nav__link--disabled {
+    color: var(--civ-color-base-DEFAULT);
+    cursor: not-allowed;
+    opacity: var(--civ-opacity-disabled);
+  }
+
+  /* ── On This Page (in-page anchor nav / table of contents) ─ */
+
+  .civ-on-this-page {
+    display: block;
+  }
+  .civ-on-this-page__heading {
+    @apply civ-m-0 civ-font-bold;
+    margin-bottom: 0.5rem;
+  }
+  .civ-on-this-page__list {
+    @apply civ-flex civ-flex-col civ-list-none civ-p-0 civ-m-0;
+    gap: 0;
+    /* Subtle leading-edge rail along the whole list — the active
+       item paints over this with the primary color, creating a
+       "moving highlight" effect as the user scrolls. */
+    border-inline-start: 2px solid var(--civ-color-border);
+  }
+  .civ-on-this-page__link {
+    @apply civ-block civ-no-underline civ-font-normal;
+    padding: 0.375rem 0.75rem;
+    color: var(--civ-color-base-darkest);
+    /* Offset the link into the list's rail so the active state's
+       darker rail can replace the resting one without layout shift. */
+    margin-inline-start: -2px;
+    border-inline-start: 2px solid transparent;
+  }
+  @media (hover: hover) {
+    .civ-on-this-page__link:hover {
+      color: var(--civ-color-primary-dark);
+    }
+  }
+  .civ-on-this-page__link--active {
+    @apply civ-font-bold;
+    color: var(--civ-color-primary-dark);
+    border-inline-start-color: var(--civ-color-primary-DEFAULT);
+  }
+
+  /* ── Back to Top ────────────────────────────────────────────
+   *
+   * Floating button anchored to the bottom-right corner. Hidden
+   * by default (the host carries `hidden` via reflected
+   * property); the component flips it off once the user scrolls
+   * past the threshold. Z-index sits at the standard overlay
+   * layer so it stays above page content but below modal-class
+   * surfaces.
+   */
+  civ-back-to-top {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: var(--civ-z-overlay, 100);
+  }
+  .civ-back-to-top__button {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-rounded-full;
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: var(--civ-color-primary-DEFAULT);
+    color: var(--civ-color-white-DEFAULT);
+    border: 1px solid var(--civ-color-primary-DEFAULT);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+  @media (hover: hover) {
+    .civ-back-to-top__button:hover {
+      background-color: var(--civ-color-primary-dark);
+      border-color: var(--civ-color-primary-dark);
     }
   }
 

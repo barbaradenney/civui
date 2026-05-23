@@ -7,6 +7,13 @@
       "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
+      "story": "KeyboardNavigation",
+      "name": "Keyboard navigation",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion>\n      <civ-accordion-item label=\"One — focus me, then press ↓\">\n        <p>Pressing the down-arrow moves focus to the next header.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Two — disabled (skipped)\" disabled>\n        <p>Disabled items are removed from the arrow-key navigation cycle.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Three\">\n        <p>Arrow keys jumped past the disabled item to land here.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Four — press End from anywhere\">\n        <p>Home / End jump to the first / last non-disabled item.</p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
       "story": "LongContent",
       "name": "With rich content",
       "category": "Layout/Accordion",
@@ -14,10 +21,24 @@
       "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
+      "story": "ParentDisabled",
+      "name": "Parent-level disabled",
+      "category": "Layout/Accordion",
+      "html": "<civ-accordion disabled>\n      <civ-accordion-item label=\"Eligibility section\">\n        <p>This entire accordion is parent-disabled.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Application section\">\n        <p>None of the items can be expanded.</p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Review section\">\n        <p>Useful while content is loading or the form is otherwise gated.</p>\n      </civ-accordion-item>\n    </civ-accordion>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
       "story": "SingleOpen",
       "name": "Single-open mode",
       "category": "Layout/Accordion",
       "html": "<civ-accordion single>\n      <civ-accordion-item label=\"What is the application deadline?\" open>\n        <p>\n          Initial enrollment must be received within 30 days of your\n          discharge or release from active duty.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"Can I apply online?\">\n        <p>\n          Yes. Online applications are available through VA.gov. You'll\n          need to sign in with a Login.gov, ID.me, or DS Logon account.\n        </p>\n      </civ-accordion-item>\n      <civ-accordion-item label=\"What happens after I apply?\">\n        <p>\n          You'll receive a written notice of your enrollment decision.\n          Once enrolled, you can schedule appointments and order\n          prescriptions.\n        </p>\n      </civ-accordion-item>\n    </civ-accordion>\n    <p class=\"civ-mt-3 civ-text-sm\">\n      With <code>single</code>, opening one item closes any other open siblings.\n    </p>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
+    },
+    {
+      "story": "Variants",
+      "name": "Variants (tertiary / secondary / primary)",
+      "category": "Layout/Accordion",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <h3 class=\"civ-heading-sm civ-mb-2\">Tertiary (default)</h3>\n        <civ-accordion>\n          <civ-accordion-item label=\"Eligibility\">\n            <p>Quietest variant. Reads as a list of disclosure rows.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"How to apply\">\n            <p>Bordered group, transparent triggers, inter-item dividers.</p>\n          </civ-accordion-item>\n        </civ-accordion>\n      </div>\n\n      <div>\n        <h3 class=\"civ-heading-sm civ-mb-2\">Secondary</h3>\n        <civ-accordion variant=\"secondary\">\n          <civ-accordion-item label=\"Eligibility\">\n            <p>Same per-item chrome as tertiary, but each item is its own bordered box.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"How to apply\">\n            <p>Items stack with gap. Use when items should read as discrete sections rather than rows of a unified list.</p>\n          </civ-accordion-item>\n        </civ-accordion>\n      </div>\n\n      <div>\n        <h3 class=\"civ-heading-sm civ-mb-2\">Primary</h3>\n        <civ-accordion variant=\"primary\">\n          <civ-accordion-item label=\"Eligibility\">\n            <p>Filled primary-lightest triggers with the chrome of the main button family — larger padding, bolder font.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"How to apply\">\n            <p>Most prominent variant. Use for hub-page sections or hero CTAs.</p>\n          </civ-accordion-item>\n        </civ-accordion>\n      </div>\n    </div>",
       "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
@@ -55,6 +76,13 @@
       "category": "Actions/Action Button",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <p class=\"civ-m-0 civ-text-sm\">\n        Setting <code>href</code> renders an <code>&lt;a&gt;</code> with action-\n        button chrome plus an underline. Useful in list rows where the Edit\n        affordance navigates to a route while Remove stays an in-page action —\n        same visual weight, different semantics under the hood.\n      </p>\n      <div class=\"civ-card\">\n        <div class=\"civ-list-item\">\n          <span class=\"civ-list-item__content civ-font-medium\">Alex Chen</span>\n          <span class=\"civ-list-item__actions\">\n            <civ-action-button href=\"/dependents/1/edit\" variant=\"tertiary\" label=\"Edit\"></civ-action-button>\n            <civ-action-button variant=\"tertiary\" danger label=\"Remove\"></civ-action-button>\n          </span>\n        </div>\n        <div class=\"civ-list-item\">\n          <span class=\"civ-list-item__content civ-font-medium\">Jordan Lee</span>\n          <span class=\"civ-list-item__actions\">\n            <civ-action-button href=\"/dependents/2/edit\" variant=\"tertiary\" label=\"Edit\"></civ-action-button>\n            <civ-action-button variant=\"tertiary\" danger label=\"Remove\"></civ-action-button>\n          </span>\n        </div>\n      </div>\n      <p class=\"civ-m-0 civ-text-sm\">\n        Underline tells a sighted reader at a glance which affordance navigates.\n        Screen readers hear the role as \"link\" vs \"button\" via the rendered\n        element.\n      </p>\n    </div>",
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
+    },
+    {
+      "story": "ConfirmRemove",
+      "name": "Confirm — remove a row",
+      "category": "Foundations/Destructive Actions",
+      "html": "<div id=\"${id}-root\">\n        <div\n          style=\"border: 1px solid var(--civ-color-base-lighter); border-radius: var(--civ-border-radius-md); padding: var(--civ-spacing-4);\"\n        >\n          <p class=\"civ-font-semibold civ-m-0\">Alex Chen</p>\n          <p class=\"civ-text-caption civ-m-0\">Spouse • Date of birth: April 12, 1985</p>\n          <div class=\"civ-flex civ-gap-2 civ-justify-end civ-mt-3\">\n            <civ-action-button variant=\"tertiary\" label=\"Edit\"></civ-action-button>\n            <civ-action-button\n              id=\"${id}-trigger\"\n              variant=\"tertiary\"\n              danger\n              label=\"Remove dependent\"\n            ></civ-action-button>\n          </div>\n        </div>\n        <p\n          data-status\n          class=\"civ-text-caption civ-text-success civ-mt-3\"\n          role=\"status\"\n        ></p>\n        <civ-modal\n          id=\"${id}-modal\"\n          heading=\"Remove Alex Chen?\"\n        >\n          <p>\n            Alex Chen will be removed from your dependents list. This can't be undone.\n          </p>\n          <div data-civ-modal-footer class=\"civ-button-row civ-justify-end\">\n            <civ-button data-cancel variant=\"secondary\" label=\"Cancel\"></civ-button>\n            <civ-button data-confirm danger label=\"Remove\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "source": "packages/core/src/foundations/destructive-actions.stories.ts"
     },
     {
       "story": "DangerVariants",
@@ -262,6 +290,32 @@
       "category": "Feedback/Alert",
       "html": "<civ-alert variant=\"warning\" heading=\"Warning\">\n      Your session will expire in 5 minutes. Save your progress to avoid losing data.\n    </civ-alert>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    }
+  ],
+  "civ-back-to-top": [
+    {
+      "story": "AlwaysVisibleDemo",
+      "category": "Navigation/Back To Top",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Manually clears the <code>hidden</code> attribute for inspection.\n      Not a recommended consumer pattern — the component manages\n      <code>hidden</code> itself.\n    </p>\n    <div style=\"height: 200px;\"></div>\n    <civ-back-to-top\n      label=\"Back to top\"\n      .hidden=${false}\n    ></civ-back-to-top>",
+      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+    },
+    {
+      "story": "CustomLabel",
+      "category": "Navigation/Back To Top",
+      "html": "<h1 class=\"civ-mt-0\">Long page</h1>\n    ${longContent}\n    <civ-back-to-top label=\"Return to top\"></civ-back-to-top>",
+      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+    },
+    {
+      "story": "CustomThreshold",
+      "category": "Navigation/Back To Top",
+      "html": "<h1 class=\"civ-mt-0\">Trigger after 100 px</h1>\n    <p class=\"civ-italic\">\n      Lower <code>threshold</code> for shorter pages where 400 px would\n      mean the button never appears.\n    </p>\n    ${longContent}\n    <civ-back-to-top threshold=\"100\"></civ-back-to-top>",
+      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Navigation/Back To Top",
+      "html": "<h1 class=\"civ-mt-0\">Long page</h1>\n    ${longContent}\n    <civ-back-to-top></civ-back-to-top>",
+      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
     }
   ],
   "civ-badge": [
@@ -472,6 +526,13 @@
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
+      "story": "FocusRing",
+      "name": "Focus ring — tab through to see it",
+      "category": "Foundations/Accessibility",
+      "html": "<div class=\"civ-flex civ-flex-wrap civ-gap-3 civ-items-center\">\n      <civ-button label=\"Primary\"></civ-button>\n      <civ-button variant=\"secondary\" label=\"Secondary\"></civ-button>\n      <a href=\"#\" class=\"civ-link\">Link</a>\n      <button class=\"civ-text-btn civ-text-btn--chip\">Text button</button>\n      <input\n        type=\"text\"\n        class=\"civ-input\"\n        placeholder=\"Plain input\"\n        style=\"max-width: 200px;\"\n        aria-label=\"Plain input\"\n      />\n    </div>",
+      "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
+    },
+    {
       "story": "FormActions",
       "category": "Actions/Button",
       "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        alert('Form submitted!');\n      }}\"\n    >\n      <p class=\"civ-mb-4\">Complete your VA benefits application and submit for review.</p>\n      <div class=\"civ-button-row\">\n        <civ-button type=\"submit\">Submit application</civ-button>\n        <civ-button variant=\"secondary\">Save and continue later</civ-button>\n        <civ-button variant=\"tertiary\">Cancel</civ-button>\n      </div>\n    </form>",
@@ -519,6 +580,13 @@
       "source": "packages/overlays/src/modal/civ-modal.stories.ts"
     },
     {
+      "story": "ScreenReaderAnnouncer",
+      "name": "Screen reader announcer — polite vs. assertive",
+      "category": "Foundations/Accessibility",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 480px;\">\n        <p class=\"civ-text-caption\">\n          Trigger each announcement and listen via your screen reader.\n          The visible page does not change — the message is sent to\n          the shared <code>aria-live</code> region.\n        </p>\n        <div class=\"civ-flex civ-gap-2\">\n          <civ-button\n            label=\"Announce politely\"\n            variant=\"secondary\"\n            @click=${onPolite}\n          ></civ-button>\n          <civ-button\n            label=\"Announce assertively\"\n            danger\n            @click=${onAssertive}\n          ></civ-button>\n        </div>\n      </div>",
+      "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
+    },
+    {
       "story": "Secondary",
       "category": "Actions/Button",
       "html": "<civ-button variant=\"secondary\">Save and continue later</civ-button>",
@@ -536,6 +604,13 @@
       "category": "Actions/Button",
       "html": "<civ-button variant=\"tertiary\">Cancel</civ-button>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "TypeToConfirm",
+      "name": "Type-to-confirm escalation",
+      "category": "Foundations/Destructive Actions",
+      "html": "<div id=\"${id}-root\">\n        <div\n          style=\"border: 1px solid var(--civ-color-base-lighter); border-radius: var(--civ-border-radius-md); padding: var(--civ-spacing-4);\"\n        >\n          <p class=\"civ-font-semibold civ-m-0\">Disability claim ${expectedPhrase}</p>\n          <p class=\"civ-text-caption civ-m-0\">Submitted April 14, 2025 • Status: Pending</p>\n          <div class=\"civ-mt-3\">\n            <civ-button\n              id=\"${id}-trigger\"\n              danger\n              label=\"Withdraw claim\"\n            ></civ-button>\n          </div>\n        </div>\n        <p\n          data-status\n          class=\"civ-text-caption civ-text-success civ-mt-3\"\n          role=\"status\"\n        ></p>\n        <civ-modal\n          id=\"${id}-modal\"\n          heading=\"Withdraw claim ${expectedPhrase}?\"\n        >\n          <p>\n            Withdrawing this claim cancels your active application and\n            removes it from the queue. You'll need to start over to\n            re-apply.\n          </p>\n          <civ-text-input\n            id=\"${id}-input\"\n            label=\"Type the claim ID to confirm\"\n            hint=\"To proceed, enter ${expectedPhrase} exactly as shown above.\"\n            name=\"confirm-phrase\"\n          ></civ-text-input>\n          <div data-civ-modal-footer class=\"civ-button-row civ-justify-end\">\n            <civ-button data-cancel variant=\"secondary\" label=\"Cancel\"></civ-button>\n            <civ-button data-confirm danger label=\"Withdraw claim\" disabled></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "source": "packages/core/src/foundations/destructive-actions.stories.ts"
     },
     {
       "story": "WithFocusTrap",
@@ -626,6 +701,59 @@
       "source": "packages/layout/src/button-group/civ-button-group.stories.ts"
     }
   ],
+  "civ-callout": [
+    {
+      "story": "AllVariants",
+      "category": "Layout/Callout",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"max-width: 600px;\">\n      <civ-callout>\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Default (neutral)</p>\n        <p class=\"civ-m-0\">The base accent border is a neutral gray — use when no semantic variant applies.</p>\n      </civ-callout>\n      <civ-callout variant=\"info\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Info</p>\n        <p class=\"civ-m-0\">Neutral informational message.</p>\n      </civ-callout>\n      <civ-callout variant=\"warning\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Warning</p>\n        <p class=\"civ-m-0\">Heads-up; user attention recommended.</p>\n      </civ-callout>\n      <civ-callout variant=\"error\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Error</p>\n        <p class=\"civ-m-0\">Action required to proceed.</p>\n      </civ-callout>\n      <civ-callout variant=\"success\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Success</p>\n        <p class=\"civ-m-0\">Action completed.</p>\n      </civ-callout>\n    </div>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "AsLandmark",
+      "name": "As an ARIA landmark",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\" role=\"region\" aria-labelledby=\"region-heading\">\n      <p id=\"region-heading\" class=\"civ-m-0 civ-font-bold civ-mb-1\">Important notice</p>\n      <p class=\"civ-m-0\">This region is announced as a landmark to assistive tech.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Note</p>\n      <p class=\"civ-m-0\">You must complete this section before continuing to the next step.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Error",
+      "name": "Error",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Action needed</p>\n      <p class=\"civ-m-0\">Your application is missing required documents.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Info",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Information</p>\n      <p class=\"civ-m-0\">Processing times are currently 3–5 business days.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "RichContent",
+      "name": "Rich content (list)",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Before you start</p>\n      <p>To finish this section, have the following ready:</p>\n      <ul>\n        <li>Your Social Security number</li>\n        <li>Your most recent W-2</li>\n        <li>Bank routing and account numbers</li>\n      </ul>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Success",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Complete</p>\n      <p class=\"civ-m-0\">Your information has been verified successfully.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Warning",
+      "category": "Layout/Callout",
+      "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Important</p>\n      <p class=\"civ-m-0\">Your session will expire in 15 minutes. Save your progress.</p>\n    </civ-callout>",
+      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+    }
+  ],
   "civ-card": [
     {
       "story": "AllStyles",
@@ -677,6 +805,13 @@
       "category": "Layout/Card",
       "html": "<civ-card>\n      <div data-card-header>\n        <div class=\"civ-flex civ-justify-between civ-items-center\">\n          <h3 class=\"civ-heading-md\">Dependent: Jane Doe</h3>\n          <div class=\"civ-flex civ-gap-2\">\n            <civ-action-button label=\"Edit\" variant=\"tertiary\"></civ-action-button>\n            <civ-action-button label=\"Remove\" variant=\"tertiary\" danger></civ-action-button>\n          </div>\n        </div>\n      </div>\n      <p>Relationship: Spouse</p>\n      <p>Date of birth: January 15, 1992</p>\n    </civ-card>",
       "source": "packages/layout/src/card/civ-card.stories.ts"
+    },
+    {
+      "story": "FlushInCardFooter",
+      "name": "Flush variant in a card footer",
+      "category": "Layout/Accordion",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <h3 class=\"civ-heading-sm civ-mb-2\">One accordion in a card footer</h3>\n        <civ-card>\n          <div data-card-header><h3 class=\"civ-heading-md\">Application status</h3></div>\n          <p>Your application was received on January 15, 2026 and is currently in review.</p>\n          <div data-card-footer>\n            <civ-accordion variant=\"flush\">\n              <civ-accordion-item label=\"View timeline\">\n                <p>Submitted → Review → Decision → Notification. Most applications complete within 7 business days.</p>\n              </civ-accordion-item>\n              <civ-accordion-item label=\"What happens next\">\n                <p>You'll receive a written notice in the mail. If approved, your benefits start the following month.</p>\n              </civ-accordion-item>\n            </civ-accordion>\n          </div>\n        </civ-card>\n      </div>\n\n      <div>\n        <h3 class=\"civ-heading-sm civ-mb-2\">Multiple accordions in a card footer</h3>\n        <civ-card>\n          <div data-card-header><h3 class=\"civ-heading-md\">Account details</h3></div>\n          <p>Below are sections you can expand to view or edit specific details about your account.</p>\n          <div data-card-footer>\n            <h4 class=\"civ-heading-sm civ-mb-1\">Profile</h4>\n            <civ-accordion variant=\"flush\">\n              <civ-accordion-item label=\"Personal information\">\n                <p>Name, date of birth, and identification on file.</p>\n              </civ-accordion-item>\n              <civ-accordion-item label=\"Contact preferences\">\n                <p>How and when we contact you about your benefits.</p>\n              </civ-accordion-item>\n            </civ-accordion>\n\n            <h4 class=\"civ-heading-sm civ-mt-3 civ-mb-1\">Security</h4>\n            <civ-accordion variant=\"flush\">\n              <civ-accordion-item label=\"Sign-in methods\">\n                <p>Login.gov, ID.me, and DS Logon options.</p>\n              </civ-accordion-item>\n              <civ-accordion-item label=\"Two-factor authentication\">\n                <p>Add a second factor to protect your account.</p>\n              </civ-accordion-item>\n            </civ-accordion>\n          </div>\n        </civ-card>\n      </div>\n    </div>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
       "story": "ReferralStatusTracker",
@@ -1761,6 +1896,13 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "EinFullMode",
+      "name": "civ-ein — business tax ID",
+      "category": "Foundations/Handling PII",
+      "html": "<civ-ein name=\"ein\" required></civ-ein>",
+      "source": "packages/core/src/foundations/pii.stories.ts"
+    },
+    {
       "story": "GovernmentFormExample",
       "category": "Forms/Inputs/EIN",
       "html": "<div style=\"max-width: 480px;\">\n      <h3 class=\"civ-text-lg civ-font-semibold civ-mb-4\">Business Information</h3>\n      <p class=\"civ-text-sm civ-text-secondary civ-mb-6\">\n        Provide the Employer Identification Number assigned to your\n        organization by the IRS.\n      </p>\n      <div class=\"civ-flex civ-flex-col civ-gap-4\">\n        <civ-ein name=\"ein\" required></civ-ein>\n      </div>\n    </div>",
@@ -2533,10 +2675,24 @@
   ],
   "civ-icon": [
     {
+      "story": "AccessibleVsDecorative",
+      "name": "Decorative vs. labelled",
+      "category": "Foundations/Icons",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">\n          Decorative — no <code>label</code>, gets <code>aria-hidden=\"true\"</code>. Used when the\n          surrounding text already conveys meaning.\n        </p>\n        <span class=\"civ-flex civ-items-center civ-gap-2\">\n          <civ-icon name=\"check-circle\" class=\"civ-text-success\"></civ-icon>\n          <span>Application submitted</span>\n        </span>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">\n          Meaningful — with <code>label</code>, gets <code>role=\"img\"</code> +\n          <code>aria-label</code>. Used when the icon stands alone.\n        </p>\n        <button\n          class=\"civ-text-btn civ-text-btn--inline\"\n          type=\"button\"\n        >\n          <civ-icon name=\"trash\" label=\"Remove dependent\" class=\"civ-text-error\"></civ-icon>\n        </button>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/icons.stories.ts"
+    },
+    {
       "story": "Actions",
       "category": "Core/Icon",
       "html": "<div class=\"civ-flex civ-items-center civ-gap-4\" style=\"font-size: 1.5em\">\n      <civ-icon name=\"close\"></civ-icon>\n      <civ-icon name=\"plus\"></civ-icon>\n      <civ-icon name=\"minus\"></civ-icon>\n      <civ-icon name=\"menu\"></civ-icon>\n      <civ-icon name=\"more-vertical\"></civ-icon>\n      <civ-icon name=\"more-horizontal\"></civ-icon>\n      <civ-icon name=\"search\"></civ-icon>\n      <civ-icon name=\"edit\"></civ-icon>\n      <civ-icon name=\"copy\"></civ-icon>\n      <civ-icon name=\"trash\"></civ-icon>\n    </div>",
       "source": "packages/core/src/icon/civ-icon.stories.ts"
+    },
+    {
+      "story": "ConfirmDeleteFile",
+      "name": "Confirm — delete an uploaded file",
+      "category": "Foundations/Destructive Actions",
+      "html": "<div id=\"${id}-root\">\n        <ul\n          class=\"civ-list-none civ-p-0 civ-space-y-1\"\n          style=\"max-width: 480px;\"\n        >\n          <li data-file class=\"civ-list-item\">\n            <div class=\"civ-list-item__content\">\n              <span class=\"civ-flex civ-items-center civ-gap-2\">\n                <civ-icon name=\"document\"></civ-icon>\n                <span class=\"civ-font-semibold\">tax-return-2025.pdf</span>\n                <span class=\"civ-ms-2\">(1.2 MB)</span>\n              </span>\n            </div>\n            <span class=\"civ-list-item__actions\">\n              <civ-action-button\n                id=\"${id}-trigger\"\n                variant=\"tertiary\"\n                danger\n                label=\"Delete file\"\n              ></civ-action-button>\n            </span>\n          </li>\n        </ul>\n        <p\n          data-status\n          class=\"civ-text-caption civ-text-success civ-mt-3\"\n          role=\"status\"\n        ></p>\n        <civ-modal\n          id=\"${id}-modal\"\n          heading=\"Delete attachment?\"\n        >\n          <p>\n            <code>tax-return-2025.pdf</code> will be removed from this\n            application. You'll need to upload it again to include it.\n          </p>\n          <div data-civ-modal-footer class=\"civ-button-row civ-justify-end\">\n            <civ-button data-cancel variant=\"secondary\" label=\"Cancel\"></civ-button>\n            <civ-button data-confirm danger label=\"Delete\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "source": "packages/core/src/foundations/destructive-actions.stories.ts"
     },
     {
       "story": "Default",
@@ -2553,10 +2709,24 @@
       "source": "packages/core/src/foundations/layout-examples.stories.ts"
     },
     {
+      "story": "InContext",
+      "name": "In context — buttons, alerts, list items",
+      "category": "Foundations/Icons",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">Inside an alert</p>\n        <div\n          class=\"civ-flex civ-items-start civ-gap-2 civ-p-3\"\n          style=\"background: var(--civ-color-warning-lighter); border-inline-start: 4px solid var(--civ-color-warning-DEFAULT); border-radius: var(--civ-border-radius-md);\"\n          role=\"status\"\n        >\n          <civ-icon name=\"warning\" class=\"civ-text-warning\" label=\"Warning\"></civ-icon>\n          <div>\n            <p class=\"civ-font-semibold civ-m-0\">Session expiring soon</p>\n            <p class=\"civ-text-caption civ-m-0\">You'll be signed out in 2 minutes.</p>\n          </div>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">Inside a button</p>\n        <civ-button label=\"Continue\" icon-end=\"arrow-right\"></civ-button>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">In a list-item status</p>\n        <ul class=\"civ-list-none civ-p-0 civ-space-y-1\" style=\"max-width: 320px;\">\n          <li class=\"civ-list-item civ-list-item--success\">\n            <div class=\"civ-list-item__content civ-flex civ-items-center civ-gap-2\">\n              <civ-icon name=\"check-circle\" class=\"civ-text-success\"></civ-icon>\n              <span>Step 1 of 3</span>\n            </div>\n          </li>\n          <li class=\"civ-list-item\">\n            <div class=\"civ-list-item__content civ-flex civ-items-center civ-gap-2\">\n              <civ-icon name=\"loading\"></civ-icon>\n              <span>Step 2 of 3 (in progress)</span>\n            </div>\n          </li>\n          <li class=\"civ-list-item\">\n            <div class=\"civ-list-item__content civ-flex civ-items-center civ-gap-2 civ-opacity-disabled\">\n              <span style=\"display: inline-block; width: 1em; height: 1em;\"></span>\n              <span>Step 3 of 3 (locked)</span>\n            </div>\n          </li>\n        </ul>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/icons.stories.ts"
+    },
+    {
       "story": "InheritColor",
       "category": "Core/Icon",
       "html": "<div class=\"civ-flex civ-items-center civ-gap-4\">\n      <span class=\"civ-text-primary\"><civ-icon name=\"info\"></civ-icon> Information</span>\n      <span class=\"civ-text-success\"><civ-icon name=\"check-circle\"></civ-icon> Success</span>\n      <span class=\"civ-text-error\"><civ-icon name=\"error\"></civ-icon> Error</span>\n      <span class=\"civ-text-warning\"><civ-icon name=\"warning\"></civ-icon> Warning</span>\n    </div>",
       "source": "packages/core/src/icon/civ-icon.stories.ts"
+    },
+    {
+      "story": "InheritsColor",
+      "name": "Inherits color from currentColor",
+      "category": "Foundations/Icons",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <div class=\"civ-flex civ-items-center civ-gap-2 civ-text-success\">\n        <civ-icon name=\"check-circle\"></civ-icon>\n        <span>Inherits civ-text-success</span>\n      </div>\n      <div class=\"civ-flex civ-items-center civ-gap-2 civ-text-error\">\n        <civ-icon name=\"error\"></civ-icon>\n        <span>Inherits civ-text-error</span>\n      </div>\n      <div class=\"civ-flex civ-items-center civ-gap-2 civ-text-warning\">\n        <civ-icon name=\"warning\"></civ-icon>\n        <span>Inherits civ-text-warning</span>\n      </div>\n      <div class=\"civ-flex civ-items-center civ-gap-2 civ-text-info\">\n        <civ-icon name=\"info\"></civ-icon>\n        <span>Inherits civ-text-info</span>\n      </div>\n      <div class=\"civ-flex civ-items-center civ-gap-2 civ-text-primary\">\n        <civ-icon name=\"open\"></civ-icon>\n        <span>Inherits civ-text-primary</span>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/icons.stories.ts"
     },
     {
       "story": "InlineWithText",
@@ -2587,6 +2757,20 @@
       "category": "Feedback/Badge",
       "html": "<div style=\"display: flex; gap: 1.5rem; align-items: center;\">\n      <span class=\"civ-badge-anchor\">\n        <civ-icon name=\"mail\" size=\"lg\"></civ-icon>\n        <civ-badge overlay dot label=\"New mail\" variant=\"error\"></civ-badge>\n      </span>\n      <span class=\"civ-badge-anchor\">\n        <civ-icon name=\"settings\" size=\"lg\"></civ-icon>\n        <civ-badge overlay dot label=\"Updates available\" variant=\"info\"></civ-badge>\n      </span>\n      <span class=\"civ-badge-anchor\">\n        <civ-icon name=\"person\" size=\"lg\"></civ-icon>\n        <civ-badge overlay label=\"New\" variant=\"success\" badge-style=\"primary\"></civ-badge>\n      </span>\n    </div>",
       "source": "packages/feedback/src/badge/civ-badge.stories.ts"
+    },
+    {
+      "story": "ScalesWithFontSize",
+      "name": "Scales with font-size",
+      "category": "Foundations/Icons",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <p class=\"civ-text-sm\">\n        <civ-icon name=\"check\"></civ-icon>\n        Small text — icon scales to match.\n      </p>\n      <p>\n        <civ-icon name=\"check\"></civ-icon>\n        Body text — icon at base size.\n      </p>\n      <p class=\"civ-text-xl\">\n        <civ-icon name=\"check\"></civ-icon>\n        Heading text — icon grows automatically.\n      </p>\n      <p class=\"civ-text-3xl\">\n        <civ-icon name=\"check\"></civ-icon>\n        Display text — same prop, larger icon.\n      </p>\n    </div>",
+      "source": "packages/core/src/foundations/icons.stories.ts"
+    },
+    {
+      "story": "Sizes",
+      "name": "Sizes — sm through 2xl",
+      "category": "Foundations/Icons",
+      "html": "<div class=\"civ-flex civ-items-end civ-gap-6\">\n      <div class=\"civ-flex civ-flex-col civ-items-center civ-gap-1\">\n        <civ-icon name=\"check-circle\" size=\"sm\"></civ-icon>\n        <code class=\"civ-text-caption\">sm</code>\n      </div>\n      <div class=\"civ-flex civ-flex-col civ-items-center civ-gap-1\">\n        <civ-icon name=\"check-circle\" size=\"md\"></civ-icon>\n        <code class=\"civ-text-caption\">md</code>\n      </div>\n      <div class=\"civ-flex civ-flex-col civ-items-center civ-gap-1\">\n        <civ-icon name=\"check-circle\" size=\"lg\"></civ-icon>\n        <code class=\"civ-text-caption\">lg</code>\n      </div>\n      <div class=\"civ-flex civ-flex-col civ-items-center civ-gap-1\">\n        <civ-icon name=\"check-circle\" size=\"xl\"></civ-icon>\n        <code class=\"civ-text-caption\">xl</code>\n      </div>\n      <div class=\"civ-flex civ-flex-col civ-items-center civ-gap-1\">\n        <civ-icon name=\"check-circle\" size=\"2xl\"></civ-icon>\n        <code class=\"civ-text-caption\">2xl</code>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/icons.stories.ts"
     },
     {
       "story": "Sizes",
@@ -3214,6 +3398,13 @@
       "source": "packages/inputs/src/date-input/civ-memorable-date.stories.ts"
     },
     {
+      "story": "LocaleAwareDates",
+      "name": "Locale-aware dates",
+      "category": "Foundations/Internationalization",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <div>\n        <p class=\"civ-text-caption civ-mb-2\">English (en-US)</p>\n        <civ-memorable-date\n          legend=\"Date of birth\"\n          name=\"dob-en\"\n          locale=\"en-US\"\n          required\n        ></civ-memorable-date>\n      </div>\n      <div lang=\"es\">\n        <p class=\"civ-text-caption civ-mb-2\">Spanish (es-ES)</p>\n        <civ-memorable-date\n          legend=\"Fecha de nacimiento\"\n          name=\"dob-es\"\n          locale=\"es-ES\"\n          required\n        ></civ-memorable-date>\n      </div>\n      <div lang=\"fr\">\n        <p class=\"civ-text-caption civ-mb-2\">French (fr-FR)</p>\n        <civ-memorable-date\n          legend=\"Date de naissance\"\n          name=\"dob-fr\"\n          locale=\"fr-FR\"\n          required\n        ></civ-memorable-date>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/i18n.stories.ts"
+    },
+    {
       "story": "Prefilled",
       "category": "Forms/Inputs/Memorable Date",
       "html": "<civ-memorable-date legend=\"Date of birth\" name=\"dob\" value=\"1990-07-04\"></civ-memorable-date>",
@@ -3498,6 +3689,32 @@
       "source": "packages/inputs/src/number/civ-number.stories.ts"
     }
   ],
+  "civ-on-this-page": [
+    {
+      "story": "AutoDetectFromHeadings",
+      "category": "Navigation/On This Page",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Auto-detect mode — leave the default slot empty and the rail scans\n      <code>h2[id], h3[id]</code> inside <code>main, article, body</code>\n      and builds the list itself.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 1fr 240px; gap: 2rem; align-items: start;\">\n      <article style=\"max-width: 640px;\">\n        <h1 class=\"civ-mt-0\">Component documentation</h1>\n        <h2 id=\"installation\">Installation</h2>\n        <p>Install via <code>npm install @civui/actions</code>.</p>\n        <h2 id=\"usage\">Usage</h2>\n        <p>Import the component and use it in your template.</p>\n        <h3 id=\"usage-basic\">Basic example</h3>\n        <p>A bare-minimum example.</p>\n        <h3 id=\"usage-advanced\">Advanced example</h3>\n        <p>Combining with other components.</p>\n        <h2 id=\"api\">API</h2>\n        <p>Reference documentation for props and events.</p>\n      </article>\n      <div style=\"${railStyle}\">\n        <civ-on-this-page label=\"On this page\" scope-selector=\"article\"></civ-on-this-page>\n      </div>\n    </div>",
+      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Navigation/On This Page",
+      "html": "<div style=\"${railStyle}\">\n      <civ-on-this-page label=\"On this page\">\n        <civ-on-this-page-item href=\"#installation\" label=\"Installation\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#usage\" label=\"Usage\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#props\" label=\"Props\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#events\" label=\"Events\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#accessibility\" label=\"Accessibility\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
+      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+    },
+    {
+      "story": "ManualMode",
+      "category": "Navigation/On This Page",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Manual mode — slot explicit items when you want to control labels\n      or skip certain headings.\n    </p>\n    <div style=\"${railStyle}\">\n      <civ-on-this-page label=\"Sections\">\n        <civ-on-this-page-item href=\"#overview\" label=\"Overview\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#examples\" label=\"Code examples\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#related\" label=\"Related components\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
+      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+    },
+    {
+      "story": "NoHeadingLabel",
+      "category": "Navigation/On This Page",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Skip the visible heading by passing <code>label=\"\"</code> — the\n      rail still gets an <code>aria-label</code> for the landmark, but\n      no on-page text.\n    </p>\n    <div style=\"${railStyle}\">\n      <civ-on-this-page label=\"\">\n        <civ-on-this-page-item href=\"#a\" label=\"Step 1\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#b\" label=\"Step 2\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#c\" label=\"Step 3\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
+      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+    }
+  ],
   "civ-page-header": [
     {
       "story": "AllSlotCombinations",
@@ -3726,6 +3943,13 @@
       "category": "Forms/Inputs/Phone",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 480px;\">\n      <civ-phone name=\"normal\"></civ-phone>\n      <civ-phone name=\"hint\" hint=\"We may call this number to verify your identity\"></civ-phone>\n      <civ-phone name=\"error\" error=\"Enter a valid 10-digit phone number\"></civ-phone>\n      <civ-phone name=\"required\" required></civ-phone>\n      <civ-phone name=\"disabled\" value=\"2025551234\" disabled></civ-phone>\n      <civ-phone name=\"intl\" international></civ-phone>\n    </div>",
       "source": "packages/inputs/src/phone/civ-phone.stories.ts"
+    },
+    {
+      "story": "ComponentPropsBeatLocale",
+      "name": "Component props always win",
+      "category": "Foundations/Internationalization",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <div>\n        <p class=\"civ-text-caption civ-mb-1\">Default label (from locale)</p>\n        <civ-phone name=\"phone-default\"></civ-phone>\n      </div>\n      <div>\n        <p class=\"civ-text-caption civ-mb-1\">\n          Per-instance override: <code>label=\"Daytime phone number\"</code>\n        </p>\n        <civ-phone label=\"Daytime phone number\" name=\"phone-custom\"></civ-phone>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/i18n.stories.ts"
     },
     {
       "story": "Default",
@@ -4826,6 +5050,32 @@
       "source": "packages/compound/src/service-history/civ-service-history.stories.ts"
     }
   ],
+  "civ-side-nav": [
+    {
+      "story": "Default",
+      "category": "Navigation/Side Nav",
+      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/installation\" label=\"Installation\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\" current></civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+    },
+    {
+      "story": "DocumentationLayout",
+      "category": "Navigation/Side Nav",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Typical documentation page composition — side rail on the left,\n      content + on-this-page rail on the right.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start;\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/intro\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\">\n          <civ-side-nav-item href=\"/button\" label=\"Button\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/input\" label=\"Text input\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/select\" label=\"Select\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\"></civ-side-nav-item>\n      </civ-side-nav>\n      <article>\n        <h1 class=\"civ-mt-0\">Button</h1>\n        <p>The Button component is the primary action affordance in CivUI…</p>\n      </article>\n    </div>",
+      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+    },
+    {
+      "story": "Nested",
+      "category": "Navigation/Side Nav",
+      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\">\n          <civ-side-nav-item href=\"/components/button\" label=\"Button\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/text-input\" label=\"Text input\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/select\" label=\"Select\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/checkbox\" label=\"Checkbox\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\">\n          <civ-side-nav-item href=\"/tokens/color\" label=\"Color\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/spacing\" label=\"Spacing\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/typography\" label=\"Typography\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+    },
+    {
+      "story": "WithDisabled",
+      "category": "Navigation/Side Nav",
+      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Application sections\">\n        <civ-side-nav-item href=\"/start\" label=\"Get started\" current></civ-side-nav-item>\n        <civ-side-nav-item href=\"/personal\" label=\"Personal information\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/income\" label=\"Income\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/review\" label=\"Review\" disabled></civ-side-nav-item>\n        <civ-side-nav-item href=\"/submit\" label=\"Submit\" disabled></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+    }
+  ],
   "civ-signature": [
     {
       "story": "AllStates",
@@ -4918,6 +5168,13 @@
       "category": "Navigation/Skip Link",
       "html": "<div>\n      <p class=\"civ-mb-2 civ-italic\">\n        Press Tab to focus the skip link — it appears when focused.\n      </p>\n      <civ-skip-link></civ-skip-link>\n      <nav style=\"padding: 16px; background: #f0f0f0; margin-bottom: 16px;\">\n        Navigation area (skip link jumps past this)\n      </nav>\n      <main id=\"main-content\" tabindex=\"-1\" style=\"padding: 16px; border: 2px solid #005ea2;\">\n        Main content area\n      </main>\n    </div>",
       "source": "packages/actions/src/skip-link/civ-skip-link.stories.ts"
+    },
+    {
+      "story": "SkipLinkAffordance",
+      "name": "Skip link — first Tab on a fresh page",
+      "category": "Foundations/Accessibility",
+      "html": "<div\n      style=\"position: relative; min-height: 200px; border: 1px dashed var(--civ-color-base-lighter); padding: var(--civ-spacing-3);\"\n    >\n      <civ-skip-link href=\"#story-main\" label=\"Skip to main content\"></civ-skip-link>\n      <nav\n        class=\"civ-flex civ-gap-3 civ-mb-4\"\n        aria-label=\"Demo header\"\n      >\n        <a href=\"#\" class=\"civ-link\">Benefits</a>\n        <a href=\"#\" class=\"civ-link\">Claims</a>\n        <a href=\"#\" class=\"civ-link\">Profile</a>\n        <a href=\"#\" class=\"civ-link\">Sign out</a>\n      </nav>\n      <main id=\"story-main\" tabindex=\"-1\">\n        <h2 class=\"civ-heading-lg\">Main content</h2>\n        <p>\n          Activating the skip link moves focus here, bypassing the four\n          nav links above.\n        </p>\n      </main>\n    </div>",
+      "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
     }
   ],
   "civ-ssn": [
@@ -4980,11 +5237,32 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "SsnFullMode",
+      "name": "civ-ssn — full mode",
+      "category": "Foundations/Handling PII",
+      "html": "<civ-ssn name=\"ssn\" required></civ-ssn>",
+      "source": "packages/core/src/foundations/pii.stories.ts"
+    },
+    {
       "story": "SSNLast4",
       "name": "Preset: SSN (Last 4)",
       "category": "Forms/Inputs/Text Input",
       "html": "<civ-ssn label=\"Last 4 digits of Social Security number\" name=\"ssn\" required mode=\"last4\"></civ-ssn>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
+      "story": "SsnLast4Pattern",
+      "name": "civ-ssn — last-4 minimization",
+      "category": "Foundations/Handling PII",
+      "html": "<civ-ssn\n      label=\"Last 4 of Social Security number\"\n      name=\"ssn-last4\"\n      mode=\"last4\"\n      required\n    ></civ-ssn>",
+      "source": "packages/core/src/foundations/pii.stories.ts"
+    },
+    {
+      "story": "WhyWeAsk",
+      "name": "Why we ask — pair PII with a disclosure",
+      "category": "Foundations/Handling PII",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-ssn name=\"ssn\" required></civ-ssn>\n      <civ-disclosure label=\"Why we ask\">\n        <p class=\"civ-m-0\">\n          We use the last 4 digits to verify your identity with the IRS.\n          We never share your full Social Security number.\n        </p>\n      </civ-disclosure>\n    </div>",
+      "source": "packages/core/src/foundations/pii.stories.ts"
     },
     {
       "story": "WithError",
@@ -5256,6 +5534,13 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "ComponentsInDark",
+      "name": "Components — dark palette preview",
+      "category": "Foundations/Dark Mode",
+      "html": "<div style=\"${surfaceStyle('dark')} ${darkPanelStyle}\">\n      <h2 class=\"civ-heading-lg\">Apply for benefits</h2>\n      <p class=\"civ-mb-4\">Complete the form below to apply.</p>\n      <civ-text-input\n        label=\"Full name\"\n        name=\"name\"\n        required\n        class=\"civ-mb-3\"\n      ></civ-text-input>\n      <civ-radio-group\n        legend=\"Preferred contact method\"\n        name=\"contact\"\n        class=\"civ-mb-3\"\n      >\n        <civ-radio value=\"email\" label=\"Email\"></civ-radio>\n        <civ-radio value=\"phone\" label=\"Phone\"></civ-radio>\n      </civ-radio-group>\n      <civ-alert\n        variant=\"error\"\n        heading=\"Sign-in failed\"\n        class=\"civ-mb-3\"\n      >\n        Your username or password didn't match. Try again.\n      </civ-alert>\n      <civ-alert variant=\"success\" heading=\"Application saved\">\n        We've saved your progress. You can return anytime.\n      </civ-alert>\n      <div class=\"civ-button-row civ-mt-3\">\n        <civ-button label=\"Save and continue\"></civ-button>\n        <civ-button variant=\"secondary\" label=\"Save draft\"></civ-button>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/dark-mode.stories.ts"
+    },
+    {
       "story": "CustomPatterns",
       "category": "Foundations/Input Masks",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4 civ-max-w-lg\">\n      <civ-text-input label=\"Case number\" name=\"case\" hint=\"For example: AB-1234\" mask-pattern=\"AA-####\"></civ-text-input>\n      <civ-text-input label=\"License plate\" name=\"plate\" hint=\"For example: ABC-1234\" mask-pattern=\"AAA-####\"></civ-text-input>\n    </div>",
@@ -5299,6 +5584,13 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "ErrorIdentification",
+      "name": "Error identification — text + color, never just color",
+      "category": "Foundations/Accessibility",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-text-input\n        label=\"Email address\"\n        name=\"email-bad\"\n        type=\"email\"\n        value=\"not-an-email\"\n        error=\"Enter an email address in the format name@example.com.\"\n        required\n      ></civ-text-input>\n      <civ-text-input\n        label=\"ZIP code\"\n        name=\"zip\"\n        value=\"ABC\"\n        error=\"ZIP code must be 5 digits. For example: 22150.\"\n        required\n        class=\"civ-mt-3\"\n      ></civ-text-input>\n    </div>",
+      "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
+    },
+    {
       "story": "FormStack",
       "name": "Vertical Form Stack",
       "category": "Foundations/Layout Examples",
@@ -5310,6 +5602,20 @@
       "category": "Forms/Inputs/Text Input",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-text-input label=\"Text\" name=\"text\" type=\"text\"></civ-text-input>\n      <civ-text-input label=\"Password\" name=\"password\" type=\"password\"></civ-text-input>\n      <civ-text-input label=\"Search\" name=\"search\" type=\"search\" leading-icon=\"search\"></civ-text-input>\n      <civ-text-input label=\"Number\" name=\"number\" type=\"number\"></civ-text-input>\n    </div>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
+      "story": "InteractAndWatch",
+      "name": "Interact and watch the event payload",
+      "category": "Foundations/Analytics",
+      "html": "<div id=\"${id}-root\" class=\"civ-grid civ-gap-4\" style=\"grid-template-columns: 1fr 1fr;\">\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <p class=\"civ-text-caption civ-mb-0\">Interactive controls</p>\n          <civ-text-input label=\"Full name\" name=\"name\"></civ-text-input>\n          <civ-select label=\"State of residence\" name=\"state\">\n            <option value=\"\">- Select -</option>\n            <option value=\"CA\">California</option>\n            <option value=\"NY\">New York</option>\n            <option value=\"TX\">Texas</option>\n          </civ-select>\n          <civ-checkbox label=\"Subscribe to updates\" name=\"subscribe\"></civ-checkbox>\n          <civ-toggle label=\"Email notifications\" name=\"notifications\"></civ-toggle>\n          <civ-button label=\"Submit\"></civ-button>\n        </div>\n        <div>\n          <p class=\"civ-text-caption civ-mb-2\">civ-analytics events</p>\n          <div\n            id=\"${id}-log\"\n            class=\"civ-p-3\"\n            style=\"background: var(--civ-color-base-lightest); border-radius: var(--civ-border-radius-md); min-height: 240px; max-height: 320px; overflow: auto; display: flex; flex-direction: column; gap: var(--civ-spacing-2);\"\n            aria-live=\"off\"\n          ></div>\n        </div>\n      </div>",
+      "source": "packages/core/src/foundations/analytics.stories.ts"
+    },
+    {
+      "story": "KeyboardOnly",
+      "name": "Keyboard-only flow",
+      "category": "Foundations/Accessibility",
+      "html": "<form class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 480px;\">\n      <civ-text-input\n        label=\"Full name\"\n        name=\"kbd-name\"\n        autocomplete=\"name\"\n        required\n      ></civ-text-input>\n      <civ-select label=\"State of residence\" name=\"kbd-state\">\n        <option value=\"\">- Select -</option>\n        <option value=\"CA\">California</option>\n        <option value=\"NY\">New York</option>\n        <option value=\"TX\">Texas</option>\n      </civ-select>\n      <civ-radio-group legend=\"Preferred contact method\" name=\"kbd-contact\" required>\n        <civ-radio value=\"email\" label=\"Email\"></civ-radio>\n        <civ-radio value=\"phone\" label=\"Phone\"></civ-radio>\n        <civ-radio value=\"mail\" label=\"US Mail\"></civ-radio>\n      </civ-radio-group>\n      <civ-button label=\"Submit\"></civ-button>\n    </form>",
+      "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
     },
     {
       "story": "LeadingAndTrailingIcons",
@@ -5339,6 +5645,13 @@
       "source": "packages/core/src/foundations/masks-examples.stories.ts"
     },
     {
+      "story": "OptOut",
+      "name": "Opt out with disable-analytics",
+      "category": "Foundations/Analytics",
+      "html": "<div id=\"${id}-root\" class=\"civ-grid civ-gap-4\" style=\"grid-template-columns: 1fr 1fr;\">\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <p class=\"civ-text-caption civ-mb-0\">\n            Type into both fields. Only the first one fires events.\n          </p>\n          <civ-text-input\n            label=\"Tracked field\"\n            name=\"tracked\"\n            hint=\"Fires civ-analytics on every change\"\n          ></civ-text-input>\n          <civ-text-input\n            label=\"Untracked field\"\n            name=\"untracked\"\n            hint=\"Has disable-analytics — no events\"\n            disable-analytics\n          ></civ-text-input>\n        </div>\n        <div>\n          <p class=\"civ-text-caption civ-mb-2\">civ-analytics events</p>\n          <div\n            id=\"${id}-log\"\n            class=\"civ-p-3\"\n            style=\"background: var(--civ-color-base-lightest); border-radius: var(--civ-border-radius-md); min-height: 240px; max-height: 320px; overflow: auto; display: flex; flex-direction: column; gap: var(--civ-spacing-2);\"\n            aria-live=\"off\"\n          ></div>\n        </div>\n      </div>",
+      "source": "packages/core/src/foundations/analytics.stories.ts"
+    },
+    {
       "story": "PasswordReveal",
       "name": "Inset: Password reveal",
       "category": "Forms/Inputs/Text Input",
@@ -5358,6 +5671,20 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
+      "story": "RtlMirror",
+      "name": "RTL — layout mirrors automatically",
+      "category": "Foundations/Internationalization",
+      "html": "<div\n      class=\"civ-grid civ-gap-4\"\n      style=\"grid-template-columns: 1fr 1fr; align-items: start;\"\n    >\n      <div dir=\"ltr\" lang=\"en\">\n        <p class=\"civ-text-caption civ-mb-2\">LTR (English)</p>\n        <civ-text-input\n          label=\"Full name\"\n          name=\"name-ltr\"\n          required\n          hint=\"As it appears on your ID\"\n        ></civ-text-input>\n        <civ-radio-group\n          legend=\"Preferred contact\"\n          name=\"contact-ltr\"\n          required\n          class=\"civ-mt-3\"\n        >\n          <civ-radio value=\"email\" label=\"Email\"></civ-radio>\n          <civ-radio value=\"phone\" label=\"Phone\"></civ-radio>\n        </civ-radio-group>\n      </div>\n      <div dir=\"rtl\" lang=\"ar\">\n        <p class=\"civ-text-caption civ-mb-2\">RTL (Arabic)</p>\n        <civ-text-input\n          label=\"الاسم الكامل\"\n          name=\"name-rtl\"\n          required\n          hint=\"كما يظهر على بطاقة هويتك\"\n        ></civ-text-input>\n        <civ-radio-group\n          legend=\"طريقة التواصل المفضلة\"\n          name=\"contact-rtl\"\n          required\n          class=\"civ-mt-3\"\n        >\n          <civ-radio value=\"email\" label=\"بريد إلكتروني\"></civ-radio>\n          <civ-radio value=\"phone\" label=\"هاتف\"></civ-radio>\n        </civ-radio-group>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/i18n.stories.ts"
+    },
+    {
+      "story": "SideBySide",
+      "name": "Light vs. dark — side-by-side",
+      "category": "Foundations/Dark Mode",
+      "html": "<div\n      class=\"civ-grid civ-gap-4\"\n      style=\"grid-template-columns: 1fr 1fr; align-items: start;\"\n    >\n      <div style=\"${surfaceStyle('light')}\">\n        <p class=\"civ-text-caption civ-mb-2\">Light (default)</p>\n        <civ-text-input\n          label=\"Email address\"\n          name=\"email-light\"\n          type=\"email\"\n          hint=\"Work email preferred\"\n        ></civ-text-input>\n        <civ-button label=\"Continue\" class=\"civ-mt-3\"></civ-button>\n      </div>\n      <div style=\"${surfaceStyle('dark')} ${darkPanelStyle}\">\n        <p class=\"civ-text-caption civ-mb-2\">Dark</p>\n        <civ-text-input\n          label=\"Email address\"\n          name=\"email-dark\"\n          type=\"email\"\n          hint=\"Work email preferred\"\n        ></civ-text-input>\n        <civ-button label=\"Continue\" class=\"civ-mt-3\"></civ-button>\n      </div>\n    </div>",
+      "source": "packages/core/src/foundations/dark-mode.stories.ts"
+    },
+    {
       "story": "SideBySide",
       "name": "Side-by-Side: All Scales Compared",
       "category": "Foundations/Density Examples",
@@ -5372,7 +5699,7 @@
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
     },
     {
-      "story": "SpacousScale",
+      "story": "SpaciousScale",
       "name": "Spacious Scale",
       "category": "Foundations/Density Examples",
       "html": "<div data-civ-scale=\"spacious\">\n      <h2 class=\"civ-heading-lg\">Welcome to the Department of Labor</h2>\n      <p class=\"civ-text-body civ-mb-4\">Find resources, file claims, and access services.</p>\n      <civ-text-input label=\"Search\" name=\"search\" hint=\"Enter a keyword or topic\"></civ-text-input>\n    </div>",
@@ -5628,6 +5955,13 @@
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
     },
     {
+      "story": "ComponentMotion",
+      "name": "Components using motion tokens",
+      "category": "Foundations/Motion",
+      "html": "<p class=\"civ-text-caption civ-mb-3\">\n      Click each control to see its tokenized transition. Toggle slides\n      at <code>--civ-motion-duration-fast</code>; checkbox check-mark\n      uses the same.\n    </p>\n    <div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <civ-toggle label=\"Email notifications\"></civ-toggle>\n      <civ-checkbox label=\"Subscribe to weekly newsletter\"></civ-checkbox>\n    </div>",
+      "source": "packages/core/src/foundations/motion.stories.ts"
+    },
+    {
       "story": "Default",
       "name": "email-notifications",
       "category": "Forms/Inputs/Toggle",
@@ -5658,6 +5992,13 @@
       "category": "Forms/Inputs/Toggle",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-toggle label=\"Notifications (off)\" name=\"ro-off\" readonly></civ-toggle>\n      <civ-toggle label=\"Notifications (on)\" name=\"ro-on\" readonly checked></civ-toggle>\n    </div>",
       "source": "packages/inputs/src/toggle/civ-toggle.stories.ts"
+    },
+    {
+      "story": "ReducedMotion",
+      "name": "Reduced motion (preview)",
+      "category": "Foundations/Motion",
+      "html": "<p class=\"civ-text-caption civ-mb-3\">\n      When the user's OS reports <code>prefers-reduced-motion: reduce</code>,\n      CivUI sets all transition durations to <code>0.01ms</code>\n      globally. The same controls still update — they just don't animate.\n      This story simulates the override locally.\n    </p>\n    <style>\n      .civ-foundations-reduced-motion-demo,\n      .civ-foundations-reduced-motion-demo *,\n      .civ-foundations-reduced-motion-demo *::before,\n      .civ-foundations-reduced-motion-demo *::after {\n        animation-duration: 0.01ms !important;\n        animation-iteration-count: 1 !important;\n        transition-duration: 0.01ms !important;\n      }\n    </style>\n    <div class=\"civ-foundations-reduced-motion-demo civ-flex civ-flex-col civ-gap-3\">\n      <civ-toggle label=\"Email notifications\"></civ-toggle>\n      <civ-checkbox label=\"Subscribe to weekly newsletter\"></civ-checkbox>\n    </div>\n    <p class=\"civ-text-caption civ-mt-4\">\n      To verify against the real media query: macOS Accessibility →\n      Display → Reduce motion, Windows Visual effects → Animation\n      effects off, or Chrome DevTools → Rendering → Emulate\n      <code>prefers-reduced-motion: reduce</code>.\n    </p>",
+      "source": "packages/core/src/foundations/motion.stories.ts"
     },
     {
       "story": "Required",
@@ -5710,6 +6051,13 @@
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\" disabled></civ-toggle-button>",
       "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "ExpandCollapseAll",
+      "name": "Expand all / collapse all",
+      "category": "Layout/Accordion",
+      "html": "<div data-story=\"expand-collapse-all\" class=\"civ-flex civ-flex-col civ-gap-3\">\n        <div>\n          <civ-toggle-button\n            label=\"Expand all\"\n            pressed-label=\"Collapse all\"\n            icon-start=\"chevron-down\"\n          ></civ-toggle-button>\n        </div>\n        <civ-accordion>\n          <civ-accordion-item label=\"Eligibility requirements\">\n            <p>Who qualifies for VA health care benefits.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"How to apply\">\n            <p>Three ways to submit your application.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"What you'll need\">\n            <p>DD-214, Social Security number, and recent tax return.</p>\n          </civ-accordion-item>\n          <civ-accordion-item label=\"After you apply\">\n            <p>What to expect during enrollment review.</p>\n          </civ-accordion-item>\n        </civ-accordion>\n      </div>",
+      "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
       "story": "PasswordRevealPattern",
@@ -5831,6 +6179,13 @@
       "category": "Forms/Inputs/Text Input",
       "html": "<civ-va-file-number label=\"VA file number\" name=\"vaFileNumber\"></civ-va-file-number>",
       "source": "packages/inputs/src/text-input/civ-text-input.stories.ts"
+    },
+    {
+      "story": "VaFileNumberRequiresOptIn",
+      "name": "civ-va-file-number — explicit opt-in needed",
+      "category": "Foundations/Handling PII",
+      "html": "<civ-va-file-number\n      name=\"va-file\"\n      data-persist-exclude\n      required\n    ></civ-va-file-number>",
+      "source": "packages/core/src/foundations/pii.stories.ts"
     },
     {
       "story": "WithError",

@@ -1,0 +1,80 @@
+---
+title: On This Page
+sidebar_position: 14
+sidebar_label: On This Page
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import OnThisPageProps from "./_on-this-page.props.mdx";
+import OnThisPageItemProps from "./_on-this-page-item.props.mdx";
+
+# On This Page
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-on-this-page`](pathname:///civui/storybook/?path=/docs/contract-civ-on-this-page--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-on-this-page>` + `<civ-on-this-page-item>`
+
+In-page navigation ("table of contents") — a vertical list of anchor links pointing at section headings in the current page. `IntersectionObserver` tracks which heading is currently in the viewport and flips the matching item's `active` flag so the highlight follows the reader's scroll position.
+
+## Two usage modes
+
+1. **Auto-detect (default)** — leave the default slot empty and the component scans for `h2[id], h3[id]` (configurable via `selector`) within the `scopeSelector` ancestor (default `main, article, body`). For each heading found, an item is created pointing at `#{heading.id}` with the heading's text as the label.
+2. **Manual** — slot explicit `<civ-on-this-page-item>` children. Auto-detection is skipped; you control the list. Useful when headings live outside the scope, when you want a different label, or when you want to skip some headings.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="navigation-on-this-page--default" />
+
+### Auto-detect from headings
+
+<StoryEmbed id="navigation-on-this-page--auto-detect-from-headings" />
+
+### Manual mode
+
+<StoryEmbed id="navigation-on-this-page--manual-mode" />
+
+### No visible heading
+
+<StoryEmbed id="navigation-on-this-page--no-heading-label" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-on-this-page--default)
+
+## Usage
+
+```html
+<!-- Auto-detect mode: scans h2[id], h3[id] inside main/article/body -->
+<civ-on-this-page label="On this page"></civ-on-this-page>
+
+<!-- Manual mode -->
+<civ-on-this-page label="Sections">
+  <civ-on-this-page-item href="#intro" label="Introduction"></civ-on-this-page-item>
+  <civ-on-this-page-item href="#usage" label="Usage"></civ-on-this-page-item>
+</civ-on-this-page>
+```
+
+## Props. Civ-on-this-page
+
+<OnThisPageProps />
+
+## Props. Civ-on-this-page-item
+
+<OnThisPageItemProps />
+
+## Accessibility
+
+- Renders as a `<nav>` landmark — set `label` to give the landmark a name (defaults to "On this page").
+- The active item uses `aria-current="location"` so the user's reading position is announced.
+- Honors `prefers-reduced-motion: reduce` — the scroll-to-section jump is instant for users who opted out of animations.
+- Clicks update `location.hash` via `history.pushState` so deep linking and back-button work.
+
+## When to use a different component
+
+- For navigation between *pages* (not sections of one page), use `<civ-side-nav>`.
+- For top-of-page primary navigation, use `<civ-nav>`.
+- For breadcrumb trails, use `<civ-breadcrumb>`.

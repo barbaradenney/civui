@@ -4528,7 +4528,7 @@
 
   /* Outer wrapper — owns the chip border/background. Non-interactive. */
   .civ-filter-chip {
-    @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded;
+    @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded-full;
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
     border: 1px solid var(--civ-color-base-light);

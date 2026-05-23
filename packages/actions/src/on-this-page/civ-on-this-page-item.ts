@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, sanitizeHref } from '@civui/core';
 
 /**
  * CivUI On This Page Item
@@ -22,6 +22,8 @@ import { CivBaseElement, LightDomTextMixin } from '@civui/core';
  * @prop {boolean} active - Set by the parent when this item's
  *   target heading is the closest one currently in the viewport.
  *   Reflects to `aria-current="location"` and a visual indicator.
+ *
+ * @fires civ-analytics - On link activation
  */
 @customElement('civ-on-this-page-item')
 export class CivOnThisPageItem extends LightDomTextMixin(CivBaseElement) {
@@ -39,6 +41,7 @@ export class CivOnThisPageItem extends LightDomTextMixin(CivBaseElement) {
   }
 
   private _onClick(e: MouseEvent): void {
+    this.sendAnalytics('click');
     // Smooth-scroll the target into view unless the user prefers
     // reduced motion. We let the default <a> navigation update the
     // URL fragment after — consumers can rely on `window.location
@@ -54,15 +57,16 @@ export class CivOnThisPageItem extends LightDomTextMixin(CivBaseElement) {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
     // Manually update the URL hash since we preventDefault'd the
-    // browser's default jump.
-    history.pushState(null, '', this.href);
+    // browser's default jump. Sanitize first — a programmatically-set
+    // `javascript:` href would otherwise be written into the URL bar.
+    history.pushState(null, '', sanitizeHref(this.href));
   }
 
   override render() {
     return html`
       <a
         class="civ-on-this-page__link ${this.active ? 'civ-on-this-page__link--active' : ''}"
-        href="${this.href}"
+        href="${sanitizeHref(this.href)}"
         aria-current="${this.active ? 'location' : nothing}"
         @click="${this._onClick}"
       >${this._text}</a>

@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-on-this-page.js';
 import './civ-on-this-page-item.js';
@@ -37,6 +37,17 @@ describe('civ-on-this-page', () => {
       </civ-on-this-page>`
     );
     expect(el.querySelector('.civ-on-this-page__heading')).toBeNull();
+  });
+
+  it('still names the nav landmark even when the visible heading is suppressed', async () => {
+    const el = await fixture<CivOnThisPage>(
+      `<civ-on-this-page label="">
+        <civ-on-this-page-item href="#a" label="A"></civ-on-this-page-item>
+      </civ-on-this-page>`
+    );
+    // Default landmark label kicks in so the <nav> is still distinguishable
+    // to screen-reader landmark navigation.
+    expect(el.querySelector('nav')!.getAttribute('aria-label')).toBe('On this page');
   });
 });
 
@@ -134,5 +145,31 @@ describe('civ-on-this-page-item', () => {
       </civ-on-this-page>`
     );
     expect(el.querySelector('a')!.textContent).toBe('Initial Text');
+  });
+
+  it('fires civ-analytics on link click', async () => {
+    const el = await fixture<CivOnThisPage>(
+      `<civ-on-this-page>
+        <civ-on-this-page-item href="#nope" label="A"></civ-on-this-page-item>
+      </civ-on-this-page>`
+    );
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+    el.querySelector('a')!.click();
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('rejects javascript: urls via sanitizeHref', async () => {
+    const el = await fixture<CivOnThisPage>(
+      `<civ-on-this-page>
+        <civ-on-this-page-item href="#safe" label="A"></civ-on-this-page-item>
+      </civ-on-this-page>`
+    );
+    const item = el.querySelector('civ-on-this-page-item') as CivOnThisPageItem;
+    item.href = 'javascript:alert(1)';
+    await elementUpdated(item);
+    const renderedHref = item.querySelector('a')!.getAttribute('href');
+    // sanitizeHref maps disallowed protocols to '#'
+    expect(renderedHref).not.toMatch(/^javascript:/);
   });
 });

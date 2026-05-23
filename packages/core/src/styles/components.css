@@ -46,7 +46,6 @@
   civ-nav-item,
   civ-on-this-page-item,
   civ-popover,
-  civ-side-nav-item,
   civ-segment,
   civ-tab,
   civ-tab-nav-item,
@@ -121,6 +120,7 @@
   civ-segmented-control,
   civ-select,
   civ-service-history,
+  civ-side-nav-item,
   civ-signature,
   civ-skip-link,
   civ-ssn,
@@ -3930,7 +3930,7 @@
        shift when a sibling item becomes current. The transparent
        border occupies the same space the primary-color rail will. */
     border-inline-start: 4px solid transparent;
-    padding-inline-start: calc(0.75rem - 4px + 4px);
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease), color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   @media (hover: hover) {
     .civ-side-nav__link:hover {
@@ -3947,8 +3947,13 @@
     color: var(--civ-color-primary-dark);
     border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
+  /*
+   * Disabled — rely on `opacity` alone for the muted treatment. The
+   * base color (`base-darkest`) stays so the opacity-reduced text
+   * still meets WCAG AA contrast against the surface background.
+   * A `color: base` + `opacity` stack pushed contrast below 4.5:1.
+   */
   .civ-side-nav__link--disabled {
-    color: var(--civ-color-base-DEFAULT);
     cursor: not-allowed;
     opacity: var(--civ-opacity-disabled);
   }
@@ -3978,6 +3983,7 @@
        darker rail can replace the resting one without layout shift. */
     margin-inline-start: -2px;
     border-inline-start: 2px solid transparent;
+    transition: color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease), border-inline-start-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   @media (hover: hover) {
     .civ-on-this-page__link:hover {
@@ -4009,6 +4015,10 @@
     @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-rounded-full;
     width: 2.75rem;
     height: 2.75rem;
+    /* Scale the chevron icon up so it has visual weight against
+       the 44 px filled chip. civ-icon inherits font-size — without
+       this, the icon renders at body-text size and looks lost. */
+    font-size: 1.25rem;
     background-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
     border: 1px solid var(--civ-color-primary-DEFAULT);

@@ -35,9 +35,9 @@ The component uses an `IntersectionObserver` against a 1 px sentinel inserted in
 
 <StoryEmbed id="navigation-back-to-top--custom-threshold" />
 
-### Always visible (inspection)
+### Chip preview (no scroll required)
 
-<StoryEmbed id="navigation-back-to-top--always-visible-demo" />
+<StoryEmbed id="navigation-back-to-top--chip-preview" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-back-to-top--default)
 
@@ -52,6 +52,8 @@ The component uses an `IntersectionObserver` against a 1 px sentinel inserted in
 ```
 
 Place once per page — typically near the closing `</body>` tag. The button uses `position: fixed` so DOM order doesn't matter for positioning, but late placement keeps tab order predictable.
+
+Each `<civ-back-to-top>` instance installs its own 1px sentinel in `<body>`. Multiple instances on the same page work independently but waste resources — render only one per route.
 
 ## Props
 

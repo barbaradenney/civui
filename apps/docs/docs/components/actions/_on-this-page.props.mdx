@@ -3,6 +3,6 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `label` | `string` | `'On this page'` | Visible heading + accessible name for the navigation landmark |
+| `label` | `string` | `'On this page'` | Used in TWO places: (a) rendered as the visible heading above the list, and (b) set as `aria-label` on the `<nav>` landmark so screen-reader landmark navigation can identify the rail. Passing an empty string suppresses the visible heading but the landmark still gets a default `aria-label="On this page"` so it can be distinguished from other navs on the page |
 | `selector` | `string` | `'h2[id], h3[id]'` | CSS selector for the headings to track when auto-detecting. Only used when no explicit `<civ-on-this-page-item>` children are slotted |
 | `scope-selector` | `string` | `'main, article, body'` | CSS selector for the ancestor that contains the headings. The first match wins. Only used when auto-detecting |

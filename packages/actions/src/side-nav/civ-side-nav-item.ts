@@ -30,6 +30,8 @@ import type { SlotConfig } from '@civui/core';
  *   sets `aria-disabled`, applies disabled styling.
  *
  * @slot - Nested `<civ-side-nav-item>` children for sub-sections.
+ *
+ * @fires civ-analytics - On link activation
  */
 @customElement('civ-side-nav-item')
 export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
@@ -62,6 +64,10 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
     ].filter(Boolean).join(' ');
   }
 
+  private _onClick(): void {
+    this.sendAnalytics('click');
+  }
+
   override render() {
     const link = this.disabled
       ? html`<span class="${this._classes}" aria-disabled="true">${this.label}</span>`
@@ -69,6 +75,7 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
           class="${this._classes}"
           href="${sanitizeHref(this.href)}"
           aria-current="${this.current ? 'page' : nothing}"
+          @click="${this._onClick}"
         >${this.label}</a>`;
 
     return html`

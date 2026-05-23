@@ -67,6 +67,19 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Secondary navigation follow-ups (side-nav, on-this-page, back-to-top)
+
+- **Surfaced:** Secondary navigation components landing, 2026-05-23. Branch `claude/nav-components-vads`.
+- **What landed:** Three new navigation-component clusters in `@civui/actions` — `<civ-side-nav>` + `<civ-side-nav-item>` (vertical hierarchical left-rail with leading-edge accent rail on the current item, nested sub-items via slot, disabled state), `<civ-on-this-page>` + `<civ-on-this-page-item>` (in-page TOC with two modes — auto-detect headings via `selector`/`scopeSelector` or manual children — and IntersectionObserver-driven `aria-current="location"` highlight), `<civ-back-to-top>` (floating chip anchored bottom-right, sentinel-based show/hide with no scroll listener, focus-moves to top landmark on click, honors `prefers-reduced-motion`). Schemas, tests, Storybook stories, and Docusaurus pages all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Mobile collapse for `civ-side-nav`.** The rail stays as a vertical list at every breakpoint. Drawer / hamburger collapse for small screens is the consumer's responsibility (`<civ-drawer>` wrapper or CSS media-query swap to a top nav).
+  2. **MutationObserver in `civ-on-this-page`.** Auto-detect runs once in `firstUpdated`. Headings rendered later (async fetches) are not picked up. Consumers wait for content to land before mounting the rail.
+  3. **URL-routing for `civ-side-nav`.** The `current` flag is consumer-managed — there's no built-in route observer or path-matching helper. Document-position fragments work via `<civ-on-this-page>` instead.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-side-nav`, `civ-side-nav-item`, `civ-on-this-page`, `civ-on-this-page-item`, and `civ-back-to-top` and they validate cleanly + produce Props/Events partials, but none are registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{SideNav,SideNavItem,OnThisPage,OnThisPageItem,BackToTop}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{SideNav,…}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{side-nav,side-nav-item,on-this-page,on-this-page-item,back-to-top}/{name}.component.yml`). Pattern: shape `civ-side-nav` / `civ-on-this-page` after `civ-list` (parent container, child sets role/state); `civ-side-nav-item` after `civ-disclosure` for the nested-children pattern; `civ-back-to-top` after `civ-action-button` for a single fixed-position interactive primitive.
+- **Why deferred:** Same rationale as the existing native-stubs entry — scroll-position tracking, IntersectionObserver, and top-landmark focus management have platform quirks (SwiftUI `ScrollViewReader`, Compose `LazyListState.firstVisibleItemIndex`) that need device verification. Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

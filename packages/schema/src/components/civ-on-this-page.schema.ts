@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     label: {
       type: 'string',
-      description: 'Visible heading + accessible name for the navigation landmark',
+      description: 'Used in TWO places: (a) rendered as the visible heading above the list, and (b) set as `aria-label` on the `<nav>` landmark so screen-reader landmark navigation can identify the rail. Passing an empty string suppresses the visible heading but the landmark still gets a default `aria-label="On this page"` so it can be distinguished from other navs on the page',
       default: 'On this page',
     },
     selector: {

@@ -51,18 +51,22 @@ export const CustomThreshold: Story = {
   `,
 };
 
-export const AlwaysVisibleDemo: Story = {
-  parameters: { docs: { description: { story: 'Forces the button visible regardless of scroll position so the chip can be inspected in isolation.' } } },
+export const ChipPreview: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Renders the chip in isolation by pinning `threshold="-1"`. The sentinel lands above the viewport top so the IntersectionObserver reports it out-of-view immediately — the chip flips visible on load without needing to scroll. Useful for inspecting the chip styling in Storybook.',
+      },
+    },
+  },
   render: () => html`
     <p class="civ-italic civ-mb-3">
-      Manually clears the <code>hidden</code> attribute for inspection.
-      Not a recommended consumer pattern — the component manages
-      <code>hidden</code> itself.
+      <code>threshold="-1"</code> positions the sentinel above the viewport
+      so the observer always reports it out-of-view — the chip flips
+      visible right away.
     </p>
     <div style="height: 200px;"></div>
-    <civ-back-to-top
-      label="Back to top"
-      .hidden=${false}
-    ></civ-back-to-top>
+    <civ-back-to-top label="Back to top" threshold="-1"></civ-back-to-top>
   `,
 };

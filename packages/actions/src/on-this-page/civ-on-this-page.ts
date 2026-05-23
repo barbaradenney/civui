@@ -2,7 +2,6 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { CivOnThisPageItem } from './civ-on-this-page-item.js';
@@ -182,8 +181,13 @@ export class CivOnThisPage extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    // Always name the landmark — even when the consumer opts out of
+    // the visible heading by passing `label=""`. An unnamed <nav>
+    // landmark can't be distinguished by AT users from any other
+    // <nav> on the page.
+    const landmarkLabel = this.label || 'On this page';
     return html`
-      <nav class="civ-on-this-page" aria-label="${ifDefined(this.label || undefined)}">
+      <nav class="civ-on-this-page" aria-label="${landmarkLabel}">
         ${this.label
           ? html`<p class="civ-on-this-page__heading">${this.label}</p>`
           : null}

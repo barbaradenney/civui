@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-side-nav.js';
 import './civ-side-nav-item.js';
@@ -96,5 +96,13 @@ describe('civ-side-nav-item', () => {
     item.current = true;
     await elementUpdated(item);
     expect(item.querySelector('a')!.getAttribute('aria-current')).toBe('page');
+  });
+
+  it('fires civ-analytics on link click', async () => {
+    const el = await fixture<CivSideNav>(sideNavHtml);
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+    el.querySelector('civ-side-nav-item')!.querySelector('a')!.click();
+    expect(handler).toHaveBeenCalledOnce();
   });
 });

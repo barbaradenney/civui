@@ -32,6 +32,13 @@ import { CivBaseElement } from '@civui/core';
  *   "Back to top". Also shown as a tooltip via `title`.
  * @prop {number} threshold - Pixels scrolled before the button
  *   appears. Default: `400`.
+ * @prop {boolean} hidden - Component-managed visibility flag.
+ *   Starts `true` and is flipped by the internal IntersectionObserver
+ *   once the user scrolls past `threshold`. Consumer assignments to
+ *   `hidden` are quickly overridden by the observer; treat it as
+ *   read-only externally.
+ *
+ * @fires civ-analytics - On click
  *
  * @example
  * ```html
@@ -104,10 +111,36 @@ export class CivBackToTop extends CivBaseElement {
   }
 
   private _onClick(): void {
+    this.sendAnalytics('click');
     const prefersReducedMotion =
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    // Move keyboard focus back to a top-of-page landmark so the user
+    // isn't stranded with focus on a now-bottom-of-viewport button.
+    // Preference order: declared skip-link target / first heading /
+    // body. Whatever we land on gets a transient tabindex if needed
+    // and `focus({ preventScroll: true })` since we already scrolled.
+    this._refocusTopOfPage();
+  }
+
+  private _refocusTopOfPage(): void {
+    const candidates: (HTMLElement | null)[] = [
+      document.getElementById('main-content'),
+      document.querySelector<HTMLElement>('main'),
+      document.querySelector<HTMLElement>('h1'),
+      document.body,
+    ];
+    const target = candidates.find((el): el is HTMLElement => el !== null);
+    if (!target) return;
+    // If the target isn't natively focusable, add tabindex="-1" so
+    // focus() works. Leave it set — it doesn't add a tab stop and a
+    // future click can reuse it.
+    if (!target.hasAttribute('tabindex') &&
+        !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(target.tagName)) {
+      target.setAttribute('tabindex', '-1');
+    }
+    target.focus({ preventScroll: true });
   }
 
   override render() {

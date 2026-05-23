@@ -65,4 +65,31 @@ describe('civ-back-to-top', () => {
     expect(arg.top).toBe(0);
     scrollTo.mockRestore();
   });
+
+  it('fires civ-analytics on click', async () => {
+    const el = await fixture<CivBackToTop>(`<civ-back-to-top></civ-back-to-top>`);
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+    el.querySelector('button')!.click();
+    expect(handler).toHaveBeenCalledOnce();
+    scrollTo.mockRestore();
+  });
+
+  it('moves focus to a top-of-page landmark after click', async () => {
+    // Put a main landmark in the body for the click handler to target.
+    const main = document.createElement('main');
+    main.id = 'main-content';
+    document.body.appendChild(main);
+
+    const el = await fixture<CivBackToTop>(`<civ-back-to-top></civ-back-to-top>`);
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    el.querySelector('button')!.click();
+    expect(document.activeElement).toBe(main);
+    // tabindex="-1" gets added so focus() works on a non-natively-focusable element.
+    expect(main.getAttribute('tabindex')).toBe('-1');
+
+    main.remove();
+    scrollTo.mockRestore();
+  });
 });

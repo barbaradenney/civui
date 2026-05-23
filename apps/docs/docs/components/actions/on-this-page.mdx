@@ -66,12 +66,19 @@ In-page navigation ("table of contents") — a vertical list of anchor links poi
 
 <OnThisPageItemProps />
 
+## Auto-detect mode caveats
+
+- Auto-detection runs **once**, in `firstUpdated`. Headings rendered later (e.g. by an async data fetch) are not picked up. For dynamic content, wait for the data to land and then render the `<civ-on-this-page>` alongside it, or use manual mode.
+- Headings without an `id` attribute are skipped silently — `IntersectionObserver` needs the heading element so it can fire when it crosses the viewport top.
+- `scopeSelector` first-match wins. If the page has a `<main>` *and* an `<article>` (default selector matches both), only the `<main>` is scanned. Override with a more specific selector when you need the article.
+
 ## Accessibility
 
-- Renders as a `<nav>` landmark — set `label` to give the landmark a name (defaults to "On this page").
+- Renders as a `<nav>` landmark. Even when `label=""` suppresses the visible heading, the landmark gets a default `aria-label="On this page"` so it stays distinguishable from other navs.
 - The active item uses `aria-current="location"` so the user's reading position is announced.
 - Honors `prefers-reduced-motion: reduce` — the scroll-to-section jump is instant for users who opted out of animations.
-- Clicks update `location.hash` via `history.pushState` so deep linking and back-button work.
+- Clicks update `location.hash` via `history.pushState` so deep linking and back-button work. The `href` is sanitized via `sanitizeHref` before writing to history.
+- Click activations dispatch `civ-analytics` from the host so consumer-level tracking can listen to in-page navigation events.
 
 ## When to use a different component
 

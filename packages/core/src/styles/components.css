@@ -3918,20 +3918,30 @@
   .civ-side-nav__sublist:empty {
     display: none;
   }
-  /* Nested sub-list — indented under the parent link so the
-     hierarchy reads at a glance. */
+  /*
+   * Disclosure parents toggle the sublist via the `hidden` attribute.
+   * Native `[hidden] { display: none }` has the same specificity as
+   * the `.civ-side-nav__sublist { display: flex }` rule above and
+   * loses on cascade order, so a more specific rule is needed.
+   */
+  .civ-side-nav__sublist[hidden] {
+    display: none;
+  }
+  /*
+   * Nested sub-list — indented under the parent so the hierarchy
+   * reads at a glance, with a leading-edge guide line that shows
+   * "these items belong to the section above". Top-level
+   * `.civ-side-nav__list` doesn't get the line.
+   */
   .civ-side-nav__sublist {
     padding-inline-start: 1rem;
+    border-inline-start: 1px solid var(--civ-color-border);
   }
 
   .civ-side-nav__link {
     @apply civ-block civ-no-underline civ-font-normal;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
-    /* Reserve the rail width even at rest so the layout doesn't
-       shift when a sibling item becomes current. The transparent
-       border occupies the same space the primary-color rail will. */
-    border-inline-start: 4px solid transparent;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease), color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
   @media (hover: hover) {
@@ -3940,14 +3950,14 @@
     }
   }
   /*
-   * Current item — leading-edge primary-color rail + bold text.
-   * The rail width was reserved as transparent on the base rule
-   * so flipping the color doesn't cause layout shift.
+   * Current item — primary color + bold text. No leading-edge rail
+   * any more: in sub-sections the sublist's leading line is the
+   * visual context, and the active item is marked by typography
+   * weight + color contrast.
    */
   .civ-side-nav__link--current {
     @apply civ-font-bold;
     color: var(--civ-color-primary-dark);
-    border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
   /*
    * Disabled — rely on `opacity` alone for the muted treatment. The
@@ -3963,19 +3973,16 @@
   /*
    * Disclosure trigger — used when a side-nav-item has nested
    * children. Full-row button with leading chevron + label.
-   * Chevron rotates 90° when the parent's `open` reflects.
+   * Chevron rotates 90° when the parent's `aria-expanded` is true.
    *
-   * Padding/border are matched to .civ-side-nav__link so leaf and
-   * parent rows align visually in the same rail.
+   * Padding matches .civ-side-nav__link so leaf and parent rows
+   * align visually in the same column.
    */
   .civ-side-nav__trigger {
     @apply civ-flex civ-items-center civ-w-full civ-cursor-pointer civ-bg-transparent
            civ-text-start civ-font-normal civ-border-0;
     padding: 0.5rem 0.75rem;
     color: var(--civ-color-base-darkest);
-    /* Reserve the same rail width as leaf links so parent/leaf
-       rows visually align in the same column. */
-    border-inline-start: 4px solid transparent;
     gap: 0.5rem;
     transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }

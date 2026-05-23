@@ -92,11 +92,16 @@ function namesMatch(jsdocName: string, propName: string): boolean {
 // decorator call (and any whitespace / typescript modifiers, plus
 // `get`/`set`/`accessor` for manual-accessor declarations like
 // `@property() get open() { ... }`).
-// `[^()]` disallows parens inside the options string so the
-// non-greedy match can't span adjacent @property blocks when the
-// immediately-following declaration uses `get`/`set`/`accessor` and
-// the regex would otherwise backtrack to find a later `)`.
-const PROPERTY_DECL_RE = /@property\(([^()]*?)\)\s*(?:(?:readonly|public|private|protected|override|get|set|accessor)\s+)*([A-Za-z_][\w]*)/g;
+//
+// The options group `(?:[^()]|\([^()]*\))*?` allows one level of
+// nested parens — enough for arrow-function converters like
+// `@property({ converter: { fromAttribute: (v) => ... } })`. A
+// flat `[^()]*?` would silently skip any @property with converter
+// functions or default factories, dropping them from declaredProps
+// and breaking the @prop / @property cross-check. Two levels of
+// nesting is the largest pattern actually used in CivUI; deeper
+// would still need a balanced-paren parser.
+const PROPERTY_DECL_RE = /@property\(((?:[^()]|\([^()]*\))*?)\)\s*(?:(?:readonly|public|private|protected|override|get|set|accessor)\s+)*([A-Za-z_][\w]*)/g;
 const ATTRIBUTE_FALSE_RE = /attribute:\s*false/;
 
 interface Component {

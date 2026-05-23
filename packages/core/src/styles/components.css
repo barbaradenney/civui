@@ -5120,16 +5120,22 @@
    * Disabled — pointer events off, dimmed. Selector uses the
    * `civ-accordion-item` element selector (not the class) because
    * the reflected `[disabled]` attribute lives on the HOST, while
-   * the inner `<details>` carries the class. The host descendant
-   * combinator picks the trigger inside.
+   * the inner `<details>` carries the class. Both rules use the
+   * full direct-child path `> details > .civ-accordion-item__trigger`
+   * so the cascade doesn't reach a NESTED accordion-item's trigger
+   * inside the panel content — only the item's OWN trigger summary.
    *
    * The second rule cascades parent `<civ-accordion disabled>` to
-   * every descendant item's trigger — matches the JS behavior in
-   * `civ-accordion-item._effectivelyDisabled` so visual + behavior
-   * stay aligned. Applies across all variants.
+   * its direct-child items only — matches the JS behavior in
+   * `civ-accordion-item._effectivelyDisabled` which walks
+   * `closest('civ-accordion')` (nearest ancestor, not all
+   * ancestors). Without the direct-child path, an outer disabled
+   * accordion would visually disable items inside a nested
+   * (enabled) accordion while JS still accepted toggles on them —
+   * visual / behavior divergence.
    */
-  civ-accordion-item[disabled] .civ-accordion-item__trigger,
-  civ-accordion[disabled] civ-accordion-item .civ-accordion-item__trigger {
+  civ-accordion-item[disabled] > details > .civ-accordion-item__trigger,
+  civ-accordion[disabled] > .civ-accordion__inner > civ-accordion-item > details > .civ-accordion-item__trigger {
     pointer-events: none;
     opacity: var(--civ-opacity-disabled);
     cursor: not-allowed;
@@ -5168,8 +5174,10 @@
 
   /*
    * Content — indented under the label so prose lines up with
-   * the label text, not the chevron. Variant rules above add a
-   * matching bg color for secondary / primary.
+   * the label text, not the chevron. The primary-variant rule
+   * above adds a matching bg color to the content panel so the
+   * trigger + content read as a single filled card; secondary
+   * and tertiary leave the content transparent.
    */
   .civ-accordion-item__content {
     padding: 0 1rem 1rem 2.5rem;

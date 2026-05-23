@@ -92,11 +92,13 @@ const PROPERTY_RE = /@property\(([\s\S]*?)\)[\s\S]*?(?:\s|^)([a-zA-Z_][\w]*)\s*[
 // `NAME =`/`NAME:` which doesn't match a getter declaration; without this
 // supplement, a component using a manual reactive accessor would have its
 // `name` property silently missing from the attrs set.
-// `[^()]` disallows parens inside the options so the engine doesn't
-// backtrack across adjacent @property blocks looking for a later `)`
-// followed by `get`/`set`/`accessor`. @property option objects use
-// curly braces, not parens, so this stays correct.
-const PROPERTY_ACCESSOR_RE = /@property\(([^()]*?)\)\s*(?:get|set|accessor)\s+([a-zA-Z_][\w]*)\b/g;
+//
+// The options group `(?:[^()]|\([^()]*\))*?` allows one level of nested
+// parens so arrow-function converters (e.g. `converter: { fromAttribute:
+// (v) => ... }`) don't make the engine backtrack across adjacent
+// @property blocks. A flat `[^()]*?` would silently skip such
+// declarations and drop the accessor from the attrs set.
+const PROPERTY_ACCESSOR_RE = /@property\(((?:[^()]|\([^()]*\))*?)\)\s*(?:get|set|accessor)\s+([a-zA-Z_][\w]*)\b/g;
 const ATTRIBUTE_OPT_RE = /attribute:\s*['"]([^'"]+)['"]/;
 const ATTRIBUTE_DISABLED_RE = /attribute:\s*false/;
 

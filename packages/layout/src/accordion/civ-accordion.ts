@@ -42,7 +42,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
  * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
- * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (gray chip palette, smaller chrome), or `'primary'` (filled primary-lightest, larger/bolder)
+ * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (transparent triggers in individually-bordered cards), or `'primary'` (filled primary-lightest, larger/bolder)
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -96,6 +96,16 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
     return { default: '[data-civ-accordion-content]' };
   }
 
+  /**
+   * Watches for dynamically-appended `<civ-accordion-item>` children
+   * so the `single` invariant stays enforced after first paint.
+   * Without this, `accordion.appendChild(newItem)` with `newItem.open
+   * = true` would leave both the existing open item and the new one
+   * expanded — only first-paint and `single` false→true transitions
+   * would otherwise reconcile.
+   */
+  private _childListObserver?: MutationObserver;
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('civ-accordion-item-toggle', this._onItemToggle as EventListener);
@@ -105,6 +115,8 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   override disconnectedCallback(): void {
     this.removeEventListener('civ-accordion-item-toggle', this._onItemToggle as EventListener);
     this.removeEventListener('keydown', this._onKeydown);
+    this._childListObserver?.disconnect();
+    this._childListObserver = undefined;
     super.disconnectedCallback();
   }
 
@@ -113,13 +125,34 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
     // Items may ship pre-authored with `open`. In `single` mode we
     // need to reconcile to one-open-at-a-time on first paint.
     if (this.single) this._enforceSingleOpen();
+
+    // Attach the mutation observer AFTER first paint so the
+    // LightDomSlotMixin's initial child relocation doesn't trigger a
+    // spurious reconciliation. The observer fires on
+    // dynamically-added/removed items thereafter.
+    this._childListObserver = new MutationObserver((mutations) => {
+      if (!this.single) return;
+      const added = mutations.some((m) =>
+        Array.from(m.addedNodes).some(
+          (n) => (n as Element).nodeName?.toLowerCase() === 'civ-accordion-item',
+        ),
+      );
+      if (added) this._enforceSingleOpen();
+    });
+    this._childListObserver.observe(this, { childList: true, subtree: true });
   }
 
   /**
-   * Reconcile when `single` toggles at runtime. If `disabled`
+   * Reconcile when `single` toggles at runtime. Whenever `disabled`
    * changes, ripple a re-render to every direct-child item so they
    * pick up the new effective-disabled state (`aria-disabled`,
    * `tabindex`, and the setter gate all read the live parent state).
+   *
+   * The disabled ripple also fires on initial mount — children may
+   * upgrade BEFORE the parent's `disabled` attribute hydrates to a
+   * property, so the first child render can miss the parent state.
+   * The redundant requestUpdate is a small perf cost in exchange
+   * for race safety.
    */
   override updated(changes: Map<PropertyKey, unknown>): void {
     super.updated(changes);
@@ -134,7 +167,15 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
-    const variantClass = `civ-accordion__inner--${this.variant}`;
+    // Normalize unknown / null variants (e.g. consumer called
+    // `el.removeAttribute('variant')`, which Lit syncs to `null` for
+    // `type: String` properties, bypassing the TS-typed default) so
+    // the rendered class always resolves to a real CSS rule.
+    const variant: AccordionVariant =
+      this.variant === 'primary' || this.variant === 'secondary'
+        ? this.variant
+        : 'tertiary';
+    const variantClass = `civ-accordion__inner--${variant}`;
     return html`
       <div class="civ-accordion__inner ${variantClass}" data-civ-accordion-content></div>
     `;
@@ -146,12 +187,21 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * invariant). Disabled items are skipped — the per-item `open`
    * setter rejects programmatic changes while disabled, so a forced
    * `item.open = true` would be a no-op anyway.
+   *
+   * In single mode we also call `_enforceSingleOpen()` after the
+   * set. Without it, if items[0] was already open AND some other
+   * item was also open (e.g. authored markup before reconcile, or
+   * a prior un-coordinated mutation), `items[0].open = true` would
+   * no-op via the setter's `old === value` short-circuit, no
+   * coordination event would fire, and the second open item would
+   * stay open — silently violating the invariant.
    */
   expandAll(): void {
     const items = this._directChildItems().filter((i) => !i.disabled);
     if (items.length === 0) return;
     if (this.single) {
       items[0].open = true;
+      this._enforceSingleOpen();
       return;
     }
     for (const item of items) {
@@ -203,6 +253,13 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * are skipped. Only acts when focus is on a `<summary>` belonging
    * to one of THIS accordion's direct-child items — nested
    * accordions' summaries are handled by their own listener.
+   *
+   * The target must be the item's OWN trigger summary (the direct
+   * `<details>` > `<summary>` child of the item), NOT a `<summary>`
+   * nested deeper in the panel content (e.g. a `<civ-disclosure>`,
+   * `<civ-read-more>`, or a raw `<details>` placed inside the item).
+   * Without this scope, ArrowDown on a nested disclosure's summary
+   * would steal focus to the next accordion header.
    */
   private _onKeydown = (e: KeyboardEvent): void => {
     if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
@@ -210,6 +267,11 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
     if (!target || target.tagName !== 'SUMMARY') return;
     const item = target.closest('civ-accordion-item') as CivAccordionItem | null;
     if (!item || item.closest('civ-accordion') !== this) return;
+    // Reject summaries from nested <details> in the item's content
+    // panel — only the item's own trigger summary should drive
+    // accordion-level navigation.
+    const ownSummary = item.querySelector(':scope > details > summary');
+    if (target !== ownSummary) return;
 
     const items = this._directChildItems().filter((i) => !i.disabled);
     if (items.length === 0) return;

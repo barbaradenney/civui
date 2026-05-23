@@ -594,4 +594,170 @@ describe('civ-accordion', () => {
     await elementUpdated(item);
     expect(item.open).toBe(true);
   });
+
+  // ─── Code-review follow-up fixes ──────────────────────────────
+
+  it('expandAll() in single mode reconciles even when items[0] is already open', async () => {
+    // Regression: previously, `expandAll()` in single mode set
+    // `items[0].open = true`. If items[0] was already open AND some
+    // other item also happened to be open (e.g. via uncoordinated
+    // mutation), the setter no-op short-circuit prevented the
+    // coordination event from firing, leaving the second open item
+    // open — silently violating the single-open invariant.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion single>
+        <civ-accordion-item label="A">A</civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+        <civ-accordion-item label="C">C</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const items = el.querySelectorAll<CivAccordionItem>('civ-accordion-item');
+    // Bypass coordination to set up the invariant-violated state:
+    // mutate `open` directly on internal state. Use the property
+    // setter from outside which goes through the gate normally.
+    items[0].open = true;
+    await elementUpdated(items[0]);
+    items[2].open = true; // single coordination would close items[0], so simulate the broken state
+    await elementUpdated(items[2]);
+    // After both opens, single coordinator closed items[0]. Manually
+    // force the violated state by re-opening items[0].
+    items[0].open = true;
+    await elementUpdated(items[0]);
+    // Now both items[0] and items[2] should be open (we forced it).
+    // Some interleaving will have collapsed one — accept whichever
+    // state and force-set the violated state explicitly:
+    // open both via internal flag
+    (items[0] as unknown as { _open: boolean })._open = true;
+    (items[2] as unknown as { _open: boolean })._open = true;
+    items[0].requestUpdate();
+    items[2].requestUpdate();
+    await elementUpdated(items[0]);
+    await elementUpdated(items[2]);
+    expect(items[0].open).toBe(true);
+    expect(items[2].open).toBe(true);
+
+    // Call expandAll. The fix calls _enforceSingleOpen() after
+    // setting items[0].open = true, which closes items[2] even
+    // though the setter on items[0] no-op'd.
+    el.expandAll();
+    await elementUpdated(el);
+    await elementUpdated(items[2]);
+    expect(items[0].open).toBe(true);
+    expect(items[2].open).toBe(false);
+  });
+
+  it('falls back to tertiary when variant is set to an invalid value', async () => {
+    // Regression: previously, `el.removeAttribute('variant')` synced
+    // `this.variant = null` (Lit's behavior for `type: String`
+    // properties), the template literal rendered
+    // `civ-accordion__inner--null` and the accordion lost all
+    // styling because no CSS rule matched.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>
+    `);
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+
+    el.removeAttribute('variant');
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--null')).toBeNull();
+
+    // Unknown variant values also normalize to tertiary.
+    el.setAttribute('variant', 'quaternary');
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--quaternary')).toBeNull();
+  });
+
+  it('ignores arrow keys from a <summary> nested inside an item\'s content panel', async () => {
+    // Regression: the keyboard handler used `target.closest('civ-accordion-item')`
+    // which returned the OUTER item when the user pressed arrows on
+    // a nested `<details>`/`<civ-disclosure>`/`<summary>` inside the
+    // content panel. The handler then yanked focus to the next
+    // accordion header, hijacking the nested disclosure's keyboard.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion>
+        <civ-accordion-item label="A" open>
+          <details data-test="nested">
+            <summary>Nested summary</summary>
+            <p>Nested content</p>
+          </details>
+        </civ-accordion-item>
+        <civ-accordion-item label="B">B</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const nestedSummary = el.querySelector<HTMLElement>('[data-test="nested"] > summary')!;
+    nestedSummary.focus();
+    dispatchKeyOn(nestedSummary, 'ArrowDown');
+    // Focus stays on the nested summary — accordion did NOT steal it.
+    expect(document.activeElement).toBe(nestedSummary);
+  });
+
+  it('enforces single-open when an item with open is appended dynamically', async () => {
+    // Regression: single-mode reconciliation only ran in
+    // `firstUpdated` and on `single` false→true transitions.
+    // Appending `<civ-accordion-item open>` to a `<civ-accordion single>`
+    // with an existing open item left both items open — only the
+    // next user toggle would coordinate them. A MutationObserver
+    // now watches for added items and runs the enforcement.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion single>
+        <civ-accordion-item label="A" open>A</civ-accordion-item>
+      </civ-accordion>
+    `);
+    const itemA = el.querySelector<CivAccordionItem>('civ-accordion-item')!;
+    expect(itemA.open).toBe(true);
+
+    const itemB = document.createElement('civ-accordion-item') as CivAccordionItem;
+    itemB.label = 'B';
+    itemB.setAttribute('open', '');
+    el.appendChild(itemB);
+    await elementUpdated(itemB);
+    // Allow the MutationObserver microtask to fire.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await elementUpdated(itemA);
+
+    // _enforceSingleOpen keeps the FIRST open item and closes the
+    // rest. itemA was open first, so itemA stays open and itemB
+    // collapses.
+    expect(itemA.open).toBe(true);
+    expect(itemB.open).toBe(false);
+  });
+
+  it('parent disabled does NOT cascade to items inside a nested accordion', async () => {
+    // Regression: the CSS rule
+    // `civ-accordion[disabled] civ-accordion-item .civ-accordion-item__trigger`
+    // was an unscoped descendant selector, dimming inner items of a
+    // nested (enabled) accordion while the JS `_effectivelyDisabled`
+    // (which uses `closest()`) said they were enabled — visual /
+    // behavior divergence. The rule now scopes to direct-child
+    // items only via `> .civ-accordion__inner >`.
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion disabled id="outer">
+        <civ-accordion-item label="Outer A" open>
+          <civ-accordion id="inner">
+            <civ-accordion-item label="Inner X">X</civ-accordion-item>
+          </civ-accordion>
+        </civ-accordion-item>
+      </civ-accordion>
+    `);
+    const innerItem = el.querySelector<CivAccordionItem>(
+      '#inner > .civ-accordion__inner > civ-accordion-item',
+    )!;
+    // The inner item's effective disabled state is FALSE (its
+    // closest accordion is the inner, which is not disabled).
+    expect((innerItem as unknown as { _effectivelyDisabled: boolean })._effectivelyDisabled)
+      .toBe(false);
+    // Programmatic open succeeds because the JS gate sees inner
+    // accordion (enabled) as the nearest ancestor.
+    innerItem.open = true;
+    await elementUpdated(innerItem);
+    expect(innerItem.open).toBe(true);
+
+    // The inner summary should NOT carry aria-disabled — its own
+    // disabled prop is false, and the parent-cascade should not
+    // reach past the nested accordion.
+    const innerSummary = innerItem.querySelector('summary')!;
+    expect(innerSummary.hasAttribute('aria-disabled')).toBe(false);
+  });
 });

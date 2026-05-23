@@ -282,15 +282,18 @@ Three visual variants in increasing prominence:
 - **Tertiary** (default) — bordered group with transparent
   triggers. Quietest, list-like. Use for FAQ pages, help content,
   optional detail.
-- **Secondary** — items rendered as filled neutral-gray buttons
-  using the same chip palette as \`civ-disclosure\` /
-  \`civ-read-more\` (base-lightest bg, default text color), with
-  the smaller chrome of \`civ-action-btn--secondary\`. Use for
-  navigation-like menus or choose-one sections where the affordance
-  should read as actionable without competing with a primary CTA.
+- **Secondary** — items rendered as filled neutral-gray chips
+  matching the \`civ-disclosure\` / \`civ-read-more\` palette,
+  with the smaller chrome of \`civ-action-btn--secondary\`. When
+  open, the content drops the bg and uses a disclosure-style
+  leading-edge gray rail with indent — keeps the variant quiet
+  while still visually connecting the body to the chip above.
+  Use for navigation-like menus or choose-one sections.
 - **Primary** — filled primary-lightest (blue) button with the
   larger padding and bolder type of \`civ-btn--secondary\` (the
-  main button family). Use for hub-page sections or hero CTAs.
+  main button family). When open, trigger + content extend the
+  colored bg as a single card. Use for hub-page sections or hero
+  CTAs.
         `,
       },
     },

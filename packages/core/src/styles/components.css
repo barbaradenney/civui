@@ -5038,25 +5038,13 @@
   }
 
   /*
-   * Shared shape: trigger gets its own rounded corners (so when
-   * closed it reads as a fully-rounded "button"). When the item
-   * is open, the trigger's bottom corners square up and the
-   * content panel continues the bg with rounded bottom corners —
-   * the pair reads as a card. Per-variant colors below.
+   * Both filled variants give the trigger its own rounded corners
+   * so when closed it reads as a fully-rounded "button". Open-state
+   * shape differs per variant (see below).
    */
   .civ-accordion__inner--secondary .civ-accordion-item__trigger,
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
     border-radius: var(--civ-border-radius-DEFAULT);
-  }
-  .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__trigger,
-  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__trigger {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__content,
-  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__content {
-    border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
-    border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
   }
 
   /*
@@ -5079,9 +5067,26 @@
   .civ-accordion__inner--secondary .civ-accordion-item__trigger:active {
     background-color: var(--civ-color-base-light);
   }
+
+  /*
+   * Secondary open: disclosure-style indent-rail pattern. The
+   * trigger keeps all four rounded corners (no bottom-corner
+   * squaring); the content drops any bg and instead gets a
+   * leading-edge gray rail with a small indent — mirrors
+   * `.civ-disclosure__content`. The rail visually connects the
+   * disclosed content to the chip above without extending the
+   * colored bg into the body, so secondary stays quieter than the
+   * primary variant's card pattern.
+   *
+   * Uses `border-inline-start` (not `border-left`) so RTL flips it
+   * to the right side automatically.
+   */
   .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__content {
-    background-color: var(--civ-color-base-lightest);
+    margin-top: 0.5rem;
+    padding: 0 0 0 0.75rem;
+    background-color: transparent;
     color: inherit;
+    border-inline-start: 2px solid var(--civ-color-base-light);
   }
 
   /*
@@ -5105,9 +5110,23 @@
   .civ-accordion__inner--primary .civ-accordion-item__trigger:active {
     background-color: var(--civ-color-primary-light);
   }
+
+  /*
+   * Primary open: card pattern — trigger squares its bottom
+   * corners, content panel continues the colored bg with rounded
+   * bottom corners. The trigger + content pair read as a single
+   * filled card. This shape is primary-only; secondary uses the
+   * lighter rail pattern above.
+   */
+  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__trigger {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
   .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__content {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
+    border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
+    border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
   }
 
   /* ── Trigger base (all variants) ──────────────────────────── */

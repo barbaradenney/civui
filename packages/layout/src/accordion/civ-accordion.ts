@@ -77,17 +77,20 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    *   triggers and inter-item dividers. The quietest, list-like
    *   affordance. Use for FAQ pages, help content, optional detail.
    * - `'secondary'` — each item rendered as a filled neutral-gray
-   *   button using the same chip palette as `civ-disclosure` and
-   *   `civ-read-more` (base-lightest bg, default text color), with
-   *   the smaller padding of `civ-action-btn--secondary`. Items
-   *   are separated by gap, no outer border. Use for navigation-
-   *   like menus or choose-one sections where the affordance
-   *   should read as actionable without competing with a primary
-   *   CTA on the page.
+   *   chip (base-lightest bg, default text color) matching the
+   *   `civ-disclosure` / `civ-read-more` palette, with the
+   *   smaller padding of `civ-action-btn--secondary`. When open,
+   *   the content drops the bg and uses a disclosure-style
+   *   leading-edge gray rail with indent — keeps the variant
+   *   quiet while still visually connecting the body to the
+   *   chip above. Use for navigation-like menus or choose-one
+   *   sections.
    * - `'primary'` — filled primary-lightest button (the
    *   `civ-btn--secondary` palette) with the larger padding and
-   *   bolder type of the main button family. The most prominent
-   *   variant; use for hub-page sections or hero CTAs.
+   *   bolder type of the main button family. When open, trigger
+   *   and content extend the colored bg as a single card. The
+   *   most prominent variant; use for hub-page sections or hero
+   *   CTAs.
    */
   @property({ type: String, reflect: true }) variant: AccordionVariant = 'tertiary';
 

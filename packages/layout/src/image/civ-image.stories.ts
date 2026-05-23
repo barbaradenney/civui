@@ -14,6 +14,8 @@ const meta: Meta = {
     ratio: { control: 'select', options: ['1:1', '4:3', '16:9', '21:9', '3:2', 'auto'] },
     fit: { control: 'select', options: ['cover', 'contain'] },
     loading: { control: 'select', options: ['lazy', 'eager'] },
+    decoding: { control: 'select', options: ['async', 'sync', 'auto'] },
+    fetchPriority: { control: 'select', options: ['auto', 'high', 'low'], name: 'fetch-priority' },
     variant: { control: 'select', options: ['content', 'thumbnail'] },
     size: { control: 'select', options: ['32', '48', '64', '96', '128'] },
     rounded: { control: 'boolean' },
@@ -31,18 +33,18 @@ export default meta;
 
 type Story = StoryObj;
 
-// Placeholder image source. Picsum honors width/height in the URL and
-// returns a real JPEG, so the stories show actual aspect-ratio
-// behavior even without consumer assets.
-const photo = (w: number, h: number, seed = 'civui') =>
-  `https://picsum.photos/seed/${seed}/${w}/${h}`;
+// LITERAL URLs — must stay literal strings (no template interpolation
+// at story-source time), because the MCP example extractor reads the
+// raw template text and ships it verbatim. Story-level helpers like
+// `photo(w, h, seed)` would render as `src="${photo(...)}"` in
+// consumer-facing examples.
 
 /** Default content variant. */
 export const Default: Story = {
   render: () => html`
     <div style="max-width: 480px;">
       <civ-image
-        src="${photo(800, 450, 'hero')}"
+        src="https://picsum.photos/seed/hero/800/450"
         alt="A government services worker assists a veteran at a counter"
         ratio="16:9"
       ></civ-image>
@@ -54,18 +56,26 @@ export const Default: Story = {
 export const Ratios: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4" style="max-width: 480px;">
-      ${['1:1', '4:3', '16:9', '21:9', '3:2'].map(
-        (r) => html`
-          <div>
-            <p class="civ-italic civ-mb-1">ratio="${r}"</p>
-            <civ-image
-              src="${photo(800, 450, r)}"
-              alt="Placeholder for ${r}"
-              ratio="${r as any}"
-            ></civ-image>
-          </div>
-        `,
-      )}
+      <div>
+        <p class="civ-italic civ-mb-1">ratio="1:1"</p>
+        <civ-image src="https://picsum.photos/seed/r1/800/800" alt="Square placeholder" ratio="1:1"></civ-image>
+      </div>
+      <div>
+        <p class="civ-italic civ-mb-1">ratio="4:3"</p>
+        <civ-image src="https://picsum.photos/seed/r2/800/600" alt="4 by 3 placeholder" ratio="4:3"></civ-image>
+      </div>
+      <div>
+        <p class="civ-italic civ-mb-1">ratio="16:9"</p>
+        <civ-image src="https://picsum.photos/seed/r3/800/450" alt="16 by 9 placeholder" ratio="16:9"></civ-image>
+      </div>
+      <div>
+        <p class="civ-italic civ-mb-1">ratio="21:9"</p>
+        <civ-image src="https://picsum.photos/seed/r4/800/343" alt="21 by 9 placeholder" ratio="21:9"></civ-image>
+      </div>
+      <div>
+        <p class="civ-italic civ-mb-1">ratio="3:2"</p>
+        <civ-image src="https://picsum.photos/seed/r5/800/533" alt="3 by 2 placeholder" ratio="3:2"></civ-image>
+      </div>
     </div>
   `,
 };
@@ -77,7 +87,7 @@ export const FitModes: Story = {
       <div style="width: 220px;">
         <p class="civ-italic civ-mb-1">fit="cover"</p>
         <civ-image
-          src="${photo(800, 450, 'cover')}"
+          src="https://picsum.photos/seed/cover/800/450"
           alt="cover example"
           ratio="1:1"
           fit="cover"
@@ -87,7 +97,7 @@ export const FitModes: Story = {
       <div style="width: 220px;">
         <p class="civ-italic civ-mb-1">fit="contain"</p>
         <civ-image
-          src="${photo(800, 450, 'cover')}"
+          src="https://picsum.photos/seed/cover/800/450"
           alt="contain example"
           ratio="1:1"
           fit="contain"
@@ -106,7 +116,7 @@ export const Decorative: Story = {
         This image has <code>alt=""</code>, so screen readers skip it entirely.
       </p>
       <civ-image
-        src="${photo(800, 200, 'decor')}"
+        src="https://picsum.photos/seed/decor/800/200"
         alt=""
         ratio="21:9"
       ></civ-image>
@@ -118,16 +128,11 @@ export const Decorative: Story = {
 export const Thumbnails: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-3 civ-items-end">
-      ${(['32', '48', '64', '96', '128'] as const).map(
-        (s) => html`
-          <civ-image
-            src="${photo(256, 256, 'avatar')}"
-            alt="Avatar"
-            variant="thumbnail"
-            size="${s}"
-          ></civ-image>
-        `,
-      )}
+      <civ-image src="https://picsum.photos/seed/avatar/256/256" alt="Avatar" variant="thumbnail" size="32"></civ-image>
+      <civ-image src="https://picsum.photos/seed/avatar/256/256" alt="Avatar" variant="thumbnail" size="48"></civ-image>
+      <civ-image src="https://picsum.photos/seed/avatar/256/256" alt="Avatar" variant="thumbnail" size="64"></civ-image>
+      <civ-image src="https://picsum.photos/seed/avatar/256/256" alt="Avatar" variant="thumbnail" size="96"></civ-image>
+      <civ-image src="https://picsum.photos/seed/avatar/256/256" alt="Avatar" variant="thumbnail" size="128"></civ-image>
     </div>
   `,
 };
@@ -136,43 +141,28 @@ export const Thumbnails: Story = {
 export const RoundedAvatars: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-3 civ-items-center">
-      <civ-image
-        src="${photo(256, 256, 'p1')}"
-        alt="Jane Doe"
-        variant="thumbnail"
-        size="48"
-        rounded
-      ></civ-image>
-      <civ-image
-        src="${photo(256, 256, 'p2')}"
-        alt="John Smith"
-        variant="thumbnail"
-        size="48"
-        rounded
-      ></civ-image>
-      <civ-image
-        src="${photo(256, 256, 'p3')}"
-        alt="Alex Lee"
-        variant="thumbnail"
-        size="48"
-        rounded
-      ></civ-image>
+      <civ-image src="https://picsum.photos/seed/p1/256/256" alt="Jane Doe" variant="thumbnail" size="48" rounded></civ-image>
+      <civ-image src="https://picsum.photos/seed/p2/256/256" alt="John Smith" variant="thumbnail" size="48" rounded></civ-image>
+      <civ-image src="https://picsum.photos/seed/p3/256/256" alt="Alex Lee" variant="thumbnail" size="48" rounded></civ-image>
     </div>
   `,
 };
 
 /**
- * Eager loading for above-the-fold hero images. Use sparingly —
- * lazy is the default and the right choice for almost everything.
+ * Above-the-fold hero — combine `loading="eager"` + `decoding="sync"` +
+ * `fetch-priority="high"` for the LCP-candidate image so the browser
+ * prioritizes its fetch and decodes it before painting.
  */
-export const EagerLoading: Story = {
+export const HeroPriority: Story = {
   render: () => html`
     <div style="max-width: 480px;">
       <civ-image
-        src="${photo(800, 450, 'hero')}"
+        src="https://picsum.photos/seed/hero/800/450"
         alt="Hero image at the top of the page"
         ratio="16:9"
         loading="eager"
+        decoding="sync"
+        fetch-priority="high"
       ></civ-image>
     </div>
   `,

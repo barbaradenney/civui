@@ -32,12 +32,22 @@
 import { readdirSync, writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
+import { COVERED_COMPONENTS } from './schema-parity.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const SCHEMAS_DIR = join(ROOT, 'packages/schema/src/components');
 const COMPONENTS_DOC_DIR = join(ROOT, 'apps/docs/docs/components');
 const OUTPUT_DIR = join(ROOT, '.storybook/contract');
 const DRY_RUN = process.argv.includes('--dry-run');
+
+/**
+ * Tags whose iOS / Android / Drupal SDC implementations exist and
+ * are enforced by `schema-parity`. For components NOT in this set,
+ * the contract doc renders a "native + Drupal stubs deferred"
+ * note instead of pointing at files that don't exist (see
+ * `.claude/rules/audit-debt.md`).
+ */
+const COVERED_TAGS = new Set(COVERED_COMPONENTS.map((c) => c.name));
 
 /**
  * Some schemas share a component doc page with related siblings — the
@@ -210,15 +220,26 @@ function renderPage(schema: ComponentSchema): string {
   }
   out.push(`## Cross-platform sources`);
   out.push('');
-  out.push('The Lit web implementation is the canonical reference. Each platform ships an equivalent that satisfies the prop / event coverage above. Schema-parity CI fails if any platform drifts.');
-  out.push('');
-  out.push('| Platform | File |');
-  out.push('|----------|------|');
-  out.push(`| Web (Lit) | \`packages/.../civ-${schema.name.replace(/^civ-/, '')}.ts\` |`);
-  const titleCase = schema.name.replace(/^civ-/, '').split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join('');
-  out.push(`| iOS (SwiftUI) | \`packages/ios/Sources/CivUI/Civ${titleCase}.swift\` |`);
-  out.push(`| Android (Compose) | \`packages/android/src/main/kotlin/gov/civui/components/Civ${titleCase}.kt\` |`);
-  out.push(`| Drupal SDC | \`packages/drupal/civui/components/${schema.name.replace(/^civ-/, '')}/\` |`);
+  if (COVERED_TAGS.has(schema.name)) {
+    out.push('The Lit web implementation is the canonical reference. Each platform ships an equivalent that satisfies the prop / event coverage above. Schema-parity CI fails if any platform drifts.');
+    out.push('');
+    out.push('| Platform | File |');
+    out.push('|----------|------|');
+    out.push(`| Web (Lit) | \`packages/.../civ-${schema.name.replace(/^civ-/, '')}.ts\` |`);
+    const titleCase = schema.name.replace(/^civ-/, '').split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join('');
+    out.push(`| iOS (SwiftUI) | \`packages/ios/Sources/CivUI/Civ${titleCase}.swift\` |`);
+    out.push(`| Android (Compose) | \`packages/android/src/main/kotlin/gov/civui/components/Civ${titleCase}.kt\` |`);
+    out.push(`| Drupal SDC | \`packages/drupal/civui/components/${schema.name.replace(/^civ-/, '')}/\` |`);
+  } else {
+    out.push('> **Native + Drupal SDC implementations are deferred** for this component (see `.claude/rules/audit-debt.md`). Only the Lit web implementation ships today. The schema above is the contract a future native / Drupal port must satisfy.');
+    out.push('');
+    out.push('| Platform | File |');
+    out.push('|----------|------|');
+    out.push(`| Web (Lit) | \`packages/.../civ-${schema.name.replace(/^civ-/, '')}.ts\` |`);
+    out.push(`| iOS (SwiftUI) | _deferred_ |`);
+    out.push(`| Android (Compose) | _deferred_ |`);
+    out.push(`| Drupal SDC | _deferred_ |`);
+  }
   out.push('');
   return out.join('\n');
 }

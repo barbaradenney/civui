@@ -47,6 +47,32 @@ const schema: ComponentSchema = {
       default: 'lazy',
       values: ['lazy', 'eager'],
     },
+    decoding: {
+      type: 'enum',
+      description: 'Native HTML `decoding` hint. `async` (default) never blocks render. `sync` blocks paint so the image and surrounding text appear together — use for above-the-fold LCP images. `auto` defers to the browser heuristic',
+      default: 'async',
+      values: ['async', 'sync', 'auto'],
+    },
+    fetchPriority: {
+      type: 'enum',
+      description: 'Native HTML `fetchpriority` hint. `high` for the LCP image, `low` for below-the-fold imagery, `auto` (default) defers to the browser. Omitted from the rendered `<img>` when `auto`',
+      default: 'auto',
+      values: ['auto', 'high', 'low'],
+      attribute: 'fetch-priority',
+    },
+    crossOrigin: {
+      type: 'enum',
+      description: 'Native HTML `crossorigin` attribute — enables CORS for the image fetch, required for SRI / canvas pixel-reading. Default `\'\'` (omitted, no CORS)',
+      default: '',
+      values: ['', 'anonymous', 'use-credentials'],
+      attribute: 'crossorigin',
+    },
+    referrerPolicy: {
+      type: 'string',
+      description: 'Native HTML `referrerpolicy` attribute. Passed through verbatim. Empty (default) omits the attribute',
+      default: '',
+      attribute: 'referrerpolicy',
+    },
     variant: {
       type: 'enum',
       description: '`content` (default) is a fluid, ratio-reserved image for body imagery. `thumbnail` is a fixed-pixel-size image on the Primer stepped scale for inline avatars / list-row thumbs. The `size` and `rounded` props only apply to the thumbnail variant',

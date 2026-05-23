@@ -2803,31 +2803,43 @@
     {
       "story": "Decorative",
       "category": "Layout/Image",
-      "html": "<div style=\"max-width: 480px;\">\n      <p class=\"civ-italic civ-mb-2\">\n        This image has <code>alt=\"\"</code>, so screen readers skip it entirely.\n      </p>\n      <civ-image\n        src=\"${photo(800, 200, 'decor')}\"\n        alt=\"\"\n        ratio=\"21:9\"\n      ></civ-image>\n    </div>",
+      "html": "<div style=\"max-width: 480px;\">\n      <p class=\"civ-italic civ-mb-2\">\n        This image has <code>alt=\"\"</code>, so screen readers skip it entirely.\n      </p>\n      <civ-image\n        src=\"https://picsum.photos/seed/decor/800/200\"\n        alt=\"\"\n        ratio=\"21:9\"\n      ></civ-image>\n    </div>",
       "source": "packages/layout/src/image/civ-image.stories.ts"
     },
     {
       "story": "Default",
       "category": "Layout/Image",
-      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"${photo(800, 450, 'hero')}\"\n        alt=\"A government services worker assists a veteran at a counter\"\n        ratio=\"16:9\"\n      ></civ-image>\n    </div>",
-      "source": "packages/layout/src/image/civ-image.stories.ts"
-    },
-    {
-      "story": "EagerLoading",
-      "category": "Layout/Image",
-      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"${photo(800, 450, 'hero')}\"\n        alt=\"Hero image at the top of the page\"\n        ratio=\"16:9\"\n        loading=\"eager\"\n      ></civ-image>\n    </div>",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"https://picsum.photos/seed/hero/800/450\"\n        alt=\"A government services worker assists a veteran at a counter\"\n        ratio=\"16:9\"\n      ></civ-image>\n    </div>",
       "source": "packages/layout/src/image/civ-image.stories.ts"
     },
     {
       "story": "FitModes",
       "category": "Layout/Image",
-      "html": "<div class=\"civ-flex civ-gap-4\">\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"cover\"</p>\n        <civ-image\n          src=\"${photo(800, 450, 'cover')}\"\n          alt=\"cover example\"\n          ratio=\"1:1\"\n          fit=\"cover\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"contain\"</p>\n        <civ-image\n          src=\"${photo(800, 450, 'cover')}\"\n          alt=\"contain example\"\n          ratio=\"1:1\"\n          fit=\"contain\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n    </div>",
+      "html": "<div class=\"civ-flex civ-gap-4\">\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"cover\"</p>\n        <civ-image\n          src=\"https://picsum.photos/seed/cover/800/450\"\n          alt=\"cover example\"\n          ratio=\"1:1\"\n          fit=\"cover\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"contain\"</p>\n        <civ-image\n          src=\"https://picsum.photos/seed/cover/800/450\"\n          alt=\"contain example\"\n          ratio=\"1:1\"\n          fit=\"contain\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "HeroPriority",
+      "category": "Layout/Image",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"https://picsum.photos/seed/hero/800/450\"\n        alt=\"Hero image at the top of the page\"\n        ratio=\"16:9\"\n        loading=\"eager\"\n        decoding=\"sync\"\n        fetch-priority=\"high\"\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "Ratios",
+      "category": "Layout/Image",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"max-width: 480px;\">\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"1:1\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r1/800/800\" alt=\"Square placeholder\" ratio=\"1:1\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"4:3\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r2/800/600\" alt=\"4 by 3 placeholder\" ratio=\"4:3\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"16:9\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r3/800/450\" alt=\"16 by 9 placeholder\" ratio=\"16:9\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"21:9\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r4/800/343\" alt=\"21 by 9 placeholder\" ratio=\"21:9\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"3:2\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r5/800/533\" alt=\"3 by 2 placeholder\" ratio=\"3:2\"></civ-image>\n      </div>\n    </div>",
       "source": "packages/layout/src/image/civ-image.stories.ts"
     },
     {
       "story": "RoundedAvatars",
       "category": "Layout/Image",
-      "html": "<div class=\"civ-flex civ-gap-3 civ-items-center\">\n      <civ-image\n        src=\"${photo(256, 256, 'p1')}\"\n        alt=\"Jane Doe\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n      <civ-image\n        src=\"${photo(256, 256, 'p2')}\"\n        alt=\"John Smith\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n      <civ-image\n        src=\"${photo(256, 256, 'p3')}\"\n        alt=\"Alex Lee\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n    </div>",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-items-center\">\n      <civ-image src=\"https://picsum.photos/seed/p1/256/256\" alt=\"Jane Doe\" variant=\"thumbnail\" size=\"48\" rounded></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/p2/256/256\" alt=\"John Smith\" variant=\"thumbnail\" size=\"48\" rounded></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/p3/256/256\" alt=\"Alex Lee\" variant=\"thumbnail\" size=\"48\" rounded></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "Thumbnails",
+      "category": "Layout/Image",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-items-end\">\n      <civ-image src=\"https://picsum.photos/seed/avatar/256/256\" alt=\"Avatar\" variant=\"thumbnail\" size=\"32\"></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/avatar/256/256\" alt=\"Avatar\" variant=\"thumbnail\" size=\"48\"></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/avatar/256/256\" alt=\"Avatar\" variant=\"thumbnail\" size=\"64\"></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/avatar/256/256\" alt=\"Avatar\" variant=\"thumbnail\" size=\"96\"></civ-image>\n      <civ-image src=\"https://picsum.photos/seed/avatar/256/256\" alt=\"Avatar\" variant=\"thumbnail\" size=\"128\"></civ-image>\n    </div>",
       "source": "packages/layout/src/image/civ-image.stories.ts"
     }
   ],

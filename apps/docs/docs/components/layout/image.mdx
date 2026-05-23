@@ -63,11 +63,11 @@ The `rounded` boolean makes the thumbnail circular — the right shape for profi
 
 <StoryEmbed id="layout-image--rounded-avatars" />
 
-### Eager loading for hero images
+### Above-the-fold hero with priority hints
 
-Use `loading="eager"` for above-the-fold hero images (the LCP candidate). For everything below the fold, leave the default `loading="lazy"`.
+For the LCP image, combine `loading="eager"` (don't defer the fetch) + `decoding="sync"` (decode before paint so the image and surrounding text appear together) + `fetch-priority="high"` (browser preloader picks this URL first).
 
-<StoryEmbed id="layout-image--eager-loading" />
+<StoryEmbed id="layout-image--hero-priority" />
 
 ## Accessibility
 

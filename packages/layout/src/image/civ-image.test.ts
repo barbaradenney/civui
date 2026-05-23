@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-image.js';
 import type { CivImage } from './civ-image.js';
@@ -6,9 +6,17 @@ import type { CivImage } from './civ-image.js';
 afterEach(cleanupFixtures);
 
 describe('civ-image', () => {
+  // Most rendering tests don't care about the dev-warn output; the
+  // dedicated dev-warn tests below explicitly spy on console.warn.
+  // Mock at the suite level so unrelated tests don't flood stderr.
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
   it('renders an <img> with the given src and alt', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/photo.jpg" alt="A veteran salutes the flag"></civ-image>',
+      '<civ-image src="/photo.jpg" alt="A veteran salutes the flag" ratio="16:9"></civ-image>',
     );
     const img = el.querySelector('img')!;
     expect(img.getAttribute('src')).toBe('/photo.jpg');
@@ -17,16 +25,24 @@ describe('civ-image', () => {
 
   it('renders alt="" verbatim for decorative images', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/flourish.svg" alt=""></civ-image>',
+      '<civ-image src="/flourish.svg" alt="" ratio="21:9"></civ-image>',
     );
     const img = el.querySelector('img')!;
     expect(img.hasAttribute('alt')).toBe(true);
     expect(img.getAttribute('alt')).toBe('');
   });
 
+  it('omits the alt attribute entirely when alt is undefined (so the bug is visible to QA)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" ratio="1:1"></civ-image>',
+    );
+    const img = el.querySelector('img')!;
+    expect(img.hasAttribute('alt')).toBe(false);
+  });
+
   it('sets loading="lazy" and decoding="async" by default', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/x.jpg" alt="x"></civ-image>',
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1"></civ-image>',
     );
     const img = el.querySelector('img')!;
     expect(img.getAttribute('loading')).toBe('lazy');
@@ -35,33 +51,63 @@ describe('civ-image', () => {
 
   it('respects loading="eager" opt-in', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/hero.jpg" alt="hero" loading="eager"></civ-image>',
+      '<civ-image src="/hero.jpg" alt="hero" ratio="16:9" loading="eager"></civ-image>',
     );
     expect(el.querySelector('img')!.getAttribute('loading')).toBe('eager');
   });
 
-  it('applies inline aspect-ratio from the ratio prop', async () => {
+  it('respects decoding="sync" opt-in', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/hero.jpg" alt="hero" ratio="16:9" decoding="sync"></civ-image>',
+    );
+    expect(el.querySelector('img')!.getAttribute('decoding')).toBe('sync');
+  });
+
+  it('forwards fetch-priority="high" to the <img> as fetchpriority', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/hero.jpg" alt="hero" ratio="16:9" fetch-priority="high"></civ-image>',
+    );
+    expect(el.querySelector('img')!.getAttribute('fetchpriority')).toBe('high');
+  });
+
+  it('omits fetchpriority when value is the "auto" default', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1"></civ-image>',
+    );
+    expect(el.querySelector('img')!.hasAttribute('fetchpriority')).toBe(false);
+  });
+
+  it('forwards crossorigin and referrerpolicy when set', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1" crossorigin="anonymous" referrerpolicy="no-referrer"></civ-image>',
+    );
+    const img = el.querySelector('img')!;
+    expect(img.getAttribute('crossorigin')).toBe('anonymous');
+    expect(img.getAttribute('referrerpolicy')).toBe('no-referrer');
+  });
+
+  it('applies inline aspect-ratio from the ratio prop directly on the <img>', async () => {
     const el = await fixture<CivImage>(
       '<civ-image src="/x.jpg" alt="x" ratio="16:9"></civ-image>',
     );
-    const box = el.querySelector<HTMLElement>('.civ-image__box')!;
-    expect(box.style.aspectRatio).toBe('16 / 9');
+    const img = el.querySelector<HTMLImageElement>('img')!;
+    expect(img.style.aspectRatio).toBe('16 / 9');
   });
 
   it('computes aspect-ratio from width/height when ratio="auto"', async () => {
     const el = await fixture<CivImage>(
       '<civ-image src="/x.jpg" alt="x" width="800" height="600"></civ-image>',
     );
-    const box = el.querySelector<HTMLElement>('.civ-image__box')!;
-    expect(box.style.aspectRatio).toBe('800 / 600');
+    const img = el.querySelector<HTMLImageElement>('img')!;
+    expect(img.style.aspectRatio).toBe('800 / 600');
   });
 
   it('explicit ratio overrides width/height', async () => {
     const el = await fixture<CivImage>(
       '<civ-image src="/x.jpg" alt="x" width="800" height="600" ratio="1:1"></civ-image>',
     );
-    const box = el.querySelector<HTMLElement>('.civ-image__box')!;
-    expect(box.style.aspectRatio).toBe('1 / 1');
+    const img = el.querySelector<HTMLImageElement>('img')!;
+    expect(img.style.aspectRatio).toBe('1 / 1');
   });
 
   it('forwards intrinsic width/height to the <img>', async () => {
@@ -73,12 +119,33 @@ describe('civ-image', () => {
     expect(img.getAttribute('height')).toBe('600');
   });
 
-  it('thumbnail variant renders the <img> directly (no box wrapper)', async () => {
+  it('drops non-finite width/height (e.g. width="auto") rather than emitting width="NaN"', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/avatar.jpg" alt="John Smith" variant="thumbnail"></civ-image>',
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1"></civ-image>',
     );
-    expect(el.querySelector('.civ-image__box')).toBeNull();
-    expect(el.querySelector('img')).not.toBeNull();
+    // Programmatically force NaN as if a consumer passed a non-numeric attr.
+    (el as any).width = Number('abc');
+    (el as any).height = Number('abc');
+    await elementUpdated(el);
+    const img = el.querySelector('img')!;
+    expect(img.hasAttribute('width')).toBe(false);
+    expect(img.hasAttribute('height')).toBe(false);
+  });
+
+  it('drops zero width/height (treats as missing, not 0×0)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1" width="0" height="0"></civ-image>',
+    );
+    const img = el.querySelector('img')!;
+    expect(img.hasAttribute('width')).toBe(false);
+    expect(img.hasAttribute('height')).toBe(false);
+  });
+
+  it('returns nothing when src is empty (no broken-image glyph)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image alt="x" ratio="1:1"></civ-image>',
+    );
+    expect(el.querySelector('img')).toBeNull();
   });
 
   it('reflects variant attribute to the host for CSS targeting', async () => {
@@ -104,64 +171,115 @@ describe('civ-image', () => {
 
   it('reflects fit attribute for object-fit CSS targeting', async () => {
     const el = await fixture<CivImage>(
-      '<civ-image src="/x.jpg" alt="x" fit="contain"></civ-image>',
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1" fit="contain"></civ-image>',
     );
     expect(el.getAttribute('fit')).toBe('contain');
   });
 
+  // ── Dev-warn behavior ─────────────────────────────────────────
+
   it('dev-warns when alt is omitted entirely', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture<CivImage>('<civ-image src="/x.jpg"></civ-image>');
-    const calls = warnSpy.mock.calls.flat().join(' ');
-    expect(calls).toContain('civ-image');
-    expect(calls).toMatch(/alt/i);
-    warnSpy.mockRestore();
+    await fixture<CivImage>('<civ-image src="/x.jpg" ratio="1:1"></civ-image>');
+    const altCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /civ-image.*alt/i.test(m),
+    );
+    expect(altCalls.length).toBeGreaterThan(0);
+  });
+
+  it('dev-warns when alt is set then cleared via removeAttribute (catches null, not just undefined)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1"></civ-image>',
+    );
+    warnSpy.mockClear();
+    el.removeAttribute('alt');
+    await elementUpdated(el);
+    const altCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /civ-image.*alt/i.test(m),
+    );
+    expect(altCalls.length).toBeGreaterThan(0);
   });
 
   it('does NOT warn when alt is an explicit empty string', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture<CivImage>('<civ-image src="/decor.svg" alt=""></civ-image>');
-    const altWarnings = warnSpy.mock.calls
-      .flat()
-      .filter((m) => typeof m === 'string' && m.includes('alt'));
-    expect(altWarnings.length).toBe(0);
-    warnSpy.mockRestore();
+    await fixture<CivImage>('<civ-image src="/decor.svg" alt="" ratio="1:1"></civ-image>');
+    const altCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /civ-image.*\balt\b/i.test(m),
+    );
+    expect(altCalls.length).toBe(0);
   });
 
   it('dev-warns when content variant has no ratio and no dimensions', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<CivImage>('<civ-image src="/x.jpg" alt="x"></civ-image>');
     const calls = warnSpy.mock.calls.flat().join(' ');
-    expect(calls).toMatch(/ratio|width|height|CLS/i);
-    warnSpy.mockRestore();
+    expect(calls).toMatch(/ratio|width|height/i);
   });
 
   it('does NOT warn about dimensions when ratio is set', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<CivImage>('<civ-image src="/x.jpg" alt="x" ratio="16:9"></civ-image>');
-    const dimWarnings = warnSpy.mock.calls
-      .flat()
-      .filter((m) => typeof m === 'string' && /ratio|width|height|CLS/i.test(m));
-    expect(dimWarnings.length).toBe(0);
-    warnSpy.mockRestore();
+    const dimCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /reserve layout|CLS/i.test(m),
+    );
+    expect(dimCalls.length).toBe(0);
   });
 
   it('does NOT warn about dimensions for thumbnail variant', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<CivImage>(
       '<civ-image src="/avatar.jpg" alt="x" variant="thumbnail"></civ-image>',
     );
-    const dimWarnings = warnSpy.mock.calls
-      .flat()
-      .filter((m) => typeof m === 'string' && /ratio|width|height|CLS/i.test(m));
-    expect(dimWarnings.length).toBe(0);
-    warnSpy.mockRestore();
+    const dimCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /reserve layout|CLS/i.test(m),
+    );
+    expect(dimCalls.length).toBe(0);
+  });
+
+  it('warns when thumbnail size is invalid (off the stepped scale)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" variant="thumbnail"></civ-image>',
+    );
+    warnSpy.mockClear();
+    (el as any).size = '40';
+    await elementUpdated(el);
+    const sizeCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /size/i.test(m),
+    );
+    expect(sizeCalls.length).toBeGreaterThan(0);
+  });
+
+  it('warns when rounded is set on the content variant (which ignores it)', async () => {
+    await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="16:9" rounded></civ-image>',
+    );
+    const roundedCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /rounded/i.test(m),
+    );
+    expect(roundedCalls.length).toBeGreaterThan(0);
+  });
+
+  it('warns when consumer attaches srcset/sizes/etc. (silently dropped attributes)', async () => {
+    await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" ratio="1:1" srcset="/x-2x.jpg 2x" sizes="(max-width: 480px) 100vw"></civ-image>',
+    );
+    const dropCalls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /srcset|sizes/i.test(m),
+    );
+    expect(dropCalls.length).toBeGreaterThan(0);
   });
 
   it('updates reactively when src changes', async () => {
-    const el = await fixture<CivImage>('<civ-image src="/a.jpg" alt="a"></civ-image>');
+    const el = await fixture<CivImage>(
+      '<civ-image src="/a.jpg" alt="a" ratio="1:1"></civ-image>',
+    );
     el.src = '/b.jpg';
     await elementUpdated(el);
     expect(el.querySelector('img')!.getAttribute('src')).toBe('/b.jpg');
+  });
+
+  it('honors thumbnail variant + custom ratio (unified render path)', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/x.jpg" alt="x" variant="thumbnail" size="64" ratio="16:9"></civ-image>',
+    );
+    const img = el.querySelector<HTMLImageElement>('img')!;
+    // The aspect-ratio is set on the <img> regardless of variant,
+    // so a thumbnail with a custom ratio actually works now.
+    expect(img.style.aspectRatio).toBe('16 / 9');
   });
 });

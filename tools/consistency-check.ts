@@ -354,7 +354,7 @@ const CHILD_COMPONENTS = new Set([
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([
   'civ-fieldset', 'civ-segment',
-  'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
+  'civ-callout', 'civ-card', 'civ-divider', 'civ-tag', 'civ-page-header',
   'civ-button-group', 'civ-list',
   'civ-skip-link', 'civ-data-field',
   'civ-summary', 'civ-icon',

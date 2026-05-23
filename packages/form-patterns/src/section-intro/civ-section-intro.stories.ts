@@ -75,39 +75,3 @@ export const NeutralNoHeading: Story = {
   `,
 };
 
-// ── Callout utility class examples ───────────────────────────
-
-export const CalloutVariants: Story = {
-  name: 'Callout variants',
-  parameters: {
-    docs: {
-      description: {
-        story: 'The `.civ-callout` CSS class can be applied to any element for a left-border accent. Five color variants match the semantic color system. Use for important notices, tips, or contextual information.',
-      },
-    },
-  },
-  render: () => html`
-    <div style="display: grid; gap: 1.5rem; max-width: 600px;">
-      <div class="civ-callout">
-        <p class="civ-font-bold civ-mb-1">Note</p>
-        <p>You must complete this section before continuing to the next step.</p>
-      </div>
-      <div class="civ-callout civ-callout--info">
-        <p class="civ-font-bold civ-mb-1">Information</p>
-        <p>Processing times are currently 3–5 business days.</p>
-      </div>
-      <div class="civ-callout civ-callout--warning">
-        <p class="civ-font-bold civ-mb-1">Important</p>
-        <p>Your session will expire in 15 minutes. Save your progress.</p>
-      </div>
-      <div class="civ-callout civ-callout--error">
-        <p class="civ-font-bold civ-mb-1">Action needed</p>
-        <p>Your application is missing required documents.</p>
-      </div>
-      <div class="civ-callout civ-callout--success">
-        <p class="civ-font-bold civ-mb-1">Complete</p>
-        <p>Your information has been verified successfully.</p>
-      </div>
-    </div>
-  `,
-};

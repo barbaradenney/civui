@@ -1,6 +1,7 @@
 // Side-effect imports ensure custom elements are registered.
 import './accordion/civ-accordion.js';
 import './accordion/civ-accordion-item.js';
+import './callout/civ-callout.js';
 import './card/civ-card.js';
 import './disclosure/civ-disclosure.js';
 import './read-more/civ-read-more.js';
@@ -15,6 +16,10 @@ import './image-preview/civ-image-preview.js';
 
 // Accordion
 export { CivAccordion, CivAccordionItem } from './accordion/index.js';
+
+// Callout
+export { CivCallout } from './callout/index.js';
+export type { CalloutVariant } from './callout/index.js';
 
 // Card
 export { CivCard } from './card/index.js';

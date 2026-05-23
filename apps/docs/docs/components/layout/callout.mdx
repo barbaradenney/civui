@@ -1,0 +1,135 @@
+---
+title: Callout
+sidebar_position: 4
+sidebar_label: Callout
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_callout.props.mdx";
+
+# Callout
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-callout`](pathname:///civui/storybook/?path=/docs/contract-civ-callout--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-callout>`
+
+A presentational primitive that frames slotted content with a left accent border and consistent padding. Five color variants map to the semantic palette.
+
+Use for important notices, tips, or contextual information. The component is purely visual — it carries no ARIA role of its own and does not announce changes. For dismissible alerts with `role="status"` / `role="alert"`, use [`civ-alert`](../feedback/alert). For section openers with a heading and `role="region"` landmark, use [`civ-section-intro`](../form/section-intro) (which composes `civ-callout` internally).
+
+## When to use it
+
+- A short notice, tip, or reminder beside body content.
+- A "before you start" block listing what the user will need.
+- Inline emphasis around an arbitrary chunk of markup (paragraphs, lists, links).
+
+For status updates that need to be announced to assistive tech, use `civ-alert` instead.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-callout--default" />
+
+### Info
+
+<StoryEmbed id="layout-callout--info" />
+
+### Warning
+
+<StoryEmbed id="layout-callout--warning" />
+
+### Error
+
+<StoryEmbed id="layout-callout--error" />
+
+### Success
+
+<StoryEmbed id="layout-callout--success" />
+
+### All variants
+
+<StoryEmbed id="layout-callout--all-variants" />
+
+### Rich content (list)
+
+<StoryEmbed id="layout-callout--rich-content" />
+
+### As an ARIA landmark
+
+<StoryEmbed id="layout-callout--as-landmark" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-callout--default)
+
+## Props
+
+<PropsTable />
+
+## Accessibility
+
+- The host element imposes **no role** of its own. When you need a landmark, set `role` (`region` / `complementary`) and `aria-labelledby` **directly on the `<civ-callout>` element** — never on an outer wrapper. Placing the role on the callout itself keeps the labelled bounding box and the visual chrome (accent border + padding) aligned. Wrapping the callout in `<div role="region"><civ-callout>...</civ-callout></div>` would push the labelled region outside the callout, so the heading would appear *before* the visual region rather than inside it.
+- Content lives in Light DOM, so links, lists, and paragraphs are announced normally.
+- Color is never the sole signal: pair the variant with descriptive text inside (e.g. *"Action needed: ..."* for `error`).
+
+## Usage
+
+```html
+<!-- Plain notice -->
+<civ-callout>
+  <p>You must complete this section before continuing.</p>
+</civ-callout>
+
+<!-- Semantic variant -->
+<civ-callout variant="warning">
+  <p>Your session will expire in 15 minutes. Save your progress.</p>
+</civ-callout>
+
+<!-- Rich content -->
+<civ-callout variant="info">
+  <p>To finish this section, have ready:</p>
+  <ul>
+    <li>Your Social Security number</li>
+    <li>Your most recent W-2</li>
+  </ul>
+</civ-callout>
+
+<!-- As a labelled landmark -->
+<civ-callout variant="warning" role="region" aria-labelledby="notice-heading">
+  <p id="notice-heading" class="civ-font-bold">Important notice</p>
+  <p>This region is announced as a landmark to assistive tech.</p>
+</civ-callout>
+```
+
+## Migrating from the `.civ-callout` utility class
+
+Earlier releases shipped `.civ-callout` / `.civ-callout--info` / `.civ-callout--warning` / `.civ-callout--error` / `.civ-callout--success` as a documented CSS utility consumers could apply to any element. Those classes were removed when the component shipped — replace them with `<civ-callout>`:
+
+| Old | New |
+|-----|-----|
+| `<div class="civ-callout">` | `<civ-callout>` |
+| `<div class="civ-callout civ-callout--info">` | `<civ-callout variant="info">` |
+| `<div class="civ-callout civ-callout--warning">` | `<civ-callout variant="warning">` |
+| `<div class="civ-callout civ-callout--error">` | `<civ-callout variant="error">` |
+| `<div class="civ-callout civ-callout--success">` | `<civ-callout variant="success">` |
+
+If you previously themed `civ-section-intro` via the rendered `.civ-section-intro--sensitive` / `.civ-section-intro--info` / `.civ-section-intro--neutral` modifier classes (also removed), target the reflected `tone` attribute instead:
+
+```css
+/* before */
+.civ-section-intro--sensitive { border-inline-start-color: var(--my-warning); }
+
+/* after */
+civ-section-intro[tone='sensitive'] > civ-callout {
+  border-inline-start-color: var(--my-warning);
+}
+```
+
+## Related
+
+- [`civ-alert`](../feedback/alert) — dismissible, live-region alert with status / error roles. Use when the message needs to be announced.
+- [`civ-section-intro`](../form/section-intro) — adds an accessible heading and a `role="region"` landmark on top of the callout chrome. Use at the top of a sensitive or complex form section.
+- [`civ-card`](./card) — a different framing primitive for grouped, self-contained content blocks.

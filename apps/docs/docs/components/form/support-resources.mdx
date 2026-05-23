@@ -17,7 +17,7 @@ import PropsTable from "./_support-resources.props.mdx";
 
 `<civ-support-resources>`
 
-A structured container for support and crisis contact information. Renders as an `<aside>` landmark with a heading and slotted content for phone, email, and other contact links. Use at the bottom of sensitive forms (benefits, healthcare, housing) to provide crisis lines, helpdesk numbers, or support links.
+A structured container for support and crisis contact information. Renders a `complementary` landmark with a heading and slotted content for phone, email, and other contact links. Use at the bottom of sensitive forms (benefits, healthcare, housing) to provide crisis lines, helpdesk numbers, or support links.
 
 ## Examples
 
@@ -67,7 +67,7 @@ You can also include paragraphs, lists, or any custom HTML:
 
 ## Accessibility
 
-- Renders as `<aside role="complementary">`. A landmark for screen reader navigation
+- Renders a `complementary` landmark (`role="complementary"` on a [`civ-callout`](../layout/callout) host) for screen-reader navigation
 - Heading uses `aria-labelledby` to label the landmark (no duplicate announcements)
 - Heading level is configurable to fit the page's heading hierarchy
 - Always visible. Not hidden behind conditionals or collapsed sections

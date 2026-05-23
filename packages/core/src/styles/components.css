@@ -107,6 +107,7 @@
   civ-race-ethnicity,
   civ-radio,
   civ-radio-group,
+  civ-callout,
   civ-read-more,
   civ-relationship,
   civ-repeater,
@@ -4148,26 +4149,22 @@
     font-size: var(--civ-typography-fontSize-sm);
   }
 
-  /* ── Callout (shared accent border — used by section-intro, alerts, custom callouts) */
+  /* ── Callout (component — chrome targets the host element directly) */
 
-  .civ-callout {
+  civ-callout {
     border-inline-start: 5px solid var(--civ-color-primary-DEFAULT);
     padding: var(--civ-spacing-3) var(--civ-spacing-4);
   }
 
-  .civ-callout--info { border-inline-start-color: var(--civ-color-info-DEFAULT); }
-  .civ-callout--warning { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
-  .civ-callout--error { border-inline-start-color: var(--civ-color-error-DEFAULT); }
-  .civ-callout--success { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+  civ-callout[variant='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
+  civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
+  civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
+  civ-callout[variant='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
 
-  /* ── Section Intro (uses callout) ───────────────────────────── */
+  /* ── Section Intro (composes civ-callout) ───────────────────── */
 
-  .civ-section-intro {
+  civ-section-intro {
     @apply civ-mb-6;
-  }
-
-  .civ-section-intro--sensitive {
-    border-inline-start-color: var(--civ-color-warning-DEFAULT);
   }
 
   /* ── Support Resources ───────────────────────────────────── */

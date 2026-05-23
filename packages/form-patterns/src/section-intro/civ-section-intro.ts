@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
+import '@civui/layout/callout';
 
 /**
  * CivUI Section Intro
@@ -41,8 +42,18 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
   /** Heading level (2-6). */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: 2 | 3 | 4 | 5 | 6 = 3;
 
-  /** Visual tone. `sensitive` uses a softer palette and a supportive icon. */
-  @property({ type: String }) tone: 'info' | 'sensitive' | 'neutral' = 'info';
+  /**
+   * Visual tone. `sensitive` uses a warning-colored accent for PII /
+   * trauma-informed sections; `info` and `neutral` both render with
+   * the primary accent (kept as separate tokens for semantic clarity
+   * in markup — they are visually identical today).
+   *
+   * Reflected to the host attribute so consumer theming overrides
+   * can target `civ-section-intro[tone='sensitive']` instead of the
+   * removed `.civ-section-intro--sensitive` class.
+   */
+  @property({ type: String, reflect: true, useDefault: true })
+  tone: 'info' | 'sensitive' | 'neutral' = 'info';
 
   private _headingId = this.generateId('section-intro-heading');
 
@@ -52,16 +63,11 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const regionLabel = this.heading ? undefined : t('sectionIntroRegionLabel');
-    const toneClass =
-      this.tone === 'sensitive'
-        ? 'civ-section-intro--sensitive'
-        : this.tone === 'neutral'
-          ? 'civ-section-intro--neutral'
-          : 'civ-section-intro--info';
+    const variant = this.tone === 'sensitive' ? 'warning' : nothing;
 
     return html`
-      <section
-        class="civ-callout civ-section-intro ${toneClass}"
+      <civ-callout
+        variant="${variant}"
         role="region"
         aria-labelledby="${this.heading ? this._headingId : nothing}"
         aria-label="${regionLabel ?? nothing}"
@@ -75,7 +81,7 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
             >${this.heading}</p>`
           : nothing}
         <div class="civ-section-intro__body" data-civ-section-intro-body></div>
-      </section>
+      </civ-callout>
     `;
   }
 }

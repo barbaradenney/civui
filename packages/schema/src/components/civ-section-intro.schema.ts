@@ -23,7 +23,7 @@ const schema: ComponentSchema = {
     },
     tone: {
       type: 'enum',
-      description: 'Visual tone. `info` is the default informational treatment; `sensitive` adds emphasis for PII / financial sections; `neutral` is the quietest variant for inline section breaks',
+      description: '`sensitive` uses a warning-colored accent for PII / trauma-informed sections. `info` and `neutral` both render the primary accent today (kept as separate tokens for semantic clarity in markup — a future revision may give `neutral` a quieter visual treatment).',
       default: 'info',
       values: ['info', 'sensitive', 'neutral'],
     },

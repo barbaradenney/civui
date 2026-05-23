@@ -30,6 +30,7 @@ export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivBadge.swift',
   'CivBreadcrumb.swift',
   'CivBreadcrumbItem.swift',
+  'CivCallout.swift',
   'CivConfirmButton.swift',
   'CivCount.swift',
   'CivCountry.swift',

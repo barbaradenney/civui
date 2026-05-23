@@ -5,4 +5,4 @@
 |-----------|------|---------|-------------|
 | `heading` | `string` | `''` | Section heading text |
 | `heading-level` | `number` | `3` | Semantic heading level (2–6). Web-only. Native platforms expose headings via accessibility traits |
-| `tone` | `'info'` \| `'sensitive'` \| `'neutral'` | `'info'` | Visual tone. `info` is the default informational treatment; `sensitive` adds emphasis for PII / financial sections; `neutral` is the quietest variant for inline section breaks |
+| `tone` | `'info'` \| `'sensitive'` \| `'neutral'` | `'info'` | `sensitive` uses a warning-colored accent for PII / trauma-informed sections. `info` and `neutral` both render the primary accent today (kept as separate tokens for semantic clarity in markup — a future revision may give `neutral` a quieter visual treatment). |

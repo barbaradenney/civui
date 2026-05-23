@@ -55,8 +55,20 @@ describe('civ-section-intro', () => {
         `<civ-section-intro heading="X" tone="${tone}"><p>body</p></civ-section-intro>`,
       );
       await elementUpdated(el);
-      expect(el.querySelector('civ-callout')!.getAttribute('variant')).toBe('default');
+      const callout = el.querySelector('civ-callout')!;
+      // useDefault: true on civ-callout suppresses the initial-value
+      // reflection — the attribute is absent so the base CSS rule applies.
+      expect(callout.getAttribute('variant')).toBeNull();
+      expect((callout as HTMLElement & { variant: string }).variant).toBe('default');
     }
+  });
+
+  it('reflects tone to the host attribute so consumers can theme via attribute selectors', async () => {
+    const el = await fixture<CivSectionIntro>(
+      '<civ-section-intro heading="X" tone="sensitive"><p>body</p></civ-section-intro>',
+    );
+    await elementUpdated(el);
+    expect(el.getAttribute('tone')).toBe('sensitive');
   });
 
   it('preserves authored body content in Light DOM', async () => {

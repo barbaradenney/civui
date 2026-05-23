@@ -71,7 +71,7 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
 
 ## Accessibility
 
-- The host element imposes **no role** of its own. Set `role` and labelling attributes directly on `<civ-callout>` when you need a landmark — for example `role="region" aria-labelledby="..."` to make the callout a navigable landmark.
+- The host element imposes **no role** of its own. When you need a landmark, set `role` (`region` / `complementary`) and `aria-labelledby` **directly on the `<civ-callout>` element** — never on an outer wrapper. Placing the role on the callout itself keeps the labelled bounding box and the visual chrome (accent border + padding) aligned. Wrapping the callout in `<div role="region"><civ-callout>...</civ-callout></div>` would push the labelled region outside the callout, so the heading would appear *before* the visual region rather than inside it.
 - Content lives in Light DOM, so links, lists, and paragraphs are announced normally.
 - Color is never the sole signal: pair the variant with descriptive text inside (e.g. *"Action needed: ..."* for `error`).
 
@@ -102,6 +102,30 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
   <p id="notice-heading" class="civ-font-bold">Important notice</p>
   <p>This region is announced as a landmark to assistive tech.</p>
 </civ-callout>
+```
+
+## Migrating from the `.civ-callout` utility class
+
+Earlier releases shipped `.civ-callout` / `.civ-callout--info` / `.civ-callout--warning` / `.civ-callout--error` / `.civ-callout--success` as a documented CSS utility consumers could apply to any element. Those classes were removed when the component shipped — replace them with `<civ-callout>`:
+
+| Old | New |
+|-----|-----|
+| `<div class="civ-callout">` | `<civ-callout>` |
+| `<div class="civ-callout civ-callout--info">` | `<civ-callout variant="info">` |
+| `<div class="civ-callout civ-callout--warning">` | `<civ-callout variant="warning">` |
+| `<div class="civ-callout civ-callout--error">` | `<civ-callout variant="error">` |
+| `<div class="civ-callout civ-callout--success">` | `<civ-callout variant="success">` |
+
+If you previously themed `civ-section-intro` via the rendered `.civ-section-intro--sensitive` / `.civ-section-intro--info` / `.civ-section-intro--neutral` modifier classes (also removed), target the reflected `tone` attribute instead:
+
+```css
+/* before */
+.civ-section-intro--sensitive { border-inline-start-color: var(--my-warning); }
+
+/* after */
+civ-section-intro[tone='sensitive'] > civ-callout {
+  border-inline-start-color: var(--my-warning);
+}
 ```
 
 ## Related

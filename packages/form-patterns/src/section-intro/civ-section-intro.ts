@@ -42,8 +42,18 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
   /** Heading level (2-6). */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: 2 | 3 | 4 | 5 | 6 = 3;
 
-  /** Visual tone. `sensitive` uses a softer palette and a supportive icon. */
-  @property({ type: String }) tone: 'info' | 'sensitive' | 'neutral' = 'info';
+  /**
+   * Visual tone. `sensitive` uses a warning-colored accent for PII /
+   * trauma-informed sections; `info` and `neutral` both render with
+   * the primary accent (kept as separate tokens for semantic clarity
+   * in markup — they are visually identical today).
+   *
+   * Reflected to the host attribute so consumer theming overrides
+   * can target `civ-section-intro[tone='sensitive']` instead of the
+   * removed `.civ-section-intro--sensitive` class.
+   */
+  @property({ type: String, reflect: true, useDefault: true })
+  tone: 'info' | 'sensitive' | 'neutral' = 'info';
 
   private _headingId = this.generateId('section-intro-heading');
 
@@ -53,7 +63,7 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const regionLabel = this.heading ? undefined : t('sectionIntroRegionLabel');
-    const variant = this.tone === 'sensitive' ? 'warning' : 'default';
+    const variant = this.tone === 'sensitive' ? 'warning' : nothing;
 
     return html`
       <civ-callout

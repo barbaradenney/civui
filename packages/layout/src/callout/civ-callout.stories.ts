@@ -28,8 +28,9 @@ export const Default: Story = {
 };
 
 export const Info: Story = {
-  render: () => html`
-    <civ-callout variant="info">
+  args: { variant: 'info' },
+  render: (args) => html`
+    <civ-callout variant="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Information</p>
       <p class="civ-m-0">Processing times are currently 3–5 business days.</p>
     </civ-callout>
@@ -37,8 +38,9 @@ export const Info: Story = {
 };
 
 export const Warning: Story = {
-  render: () => html`
-    <civ-callout variant="warning">
+  args: { variant: 'warning' },
+  render: (args) => html`
+    <civ-callout variant="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Important</p>
       <p class="civ-m-0">Your session will expire in 15 minutes. Save your progress.</p>
     </civ-callout>
@@ -47,8 +49,9 @@ export const Warning: Story = {
 
 export const Error: Story = {
   name: 'Error',
-  render: () => html`
-    <civ-callout variant="error">
+  args: { variant: 'error' },
+  render: (args) => html`
+    <civ-callout variant="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Action needed</p>
       <p class="civ-m-0">Your application is missing required documents.</p>
     </civ-callout>
@@ -56,8 +59,9 @@ export const Error: Story = {
 };
 
 export const Success: Story = {
-  render: () => html`
-    <civ-callout variant="success">
+  args: { variant: 'success' },
+  render: (args) => html`
+    <civ-callout variant="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Complete</p>
       <p class="civ-m-0">Your information has been verified successfully.</p>
     </civ-callout>
@@ -65,6 +69,11 @@ export const Success: Story = {
 };
 
 export const AllVariants: Story = {
+  parameters: {
+    // Showcase renders every variant simultaneously — the toolbar
+    // `variant` control would be misleading here.
+    controls: { exclude: ['variant'] },
+  },
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4" style="max-width: 600px;">
       <civ-callout>
@@ -93,8 +102,9 @@ export const AllVariants: Story = {
 
 export const RichContent: Story = {
   name: 'Rich content (list)',
-  render: () => html`
-    <civ-callout variant="info">
+  args: { variant: 'info' },
+  render: (args) => html`
+    <civ-callout variant="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Before you start</p>
       <p>To finish this section, have the following ready:</p>
       <ul>
@@ -108,16 +118,17 @@ export const RichContent: Story = {
 
 export const AsLandmark: Story = {
   name: 'As an ARIA landmark',
+  args: { variant: 'warning' },
   parameters: {
     docs: {
       description: {
         story:
-          'The host element imposes no role of its own — set `role` and `aria-labelledby` directly when you need a landmark.',
+          'The host imposes no role of its own. Set `role` and `aria-labelledby` on `<civ-callout>` directly so the labelled bounding box and the visual chrome (border + padding) coincide. Avoid wrapping the callout in an outer `<div role="region">` — the labelled region would then exclude the callout chrome.',
       },
     },
   },
-  render: () => html`
-    <civ-callout variant="warning" role="region" aria-labelledby="region-heading">
+  render: (args) => html`
+    <civ-callout variant="${args.variant}" role="region" aria-labelledby="region-heading">
       <p id="region-heading" class="civ-m-0 civ-font-bold civ-mb-1">Important notice</p>
       <p class="civ-m-0">This region is announced as a landmark to assistive tech.</p>
     </civ-callout>

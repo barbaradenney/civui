@@ -31,7 +31,7 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'region',
+    role: 'complementary',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },
@@ -39,7 +39,7 @@ const schema: ComponentSchema = {
   renderOrder: [
     {
       type: 'container',
-      bindings: { tag: 'aside' },
+      bindings: { tag: 'civ-callout', role: 'complementary' },
       children: [
         { type: 'label', condition: 'heading', bindings: { text: 'heading', headingLevel: 'headingLevel' } },
         { type: 'slot', bindings: { name: 'default' } },

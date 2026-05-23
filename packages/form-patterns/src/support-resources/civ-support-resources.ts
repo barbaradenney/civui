@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
@@ -9,9 +9,10 @@ export type SupportResourcesTone = 'default' | 'crisis';
 /**
  * CivUI Support Resources
  *
- * A structured container for support/crisis contact information. Renders
- * as an `<aside>` landmark with a heading and slotted action links for
- * phone, email, or other contact methods.
+ * A structured container for support/crisis contact information.
+ * Renders a `complementary` landmark (composed from `civ-callout`)
+ * with a heading and slotted action links for phone, email, or other
+ * contact methods.
  *
  * Use at the bottom of sensitive forms (benefits, healthcare, housing)
  * to provide crisis lines, helpdesk numbers, or support links.
@@ -53,7 +54,7 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const headingText = this.heading || t('supportResourcesHeading');
-    const variant = this.tone === 'crisis' ? 'error' : 'default';
+    const variant = this.tone === 'crisis' ? 'error' : nothing;
     const level = Math.max(2, Math.min(6, this.headingLevel));
 
     const headingId = this.generateId('heading');

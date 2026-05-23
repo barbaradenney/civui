@@ -12,6 +12,7 @@ import '../packages/core/src/styles/civ.css';
 // dev-time bundle that registers every element once on Storybook boot.
 import '@civui/core';
 import '@civui/actions';
+import '@civui/navigation';
 import '@civui/controls';
 import '@civui/feedback';
 import '@civui/layout';

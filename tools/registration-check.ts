@@ -62,6 +62,21 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-alert': '@civui/feedback',
   'civ-badge': '@civui/feedback',
   'civ-count': '@civui/feedback',
+  // Navigation cluster (extracted from @civui/actions into its own package).
+  'civ-breadcrumb': '@civui/navigation',
+  'civ-breadcrumb-item': '@civui/navigation',
+  'civ-nav': '@civui/navigation',
+  'civ-nav-item': '@civui/navigation',
+  'civ-tabs': '@civui/navigation',
+  'civ-tab': '@civui/navigation',
+  'civ-tab-panel': '@civui/navigation',
+  'civ-tab-nav': '@civui/navigation',
+  'civ-tab-nav-item': '@civui/navigation',
+  'civ-side-nav': '@civui/navigation',
+  'civ-side-nav-item': '@civui/navigation',
+  'civ-on-this-page': '@civui/navigation',
+  'civ-on-this-page-item': '@civui/navigation',
+  'civ-back-to-top': '@civui/navigation',
 };
 
 // Packages whose components compose children from other packages

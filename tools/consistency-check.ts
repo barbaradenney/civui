@@ -20,6 +20,7 @@ const COMPONENT_DIRS = [
   join(ROOT, 'packages/compound/src'),
   join(ROOT, 'packages/form-patterns/src'),
   join(ROOT, 'packages/actions/src'),
+  join(ROOT, 'packages/navigation/src'),
   join(ROOT, 'packages/overlays/src'),
   join(ROOT, 'packages/layout/src'),
   join(ROOT, 'packages/feedback/src'),
@@ -350,6 +351,8 @@ const CHILD_COMPONENTS = new Set([
   'civ-tab',              // Tested in civ-tabs.test.ts
   'civ-tab-panel',        // Tested in civ-tabs.test.ts
   'civ-menu-item',        // Tested in civ-menu.test.ts
+  'civ-side-nav-item',    // Tested in civ-side-nav.test.ts
+  'civ-on-this-page-item',// Tested in civ-on-this-page.test.ts
 ]);
 // Structural/display/utility components that don't need analytics
 const NO_ANALYTICS = new Set([
@@ -381,10 +384,33 @@ const NO_ANALYTICS = new Set([
   'civ-filterable-list', 'civ-image-preview', 'civ-input-group',
 ]);
 
+// Components whose native (iOS/Android) implementations are
+// explicitly deferred per `.claude/rules/audit-debt.md`. The schema
+// is the contract; native stubs will land as a dedicated pass with
+// device verification. Tracked here so the consistency lint doesn't
+// flag them every run — but the audit-debt entry is the source of
+// truth, and entries should be removed from this set as soon as
+// the native counterparts land.
+const NATIVE_DEFERRED = new Set([
+  // Loading primitives (new in @civui/feedback)
+  'civ-spinner',
+  'civ-skeleton',
+  // Image (new in @civui/layout)
+  'civ-image',
+  // Accordion cluster
+  'civ-accordion',
+  'civ-accordion-item',
+  // Navigation cluster — side-nav / on-this-page / back-to-top
+  'civ-side-nav',
+  'civ-on-this-page',
+  'civ-back-to-top',
+]);
+
 function checkNativeCounterparts(comp: ComponentFile) {
   if (comp.name === 'civ-icon') return;
   if (comp.name === 'civ-conditional' || comp.name === 'civ-progress-bar') return;
   if (CHILD_COMPONENTS.has(comp.name)) return; // Part of parent component on native
+  if (NATIVE_DEFERRED.has(comp.name)) return; // see audit-debt.md
   // civ-fieldset is a web-only layout wrapper — no native counterpart needed
   if (comp.name === 'civ-fieldset') return;
   if (comp.name === 'civ-race-ethnicity') return; // Compound web component

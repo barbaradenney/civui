@@ -1,6 +1,6 @@
-import { CivFormElement, dispatch } from '@civui/core';
+import { CivFormElement, dispatch, ANALYTICS_EVENT_NAME } from '@civui/core';
 import { property } from 'lit/decorators.js';
-import type { InputWidth } from '@civui/core';
+import type { AnalyticsEventDetail, InputWidth } from '@civui/core';
 
 /**
  * Base class for preset input wrappers (SSN, EIN, ZIP, Phone, etc.).
@@ -54,4 +54,32 @@ export abstract class PresetInputWrapper extends CivFormElement {
     this.updateFormValue(null);
     dispatch(this, 'civ-reset');
   }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener(ANALYTICS_EVENT_NAME, this._interceptAnalytics);
+  }
+
+  override disconnectedCallback(): void {
+    this.removeEventListener(ANALYTICS_EVENT_NAME, this._interceptAnalytics);
+    super.disconnectedCallback();
+  }
+
+  // Inner controls (civ-text-input, civ-combobox) dispatch civ-analytics with
+  // their own tagName as componentName. Re-stamp with the wrapper's tagName so
+  // analytics consumers see the preset (civ-ssn, civ-phone, etc.) rather than
+  // the generic inner control.
+  private _interceptAnalytics = (e: Event): void => {
+    if (!(e instanceof CustomEvent)) return;
+    const detail = e.detail as AnalyticsEventDetail;
+    const ownName = this.tagName.toLowerCase();
+    if (detail.componentName === ownName) return;
+    // stopImmediatePropagation so other listeners on the wrapper itself
+    // see only the re-stamped event, not the original from the inner control.
+    e.stopImmediatePropagation();
+    dispatch<AnalyticsEventDetail>(this, ANALYTICS_EVENT_NAME, {
+      ...detail,
+      componentName: ownName,
+    });
+  };
 }

@@ -168,6 +168,7 @@ const config: StorybookConfig = {
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
+      '@civui/layout/image': resolve(root, 'packages/layout/src/image/index.ts'),
       '@civui/layout/disclosure': resolve(root, 'packages/layout/src/disclosure/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Data — admin / collection-display family

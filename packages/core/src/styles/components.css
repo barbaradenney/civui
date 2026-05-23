@@ -5961,6 +5961,67 @@
     margin-top: var(--civ-spacing-1);
   }
 
+  /* ── Image ─────────────────────────────────────────────────── */
+  /*
+   * General-purpose accessible image. Content variant is block and
+   * fluid; thumbnail variant is inline-block on a fixed px scale.
+   *
+   * `aspect-ratio` is set inline directly on the <img> (it's a
+   * function of the `ratio` prop or the `width`/`height` props in
+   * combination). Putting it on the img means `height: auto` falls
+   * back to the natural ratio cleanly when no ratio is set, rather
+   * than collapsing a wrapper box to 0 height.
+   *
+   * `object-fit` flips via the host's `[fit]` attribute so
+   * consumers swap behavior without a wrapper.
+   */
+  civ-image {
+    display: block;
+  }
+
+  civ-image[variant="thumbnail"] {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* Content image: fluid width, height derived from aspect-ratio
+   * (set inline on the img by the component). When no aspect-ratio
+   * is set, `height: auto` lets the browser use the image's natural
+   * height — visible at the natural size, CLS-prone (the dev-warn
+   * catches this case in development). */
+  civ-image[variant="content"] .civ-image__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  civ-image[variant="content"][fit="contain"] .civ-image__img {
+    object-fit: contain;
+  }
+
+  /* Thumbnail size scale — Primer's stepped avatar/thumb sizes.
+   * Fixed px on both axes so `object-fit` can crop to a square. */
+  civ-image[variant="thumbnail"] .civ-image__img {
+    display: block;
+    object-fit: cover;
+  }
+  civ-image[variant="thumbnail"][fit="contain"] .civ-image__img {
+    object-fit: contain;
+  }
+  civ-image[variant="thumbnail"][size="32"] .civ-image__img { width: 32px; height: 32px; }
+  civ-image[variant="thumbnail"][size="48"] .civ-image__img { width: 48px; height: 48px; }
+  civ-image[variant="thumbnail"][size="64"] .civ-image__img { width: 64px; height: 64px; }
+  civ-image[variant="thumbnail"][size="96"] .civ-image__img { width: 96px; height: 96px; }
+  civ-image[variant="thumbnail"][size="128"] .civ-image__img { width: 128px; height: 128px; }
+
+  /* Circular avatars — thumbnail variant only (content images that
+   * mistakenly set `rounded` get a dev-warn instead of silently
+   * becoming circular). */
+  civ-image[variant="thumbnail"][rounded] .civ-image__img {
+    border-radius: 50%;
+  }
+
   /* ── Spinner ────────────────────────────────────────────────── */
   /*
    * Indeterminate loading indicator. Rotation is functional, not

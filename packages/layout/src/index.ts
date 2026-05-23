@@ -13,6 +13,7 @@ import './page-header/civ-page-header.js';
 import './tag/civ-tag.js';
 import './button-group/civ-button-group.js';
 import './image-preview/civ-image-preview.js';
+import './image/civ-image.js';
 
 // Accordion
 export { CivAccordion, CivAccordionItem } from './accordion/index.js';
@@ -54,3 +55,7 @@ export { CivButtonGroup } from './button-group/index.js';
 // Image Preview
 export { CivImagePreview } from './image-preview/index.js';
 export type { ImagePreviewSize } from './image-preview/index.js';
+
+// Image
+export { CivImage } from './image/index.js';
+export type { ImageRatio, ImageFit, ImageLoading, ImageVariant, ThumbnailSize } from './image/index.js';

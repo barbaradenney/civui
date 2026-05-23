@@ -1,7 +1,7 @@
 {
   "name": "@civui/layout",
   "version": "0.1.0",
-  "description": "CivUI layout components — Accordion, Callout, Card, Divider, InputGroup, PageHeader, Tag, List, ButtonGroup, ImagePreview, Disclosure, ReadMore",
+  "description": "CivUI layout components — Accordion, Callout, Card, Divider, InputGroup, PageHeader, Tag, List, ButtonGroup, ImagePreview, Image, Disclosure, ReadMore",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -18,7 +18,8 @@
     "./page-header": "./dist/page-header/index.js",
     "./tag": "./dist/tag/index.js",
     "./button-group": "./dist/button-group/index.js",
-    "./image-preview": "./dist/image-preview/index.js"
+    "./image-preview": "./dist/image-preview/index.js",
+    "./image": "./dist/image/index.js"
   },
   "files": [
     "dist"

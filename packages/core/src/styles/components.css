@@ -4656,7 +4656,7 @@
   }
 
   .civ-card--tertiary {
-    @apply civ-bg-white civ-border-base-lighter;
+    @apply civ-bg-white civ-border-base-light;
     color: var(--civ-color-base-darkest);
   }
 
@@ -4717,7 +4717,7 @@
 
   .civ-card__footer {
     @apply civ-mt-3 civ-pt-3;
-    border-top: 1px solid var(--civ-color-base-lighter);
+    border-top: 1px solid var(--civ-color-base-light);
   }
 
   /* ── Repeater row heading ─────────────────────────────────────
@@ -4940,16 +4940,15 @@
    *   padding and bolder type of `civ-btn--secondary` (main
    *   button family).
    *
-   * Border color: `--civ-color-base-lighter` (softer gray) is
-   * used across all variants instead of `--civ-color-base-light`
-   * so accordion borders match the CivUI inter-item divider
-   * convention (`civ-card`, `civ-list--dividers`, file-item
-   * dividers) — keeps an accordion sitting inside a card
-   * visually integrated rather than having a darker frame
-   * inside a lighter one. `base-light` is reserved for floating
-   * overlay surfaces (combobox listbox, drawer, action-sheet,
-   * popover) where a stronger edge separates the floating
-   * element from the page underneath.
+   * Border color: `--civ-color-base-light` (medium-light gray)
+   * across all variants. Matches `civ-card` (also bumped to
+   * `base-light` so a card containing an accordion reads as
+   * one integrated chrome) and the floating-surface family
+   * (combobox listbox, drawer, action-sheet, popover) which
+   * already used this color. `--civ-color-base-lighter` (softer)
+   * stays reserved for the subtle in-row dividers in `civ-list
+   * --dividers` and file-item lists, where the divider is a
+   * scanning hint rather than a structural frame.
    */
 
   /* ── Tertiary variant (default) ───────────────────────────── */
@@ -4968,11 +4967,11 @@
    * CLAUDE.md warning).
    */
   .civ-accordion__inner--tertiary {
-    border: 1px solid var(--civ-color-base-lighter);
+    border: 1px solid var(--civ-color-base-light);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-base-light);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5008,7 +5007,7 @@
    * between them since their items butt directly otherwise.
    */
   .civ-accordion__inner--flush > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-base-light);
   }
   .civ-accordion__inner--flush > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5049,7 +5048,7 @@
    * than rows of a unified list.
    */
   .civ-accordion__inner--secondary > civ-accordion-item {
-    border: 1px solid var(--civ-color-base-lighter);
+    border: 1px solid var(--civ-color-base-light);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {

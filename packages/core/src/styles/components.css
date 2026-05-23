@@ -4152,7 +4152,7 @@
   /* ── Callout (component — chrome targets the host element directly) */
 
   civ-callout {
-    border-inline-start: 5px solid var(--civ-color-primary-DEFAULT);
+    border-inline-start: 5px solid var(--civ-color-base-DEFAULT);
     padding: var(--civ-spacing-3) var(--civ-spacing-4);
   }
 
@@ -4160,6 +4160,18 @@
   civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
   civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
   civ-callout[variant='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+
+  /* Restore list markers inside callout body — Tailwind's preflight
+     strips them globally and a callout is one of the few places where
+     authored prose-style lists belong. Scoped to direct children so
+     <civ-list> (which deliberately renders a bullet-less <ul>) inside
+     a callout is unaffected. */
+  civ-callout > ul,
+  civ-callout > ol {
+    list-style: revert;
+    padding-inline-start: 1.5em;
+    margin: var(--civ-spacing-1) 0;
+  }
 
   /* ── Section Intro (composes civ-callout) ───────────────────── */
 

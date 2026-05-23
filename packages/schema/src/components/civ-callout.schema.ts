@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     variant: {
       type: 'enum',
-      description: 'Accent border color. `default` uses the primary palette; `info`, `warning`, `error`, and `success` map to their semantic counterparts',
+      description: 'Accent border color. `default` is a neutral gray for callouts with no semantic urgency; `info`, `warning`, `error`, and `success` map to their semantic palette counterparts',
       default: 'default',
       values: ['default', 'info', 'warning', 'error', 'success'],
     },

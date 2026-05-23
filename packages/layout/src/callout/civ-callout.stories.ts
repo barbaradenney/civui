@@ -77,8 +77,8 @@ export const AllVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4" style="max-width: 600px;">
       <civ-callout>
-        <p class="civ-m-0 civ-font-bold civ-mb-1">Default (primary)</p>
-        <p class="civ-m-0">The base accent border uses the primary palette.</p>
+        <p class="civ-m-0 civ-font-bold civ-mb-1">Default (neutral)</p>
+        <p class="civ-m-0">The base accent border is a neutral gray — use when no semantic variant applies.</p>
       </civ-callout>
       <civ-callout variant="info">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Info</p>

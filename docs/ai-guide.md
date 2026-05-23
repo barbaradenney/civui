@@ -82,7 +82,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-list>` | Layout | `dividers` (boolean) | — |
 | `<civ-list-item>` | Layout | `href` (optional, makes whole row clickable). Trailing content via `data-list-item-end` attribute on a child. | `civ-analytics` |
 | `<civ-image-preview>` | Layout | `src`, `alt`, `filename`, `file-size`, `size` | — |
-| `<civ-accordion>` | Layout | `single` (one-open-at-a-time), `disabled` (cascades to items), `variant` (`tertiary` default / `secondary` / `primary`). Methods: `expandAll()`, `collapseAll()`. | — |
+| `<civ-accordion>` | Layout | `single` (one-open-at-a-time), `disabled` (cascades to items), `variant` (`tertiary` default / `secondary` / `primary` / `flush` — flush has no outer border, designed for card footers). Methods: `expandAll()`, `collapseAll()`. | — |
 | `<civ-accordion-item>` | Layout | `label`, `open`, `disabled`, `heading-level` (1–6) | `civ-toggle: { open }` |
 | `<civ-skip-link>` | Navigation | `label`, `href` | — |
 

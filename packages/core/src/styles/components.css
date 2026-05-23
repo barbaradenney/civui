@@ -5018,6 +5018,37 @@
     background-color: var(--civ-color-base-lighter);
   }
 
+  /* ── Flush variant (no outer border) ───────────────────────
+   *
+   * Same per-item chrome as tertiary — transparent triggers,
+   * inter-item dividers, indented content — but the outer
+   * wrapper has no border or radius. Designed for use inside
+   * another bordered container (a `<civ-card>` footer is the
+   * canonical case) where the parent already provides the visual
+   * boundary. Multiple flush accordions can stack in the same
+   * footer to group related sections; add a heading or divider
+   * between them since their items butt directly otherwise.
+   */
+  .civ-accordion__inner--flush > civ-accordion-item {
+    border-bottom: 1px solid var(--civ-color-base-light);
+  }
+  .civ-accordion__inner--flush > civ-accordion-item:last-child {
+    border-bottom: none;
+  }
+  .civ-accordion__inner--flush .civ-accordion-item__trigger {
+    padding: 1rem;
+    background-color: transparent;
+    color: inherit;
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--flush .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
+  }
+  .civ-accordion__inner--flush .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-base-lighter);
+  }
+
   /* ── Secondary + primary variants (filled triggers) ───────── */
 
   /*

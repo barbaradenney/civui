@@ -26,6 +26,13 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    variant: {
+      type: 'enum',
+      description: 'Visual variant. `tertiary` (default) is a bordered group with transparent triggers — list-like, quiet. `secondary` renders each item as a filled primary-lightest button matching `civ-action-btn--secondary`. `primary` uses the same palette but with the larger padding and bolder type of `civ-btn--secondary`. Items in primary / secondary stack with a small gap; no outer border or inter-item dividers.',
+      values: ['primary', 'secondary', 'tertiary'],
+      default: 'tertiary',
+      reflect: true,
+    },
   },
 
   methods: {

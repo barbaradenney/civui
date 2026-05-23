@@ -515,6 +515,42 @@ describe('civ-accordion', () => {
     }
   });
 
+  // ─── Variants ─────────────────────────────────────────────────
+
+  it('defaults to the tertiary variant', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>
+    `);
+    expect(el.variant).toBe('tertiary');
+    expect(el.getAttribute('variant')).toBe('tertiary');
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+  });
+
+  it.each(['primary', 'secondary', 'tertiary'] as const)(
+    'renders the %s variant inner class',
+    async (variant) => {
+      const el = await fixture<CivAccordion>(`
+        <civ-accordion variant="${variant}">
+          <civ-accordion-item label="X">B</civ-accordion-item>
+        </civ-accordion>
+      `);
+      expect(el.variant).toBe(variant);
+      expect(el.getAttribute('variant')).toBe(variant);
+      expect(el.querySelector(`.civ-accordion__inner--${variant}`)).not.toBeNull();
+    },
+  );
+
+  it('updates the inner class when variant changes at runtime', async () => {
+    const el = await fixture<CivAccordion>(`
+      <civ-accordion><civ-accordion-item label="X">B</civ-accordion-item></civ-accordion>
+    `);
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
+    el.variant = 'primary';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--primary')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--tertiary')).toBeNull();
+  });
+
   it('re-enables children when parent disabled is cleared', async () => {
     const el = await fixture<CivAccordion>(`
       <civ-accordion disabled>

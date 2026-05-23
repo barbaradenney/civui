@@ -42,6 +42,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
  * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
+ * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (filled action-button palette), or `'primary'` (filled main-button palette, larger/bolder)
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -54,6 +55,8 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  * </civ-accordion>
  * ```
  */
+export type AccordionVariant = 'primary' | 'secondary' | 'tertiary';
+
 @customElement('civ-accordion')
 export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   /** When true, opening one item closes any other open siblings. */
@@ -66,6 +69,24 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * here cascades automatically.
    */
   @property({ type: Boolean, reflect: true }) disabled = false;
+
+  /**
+   * Visual variant. Three levels of prominence:
+   *
+   * - `'tertiary'` (default) — bordered group with transparent
+   *   triggers and inter-item dividers. The quietest, list-like
+   *   affordance. Use for FAQ pages, help content, optional detail.
+   * - `'secondary'` — each item rendered as a filled
+   *   primary-lightest button (matches `civ-action-btn--secondary`'s
+   *   palette and chrome scale). Items are separated by gap, no
+   *   outer border. Use for navigation-like menus or choose-one
+   *   sections where the affordance should read as actionable.
+   * - `'primary'` — same palette as `secondary` but with the larger
+   *   padding and bolder type of `civ-btn--secondary` (the main
+   *   button family). The most prominent variant; use for hub-page
+   *   sections or hero CTAs.
+   */
+  @property({ type: String, reflect: true }) variant: AccordionVariant = 'tertiary';
 
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-accordion-content]' };
@@ -109,8 +130,9 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const variantClass = `civ-accordion__inner--${this.variant}`;
     return html`
-      <div class="civ-accordion__inner" data-civ-accordion-content></div>
+      <div class="civ-accordion__inner ${variantClass}" data-civ-accordion-content></div>
     `;
   }
 

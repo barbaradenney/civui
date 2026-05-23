@@ -3,7 +3,6 @@ import { html } from 'lit';
 import './civ-accordion.js';
 import './civ-accordion-item.js';
 import '../card/civ-card.js';
-import '@civui/actions/button';
 import type { CivAccordion } from './civ-accordion.js';
 
 const meta: Meta = {
@@ -242,16 +241,16 @@ methods — their state stays frozen.
     return html`
       <div data-story class="civ-flex civ-flex-col civ-gap-3">
         <div class="civ-flex civ-gap-2">
-          <civ-button
-            label="Expand all"
-            variant="secondary"
+          <button
+            type="button"
+            class="civ-text-btn civ-text-btn--chip"
             @click="${(e: Event) => getAccordion(e).expandAll()}"
-          ></civ-button>
-          <civ-button
-            label="Collapse all"
-            variant="secondary"
+          >Expand all</button>
+          <button
+            type="button"
+            class="civ-text-btn civ-text-btn--chip"
             @click="${(e: Event) => getAccordion(e).collapseAll()}"
-          ></civ-button>
+          >Collapse all</button>
         </div>
         <civ-accordion>
           <civ-accordion-item label="Eligibility requirements">
@@ -270,6 +269,69 @@ methods — their state stays frozen.
       </div>
     `;
   },
+};
+
+export const Variants: Story = {
+  name: 'Variants (tertiary / secondary / primary)',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Three visual variants in increasing prominence:
+
+- **Tertiary** (default) — bordered group with transparent
+  triggers. Quietest, list-like. Use for FAQ pages, help content,
+  optional detail.
+- **Secondary** — items rendered as filled primary-lightest
+  buttons matching the \`civ-action-btn--secondary\` palette and
+  chrome scale. Use for navigation-like menus or choose-one
+  sections.
+- **Primary** — same palette as secondary but with the larger
+  padding and bolder type of \`civ-btn--secondary\` (the main
+  button family). Use for hub-page sections or hero CTAs.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <h3 class="civ-heading-sm civ-mb-2">Tertiary (default)</h3>
+        <civ-accordion>
+          <civ-accordion-item label="Eligibility">
+            <p>Quietest variant. Reads as a list of disclosure rows.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="How to apply">
+            <p>Bordered group, transparent triggers, inter-item dividers.</p>
+          </civ-accordion-item>
+        </civ-accordion>
+      </div>
+
+      <div>
+        <h3 class="civ-heading-sm civ-mb-2">Secondary</h3>
+        <civ-accordion variant="secondary">
+          <civ-accordion-item label="Eligibility">
+            <p>Filled primary-lightest triggers. Smaller padding, lighter weight — matches action-button secondary.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="How to apply">
+            <p>Items stack with gap; each reads as a standalone button.</p>
+          </civ-accordion-item>
+        </civ-accordion>
+      </div>
+
+      <div>
+        <h3 class="civ-heading-sm civ-mb-2">Primary</h3>
+        <civ-accordion variant="primary">
+          <civ-accordion-item label="Eligibility">
+            <p>Same palette as secondary, but the chrome of the main button family — larger padding, bolder font.</p>
+          </civ-accordion-item>
+          <civ-accordion-item label="How to apply">
+            <p>Most prominent variant. Use for hub-page sections or hero CTAs.</p>
+          </civ-accordion-item>
+        </civ-accordion>
+      </div>
+    </div>
+  `,
 };
 
 export const KeyboardNavigation: Story = {

@@ -15,6 +15,7 @@ import './image-preview/civ-image-preview.js';
 
 // Accordion
 export { CivAccordion, CivAccordionItem } from './accordion/index.js';
+export type { AccordionVariant } from './accordion/index.js';
 
 // Card
 export { CivCard } from './card/index.js';

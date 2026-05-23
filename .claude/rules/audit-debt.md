@@ -74,6 +74,17 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Accordion follow-ups
+
+- **Surfaced:** Accordion landing, 2026-05-23. Branch `claude/accordion-component-design-qXQjU`.
+- **What landed:** Two new web components in `@civui/layout` — `<civ-accordion>` (group container with `single`-open coordination) and `<civ-accordion-item>` (full-width expandable row built on native `<details>`/`<summary>`, with an optional `heading-level` 1–6 prop that wraps the label in an `<h1>`–`<h6>` for screen-reader rotor navigation). Composes the same visual language as `civ-disclosure` (chevron caret, 90° rotation on open) but with a larger tap target and full row width. Schemas, tests (23 new tests), Storybook stories, CSS, and a docs page all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Form-field exclusion when collapsed.** Unlike `civ-conditional`, accordion-hidden content stays in the DOM and is included in `civ-form.getFormData()` / `validate()`. Documented in the docs page; not wired into the form-pattern exclusion path. Matches `civ-tabs` behavior.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-accordion` and `civ-accordion-item` and they validate cleanly + produce Props/Events partials, but neither is registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{Accordion,AccordionItem}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{Accordion,AccordionItem}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{accordion,accordion-item}/{name}.component.yml`). Pattern: shape `civ-accordion` after `civ-list` (parent renders a container, child sets `role`/state); shape `civ-accordion-item` after `civ-disclosure` (native disclosure primitive with chevron + label).
+- **Why deferred:** Same rationale as the existing native-stubs entry — disclosure/expand presentation has platform quirks (SwiftUI `DisclosureGroup`, Compose `AnimatedVisibility` / `ExpandableCard`) that need device verification.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

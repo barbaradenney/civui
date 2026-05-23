@@ -161,6 +161,7 @@ function renderMethods(name: string, methods: Record<string, MethodDef> | undefi
  * its own page.
  */
 const HOST_PAGE_OVERRIDES: Record<string, string> = {
+  'civ-accordion-item': 'layout/accordion.mdx',
   'civ-checkbox-group': 'controls/checkbox.mdx',
   'civ-menu-item': 'overlays/menu.mdx',
   'civ-radio': 'controls/radio.mdx',

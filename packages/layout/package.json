@@ -1,13 +1,14 @@
 {
   "name": "@civui/layout",
   "version": "0.1.0",
-  "description": "CivUI layout components — Card, Divider, InputGroup, PageHeader, Tag, List, ButtonGroup, ImagePreview, Disclosure, ReadMore",
+  "description": "CivUI layout components — Accordion, Card, Divider, InputGroup, PageHeader, Tag, List, ButtonGroup, ImagePreview, Disclosure, ReadMore",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
+    "./accordion": "./dist/accordion/index.js",
     "./card": "./dist/card/index.js",
     "./disclosure": "./dist/disclosure/index.js",
     "./divider": "./dist/divider/index.js",

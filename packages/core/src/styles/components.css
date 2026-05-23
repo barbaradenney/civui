@@ -53,6 +53,8 @@
   }
 
   /* Block: form fields, compounds, sections, overlays, layout wrappers. */
+  civ-accordion,
+  civ-accordion-item,
   civ-action-sheet,
   civ-address,
   civ-alert,
@@ -4954,6 +4956,137 @@
   .civ-disclosure__content {
     @apply civ-mt-2 civ-ps-3;
     border-inline-start: 2px solid var(--civ-color-base-light);
+  }
+
+  /* ── Accordion ─────────────────────────────────────────────
+   *
+   * Full-width disclosure stack. A grouped collection of
+   * expandable rows that compose the same visual language as
+   * `civ-disclosure` (chevron caret, 90° rotation on open) but
+   * span the full row with a larger tap target. The outer
+   * wrapper carries a rounded border; inter-item dividers come
+   * from each host's bottom-border (placed on the
+   * `civ-accordion-item` element, not on the inner `<details>`
+   * class — `:last-child` and `[disabled]` selectors need to
+   * match the host, which has proper siblings and reflected
+   * attributes). Items are real `<details>` elements so the
+   * disclosure semantics are native — keyboard, screen reader,
+   * and no-JS all work.
+   */
+
+  .civ-accordion__inner {
+    border: 1px solid var(--civ-color-base-light);
+    border-radius: var(--civ-border-radius-DEFAULT);
+    /*
+     * No `overflow: hidden` — combined with `border-radius` on a
+     * focusable-descendant container it would clip the global
+     * focus-ring `outline` + `box-shadow` halo on first/last
+     * item triggers (per the CLAUDE.md warning). The hover
+     * background on first/last items is briefly visible behind
+     * the rounded corner; this is preferred over a clipped
+     * focus indicator (WCAG 2.4.7).
+     */
+  }
+
+  /*
+   * Inter-item divider lives on the HOST `civ-accordion-item`
+   * element, not on the inner `<details>` class. The inner
+   * `<details>` is always the sole/last child of its host so
+   * `.civ-accordion-item:last-child` would strip every item's
+   * border; the host elements, however, are real siblings under
+   * `.civ-accordion__inner` and `:last-child` works as intended.
+   */
+  civ-accordion-item {
+    border-bottom: 1px solid var(--civ-color-base-light);
+  }
+  civ-accordion-item:last-child {
+    border-bottom: none;
+  }
+
+  /*
+   * Trigger — the `<summary>` element. Full-width row, larger
+   * tap target than civ-disclosure's chip. Background stays
+   * transparent at rest so the row blends into the container
+   * until hover.
+   */
+  .civ-accordion-item__trigger {
+    @apply civ-flex civ-items-center civ-gap-2 civ-cursor-pointer civ-font-semibold civ-w-full;
+    padding: 1rem;
+    list-style: none;
+    background-color: transparent;
+    color: inherit;
+  }
+  .civ-accordion-item__trigger::-webkit-details-marker {
+    display: none;
+  }
+  .civ-accordion-item__trigger::marker {
+    content: '';
+  }
+  @media (hover: hover) {
+    .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-base-lightest);
+    }
+  }
+  .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-base-lighter);
+  }
+
+  /*
+   * Disabled — pointer events off, dimmed. Selector uses the
+   * `civ-accordion-item` element selector (not the class) because
+   * the reflected `[disabled]` attribute lives on the HOST, while
+   * the inner `<details>` carries the class. The host descendant
+   * combinator picks the trigger inside.
+   *
+   * The second rule cascades parent `<civ-accordion disabled>` to
+   * every descendant item's trigger — matches the JS behavior in
+   * `civ-accordion-item._effectivelyDisabled` so visual + behavior
+   * stay aligned.
+   */
+  civ-accordion-item[disabled] .civ-accordion-item__trigger,
+  civ-accordion[disabled] civ-accordion-item .civ-accordion-item__trigger {
+    pointer-events: none;
+    opacity: var(--civ-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /*
+   * Chevron rotation. Uses the BEM class on the icon (not an
+   * attribute selector on the icon name) so theme overrides and
+   * future leading-icon additions stay scoped. Same motion duration
+   * token as civ-disclosure so the two read as the same affordance.
+   * The global `prefers-reduced-motion` rule disables the
+   * transition for users who request reduced motion.
+   */
+  .civ-accordion-item__icon {
+    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+    flex-shrink: 0;
+  }
+  .civ-accordion-item[open] > .civ-accordion-item__trigger > .civ-accordion-item__icon {
+    transform: rotate(90deg);
+  }
+
+  /*
+   * Label fills the row width. When `heading-level` is set the
+   * label renders as an `<h1>`–`<h6>` for screen-reader rotor
+   * navigation; the heading's default font-size, weight, margins,
+   * and line-height are reset so the visual treatment stays
+   * constant regardless of heading level.
+   */
+  .civ-accordion-item__label {
+    flex: 1;
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
+  /*
+   * Content — indented under the label so prose lines up with
+   * the label text, not the chevron.
+   */
+  .civ-accordion-item__content {
+    padding: 0 1rem 1rem 2.5rem;
   }
 
   /* ── Read More ─────────────────────────────────────────────── */

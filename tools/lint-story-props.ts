@@ -87,6 +87,16 @@ async function walk(dir: string, predicate: (p: string) => boolean): Promise<str
 
 const CUSTOM_ELEMENT_TAG_RE = /@customElement\(['"]([^'"]+)['"]\)/g;
 const PROPERTY_RE = /@property\(([\s\S]*?)\)[\s\S]*?(?:\s|^)([a-zA-Z_][\w]*)\s*[!?]?\s*[=:]/g;
+// Accessor form: `@property(...) get name()` / `@property(...) set name()` /
+// `@property(...) accessor name = ...`. The default PROPERTY_RE looks for
+// `NAME =`/`NAME:` which doesn't match a getter declaration; without this
+// supplement, a component using a manual reactive accessor would have its
+// `name` property silently missing from the attrs set.
+// `[^()]` disallows parens inside the options so the engine doesn't
+// backtrack across adjacent @property blocks looking for a later `)`
+// followed by `get`/`set`/`accessor`. @property option objects use
+// curly braces, not parens, so this stays correct.
+const PROPERTY_ACCESSOR_RE = /@property\(([^()]*?)\)\s*(?:get|set|accessor)\s+([a-zA-Z_][\w]*)\b/g;
 const ATTRIBUTE_OPT_RE = /attribute:\s*['"]([^'"]+)['"]/;
 const ATTRIBUTE_DISABLED_RE = /attribute:\s*false/;
 
@@ -151,6 +161,15 @@ async function buildComponentMap(): Promise<Map<string, ComponentMeta>> {
     for (const m of src.matchAll(PROPERTY_RE)) {
       const options = m[1] ?? '';
       if (ATTRIBUTE_DISABLED_RE.test(options)) continue; // JS-only property
+      const explicit = ATTRIBUTE_OPT_RE.exec(options);
+      const propName = m[2];
+      if (!propName) continue;
+      const attrName = explicit ? explicit[1] : propName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      attrs.add(attrName);
+    }
+    for (const m of src.matchAll(PROPERTY_ACCESSOR_RE)) {
+      const options = m[1] ?? '';
+      if (ATTRIBUTE_DISABLED_RE.test(options)) continue;
       const explicit = ATTRIBUTE_OPT_RE.exec(options);
       const propName = m[2];
       if (!propName) continue;

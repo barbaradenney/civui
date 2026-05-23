@@ -1,0 +1,208 @@
+---
+title: Accordion
+sidebar_position: 11
+sidebar_label: Accordion
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import AccordionProps from "./_accordion.props.mdx";
+import AccordionEvents from "./_accordion.events.mdx";
+import AccordionItemProps from "./_accordion-item.props.mdx";
+import AccordionItemEvents from "./_accordion-item.events.mdx";
+
+# Accordion
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-accordion`](pathname:///civui/storybook/?path=/docs/contract-civ-accordion--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-accordion>` and `<civ-accordion-item>`
+
+A grouped stack of full-width expandable rows. Each item composes the
+same visual language as [`<civ-disclosure>`](./disclosure) — chevron
+caret beside the label, 90° rotation on open — but spans the row with
+a larger tap target.
+
+Built on native `<details>` / `<summary>` so it works without
+JavaScript and is announced as a disclosure widget by every screen
+reader.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-accordion--default" />
+
+### With one item open
+
+<StoryEmbed id="layout-accordion--with-open-item" />
+
+### Single-open mode
+
+<StoryEmbed id="layout-accordion--single-open" />
+
+### With a disabled item
+
+<StoryEmbed id="layout-accordion--with-disabled-item" />
+
+### With semantic heading level
+
+<StoryEmbed id="layout-accordion--with-heading-level" />
+
+### Nested inside a card
+
+<StoryEmbed id="layout-accordion--within-card" />
+
+### Expand all / collapse all
+
+<StoryEmbed id="layout-accordion--expand-collapse-all" />
+
+### Keyboard navigation
+
+<StoryEmbed id="layout-accordion--keyboard-navigation" />
+
+### Parent-level disabled
+
+<StoryEmbed id="layout-accordion--parent-disabled" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-accordion--default)
+
+## `civ-accordion` Props
+
+<AccordionProps />
+
+## `civ-accordion` Events
+
+<AccordionEvents />
+
+## `civ-accordion` Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `expandAll()` | `void` | Open every direct-child item. In `single` mode, opens only the first non-disabled item. Disabled items are skipped. |
+| `collapseAll()` | `void` | Close every direct-child item. Disabled items are skipped — their state stays frozen. |
+
+## `civ-accordion-item` Props
+
+<AccordionItemProps />
+
+## `civ-accordion-item` Events
+
+<AccordionItemEvents />
+
+## When to use Accordion
+
+- **FAQ pages and help content.** A list of questions where each
+  answer is rarely needed by every reader.
+- **Settings and preference groups.** Sections of a settings page
+  that the user expands as needed.
+- **Optional or deferred-detail sections.** Eligibility footnotes,
+  edge-case rules, advanced configuration.
+
+Do **not** use an accordion to:
+
+- **Hide required form content.** Anything the user MUST read or fill
+  in belongs in the primary flow. Use [`<civ-conditional>`](../form/conditional)
+  for branching content that genuinely doesn't apply in some cases.
+- **Compress long forms.** The [Review and Submit pattern](../../form-patterns/review-and-submit)
+  uses a flat, scrollable layout so every answer is visible at once.
+- **Replace tabs.** When users need to switch between mutually
+  exclusive views of related content, use [`<civ-tabs>`](../actions/tabs)
+  instead.
+
+## Usage
+
+```html
+<civ-accordion>
+  <civ-accordion-item label="Who is eligible?">
+    <p>Eligibility content here.</p>
+  </civ-accordion-item>
+  <civ-accordion-item label="How to apply">
+    <p>Application steps here.</p>
+  </civ-accordion-item>
+  <civ-accordion-item label="What to expect">
+    <p>Timeline and follow-up details.</p>
+  </civ-accordion-item>
+</civ-accordion>
+```
+
+### Single-open mode
+
+Pass `single` on the parent to enforce one-open-at-a-time — when the
+user opens an item, the parent collapses any other open siblings.
+
+```html
+<civ-accordion single>
+  <civ-accordion-item label="First" open>…</civ-accordion-item>
+  <civ-accordion-item label="Second">…</civ-accordion-item>
+  <civ-accordion-item label="Third">…</civ-accordion-item>
+</civ-accordion>
+```
+
+### Semantic heading levels
+
+For FAQ pages where screen-reader users navigate by heading, set
+`heading-level` (1–6) on each item to wrap the label in an `<h1>`–`<h6>`.
+The visual treatment is unchanged; the heading element only affects
+assistive-tech rotor navigation.
+
+```html
+<h2>Frequently asked questions</h2>
+<civ-accordion>
+  <civ-accordion-item heading-level="3" label="Who is eligible?">…</civ-accordion-item>
+  <civ-accordion-item heading-level="3" label="How do I apply?">…</civ-accordion-item>
+</civ-accordion>
+```
+
+## Accessibility
+
+- Built on native `<details>` / `<summary>`. The expand/collapse state
+  and associated content are announced as a disclosure widget by every
+  modern screen reader. No `aria-controls` or `aria-expanded` is added
+  (native semantics already cover this).
+- The `civ-toggle` event fires on every item toggle but does **not**
+  bubble or compose. Accordion items often live inside `<civ-form>` and
+  form-level listeners should not see accordion events. Subscribe
+  directly on the `<civ-accordion-item>` element.
+- An internal bubbling event (`civ-accordion-item-toggle`) is used by
+  the parent `<civ-accordion>` to coordinate `single`-open mode.
+  Consumers should not rely on it.
+- **Keyboard navigation** follows the ARIA APG accordion pattern.
+  Enter / Space on a summary toggles the panel. **↓ / ↑** move focus
+  between item headers (wraps at edges); **Home** / **End** jump to
+  the first / last header. Disabled items are skipped during arrow
+  navigation. Tab order is preserved — arrow-key navigation is
+  additive when focus is already on a summary.
+- Optional `heading-level` (1–6) wraps the label in an `<h1>`–`<h6>` so
+  rotor navigation works. The visual treatment is held constant across
+  all levels.
+- `<civ-accordion disabled>` cascades to every item — the summary gets
+  `aria-disabled="true"` and `tabindex="-1"`, so assistive technologies
+  announce the disabled state and keyboard users skip the items.
+
+## Form fields inside an accordion
+
+Unlike [`<civ-conditional>`](../form/conditional), accordion-hidden
+content **stays in the DOM**. Form fields rendered inside a collapsed
+item are still validated, submitted, and reset by `<civ-form>`. If a
+field's value depends on context that only becomes visible when the
+accordion is expanded, surface it outside the accordion or wrap it
+in a `<civ-conditional>` block bound to a separate state.
+
+## Behavioral contract
+
+- `open` on an item is reflected to the host attribute. CSS selectors
+  like `civ-accordion-item[open]` are supported for styling hooks.
+- `disabled` on an item is reflected and prevents toggling. Programmatic
+  attempts to set `open` while disabled are reverted.
+- `single` on the parent is reflected. Setting it triggers a
+  reconciliation pass — if multiple items are currently open, the
+  first stays open and the rest collapse. Authored markup with
+  multiple `open` items inside `<civ-accordion single>` reconciles
+  the same way on first paint.
+- `disabled` on the parent cascades to every direct-child item
+  without mutating each item's own `disabled` prop. Re-enabling the
+  parent restores per-item disabled state from the items'
+  authored values.

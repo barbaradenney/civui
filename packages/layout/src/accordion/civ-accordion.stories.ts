@@ -3,7 +3,9 @@ import { html } from 'lit';
 import './civ-accordion.js';
 import './civ-accordion-item.js';
 import '../card/civ-card.js';
+import '@civui/actions/toggle-button';
 import type { CivAccordion } from './civ-accordion.js';
+import type { CivToggleButton } from '@civui/actions/toggle-button';
 
 const meta: Meta = {
   title: 'Layout/Accordion',
@@ -260,31 +262,36 @@ are skipped by both methods — their state stays frozen.
       root.dataset.initialized = 'true';
 
       const accordion = root.querySelector<CivAccordion>('civ-accordion');
-      const btn = root.querySelector<HTMLButtonElement>('[data-toggle-btn]');
-      if (!accordion || !btn) return;
+      const toggle = root.querySelector<CivToggleButton>('civ-toggle-button');
+      if (!accordion || !toggle) return;
 
-      const refresh = (): void => {
+      const allOpen = (): boolean => {
         const items = Array.from(
           accordion.querySelectorAll<HTMLElement & { open: boolean }>('civ-accordion-item'),
         );
-        const allOpen = items.length > 0 && items.every((i) => i.open);
-        btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+        return items.length > 0 && items.every((i) => i.open);
+      };
+      const refresh = (): void => {
+        toggle.pressed = allOpen();
       };
 
-      btn.addEventListener('click', () => {
-        const items = Array.from(
-          accordion.querySelectorAll<HTMLElement & { open: boolean }>('civ-accordion-item'),
-        );
-        if (items.length > 0 && items.every((i) => i.open)) accordion.collapseAll();
-        else accordion.expandAll();
-        // Defer the label refresh until after the accordion's
-        // updated() lifecycle runs, so we read the post-toggle state.
+      // Drive expandAll / collapseAll from the toggle's civ-toggle
+      // event. detail.pressed is the NEW state — true means the
+      // user wants "all open".
+      toggle.addEventListener('civ-toggle', (e) => {
+        const ev = e as CustomEvent<{ pressed: boolean }>;
+        if (ev.detail.pressed) accordion.expandAll();
+        else accordion.collapseAll();
+        // Defer re-sync so we read post-update state and undo any
+        // optimistic toggle if expandAll was a no-op (e.g. all items
+        // disabled).
         requestAnimationFrame(refresh);
       });
 
-      // civ-toggle is non-bubbling per the component's design
-      // (matches civ-disclosure precedent so events don't leak into
-      // form-level listeners), so we attach to each item directly.
+      // Sync the toggle when individual items toggle. civ-toggle is
+      // non-bubbling per the component's design (matches
+      // civ-disclosure precedent so events don't leak into form-level
+      // listeners), so we attach to each item directly.
       accordion.querySelectorAll('civ-accordion-item').forEach((item) => {
         item.addEventListener('civ-toggle', refresh);
       });
@@ -295,11 +302,11 @@ are skipped by both methods — their state stays frozen.
     return html`
       <div data-story="expand-collapse-all" class="civ-flex civ-flex-col civ-gap-3">
         <div>
-          <button
-            type="button"
-            data-toggle-btn
-            class="civ-text-btn civ-text-btn--chip"
-          >Expand all</button>
+          <civ-toggle-button
+            label="Expand all"
+            pressed-label="Collapse all"
+            icon-start="chevron-down"
+          ></civ-toggle-button>
         </div>
         <civ-accordion>
           <civ-accordion-item label="Eligibility requirements">

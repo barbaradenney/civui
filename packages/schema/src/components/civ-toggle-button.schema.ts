@@ -32,6 +32,12 @@ const schema: ComponentSchema = {
       default: 'chip',
       values: ['chip', 'inline'],
     },
+    iconStart: {
+      type: 'string',
+      description: 'Optional leading icon name from the CivUI icon library (e.g. `chevron-down` for an accordion expand-all toggle, `visibility` for a password reveal). Rendered with `aria-hidden="true"` so the label remains the accessible name',
+      default: '',
+      attribute: 'icon-start',
+    },
   },
 
   events: {

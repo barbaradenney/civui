@@ -36,6 +36,7 @@ export type ToggleButtonVariant = 'chip' | 'inline';
  * @prop {string} pressedLabel - Pressed label ("Hide"). Required — the swap label gives the toggle its meaning.
  * @prop {boolean} pressed - Reflected boolean state. Two-way bindable.
  * @prop {ToggleButtonVariant} variant - Picks the text-btn modifier. `chip` (default) is the prominent gray pill — the common case (helper rows, standalone toggles, password reveal). `inline` is the transparent text-link style for surfaces where the toggle should read as quiet.
+ * @prop {string} iconStart - Optional leading icon name (e.g. `chevron-down` for an accordion expand-all toggle, `visibility` for a password reveal). Rendered with `aria-hidden="true"` so the label remains the accessible name.
  * @prop {boolean} disabled - Standard disabled state.
  *
  * @fires civ-toggle - On click. detail: { pressed: boolean } — the NEW state after the toggle.
@@ -59,6 +60,7 @@ export class CivToggleButton extends CivBaseElement {
   @property({ type: String, attribute: 'pressed-label' }) pressedLabel = '';
   @property({ type: Boolean, reflect: true }) pressed = false;
   @property({ type: String }) variant: ToggleButtonVariant = 'chip';
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   private _onClick(): void {
@@ -79,7 +81,7 @@ export class CivToggleButton extends CivBaseElement {
         aria-pressed="${this.pressed ? 'true' : 'false'}"
         ?disabled="${this.disabled}"
         @click="${this._onClick}"
-      >${visibleLabel}</button>
+      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" aria-hidden="true"></civ-icon>` : null}${visibleLabel}</button>
     `;
   }
 }

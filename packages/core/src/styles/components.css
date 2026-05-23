@@ -4855,7 +4855,7 @@
 
   .civ-divider {
     @apply civ-border-0 civ-my-4;
-    border-top: 1px solid var(--civ-color-base-lighter);
+    border-top: 1px solid var(--civ-color-base-light);
   }
 
   .civ-divider--sm {
@@ -4941,14 +4941,15 @@
    *   button family).
    *
    * Border color: `--civ-color-base-light` (medium-light gray)
-   * across all variants. Matches `civ-card` (also bumped to
-   * `base-light` so a card containing an accordion reads as
-   * one integrated chrome) and the floating-surface family
-   * (combobox listbox, drawer, action-sheet, popover) which
-   * already used this color. `--civ-color-base-lighter` (softer)
-   * stays reserved for the subtle in-row dividers in `civ-list
-   * --dividers` and file-item lists, where the divider is a
-   * scanning hint rather than a structural frame.
+   * across all variants. Matches `civ-card`, `civ-divider`, and
+   * the floating-surface family (combobox listbox, drawer,
+   * action-sheet, popover) which already used this color —
+   * a card containing an accordion reads as one integrated
+   * chrome, and standalone `<civ-divider>` rules between
+   * sections share the same weight. `--civ-color-base-lighter`
+   * (softer) stays reserved for the subtle in-row dividers in
+   * `civ-list--dividers` and file-item lists, where the divider
+   * is a scanning hint rather than a structural frame.
    */
 
   /* ── Tertiary variant (default) ───────────────────────────── */

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-side-nav.js';
 import './civ-side-nav-item.js';
+import './civ-side-nav-heading.js';
 
 const meta: Meta = {
   title: 'Navigation/Side Nav',
@@ -111,6 +112,34 @@ export const CollapsedByDefault: Story = {
           <civ-side-nav-item href="/tokens/color" label="Color"></civ-side-nav-item>
           <civ-side-nav-item href="/tokens/spacing" label="Spacing"></civ-side-nav-item>
         </civ-side-nav-item>
+      </civ-side-nav>
+    </div>
+  `,
+};
+
+export const WithSectionHeadings: Story = {
+  name: 'With section headings',
+  render: () => html`
+    <p class="civ-italic civ-mb-3">
+      Use <code>&lt;civ-side-nav-heading&gt;</code> to label groups of
+      items by category — small uppercase labels modeled on the VA
+      Design System's section headers. Non-interactive; pure visual /
+      semantic grouping.
+    </p>
+    <div style="${wrapStyle}">
+      <civ-side-nav label="Documentation">
+        <civ-side-nav-heading label="Getting started"></civ-side-nav-heading>
+        <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
+        <civ-side-nav-item href="/install" label="Installation"></civ-side-nav-item>
+
+        <civ-side-nav-heading label="Components"></civ-side-nav-heading>
+        <civ-side-nav-item href="/button" label="Button"></civ-side-nav-item>
+        <civ-side-nav-item href="/input" label="Text input" current></civ-side-nav-item>
+        <civ-side-nav-item href="/select" label="Select"></civ-side-nav-item>
+
+        <civ-side-nav-heading label="Foundations"></civ-side-nav-heading>
+        <civ-side-nav-item href="/color" label="Color"></civ-side-nav-item>
+        <civ-side-nav-item href="/spacing" label="Spacing"></civ-side-nav-item>
       </civ-side-nav>
     </div>
   `,

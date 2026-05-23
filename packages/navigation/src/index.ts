@@ -10,6 +10,7 @@ import './tab-nav/civ-tab-nav.js';
 import './tab-nav/civ-tab-nav-item.js';
 import './side-nav/civ-side-nav.js';
 import './side-nav/civ-side-nav-item.js';
+import './side-nav/civ-side-nav-heading.js';
 import './on-this-page/civ-on-this-page.js';
 import './on-this-page/civ-on-this-page-item.js';
 import './back-to-top/civ-back-to-top.js';
@@ -27,7 +28,7 @@ export { CivTabs, CivTab, CivTabPanel } from './tabs/index.js';
 export { CivTabNav, CivTabNavItem } from './tab-nav/index.js';
 
 // Side Nav
-export { CivSideNav, CivSideNavItem } from './side-nav/index.js';
+export { CivSideNav, CivSideNavItem, CivSideNavHeading } from './side-nav/index.js';
 
 // On This Page
 export { CivOnThisPage, CivOnThisPageItem } from './on-this-page/index.js';

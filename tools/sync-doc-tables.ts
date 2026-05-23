@@ -181,6 +181,7 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-tab-panel': 'navigation/tabs.mdx',
   'civ-tab-nav-item': 'navigation/tab-nav.mdx',
   'civ-side-nav-item': 'navigation/side-nav.mdx',
+  'civ-side-nav-heading': 'navigation/side-nav.mdx',
   'civ-on-this-page-item': 'navigation/on-this-page.mdx',
   // Time picker is documented on the shorter "Time" page filename.
   'civ-time-picker': 'inputs/time.mdx',

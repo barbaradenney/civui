@@ -1,0 +1,7 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible header text. Required. |
+| `heading-level` | `number` | — | Optional integer 1–6. When set, wraps the label in an `<h1>`–`<h6>` for screen-reader rotor navigation. Visual treatment stays the same across levels — heading-level only affects assistive-tech navigation, not the rendered font size or weight. Values outside 1–6 trigger a dev-mode warning and fall back to a plain `<span>`. Web-only; native platforms expose section semantics through their own header conventions. |

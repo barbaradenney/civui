@@ -103,6 +103,7 @@
   civ-number,
   civ-on-this-page,
   civ-side-nav,
+  civ-side-nav-heading,
   civ-page-header,
   civ-pagination,
   civ-partnership-history,
@@ -4040,6 +4041,38 @@
   .civ-side-nav__trigger-label {
     flex: 1;
     min-width: 0;
+  }
+
+  /*
+   * Section heading — small uppercase muted label that groups the
+   * `<civ-side-nav-item>` rows that follow it. Modeled on the VA
+   * Design System's side-nav section headers.
+   *
+   * Spacing: a wider top margin separates the heading from the
+   * group above (so the heading visually owns the items below);
+   * the first heading in a side-nav has zero top margin so it sits
+   * flush. Bottom margin is small so the heading hugs its first
+   * child item.
+   *
+   * `civ-text-base-dark` is one of the muted-text classes the
+   * common-traps rule discourages, but section headings are a
+   * documented exception — they're meta-info that intentionally
+   * recedes so navigable items dominate.
+   */
+  .civ-side-nav__heading {
+    @apply civ-block civ-text-xs civ-font-bold civ-m-0;
+    padding: 0.5rem 0.75rem 0.25rem;
+    margin-top: 1rem;
+    color: var(--civ-color-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  /* The first heading in any list (top-level or sublist) sits
+     flush — no top margin needed when there's nothing above to
+     separate from. */
+  .civ-side-nav__list > civ-side-nav-heading:first-child .civ-side-nav__heading,
+  .civ-side-nav__sublist > civ-side-nav-heading:first-child .civ-side-nav__heading {
+    margin-top: 0;
   }
 
   /* ── On This Page (in-page anchor nav / table of contents) ─ */

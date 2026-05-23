@@ -2,8 +2,10 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-side-nav.js';
 import './civ-side-nav-item.js';
+import './civ-side-nav-heading.js';
 import type { CivSideNav } from './civ-side-nav.js';
 import type { CivSideNavItem } from './civ-side-nav-item.js';
+import type { CivSideNavHeading } from './civ-side-nav-heading.js';
 
 afterEach(cleanupFixtures);
 
@@ -230,5 +232,77 @@ describe('civ-side-nav-item — disclosure (parent with children)', () => {
     // Parent renders as button, not link.
     expect(parent.querySelector(':scope > a.civ-side-nav__link')).toBeNull();
     expect(parent.querySelector(':scope > button.civ-side-nav__trigger')).not.toBeNull();
+  });
+});
+
+describe('civ-side-nav-heading', () => {
+  it('renders the label as a <span> by default', async () => {
+    const el = await fixture<CivSideNav>(`
+      <civ-side-nav>
+        <civ-side-nav-heading label="Getting started"></civ-side-nav-heading>
+        <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
+      </civ-side-nav>
+    `);
+    const heading = el.querySelector('civ-side-nav-heading') as CivSideNavHeading;
+    const span = heading.querySelector('span.civ-side-nav__heading')!;
+    expect(span).not.toBeNull();
+    expect(span.textContent).toBe('Getting started');
+    expect(heading.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
+  });
+
+  it('sets role="presentation" on the host so AT skips it as a list item', async () => {
+    const el = await fixture<CivSideNav>(`
+      <civ-side-nav>
+        <civ-side-nav-heading label="Section"></civ-side-nav-heading>
+      </civ-side-nav>
+    `);
+    const heading = el.querySelector('civ-side-nav-heading') as CivSideNavHeading;
+    expect(heading.getAttribute('role')).toBe('presentation');
+  });
+
+  it('wraps the label in an <h3> when heading-level=3', async () => {
+    const el = await fixture<CivSideNav>(`
+      <civ-side-nav>
+        <civ-side-nav-heading label="Section" heading-level="3"></civ-side-nav-heading>
+      </civ-side-nav>
+    `);
+    const heading = el.querySelector('civ-side-nav-heading') as CivSideNavHeading;
+    const h3 = heading.querySelector('h3.civ-side-nav__heading')!;
+    expect(h3).not.toBeNull();
+    expect(h3.textContent).toBe('Section');
+    expect(heading.querySelector('span.civ-side-nav__heading')).toBeNull();
+  });
+
+  it('falls back to <span> and warns when heading-level is out of range', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await fixture<CivSideNav>(`
+      <civ-side-nav>
+        <civ-side-nav-heading label="Section" heading-level="9"></civ-side-nav-heading>
+      </civ-side-nav>
+    `);
+    const heading = el.querySelector('civ-side-nav-heading') as CivSideNavHeading;
+    expect(heading.querySelector('span.civ-side-nav__heading')).not.toBeNull();
+    expect(heading.querySelector('h1, h2, h3, h4, h5, h6')).toBeNull();
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it('can be interleaved with items inside a top-level side-nav', async () => {
+    const el = await fixture<CivSideNav>(`
+      <civ-side-nav>
+        <civ-side-nav-heading label="Getting started"></civ-side-nav-heading>
+        <civ-side-nav-item href="/intro" label="Introduction"></civ-side-nav-item>
+        <civ-side-nav-heading label="Components"></civ-side-nav-heading>
+        <civ-side-nav-item href="/button" label="Button"></civ-side-nav-item>
+      </civ-side-nav>
+    `);
+    const list = el.querySelector('ul.civ-side-nav__list')!;
+    const children = Array.from(list.children).map((c) => c.tagName.toLowerCase());
+    expect(children).toEqual([
+      'civ-side-nav-heading',
+      'civ-side-nav-item',
+      'civ-side-nav-heading',
+      'civ-side-nav-item',
+    ]);
   });
 });

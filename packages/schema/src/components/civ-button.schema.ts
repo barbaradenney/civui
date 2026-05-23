@@ -54,8 +54,8 @@ const schema: ComponentSchema = {
     },
     loadingLabel: {
       type: 'string',
-      description: 'Accessible name announced via the spinner\'s polite live region while `loading` is true. Use an action-specific present-participle verb ("Saving…", "Submitting your application…"). Defaults to "Loading…"',
-      default: 'Loading…',
+      description: 'Accessible name applied as `aria-label` on the host while `loading` is true, and announced once via `@civui/core`\'s shared `announce()` queue on the loading transition. Empty default falls back to the locale\'s `buttonLoadingLabel` ("Loading…" in English). Pass an action-specific present-participle verb ("Saving…", "Submitting your application…") for clarity',
+      default: '',
       attribute: 'loading-label',
     },
     href: {

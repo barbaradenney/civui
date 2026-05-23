@@ -231,6 +231,12 @@ describe('CivButton loading state', () => {
     expect(el.querySelector('civ-icon[name="check"]')).toBeNull();
   });
 
+  it('the inner spinner is decorative (no role, no aria-label), letting the button\'s aria-busy carry the AT signal', async () => {
+    const el = await fixture('<civ-button loading label="Save"></civ-button>');
+    const spinner = el.querySelector('civ-spinner') as HTMLElement;
+    expect(spinner.hasAttribute('decorative')).toBe(true);
+  });
+
   it('disables the underlying button while loading', async () => {
     const el = await fixture('<civ-button loading label="Save"></civ-button>');
     const btn = el.querySelector('button') as HTMLButtonElement;
@@ -249,12 +255,28 @@ describe('CivButton loading state', () => {
     expect(btn.hasAttribute('aria-busy')).toBe(false);
   });
 
-  it('passes loadingLabel through to the spinner', async () => {
+  it('swaps the accessible name to loadingLabel while loading', async () => {
     const el = await fixture(
       '<civ-button loading loading-label="Saving your application…" label="Save"></civ-button>',
     );
-    const spinner = el.querySelector('civ-spinner') as HTMLElement;
-    expect(spinner.getAttribute('label')).toBe('Saving your application…');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.getAttribute('aria-label')).toBe('Saving your application…');
+  });
+
+  it('removes aria-busy and aria-label when loading flips back to false', async () => {
+    const el = await fixture<any>(
+      '<civ-button loading loading-label="Saving…" label="Save"></civ-button>',
+    );
+    let btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.getAttribute('aria-busy')).toBe('true');
+    expect(btn.getAttribute('aria-label')).toBe('Saving…');
+
+    el.loading = false;
+    await elementUpdated(el);
+    btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.hasAttribute('aria-busy')).toBe(false);
+    expect(btn.hasAttribute('aria-label')).toBe(false);
+    expect(btn.disabled).toBe(false);
   });
 
   it('still renders the label text while loading', async () => {
@@ -263,11 +285,28 @@ describe('CivButton loading state', () => {
     expect(btn.textContent).toContain('Save');
   });
 
-  it('ignores loading in link mode (href set)', async () => {
+  it('ignores loading in link mode (href set) and dev-warns', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const el = await fixture(
       '<civ-button loading href="/next" label="Continue"></civ-button>',
     );
     expect(el.querySelector('a')).not.toBeNull();
     expect(el.querySelector('civ-spinner')).toBeNull();
+    const loadingWarnings = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /loading.*link|link.*loading/i.test(m),
+    );
+    expect(loadingWarnings.length).toBeGreaterThan(0);
+    warnSpy.mockRestore();
+  });
+
+  it('does not announce or set aria-busy when loading flips false then true again without re-render', async () => {
+    // Smoke test for the _wasLoading change-detection guard.
+    const el = await fixture<any>('<civ-button label="Save"></civ-button>');
+    el.loading = true;
+    await elementUpdated(el);
+    el.loading = false;
+    await elementUpdated(el);
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.hasAttribute('aria-busy')).toBe(false);
   });
 });

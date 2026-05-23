@@ -78,19 +78,34 @@ fun CivButton(
     val whiteColor = if (isDark) CivTokens.DarkColors.White.default_ else CivTokens.Colors.White.default_
     val errorColor = if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
 
+    // `loading` implies disabled so repeated taps don't fire concurrent
+    // work. The effectiveDisabled cascade applies across all variants
+    // below so each Material button respects both flags.
+    val effectiveDisabled = disabled || loading
+
     val buttonModifier = modifier
-        .alpha(if (disabled) 0.5f else 1f)
+        .alpha(if (effectiveDisabled) 0.5f else 1f)
         .semantics {
-            contentDescription = label
+            // TalkBack hears the loading label instead of the static
+            // button label while loading is in flight, matching the
+            // web's aria-label swap.
+            contentDescription = if (loading) loadingLabel else label
             role = if (href.isNotEmpty()) Role.Button else Role.Button
         }
 
     val handleClick: () -> Unit = {
-        onAnalytics?.invoke("click", mapOf("label" to label, "variant" to variant))
-        onClick?.invoke()
+        // Guard against tap-while-loading at the handler level — the
+        // enabled=!effectiveDisabled cascade below already blocks the
+        // tap at the UI layer; this is belt-and-suspenders for any
+        // path that calls handleClick programmatically.
+        if (!loading) {
+            onAnalytics?.invoke("click", mapOf("label" to label, "variant" to variant))
+            onClick?.invoke()
+        }
     }
 
-    // Link mode
+    // Link mode — `loading` is ignored on links (matches the web's
+    // `_isLoading = loading && !_isLink` rule). Use only `disabled`.
     if (href.isNotEmpty()) {
         val uriHandler = LocalUriHandler.current
         TextButton(
@@ -121,7 +136,7 @@ fun CivButton(
         "secondary" -> {
             OutlinedButton(
                 onClick = handleClick,
-                enabled = !disabled,
+                enabled = !effectiveDisabled,
                 border = BorderStroke(CivTokens.Border.Width._2, primaryColor),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = primaryColor,
@@ -140,7 +155,7 @@ fun CivButton(
         "tertiary" -> {
             TextButton(
                 onClick = handleClick,
-                enabled = !disabled,
+                enabled = !effectiveDisabled,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = primaryColor,
                 ),
@@ -158,7 +173,7 @@ fun CivButton(
         "danger" -> {
             Button(
                 onClick = handleClick,
-                enabled = !disabled,
+                enabled = !effectiveDisabled,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = errorColor,
                     contentColor = whiteColor,
@@ -178,7 +193,7 @@ fun CivButton(
             // "primary" — default filled button
             Button(
                 onClick = handleClick,
-                enabled = !disabled,
+                enabled = !effectiveDisabled,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = primaryColor,
                     contentColor = whiteColor,

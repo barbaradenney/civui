@@ -107,7 +107,14 @@ public struct CivButton: View {
     public var body: some View {
         Button(action: handleTap) {
             HStack(spacing: CivTokens.Spacing._1) {
-                if !iconStart.isEmpty {
+                // When loading, replace the leading icon with a
+                // ProgressView spinner. The label stays visible; the
+                // accessibility name (below) swaps to `loadingLabel`.
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(0.7)
+                } else if !iconStart.isEmpty {
                     CivIcon(name: iconStart, size: "sm")
                 }
                 Text(label)
@@ -124,9 +131,12 @@ public struct CivButton: View {
                 .cornerRadius(CivTokens.Border.Radius.default_)
                 .overlay(borderOverlay)
         }
-        .disabled(isDisabled)
+        // Loading implies disabled so taps don't fire concurrent work.
+        .disabled(isDisabled || isLoading)
         .opacity(isDisabled ? 0.5 : 1.0)
-        .accessibilityLabel(label)
+        // VoiceOver hears the loading label instead of the static
+        // button label while loading is in flight.
+        .accessibilityLabel(isLoading ? Text(loadingLabel) : Text(label))
         .accessibilityAddTraits(href != nil ? .isLink : .isButton)
         .accessibilityRemoveTraits(href != nil ? .isButton : .isLink)
     }

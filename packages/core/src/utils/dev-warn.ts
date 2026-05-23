@@ -82,3 +82,12 @@ export function devWarn(tag: string, message: string, dedupeKey?: string): void 
   }
   console.warn(`[${tag}] ${message}`);
 }
+
+/**
+ * Reset the devWarn dedupe set. Intended for tests that need to
+ * re-trigger a previously-fired warning in a later test case;
+ * `beforeEach(() => resetDevWarnDedupe())` keeps tests isolated.
+ */
+export function resetDevWarnDedupe(): void {
+  _warned.clear();
+}

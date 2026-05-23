@@ -4,6 +4,7 @@
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Diameter. `sm` = 1rem, `md` = 1.5rem (default), `lg` = 2rem. Color inherits from `currentColor` so the spinner sits naturally on top of any container |
-| `label` | `string` | `'Loading…'` | Accessible name announced via the host's `aria-live="polite"` region. Use a present-participle verb specific to the action ("Saving your application…", not generic "Loading") |
+| `label` | `string` | `''` | Accessible name applied as `aria-label` on the host and announced once via @civui/core's `announce()` queue when the spinner becomes visible. Empty default — the locale's `spinnerDefaultLabel` ("Loading…" in English) is used when unset. Pass an action-specific present-participle verb ("Saving your application…") for clarity |
 | `delay` | `number` | `200` | Milliseconds to wait before rendering anything. Fast responses (sub-200ms) never paint a spinner at all, avoiding the flash-then-disappear flicker |
 | `min-duration` | `number` | `400` | Minimum on-screen time once the spinner has appeared. Once visible, the spinner stays for at least this long so the user perceives a state change rather than a flicker. Consumers awaiting `waitForMinDuration()` honor this before unmounting |
+| `decorative` | `boolean` | `false` | Suppress all AT semantics — no `role`, no `aria-label`, no announcement. Use when nesting the spinner inside a parent that already signals busy state (e.g. `<civ-button loading>` which sets `aria-busy="true"` and announces `loadingLabel` itself). Avoids the NVDA/JAWS aria-busy-buffering trap that would swallow the spinner's own live region |

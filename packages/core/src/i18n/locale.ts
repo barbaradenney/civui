@@ -24,6 +24,10 @@ export interface CivLocaleStrings {
   comboboxTypeToSearch: string; // "Type at least {count} characters"
   comboboxLoadingAnnouncement: string; // SR announcement when fetch starts
 
+  // Loading primitives
+  spinnerDefaultLabel: string; // default spinner label, announced when shown
+  buttonLoadingLabel: string; // default civ-button[loading] label
+
   // Form error summary
   formErrorSingular: string; // "There is 1 error in this form"
   formErrorPlural: string; // "There are {count} errors in this form"
@@ -776,6 +780,9 @@ const defaultStrings: CivLocaleStrings = {
   comboboxLoadError: 'Could not load results. Try again.',
   comboboxTypeToSearch: 'Type at least {count} characters to search',
   comboboxLoadingAnnouncement: 'Loading results',
+
+  spinnerDefaultLabel: 'Loading…',
+  buttonLoadingLabel: 'Loading…',
 
   formErrorSingular: 'There is 1 error in this form',
   formErrorPlural: 'There are {count} errors in this form',

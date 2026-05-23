@@ -69,6 +69,17 @@ const config: Config = {
         black: {
           DEFAULT: 'var(--civ-color-black-DEFAULT)',
         },
+        // Semantic surface tokens — neutral card / panel / input
+        // backgrounds (and their hover / active states). Source of
+        // truth is the `--civ-color-surface*` CSS vars in civ.css;
+        // changing those single lines re-themes every surface
+        // across CivUI. Tailwind aliases: `civ-bg-surface`,
+        // `civ-bg-surface-hover`, `civ-bg-surface-active`.
+        surface: {
+          DEFAULT: 'var(--civ-color-surface)',
+          hover: 'var(--civ-color-surface-hover)',
+          active: 'var(--civ-color-surface-active)',
+        },
         accent: {
           cool: {
             lightest: 'var(--civ-color-accent-cool-lightest)',
@@ -140,6 +151,15 @@ const config: Config = {
         'md': 'var(--civ-border-radius-md)',
         'lg': 'var(--civ-border-radius-lg)',
         'full': 'var(--civ-border-radius-full)',
+      },
+      // Semantic default border color — Tailwind's `civ-border`
+      // utility picks this up as its border-color when no
+      // `civ-border-{family}-{shade}` modifier is supplied. Single
+      // source of truth lives in `--civ-color-border` (defined in
+      // civ.css); change that one variable to update every
+      // chrome line CivUI-wide.
+      borderColor: {
+        DEFAULT: 'var(--civ-color-border)',
       },
     },
   },

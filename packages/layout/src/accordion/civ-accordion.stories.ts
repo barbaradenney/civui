@@ -225,32 +225,81 @@ export const ExpandCollapseAll: Story = {
         story: `
 \`<civ-accordion>\` exposes \`expandAll()\` and \`collapseAll()\`
 methods for "Show all" / "Hide all" affordances on FAQ pages,
-settings panels, and similar dense lists. In \`single\` mode,
-\`expandAll()\` opens only the first non-disabled item (the
-invariant forbids more). Disabled items are skipped by both
-methods — their state stays frozen.
+settings panels, and similar dense lists.
+
+The recommended UX is a **single toggle button** whose label
+swaps between "Expand all" and "Collapse all" based on the
+current accordion state: when every item is open, the button
+reads "Collapse all"; otherwise it reads "Expand all". A single
+control reduces visual noise and aligns with how users
+intuitively read the affordance — the label tells them what
+action the button will take next.
+
+In \`single\` mode, \`expandAll()\` opens only the first
+non-disabled item (the invariant forbids more). Disabled items
+are skipped by both methods — their state stays frozen.
         `,
       },
     },
   },
   render: () => {
-    function getAccordion(e: Event): CivAccordion {
-      const root = (e.currentTarget as HTMLElement).closest('[data-story]')!;
-      return root.querySelector<CivAccordion>('civ-accordion')!;
-    }
+    // Story-scoped setup: wires the toggle button to the accordion
+    // after the DOM mounts. Uses `setTimeout(..., 0)` (the task
+    // queue, not the microtask queue) so Lit's update cycle and
+    // `LightDomSlotMixin`'s item relocation both complete before
+    // we query for items — a `queueMicrotask` here would run
+    // BEFORE the mixin re-attaches the items to the inner
+    // container, and `querySelectorAll('civ-accordion-item')`
+    // would silently return 0 elements. The one-time `initialized`
+    // flag prevents re-renders (e.g. from Storybook controls)
+    // from stacking duplicate listeners.
+    setTimeout(() => {
+      const root = document.querySelector('[data-story="expand-collapse-all"]');
+      if (!(root instanceof HTMLElement)) return;
+      if (root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+
+      const accordion = root.querySelector<CivAccordion>('civ-accordion');
+      const btn = root.querySelector<HTMLButtonElement>('[data-toggle-btn]');
+      if (!accordion || !btn) return;
+
+      const refresh = (): void => {
+        const items = Array.from(
+          accordion.querySelectorAll<HTMLElement & { open: boolean }>('civ-accordion-item'),
+        );
+        const allOpen = items.length > 0 && items.every((i) => i.open);
+        btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+      };
+
+      btn.addEventListener('click', () => {
+        const items = Array.from(
+          accordion.querySelectorAll<HTMLElement & { open: boolean }>('civ-accordion-item'),
+        );
+        if (items.length > 0 && items.every((i) => i.open)) accordion.collapseAll();
+        else accordion.expandAll();
+        // Defer the label refresh until after the accordion's
+        // updated() lifecycle runs, so we read the post-toggle state.
+        requestAnimationFrame(refresh);
+      });
+
+      // civ-toggle is non-bubbling per the component's design
+      // (matches civ-disclosure precedent so events don't leak into
+      // form-level listeners), so we attach to each item directly.
+      accordion.querySelectorAll('civ-accordion-item').forEach((item) => {
+        item.addEventListener('civ-toggle', refresh);
+      });
+
+      refresh();
+    }, 0);
+
     return html`
-      <div data-story class="civ-flex civ-flex-col civ-gap-3">
-        <div class="civ-flex civ-gap-2">
+      <div data-story="expand-collapse-all" class="civ-flex civ-flex-col civ-gap-3">
+        <div>
           <button
             type="button"
+            data-toggle-btn
             class="civ-text-btn civ-text-btn--chip"
-            @click="${(e: Event) => getAccordion(e).expandAll()}"
           >Expand all</button>
-          <button
-            type="button"
-            class="civ-text-btn civ-text-btn--chip"
-            @click="${(e: Event) => getAccordion(e).collapseAll()}"
-          >Collapse all</button>
         </div>
         <civ-accordion>
           <civ-accordion-item label="Eligibility requirements">

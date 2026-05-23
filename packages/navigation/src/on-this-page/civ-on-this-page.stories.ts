@@ -39,7 +39,7 @@ export const AutoDetectFromHeadings: Story = {
       <article style="max-width: 640px;">
         <h1 class="civ-mt-0">Component documentation</h1>
         <h2 id="installation">Installation</h2>
-        <p>Install via <code>npm install @civui/actions</code>.</p>
+        <p>Install via <code>npm install @civui/navigation</code>.</p>
         <h2 id="usage">Usage</h2>
         <p>Import the component and use it in your template.</p>
         <h3 id="usage-basic">Basic example</h3>

@@ -297,25 +297,25 @@
       "story": "ChipPreview",
       "category": "Navigation/Back To Top",
       "html": "<p class=\"civ-italic civ-mb-3\">\n      <code>threshold=\"-1\"</code> positions the sentinel above the viewport\n      so the observer always reports it out-of-view — the chip flips\n      visible right away.\n    </p>\n    <div style=\"height: 200px;\"></div>\n    <civ-back-to-top label=\"Back to top\" threshold=\"-1\"></civ-back-to-top>",
-      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+      "source": "packages/navigation/src/back-to-top/civ-back-to-top.stories.ts"
     },
     {
       "story": "CustomLabel",
       "category": "Navigation/Back To Top",
       "html": "<h1 class=\"civ-mt-0\">Long page</h1>\n    ${longContent}\n    <civ-back-to-top label=\"Return to top\"></civ-back-to-top>",
-      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+      "source": "packages/navigation/src/back-to-top/civ-back-to-top.stories.ts"
     },
     {
       "story": "CustomThreshold",
       "category": "Navigation/Back To Top",
       "html": "<h1 class=\"civ-mt-0\">Trigger after 100 px</h1>\n    <p class=\"civ-italic\">\n      Lower <code>threshold</code> for shorter pages where 400 px would\n      mean the button never appears.\n    </p>\n    ${longContent}\n    <civ-back-to-top threshold=\"100\"></civ-back-to-top>",
-      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+      "source": "packages/navigation/src/back-to-top/civ-back-to-top.stories.ts"
     },
     {
       "story": "Default",
       "category": "Navigation/Back To Top",
       "html": "<h1 class=\"civ-mt-0\">Long page</h1>\n    ${longContent}\n    <civ-back-to-top></civ-back-to-top>",
-      "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
+      "source": "packages/navigation/src/back-to-top/civ-back-to-top.stories.ts"
     }
   ],
   "civ-badge": [
@@ -376,25 +376,25 @@
       "story": "CustomLandmarkName",
       "category": "Navigation/Breadcrumb",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      Use the <code>label</code> prop to name the landmark when a page has more than one breadcrumb trail.\n    </p>\n    <civ-breadcrumb label=\"Section path\">\n      <civ-breadcrumb-item href=\"/forms\" label=\"Forms\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"VA Form 10-10EZ\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
-      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+      "source": "packages/navigation/src/breadcrumb/civ-breadcrumb.stories.ts"
     },
     {
       "story": "Default",
       "category": "Navigation/Breadcrumb",
       "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits\" label=\"Benefits\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Healthcare\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
-      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+      "source": "packages/navigation/src/breadcrumb/civ-breadcrumb.stories.ts"
     },
     {
       "story": "FourLevels",
       "category": "Navigation/Breadcrumb",
       "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits\" label=\"Benefits\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item href=\"/benefits/healthcare\" label=\"Healthcare\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Apply\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
-      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+      "source": "packages/navigation/src/breadcrumb/civ-breadcrumb.stories.ts"
     },
     {
       "story": "TwoLevels",
       "category": "Navigation/Breadcrumb",
       "html": "<civ-breadcrumb>\n      <civ-breadcrumb-item href=\"/\" label=\"Home\"></civ-breadcrumb-item>\n      <civ-breadcrumb-item label=\"Benefits\" current></civ-breadcrumb-item>\n    </civ-breadcrumb>",
-      "source": "packages/actions/src/breadcrumb/civ-breadcrumb.stories.ts"
+      "source": "packages/navigation/src/breadcrumb/civ-breadcrumb.stories.ts"
     }
   ],
   "civ-bulk-actions": [
@@ -3652,31 +3652,31 @@
       "story": "Default",
       "category": "Navigation/Nav",
       "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/forms\" label=\"Forms\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
-      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
       "story": "FooterNavigation",
       "category": "Navigation/Nav",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      Multiple navs on the same page each need a distinct <code>label</code>.\n    </p>\n    <civ-nav label=\"Footer navigation\">\n      <civ-nav-item href=\"/privacy\" label=\"Privacy\"></civ-nav-item>\n      <civ-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-nav-item>\n      <civ-nav-item href=\"/foia\" label=\"FOIA\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
-      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
       "story": "MobileStacking",
       "category": "Navigation/Nav",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      At ≤480px the items stack vertically. Resize the viewport to see it.\n    </p>\n    <div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-nav label=\"Primary navigation\">\n        <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n        <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n        <civ-nav-item href=\"/forms\" label=\"Forms\"></civ-nav-item>\n        <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n      </civ-nav>\n    </div>",
-      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
       "story": "NoActivePage",
       "category": "Navigation/Nav",
       "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\"></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
-      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
       "story": "WithDisabled",
       "category": "Navigation/Nav",
       "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/admin\" label=\"Admin\" disabled></civ-nav-item>\n    </civ-nav>",
-      "source": "packages/actions/src/nav/civ-nav.stories.ts"
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     }
   ],
   "civ-number": [
@@ -3773,26 +3773,26 @@
     {
       "story": "AutoDetectFromHeadings",
       "category": "Navigation/On This Page",
-      "html": "<p class=\"civ-italic civ-mb-3\">\n      Auto-detect mode — leave the default slot empty and the rail scans\n      <code>h2[id], h3[id]</code> inside <code>main, article, body</code>\n      and builds the list itself.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 1fr 240px; gap: 2rem; align-items: start;\">\n      <article style=\"max-width: 640px;\">\n        <h1 class=\"civ-mt-0\">Component documentation</h1>\n        <h2 id=\"installation\">Installation</h2>\n        <p>Install via <code>npm install @civui/actions</code>.</p>\n        <h2 id=\"usage\">Usage</h2>\n        <p>Import the component and use it in your template.</p>\n        <h3 id=\"usage-basic\">Basic example</h3>\n        <p>A bare-minimum example.</p>\n        <h3 id=\"usage-advanced\">Advanced example</h3>\n        <p>Combining with other components.</p>\n        <h2 id=\"api\">API</h2>\n        <p>Reference documentation for props and events.</p>\n      </article>\n      <div style=\"${railStyle}\">\n        <civ-on-this-page label=\"On this page\" scope-selector=\"article\"></civ-on-this-page>\n      </div>\n    </div>",
-      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Auto-detect mode — leave the default slot empty and the rail scans\n      <code>h2[id], h3[id]</code> inside <code>main, article, body</code>\n      and builds the list itself.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 1fr 240px; gap: 2rem; align-items: start;\">\n      <article style=\"max-width: 640px;\">\n        <h1 class=\"civ-mt-0\">Component documentation</h1>\n        <h2 id=\"installation\">Installation</h2>\n        <p>Install via <code>npm install @civui/navigation</code>.</p>\n        <h2 id=\"usage\">Usage</h2>\n        <p>Import the component and use it in your template.</p>\n        <h3 id=\"usage-basic\">Basic example</h3>\n        <p>A bare-minimum example.</p>\n        <h3 id=\"usage-advanced\">Advanced example</h3>\n        <p>Combining with other components.</p>\n        <h2 id=\"api\">API</h2>\n        <p>Reference documentation for props and events.</p>\n      </article>\n      <div style=\"${railStyle}\">\n        <civ-on-this-page label=\"On this page\" scope-selector=\"article\"></civ-on-this-page>\n      </div>\n    </div>",
+      "source": "packages/navigation/src/on-this-page/civ-on-this-page.stories.ts"
     },
     {
       "story": "Default",
       "category": "Navigation/On This Page",
       "html": "<div style=\"${railStyle}\">\n      <civ-on-this-page label=\"On this page\">\n        <civ-on-this-page-item href=\"#installation\" label=\"Installation\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#usage\" label=\"Usage\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#props\" label=\"Props\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#events\" label=\"Events\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#accessibility\" label=\"Accessibility\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
-      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+      "source": "packages/navigation/src/on-this-page/civ-on-this-page.stories.ts"
     },
     {
       "story": "ManualMode",
       "category": "Navigation/On This Page",
       "html": "<p class=\"civ-italic civ-mb-3\">\n      Manual mode — slot explicit items when you want to control labels\n      or skip certain headings.\n    </p>\n    <div style=\"${railStyle}\">\n      <civ-on-this-page label=\"Sections\">\n        <civ-on-this-page-item href=\"#overview\" label=\"Overview\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#examples\" label=\"Code examples\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#related\" label=\"Related components\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
-      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+      "source": "packages/navigation/src/on-this-page/civ-on-this-page.stories.ts"
     },
     {
       "story": "NoHeadingLabel",
       "category": "Navigation/On This Page",
       "html": "<p class=\"civ-italic civ-mb-3\">\n      Skip the visible heading by passing <code>label=\"\"</code> — the\n      rail still gets an <code>aria-label</code> for the landmark, but\n      no on-page text.\n    </p>\n    <div style=\"${railStyle}\">\n      <civ-on-this-page label=\"\">\n        <civ-on-this-page-item href=\"#a\" label=\"Step 1\"></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#b\" label=\"Step 2\" active></civ-on-this-page-item>\n        <civ-on-this-page-item href=\"#c\" label=\"Step 3\"></civ-on-this-page-item>\n      </civ-on-this-page>\n    </div>",
-      "source": "packages/actions/src/on-this-page/civ-on-this-page.stories.ts"
+      "source": "packages/navigation/src/on-this-page/civ-on-this-page.stories.ts"
     }
   ],
   "civ-page-header": [
@@ -5132,28 +5132,46 @@
   ],
   "civ-side-nav": [
     {
+      "story": "CollapsedByDefault",
+      "name": "All sections collapsed",
+      "category": "Navigation/Side Nav",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Without a <code>current</code> descendant or an explicit\n      <code>open</code> on a parent, sections start collapsed.\n    </p>\n    <div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item label=\"Components\">\n          <civ-side-nav-item href=\"/components/button\" label=\"Button\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/text-input\" label=\"Text input\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item label=\"Design tokens\">\n          <civ-side-nav-item href=\"/tokens/color\" label=\"Color\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/spacing\" label=\"Spacing\"></civ-side-nav-item>\n        </civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
+    },
+    {
       "story": "Default",
+      "name": "Default (flat list of leaf links)",
       "category": "Navigation/Side Nav",
       "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/installation\" label=\"Installation\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\" current></civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
-      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
     },
     {
       "story": "DocumentationLayout",
+      "name": "Documentation page layout",
       "category": "Navigation/Side Nav",
-      "html": "<p class=\"civ-italic civ-mb-3\">\n      Typical documentation page composition — side rail on the left,\n      content + on-this-page rail on the right.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start;\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/intro\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\">\n          <civ-side-nav-item href=\"/button\" label=\"Button\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/input\" label=\"Text input\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/select\" label=\"Select\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\"></civ-side-nav-item>\n      </civ-side-nav>\n      <article>\n        <h1 class=\"civ-mt-0\">Button</h1>\n        <p>The Button component is the primary action affordance in CivUI…</p>\n      </article>\n    </div>",
-      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Typical documentation page composition — side rail on the left,\n      content on the right. The active page's parent section\n      auto-expands.\n    </p>\n    <div style=\"display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start;\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/intro\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item label=\"Components\">\n          <civ-side-nav-item href=\"/button\" label=\"Button\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/input\" label=\"Text input\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/select\" label=\"Select\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\"></civ-side-nav-item>\n      </civ-side-nav>\n      <article>\n        <h1 class=\"civ-mt-0\">Button</h1>\n        <p>The Button component is the primary action affordance in CivUI…</p>\n      </article>\n    </div>",
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
+    },
+    {
+      "story": "MultipleSectionsOpen",
+      "name": "Multiple sections open",
+      "category": "Navigation/Side Nav",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      Multi-expand by default — opening one section does not collapse\n      others. Each parent owns its own <code>open</code> state.\n    </p>\n    <div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item label=\"Components\" open>\n          <civ-side-nav-item href=\"/components/button\" label=\"Button\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/text-input\" label=\"Text input\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/select\" label=\"Select\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item label=\"Design tokens\" open>\n          <civ-side-nav-item href=\"/tokens/color\" label=\"Color\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/spacing\" label=\"Spacing\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
     },
     {
       "story": "Nested",
+      "name": "Nested (auto-expands the active section)",
       "category": "Navigation/Side Nav",
-      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/components\" label=\"Components\">\n          <civ-side-nav-item href=\"/components/button\" label=\"Button\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/text-input\" label=\"Text input\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/select\" label=\"Select\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/checkbox\" label=\"Checkbox\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/tokens\" label=\"Design tokens\">\n          <civ-side-nav-item href=\"/tokens/color\" label=\"Color\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/spacing\" label=\"Spacing\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/typography\" label=\"Typography\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
-      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Documentation\">\n        <civ-side-nav-item href=\"/introduction\" label=\"Introduction\"></civ-side-nav-item>\n        <civ-side-nav-item label=\"Components\">\n          <civ-side-nav-item href=\"/components/button\" label=\"Button\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/text-input\" label=\"Text input\" current></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/select\" label=\"Select\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/components/checkbox\" label=\"Checkbox\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item label=\"Design tokens\">\n          <civ-side-nav-item href=\"/tokens/color\" label=\"Color\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/spacing\" label=\"Spacing\"></civ-side-nav-item>\n          <civ-side-nav-item href=\"/tokens/typography\" label=\"Typography\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
     },
     {
       "story": "WithDisabled",
+      "name": "With disabled rows",
       "category": "Navigation/Side Nav",
-      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Application sections\">\n        <civ-side-nav-item href=\"/start\" label=\"Get started\" current></civ-side-nav-item>\n        <civ-side-nav-item href=\"/personal\" label=\"Personal information\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/income\" label=\"Income\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/review\" label=\"Review\" disabled></civ-side-nav-item>\n        <civ-side-nav-item href=\"/submit\" label=\"Submit\" disabled></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
-      "source": "packages/actions/src/side-nav/civ-side-nav.stories.ts"
+      "html": "<div style=\"${wrapStyle}\">\n      <civ-side-nav label=\"Application sections\">\n        <civ-side-nav-item href=\"/start\" label=\"Get started\" current></civ-side-nav-item>\n        <civ-side-nav-item href=\"/personal\" label=\"Personal information\"></civ-side-nav-item>\n        <civ-side-nav-item href=\"/income\" label=\"Income\"></civ-side-nav-item>\n        <civ-side-nav-item label=\"Review\" disabled>\n          <civ-side-nav-item href=\"/review/summary\" label=\"Summary\"></civ-side-nav-item>\n        </civ-side-nav-item>\n        <civ-side-nav-item href=\"/submit\" label=\"Submit\" disabled></civ-side-nav-item>\n      </civ-side-nav>\n    </div>",
+      "source": "packages/navigation/src/side-nav/civ-side-nav.stories.ts"
     }
   ],
   "civ-signature": [
@@ -5463,31 +5481,31 @@
       "story": "Default",
       "category": "Navigation/Tab Nav",
       "html": "<civ-tab-nav label=\"Repository sections\">\n      <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/actions\" label=\"Actions\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n    </civ-tab-nav>",
-      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     },
     {
       "story": "MobileStacking",
       "category": "Navigation/Tab Nav",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      At ≤480px the tabs stack vertically. Resize the viewport to see it.\n    </p>\n    <div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-tab-nav label=\"Repository sections\">\n        <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n      </civ-tab-nav>\n    </div>",
-      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     },
     {
       "story": "NoCurrentItem",
       "category": "Navigation/Tab Nav",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      With no <code>current</code> item, none of the links carry <code>aria-current</code>. Use this on landing pages that don't map to a single tab.\n    </p>\n    <civ-tab-nav label=\"Repository sections\">\n      <civ-tab-nav-item href=\"/repo\" label=\"Code\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n    </civ-tab-nav>",
-      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     },
     {
       "story": "TwoItems",
       "category": "Navigation/Tab Nav",
       "html": "<civ-tab-nav label=\"Profile sections\">\n      <civ-tab-nav-item href=\"/profile\" label=\"About\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/profile/activity\" label=\"Activity\" current></civ-tab-nav-item>\n    </civ-tab-nav>",
-      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     },
     {
       "story": "WithDisabled",
       "category": "Navigation/Tab Nav",
       "html": "<civ-tab-nav label=\"Account sections\">\n      <civ-tab-nav-item href=\"/account\" label=\"Overview\" current></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/account/billing\" label=\"Billing\"></civ-tab-nav-item>\n      <civ-tab-nav-item href=\"/account/admin\" label=\"Admin\" disabled></civ-tab-nav-item>\n    </civ-tab-nav>",
-      "source": "packages/actions/src/tab-nav/civ-tab-nav.stories.ts"
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     }
   ],
   "civ-tabs": [
@@ -5495,31 +5513,31 @@
       "story": "Default",
       "category": "Navigation/Tabs",
       "html": "<civ-tabs label=\"Account settings\" value=\"profile\">\n      <civ-tab value=\"profile\" label=\"Profile\"></civ-tab>\n      <civ-tab value=\"security\" label=\"Security\"></civ-tab>\n      <civ-tab value=\"notifications\" label=\"Notifications\"></civ-tab>\n\n      <civ-tab-panel value=\"profile\">\n        <h3 class=\"civ-mt-0\">Profile</h3>\n        <p>Update your display name, photo, and contact preferences.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"security\">\n        <h3 class=\"civ-mt-0\">Security</h3>\n        <p>Change your password, manage sign-in devices, and review login history.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"notifications\">\n        <h3 class=\"civ-mt-0\">Notifications</h3>\n        <p>Choose which updates we send by email and text.</p>\n      </civ-tab-panel>\n    </civ-tabs>",
-      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     },
     {
       "story": "Keyboard",
       "category": "Navigation/Tabs",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      Focus a tab and try <kbd>←</kbd> / <kbd>→</kbd> to move between tabs,\n      <kbd>Home</kbd> / <kbd>End</kbd> to jump to first / last.\n    </p>\n    <civ-tabs label=\"Keyboard demo\" value=\"first\">\n      <civ-tab value=\"first\" label=\"First\"></civ-tab>\n      <civ-tab value=\"second\" label=\"Second\"></civ-tab>\n      <civ-tab value=\"third\" label=\"Third\"></civ-tab>\n      <civ-tab value=\"fourth\" label=\"Fourth\"></civ-tab>\n\n      <civ-tab-panel value=\"first\">Panel 1 content.</civ-tab-panel>\n      <civ-tab-panel value=\"second\">Panel 2 content.</civ-tab-panel>\n      <civ-tab-panel value=\"third\">Panel 3 content.</civ-tab-panel>\n      <civ-tab-panel value=\"fourth\">Panel 4 content.</civ-tab-panel>\n    </civ-tabs>",
-      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     },
     {
       "story": "RichPanelContent",
       "category": "Navigation/Tabs",
       "html": "<civ-tabs label=\"Application overview\" value=\"summary\">\n      <civ-tab value=\"summary\" label=\"Summary\"></civ-tab>\n      <civ-tab value=\"documents\" label=\"Documents (4)\"></civ-tab>\n      <civ-tab value=\"history\" label=\"History\"></civ-tab>\n\n      <civ-tab-panel value=\"summary\">\n        <h3 class=\"civ-mt-0\">Application VA-21P-527</h3>\n        <p>Pension claim filed on May 5, 2026. Currently under review.</p>\n        <civ-button variant=\"primary\">Continue application</civ-button>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"documents\">\n        <ul>\n          <li>DD-214 — uploaded May 1, 2026</li>\n          <li>Marriage certificate — uploaded May 2, 2026</li>\n          <li>Birth certificate — uploaded May 3, 2026</li>\n          <li>VA Form 21-526EZ — submitted May 5, 2026</li>\n        </ul>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"history\">\n        <p>Activity history will appear here once your application is processed.</p>\n      </civ-tab-panel>\n    </civ-tabs>",
-      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     },
     {
       "story": "TwoTabs",
       "category": "Navigation/Tabs",
       "html": "<civ-tabs label=\"Application status\">\n      <civ-tab value=\"open\" label=\"Open (3)\"></civ-tab>\n      <civ-tab value=\"closed\" label=\"Closed\"></civ-tab>\n\n      <civ-tab-panel value=\"open\">Three open applications.</civ-tab-panel>\n      <civ-tab-panel value=\"closed\">No closed applications yet.</civ-tab-panel>\n    </civ-tabs>",
-      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     },
     {
       "story": "WithDisabledTab",
       "category": "Navigation/Tabs",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      Disabled tabs are skipped by arrow-key navigation.\n    </p>\n    <civ-tabs label=\"Forms\" value=\"active\">\n      <civ-tab value=\"active\" label=\"Active forms\"></civ-tab>\n      <civ-tab value=\"drafts\" label=\"Drafts\"></civ-tab>\n      <civ-tab value=\"archived\" label=\"Archived\" disabled></civ-tab>\n\n      <civ-tab-panel value=\"active\">Forms you're actively working on.</civ-tab-panel>\n      <civ-tab-panel value=\"drafts\">Forms you've saved as drafts.</civ-tab-panel>\n      <civ-tab-panel value=\"archived\">Archive is empty.</civ-tab-panel>\n    </civ-tabs>",
-      "source": "packages/actions/src/tabs/civ-tabs.stories.ts"
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     }
   ],
   "civ-tag": [

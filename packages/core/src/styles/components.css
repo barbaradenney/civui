@@ -5117,6 +5117,47 @@
   }
 
   /*
+   * Focus indicator — inset variant of the global focus pattern.
+   *
+   * The default civ.css focus rule paints `outline: 3px solid dark`
+   * at the element's outer edge with a 3px yellow box-shadow halo
+   * extending OUTSIDE. For an accordion-item trigger that produces
+   * two visual problems:
+   *
+   * 1. **Open-item content overlap.** When the item is open and the
+   *    summary is focused, the yellow halo extends DOWN past the
+   *    summary into the content panel. The content's top text
+   *    (which sits flush at the panel's top with no padding) gets
+   *    overlapped by the halo, "obstructing viewing the text."
+   * 2. **Corner overflow.** The outline is rectangular even when
+   *    the trigger sits inside a rounded wrapper (tertiary) or has
+   *    its own rounded corners (secondary / primary closed state).
+   *    The square focus-ring corners poke past the rounded
+   *    wrapper / item edges, breaking the visual.
+   *
+   * The override replaces `outline + box-shadow` with two INSET
+   * box-shadows that paint inside the trigger:
+   * - `var(--civ-focus-shadow-radius)` (6px) yellow halo on the
+   *   inner edge
+   * - `var(--civ-focus-outline-width)` (3px) dark band overlaid on
+   *   the outer 3px of the halo
+   *
+   * Net layering matches the global pattern (dark closest to row
+   * edge, yellow further in), but stays INSIDE the trigger so it
+   * doesn't escape the row's bounds. With 1rem trigger padding,
+   * there's ~10px breathing room between the focus indicator and
+   * the label text. `box-shadow: inset` respects the trigger's
+   * `border-radius`, so secondary / primary closed-state focus
+   * rings follow the rounded corners cleanly.
+   */
+  .civ-accordion-item__trigger:focus {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color),
+      inset 0 0 0 var(--civ-focus-outline-width) var(--civ-focus-shadow-color);
+  }
+
+  /*
    * Disabled — pointer events off, dimmed. Selector uses the
    * `civ-accordion-item` element selector (not the class) because
    * the reflected `[disabled]` attribute lives on the HOST, while

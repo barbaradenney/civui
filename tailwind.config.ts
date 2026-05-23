@@ -69,6 +69,17 @@ const config: Config = {
         black: {
           DEFAULT: 'var(--civ-color-black-DEFAULT)',
         },
+        // Semantic surface tokens — neutral card / panel / input
+        // backgrounds (and their hover / active states). Source of
+        // truth is the `--civ-color-surface*` CSS vars in civ.css;
+        // changing those single lines re-themes every surface
+        // across CivUI. Tailwind aliases: `civ-bg-surface`,
+        // `civ-bg-surface-hover`, `civ-bg-surface-active`.
+        surface: {
+          DEFAULT: 'var(--civ-color-surface)',
+          hover: 'var(--civ-color-surface-hover)',
+          active: 'var(--civ-color-surface-active)',
+        },
         accent: {
           cool: {
             lightest: 'var(--civ-color-accent-cool-lightest)',

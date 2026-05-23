@@ -622,7 +622,7 @@
 
   .civ-input {
     @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-2
-           civ-font-sans civ-bg-white civ-border-base;
+           civ-font-sans civ-bg-surface civ-border-base;
     color: var(--civ-color-base-darkest);
   }
 
@@ -663,12 +663,12 @@
 
 
   .civ-input-prefix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-white;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-surface;
     color: var(--civ-color-base-dark);
   }
 
   .civ-input-suffix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base civ-bg-white;
+    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base civ-bg-surface;
     color: var(--civ-color-base-dark);
   }
 
@@ -1095,7 +1095,7 @@
   }
 
   .civ-check-input {
-    @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base civ-rounded civ-bg-white;
+    @apply civ-me-2 civ-align-middle civ-cursor-pointer civ-border civ-border-base civ-rounded civ-bg-surface;
     appearance: none;
     -webkit-appearance: none;
     width: var(--civ-spacing-8);
@@ -1266,7 +1266,7 @@
   }
 
   .civ-toggle-thumb {
-    @apply civ-absolute civ-bg-white civ-rounded-full civ-border civ-border-base;
+    @apply civ-absolute civ-bg-surface civ-rounded-full civ-border civ-border-base;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1318,7 +1318,7 @@
    */
   .civ-segment-btn {
     @apply civ-px-4 civ-py-2 civ-font-sans civ-font-medium civ-border
-           civ-bg-white civ-text-base-darkest civ-border-base civ-cursor-pointer;
+           civ-bg-surface civ-text-base-darkest civ-border-base civ-cursor-pointer;
     /* `<button>`'s browser-default `line-height: normal` resolves to
        roughly 1.2 — shorter than `<input>` / `<select>`'s effective
        1.5 with the same font / padding / border. Force 1.5 so a
@@ -1417,7 +1417,7 @@
   /* ── Combobox ───────────────────────────────────────────────── */
 
   .civ-combobox-listbox {
-    @apply civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border
+    @apply civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-surface civ-border
  civ-rounded civ-shadow-md civ-max-h-60
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
@@ -1543,7 +1543,7 @@
 
   /* Date picker dialog extends the shared action sheet mobile pattern */
   .civ-datepicker-dialog {
-    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
+    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-surface civ-border
  civ-rounded civ-shadow-lg civ-p-4;
     width: max-content;
   }
@@ -1808,7 +1808,7 @@
   @media (hover: hover) {
     .civ-toggle-track[aria-readonly="true"]:hover,
     .civ-toggle-track[aria-readonly="true"][aria-checked="true"]:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
       border-color: var(--civ-color-base-DEFAULT);
     }
     .civ-toggle-track[aria-readonly="true"][aria-checked="true"]:hover {
@@ -1976,7 +1976,7 @@
   }
 
   .civ-btn--yesno {
-    @apply civ-bg-white civ-border-base;
+    @apply civ-bg-surface civ-border-base;
   }
   .civ-btn--yesno[aria-checked="true"] {
     @apply civ-bg-primary civ-text-white civ-border-primary;
@@ -2105,7 +2105,7 @@
     max-height: 80vh;
     overflow-y: auto;
     border: none;
-    @apply civ-bg-white civ-rounded civ-shadow-lg civ-p-6;
+    @apply civ-bg-surface civ-rounded civ-shadow-lg civ-p-6;
     color: var(--civ-color-base-darkest);
   }
 
@@ -2240,7 +2240,7 @@
   /* ── Action Sheet ─────────────────────────────────────────── */
 
   .civ-action-sheet {
-    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
+    @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-surface civ-border
  civ-rounded civ-shadow-lg;
     display: none;
   }
@@ -2324,12 +2324,12 @@
 
   .civ-action-btn--tertiary {
     @apply civ-border-base;
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     color: var(--civ-color-base-darkest);
   }
   @media (hover: hover) {
     .civ-action-btn--tertiary:hover:not(:disabled) {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
 
@@ -2394,7 +2394,7 @@
   }
 
   .civ-popover__panel {
-    @apply civ-fixed civ-bg-white civ-border
+    @apply civ-fixed civ-bg-surface civ-border
            civ-rounded civ-shadow-lg civ-py-1;
     /* Position is computed in JS on open. The CSS-only fallback pins
        the panel to the top-left corner; consumers should rely on the
@@ -2463,7 +2463,7 @@
 
   @media (hover: hover) {
     .civ-menu-item__inner:hover:not(:disabled):not([aria-disabled='true']) {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
 
@@ -2557,7 +2557,7 @@
      read as faint blue-on-blue. Force a white surface so the border has
      contrast — same approach the data-grid kebab trigger relies on. */
   .civ-bulk-actions__clear button {
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
   }
 
   @media (max-width: 480px) {
@@ -2597,7 +2597,7 @@
 
   @media (hover: hover) {
     .civ-column-visibility__option:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
 
@@ -2774,7 +2774,7 @@
 
   @media (hover: hover) {
     .civ-data-grid__tr--interactive:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
 
     .civ-data-grid__tr--interactive.civ-data-grid__tr--selected:hover {
@@ -2801,7 +2801,7 @@
 
   @media (hover: hover) {
     .civ-data-grid__expand-toggle:hover:not(:disabled) {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
 
@@ -2932,7 +2932,7 @@
 
   @media (hover: hover) {
     .civ-data-grid__td--editable:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
 
@@ -2967,7 +2967,7 @@
   }
 
   .civ-data-grid__edit-input {
-    @apply civ-w-full civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    @apply civ-w-full civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-surface;
     border-color: var(--civ-color-border);
     font: inherit;
     color: var(--civ-color-base-darkest);
@@ -3249,7 +3249,7 @@
   }
 
   .civ-pagination__page-size-select {
-    @apply civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    @apply civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-surface;
     font: inherit;
   }
 
@@ -3605,7 +3605,7 @@
   /* ── Alert: Tertiary (white bg, border only) ───────────────── */
 
   .civ-alert--style-tertiary {
-    @apply civ-bg-white;
+    @apply civ-bg-surface;
   }
   .civ-alert--style-tertiary .civ-alert__heading { color: var(--civ-color-base-darkest); }
   .civ-alert--style-tertiary .civ-alert__body { color: var(--civ-color-base-darkest); }
@@ -3901,7 +3901,7 @@
     top: 0;
     inset-inline-start: 0;
     z-index: var(--civ-z-skip-link);
-    @apply civ-bg-white civ-text-primary civ-font-bold civ-p-3
+    @apply civ-bg-surface civ-text-primary civ-font-bold civ-p-3
            civ-border-2 civ-border-primary civ-rounded;
     width: auto;
     height: auto;
@@ -3990,7 +3990,7 @@
 
   /* Tertiary — outlined border */
   .civ-link-card--tertiary {
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     border-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-primary-dark);
   }
@@ -4484,7 +4484,7 @@
   /* Outer wrapper — owns the chip border/background. Non-interactive. */
   .civ-filter-chip {
     @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded;
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     color: var(--civ-color-base-darkest);
     border: 1px solid var(--civ-color-border);
     overflow: hidden;
@@ -4544,7 +4544,7 @@
 
   @media (hover: hover) {
     .civ-filter-chip:hover:not(.civ-filter-chip--disabled) {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
       border-color: var(--civ-color-base-darker);
     }
   }
@@ -4656,7 +4656,7 @@
   }
 
   .civ-card--tertiary {
-    @apply civ-bg-white;
+    @apply civ-bg-surface;
     color: var(--civ-color-base-darkest);
   }
 
@@ -4988,11 +4988,11 @@
   }
   @media (hover: hover) {
     .civ-accordion__inner--tertiary .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
   .civ-accordion__inner--tertiary .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-surface-active);
   }
 
   /* ── Flush variant (no outer border) ───────────────────────
@@ -5019,11 +5019,11 @@
   }
   @media (hover: hover) {
     .civ-accordion__inner--flush .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
   .civ-accordion__inner--flush .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-surface-active);
   }
 
   /* ── Secondary + primary variants (filled triggers) ───────── */
@@ -5058,11 +5058,11 @@
   }
   @media (hover: hover) {
     .civ-accordion__inner--secondary .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface-hover);
     }
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-base-lighter);
+    background-color: var(--civ-color-surface-active);
   }
 
   /*
@@ -5456,13 +5456,13 @@
   /* ── Dark mode overrides for popup/overlay backgrounds ────── */
   @media (prefers-color-scheme: dark) {
     .civ-combobox-listbox {
-      background-color: var(--civ-color-white-DEFAULT);
+      background-color: var(--civ-color-surface);
       border-color: var(--civ-color-base-dark);
       color: var(--civ-color-base-darkest);
     }
 
     .civ-datepicker-dialog {
-      background-color: var(--civ-color-white-DEFAULT);
+      background-color: var(--civ-color-surface);
       border-color: var(--civ-color-base-dark);
     }
 
@@ -5486,7 +5486,7 @@
     }
 
     .civ-link-card--tertiary {
-      background-color: var(--civ-color-white-DEFAULT);
+      background-color: var(--civ-color-surface);
       border-color: var(--civ-color-base-dark);
       color: var(--civ-color-base-darkest);
     }
@@ -5526,13 +5526,13 @@
    * uses for the same components.
    */
   :root[data-civ-theme="dark"] .civ-combobox-listbox {
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     border-color: var(--civ-color-base-dark);
     color: var(--civ-color-base-darkest);
   }
 
   :root[data-civ-theme="dark"] .civ-datepicker-dialog {
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     border-color: var(--civ-color-base-dark);
   }
 
@@ -5556,7 +5556,7 @@
   }
 
   :root[data-civ-theme="dark"] .civ-link-card--tertiary {
-    background-color: var(--civ-color-white-DEFAULT);
+    background-color: var(--civ-color-surface);
     border-color: var(--civ-color-base-dark);
     color: var(--civ-color-base-darkest);
   }

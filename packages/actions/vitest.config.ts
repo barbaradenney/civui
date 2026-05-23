@@ -12,6 +12,8 @@ export default defineConfig({
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
       '@civui/feedback/count': resolve(__dirname, '../feedback/src/count/index.ts'),
       '@civui/feedback/badge': resolve(__dirname, '../feedback/src/badge/index.ts'),
+      '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
+      '@civui/feedback/skeleton': resolve(__dirname, '../feedback/src/skeleton/index.ts'),
       '@civui/feedback': resolve(__dirname, '../feedback/src/index.ts'),
     },
   },

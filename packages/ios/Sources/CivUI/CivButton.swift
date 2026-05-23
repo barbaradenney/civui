@@ -59,6 +59,13 @@ public struct CivButton: View {
     /// Button type (e.g., "button", "submit", "reset").
     public var type: String
 
+    /// Async-in-flight state. Swaps the leading icon for a spinner and
+    /// disables the button. Should announce `loadingLabel` via VoiceOver.
+    public var isLoading: Bool
+
+    /// Accessible label announced via VoiceOver while `isLoading` is true.
+    public var loadingLabel: String
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -76,7 +83,9 @@ public struct CivButton: View {
         onClick: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         danger: Bool = false,
-        type: String = "button"
+        type: String = "button",
+        isLoading: Bool = false,
+        loadingLabel: String = "Loading…"
     ) {
         self.label = label
         self.variant = variant
@@ -89,6 +98,8 @@ public struct CivButton: View {
         self.onAnalytics = onAnalytics
         self.danger = danger
         self.type = type
+        self.isLoading = isLoading
+        self.loadingLabel = loadingLabel
     }
 
     // MARK: - Body

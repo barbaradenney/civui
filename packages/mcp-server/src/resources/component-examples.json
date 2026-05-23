@@ -5292,6 +5292,32 @@
       "source": "packages/compound/src/signature/civ-signature.stories.ts"
     }
   ],
+  "civ-skeleton": [
+    {
+      "story": "ComposedCard",
+      "category": "Feedback/Skeleton",
+      "html": "<div\n      aria-busy=\"true\"\n      class=\"civ-flex civ-flex-col civ-gap-3 civ-p-4 civ-border civ-rounded\"\n      style=\"width: 320px;\"\n    >\n      <civ-skeleton variant=\"block\"></civ-skeleton>\n      <civ-skeleton variant=\"heading\" width=\"70%\"></civ-skeleton>\n      <civ-skeleton variant=\"text\" lines=\"3\"></civ-skeleton>\n    </div>",
+      "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Feedback/Skeleton",
+      "html": "<civ-skeleton></civ-skeleton>",
+      "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
+    },
+    {
+      "story": "MultilineText",
+      "category": "Feedback/Skeleton",
+      "html": "<div style=\"width: 320px;\">\n      <civ-skeleton lines=\"4\"></civ-skeleton>\n    </div>",
+      "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
+    },
+    {
+      "story": "Variants",
+      "category": "Feedback/Skeleton",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"width: 320px;\">\n      <civ-skeleton variant=\"heading\" width=\"60%\"></civ-skeleton>\n      <civ-skeleton variant=\"text\"></civ-skeleton>\n      <civ-skeleton variant=\"block\"></civ-skeleton>\n      <civ-skeleton variant=\"circle\"></civ-skeleton>\n    </div>",
+      "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
+    }
+  ],
   "civ-skip-link": [
     {
       "story": "CustomLabel",
@@ -5317,6 +5343,38 @@
       "category": "Foundations/Accessibility",
       "html": "<div\n      style=\"position: relative; min-height: 200px; border: 1px dashed var(--civ-color-base-lighter); padding: var(--civ-spacing-3);\"\n    >\n      <civ-skip-link href=\"#story-main\" label=\"Skip to main content\"></civ-skip-link>\n      <nav\n        class=\"civ-flex civ-gap-3 civ-mb-4\"\n        aria-label=\"Demo header\"\n      >\n        <a href=\"#\" class=\"civ-link\">Benefits</a>\n        <a href=\"#\" class=\"civ-link\">Claims</a>\n        <a href=\"#\" class=\"civ-link\">Profile</a>\n        <a href=\"#\" class=\"civ-link\">Sign out</a>\n      </nav>\n      <main id=\"story-main\" tabindex=\"-1\">\n        <h2 class=\"civ-heading-lg\">Main content</h2>\n        <p>\n          Activating the skip link moves focus here, bypassing the four\n          nav links above.\n        </p>\n      </main>\n    </div>",
       "source": "packages/core/src/foundations/accessibility-examples.stories.ts"
+    }
+  ],
+  "civ-spinner": [
+    {
+      "story": "CustomLabel",
+      "category": "Feedback/Spinner",
+      "html": "<civ-spinner delay=\"0\" label=\"Saving your application…\"></civ-spinner>",
+      "source": "packages/feedback/src/spinner/civ-spinner.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Feedback/Spinner",
+      "html": "<civ-spinner delay=\"0\"></civ-spinner>",
+      "source": "packages/feedback/src/spinner/civ-spinner.stories.ts"
+    },
+    {
+      "story": "DelayedAppearance",
+      "category": "Feedback/Spinner",
+      "html": "<p class=\"civ-italic civ-mb-2\">The spinner below has a 1-second delay before it paints.</p>\n    <civ-spinner delay=\"1000\"></civ-spinner>",
+      "source": "packages/feedback/src/spinner/civ-spinner.stories.ts"
+    },
+    {
+      "story": "InheritsColor",
+      "category": "Feedback/Spinner",
+      "html": "<div class=\"civ-flex civ-gap-4 civ-items-center\">\n      <span class=\"civ-text-primary\">\n        <civ-spinner delay=\"0\"></civ-spinner>\n      </span>\n      <span class=\"civ-text-error\">\n        <civ-spinner delay=\"0\"></civ-spinner>\n      </span>\n      <span class=\"civ-text-success\">\n        <civ-spinner delay=\"0\"></civ-spinner>\n      </span>\n    </div>",
+      "source": "packages/feedback/src/spinner/civ-spinner.stories.ts"
+    },
+    {
+      "story": "Sizes",
+      "category": "Feedback/Spinner",
+      "html": "<div class=\"civ-flex civ-gap-4 civ-items-center\">\n      <civ-spinner delay=\"0\" size=\"sm\"></civ-spinner>\n      <civ-spinner delay=\"0\" size=\"md\"></civ-spinner>\n      <civ-spinner delay=\"0\" size=\"lg\"></civ-spinner>\n    </div>",
+      "source": "packages/feedback/src/spinner/civ-spinner.stories.ts"
     }
   ],
   "civ-ssn": [

@@ -1,0 +1,8 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `variant` | `'text'` \| `'heading'` \| `'block'` \| `'circle'` | `'text'` | Shape. `text` (default) is one or more 1em-high text lines; `heading` is a taller text block for h1–h3 placeholders; `block` is a rectangular media / card body; `circle` is an avatar / icon round |
+| `width` | `string` | `''` | CSS length for the skeleton width (e.g. `100%`, `12rem`, `80px`). Defaults to `100%` for text / heading / block and `2.5rem` for circle |
+| `lines` | `number` | `1` | Number of text lines to render. Only meaningful for the `text` variant. When &gt; 1, the last line renders at 70% width to mimic a paragraph's natural ragged-right edge |

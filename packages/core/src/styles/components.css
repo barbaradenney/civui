@@ -3974,6 +3974,19 @@
     border-inline-start-color: var(--civ-color-primary-DEFAULT);
   }
   /*
+   * Inside a sublist, the active rail needs to overlay the
+   * sublist's gray guide line (which sits at the chevron column).
+   * Without this, the rail sits to the right of the line by the
+   * sublist's `padding-inline-start` + `border-inline-start` width
+   * (0.75rem + 1px). A negative margin pulls the link's border out
+   * to the line; the padding is compensated by the same amount so
+   * the text stays put.
+   */
+  .civ-side-nav__sublist .civ-side-nav__link--current {
+    margin-inline-start: calc(-0.75rem - 1px);
+    padding-inline-start: calc(0.75rem + 0.75rem + 1px);
+  }
+  /*
    * Disabled — rely on `opacity` alone for the muted treatment. The
    * base color (`base-darkest`) stays so the opacity-reduced text
    * still meets WCAG AA contrast against the surface background.
@@ -6007,5 +6020,115 @@
    * becoming circular). */
   civ-image[variant="thumbnail"][rounded] .civ-image__img {
     border-radius: 50%;
+  }
+
+  /* ── Spinner ────────────────────────────────────────────────── */
+  /*
+   * Indeterminate loading indicator. Rotation is functional, not
+   * decorative — it conveys "system isn't frozen" to sighted users.
+   * civ.css carves spinner rotation out of the global
+   * `prefers-reduced-motion` animation-kill rule (slowed, not
+   * disabled), so the user keeps the visual reassurance.
+   */
+  civ-spinner {
+    display: inline-flex;
+    vertical-align: middle;
+  }
+
+  .civ-spinner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* `currentColor` is intentional — the spinner inherits its color
+     * from the surrounding text so it composes inside any button or
+     * container without extra props. Consumers tint by setting `color`
+     * on the parent. */
+    color: currentColor;
+    line-height: 0;
+    vertical-align: middle;
+  }
+
+  .civ-spinner--sm { width: 1rem; height: 1rem; }
+  .civ-spinner--md { width: 1.5rem; height: 1.5rem; }
+  .civ-spinner--lg { width: 2rem; height: 2rem; }
+
+  .civ-spinner__svg {
+    width: 100%;
+    height: 100%;
+    animation: civ-spin var(--civ-motion-duration-slower, 750ms) var(--civ-motion-easing-linear, linear) infinite;
+  }
+
+  .civ-spinner__track {
+    opacity: 0.2;
+  }
+
+  .civ-spinner__arc {
+    /* The path covers a 90° arc; rotation animates the whole SVG. */
+    opacity: 1;
+  }
+
+  /* ── Skeleton ───────────────────────────────────────────────── */
+  /*
+   * Decorative content-shape placeholder. The shimmer is purely
+   * decorative — the global `prefers-reduced-motion` rule disables
+   * it, leaving a static gray block that still reserves layout
+   * space (the accessibility-critical behavior).
+   *
+   * Consumers carry the `aria-busy` state on the parent region;
+   * skeletons themselves are `aria-hidden` and never announced.
+   */
+  civ-skeleton {
+    display: block;
+  }
+
+  .civ-skeleton {
+    display: block;
+    background-color: var(--civ-color-base-lighter, #e5e7eb);
+    background-image: linear-gradient(
+      90deg,
+      var(--civ-color-base-lighter, #e5e7eb) 0%,
+      var(--civ-color-base-lightest, #f3f4f6) 50%,
+      var(--civ-color-base-lighter, #e5e7eb) 100%
+    );
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    /* Slower than the slowest motion token (500ms) because shimmer
+     * works at scenic-loop speeds — 1.5s reads as "moving but calm"
+     * vs 500ms which reads as "agitated". Hardcoded literal because
+     * no token covers this range. */
+    animation: civ-skeleton-shimmer 1500ms var(--civ-motion-easing-ease-in-out, ease-in-out) infinite;
+  }
+
+  .civ-skeleton--text {
+    height: 1em;
+    border-radius: var(--civ-border-radius-sm, 2px);
+  }
+
+  .civ-skeleton--heading {
+    height: 1.75em;
+    border-radius: var(--civ-border-radius-sm, 2px);
+  }
+
+  .civ-skeleton--block {
+    height: 8rem;
+    border-radius: var(--civ-border-radius-md, 8px);
+  }
+
+  .civ-skeleton--circle {
+    height: 2.5rem;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Stacked text-line skeletons share vertical rhythm with body copy. */
+  .civ-skeleton-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--civ-spacing-2, 0.5rem);
+  }
+
+  @keyframes civ-skeleton-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
   }
 }

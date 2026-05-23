@@ -282,13 +282,15 @@ Three visual variants in increasing prominence:
 - **Tertiary** (default) — bordered group with transparent
   triggers. Quietest, list-like. Use for FAQ pages, help content,
   optional detail.
-- **Secondary** — items rendered as filled primary-lightest
-  buttons matching the \`civ-action-btn--secondary\` palette and
-  chrome scale. Use for navigation-like menus or choose-one
-  sections.
-- **Primary** — same palette as secondary but with the larger
-  padding and bolder type of \`civ-btn--secondary\` (the main
-  button family). Use for hub-page sections or hero CTAs.
+- **Secondary** — items rendered as filled neutral-gray buttons
+  using the same chip palette as \`civ-disclosure\` /
+  \`civ-read-more\` (base-lightest bg, default text color), with
+  the smaller chrome of \`civ-action-btn--secondary\`. Use for
+  navigation-like menus or choose-one sections where the affordance
+  should read as actionable without competing with a primary CTA.
+- **Primary** — filled primary-lightest (blue) button with the
+  larger padding and bolder type of \`civ-btn--secondary\` (the
+  main button family). Use for hub-page sections or hero CTAs.
         `,
       },
     },
@@ -311,7 +313,7 @@ Three visual variants in increasing prominence:
         <h3 class="civ-heading-sm civ-mb-2">Secondary</h3>
         <civ-accordion variant="secondary">
           <civ-accordion-item label="Eligibility">
-            <p>Filled primary-lightest triggers. Smaller padding, lighter weight — matches action-button secondary.</p>
+            <p>Filled gray triggers using the chip palette. Smaller padding, lighter weight — actionable without competing with primary CTAs.</p>
           </civ-accordion-item>
           <civ-accordion-item label="How to apply">
             <p>Items stack with gap; each reads as a standalone button.</p>
@@ -323,7 +325,7 @@ Three visual variants in increasing prominence:
         <h3 class="civ-heading-sm civ-mb-2">Primary</h3>
         <civ-accordion variant="primary">
           <civ-accordion-item label="Eligibility">
-            <p>Same palette as secondary, but the chrome of the main button family — larger padding, bolder font.</p>
+            <p>Filled primary-lightest triggers with the chrome of the main button family — larger padding, bolder font.</p>
           </civ-accordion-item>
           <civ-accordion-item label="How to apply">
             <p>Most prominent variant. Use for hub-page sections or hero CTAs.</p>

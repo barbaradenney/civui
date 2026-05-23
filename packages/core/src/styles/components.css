@@ -5038,29 +5038,16 @@
   }
 
   /*
-   * Trigger has the filled palette + its own rounded corners
-   * (so when the item is closed it reads as a fully-rounded
-   * "button"). When the item is open, the trigger's bottom
-   * corners square up and the content panel continues the bg
-   * with rounded bottom corners — the pair reads as a card.
+   * Shared shape: trigger gets its own rounded corners (so when
+   * closed it reads as a fully-rounded "button"). When the item
+   * is open, the trigger's bottom corners square up and the
+   * content panel continues the bg with rounded bottom corners —
+   * the pair reads as a card. Per-variant colors below.
    */
   .civ-accordion__inner--secondary .civ-accordion-item__trigger,
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
-    background-color: var(--civ-color-primary-lightest);
-    color: var(--civ-color-primary-dark);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
-  @media (hover: hover) {
-    .civ-accordion__inner--secondary .civ-accordion-item__trigger:hover,
-    .civ-accordion__inner--primary .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-primary-lighter);
-    }
-  }
-  .civ-accordion__inner--secondary .civ-accordion-item__trigger:active,
-  .civ-accordion__inner--primary .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-primary-light);
-  }
-
   .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__trigger,
   .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__trigger {
     border-bottom-left-radius: 0;
@@ -5068,29 +5055,59 @@
   }
   .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__content,
   .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__content {
-    background-color: var(--civ-color-primary-lightest);
-    color: var(--civ-color-primary-dark);
     border-bottom-left-radius: var(--civ-border-radius-DEFAULT);
     border-bottom-right-radius: var(--civ-border-radius-DEFAULT);
   }
 
   /*
-   * Secondary trigger scale — matches `civ-action-btn--secondary`
-   * (smaller padding, base font weight via the trigger's
-   * inherited `civ-font-semibold`).
+   * Secondary palette: neutral gray (base-lightest) with default
+   * text color — same chip palette as `civ-disclosure` and
+   * `civ-read-more`. Trigger scale matches `civ-action-btn--secondary`
+   * (smaller padding, base font weight via the trigger's inherited
+   * `civ-font-semibold`).
    */
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {
+    background-color: var(--civ-color-base-lightest);
+    color: inherit;
     padding: 0.625rem 1rem;
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--secondary .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-base-lighter);
+    }
+  }
+  .civ-accordion__inner--secondary .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-base-light);
+  }
+  .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__content {
+    background-color: var(--civ-color-base-lightest);
+    color: inherit;
   }
 
   /*
-   * Primary trigger scale — matches `civ-btn--secondary` (larger
-   * padding, bolder weight, slightly larger font).
+   * Primary palette: filled primary-lightest with primary-dark
+   * text — matches `civ-btn--secondary`. Trigger scale matches
+   * `civ-btn--secondary` too (larger padding, bolder weight,
+   * slightly larger font). The most prominent variant.
    */
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
     padding: 1rem 1.25rem;
     font-weight: 700;
     font-size: var(--civ-typography-fontSize-lg, 1.125rem);
+  }
+  @media (hover: hover) {
+    .civ-accordion__inner--primary .civ-accordion-item__trigger:hover {
+      background-color: var(--civ-color-primary-lighter);
+    }
+  }
+  .civ-accordion__inner--primary .civ-accordion-item__trigger:active {
+    background-color: var(--civ-color-primary-light);
+  }
+  .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__content {
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
   }
 
   /* ── Trigger base (all variants) ──────────────────────────── */

@@ -42,7 +42,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
  * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
- * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (filled action-button palette), or `'primary'` (filled main-button palette, larger/bolder)
+ * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (gray chip palette, smaller chrome), or `'primary'` (filled primary-lightest, larger/bolder)
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -76,15 +76,18 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * - `'tertiary'` (default) — bordered group with transparent
    *   triggers and inter-item dividers. The quietest, list-like
    *   affordance. Use for FAQ pages, help content, optional detail.
-   * - `'secondary'` — each item rendered as a filled
-   *   primary-lightest button (matches `civ-action-btn--secondary`'s
-   *   palette and chrome scale). Items are separated by gap, no
-   *   outer border. Use for navigation-like menus or choose-one
-   *   sections where the affordance should read as actionable.
-   * - `'primary'` — same palette as `secondary` but with the larger
-   *   padding and bolder type of `civ-btn--secondary` (the main
-   *   button family). The most prominent variant; use for hub-page
-   *   sections or hero CTAs.
+   * - `'secondary'` — each item rendered as a filled neutral-gray
+   *   button using the same chip palette as `civ-disclosure` and
+   *   `civ-read-more` (base-lightest bg, default text color), with
+   *   the smaller padding of `civ-action-btn--secondary`. Items
+   *   are separated by gap, no outer border. Use for navigation-
+   *   like menus or choose-one sections where the affordance
+   *   should read as actionable without competing with a primary
+   *   CTA on the page.
+   * - `'primary'` — filled primary-lightest button (the
+   *   `civ-btn--secondary` palette) with the larger padding and
+   *   bolder type of the main button family. The most prominent
+   *   variant; use for hub-page sections or hero CTAs.
    */
   @property({ type: String, reflect: true }) variant: AccordionVariant = 'tertiary';
 

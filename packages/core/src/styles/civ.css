@@ -21,6 +21,23 @@ body {
   font-size: var(--civ-typography-fontSize-base);
 }
 
+/* Semantic border / divider color — the single source of truth
+   for chrome lines across CivUI. Cards, dividers, accordion
+   borders, modal headers/footers, action sheets, drawers,
+   popovers, list dividers, file-item dividers, datepicker chrome,
+   data-grid borders, pagination select, nav underlines, tab
+   underlines, and tab-nav underlines all reference this.
+
+   To change the border color CivUI-wide, change this one line.
+   The Tailwind `civ-border` utility also picks this up as its
+   default border-color via `theme.extend.borderColor.DEFAULT`
+   in tailwind.config.ts. Components that need a different color
+   should still use the `civ-border-{family}-{shade}` modifier
+   (e.g. `civ-border-error` for an error-state input). */
+:root {
+  --civ-color-border: var(--civ-color-base-light);
+}
+
 /* `civ-text-base` is a font-size utility only. Tailwind would otherwise
    emit a *color* rule under the same class name because the `base` key
    collides between the colors and fontSize scales — that hidden color

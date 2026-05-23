@@ -141,6 +141,15 @@ const config: Config = {
         'lg': 'var(--civ-border-radius-lg)',
         'full': 'var(--civ-border-radius-full)',
       },
+      // Semantic default border color — Tailwind's `civ-border`
+      // utility picks this up as its border-color when no
+      // `civ-border-{family}-{shade}` modifier is supplied. Single
+      // source of truth lives in `--civ-color-border` (defined in
+      // civ.css); change that one variable to update every
+      // chrome line CivUI-wide.
+      borderColor: {
+        DEFAULT: 'var(--civ-color-border)',
+      },
     },
   },
   // Logical-property utilities (border-s-*, rounded-s, ms-*, me-*, etc.)

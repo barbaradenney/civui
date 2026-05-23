@@ -199,7 +199,7 @@
   }
 
   .civ-file-item + .civ-file-item {
-    @apply civ-border-t civ-border-base-lighter;
+    @apply civ-border-t;
   }
 
   .civ-file-item__content {
@@ -291,7 +291,7 @@
   }
 
   .civ-list--dividers > civ-list-item + civ-list-item {
-    @apply civ-border-t civ-border-base-lighter;
+    @apply civ-border-t;
   }
 
   .civ-list--sm .civ-list-item__row {
@@ -1411,14 +1411,14 @@
     height: 2em;
     object-fit: cover;
     border-radius: var(--civ-border-radius-DEFAULT);
-    border: 1px solid var(--civ-color-base-lighter);
+    border: 1px solid var(--civ-color-border);
   }
 
   /* ── Combobox ───────────────────────────────────────────────── */
 
   .civ-combobox-listbox {
     @apply civ-absolute civ-z-10 civ-w-full civ-mt-0.5 civ-bg-white civ-border
-           civ-border-base-light civ-rounded civ-shadow-md civ-max-h-60
+ civ-rounded civ-shadow-md civ-max-h-60
            civ-overflow-y-auto civ-list-none civ-p-0 civ-m-0;
   }
 
@@ -1544,7 +1544,7 @@
   /* Date picker dialog extends the shared action sheet mobile pattern */
   .civ-datepicker-dialog {
     @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
-           civ-border-base-light civ-rounded civ-shadow-lg civ-p-4;
+ civ-rounded civ-shadow-lg civ-p-4;
     width: max-content;
   }
 
@@ -1596,7 +1596,7 @@
 
   /* Today button in the dialog footer */
   .civ-datepicker-footer {
-    @apply civ-mt-2 civ-pt-2 civ-flex civ-justify-end civ-border-t civ-border-base-lighter;
+    @apply civ-mt-2 civ-pt-2 civ-flex civ-justify-end civ-border-t;
   }
   .civ-datepicker-today-btn {
     @apply civ-px-3 civ-py-1 civ-rounded civ-text-sm civ-font-semibold
@@ -1671,7 +1671,7 @@
    */
   [data-civ-form-disclosures-slot]:not(:empty) {
     @apply civ-mt-6 civ-pt-4 civ-text-sm;
-    border-top: 1px solid var(--civ-color-base-lighter);
+    border-top: 1px solid var(--civ-color-border);
     color: var(--civ-color-base-dark);
   }
 
@@ -2208,7 +2208,7 @@
   }
 
   .civ-drawer__header {
-    @apply civ-flex civ-items-center civ-justify-between civ-p-4 civ-border-b civ-border-base-light;
+    @apply civ-flex civ-items-center civ-justify-between civ-p-4 civ-border-b;
     background-color: var(--civ-drawer-bg);
   }
 
@@ -2227,7 +2227,7 @@
   }
 
   .civ-drawer__footer {
-    @apply civ-flex civ-gap-4 civ-justify-end civ-p-4 civ-border-t civ-border-base-light;
+    @apply civ-flex civ-gap-4 civ-justify-end civ-p-4 civ-border-t;
     background-color: var(--civ-drawer-bg);
   }
 
@@ -2241,7 +2241,7 @@
 
   .civ-action-sheet {
     @apply civ-absolute civ-z-50 civ-mt-1 civ-bg-white civ-border
-           civ-border-base-light civ-rounded civ-shadow-lg;
+ civ-rounded civ-shadow-lg;
     display: none;
   }
 
@@ -2394,7 +2394,7 @@
   }
 
   .civ-popover__panel {
-    @apply civ-fixed civ-bg-white civ-border civ-border-base-light
+    @apply civ-fixed civ-bg-white civ-border
            civ-rounded civ-shadow-lg civ-py-1;
     /* Position is computed in JS on open. The CSS-only fallback pins
        the panel to the top-left corner; consumers should rely on the
@@ -2659,7 +2659,7 @@
     font-weight: 600;
     font-size: var(--civ-typography-fontSize-sm);
     color: var(--civ-color-base-darkest);
-    border-bottom: 2px solid var(--civ-color-base-light);
+    border-bottom: 2px solid var(--civ-color-border);
     vertical-align: bottom;
   }
 
@@ -2727,7 +2727,7 @@
   .civ-data-grid__td {
     @apply civ-px-3 civ-py-2;
     color: var(--civ-color-base-darkest);
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-border);
     vertical-align: top;
   }
 
@@ -2747,7 +2747,7 @@
 
   .civ-data-grid--bordered .civ-data-grid__th,
   .civ-data-grid--bordered .civ-data-grid__td {
-    border-inline-end: 1px solid var(--civ-color-base-lighter);
+    border-inline-end: 1px solid var(--civ-color-border);
   }
 
   .civ-data-grid--bordered .civ-data-grid__th:last-child,
@@ -2968,7 +2968,7 @@
 
   .civ-data-grid__edit-input {
     @apply civ-w-full civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
-    border-color: var(--civ-color-base-light);
+    border-color: var(--civ-color-border);
     font: inherit;
     color: var(--civ-color-base-darkest);
   }
@@ -3003,7 +3003,7 @@
 
   .civ-data-grid__filter-cell {
     padding: var(--civ-spacing-2) var(--civ-spacing-3);
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    border-bottom: 1px solid var(--civ-color-border);
     vertical-align: middle;
   }
 
@@ -3034,7 +3034,7 @@
   }
 
   .civ-data-grid__tfoot-cell {
-    border-top: 2px solid var(--civ-color-base-light);
+    border-top: 2px solid var(--civ-color-border);
     font-weight: 600;
   }
 
@@ -3060,7 +3060,7 @@
   .civ-data-grid__tr--group-subtotal .civ-data-grid__tfoot-cell {
     /* Subtotals get a thinner border than the grand-total footer — they
        belong inside their group, not at the bottom of everything. */
-    border-top: 1px solid var(--civ-color-base-light);
+    border-top: 1px solid var(--civ-color-border);
   }
 
   /* Keyboard-nav focus indicator on the focused cell. The global focus
@@ -3143,7 +3143,7 @@
        subtotal aggregates) and shouldn't pick up an extra border /
        padding shell. */
     .civ-data-grid--stacked .civ-data-grid__tr {
-      border-bottom: 2px solid var(--civ-color-base-light);
+      border-bottom: 2px solid var(--civ-color-border);
       padding: var(--civ-spacing-2) 0;
     }
 
@@ -3249,7 +3249,7 @@
   }
 
   .civ-pagination__page-size-select {
-    @apply civ-border civ-border-base-light civ-rounded civ-px-2 civ-py-1 civ-bg-white;
+    @apply civ-border civ-rounded civ-px-2 civ-py-1 civ-bg-white;
     font: inherit;
   }
 
@@ -3797,7 +3797,7 @@
 
   .civ-tabs__list {
     @apply civ-flex civ-flex-wrap civ-items-stretch civ-gap-0
-           civ-border-b-2 civ-border-base-light;
+           civ-border-b-2;
   }
 
   .civ-tabs__panels {
@@ -3839,7 +3839,7 @@
   .civ-tab-nav__list {
     @apply civ-flex civ-flex-wrap civ-items-stretch civ-gap-0
            civ-list-none civ-p-0 civ-m-0
-           civ-border-b-2 civ-border-base-light;
+           civ-border-b-2;
   }
 
   .civ-tab-nav__link {
@@ -3877,7 +3877,7 @@
     .civ-tab-nav__link {
       @apply civ-block civ-py-3;
       margin-bottom: 0;
-      border-bottom: 1px solid var(--civ-color-base-light);
+      border-bottom: 1px solid var(--civ-color-border);
     }
     .civ-tab-nav__link--current {
       border-bottom-color: var(--civ-color-primary-DEFAULT);
@@ -4102,8 +4102,8 @@
     padding-top: var(--civ-spacing-2, 8px);
     padding-bottom: var(--civ-spacing-2, 8px);
     font-size: var(--civ-typography-fontSize-lg);
-    border-top: 1px solid var(--civ-color-base-lighter);
-    border-bottom: 1px solid var(--civ-color-base-lighter);
+    border-top: 1px solid var(--civ-color-border);
+    border-bottom: 1px solid var(--civ-color-border);
   }
 
   /* Secondary — no dividers, base font */
@@ -4486,7 +4486,7 @@
     @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded;
     background-color: var(--civ-color-white-DEFAULT);
     color: var(--civ-color-base-darkest);
-    border: 1px solid var(--civ-color-base-light);
+    border: 1px solid var(--civ-color-border);
     overflow: hidden;
     transition:
       background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),
@@ -4656,7 +4656,7 @@
   }
 
   .civ-card--tertiary {
-    @apply civ-bg-white civ-border-base-light;
+    @apply civ-bg-white;
     color: var(--civ-color-base-darkest);
   }
 
@@ -4717,7 +4717,7 @@
 
   .civ-card__footer {
     @apply civ-mt-3 civ-pt-3;
-    border-top: 1px solid var(--civ-color-base-light);
+    border-top: 1px solid var(--civ-color-border);
   }
 
   /* ── Repeater row heading ─────────────────────────────────────
@@ -4855,7 +4855,7 @@
 
   .civ-divider {
     @apply civ-border-0 civ-my-4;
-    border-top: 1px solid var(--civ-color-base-light);
+    border-top: 1px solid var(--civ-color-border);
   }
 
   .civ-divider--sm {
@@ -4863,7 +4863,7 @@
   }
 
   .civ-divider--primary {
-    border-top: 2px solid var(--civ-color-base-light);
+    border-top: 2px solid var(--civ-color-border);
   }
 
   /* ── Disclosure ──────────────────────────────────────────── */
@@ -4919,7 +4919,7 @@
    */
   .civ-disclosure__content {
     @apply civ-mt-2 civ-ps-3;
-    border-inline-start: 2px solid var(--civ-color-base-light);
+    border-inline-start: 2px solid var(--civ-color-border);
   }
 
   /* ── Accordion ─────────────────────────────────────────────
@@ -4940,16 +4940,15 @@
    *   padding and bolder type of `civ-btn--secondary` (main
    *   button family).
    *
-   * Border color: `--civ-color-base-light` (medium-light gray)
-   * across all variants. Matches `civ-card`, `civ-divider`, and
-   * the floating-surface family (combobox listbox, drawer,
-   * action-sheet, popover) which already used this color —
-   * a card containing an accordion reads as one integrated
-   * chrome, and standalone `<civ-divider>` rules between
-   * sections share the same weight. `--civ-color-base-lighter`
-   * (softer) stays reserved for the subtle in-row dividers in
-   * `civ-list--dividers` and file-item lists, where the divider
-   * is a scanning hint rather than a structural frame.
+   * Border color: `var(--civ-color-border)` — the semantic
+   * border token defined in `civ.css`. All accordion borders
+   * (outer wrapper, inter-item dividers, secondary per-item
+   * cards) reference this single variable, as do `civ-card`,
+   * `civ-divider`, modal headers/footers, action sheets,
+   * drawers, popovers, datepicker chrome, data-grid borders,
+   * list dividers, and file-item dividers. To change the
+   * border color CivUI-wide, edit `--civ-color-border` in
+   * `civ.css` — every chrome line follows.
    */
 
   /* ── Tertiary variant (default) ───────────────────────────── */
@@ -4968,11 +4967,11 @@
    * CLAUDE.md warning).
    */
   .civ-accordion__inner--tertiary {
-    border: 1px solid var(--civ-color-base-light);
+    border: 1px solid var(--civ-color-border);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-light);
+    border-bottom: 1px solid var(--civ-color-border);
   }
   .civ-accordion__inner--tertiary > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5008,7 +5007,7 @@
    * between them since their items butt directly otherwise.
    */
   .civ-accordion__inner--flush > civ-accordion-item {
-    border-bottom: 1px solid var(--civ-color-base-light);
+    border-bottom: 1px solid var(--civ-color-border);
   }
   .civ-accordion__inner--flush > civ-accordion-item:last-child {
     border-bottom: none;
@@ -5049,7 +5048,7 @@
    * than rows of a unified list.
    */
   .civ-accordion__inner--secondary > civ-accordion-item {
-    border: 1px solid var(--civ-color-base-light);
+    border: 1px solid var(--civ-color-border);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {
@@ -5584,7 +5583,7 @@
      wrapping element: the input value is already announced by the
      screen reader, so the preview is purely decorative. */
   .civ-signature-preview {
-    border-bottom: 1px solid var(--civ-color-base-light);
+    border-bottom: 1px solid var(--civ-color-border);
     padding: var(--civ-spacing-2) var(--civ-spacing-1) var(--civ-spacing-1);
     margin: var(--civ-spacing-4) 0 var(--civ-spacing-1);
     /* Hard-set height (not min-height) so the box never grows. Sized for

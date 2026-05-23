@@ -76,15 +76,13 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    * - `'tertiary'` (default) — bordered group with transparent
    *   triggers and inter-item dividers. The quietest, list-like
    *   affordance. Use for FAQ pages, help content, optional detail.
-   * - `'secondary'` — each item rendered as a filled neutral-gray
-   *   chip (base-lightest bg, default text color) matching the
-   *   `civ-disclosure` / `civ-read-more` palette, with the
-   *   smaller padding of `civ-action-btn--secondary`. When open,
-   *   the content drops the bg and uses a disclosure-style
-   *   leading-edge gray rail with indent — keeps the variant
-   *   quiet while still visually connecting the body to the
-   *   chip above. Use for navigation-like menus or choose-one
-   *   sections.
+   * - `'secondary'` — same per-item style as `tertiary`
+   *   (transparent trigger, gray hover, indented content), but
+   *   each item is its own bordered/rounded box separated by gap
+   *   rather than sharing a single outer border. Use when the
+   *   items should read as discrete sections instead of rows of
+   *   a unified list — e.g. a hub page listing distinct
+   *   workstreams that each happen to expand.
    * - `'primary'` — filled primary-lightest button (the
    *   `civ-btn--secondary` palette) with the larger padding and
    *   bolder type of the main button family. When open, trigger

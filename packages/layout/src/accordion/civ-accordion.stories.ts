@@ -282,13 +282,11 @@ Three visual variants in increasing prominence:
 - **Tertiary** (default) — bordered group with transparent
   triggers. Quietest, list-like. Use for FAQ pages, help content,
   optional detail.
-- **Secondary** — items rendered as filled neutral-gray chips
-  matching the \`civ-disclosure\` / \`civ-read-more\` palette,
-  with the smaller chrome of \`civ-action-btn--secondary\`. When
-  open, the content drops the bg and uses a disclosure-style
-  leading-edge gray rail with indent — keeps the variant quiet
-  while still visually connecting the body to the chip above.
-  Use for navigation-like menus or choose-one sections.
+- **Secondary** — same per-item style as tertiary (transparent
+  trigger, gray hover, indented content), but each item is its
+  own bordered/rounded box separated by gap rather than sharing
+  a single outer border. Use when items should read as discrete
+  sections rather than rows of a unified list.
 - **Primary** — filled primary-lightest (blue) button with the
   larger padding and bolder type of \`civ-btn--secondary\` (the
   main button family). When open, trigger + content extend the
@@ -316,10 +314,10 @@ Three visual variants in increasing prominence:
         <h3 class="civ-heading-sm civ-mb-2">Secondary</h3>
         <civ-accordion variant="secondary">
           <civ-accordion-item label="Eligibility">
-            <p>Filled gray triggers using the chip palette. Smaller padding, lighter weight — actionable without competing with primary CTAs.</p>
+            <p>Same per-item chrome as tertiary, but each item is its own bordered box.</p>
           </civ-accordion-item>
           <civ-accordion-item label="How to apply">
-            <p>Items stack with gap; each reads as a standalone button.</p>
+            <p>Items stack with gap. Use when items should read as discrete sections rather than rows of a unified list.</p>
           </civ-accordion-item>
         </civ-accordion>
       </div>

@@ -5024,76 +5024,48 @@
   /* ── Secondary + primary variants (filled triggers) ───────── */
 
   /*
-   * Filled variants stack items with a small gap; each item is a
-   * standalone rounded block. No outer border or inter-item
-   * dividers — the colored bg and gap are the separators.
+   * Secondary + primary stack their items with a small gap. The
+   * tertiary divider rules above are scoped to `--tertiary` so
+   * nothing leaks into these variants — items here start with no
+   * border by default.
    */
   .civ-accordion__inner--secondary,
   .civ-accordion__inner--primary {
     @apply civ-flex civ-flex-col civ-gap-2;
   }
-  .civ-accordion__inner--secondary > civ-accordion-item,
-  .civ-accordion__inner--primary > civ-accordion-item {
-    border-bottom: none;
-  }
 
   /*
-   * Both filled variants give the trigger its own rounded corners
-   * so when closed it reads as a fully-rounded "button". Open-state
-   * shape differs per variant (see below).
+   * Secondary variant — same per-item style as tertiary
+   * (transparent trigger, gray hover, indented content), but each
+   * item is its own bordered/rounded box separated by gap rather
+   * than sharing a single outer border with inter-item dividers.
+   * Use when the items should read as discrete sections rather
+   * than rows of a unified list.
    */
-  .civ-accordion__inner--secondary .civ-accordion-item__trigger,
-  .civ-accordion__inner--primary .civ-accordion-item__trigger {
+  .civ-accordion__inner--secondary > civ-accordion-item {
+    border: 1px solid var(--civ-color-base-light);
     border-radius: var(--civ-border-radius-DEFAULT);
   }
-
-  /*
-   * Secondary palette: neutral gray (base-lightest) with default
-   * text color — same chip palette as `civ-disclosure` and
-   * `civ-read-more`. Trigger scale matches `civ-action-btn--secondary`
-   * (smaller padding, base font weight via the trigger's inherited
-   * `civ-font-semibold`).
-   */
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {
-    background-color: var(--civ-color-base-lightest);
+    padding: 1rem;
+    background-color: transparent;
     color: inherit;
-    padding: 0.625rem 1rem;
   }
   @media (hover: hover) {
     .civ-accordion__inner--secondary .civ-accordion-item__trigger:hover {
-      background-color: var(--civ-color-base-lighter);
+      background-color: var(--civ-color-base-lightest);
     }
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger:active {
-    background-color: var(--civ-color-base-light);
+    background-color: var(--civ-color-base-lighter);
   }
 
   /*
-   * Secondary open: disclosure-style indent-rail pattern. The
-   * trigger keeps all four rounded corners (no bottom-corner
-   * squaring); the content drops any bg and instead gets a
-   * leading-edge gray rail with a small indent — mirrors
-   * `.civ-disclosure__content`. The rail visually connects the
-   * disclosed content to the chip above without extending the
-   * colored bg into the body, so secondary stays quieter than the
-   * primary variant's card pattern.
-   *
-   * Uses `border-inline-start` (not `border-left`) so RTL flips it
-   * to the right side automatically.
-   */
-  .civ-accordion__inner--secondary > civ-accordion-item[open] .civ-accordion-item__content {
-    margin-top: 0.5rem;
-    padding: 0 0 0 0.75rem;
-    background-color: transparent;
-    color: inherit;
-    border-inline-start: 2px solid var(--civ-color-base-light);
-  }
-
-  /*
-   * Primary palette: filled primary-lightest with primary-dark
-   * text — matches `civ-btn--secondary`. Trigger scale matches
-   * `civ-btn--secondary` too (larger padding, bolder weight,
-   * slightly larger font). The most prominent variant.
+   * Primary variant — filled primary-lightest chip with the
+   * `civ-btn--secondary` palette and chrome scale (larger padding,
+   * bolder weight, slightly larger font). The most prominent
+   * variant; the trigger gets its own rounded corners so when
+   * closed it reads as a fully-rounded "button".
    */
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
     background-color: var(--civ-color-primary-lightest);
@@ -5101,6 +5073,7 @@
     padding: 1rem 1.25rem;
     font-weight: 700;
     font-size: var(--civ-typography-fontSize-lg, 1.125rem);
+    border-radius: var(--civ-border-radius-DEFAULT);
   }
   @media (hover: hover) {
     .civ-accordion__inner--primary .civ-accordion-item__trigger:hover {
@@ -5115,8 +5088,7 @@
    * Primary open: card pattern — trigger squares its bottom
    * corners, content panel continues the colored bg with rounded
    * bottom corners. The trigger + content pair read as a single
-   * filled card. This shape is primary-only; secondary uses the
-   * lighter rail pattern above.
+   * filled card.
    */
   .civ-accordion__inner--primary > civ-accordion-item[open] .civ-accordion-item__trigger {
     border-bottom-left-radius: 0;

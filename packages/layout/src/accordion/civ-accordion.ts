@@ -42,7 +42,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  *
  * @prop {boolean} single - When true, opening one item closes any other open siblings
  * @prop {boolean} disabled - Disables every direct-child item — both visually and behaviorally
- * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (transparent triggers in individually-bordered cards), or `'primary'` (filled primary-lightest, larger/bolder)
+ * @prop {string} variant - `'tertiary'` (default, bordered list), `'secondary'` (transparent triggers in individually-bordered cards), `'primary'` (filled primary-lightest, larger/bolder), or `'flush'` (no outer border — designed for use inside a card footer)
  *
  * @slot - One or more `<civ-accordion-item>` children
  *
@@ -55,7 +55,7 @@ import type { CivAccordionItem } from './civ-accordion-item.js';
  * </civ-accordion>
  * ```
  */
-export type AccordionVariant = 'primary' | 'secondary' | 'tertiary';
+export type AccordionVariant = 'primary' | 'secondary' | 'tertiary' | 'flush';
 
 @customElement('civ-accordion')
 export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
@@ -89,6 +89,12 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
    *   and content extend the colored bg as a single card. The
    *   most prominent variant; use for hub-page sections or hero
    *   CTAs.
+   * - `'flush'` — same per-item chrome as `tertiary` (transparent
+   *   triggers, inter-item dividers) but with no outer wrapper
+   *   border. Designed for use inside another bordered container
+   *   (most commonly a `<civ-card>` footer) where the parent
+   *   already provides the visual boundary. Stack multiple flush
+   *   accordions in the same footer to group related sections.
    */
   @property({ type: String, reflect: true }) variant: AccordionVariant = 'tertiary';
 
@@ -172,7 +178,9 @@ export class CivAccordion extends LightDomSlotMixin(CivBaseElement) {
     // `type: String` properties, bypassing the TS-typed default) so
     // the rendered class always resolves to a real CSS rule.
     const variant: AccordionVariant =
-      this.variant === 'primary' || this.variant === 'secondary'
+      this.variant === 'primary' ||
+      this.variant === 'secondary' ||
+      this.variant === 'flush'
         ? this.variant
         : 'tertiary';
     const variantClass = `civ-accordion__inner--${variant}`;

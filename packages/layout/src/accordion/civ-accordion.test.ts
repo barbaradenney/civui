@@ -526,7 +526,7 @@ describe('civ-accordion', () => {
     expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
   });
 
-  it.each(['primary', 'secondary', 'tertiary'] as const)(
+  it.each(['primary', 'secondary', 'tertiary', 'flush'] as const)(
     'renders the %s variant inner class',
     async (variant) => {
       const el = await fixture<CivAccordion>(`
@@ -545,7 +545,7 @@ describe('civ-accordion', () => {
     // string — Tailwind's content scanner only emits CSS for class
     // names it sees in source. The parametric `it.each` test above
     // constructs `civ-accordion__inner--${variant}` via template
-    // literal which Tailwind can't follow; checking all three
+    // literal which Tailwind can't follow; checking all four
     // resolved selectors here keeps every variant's CSS in the
     // build output. See tailwind.config.ts for the cautionary tale.
     const el = await fixture<CivAccordion>(`
@@ -554,6 +554,7 @@ describe('civ-accordion', () => {
     expect(el.querySelector('.civ-accordion__inner--tertiary')).not.toBeNull();
     expect(el.querySelector('.civ-accordion__inner--secondary')).toBeNull();
     expect(el.querySelector('.civ-accordion__inner--primary')).toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--flush')).toBeNull();
 
     el.variant = 'secondary';
     await elementUpdated(el);
@@ -564,6 +565,11 @@ describe('civ-accordion', () => {
     await elementUpdated(el);
     expect(el.querySelector('.civ-accordion__inner--primary')).not.toBeNull();
     expect(el.querySelector('.civ-accordion__inner--secondary')).toBeNull();
+
+    el.variant = 'flush';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-accordion__inner--flush')).not.toBeNull();
+    expect(el.querySelector('.civ-accordion__inner--primary')).toBeNull();
   });
 
   it('re-enables children when parent disabled is cleared', async () => {

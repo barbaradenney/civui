@@ -8,6 +8,19 @@
   @tailwind utilities;
 }
 
+/* Apply the design-system base font size to `body` so every text
+   element inherits ~17-19px (the `clamp(1.063rem, ..., 1.188rem)`
+   from the typography tokens) by default. Without this rule, body
+   stays at the browser default 16px and every component has to
+   explicitly opt in via `font-size: var(--civ-typography-fontSize-base)`
+   — 36 places in components.css do exactly that. Setting it once
+   on body means new components inherit correctly by default; the
+   pre-existing explicit overrides remain harmless no-ops (same
+   value as inherited). */
+body {
+  font-size: var(--civ-typography-fontSize-base);
+}
+
 /* `civ-text-base` is a font-size utility only. Tailwind would otherwise
    emit a *color* rule under the same class name because the `base` key
    collides between the colors and fontSize scales — that hidden color

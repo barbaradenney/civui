@@ -401,3 +401,81 @@ can still be disabled independently when the parent is enabled.
     </civ-accordion>
   `,
 };
+
+export const FlushInCardFooter: Story = {
+  name: 'Flush variant in a card footer',
+  parameters: {
+    docs: {
+      description: {
+        story: `
+The \`flush\` variant removes the outer wrapper border so the
+accordion nests cleanly inside another bordered container — most
+commonly a \`<civ-card>\` footer. Same per-item chrome as tertiary
+(transparent triggers, inter-item dividers, indented content)
+without the doubled-up outer frame.
+
+**One accordion** — drop a single \`<civ-accordion variant="flush">\`
+into the card footer slot. The card's footer top-divider visually
+separates the accordion from the body; the accordion's inter-item
+dividers separate questions.
+
+**Multiple accordions** — stack several flush accordions in the
+same footer to group related sections. Each accordion's last item
+has no bottom border so adjacent accordions butt directly; add a
+heading or \`<civ-divider>\` between them to read as distinct
+groups.
+        `,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <h3 class="civ-heading-sm civ-mb-2">One accordion in a card footer</h3>
+        <civ-card>
+          <div data-card-header><h3 class="civ-heading-md">Application status</h3></div>
+          <p>Your application was received on January 15, 2026 and is currently in review.</p>
+          <div data-card-footer>
+            <civ-accordion variant="flush">
+              <civ-accordion-item label="View timeline">
+                <p>Submitted → Review → Decision → Notification. Most applications complete within 7 business days.</p>
+              </civ-accordion-item>
+              <civ-accordion-item label="What happens next">
+                <p>You'll receive a written notice in the mail. If approved, your benefits start the following month.</p>
+              </civ-accordion-item>
+            </civ-accordion>
+          </div>
+        </civ-card>
+      </div>
+
+      <div>
+        <h3 class="civ-heading-sm civ-mb-2">Multiple accordions in a card footer</h3>
+        <civ-card>
+          <div data-card-header><h3 class="civ-heading-md">Account details</h3></div>
+          <p>Below are sections you can expand to view or edit specific details about your account.</p>
+          <div data-card-footer>
+            <h4 class="civ-heading-sm civ-mb-1">Profile</h4>
+            <civ-accordion variant="flush">
+              <civ-accordion-item label="Personal information">
+                <p>Name, date of birth, and identification on file.</p>
+              </civ-accordion-item>
+              <civ-accordion-item label="Contact preferences">
+                <p>How and when we contact you about your benefits.</p>
+              </civ-accordion-item>
+            </civ-accordion>
+
+            <h4 class="civ-heading-sm civ-mt-3 civ-mb-1">Security</h4>
+            <civ-accordion variant="flush">
+              <civ-accordion-item label="Sign-in methods">
+                <p>Login.gov, ID.me, and DS Logon options.</p>
+              </civ-accordion-item>
+              <civ-accordion-item label="Two-factor authentication">
+                <p>Add a second factor to protect your account.</p>
+              </civ-accordion-item>
+            </civ-accordion>
+          </div>
+        </civ-card>
+      </div>
+    </div>
+  `,
+};

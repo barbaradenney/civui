@@ -62,6 +62,8 @@ const TAG_TO_PACKAGE: Record<string, string> = {
   'civ-alert': '@civui/feedback',
   'civ-badge': '@civui/feedback',
   'civ-count': '@civui/feedback',
+  'civ-spinner': '@civui/feedback',
+  'civ-skeleton': '@civui/feedback',
   // Navigation cluster (extracted from @civui/actions into its own package).
   'civ-breadcrumb': '@civui/navigation',
   'civ-breadcrumb-item': '@civui/navigation',

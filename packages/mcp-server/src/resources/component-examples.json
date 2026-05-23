@@ -5302,19 +5302,19 @@
     {
       "story": "Default",
       "category": "Feedback/Skeleton",
-      "html": "<civ-skeleton></civ-skeleton>",
+      "html": "<div aria-busy=\"true\" style=\"width: 320px;\">\n      <civ-skeleton></civ-skeleton>\n    </div>",
       "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
     },
     {
       "story": "MultilineText",
       "category": "Feedback/Skeleton",
-      "html": "<div style=\"width: 320px;\">\n      <civ-skeleton lines=\"4\"></civ-skeleton>\n    </div>",
+      "html": "<div aria-busy=\"true\" style=\"width: 320px;\">\n      <civ-skeleton lines=\"4\"></civ-skeleton>\n    </div>",
       "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
     },
     {
       "story": "Variants",
       "category": "Feedback/Skeleton",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"width: 320px;\">\n      <civ-skeleton variant=\"heading\" width=\"60%\"></civ-skeleton>\n      <civ-skeleton variant=\"text\"></civ-skeleton>\n      <civ-skeleton variant=\"block\"></civ-skeleton>\n      <civ-skeleton variant=\"circle\"></civ-skeleton>\n    </div>",
+      "html": "<div aria-busy=\"true\" class=\"civ-flex civ-flex-col civ-gap-4\" style=\"width: 320px;\">\n      <civ-skeleton variant=\"heading\" width=\"60%\"></civ-skeleton>\n      <civ-skeleton variant=\"text\"></civ-skeleton>\n      <civ-skeleton variant=\"block\"></civ-skeleton>\n      <civ-skeleton variant=\"circle\"></civ-skeleton>\n    </div>",
       "source": "packages/feedback/src/skeleton/civ-skeleton.stories.ts"
     }
   ],

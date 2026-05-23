@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-spinner',
-  description: 'Indeterminate loading indicator for short waits (200ms–~1s) where the shape of incoming content is unknown. For longer waits with a known content shape, use `civ-skeleton` instead. Host carries `role="status"` + `aria-live="polite"` so the visually-hidden `label` is announced once on first appearance. Built-in `delay` (default 200ms before render) and `minDuration` (default 400ms minimum on-screen) protect against flash on fast responses. Spinner rotation is functional, not decorative — it keeps animating (slowed) under `prefers-reduced-motion`, the lone carve-out in CivUI\'s otherwise global motion-kill rule.',
+  description: 'Indeterminate loading indicator for short waits (200ms–~1s) where the shape of incoming content is unknown. For longer waits with a known content shape, use `civ-skeleton` instead. Host gains `role="img"` + `aria-label="${label}"` when visible (so AT users discovering it later hear the label) and fires a single announcement via `@civui/core`\'s shared queue (so concurrent spinners don\'t stack). Built-in `delay` (default 200ms before render) and `minDuration` (default 400ms minimum on-screen) protect against flash on fast responses; reconnects reset visibility so the contract holds across every mount cycle. Spinner rotation is functional, not decorative — it keeps animating (slowed) under `prefers-reduced-motion`. Use `decorative` when nesting inside a parent that already announces busy state (e.g. `civ-button[loading]`).',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -18,8 +18,8 @@ const schema: ComponentSchema = {
     },
     label: {
       type: 'string',
-      description: 'Accessible name announced via the host\'s `aria-live="polite"` region. Use a present-participle verb specific to the action ("Saving your application…", not generic "Loading")',
-      default: 'Loading…',
+      description: 'Accessible name applied as `aria-label` on the host and announced once via @civui/core\'s `announce()` queue when the spinner becomes visible. Empty default — the locale\'s `spinnerDefaultLabel` ("Loading…" in English) is used when unset. Pass an action-specific present-participle verb ("Saving your application…") for clarity',
+      default: '',
     },
     delay: {
       type: 'number',
@@ -31,6 +31,12 @@ const schema: ComponentSchema = {
       description: 'Minimum on-screen time once the spinner has appeared. Once visible, the spinner stays for at least this long so the user perceives a state change rather than a flicker. Consumers awaiting `waitForMinDuration()` honor this before unmounting',
       default: 400,
       attribute: 'min-duration',
+    },
+    decorative: {
+      type: 'boolean',
+      description: 'Suppress all AT semantics — no `role`, no `aria-label`, no announcement. Use when nesting the spinner inside a parent that already signals busy state (e.g. `<civ-button loading>` which sets `aria-busy="true"` and announces `loadingLabel` itself). Avoids the NVDA/JAWS aria-busy-buffering trap that would swallow the spinner\'s own live region',
+      default: false,
+      reflect: true,
     },
   },
 

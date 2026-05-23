@@ -24,15 +24,23 @@ export default meta;
 
 type Story = StoryObj;
 
+// Every story wraps the skeleton(s) in `aria-busy="true"` because
+// that's the contract — the parent region carries the busy state.
+// Consumers who forget the wrapper get a dev-warn at runtime.
+
 /** Default — single text line at full width. */
 export const Default: Story = {
-  render: () => html`<civ-skeleton></civ-skeleton>`,
+  render: () => html`
+    <div aria-busy="true" style="width: 320px;">
+      <civ-skeleton></civ-skeleton>
+    </div>
+  `,
 };
 
 /** Each variant in isolation. */
 export const Variants: Story = {
   render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-4" style="width: 320px;">
+    <div aria-busy="true" class="civ-flex civ-flex-col civ-gap-4" style="width: 320px;">
       <civ-skeleton variant="heading" width="60%"></civ-skeleton>
       <civ-skeleton variant="text"></civ-skeleton>
       <civ-skeleton variant="block"></civ-skeleton>
@@ -44,7 +52,7 @@ export const Variants: Story = {
 /** Multi-line text placeholder — last line narrows to 70% to mimic ragged-right. */
 export const MultilineText: Story = {
   render: () => html`
-    <div style="width: 320px;">
+    <div aria-busy="true" style="width: 320px;">
       <civ-skeleton lines="4"></civ-skeleton>
     </div>
   `,

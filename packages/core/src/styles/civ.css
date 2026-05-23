@@ -147,10 +147,12 @@ summary:focus,
 
 /* Reduced motion: disable all transitions and animations.
  *
- * The spinner rotation is a documented exception (see civ-spinner):
- * it conveys "system isn't frozen" and is functional, not decorative.
- * It still slows down for reduced-motion users (longer duration) but
- * doesn't stop entirely. Primer's Spinner takes the same position. */
+ * Spinner rotation is a documented exception (see civ-spinner): it
+ * conveys "system isn't frozen" and is functional, not decorative.
+ * Same rationale applies to `civ-icon[name="loading"]` (the older
+ * loading-icon variant from civ-icon, which uses the same civ-spin
+ * keyframe) — both keep rotating, just slowed down. Primer's
+ * Spinner takes the same position. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -161,7 +163,8 @@ summary:focus,
     scroll-behavior: auto !important;
   }
 
-  .civ-spinner__svg {
+  .civ-spinner__svg,
+  .civ-icon--loading {
     animation-duration: 2s !important;
     animation-iteration-count: infinite !important;
   }

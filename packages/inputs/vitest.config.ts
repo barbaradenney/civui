@@ -14,6 +14,11 @@ export default defineConfig({
       '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
       '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
+      // Defensive — the `@civui/actions` barrel transitively imports
+      // `@civui/feedback/spinner` via civ-button. No inputs test pulls
+      // civ-button today, but if one ever does we want it to resolve
+      // to source instead of failing at module load.
+      '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
     },
   },
 });

@@ -18,7 +18,7 @@ export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './
 export { generateId, resetIdCounter } from './utils/id-generator.js';
 export { debounce } from './utils/debounce.js';
 export { dispatch, forwardTileClick } from './utils/events.js';
-export { warnInvalidProp, devWarn } from './utils/dev-warn.js';
+export { warnInvalidProp, devWarn, resetDevWarnDedupe } from './utils/dev-warn.js';
 export { isSafeHref, sanitizeHref } from './utils/href-safety.js';
 export { interpolate } from './utils/interpolate.js';
 export { isRtl } from './utils/direction.js';

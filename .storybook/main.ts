@@ -115,6 +115,7 @@ const config: StorybookConfig = {
       '@civui/inputs/number': resolve(root, 'packages/inputs/src/number/index.ts'),
       '@civui/inputs/memorable-date': resolve(root, 'packages/inputs/src/date-input/index.ts'),
       '@civui/inputs/yes-no': resolve(root, 'packages/inputs/src/yes-no/index.ts'),
+      '@civui/inputs/toggle': resolve(root, 'packages/inputs/src/toggle/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
       '@civui/controls/checkbox': resolve(root, 'packages/controls/src/checkbox/index.ts'),
       '@civui/controls/radio': resolve(root, 'packages/controls/src/radio/index.ts'),
@@ -158,6 +159,7 @@ const config: StorybookConfig = {
       '@civui/layout/tag': resolve(root, 'packages/layout/src/tag/index.ts'),
       '@civui/layout/button-group': resolve(root, 'packages/layout/src/button-group/index.ts'),
       '@civui/layout/image-preview': resolve(root, 'packages/layout/src/image-preview/index.ts'),
+      '@civui/layout/disclosure': resolve(root, 'packages/layout/src/disclosure/index.ts'),
       '@civui/layout': resolve(root, 'packages/layout/src/index.ts'),
       // Data — admin / collection-display family
       '@civui/data/data-grid': resolve(root, 'packages/data/src/data-grid/index.ts'),

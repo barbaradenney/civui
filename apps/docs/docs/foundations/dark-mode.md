@@ -4,9 +4,15 @@ sidebar_position: 14
 sidebar_label: Dark Mode
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Dark Mode
 
 CivUI supports dark mode via the `prefers-color-scheme` media query. When the user's OS is set to dark mode, all components automatically switch to a dark palette with WCAG AA contrast ratios.
+
+## Light vs. dark — side-by-side
+
+<StoryEmbed id="foundations-dark-mode--side-by-side" />
 
 ## How it works
 
@@ -50,6 +56,12 @@ The dark palette inverts the lightness scale. `lightest` becomes the darkest sha
 | `success-DEFAULT` | `#00a91c` | `#5cb85c` | Success states |
 | `base-darkest` | `#1b1b1b` | `#f0f0f0` | Primary text |
 | `base-lightest` | `#f0f0f0` | `#1b1b1b` | Page background |
+
+<StoryEmbed id="foundations-dark-mode--palette-comparison" />
+
+## A full form in the dark palette
+
+<StoryEmbed id="foundations-dark-mode--components-in-dark" />
 
 ## Focus rings in dark mode
 

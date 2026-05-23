@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const SpacousScale: Story = {
+export const SpaciousScale: Story = {
   name: 'Spacious Scale',
   render: () => html`
     <div data-civ-scale="spacious">

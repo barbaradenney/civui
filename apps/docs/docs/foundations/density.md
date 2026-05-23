@@ -4,9 +4,15 @@ sidebar_position: 16
 sidebar_label: Density
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Density
 
 CivUI supports three density scales that adjust spacing, font sizes, and line heights globally. Apply a scale to any container element and all CivUI components inside inherit the adjusted values.
+
+## All three scales compared
+
+<StoryEmbed id="foundations-density-examples--side-by-side" />
 
 ## Scales
 
@@ -91,6 +97,20 @@ Scales can be nested. The innermost `data-civ-scale` wins:
   </div>
 </div>
 ```
+
+## Per-scale previews
+
+### Default
+
+<StoryEmbed id="foundations-density-examples--default-scale" />
+
+### Dense — admin dashboards, data tables
+
+<StoryEmbed id="foundations-density-examples--dense-scale" />
+
+### Spacious — accessibility, kiosks, public-facing flows
+
+<StoryEmbed id="foundations-density-examples--spacious-scale" />
 
 ## When to use each scale
 

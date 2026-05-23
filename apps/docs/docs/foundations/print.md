@@ -4,9 +4,17 @@ sidebar_position: 15
 sidebar_label: Print
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Print Styles
 
 CivUI includes print-specific CSS rules that clean up form rendering for paper output. Government forms are frequently printed for records, mailing, or offline review. The print styles ensure forms look professional without interactive UI clutter.
+
+## Complete form — paper filing preview
+
+The stories below simulate what each component looks like when printed (interactive UI hidden, borders simplified, hint text shrunken). To see the real thing, open browser print preview on any CivUI page.
+
+<StoryEmbed id="foundations-print-preview--complete-form" />
 
 ## What gets hidden
 
@@ -40,6 +48,28 @@ Checkbox and radio states are preserved in print. Checked items render their vis
 ## Page break control
 
 Form field containers use `break-inside: avoid` to prevent a label from appearing at the bottom of one page with its input at the top of the next.
+
+## Per-component previews
+
+### Text inputs
+
+<StoryEmbed id="foundations-print-preview--text-inputs" />
+
+### Textarea and select
+
+<StoryEmbed id="foundations-print-preview--textarea-and-select" />
+
+### Checkboxes and radios
+
+<StoryEmbed id="foundations-print-preview--selection-controls" />
+
+### Date fields
+
+<StoryEmbed id="foundations-print-preview--date-fields" />
+
+### Compound fields (name, address)
+
+<StoryEmbed id="foundations-print-preview--compound-fields" />
 
 ## Testing print output
 

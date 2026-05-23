@@ -4,6 +4,8 @@ sidebar_position: 12
 sidebar_label: i18n
 ---
 
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
 # Internationalization (i18n)
 
 CivUI ships with 580+ translatable locale strings covering every component's labels, hints, error messages, and screen reader announcements. Override any string with a single function call.
@@ -47,6 +49,8 @@ setLocaleStrings({
 ```
 
 ## Component props always win
+
+<StoryEmbed id="foundations-internationalization--component-props-beat-locale" />
 
 Individual component props override locale strings. This lets you customize a specific instance without changing the global locale:
 
@@ -93,6 +97,8 @@ Date components accept a `locale` prop for formatting month names and date displ
 
 Internally, dates use `Intl.DateTimeFormat` with the specified locale for month names and formatted output.
 
+<StoryEmbed id="foundations-internationalization--locale-aware-dates" />
+
 ## RTL support
 
 CivUI supports right-to-left languages. Set `dir="rtl"` on a parent element or the `<html>` tag:
@@ -109,6 +115,12 @@ CivUI supports right-to-left languages. Set `dir="rtl"` on a parent element or t
 - The `isRtl(el)` utility function from `@civui/core` detects RTL context via computed style
 
 No additional configuration is needed beyond setting the `dir` attribute.
+
+<StoryEmbed id="foundations-internationalization--rtl-mirror" />
+
+### Logical property utilities
+
+<StoryEmbed id="foundations-internationalization--logical-properties-demo" />
 
 ## Interpolation
 

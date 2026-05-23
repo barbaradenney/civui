@@ -1,0 +1,137 @@
+---
+title: Metric Tile
+sidebar_position: 7
+sidebar_label: Metric Tile
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import MetricTileProps from "./_metric-tile.props.mdx";
+import MetricTileEvents from "./_metric-tile.events.mdx";
+import MetricGroupProps from "./_metric-group.props.mdx";
+import MetricGroupEvents from "./_metric-group.events.mdx";
+
+# Metric Tile
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-metric-tile`](pathname:///civui/storybook/?path=/docs/contract-civ-metric-tile--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-metric-tile>` and `<civ-metric-group>`
+
+Display-only dashboard tiles for surfacing key figures. The tile inverts
+`<civ-card>`'s hierarchy — the **value** is the dominant element, with a
+small caption **label** above and an optional delta indicator and
+description below.
+
+Compose with `<civ-metric-group>` for responsive multi-tile layouts that
+stack to one column on mobile, two on tablet, and up to `columns` on
+desktop.
+
+## When to use
+
+Use metric tiles for read-only summary figures — dashboard hero stats,
+list-page counts, application status rollups. The tile is not interactive
+and not form-associated. If you need a clickable tile that drills into a
+detail view, use [`<civ-link-card>`](../actions/link-card) instead. If
+you need a structured content container with rich slot areas, use
+[`<civ-card>`](../layout/card).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="data-metric-tile--default" />
+
+### With unit
+
+<StoryEmbed id="data-metric-tile--with-unit" />
+
+### With positive trend
+
+<StoryEmbed id="data-metric-tile--with-positive-trend" />
+
+### With negative trend
+
+<StoryEmbed id="data-metric-tile--with-negative-trend" />
+
+### With flat trend
+
+<StoryEmbed id="data-metric-tile--with-flat-trend" />
+
+### With icon
+
+<StoryEmbed id="data-metric-tile--with-icon" />
+
+### In a metric group
+
+<StoryEmbed id="data-metric-tile--in-group" />
+
+## Trend vs. intent — both axes matter
+
+`trend` and `intent` are independent on purpose. "Up" doesn't always mean
+"good" — errors going up is bad, response time going down is good. So the
+arrow direction and the color are set separately:
+
+| Metric | trend | intent |
+|---|---|---|
+| Active users went up 12% | `up` | `positive` |
+| Errors went up 8% | `up` | `negative` |
+| Response time went down 15% | `down` | `positive` |
+| Conversion rate went down 2% | `down` | `negative` |
+| Latency unchanged | `flat` | `neutral` |
+
+If you omit `intent`, the delta renders in neutral (no color) — useful
+when the figure is informational and "good" or "bad" doesn't apply.
+
+## Metric group — responsive layout
+
+`<civ-metric-group>` is a pure layout primitive: a CSS grid that scales
+from 1 column on mobile, to 2 columns on tablet, to up to `columns` on
+desktop (≥768px). `columns` accepts 2–6.
+
+```html
+<civ-metric-group columns="3">
+  <civ-metric-tile label="Applications" value="1,234"></civ-metric-tile>
+  <civ-metric-tile label="Pending review" value="248"></civ-metric-tile>
+  <civ-metric-tile label="Approved" value="47"></civ-metric-tile>
+</civ-metric-group>
+```
+
+The group has no chrome — no headings, no border, no surrounding card.
+If your group needs a section label ("Key metrics — last 30 days"),
+wrap it in a `<section>` with your own `<h2>` above.
+
+## Accessibility
+
+- The tile has `role="group"` so screen readers announce the figure as
+  a related cluster.
+- The label is rendered as a `<span>`, not an `<h*>` — metric tiles are
+  not section headings. If your dashboard layout needs heading
+  structure, wrap each group of tiles in a `<section>` with your own
+  heading.
+- The trend arrow is announced via the icon's accessible label
+  (`"Up"` / `"Down"` / `"No change"`) — so a screen-reader user gets
+  the direction even when they can't see the color.
+- Color is never the sole indicator of intent — the arrow direction is
+  present alongside the color, so colorblind users get the full meaning.
+
+## Props
+
+### `<civ-metric-tile>`
+
+<MetricTileProps />
+
+### `<civ-metric-group>`
+
+<MetricGroupProps />
+
+## Events
+
+`<civ-metric-tile>` and `<civ-metric-group>` are display-only and fire
+no custom events.
+
+<MetricTileEvents />
+
+<MetricGroupEvents />

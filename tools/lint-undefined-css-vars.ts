@@ -64,6 +64,12 @@ const RUNTIME_DEFINED_VARS = new Set<string>([
   // SVG-pattern detector — not a real CSS reference, just a token
   // that the editor scans for when matching icon shapes.
   '--civ-icon-stroke',
+  // Set by civ-metric-group at render time via inline style — the
+  // `columns` prop is forwarded as
+  // `style="--civ-metric-group-cols: ${cols}"`. The CSS reference
+  // has a `, 4` fallback so the unstyled state still renders.
+  // Per-instance API surface, not a global design token.
+  '--civ-metric-group-cols',
 ]);
 
 function* walk(path: string): Generator<string> {

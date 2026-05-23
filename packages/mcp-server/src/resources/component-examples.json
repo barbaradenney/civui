@@ -294,9 +294,9 @@
   ],
   "civ-back-to-top": [
     {
-      "story": "AlwaysVisibleDemo",
+      "story": "ChipPreview",
       "category": "Navigation/Back To Top",
-      "html": "<p class=\"civ-italic civ-mb-3\">\n      Manually clears the <code>hidden</code> attribute for inspection.\n      Not a recommended consumer pattern — the component manages\n      <code>hidden</code> itself.\n    </p>\n    <div style=\"height: 200px;\"></div>\n    <civ-back-to-top\n      label=\"Back to top\"\n      .hidden=${false}\n    ></civ-back-to-top>",
+      "html": "<p class=\"civ-italic civ-mb-3\">\n      <code>threshold=\"-1\"</code> positions the sentinel above the viewport\n      so the observer always reports it out-of-view — the chip flips\n      visible right away.\n    </p>\n    <div style=\"height: 200px;\"></div>\n    <civ-back-to-top label=\"Back to top\" threshold=\"-1\"></civ-back-to-top>",
       "source": "packages/actions/src/back-to-top/civ-back-to-top.stories.ts"
     },
     {
@@ -3479,6 +3479,86 @@
       "category": "Overlays/Menu",
       "html": "<div style=\"min-height: 280px;\">\n      <civ-menu label=\"File actions\">\n        <civ-button data-civ-menu-trigger variant=\"tertiary\" label=\"File actions\"></civ-button>\n        <civ-menu-item value=\"open\" icon=\"open\">Open</civ-menu-item>\n        <civ-menu-item value=\"download\" icon=\"download\">Download</civ-menu-item>\n        <civ-menu-item value=\"share\" icon=\"share\">Share</civ-menu-item>\n      </civ-menu>\n    </div>",
       "source": "packages/overlays/src/menu/civ-menu.stories.ts"
+    }
+  ],
+  "civ-metric-group": [
+    {
+      "story": "Default",
+      "name": "Default (4 columns)",
+      "category": "Data/Metric Group",
+      "html": "<civ-metric-group>${tiles}</civ-metric-group>",
+      "source": "packages/data/src/metric-group/civ-metric-group.stories.ts"
+    },
+    {
+      "story": "InGroup",
+      "name": "In a metric group",
+      "category": "Data/Metric Tile",
+      "html": "<civ-metric-group columns=\"4\">\n      <civ-metric-tile\n        label=\"Applications\"\n        value=\"1,234\"\n        delta=\"+12%\"\n        trend=\"up\"\n        intent=\"positive\"\n        description=\"vs. last 30 days\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Pending review\"\n        value=\"248\"\n        delta=\"-8\"\n        trend=\"down\"\n        intent=\"positive\"\n        description=\"vs. last week\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Approved\"\n        value=\"47\"\n        delta=\"+5\"\n        trend=\"up\"\n        intent=\"positive\"\n        description=\"this week\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Avg. processing\"\n        value=\"3.2\"\n        unit=\"days\"\n        delta=\"0.4\"\n        trend=\"up\"\n        intent=\"negative\"\n        description=\"vs. last quarter\"\n      ></civ-metric-tile>\n    </civ-metric-group>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "ThreeColumns",
+      "name": "Three columns",
+      "category": "Data/Metric Group",
+      "html": "<civ-metric-group columns=\"3\">\n      <civ-metric-tile label=\"Applications\" value=\"1,234\"></civ-metric-tile>\n      <civ-metric-tile label=\"Pending review\" value=\"248\"></civ-metric-tile>\n      <civ-metric-tile label=\"Approved\" value=\"47\"></civ-metric-tile>\n    </civ-metric-group>",
+      "source": "packages/data/src/metric-group/civ-metric-group.stories.ts"
+    },
+    {
+      "story": "TwoColumns",
+      "name": "Two columns",
+      "category": "Data/Metric Group",
+      "html": "<civ-metric-group columns=\"2\">\n      <civ-metric-tile label=\"Applications\" value=\"1,234\"></civ-metric-tile>\n      <civ-metric-tile label=\"Approved\" value=\"47\"></civ-metric-tile>\n    </civ-metric-group>",
+      "source": "packages/data/src/metric-group/civ-metric-group.stories.ts"
+    },
+    {
+      "story": "WithDeltas",
+      "name": "With deltas and descriptions",
+      "category": "Data/Metric Group",
+      "html": "<civ-metric-group columns=\"4\">\n      <civ-metric-tile\n        label=\"Applications\"\n        value=\"1,234\"\n        delta=\"+12%\"\n        trend=\"up\"\n        intent=\"positive\"\n        description=\"vs. last 30 days\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Pending review\"\n        value=\"248\"\n        delta=\"-8\"\n        trend=\"down\"\n        intent=\"positive\"\n        description=\"vs. last week\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Approved\"\n        value=\"47\"\n        delta=\"+5\"\n        trend=\"up\"\n        intent=\"positive\"\n        description=\"this week\"\n      ></civ-metric-tile>\n      <civ-metric-tile\n        label=\"Avg. processing\"\n        value=\"3.2\"\n        unit=\"days\"\n        delta=\"0.4\"\n        trend=\"up\"\n        intent=\"negative\"\n        description=\"vs. last quarter\"\n      ></civ-metric-tile>\n    </civ-metric-group>",
+      "source": "packages/data/src/metric-group/civ-metric-group.stories.ts"
+    }
+  ],
+  "civ-metric-tile": [
+    {
+      "story": "Default",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile label=\"Applications\" value=\"1,234\"></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "WithFlatTrend",
+      "name": "With flat trend",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile\n        label=\"System uptime\"\n        value=\"99.9\"\n        unit=\"%\"\n        delta=\"0%\"\n        trend=\"flat\"\n        intent=\"neutral\"\n        description=\"vs. last 30 days\"\n      ></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "WithIcon",
+      "name": "With icon",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile\n        icon=\"check-circle\"\n        label=\"Approved this week\"\n        value=\"47\"\n        delta=\"+5\"\n        trend=\"up\"\n        intent=\"positive\"\n      ></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "WithNegativeTrend",
+      "name": "With negative trend",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile\n        label=\"Errors\"\n        value=\"47\"\n        delta=\"+8%\"\n        trend=\"up\"\n        intent=\"negative\"\n        description=\"vs. last 30 days\"\n      ></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "WithPositiveTrend",
+      "name": "With positive trend",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile\n        label=\"Active users\"\n        value=\"1,234\"\n        delta=\"+12%\"\n        trend=\"up\"\n        intent=\"positive\"\n        description=\"vs. last 30 days\"\n      ></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
+    },
+    {
+      "story": "WithUnit",
+      "name": "With unit",
+      "category": "Data/Metric Tile",
+      "html": "<div style=\"max-width: 280px;\">\n      <civ-metric-tile label=\"Avg. response time\" value=\"230\" unit=\"ms\"></civ-metric-tile>\n    </div>",
+      "source": "packages/data/src/metric-tile/civ-metric-tile.stories.ts"
     }
   ],
   "civ-name": [

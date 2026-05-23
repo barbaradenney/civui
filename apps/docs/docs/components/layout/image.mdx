@@ -1,0 +1,92 @@
+---
+title: Image
+sidebar_position: 14
+sidebar_label: Image
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_image.props.mdx";
+
+# Image
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-image`](pathname:///civui/storybook/?path=/docs/contract-civ-image--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-image>`
+
+General-purpose accessible image. Distinct from [`civ-image-preview`](./image-preview), which is upload chrome with a filename + filesize caption next to the image. Use `civ-image` for content imagery — marketing visuals, illustrations, profile photos, avatar thumbnails — anything that isn't a file-upload preview.
+
+The defaults bake in what gov sites typically miss:
+
+- **`loading="lazy"`** — defers off-screen images.
+- **`decoding="async"`** — never blocks render.
+- **CSS `aspect-ratio` reserved** from `ratio` or `width`/`height` so the box has shape before the bytes arrive — no Cumulative Layout Shift.
+- **`object-fit: cover`** by default so the image fills its box without stretching.
+- **Required `alt`** — the component dev-warns if you omit the attribute.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-image--default" />
+
+### Aspect ratios
+
+Five blessed ratios — Scottish GOV's aspect-box vocabulary plus 3:2 — plus `auto` (which defers to intrinsic `width`/`height` if both are set).
+
+<StoryEmbed id="layout-image--ratios" />
+
+### Fit modes
+
+`cover` fills the box and crops; `contain` fits inside the box without cropping (letterboxing / pillarboxing).
+
+<StoryEmbed id="layout-image--fit-modes" />
+
+### Decorative images
+
+For purely decorative imagery, pass `alt=""` (empty string). This is the W3C-documented opt-out — screen readers skip the image entirely. **Never** omit the `alt` attribute; the component will dev-warn and screen readers fall back to reading the filename, which on .gov uploads is often opaque ("DSC_4827_final_v3.jpg").
+
+<StoryEmbed id="layout-image--decorative" />
+
+### Thumbnails
+
+The `thumbnail` variant is a fixed-pixel-size image on Primer's stepped scale (32 / 48 / 64 / 96 / 128 px). Use for inline avatars or row thumbnails. Defaults to `64` if `size` is omitted.
+
+<StoryEmbed id="layout-image--thumbnails" />
+
+### Rounded avatars
+
+The `rounded` boolean makes the thumbnail circular — the right shape for profile photos. Ignored for the content variant.
+
+<StoryEmbed id="layout-image--rounded-avatars" />
+
+### Eager loading for hero images
+
+Use `loading="eager"` for above-the-fold hero images (the LCP candidate). For everything below the fold, leave the default `loading="lazy"`.
+
+<StoryEmbed id="layout-image--eager-loading" />
+
+## Accessibility
+
+- **Alt is required.** WCAG 1.1.1 / Section 508 §1194.22(a). The component dev-warns if `alt` is undefined. Pass `alt=""` (empty string) for decorative images — that's the documented opt-out, never omit.
+- **Don't auto-generate alt from filenames.** Many image components fall back to the `src` basename; we deliberately don't, because government uploads frequently have opaque names that are worse than nothing.
+- **Aspect-ratio reservation prevents CLS.** Set `ratio="16:9"` (or pass intrinsic `width` and `height` in px) so the box has shape before the image bytes arrive. The component dev-warns if neither is set on the content variant.
+- **For informative images, alt should describe meaning, not appearance.** "A veteran fills out their application" — not "A man holding a clipboard."
+- **For complex images** (charts, diagrams), put the long description in adjacent prose or use `aria-describedby` to point at it. Don't stuff a paragraph into `alt`.
+- **For image-links** (the image is the only content of an `<a>`), alt must describe the destination, not the picture.
+
+## When NOT to use this
+
+| Need | Use |
+|------|-----|
+| Upload preview chrome (filename + filesize) | [`civ-image-preview`](./image-preview) |
+| Icon (inline SVG, color via `currentColor`) | [`civ-icon`](../core/icon) |
+| Status indicator | [`civ-badge`](../feedback/badge) |
+| Complex art direction (different crop per breakpoint) | Raw `<picture>` element — `civ-image` v1 deliberately defers art direction |
+
+## Props
+
+<PropsTable />

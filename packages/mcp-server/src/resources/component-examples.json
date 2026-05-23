@@ -2799,6 +2799,38 @@
       "source": "packages/core/src/icon/civ-icon-editor.stories.ts"
     }
   ],
+  "civ-image": [
+    {
+      "story": "Decorative",
+      "category": "Layout/Image",
+      "html": "<div style=\"max-width: 480px;\">\n      <p class=\"civ-italic civ-mb-2\">\n        This image has <code>alt=\"\"</code>, so screen readers skip it entirely.\n      </p>\n      <civ-image\n        src=\"${photo(800, 200, 'decor')}\"\n        alt=\"\"\n        ratio=\"21:9\"\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Image",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"${photo(800, 450, 'hero')}\"\n        alt=\"A government services worker assists a veteran at a counter\"\n        ratio=\"16:9\"\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "EagerLoading",
+      "category": "Layout/Image",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"${photo(800, 450, 'hero')}\"\n        alt=\"Hero image at the top of the page\"\n        ratio=\"16:9\"\n        loading=\"eager\"\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "FitModes",
+      "category": "Layout/Image",
+      "html": "<div class=\"civ-flex civ-gap-4\">\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"cover\"</p>\n        <civ-image\n          src=\"${photo(800, 450, 'cover')}\"\n          alt=\"cover example\"\n          ratio=\"1:1\"\n          fit=\"cover\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n      <div style=\"width: 220px;\">\n        <p class=\"civ-italic civ-mb-1\">fit=\"contain\"</p>\n        <civ-image\n          src=\"${photo(800, 450, 'cover')}\"\n          alt=\"contain example\"\n          ratio=\"1:1\"\n          fit=\"contain\"\n          style=\"background: #eee;\"\n        ></civ-image>\n      </div>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
+      "story": "RoundedAvatars",
+      "category": "Layout/Image",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-items-center\">\n      <civ-image\n        src=\"${photo(256, 256, 'p1')}\"\n        alt=\"Jane Doe\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n      <civ-image\n        src=\"${photo(256, 256, 'p2')}\"\n        alt=\"John Smith\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n      <civ-image\n        src=\"${photo(256, 256, 'p3')}\"\n        alt=\"Alex Lee\"\n        variant=\"thumbnail\"\n        size=\"48\"\n        rounded\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    }
+  ],
   "civ-image-preview": [
     {
       "story": "Default",

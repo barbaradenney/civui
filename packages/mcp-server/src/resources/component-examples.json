@@ -819,6 +819,13 @@
       "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
+      "story": "Secondary",
+      "name": "Secondary weight (thinner rail)",
+      "category": "Feedback/Callout",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 600px;\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Side-by-side — primary above, secondary below</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <civ-callout variant=\"warning\">\n            <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Primary (5px rail)</p>\n            <p class=\"civ-m-0\">Your session will expire in 15 minutes — the rail commands attention.</p>\n          </civ-callout>\n          <civ-callout variant=\"warning\" callout-style=\"secondary\">\n            <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Secondary (3px rail)</p>\n            <p class=\"civ-m-0\">Same variant + same content; thinner rail recedes for a quieter tone.</p>\n          </civ-callout>\n        </div>\n      </div>\n\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">All variants at secondary weight</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <civ-callout callout-style=\"secondary\">\n            <p class=\"civ-m-0\">Default — neutral accent, subtle.</p>\n          </civ-callout>\n          <civ-callout variant=\"info\" callout-style=\"secondary\">\n            <p class=\"civ-m-0\">Info — quieter routine guidance.</p>\n          </civ-callout>\n          <civ-callout variant=\"warning\" callout-style=\"secondary\">\n            <p class=\"civ-m-0\">Warning — softer heads-up.</p>\n          </civ-callout>\n          <civ-callout variant=\"error\" callout-style=\"secondary\">\n            <p class=\"civ-m-0\">Error — toned-down problem callout.</p>\n          </civ-callout>\n          <civ-callout variant=\"success\" callout-style=\"secondary\">\n            <p class=\"civ-m-0\">Success — gentle confirmation.</p>\n          </civ-callout>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
+    },
+    {
       "story": "Success",
       "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Complete</p>\n      <p class=\"civ-m-0\">Your information has been verified successfully.</p>\n    </civ-callout>",
@@ -3872,6 +3879,41 @@
       "source": "packages/feedback/src/notice/civ-notice.stories.ts"
     },
     {
+      "story": "CustomIconCalendar",
+      "name": "Custom icon — appointment reminder",
+      "category": "Feedback/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"neutral\"\n        icon=\"calendar\"\n        header=\"Your appointment is scheduled\"\n        body=\"Tuesday, February 4, 2026 at 9:00 AM. Bring photo ID and your appointment confirmation.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/feedback/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "CustomIconDocument",
+      "name": "Custom icon — required document",
+      "category": "Feedback/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"warning\"\n        icon=\"upload\"\n        header=\"Document required to continue\"\n        body=\"Upload a recent utility bill or bank statement to verify your address before submitting.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/feedback/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "CustomIconMail",
+      "name": "Custom icon — confirmation by mail",
+      "category": "Feedback/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"info\"\n        icon=\"mail\"\n        header=\"Confirmation mailed\"\n        body=\"A paper confirmation was sent to the address on file. Allow 7–10 business days for delivery.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/feedback/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "CustomIconPhone",
+      "name": "Custom icon — contact instruction",
+      "category": "Feedback/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"neutral\"\n        icon=\"phone\"\n        header=\"Need help completing this form?\"\n        body=\"Call 1-800-827-1000, Monday through Friday, 8:00 AM to 9:00 PM Eastern Time.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/feedback/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "CustomIconSecondaryWeight",
+      "name": "Custom icon + secondary weight",
+      "category": "Feedback/Notice",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"neutral\"\n        notice-style=\"secondary\"\n        icon=\"calendar\"\n        body=\"Renewal due February 28, 2026.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"info\"\n        notice-style=\"secondary\"\n        icon=\"mail\"\n        body=\"Your benefit letter was mailed on January 18.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/feedback/src/notice/civ-notice.stories.ts"
+    },
+    {
       "story": "Default",
       "category": "Feedback/Notice",
       "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        header=\"You must register\"\n        body=\"You can be fined up to $5,000 if you do not register before the deadline.\"\n      ></civ-notice>\n    </div>",
@@ -3899,10 +3941,10 @@
       "source": "packages/feedback/src/notice/civ-notice.stories.ts"
     },
     {
-      "story": "OutlineIcons",
-      "name": "Outline icon variant",
+      "story": "Secondary",
+      "name": "Secondary weight (passive emphasis)",
       "category": "Feedback/Notice",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"info\"\n        icon-style=\"outline\"\n        body=\"Outline-info: lighter affordance for ambient information.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"warning\"\n        icon-style=\"outline\"\n        body=\"Outline-warning: softer cue when nested in a colored panel.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"error\"\n        icon-style=\"outline\"\n        body=\"Outline-error: less visually loud than the filled default.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"success\"\n        icon-style=\"outline\"\n        body=\"Outline-success: same shape, lighter weight.\"\n      ></civ-notice>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"info\"\n        notice-style=\"secondary\"\n        body=\"Info — quieter affordance for ambient information.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"warning\"\n        notice-style=\"secondary\"\n        body=\"Warning — softer cue when nested in a colored panel.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"error\"\n        notice-style=\"secondary\"\n        body=\"Error — less visually loud than the primary default.\"\n      ></civ-notice>\n      <civ-notice\n        intent=\"success\"\n        notice-style=\"secondary\"\n        body=\"Success — same shape, lighter weight.\"\n      ></civ-notice>\n    </div>",
       "source": "packages/feedback/src/notice/civ-notice.stories.ts"
     },
     {

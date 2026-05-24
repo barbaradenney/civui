@@ -6,10 +6,10 @@ import { CivBaseElement } from '@civui/core';
 
 export type NoticeIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
 export type NoticeSpacing = 'default' | 'sm';
-export type NoticeIconStyle = 'filled' | 'outline';
+export type NoticeStyle = 'primary' | 'secondary';
 export type NoticeHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
-const DEFAULT_ICONS_FILLED: Record<NoticeIntent, string> = {
+const DEFAULT_ICONS_PRIMARY: Record<NoticeIntent, string> = {
   info: 'info-fill',
   warning: 'warning-fill',
   error: 'error-fill',
@@ -17,7 +17,7 @@ const DEFAULT_ICONS_FILLED: Record<NoticeIntent, string> = {
   neutral: 'info-fill',
 };
 
-const DEFAULT_ICONS_OUTLINE: Record<NoticeIntent, string> = {
+const DEFAULT_ICONS_SECONDARY: Record<NoticeIntent, string> = {
   info: 'info',
   warning: 'warning',
   error: 'error',
@@ -49,8 +49,8 @@ const DEFAULT_ICONS_OUTLINE: Record<NoticeIntent, string> = {
  *
  * @prop {NoticeIntent} intent - Severity / color treatment (`info`, `warning`, `error`, `success`, `neutral`). Default `info`.
  * @prop {NoticeSpacing} spacing - `default` (GOV.UK presence — larger icon + bold text) or `sm` (inline-compact). Default `default`.
- * @prop {NoticeIconStyle} iconStyle - `filled` (default) uses the solid Material Icons variants for heavier presence; `outline` uses the lighter outlined glyphs.
- * @prop {string} icon - Override for the intent's default icon
+ * @prop {NoticeStyle} noticeStyle - Visual weight. `primary` (default) uses the heavier filled-icon variants per intent for full emphasis; `secondary` uses the lighter outlined glyphs for a more passive callout. When `icon` is overridden, this only affects the *default* glyph picked for the intent — consumers can still pass any icon name.
+ * @prop {string} icon - Override the default icon for this intent. Any icon name from the CivUI icon library works — use it when the notice is communicating something beyond the five built-in semantic intents (calendar reminder, mail confirmation, document required, payment due, etc.).
  * @prop {string} header - Optional heading text (renders bold)
  * @prop {NoticeHeadingLevel} headingLevel - Heading level 2-6 (default 3) when `header` is set
  * @prop {string} body - Body text rendered below the header
@@ -66,16 +66,19 @@ const DEFAULT_ICONS_OUTLINE: Record<NoticeIntent, string> = {
  *
  * <civ-notice intent="info" spacing="sm" body="This step is optional."></civ-notice>
  *
- * <!-- Outline icon variant for a lighter visual touch -->
- * <civ-notice intent="info" icon-style="outline" body="..."></civ-notice>
+ * <!-- Secondary weight — lighter visual touch -->
+ * <civ-notice intent="info" notice-style="secondary" body="..."></civ-notice>
+ *
+ * <!-- Custom icon — works for any reminder / cue, not just status -->
+ * <civ-notice icon="calendar" header="Your appointment" body="Tuesday, 9:00 AM"></civ-notice>
  * ```
  */
 @customElement('civ-notice')
 export class CivNotice extends CivBaseElement {
   @property({ type: String, reflect: true }) intent: NoticeIntent = 'info';
   @property({ type: String, reflect: true }) spacing: NoticeSpacing = 'default';
-  @property({ type: String, attribute: 'icon-style', reflect: true })
-  iconStyle: NoticeIconStyle = 'filled';
+  @property({ type: String, attribute: 'notice-style', reflect: true })
+  noticeStyle: NoticeStyle = 'primary';
   @property({ type: String }) icon = '';
   @property({ type: String }) header = '';
   @property({ type: Number, attribute: 'heading-level' })
@@ -85,7 +88,7 @@ export class CivNotice extends CivBaseElement {
 
   private get _iconName(): string {
     if (this.icon) return this.icon;
-    const map = this.iconStyle === 'outline' ? DEFAULT_ICONS_OUTLINE : DEFAULT_ICONS_FILLED;
+    const map = this.noticeStyle === 'secondary' ? DEFAULT_ICONS_SECONDARY : DEFAULT_ICONS_PRIMARY;
     return map[this.intent] ?? map.info;
   }
 

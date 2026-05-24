@@ -23,17 +23,17 @@ const schema: ComponentSchema = {
       default: 'default',
       reflect: true,
     },
-    iconStyle: {
+    noticeStyle: {
       type: 'enum',
-      description: '`filled` (default) uses the solid Material Icons variants (`info-fill`, `warning-fill`, `error-fill`, `check-circle-fill`) for heavier visual presence. `outline` uses the lighter outlined glyphs (`info`, `warning`, `error`, `check-circle`) when the placement competes with surrounding chrome and a softer cue reads better.',
-      values: ['filled', 'outline'],
-      default: 'filled',
-      attribute: 'icon-style',
+      description: 'Visual weight. `primary` (default) uses the heavier filled-icon variants (`info-fill` / `warning-fill` / `error-fill` / `check-circle-fill`) for full emphasis — the established notice treatment. `secondary` uses the lighter outlined glyphs (`info` / `warning` / `error` / `check-circle`) for a more passive callout when the placement competes with surrounding chrome. When `icon` is overridden the consumer\'s glyph is used regardless; `noticeStyle` only picks the *default* glyph for the intent.',
+      values: ['primary', 'secondary'],
+      default: 'primary',
+      attribute: 'notice-style',
       reflect: true,
     },
     icon: {
       type: 'string',
-      description: 'Override the intent\'s default icon. When unset, the default is picked from `iconStyle`: filled gives `info-fill` / `warning-fill` / `error-fill` / `check-circle-fill` / `info-fill`; outline gives `info` / `warning` / `error` / `check-circle` / `info`.',
+      description: 'Override the default icon for this intent. Any icon name from the CivUI icon library works — use it when the notice is communicating something beyond the five built-in semantic intents (e.g. `calendar`, `mail`, `document`, `lock`, `phone`). When unset, the default is picked from `noticeStyle`: primary gives `info-fill` / `warning-fill` / `error-fill` / `check-circle-fill` / `info-fill`; secondary gives `info` / `warning` / `error` / `check-circle` / `info`.',
       default: '',
     },
     header: {

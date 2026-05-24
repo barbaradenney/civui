@@ -167,16 +167,16 @@ export class CivPagination extends CivBaseElement {
       page: String(p),
       pageCount: String(this.totalPages),
     });
-    const variant = isCurrent ? 'civ-action-btn--primary' : 'civ-action-btn--tertiary';
     return html`
       <li>
-        <button
-          type="button"
-          class="civ-action-btn ${variant} civ-pagination__page"
+        <civ-action-button
+          class="civ-pagination__page"
+          variant="${isCurrent ? 'primary' : 'tertiary'}"
+          label="${String(p)}"
           aria-label="${isCurrent ? currentLabel : pageLabel}"
-          aria-current="${isCurrent ? 'page' : 'false'}"
+          ?current="${isCurrent}"
           @click="${() => this._goto(p)}"
-        >${p}</button>
+        ></civ-action-button>
       </li>
     `;
   }

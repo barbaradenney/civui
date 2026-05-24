@@ -62,6 +62,21 @@ export class CivActionButton extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: Boolean, reflect: true }) pressed: boolean | undefined = undefined;
+  /**
+   * Marks this button as the current item in a navigation set (e.g.
+   * the active page in pagination, the current step in a wizard).
+   * Renders `aria-current="page"` on the inner `<button>` so AT users
+   * hear "current page" when they navigate to it. Distinct from
+   * `pressed` (which is for toggle-button semantics via aria-pressed).
+   */
+  @property({ type: Boolean, reflect: true }) current = false;
+  /**
+   * Override the inner `<button>`'s accessible name with a richer
+   * label for AT (e.g. pagination "Page 3 of 10" vs the visible "3").
+   * When unset, the visible `label` doubles as the accessible name.
+   * `null` matches the DOM's built-in `HTMLElement.ariaLabel` shape.
+   */
+  @property({ type: String, attribute: 'aria-label' }) ariaLabel: string | null = null;
   @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
@@ -168,6 +183,8 @@ export class CivActionButton extends CivBaseElement {
         class="${this._classes}"
         ?disabled="${this.disabled}"
         aria-pressed="${ifDefined(ariaPressed)}"
+        aria-current="${this.current ? 'page' : nothing}"
+        aria-label="${this.ariaLabel ?? nothing}"
         @click="${this._onClick}"
       >${inner}</button>
     `;

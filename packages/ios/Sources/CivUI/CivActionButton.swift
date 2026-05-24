@@ -51,6 +51,12 @@ public struct CivActionButton: View {
     /// Toggle pressed state (for toolbar toggles).
     public var isPressed: Bool
 
+    /// Marks this button as the current item in a navigation set
+    /// (e.g. active page in pagination). Native equivalent of the
+    /// web's `aria-current="page"` — informs VoiceOver via the
+    /// `.selected` accessibility trait.
+    public var isCurrent: Bool
+
     /// Called on button tap.
     public var onClick: (() -> Void)?
 
@@ -87,6 +93,7 @@ public struct CivActionButton: View {
         isDanger: Bool = false,
         isDisabled: Bool = false,
         isPressed: Bool = false,
+        isCurrent: Bool = false,
         onClick: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         type: String = "button",
@@ -101,6 +108,7 @@ public struct CivActionButton: View {
         self.isDanger = isDanger
         self.isDisabled = isDisabled
         self.isPressed = isPressed
+        self.isCurrent = isCurrent
         self.onClick = onClick
         self.onAnalytics = onAnalytics
         self.type = type

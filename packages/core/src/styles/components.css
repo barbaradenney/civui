@@ -1413,12 +1413,18 @@
     @apply civ-text-primary civ-underline;
   }
 
+  /*
+   * Thumbnail-preview class for the upload-row image preview in
+   * civ-file-upload. The class lands on a `<civ-image variant="thumbnail">`
+   * host (post-compose-the-sibling refactor); the inner <img> already
+   * has its dimensions + object-fit from civ-image's CSS, so this rule
+   * just adds the border / rounded corners and overflow:hidden so the
+   * border-radius clips the inner img's square corners.
+   */
   .civ-file-preview {
-    width: 2em;
-    height: 2em;
-    object-fit: cover;
     border-radius: var(--civ-border-radius-DEFAULT);
     border: 1px solid var(--civ-color-border);
+    overflow: hidden;
   }
 
   /* ── Combobox ───────────────────────────────────────────────── */

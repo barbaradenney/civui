@@ -336,6 +336,9 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/feedback':
+        specifier: workspace:*
+        version: link:../feedback
       '@civui/inputs':
         specifier: workspace:*
         version: link:../inputs
@@ -346,9 +349,6 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
-      '@civui/feedback':
-        specifier: workspace:*
-        version: link:../feedback
       '@civui/layout':
         specifier: workspace:*
         version: link:../layout
@@ -481,6 +481,12 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/feedback':
+        specifier: workspace:*
+        version: link:../feedback
+      '@civui/layout':
+        specifier: workspace:*
+        version: link:../layout
       lit:
         specifier: ^3.2.0
         version: 3.3.2

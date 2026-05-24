@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `heading` | `string` | `''` | Step title rendered prominently above the body content. |
+| `heading-level` | `number` | `3` | Semantic heading level (2-6) used for the rendered heading's `aria-level`. Set to one below the surrounding section heading so the screen-reader rotor lists steps under their parent. |
+| `state` | `'default'` \| `'complete'` | `'default'` | Visual state. `default` shows the auto-incremented step number in a primary-tinted marker. `complete` swaps to a check icon in a success-tinted marker — use when the step has been finished. |
+| `icon` | `string` | `''` | Optional icon name from the CivUI icon library. When set, replaces the auto-number or check icon in the marker — use for steps with a more specific affordance (e.g. `lock` for authentication, `mail` for verification). |

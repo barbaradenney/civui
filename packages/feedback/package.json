@@ -1,7 +1,7 @@
 {
   "name": "@civui/feedback",
   "version": "0.1.0",
-  "description": "CivUI feedback components — Alert, Badge, Count, Spinner, Skeleton, Timeline",
+  "description": "CivUI feedback components — Alert, Badge, Count, Spinner, Skeleton, Timeline, Process List",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -13,7 +13,8 @@
     "./count": "./dist/count/index.js",
     "./spinner": "./dist/spinner/index.js",
     "./skeleton": "./dist/skeleton/index.js",
-    "./timeline": "./dist/timeline/index.js"
+    "./timeline": "./dist/timeline/index.js",
+    "./process-list": "./dist/process-list/index.js"
   },
   "files": [
     "dist"

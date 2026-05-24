@@ -6,6 +6,8 @@ import './spinner/civ-spinner.js';
 import './skeleton/civ-skeleton.js';
 import './timeline/civ-timeline.js';
 import './timeline/civ-timeline-item.js';
+import './process-list/civ-process-list.js';
+import './process-list/civ-process-list-item.js';
 
 // Alert
 export { CivAlert } from './alert/index.js';
@@ -14,6 +16,10 @@ export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.
 // Timeline
 export { CivTimeline, CivTimelineItem } from './timeline/index.js';
 export type { TimelineIntent, TimestampFormat } from './timeline/index.js';
+
+// Process List
+export { CivProcessList, CivProcessListItem } from './process-list/index.js';
+export type { ProcessListItemState } from './process-list/index.js';
 
 // Badge
 export { CivBadge } from './badge/index.js';

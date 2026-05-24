@@ -59,6 +59,8 @@
   civ-action-sheet,
   civ-timeline,
   civ-timeline-item,
+  civ-process-list,
+  civ-process-list-item,
   civ-address,
   civ-alert,
   civ-breadcrumb,
@@ -4595,6 +4597,111 @@
   .civ-timeline-item__body:has(*) {
     @apply civ-mt-1;
     font-size: var(--civ-typography-fontSize-sm);
+  }
+
+  /* ── Process List ────────────────────────────────────────────
+     Numbered vertical list of upcoming process steps. Visual is
+     close to the timeline (rail + connecting line + trailing
+     content) but with auto-incremented numbered markers via CSS
+     counters, no timestamp axis, and bigger markers / vertical
+     gaps so it reads as "here's the road ahead" rather than
+     "here's what happened." Used on intro pages before a form. */
+
+  .civ-process-list {
+    counter-reset: civ-process-list-step;
+  }
+
+  civ-process-list-item {
+    @apply civ-relative;
+    counter-increment: civ-process-list-step;
+  }
+
+  .civ-process-list-item {
+    @apply civ-flex civ-items-stretch civ-gap-4;
+    padding-bottom: var(--civ-spacing-6);
+  }
+
+  /* Suppress the connecting line on the last item. */
+  civ-process-list-item:last-child .civ-process-list-item__line {
+    display: none;
+  }
+  civ-process-list-item:last-child .civ-process-list-item {
+    padding-bottom: 0;
+  }
+
+  .civ-process-list-item__rail {
+    @apply civ-flex civ-flex-col civ-items-center;
+    flex-shrink: 0;
+    width: 2rem;
+  }
+
+  /* Marker is a primary-tinted circle holding either the auto-
+     incremented step number (via the :empty::before rule below) or
+     an icon when explicitly set / in complete state. Rounded by
+     identity — the pill shape IS the marker. Allowlisted in
+     tools/lint-border-radius.ts. */
+  .civ-process-list-item__marker {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-font-bold;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    flex-shrink: 0;
+    line-height: 1;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* When the marker has no rendered children, fill it with the
+     auto-incremented step number. Once a child icon is rendered
+     (explicit `icon` prop or the `complete` state's check), this
+     pseudo no longer fires and the icon takes over the marker. */
+  .civ-process-list-item__marker:empty::before {
+    content: counter(civ-process-list-step);
+  }
+
+  /* Complete state — swap to a success-tinted background; the
+     `check` icon rendered in the template fills the marker. */
+  civ-process-list-item[state='complete'] .civ-process-list-item__marker {
+    background-color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-darkest);
+  }
+
+  /* Marker icon — same centering treatment as the timeline dot
+     icon: collapse host into block-flex, override the global
+     .civ-icon baseline offset so the SVG sits dead-center inside
+     the circle. */
+  .civ-process-list-item__marker-icon {
+    @apply civ-flex civ-items-center civ-justify-center;
+    width: 1rem;
+    height: 1rem;
+    line-height: 0;
+  }
+  .civ-process-list-item__marker-icon .civ-icon {
+    width: 100%;
+    height: 100%;
+    vertical-align: 0;
+    display: block;
+  }
+
+  .civ-process-list-item__line {
+    @apply civ-flex-1;
+    width: 2px;
+    background-color: var(--civ-color-base-lighter);
+    margin-top: var(--civ-spacing-1);
+  }
+
+  .civ-process-list-item__content {
+    @apply civ-flex civ-flex-col civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-process-list-item__heading {
+    @apply civ-m-0 civ-mb-2 civ-font-bold;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-process-list-item__body:has(*) {
+    font-size: var(--civ-typography-fontSize-base);
   }
 
   /* ── Support Resources ───────────────────────────────────── */

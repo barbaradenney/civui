@@ -148,6 +148,7 @@ const ALLOWLIST: string[] = [
   'civ-skeleton',
   'civ-avatar',
   'civ-timeline-item__dot', // colored rail dot — decorative pill geometry
+  'civ-process-list-item__marker', // numbered/check rail marker — decorative pill
   'civ-image__img', // <civ-image variant="thumbnail" rounded> consumer opt-in
 
   // 9. Input-group flush-border corner utilities

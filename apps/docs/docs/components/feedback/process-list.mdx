@@ -1,0 +1,113 @@
+---
+title: Process List
+sidebar_position: 9
+sidebar_label: Process List
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import ListProps from "./_process-list.props.mdx";
+import ItemProps from "./_process-list-item.props.mdx";
+
+# Process List
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-process-list`](pathname:///civui/storybook/?path=/docs/contract-civ-process-list--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-process-list>` + `<civ-process-list-item>`
+
+A numbered vertical preview of upcoming steps — "here's what to expect." Used on intro pages before a multi-step form, on benefit-application landing pages, or anywhere the user needs a clear preview of the path they're about to walk.
+
+## When to use it
+
+- A benefit-application intro page that explains "submit → review → decision → appeal."
+- A document-workflow overview that shows what the user will do before the form starts.
+- An onboarding screen that previews account-setup stages.
+- A "before you begin" surface that lays out gathering documents, filling the form, and waiting for a response.
+
+For the in-flight "where am I right now" indicator inside an active form, use [`civ-progress-steps`](../form/progress) instead. For a backward-looking dated history of events, use [`civ-timeline`](./timeline).
+
+## Content model
+
+Items are direct children. Order in the markup is the visual order; the `<ol>` semantics convey sequence and count to screen readers. Each item renders its own auto-incremented numbered marker via a CSS counter on the parent list — no need to author step numbers manually. Add, remove, or reorder items and the numbers re-flow.
+
+The connecting line between markers is rendered by each item and suppressed automatically on the last one.
+
+:::caution Dynamic items
+
+The process list uses `LightDomSlotMixin`, which captures children once in `connectedCallback`. Items added/removed by an outer template's later re-render can appear duplicated or missing. See [common-traps.md → LightDomSlotMixin composition with dynamic Lit children](https://github.com/barbaradenney/civui/blob/main/.claude/rules/common-traps.md) for the safe pattern. Static authoring (or wrapping a dynamic map in a stable container) works correctly.
+
+:::
+
+## Examples
+
+### Benefit application — three-step preview
+
+<StoryEmbed id="feedback-process-list--benefit-application" />
+
+### Mixed progress — completed + upcoming
+
+<StoryEmbed id="feedback-process-list--mixed-progress" />
+
+### Custom icons per step
+
+<StoryEmbed id="feedback-process-list--custom-icons" />
+
+### Headings only — terse stage preview
+
+<StoryEmbed id="feedback-process-list--headings-only" />
+
+### Rich body — nested lists and links
+
+<StoryEmbed id="feedback-process-list--rich-body" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-process-list--benefit-application)
+
+## Props
+
+### `<civ-process-list>`
+
+<ListProps />
+
+### `<civ-process-list-item>`
+
+<ItemProps />
+
+## Slots
+
+| Component | Slot | Purpose |
+|-----------|------|---------|
+| `civ-process-list` | _(default)_ | One or more `<civ-process-list-item>` elements. |
+| `civ-process-list-item` | _(default)_ | Body content: paragraphs, nested lists, links, callouts. |
+
+## Accessibility
+
+- The container renders as `<ol role="list">` so screen readers announce sequence and count.
+- Each item carries `role="listitem"` on its host element.
+- The marker rail (numbered circle + connecting line) is wrapped in `aria-hidden="true"` — screen readers hear only the heading and body content, not the decorative geometry.
+- Each item's heading uses `role="heading"` + `aria-level` (defaulting to 3) so the rotor lists the steps. Set `heading-level` to one below the surrounding section heading.
+
+## States
+
+| `state` | Marker | Use when |
+|---------|--------|----------|
+| `default` _(default)_ | Auto-incremented step number on a primary-tinted circle | The step is upcoming. |
+| `complete` | Check icon on a success-tinted circle | The step has been finished — useful for mixed "what you've done + what's next" surfaces. |
+
+Pass an explicit `icon="some-name"` on any item to replace the auto-number / check with a more specific affordance (e.g. `mail` for verification, `document` for an upload step).
+
+## Composition
+
+`<civ-process-list>` pairs well with:
+
+- [`civ-section-intro`](../layout/section-intro) — section heading + lead paragraph above the list.
+- [`civ-callout`](../layout/callout) — "Before you begin" / "What you'll need" surface above or below the list.
+- [`civ-button`](../actions/button) — a "Start application" CTA below the list.
+
+## Related
+
+- [`civ-progress-steps`](../form/progress): active-progress indicator for in-flight form flows.
+- [`civ-timeline`](./timeline): backward-looking dated event sequence.
+- [`civ-list`](../layout/list): generic flat list when ordering isn't meaningful.

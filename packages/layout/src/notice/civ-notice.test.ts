@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-notice.js';
+import '@civui/feedback';
 import type { CivNotice } from './civ-notice.js';
 
 afterEach(cleanupFixtures);
@@ -142,5 +143,54 @@ describe('civ-notice', () => {
     `);
     const sr = el.querySelector('.civ-sr-only');
     expect(sr?.textContent).toBe('Warning:');
+  });
+});
+
+describe('civ-notice composed inside civ-alert', () => {
+  // Civ-alert was migrated from LightDomTextMixin to LightDomSlotMixin
+  // so consumers can place rich content (including <civ-notice>) as
+  // children. These tests live in the layout package because
+  // packages/layout/vitest.config.ts already aliases @civui/feedback
+  // to source.
+
+  it('relocates a civ-notice child into the alert body when label is unset', async () => {
+    const el = await fixture(`
+      <civ-alert variant="warning">
+        <civ-notice intent="warning" body="Embedded notice body"></civ-notice>
+      </civ-alert>
+    `);
+    const body = el.querySelector('.civ-alert__body')!;
+    const notice = body.querySelector('civ-notice');
+    expect(notice).not.toBeNull();
+    expect(notice?.querySelector('.civ-notice__body')?.textContent).toBe('Embedded notice body');
+  });
+
+  it('hides children when label is set (label-wins rule preserved)', async () => {
+    const el = await fixture(`
+      <civ-alert variant="info" label="Label wins">
+        <civ-notice intent="info" body="Should be hidden"></civ-notice>
+      </civ-alert>
+    `);
+    const body = el.querySelector('.civ-alert__body')!;
+    expect(body.textContent?.trim()).toBe('Label wins');
+    // The notice element was captured by LightDomSlotMixin but, since
+    // the body container is non-empty (label rendered), the mixin
+    // never relocates it — so it is not present in the alert body.
+    expect(body.querySelector('civ-notice')).toBeNull();
+  });
+
+  it('preserves the alert role + ARIA labelling around composed children', async () => {
+    const el = await fixture(`
+      <civ-alert variant="error" heading="Action needed">
+        <civ-notice intent="error" body="Composed body"></civ-notice>
+      </civ-alert>
+    `);
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.getAttribute('role')).toBe('alert');
+    // aria-labelledby points to the alert's own heading id, even when
+    // the body is supplied by a composed civ-notice.
+    const headingId = el.querySelector('.civ-alert__heading')?.id;
+    expect(headingId).toBeTruthy();
+    expect(alert.getAttribute('aria-labelledby')).toBe(headingId);
   });
 });

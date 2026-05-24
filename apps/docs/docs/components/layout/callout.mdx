@@ -63,7 +63,44 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
 
 <StoryEmbed id="layout-callout--as-landmark" />
 
+### Composed with civ-notice
+
+<StoryEmbed id="layout-callout--composed-with-notice" />
+
+### Composed with multiple civ-notice (layered consequences)
+
+<StoryEmbed id="layout-callout--composed-with-multiple-notices" />
+
+### Composed with civ-badge — status summary
+
+<StoryEmbed id="layout-callout--composed-with-badge" />
+
+### Composed with multiple civ-badge — multi-step status
+
+<StoryEmbed id="layout-callout--composed-with-badge-list" />
+
+### Composed with badge + notice + descriptive copy
+
+<StoryEmbed id="layout-callout--composed-rich-body" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-callout--default)
+
+## Composing other CivUI components inside
+
+Callout uses a detached render root, so anything you author as a child
+flows through as a normal light-DOM descendant. That means custom
+elements (`civ-notice`, `civ-badge`, `civ-link`, `civ-button`, etc.)
+compose freely — no slot wiring, no special props.
+
+| Pair callout with | When to reach for it |
+|---|---|
+| [`civ-notice`](./notice) | Highlight a specific consequence inside the callout's body — legal warning, financial impact, safety detail |
+| [`civ-badge`](../feedback/badge) | Add a status label to summarize what state the surrounding copy describes ("In review", "Verified", "Pending") |
+| Both | Status badge at top → context paragraph → must-not-miss notice below |
+
+For the same composition surface with banner chrome + dismiss button +
+ARIA live region, use [`civ-alert`](../feedback/alert) instead — it
+accepts the same children via the same Light-DOM mixin pattern.
 
 ## Props
 

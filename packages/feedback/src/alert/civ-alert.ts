@@ -1,6 +1,13 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, dispatch, renderCloseButton, t } from '@civui/core';
+import {
+  CivBaseElement,
+  LightDomSlotMixin,
+  dispatch,
+  renderCloseButton,
+  t,
+} from '@civui/core';
+import type { SlotConfig } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
@@ -14,8 +21,11 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * success messages. Supports a heading, dismissible close button, and
  * slim (compact) variant.
  *
- * Body text is set via the `label` property. If `label` is not set,
- * initial Light DOM text content is used as a fallback.
+ * **Body content:** set via the `label` prop for plain text, or by
+ * placing children inside the host for rich content (paragraphs,
+ * links, or composed components like `<civ-notice>` and `<civ-link>`).
+ * If `label` is set, it takes precedence and any captured children
+ * stay hidden — set one OR the other, not both.
  *
  * **Heading level:** Renders at `heading-level` (default 4). Set to one
  * level below the nearest parent heading in your document outline.
@@ -26,16 +36,19 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, tertiary)
  * @prop {string} heading - Optional heading text
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
- * @prop {string} label - Body text (preferred over child text)
+ * @prop {string} label - Body text (preferred over child content)
  * @prop {boolean} dismissible - Shows close button
  * @prop {boolean} slim - Compact single-line variant (no heading)
  * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies slim layout)
+ *
+ * @slot - Body content. Used when `label` is unset. Accepts text or
+ *   rich markup including composed CivUI components.
  *
  * @fires civ-dismiss - When close button is clicked
  * @fires civ-analytics - Analytics tracking event on dismiss
  */
 @customElement('civ-alert')
-export class CivAlert extends LightDomTextMixin(CivBaseElement) {
+export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) variant: AlertVariant = 'info';
   @property({ type: String, attribute: 'alert-style' }) alertStyle: AlertStyle = 'secondary';
   @property({ type: String }) heading = '';
@@ -49,9 +62,25 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
 
   private readonly _headingId = this.generateId('heading');
 
-  private get _bodyText(): string {
-    return this.label || this._initialText;
+  override _getSlotConfig(): SlotConfig {
+    return { default: '[data-civ-alert-body-slot]' };
   }
+
+  /**
+   * The slot target div is rendered ONLY when `label` is unset, so
+   * the mixin's `updated()` hook finds a target to relocate children
+   * into. When `label` IS set, the slot target is absent — the
+   * mixin's querySelector returns null and the captured children
+   * stay hidden in `_slottedChildren`. This preserves the
+   * "label wins" rule from the original LightDomTextMixin behavior.
+   *
+   * On the "label unset" path: text nodes (so
+   * `<civ-alert>Plain text</civ-alert>` still works as a fallback)
+   * AND element children (so consumers can compose `<civ-notice>` or
+   * other markup inside the alert) both flow into the body. The
+   * mixin's empty-check + idempotent appendChild keeps the
+   * relocation correct across re-renders.
+   */
 
   override render() {
     const classes = [
@@ -84,7 +113,11 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
                    role="heading" aria-level="${level}"
                 >${this.heading}</p>
               ` : nothing}
-              <div class="civ-alert__body">${this._bodyText}</div>
+              <div class="civ-alert__body">${
+                this.label
+                  ? this.label
+                  : html`<div data-civ-alert-body-slot></div>`
+              }</div>
             </div>
             ${this.dismissible
               ? renderCloseButton({

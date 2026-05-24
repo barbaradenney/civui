@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-callout.js';
+import '../notice/civ-notice.js';
+import '@civui/feedback';
 import type { CivCallout } from './civ-callout.js';
 
 afterEach(cleanupFixtures);
@@ -105,5 +107,51 @@ describe('civ-callout', () => {
     expect(message).toContain('variant');
     expect(message).toContain('critical');
     warn.mockRestore();
+  });
+
+  // Composition tests. Callout's detached-renderRoot pattern means
+  // children live directly as light-DOM descendants of the host — no
+  // capture, no relocation. Custom elements work the same as plain
+  // <p> or <ul>.
+  describe('composition', () => {
+    it('hosts a civ-notice child', async () => {
+      const el = await fixture(`
+        <civ-callout variant="warning">
+          <civ-notice intent="warning" body="Composed body"></civ-notice>
+        </civ-callout>
+      `);
+      await elementUpdated(el);
+      const notice = el.querySelector('civ-notice');
+      expect(notice).not.toBeNull();
+      expect(notice?.querySelector('.civ-notice__body')?.textContent).toBe('Composed body');
+    });
+
+    it('hosts a civ-badge child', async () => {
+      const el = await fixture(`
+        <civ-callout variant="info">
+          <civ-badge label="In review" variant="info" with-icon></civ-badge>
+        </civ-callout>
+      `);
+      await elementUpdated(el);
+      const badge = el.querySelector('civ-badge');
+      expect(badge).not.toBeNull();
+      expect(badge?.querySelector('.civ-badge')?.textContent?.trim()).toBe('In review');
+    });
+
+    it('hosts multiple notice + badge children alongside prose', async () => {
+      const el = await fixture(`
+        <civ-callout variant="error">
+          <civ-badge label="Action required" variant="error" badge-style="primary" with-icon></civ-badge>
+          <p>Your identity verification expired on January 15, 2026.</p>
+          <civ-notice intent="error" spacing="sm" body="You have 30 days to re-verify."></civ-notice>
+        </civ-callout>
+      `);
+      await elementUpdated(el);
+      // Scope to DIRECT children of the host — querySelectorAll('p')
+      // would also match the <p> civ-notice renders internally for
+      // its body.
+      const directKids = Array.from(el.children).map(c => c.tagName.toLowerCase());
+      expect(directKids).toEqual(['civ-badge', 'p', 'civ-notice']);
+    });
   });
 });

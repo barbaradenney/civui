@@ -5,7 +5,7 @@
 |-----------|------|---------|-------------|
 | `timestamp` | `string` | `''` | ISO 8601 timestamp string. Required for the `<time datetime>` wrapper to be valid. |
 | `timestamp-format` | `'relative'` \| `'absolute'` \| `'both'` | `'both'` | Visual timestamp format. `relative` shows "3 hours ago"; `absolute` shows the locale-formatted date/time; `both` shows the absolute label with the relative phrase in parentheses (default). |
-| `actor` | `string` | `''` | Person or system that took the action (e.g. "J. Martinez (Reviewer)", "System"). |
+| `actor` | `string` | `''` | Person, system, department, version, or other label associated with the entry (e.g. "J. Martinez (Reviewer)", "System", "v2.4.1"). Optional. |
 | `action` | `string` | `''` | Short action label (e.g. "Application submitted", "Approved", "Documentation requested"). |
 | `intent` | `'success'` \| `'info'` \| `'warning'` \| `'error'` \| `'neutral'` | `'neutral'` | Semantic color for the rail dot. Drives the dot background and the default icon inside it. |
 | `icon` | `string` | — | Override icon name. When unset, the intent's semantic icon is used (success → check, info → info, warning → warning, error → error, neutral → no icon). Empty string explicitly suppresses the icon and shows a plain colored dot. |

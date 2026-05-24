@@ -124,36 +124,6 @@
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     }
   ],
-  "civ-activity-timeline": [
-    {
-      "story": "AllIntents",
-      "name": "All intents",
-      "category": "Feedback/Activity Timeline",
-      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${daysAgo(5)}\"\n          action=\"Neutral intent — plain dot\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(4)}\"\n          action=\"Info intent\"\n          intent=\"info\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(3)}\"\n          action=\"Success intent\"\n          intent=\"success\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(2)}\"\n          action=\"Warning intent\"\n          intent=\"warning\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          action=\"Error intent\"\n          intent=\"error\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
-      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
-    },
-    {
-      "story": "AuditLog",
-      "name": "Audit log (newest first)",
-      "category": "Feedback/Activity Timeline",
-      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(0.25)}\"\n          actor=\"admin@agency.gov\"\n          action=\"Role changed to Reviewer\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${hoursAgo(2)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Password reset requested\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${hoursAgo(8)}\"\n          actor=\"System\"\n          action=\"Failed login attempt\"\n          intent=\"error\"\n        >\n          Three consecutive failures from IP 198.51.100.42.\n        </civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Signed in\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
-      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
-    },
-    {
-      "story": "ClaimHistory",
-      "name": "Claim history (chronological)",
-      "category": "Feedback/Activity Timeline",
-      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${daysAgo(7)}\"\n          actor=\"Sarah Chen\"\n          action=\"Application submitted\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(5)}\"\n          actor=\"Benefits processing\"\n          action=\"Documentation requested\"\n          intent=\"warning\"\n        >\n          We need a copy of your DD-214 to verify service dates.\n        </civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(3)}\"\n          actor=\"Sarah Chen\"\n          action=\"DD-214 uploaded\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"J. Martinez (Reviewer)\"\n          action=\"Approved\"\n          intent=\"success\"\n        >\n          All documentation verified. Award letter to follow within 5 business days.\n        </civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
-      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
-    },
-    {
-      "story": "RelativeOnly",
-      "name": "Relative-only timestamps",
-      "category": "Feedback/Activity Timeline",
-      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(0.5)}\"\n          actor=\"Sarah\"\n          action=\"Saved progress\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(3)}\"\n          actor=\"Sarah\"\n          action=\"Uploaded passport scan\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(2)}\"\n          actor=\"Sarah\"\n          action=\"Started application\"\n          intent=\"neutral\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
-      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
-    }
-  ],
   "civ-address": [
     {
       "story": "AllStates",
@@ -6210,6 +6180,36 @@
       "category": "Forms/Inputs/Time Picker",
       "html": "<civ-time-picker\n      label=\"When did the incident occur?\"\n      name=\"incident_time\"\n      mode=\"text\"\n      hint=\"Tap Now to anchor to the current time, then adjust as needed.\"\n      show-now-button\n    ></civ-time-picker>",
       "source": "packages/inputs/src/time-picker/civ-time-picker.stories.ts"
+    }
+  ],
+  "civ-timeline": [
+    {
+      "story": "AllIntents",
+      "name": "All intents",
+      "category": "Feedback/Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(5)}\"\n          action=\"Neutral intent — plain dot\"\n          intent=\"neutral\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(4)}\"\n          action=\"Info intent\"\n          intent=\"info\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(3)}\"\n          action=\"Success intent\"\n          intent=\"success\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(2)}\"\n          action=\"Warning intent\"\n          intent=\"warning\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(1)}\"\n          action=\"Error intent\"\n          intent=\"error\"\n        ></civ-timeline-item>\n      </civ-timeline>\n    </div>",
+      "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
+    },
+    {
+      "story": "AuditLog",
+      "name": "Audit log (newest first)",
+      "category": "Feedback/Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(0.25)}\"\n          actor=\"admin@agency.gov\"\n          action=\"Role changed to Reviewer\"\n          intent=\"neutral\"\n        ></civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(2)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Password reset requested\"\n          intent=\"info\"\n        ></civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(8)}\"\n          actor=\"System\"\n          action=\"Failed login attempt\"\n          intent=\"error\"\n        >\n          Three consecutive failures from IP 198.51.100.42.\n        </civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Signed in\"\n          intent=\"neutral\"\n        ></civ-timeline-item>\n      </civ-timeline>\n    </div>",
+      "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
+    },
+    {
+      "story": "ClaimHistory",
+      "name": "Claim history (chronological)",
+      "category": "Feedback/Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(7)}\"\n          actor=\"Sarah Chen\"\n          action=\"Application submitted\"\n          intent=\"info\"\n        ></civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(5)}\"\n          actor=\"Benefits processing\"\n          action=\"Documentation requested\"\n          intent=\"warning\"\n        >\n          We need a copy of your DD-214 to verify service dates.\n        </civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(3)}\"\n          actor=\"Sarah Chen\"\n          action=\"DD-214 uploaded\"\n          intent=\"info\"\n        ></civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"J. Martinez (Reviewer)\"\n          action=\"Approved\"\n          intent=\"success\"\n        >\n          All documentation verified. Award letter to follow within 5 business days.\n        </civ-timeline-item>\n      </civ-timeline>\n    </div>",
+      "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
+    },
+    {
+      "story": "RelativeOnly",
+      "name": "Relative-only timestamps",
+      "category": "Feedback/Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(0.5)}\"\n          actor=\"Sarah\"\n          action=\"Saved progress\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(3)}\"\n          actor=\"Sarah\"\n          action=\"Uploaded passport scan\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(2)}\"\n          actor=\"Sarah\"\n          action=\"Started application\"\n          intent=\"neutral\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n      </civ-timeline>\n    </div>",
+      "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
     }
   ],
   "civ-toggle": [

@@ -273,6 +273,13 @@ When the Drupal SDC YAMLs drift, regenerate from schemas with `pnpm sync:drupal`
 
 **Adding a new component:** drop a schema next to its source in `packages/schema/src/components/civ-<name>.schema.ts`, add a `COVERED_COMPONENTS` entry in `tools/schema-parity.ts`, and the CI gate picks it up automatically.
 
+## Design Rules
+
+Cross-cutting design principles live in `.claude/rules/design-rules.md`. Two rules in particular:
+
+- **Only interactive elements get rounded corners.** Buttons, inputs, links, controls, overlay panels, and pills/badges may carry `border-radius`. Static container chrome (cards, callouts, metric tiles, image thumbnails, info blocks) stays flat. Enforced by `pnpm lint:border-radius` — adding a new rounded class requires a deliberate allowlist entry.
+- **Compose existing components before hand-rolling chrome.** Before writing a new `<aside>` / `<div>` with bordered / padded / backgrounded chrome, check the decision tree in `design-rules.md` — the chances are `civ-card`, `civ-callout`, `civ-support-resources`, `civ-link-card`, `civ-section-intro`, `civ-alert`, or one of the form-pattern components already does it. Hand-rolling a parallel BEM (`civ-form-support-resources` next to `civ-support-resources`) is the canonical drift smell.
+
 ## AI Component Usage Guide
 
 For comprehensive component usage, HTML examples, government design patterns,

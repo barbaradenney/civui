@@ -3,10 +3,10 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
-export type ActivityIntent = 'success' | 'info' | 'warning' | 'error' | 'neutral';
+export type TimelineIntent = 'success' | 'info' | 'warning' | 'error' | 'neutral';
 export type TimestampFormat = 'relative' | 'absolute' | 'both';
 
-const INTENT_DEFAULT_ICON: Record<ActivityIntent, string> = {
+const INTENT_DEFAULT_ICON: Record<TimelineIntent, string> = {
   success: 'check',
   info: 'info',
   warning: 'warning',
@@ -15,15 +15,14 @@ const INTENT_DEFAULT_ICON: Record<ActivityIntent, string> = {
 };
 
 /**
- * CivUI Activity Item
+ * CivUI Timeline Item
  *
- * A single entry inside `<civ-activity-timeline>`. Renders the rail
- * dot + connecting segment on the leading edge, then a stack of
- * timestamp / actor / action / optional comment body on the trailing
- * edge.
+ * A single entry inside `<civ-timeline>`. Renders the rail dot +
+ * connecting segment on the leading edge, then a stack of timestamp /
+ * actor / action / optional comment body on the trailing edge.
  *
- * The timestamp is always wrapped in a `<time datetime="...">` so it
- * is machine-readable. The visual format is controlled by
+ * The timestamp is wrapped in a `<time datetime="...">` when parseable
+ * so it is machine-readable. The visual format is controlled by
  * `timestamp-format`:
  *
  * - `relative` — "3 hours ago"
@@ -37,26 +36,31 @@ const INTENT_DEFAULT_ICON: Record<ActivityIntent, string> = {
  * default"; only an empty-string value (set via attribute or JS)
  * counts as the explicit suppression sentinel.
  *
+ * The `actor` field is optional and generic — use it for whoever (or
+ * whatever) is responsible for the entry: a person, a system, a
+ * department, a version number, a milestone label.
+ *
  * The rail uses `aria-hidden` so screen readers hear only the
  * timestamp + actor + action + body content, not the decorative
  * dot/line geometry.
  *
- * @element civ-activity-item
+ * @element civ-timeline-item
  *
  * @prop {string} timestamp - ISO 8601 timestamp string. Required for
  *   the time wrapper to be valid.
  * @prop {TimestampFormat} timestampFormat - Visual format
  *   (default: 'both').
- * @prop {string} actor - Person or system that took the action.
+ * @prop {string} actor - Person, system, or label associated with
+ *   the entry. Optional.
  * @prop {string} action - Short action label (required).
- * @prop {ActivityIntent} intent - Semantic color (default: 'neutral').
+ * @prop {TimelineIntent} intent - Semantic color (default: 'neutral').
  * @prop {string} icon - Override icon name. Empty string suppresses
  *   the default intent icon and shows a plain dot.
  *
  * @slot - Optional comment/detail body shown under the action label.
  */
-@customElement('civ-activity-item')
-export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
+@customElement('civ-timeline-item')
+export class CivTimelineItem extends LightDomSlotMixin(CivBaseElement) {
   /** ISO 8601 timestamp string. */
   @property({ type: String }) timestamp = '';
 
@@ -64,7 +68,7 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String, attribute: 'timestamp-format' })
   timestampFormat: TimestampFormat = 'both';
 
-  /** Person or system that took the action. */
+  /** Person, system, or label associated with the entry. */
   @property({ type: String }) actor = '';
 
   /** Short action label. */
@@ -72,13 +76,13 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
 
   /** Semantic color. */
   @property({ type: String, reflect: true })
-  intent: ActivityIntent = 'neutral';
+  intent: TimelineIntent = 'neutral';
 
   /** Override icon name. Empty string suppresses the default icon. */
   @property({ type: String }) icon: string | null | undefined = null;
 
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-activity-item-content]' };
+    return { default: '[data-civ-timeline-item-content]' };
   }
 
   override connectedCallback(): void {
@@ -169,44 +173,44 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
     }
 
     const inner = html`${primary}${secondary
-      ? html` <span class="civ-activity-item__timestamp-relative">(${secondary})</span>`
+      ? html` <span class="civ-timeline-item__timestamp-relative">(${secondary})</span>`
       : nothing}`;
 
     if (!isValid) {
-      return html`<span class="civ-activity-item__timestamp">${inner}</span>`;
+      return html`<span class="civ-timeline-item__timestamp">${inner}</span>`;
     }
-    return html`<time class="civ-activity-item__timestamp" datetime="${this.timestamp}">${inner}</time>`;
+    return html`<time class="civ-timeline-item__timestamp" datetime="${this.timestamp}">${inner}</time>`;
   }
 
   override render() {
     const iconName = this._resolvedIcon;
 
     return html`
-      <div class="civ-activity-item">
+      <div class="civ-timeline-item">
         <div
-          class="civ-activity-item__rail"
+          class="civ-timeline-item__rail"
           aria-hidden="true"
         >
-          <span class="civ-activity-item__dot">
+          <span class="civ-timeline-item__dot">
             ${iconName
               ? html`<civ-icon
-                  class="civ-activity-item__dot-icon"
+                  class="civ-timeline-item__dot-icon"
                   name="${iconName}"
                 ></civ-icon>`
               : nothing}
           </span>
-          <span class="civ-activity-item__line"></span>
+          <span class="civ-timeline-item__line"></span>
         </div>
 
-        <div class="civ-activity-item__content">
+        <div class="civ-timeline-item__content">
           ${this._renderTimestamp()}
           ${this.actor
-            ? html`<span class="civ-activity-item__actor">${this.actor}</span>`
+            ? html`<span class="civ-timeline-item__actor">${this.actor}</span>`
             : nothing}
-          <span class="civ-activity-item__action">${this.action}</span>
+          <span class="civ-timeline-item__action">${this.action}</span>
           <div
-            class="civ-activity-item__body"
-            data-civ-activity-item-content
+            class="civ-timeline-item__body"
+            data-civ-timeline-item-content
           ></div>
         </div>
       </div>
@@ -216,6 +220,6 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'civ-activity-item': CivActivityItem;
+    'civ-timeline-item': CivTimelineItem;
   }
 }

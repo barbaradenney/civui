@@ -63,8 +63,14 @@ export class CivMetricTile extends CivBaseElement {
     const trendIcon = this._trendIcon;
     const hasDelta = Boolean(this.delta) || Boolean(trendIcon);
 
+    // The card chrome (border, padding, background, surface color) is
+    // applied via the shared `civ-card civ-card--tertiary` classes so
+    // every flat-card surface in CivUI has the same visual treatment.
+    // Per the design rule "only interactive elements get rounded
+    // corners", `civ-card` deliberately has no border-radius — the
+    // metric tile inherits that flat treatment automatically.
     return html`
-      <div class="civ-metric-tile">
+      <div class="civ-metric-tile civ-card civ-card--tertiary">
         <div class="civ-metric-tile__header">
           ${this.icon
             ? html`<civ-icon class="civ-metric-tile__icon" name="${this.icon}" aria-hidden="true"></civ-icon>`

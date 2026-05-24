@@ -88,7 +88,7 @@ function renderProps(name: string, props: Record<string, PropDef>, extendsClass:
     // The form-element chrome disclaimer (`label`, `hint`, `error`,
     // `required`, `disabled`, `name`, `value`) only applies to
     // CivFormElement subclasses. CivBaseElement subclasses (display-only
-    // components like activity-timeline, alert, callout) inherit none of
+    // components like timeline, alert, callout) inherit none of
     // those — calling them out as "inherited form chrome" misleads
     // consumers into trying form-only props that are silently ignored.
     if (extendsClass === 'CivFormElement') {
@@ -197,8 +197,8 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-time-picker': 'inputs/time.mdx',
   // Metric group is documented as a sub-section of the metric tile page.
   'civ-metric-group': 'data/metric-tile.mdx',
-  // Activity item is documented on the activity-timeline page.
-  'civ-activity-item': 'feedback/activity-timeline.mdx',
+  // Timeline item is documented on the timeline page.
+  'civ-timeline-item': 'feedback/timeline.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

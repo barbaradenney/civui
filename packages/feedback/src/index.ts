@@ -4,16 +4,16 @@ import './badge/civ-badge.js';
 import './count/civ-count.js';
 import './spinner/civ-spinner.js';
 import './skeleton/civ-skeleton.js';
-import './activity-timeline/civ-activity-timeline.js';
-import './activity-timeline/civ-activity-item.js';
+import './timeline/civ-timeline.js';
+import './timeline/civ-timeline-item.js';
 
 // Alert
 export { CivAlert } from './alert/index.js';
 export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.js';
 
-// Activity Timeline
-export { CivActivityTimeline, CivActivityItem } from './activity-timeline/index.js';
-export type { ActivityIntent, TimestampFormat } from './activity-timeline/index.js';
+// Timeline
+export { CivTimeline, CivTimelineItem } from './timeline/index.js';
+export type { TimelineIntent, TimestampFormat } from './timeline/index.js';
 
 // Badge
 export { CivBadge } from './badge/index.js';

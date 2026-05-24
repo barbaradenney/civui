@@ -30,6 +30,10 @@ export default defineConfig({
       '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
+      // Layout sub-paths used by transitively-imported components (e.g.
+      // civ-file-upload composes <civ-image>).
+      '@civui/layout/image': resolve(__dirname, '../layout/src/image/index.ts'),
+      '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),
       // Resolve test-utils to source so the lint:double-labels test
       // works in CI without a prebuilt @civui/test-utils dist (the
       // package's package.json points at dist/index.js, which fresh

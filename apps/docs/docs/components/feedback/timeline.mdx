@@ -1,30 +1,31 @@
 ---
-title: Activity Timeline
+title: Timeline
 sidebar_position: 8
-sidebar_label: Activity Timeline
+sidebar_label: Timeline
 ---
 
 import StoryEmbed from "@site/src/components/StoryEmbed";
-import TimelineProps from "./_activity-timeline.props.mdx";
-import ItemProps from "./_activity-item.props.mdx";
+import TimelineProps from "./_timeline.props.mdx";
+import ItemProps from "./_timeline-item.props.mdx";
 
-# Activity Timeline
+# Timeline
 
 <!-- contract-link:start -->
 
-> **Contract reference:** [`civ-activity-timeline`](pathname:///civui/storybook/?path=/docs/contract-civ-activity-timeline--docs). Auto-generated structured contract for cross-platform implementation.
+> **Contract reference:** [`civ-timeline`](pathname:///civui/storybook/?path=/docs/contract-civ-timeline--docs). Auto-generated structured contract for cross-platform implementation.
 
 <!-- contract-link:end -->
 
-`<civ-activity-timeline>` + `<civ-activity-item>`
+`<civ-timeline>` + `<civ-timeline-item>`
 
-A vertical timeline that lists dated events with an intent-colored rail connecting them. Useful for claim histories, audit logs, case progress, document workflows, and any other "things that happened, in order" surface.
+A vertical timeline that lists dated events with an intent-colored rail connecting them. Generic over use cases — claim histories, audit logs, case progress, document workflows, version histories, project milestones, onboarding journeys, and any other "things that happened, in order" surface.
 
 ## When to use it
 
 - A claim or case history page showing every status change over time.
 - An audit log showing recent activity on an account (newest first).
 - A document workflow page showing review / approval / publication steps.
+- A version-history surface for releases, configuration changes, or content revisions.
 - A submission progress page that walks the user through processing stages.
 
 For a horizontal step indicator inside an active form, use [`civ-progress-steps`](../form/progress) instead — that's a forward-looking "where am I in this flow" component, not a backward-looking "what happened so far" log.
@@ -45,29 +46,29 @@ Avoid `${items.map(...)}` patterns that mutate the items array AFTER mount — t
 
 ### Claim history (chronological)
 
-<StoryEmbed id="feedback-activity-timeline--claim-history" />
+<StoryEmbed id="feedback-timeline--claim-history" />
 
 ### Audit log (newest first)
 
-<StoryEmbed id="feedback-activity-timeline--audit-log" />
+<StoryEmbed id="feedback-timeline--audit-log" />
 
 ### Relative-only timestamps
 
-<StoryEmbed id="feedback-activity-timeline--relative-only" />
+<StoryEmbed id="feedback-timeline--relative-only" />
 
 ### All intents
 
-<StoryEmbed id="feedback-activity-timeline--all-intents" />
+<StoryEmbed id="feedback-timeline--all-intents" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-activity-timeline--claim-history)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-timeline--claim-history)
 
 ## Props
 
-### `<civ-activity-timeline>`
+### `<civ-timeline>`
 
 <TimelineProps />
 
-### `<civ-activity-item>`
+### `<civ-timeline-item>`
 
 <ItemProps />
 
@@ -75,15 +76,15 @@ Avoid `${items.map(...)}` patterns that mutate the items array AFTER mount — t
 
 | Component | Slot | Purpose |
 |-----------|------|---------|
-| `civ-activity-timeline` | _(default)_ | One or more `<civ-activity-item>` elements. |
-| `civ-activity-item` | _(default)_ | Optional comment / detail body shown under the action label. |
+| `civ-timeline` | _(default)_ | One or more `<civ-timeline-item>` elements. |
+| `civ-timeline-item` | _(default)_ | Optional comment / detail body shown under the action label. |
 
 ## Accessibility
 
 - The container renders as `<ol role="list">` so screen readers announce sequence and count.
 - Each item carries `role="listitem"` on its host element.
 - The decorative rail (dot + connecting line) is wrapped in `aria-hidden="true"` — screen readers hear only the meaningful content (timestamp, actor, action, body).
-- Timestamps are always wrapped in `<time datetime="...">` regardless of visual format, so assistive tech and indexers see a machine-readable ISO value.
+- Timestamps are wrapped in `<time datetime="...">` when parseable, so assistive tech and indexers see a machine-readable ISO value. Unparseable values render as plain `<span>` text (HTML5 forbids invalid `datetime` attributes).
 
 ## Timestamp formats
 
@@ -110,30 +111,30 @@ Pass `icon=""` (empty string) on any item to suppress the default icon and show 
 ## Usage
 
 ```html
-<civ-activity-timeline>
-  <civ-activity-item
+<civ-timeline>
+  <civ-timeline-item
     timestamp="2026-01-15T10:30:00Z"
     actor="Sarah Chen"
     action="Application submitted"
     intent="info">
-  </civ-activity-item>
+  </civ-timeline-item>
 
-  <civ-activity-item
+  <civ-timeline-item
     timestamp="2026-01-16T14:20:00Z"
     actor="Benefits processing"
     action="Documentation requested"
     intent="warning">
     We need a copy of your DD-214 to verify service dates.
-  </civ-activity-item>
+  </civ-timeline-item>
 
-  <civ-activity-item
+  <civ-timeline-item
     timestamp="2026-01-20T09:00:00Z"
     actor="J. Martinez (Reviewer)"
     action="Approved"
     intent="success">
     All documentation verified.
-  </civ-activity-item>
-</civ-activity-timeline>
+  </civ-timeline-item>
+</civ-timeline>
 ```
 
 ## Related

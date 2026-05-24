@@ -2,8 +2,8 @@ import type { ComponentSchema } from '../schema.types.js';
 
 const schema: ComponentSchema = {
   $schema: '1.0',
-  name: 'civ-activity-item',
-  description: 'A single entry inside `<civ-activity-timeline>`. Renders the rail dot + connecting segment on the leading edge, then a stack of timestamp / actor / action / optional comment body on the trailing edge. The timestamp is always wrapped in a machine-readable `<time datetime>` element regardless of visual format.',
+  name: 'civ-timeline-item',
+  description: 'A single entry inside `<civ-timeline>`. Renders the rail dot + connecting segment on the leading edge, then a stack of timestamp / actor / action / optional comment body on the trailing edge. The timestamp is wrapped in a machine-readable `<time datetime>` element when parseable, regardless of visual format.',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -23,7 +23,7 @@ const schema: ComponentSchema = {
     },
     actor: {
       type: 'string',
-      description: 'Person or system that took the action (e.g. "J. Martinez (Reviewer)", "System").',
+      description: 'Person, system, department, version, or other label associated with the entry (e.g. "J. Martinez (Reviewer)", "System", "v2.4.1"). Optional.',
       default: '',
     },
     action: {

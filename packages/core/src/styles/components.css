@@ -57,8 +57,8 @@
   civ-accordion,
   civ-accordion-item,
   civ-action-sheet,
-  civ-activity-item,
-  civ-activity-timeline,
+  civ-timeline,
+  civ-timeline-item,
   civ-address,
   civ-alert,
   civ-breadcrumb,
@@ -4474,85 +4474,107 @@
     }
   }
 
-  /* ── Activity Timeline ───────────────────────────────────────
+  /* ── Timeline ───────────────────────────────────────────────
      Vertical list of dated events with an intent-colored rail
      connecting the entries. The dot + connecting line live inside
      each item so the rail aligns with whatever content the
      item carries. The last item's connecting line is suppressed
      via :last-child. */
 
-  civ-activity-item {
+  civ-timeline-item {
     @apply civ-relative;
   }
 
-  .civ-activity-item {
+  .civ-timeline-item {
     @apply civ-flex civ-items-stretch civ-gap-3;
-    padding-bottom: var(--civ-spacing-5);
+    padding-bottom: var(--civ-spacing-4);
   }
 
   /* Suppress the connecting line on the last item. */
-  civ-activity-item:last-child .civ-activity-item__line {
+  civ-timeline-item:last-child .civ-timeline-item__line {
     display: none;
   }
 
-  civ-activity-item:last-child .civ-activity-item {
+  civ-timeline-item:last-child .civ-timeline-item {
     padding-bottom: 0;
   }
 
-  .civ-activity-item__rail {
+  .civ-timeline-item__rail {
     @apply civ-flex civ-flex-col civ-items-center;
     flex-shrink: 0;
     width: 1.5rem;
   }
 
-  .civ-activity-item__dot {
-    @apply civ-flex civ-items-center civ-justify-center;
+  .civ-timeline-item__dot {
+    @apply civ-inline-flex civ-items-center civ-justify-center;
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 9999px;
     background-color: var(--civ-color-base-DEFAULT);
     color: var(--civ-color-base-lightest);
     flex-shrink: 0;
-    margin-top: 2px;
+    /* Nudge the dot vertically so it lines up with the first line of
+       text in the content column (cap-height alignment). The dot is
+       1.25rem tall, the timestamp is 0.875rem font-size — the small
+       offset compensates for the cap-height differential. */
+    margin-top: 0.125rem;
+    /* line-height: 1 on the dot itself prevents any inherited
+       line-height from adding phantom vertical space inside the
+       circle, which would push the icon off-center. */
+    line-height: 1;
   }
 
   /* Intent → dot color. The dot's background carries the semantic
      color; the icon inside is rendered in the corresponding lighter
      shade for contrast against the dot. */
-  civ-activity-item[intent='success'] .civ-activity-item__dot {
+  civ-timeline-item[intent='success'] .civ-timeline-item__dot {
     background-color: var(--civ-color-success-DEFAULT);
     color: var(--civ-color-success-lighter);
   }
-  civ-activity-item[intent='info'] .civ-activity-item__dot {
+  civ-timeline-item[intent='info'] .civ-timeline-item__dot {
     background-color: var(--civ-color-info-DEFAULT);
     color: var(--civ-color-info-lighter);
   }
-  civ-activity-item[intent='warning'] .civ-activity-item__dot {
+  civ-timeline-item[intent='warning'] .civ-timeline-item__dot {
     background-color: var(--civ-color-warning-DEFAULT);
     color: var(--civ-color-warning-lighter);
   }
-  civ-activity-item[intent='error'] .civ-activity-item__dot {
+  civ-timeline-item[intent='error'] .civ-timeline-item__dot {
     background-color: var(--civ-color-error-DEFAULT);
     color: var(--civ-color-error-lightest);
   }
-  civ-activity-item[intent='neutral'] .civ-activity-item__dot {
+  civ-timeline-item[intent='neutral'] .civ-timeline-item__dot {
     background-color: var(--civ-color-base-DEFAULT);
     color: var(--civ-color-base-lightest);
   }
 
-  .civ-activity-item__dot-icon {
-    width: 0.875rem;
-    height: 0.875rem;
+  /* The dot-icon host is a custom element (civ-icon) which defaults
+     to display: inline-block with a baseline-aligned SVG inside. In
+     a flex-centered container that baseline produces a visual offset
+     of a few pixels — collapse the host into a block-flex layout so
+     the SVG sits dead-center. The inner .civ-icon SVG defaults to
+     vertical-align: -0.1em which we override to 0 here. */
+  .civ-timeline-item__dot-icon {
+    @apply civ-flex civ-items-center civ-justify-center;
+    width: 0.75rem;
+    height: 0.75rem;
+    line-height: 0;
+  }
+  .civ-timeline-item__dot-icon .civ-icon {
+    width: 100%;
+    height: 100%;
+    vertical-align: 0;
+    display: block;
   }
 
-  .civ-activity-item__line {
+  .civ-timeline-item__line {
     @apply civ-flex-1;
     width: 2px;
     background-color: var(--civ-color-base-lighter);
     margin-top: var(--civ-spacing-1);
   }
 
-  .civ-activity-item__content {
+  .civ-timeline-item__content {
     @apply civ-flex civ-flex-col civ-flex-1 civ-min-w-0;
     gap: 2px;
   }
@@ -4561,30 +4583,26 @@
      based hierarchy. Per CLAUDE.md gray-text rules this is metadata
      not body text, so a smaller/lighter weight is fine without using
      a muted color class. */
-  .civ-activity-item__timestamp {
+  .civ-timeline-item__timestamp {
     @apply civ-block;
     font-size: var(--civ-typography-fontSize-sm);
   }
 
-  .civ-activity-item__timestamp-relative {
+  .civ-timeline-item__timestamp-relative {
     font-size: var(--civ-typography-fontSize-sm);
   }
 
-  .civ-activity-item__actor {
+  .civ-timeline-item__actor {
     @apply civ-block civ-font-semibold;
   }
 
-  .civ-activity-item__action {
+  .civ-timeline-item__action {
     @apply civ-block;
   }
 
-  .civ-activity-item__body {
+  .civ-timeline-item__body:has(*) {
     @apply civ-mt-1;
     font-size: var(--civ-typography-fontSize-sm);
-  }
-
-  .civ-activity-item__body:empty {
-    @apply civ-mt-0;
   }
 
   /* ── Support Resources ───────────────────────────────────── */

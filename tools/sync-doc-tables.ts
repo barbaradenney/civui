@@ -197,6 +197,8 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-time-picker': 'inputs/time.mdx',
   // Metric group is documented as a sub-section of the metric tile page.
   'civ-metric-group': 'data/metric-tile.mdx',
+  // Itemized item is documented as a sub-section of the itemized total page.
+  'civ-itemized-item': 'data/itemized-total.mdx',
   // Timeline item is documented on the timeline page.
   'civ-timeline-item': 'feedback/timeline.mdx',
   // Process-list item is documented on the process-list page.

@@ -1,0 +1,10 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | The line-item label rendered on the left |
+| `amount` | `number` | — | The line-item value. Formatted by the parent `<civ-itemized-total>` using its `currency` and `locale`. Negative values render with a locale-correct minus. |
+| `value-label` | `string` | `''` | Override for non-numeric rows (`Pending`, `Free`, `—`). When set, this string is rendered verbatim and the row is excluded from the parent's auto-sum. |
+| `note` | `string` | `''` | Optional secondary text rendered below the label (e.g. `Annual / 12`). |
+| `intent` | `''` \| `'positive'` \| `'negative'` \| `'neutral'` | `''` | Color treatment for the amount. `positive` (green), `negative` (red), `neutral` (default). Independent of the sign of `amount` so credits can render neutrally unless the consumer explicitly opts in to a tint. |

@@ -42,6 +42,21 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Itemized total follow-ups
+
+- **Surfaced:** Itemized total landing, 2026-05-24. Branch `claude/itemized-totals-component-N2dSw`.
+- **What landed:** Two new web components in `@civui/data` — `<civ-itemized-total>` (display-only ledger surface with optional heading, list of rows, top-bordered total row, configurable `currency` + `locale` via `Intl.NumberFormat`, auto-sum with `total-amount` override) and `<civ-itemized-item>` (single label + amount row with optional `note` and `value-label` escape hatch for non-numeric rows like `Pending`, plus a per-row `intent` for positive / negative tinting). Schemas, tests (18 new tests), Storybook stories, CSS, and a Docusaurus page (`docs/components/data/itemized-total.mdx` — covers both components, per `HOST_PAGE_OVERRIDES`) all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Subtotals / sections.** No section-grouping element (e.g. an `itemized-section` wrapper) — the component is one flat list + one total. Tax-form-style nested subtotals are a v2 if a real placement needs them.
+  2. **Percentages / running totals.** No "this line is 23% of total" annotations and no per-row running balance.
+  3. **Inline editing.** Display-only — consumers wrap the row in their own affordance if they need a drillable line item.
+  4. **Multi-currency.** One `currency` per component instance. Mixed-currency ledgers should be composed as two separate `<civ-itemized-total>` blocks.
+  5. **Heading slot.** `heading` is a string prop. Decoration like a leading `civ-tag` ("Estimated", "As of Jan 2026") requires consumers to wrap the component themselves in a `<section>` with their own heading.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-itemized-total` and `civ-itemized-item` and they validate cleanly + produce Props/Events partials, but neither is registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{ItemizedTotal,ItemizedItem}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{ItemizedTotal,ItemizedItem}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{itemized-total,itemized-item}/{name}.component.yml`). Pattern: shape `civ-itemized-total` after `civ-list` (parent container, slot-projects children, plus a summary footer row); shape `civ-itemized-item` after `civ-data-field` (per-row label + value pair).
+- **Why deferred:** Same rationale as the existing native-stubs entry — `Intl.NumberFormat` has platform-specific equivalents (SwiftUI's `.formatted(.currency(code:))`, Compose's `java.text.NumberFormat.getCurrencyInstance(Locale)`) and tabular numeric alignment + currency-symbol positioning vary per OS in ways that need device verification. Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Navigation components follow-ups
 
 - **Surfaced:** Navigation components landing, 2026-05-18. Branch `claude/add-navigation-components-YikKk`.

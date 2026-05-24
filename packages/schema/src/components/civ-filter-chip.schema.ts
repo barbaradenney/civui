@@ -76,7 +76,6 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'button',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
     ariaAttributes: {
@@ -97,9 +96,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

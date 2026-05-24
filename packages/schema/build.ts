@@ -137,7 +137,11 @@ function buildContractSchema(): Record<string, unknown> {
       },
       A11yDef: {
         type: 'object',
-        required: ['role', 'requiredIndicator', 'errorAnnouncement'],
+        // role is optional — display-only components (civ-image,
+        // civ-icon, civ-button, civ-link, etc.) render native elements
+        // whose implicit role IS the contract; declaring a redundant
+        // role here would mislead cross-platform contractors.
+        required: ['requiredIndicator', 'errorAnnouncement'],
         properties: {
           role: { type: 'string' },
           requiredIndicator: { type: 'string', enum: ['asterisk', 'text', 'none'] },
@@ -166,9 +170,9 @@ function buildContractSchema(): Record<string, unknown> {
         type: 'object',
         required: ['valueMode', 'formAssociated', 'resetBehavior'],
         properties: {
-          valueMode: { type: 'string', enum: ['string', 'boolean', 'multi', 'file'] },
+          valueMode: { type: 'string', enum: ['string', 'boolean', 'multi', 'file', 'none'] },
           formAssociated: { type: 'boolean' },
-          resetBehavior: { type: 'string', enum: ['restore-default-value', 'restore-default-checked', 'clear-files'] },
+          resetBehavior: { type: 'string', enum: ['restore-default-value', 'restore-default-checked', 'clear-files', 'none'] },
         },
       },
       WidthVariant: {

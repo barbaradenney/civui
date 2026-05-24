@@ -125,8 +125,17 @@ export interface EventDef {
 // ---------------------------------------------------------------------------
 
 export interface A11yDef {
-  /** ARIA role for the control element */
-  role: string;
+  /**
+   * ARIA role for the control element. Optional — display-only
+   * components (civ-image, civ-icon, civ-spinner, civ-skeleton,
+   * civ-badge, civ-count, civ-alert, civ-tag, civ-card, civ-divider,
+   * etc.) render native elements whose implicit role IS the contract
+   * (`<img>` already exposes `role="img"`, `<aside>` already exposes
+   * `role="complementary"`, etc.) — declaring a redundant `role`
+   * here would mislead cross-platform contractors into adding one
+   * explicitly.
+   */
+  role?: string;
 
   /** How the required state is communicated */
   requiredIndicator: 'asterisk' | 'text' | 'none';
@@ -201,9 +210,21 @@ export interface RenderElement {
  *  - boolean: value is submitted when checked, null when unchecked (checkbox, toggle)
  *  - multi:   FormData with multiple values (checkbox-group, date-range-picker)
  *  - file:    FormData with File objects (file-upload)
+ *  - none:    component does not participate in form submission
+ *             (display-only: civ-image, civ-icon, civ-spinner,
+ *             civ-skeleton, civ-badge, civ-tag, civ-card, civ-divider,
+ *             civ-alert, civ-callout, etc.). When this mode is set,
+ *             `formAssociated` must be false and `resetBehavior` should
+ *             be 'none'. Use this instead of choosing 'string' as a
+ *             placeholder — cross-platform contractors reading the
+ *             schema as the contract should not be told that civ-image
+ *             participates in forms.
  */
-export const FORM_VALUE_MODES = ['string', 'boolean', 'multi', 'file'] as const;
+export const FORM_VALUE_MODES = ['string', 'boolean', 'multi', 'file', 'none'] as const;
 export type FormValueMode = typeof FORM_VALUE_MODES[number];
+
+export const FORM_RESET_BEHAVIORS = ['restore-default-value', 'restore-default-checked', 'clear-files', 'none'] as const;
+export type FormResetBehavior = typeof FORM_RESET_BEHAVIORS[number];
 
 export interface FormBehavior {
   /** How this component participates in form submission */
@@ -212,8 +233,12 @@ export interface FormBehavior {
   /** Whether this is a form-associated custom element */
   formAssociated: boolean;
 
-  /** What happens on form reset */
-  resetBehavior: 'restore-default-value' | 'restore-default-checked' | 'clear-files';
+  /**
+   * What happens on form reset. Display-only components
+   * (`valueMode: 'none'`) use `'none'` since they have no value to
+   * restore.
+   */
+  resetBehavior: FormResetBehavior;
 }
 
 // ---------------------------------------------------------------------------

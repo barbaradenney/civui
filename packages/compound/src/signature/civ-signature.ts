@@ -4,7 +4,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, interpolate, t } from '@civui/core';
 import type { LabelSize } from '@civui/core';
 import '@civui/inputs/text-input';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 
 export interface SignatureValue {
   name: string;

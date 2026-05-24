@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import '@civui/core';
 import '@civui/inputs/toggle';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 
 const meta: Meta = {
   title: 'Foundations/Motion',

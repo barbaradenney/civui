@@ -12,7 +12,7 @@ title: Installation
 npm install @civui/core
 
 # Form components
-npm install @civui/inputs @civui/controls @civui/compound @civui/form-patterns
+npm install @civui/inputs @civui/inputs @civui/compound @civui/form-patterns
 
 # Action components (button, link, action-button, link-card, button-group, filter-chip, skip-link, confirm-button, toggle-button)
 npm install @civui/actions
@@ -36,7 +36,7 @@ npm install @civui/feedback
 <script type="module">
   import '@civui/core';
   import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/compound';
 import '@civui/form-patterns';
   import '@civui/actions';
@@ -60,7 +60,7 @@ CivUI web components work in React as custom elements:
 ```tsx
 import '@civui/core';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/compound';
 import '@civui/form-patterns';
 import '@civui/actions';

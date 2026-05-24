@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t } from '@civui/core';
 import '@civui/overlays/popover';
 import '@civui/actions/action-button';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
 
 /**

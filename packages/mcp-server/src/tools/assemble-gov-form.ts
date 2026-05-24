@@ -605,7 +605,7 @@ import ConfirmationPage from './pages/ConfirmationPage';
 
 import '@civui/core';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/compound';
 import '@civui/form-patterns';
 import '@civui/actions';

@@ -4,7 +4,7 @@ import '@civui/core';
 import './text-input/civ-text-input.js';
 import './select/civ-select.js';
 import './textarea/civ-textarea.js';
-import '@civui/controls';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Foundations/Density',

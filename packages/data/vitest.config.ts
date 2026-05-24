@@ -27,9 +27,13 @@ export default defineConfig({
       '@civui/inputs/text-input': resolve(__dirname, '../inputs/src/text-input/index.ts'),
       '@civui/inputs/number': resolve(__dirname, '../inputs/src/number/index.ts'),
       '@civui/inputs/select': resolve(__dirname, '../inputs/src/select/index.ts'),
+      // Selection controls — moved from the former @civui/controls.
+      // Declared above the bare `@civui/inputs` entry so longest-prefix
+      // match wins.
+      '@civui/inputs/checkbox': resolve(__dirname, '../inputs/src/checkbox/index.ts'),
+      '@civui/inputs/radio': resolve(__dirname, '../inputs/src/radio/index.ts'),
+      '@civui/inputs/segmented-control': resolve(__dirname, '../inputs/src/segmented-control/index.ts'),
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
-      '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
-      '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
     },
   },
 });

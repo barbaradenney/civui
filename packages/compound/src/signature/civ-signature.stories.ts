@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-signature.js';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Compound/Signature',

@@ -6,7 +6,7 @@ import '../civui-styles.css';
 // the @customElement decorators to register each custom element
 import '@civui/core';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/compound';
 import '@civui/form-patterns';
 import '@civui/actions';

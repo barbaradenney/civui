@@ -9,9 +9,14 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@civui/controls/checkbox': resolve(__dirname, '../controls/src/checkbox/index.ts'),
-      '@civui/controls/segmented-control': resolve(__dirname, '../controls/src/segmented-control/index.ts'),
-      '@civui/controls': resolve(__dirname, '../controls/src/index.ts'),
+      // Selection controls — moved from the former @civui/controls
+      // into @civui/inputs. Tests inside this package that need the
+      // checkbox/radio/segmented-control sub-paths resolve to local
+      // source instead of going through the built dist.
+      '@civui/inputs/checkbox': resolve(__dirname, 'src/checkbox/index.ts'),
+      '@civui/inputs/radio': resolve(__dirname, 'src/radio/index.ts'),
+      '@civui/inputs/segmented-control': resolve(__dirname, 'src/segmented-control/index.ts'),
+      '@civui/inputs': resolve(__dirname, 'src/index.ts'),
       '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       // Defensive — the `@civui/actions` barrel transitively imports

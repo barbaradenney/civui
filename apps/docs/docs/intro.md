@@ -80,7 +80,7 @@ two CSS imports above.
 | `@civui/core` | Base classes, a11y utilities, icons, analytics, validation, mask system |
 | `@civui/schema` | Platform-neutral component contracts (the source of truth for cross-platform parity) |
 | `@civui/inputs` | Input components (text-input, textarea, select, combobox, date-picker, time-picker, file-upload, toggle, yes-no, and preset wrappers for SSN/EIN/phone/email/etc.) |
-| `@civui/controls` | Selection controls (checkbox, radio, segmented-control) |
+| `@civui/inputs` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/actions` | Action affordances (button, action-button, button-group, link, link-card, filter-chip, skip-link, confirm-button, toggle-button) |
 | `@civui/navigation` | Navigation surfaces (breadcrumb, nav, side-nav, tabs, tab-nav, on-this-page, back-to-top) |
 | `@civui/overlays` | Overlay components (modal, action-sheet, drawer, menu) |

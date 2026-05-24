@@ -21,6 +21,14 @@ import './currency/civ-currency.js';
 import './routing-number/civ-routing-number.js';
 import './country/civ-country.js';
 import './va-file-number/civ-va-file-number.js';
+// Selection controls — moved from the former @civui/controls package
+// since consumers always reached for both packages together.
+import './checkbox/civ-checkbox.js';
+import './checkbox/civ-checkbox-group.js';
+import './radio/civ-radio.js';
+import './radio/civ-radio-group.js';
+import './segmented-control/civ-segment.js';
+import './segmented-control/civ-segmented-control.js';
 
 // Preset Input Base Class
 export { PresetInputWrapper } from './preset-input/index.js';
@@ -93,3 +101,18 @@ export { CivCountry } from './country/index.js';
 // VA File Number
 export { CivVaFileNumber } from './va-file-number/index.js';
 
+
+// ── Selection controls (formerly @civui/controls) ────────────
+// Checkbox + Radio + Segmented Control. Kept conceptually
+// distinct in docs (their own sidebar category) but live in
+// @civui/inputs since they're all form-participating inputs and
+// consumers always reach for both packages together.
+
+// Checkbox
+export { CivCheckbox, CivCheckboxGroup } from './checkbox/index.js';
+
+// Radio
+export { CivRadio, CivRadioGroup } from './radio/index.js';
+
+// Segmented Control
+export { CivSegmentedControl, CivSegment } from './segmented-control/index.js';

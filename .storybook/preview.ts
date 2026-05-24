@@ -13,7 +13,7 @@ import '../packages/core/src/styles/civ.css';
 import '@civui/core';
 import '@civui/actions';
 import '@civui/navigation';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/feedback';
 import '@civui/layout';
 import '@civui/overlays';

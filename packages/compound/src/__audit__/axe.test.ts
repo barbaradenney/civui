@@ -13,7 +13,7 @@ import { describe, it, expect } from 'vitest';
 import axe from 'axe-core';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/overlays/modal';
 import '../address/civ-address.js';
 import '../name/civ-name.js';

@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import "@civui/inputs";
-import "@civui/controls";
+import "@civui/inputs";
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-address.js';
 import type { CivAddress } from './civ-address.js';

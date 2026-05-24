@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import '@civui/core';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/actions';
 
 const meta: Meta = {

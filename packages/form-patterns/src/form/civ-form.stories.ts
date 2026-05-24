@@ -3,7 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import './civ-form.js';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/actions';
 import '@civui/actions/link';
 import '@civui/storybook-utils/demo-frame';

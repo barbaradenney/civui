@@ -1,7 +1,7 @@
 {
   "name": "@civui/inputs",
   "version": "0.1.0",
-  "description": "CivUI input components — Text input, textarea, select, combobox, date picker, file upload, toggle, yes/no",
+  "description": "CivUI input components — Text input, textarea, select, combobox, date picker, file upload, toggle, yes/no, checkbox, radio, segmented control",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -29,7 +29,10 @@
     "./routing-number": "./dist/routing-number/index.js",
     "./country": "./dist/country/index.js",
     "./va-file-number": "./dist/va-file-number/index.js",
-    "./preset-input": "./dist/preset-input/index.js"
+    "./preset-input": "./dist/preset-input/index.js",
+    "./checkbox": "./dist/checkbox/index.js",
+    "./radio": "./dist/radio/index.js",
+    "./segmented-control": "./dist/segmented-control/index.js"
   },
   "files": [
     "dist"
@@ -46,7 +49,6 @@
   "dependencies": {
     "@civui/actions": "workspace:*",
     "@civui/core": "workspace:*",
-    "@civui/controls": "workspace:*",
     "@civui/feedback": "workspace:*",
     "@civui/layout": "workspace:*",
     "lit": "^3.2.0"

@@ -6,7 +6,7 @@ import type { SelectLike } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
 import '@civui/inputs/memorable-date';
-import '@civui/controls/radio';
+import '@civui/inputs/radio';
 import '../name/civ-name.js';
 
 export interface MarriageValue {

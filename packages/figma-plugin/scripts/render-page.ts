@@ -17,7 +17,7 @@
 
 import '@civui/actions/button';
 import '@civui/inputs/text-input';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 import '@civui/feedback/alert';
 
 interface RenderRequest {

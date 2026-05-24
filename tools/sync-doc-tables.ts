@@ -162,10 +162,10 @@ function renderMethods(name: string, methods: Record<string, MethodDef> | undefi
 
 /**
  * Sub-components that share a host MDX page with a sibling component
- * (e.g. `civ-checkbox-group` lives inside `controls/checkbox.mdx`,
+ * (e.g. `civ-checkbox-group` lives inside `inputs/checkbox.mdx`,
  * not its own `checkbox-group.mdx`). The value is the page's relative
  * path under `apps/docs/docs/components/`. Partial files get written
- * next to the host page (e.g. `controls/_checkbox-group.props.mdx`).
+ * next to the host page (e.g. `inputs/_checkbox-group.props.mdx`).
  *
  * Add an entry when you create a schema for a component that's
  * documented as a sub-section of a sibling's MDX page rather than on
@@ -173,11 +173,11 @@ function renderMethods(name: string, methods: Record<string, MethodDef> | undefi
  */
 const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-accordion-item': 'layout/accordion.mdx',
-  'civ-checkbox-group': 'controls/checkbox.mdx',
+  'civ-checkbox-group': 'inputs/checkbox.mdx',
   'civ-menu-item': 'overlays/menu.mdx',
-  'civ-radio': 'controls/radio.mdx',
-  'civ-radio-group': 'controls/radio.mdx',
-  'civ-segment': 'controls/segmented-control.mdx',
+  'civ-radio': 'inputs/radio.mdx',
+  'civ-radio-group': 'inputs/radio.mdx',
+  'civ-segment': 'inputs/segmented-control.mdx',
   'civ-list-item': 'layout/list.mdx',
   'civ-filter-chip-group': 'actions/filter-chip.mdx',
   'civ-memorable-date': 'inputs/date.mdx',

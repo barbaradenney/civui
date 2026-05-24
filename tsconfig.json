@@ -21,7 +21,6 @@
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/inputs" },
-    { "path": "./packages/controls" },
     { "path": "./packages/compound" },
     { "path": "./packages/form-patterns" },
     { "path": "./packages/test-utils" },

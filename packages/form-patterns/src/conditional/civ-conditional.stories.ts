@@ -3,7 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import './civ-conditional.js';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '@civui/actions';
 import '../form/civ-form.js';
 

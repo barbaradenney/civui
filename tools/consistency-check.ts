@@ -16,7 +16,6 @@ import { join, basename } from 'path';
 const ROOT = join(import.meta.dirname, '..');
 const COMPONENT_DIRS = [
   join(ROOT, 'packages/inputs/src'),
-  join(ROOT, 'packages/controls/src'),
   join(ROOT, 'packages/compound/src'),
   join(ROOT, 'packages/form-patterns/src'),
   join(ROOT, 'packages/actions/src'),

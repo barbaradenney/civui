@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivCompoundElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/routing-number';
-import '@civui/controls/radio';
+import '@civui/inputs/radio';
 
 export interface DirectDepositValue {
   accountType: 'checking' | 'savings' | '';

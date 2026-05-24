@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-direct-deposit.js';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 
 const meta: Meta = {
   title: 'Forms/Compound/Direct Deposit',

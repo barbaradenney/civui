@@ -116,11 +116,13 @@ const config: StorybookConfig = {
       '@civui/inputs/memorable-date': resolve(root, 'packages/inputs/src/date-input/index.ts'),
       '@civui/inputs/yes-no': resolve(root, 'packages/inputs/src/yes-no/index.ts'),
       '@civui/inputs/toggle': resolve(root, 'packages/inputs/src/toggle/index.ts'),
+      // Selection controls — moved from the former @civui/controls package
+      // into @civui/inputs. Sub-path aliases declared above the bare
+      // `@civui/inputs` entry so longest-prefix match wins.
+      '@civui/inputs/checkbox': resolve(root, 'packages/inputs/src/checkbox/index.ts'),
+      '@civui/inputs/radio': resolve(root, 'packages/inputs/src/radio/index.ts'),
+      '@civui/inputs/segmented-control': resolve(root, 'packages/inputs/src/segmented-control/index.ts'),
       '@civui/inputs': resolve(root, 'packages/inputs/src/index.ts'),
-      '@civui/controls/checkbox': resolve(root, 'packages/controls/src/checkbox/index.ts'),
-      '@civui/controls/radio': resolve(root, 'packages/controls/src/radio/index.ts'),
-      '@civui/controls/segmented-control': resolve(root, 'packages/controls/src/segmented-control/index.ts'),
-      '@civui/controls': resolve(root, 'packages/controls/src/index.ts'),
       '@civui/compound': resolve(root, 'packages/compound/src/index.ts'),
       '@civui/form-patterns/form': resolve(root, 'packages/form-patterns/src/form/index.ts'),
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),

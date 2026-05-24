@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Confirm Button
+status: stable
+group: CivUI Actions
+description: 'Text button that fires an action and shows a transient confirmation receipt (Copy → Copied ✓ → Copy).'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Resting label ("Copy", "Generate", "Scan").'
+    success_label:
+      title: Success label
+      type: string
+      description: 'Transient receipt label shown during the success window ("Copied", "Generated").'
+    success_ms:
+      title: Success ms
+      type: number
+      default: 1500
+      description: 'How long the success state stays visible, in milliseconds.'
+    variant:
+      title: Variant
+      type: string
+      enum: ['chip', 'inline']
+      default: 'chip'
+      description: 'Picks the text-btn modifier. chip = prominent gray pill; inline = transparent text-link style.'
+
+slots:
+  default:
+    title: Default
+    description: 'Child content (alternative to label prop).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

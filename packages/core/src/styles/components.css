@@ -1701,35 +1701,14 @@
    * surfaces crisis / housing / domestic-violence hotlines and similar
    * help links so users in distress can leave the form for support.
    *
-   * Subtle primary-tinted card so it reads as helpful, not alarming
-   * (no red — red is for errors). Sits below the form with a 1.5rem
-   * top margin to separate it from the submit button.
+   * civ-form composes <civ-support-resources> (which composes
+   * <civ-callout>) for the panel chrome — the bespoke
+   * .civ-form-support-resources styling was deleted as part of the
+   * callout migration. civ-form keeps just the top-margin separation
+   * from the submit button below.
    */
-  /* Static info block — display-only, so no border-radius per the
-     design rule (only interactive elements get rounded corners).
-     The left-edge accent rail + tinted background carry the
-     "this is help content" affordance without rounded corners. */
-  .civ-form-support-resources {
-    @apply civ-mt-6 civ-p-4;
-    background: var(--civ-color-primary-lightest);
-    border-inline-start: 4px solid var(--civ-color-primary-dark);
-  }
-
-  .civ-form-support-resources__heading {
-    @apply civ-m-0 civ-mb-2 civ-font-bold;
-    color: var(--civ-color-base-darkest);
-  }
-
-  .civ-form-support-resources ul {
-    @apply civ-list-none civ-p-0 civ-m-0;
-  }
-
-  .civ-form-support-resources li {
-    @apply civ-mb-1;
-  }
-
-  .civ-form-support-resources li:last-child {
-    @apply civ-mb-0;
+  civ-form > civ-support-resources {
+    @apply civ-mt-6 civ-block;
   }
 
   /* ── Read-only mode ──────────────────────────────────────────── */

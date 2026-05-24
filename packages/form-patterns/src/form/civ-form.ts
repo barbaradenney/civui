@@ -5,6 +5,11 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate, warnInvalidProp } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import type { PrefillData, PrefillMeta } from '../prefill/types.js';
+// Side-effect imports for the support-resources rendering — the
+// component composes <civ-support-resources> (which itself composes
+// <civ-callout>) instead of hand-rolling an inline <aside>.
+import '../support-resources/civ-support-resources.js';
+import '@civui/actions/link';
 
 export interface FormFieldError {
   name: string;
@@ -336,21 +341,17 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       <div data-civ-form-disclosures-slot></div>
       ${this.supportResources.length > 0
         ? html`
-            <aside
-              class="civ-form-support-resources"
-              aria-label="${this.supportResourcesHeading || t('supportResourcesHeading')}"
+            <civ-support-resources
+              heading="${this.supportResourcesHeading || nothing}"
               data-civ-support-resources
             >
-              <p class="civ-form-support-resources__heading">
-                ${this.supportResourcesHeading || t('supportResourcesHeading')}
-              </p>
               <ul class="civ-list-none civ-p-0 civ-m-0">
                 ${this.supportResources
                   .filter((r) => r && r.label && this._isSafeHref(r.href))
                   .map(
                     (r) => html`
                       <li class="civ-mb-1">
-                        <a href="${r.href}" class="civ-link civ-underline">${r.label}</a>
+                        <civ-link href="${r.href}" label="${r.label}"></civ-link>
                         ${r.description
                           ? html`<span class="civ-text-sm civ-ms-2">${r.description}</span>`
                           : nothing}
@@ -358,7 +359,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
                     `,
                   )}
               </ul>
-            </aside>
+            </civ-support-resources>
           `
         : nothing}
     `;

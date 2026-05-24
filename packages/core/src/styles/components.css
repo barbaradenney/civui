@@ -771,7 +771,7 @@
     white-space: nowrap;
   }
   @media (hover: hover) {
-    .civ-text-btn--inline:hover { background: rgba(0, 0, 0, 0.05); }
+    .civ-text-btn--inline:hover { background: var(--civ-color-hover-tint-subtle); }
   }
 
   /* Transient success state — flip to green with a leading check
@@ -2067,10 +2067,6 @@
     @apply civ-flex civ-items-center civ-justify-between civ-mb-4;
   }
 
-  .civ-modal__close {
-    @apply civ-ms-4 civ-flex-shrink-0;
-  }
-
   .civ-modal__body {
     @apply civ-mb-4;
   }
@@ -2168,6 +2164,12 @@
     z-index: 1;
   }
 
+  /* Shared close-button positioning for header-aligned overlay dismiss.
+     The `.civ-modal__close` / `.civ-drawer__close` classes themselves
+     stay on the rendered elements (tests + consumer styling target them
+     by name) — this rule applies the inline-end margin + flex-shrink to
+     both via a single selector list. */
+  .civ-modal__close,
   .civ-drawer__close {
     @apply civ-ms-4 civ-flex-shrink-0;
   }
@@ -5235,7 +5237,7 @@
 
   @media (hover: hover) {
     .civ-filter-chip__remove:hover:not(:disabled) {
-      background: rgba(0, 0, 0, 0.08);
+      background: var(--civ-color-hover-tint);
       color: inherit;
     }
   }

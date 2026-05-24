@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-support-resources',
   description: 'Inline crisis / support contact panel for sensitive forms. Renders a heading and a slot of action links pointing to hotlines or counselors. The crisis tone applies an error-bordered visual treatment to mark urgent context (suicide / crisis / domestic-violence flows).',
-  category: 'feedback',
+  category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
 

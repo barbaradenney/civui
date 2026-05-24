@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-data-field',
   description: 'Read-only label + value display row. Renders a self-contained `<dl>` that can be used standalone or composed inside `civ-summary`. Optional inline edit link or download link for the value. Stacks vertically on mobile.',
-  category: 'feedback',
+  category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
 

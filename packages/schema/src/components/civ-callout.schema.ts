@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-callout',
   description: 'A presentational primitive that frames slotted content with a left accent border and consistent padding. Five color variants map to the semantic palette. Use for important notices, tips, or contextual information. For dismissible / live-region alerts use `civ-alert`; for section openers with a heading use `civ-section-intro` (which composes `civ-callout` internally).',
-  category: 'ui',
+  category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,
 

@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-menu',
   description: 'Anchored on-page menu for row actions and overflow menus. Composes a slotted trigger with a popup panel of `civ-menu-item` children. Renders as a popover on desktop (≥481px) and as a bottom sheet on mobile (≤480px). Follows the WAI-ARIA Menu Button keyboard pattern: Enter/Space/ArrowDown on trigger opens and focuses the first item; ArrowUp/ArrowDown move between items; Home/End jump to ends; Escape closes and returns focus to the trigger.',
-  category: 'ui',
+  category: 'overlay',
   extends: 'CivBaseElement',
   isGroup: false,
 

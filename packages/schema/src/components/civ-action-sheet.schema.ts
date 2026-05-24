@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-action-sheet',
   description: 'Bottom-anchored action sheet for mobile-first selection / confirmation flows. On web it is a fixed-positioned panel that slides up from the bottom; iOS uses `.confirmationDialog`/`.sheet`; Android uses a `ModalBottomSheet`.',
-  category: 'feedback',
+  category: 'overlay',
   extends: 'CivBaseElement',
   isGroup: false,
 

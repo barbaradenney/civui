@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-modal',
   description: 'Accessible modal dialog. Renders as a native `<dialog>` on web (auto-traps focus, restores focus on close, closes on Escape). On mobile (≤480px) the dialog is bottom-anchored as a sheet via `.civ-bottom-sheet`. Native platforms use platform-idiomatic full-screen / sheet presentations.',
-  category: 'feedback',
+  category: 'overlay',
   extends: 'CivBaseElement',
   isGroup: false,
 

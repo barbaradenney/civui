@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-notice',
   description: 'Icon-prefixed emphasis text for highlighting a specific passage inside longer content — legal, safety, or financial consequences a reader could miss in flowing prose. Based on GOV.UK\'s "warning text" pattern, extended with semantic intents (info / warning / error / success / neutral) so the same affordance handles emphasis across the system. Distinct from `civ-alert` (notification with dismiss + ARIA live region) and `civ-callout` (panel with background + larger padding). Notice is the lightweight inline variant: no background, no dismiss, no heading slot — just a large semantic icon and bold paragraphs.',
-  category: 'ui',
+  category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,
 

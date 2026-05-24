@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-drawer',
   description: 'Full-viewport-height dialog that slides in from the start or end edge. Built on the native `<dialog>` element on web (auto focus trap, Escape close, top-layer stacking). Sized to a configurable width; spans the full viewport height. Used for navigation menus (mobile main nav), settings panels, secondary content, and filter trays where a centered modal or bottom sheet would feel wrong.',
-  category: 'feedback',
+  category: 'overlay',
   extends: 'CivBaseElement',
   isGroup: false,
 

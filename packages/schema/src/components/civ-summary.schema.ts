@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-summary',
   description: 'Read-only review/summary page. Renders form data as structured sections with label/value pairs and per-section edit links. Use at the end of a multi-step form (review page) or mid-form (hub pages with status indicators).',
-  category: 'feedback',
+  category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
 

@@ -4,7 +4,7 @@ const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-popover',
   description: 'Low-level popover primitive: a slotted trigger anchored to a floating panel. Handles trigger ARIA wiring (`aria-haspopup`, `aria-expanded`, `aria-controls`), click-outside / Escape / Tab close with focus return, viewport-aware position with auto-flip, and the mobile bottom-sheet pattern (≤480px). Ships no semantics. Consumers declare the panel\'s `panelRole` and provide their own keyboard model. Composed by `civ-menu`, `civ-column-visibility`, and `civ-button-group`\'s overflow.',
-  category: 'ui',
+  category: 'overlay',
   extends: 'CivBaseElement',
   isGroup: false,
 

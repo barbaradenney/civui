@@ -277,7 +277,7 @@ export interface PlatformOverrides {
 // ---------------------------------------------------------------------------
 
 export const COMPONENT_CATEGORIES = [
-  'form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation',
+  'form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation', 'overlay',
 ] as const;
 export type ComponentCategory = typeof COMPONENT_CATEGORIES[number];
 

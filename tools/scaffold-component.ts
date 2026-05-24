@@ -60,7 +60,7 @@ const VALID_PACKAGES = [
 ];
 
 const VALID_CATEGORIES = [
-  'form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation',
+  'form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation', 'overlay',
 ];
 
 function parseArgs(argv: string[]): ScaffoldOptions {

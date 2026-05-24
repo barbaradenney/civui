@@ -1416,11 +1416,13 @@
     @apply civ-text-primary civ-underline;
   }
 
+  /* Image / file preview thumbnail — display-only chrome, so no
+     border-radius per the design rule (only interactive elements
+     get rounded corners). */
   .civ-file-preview {
     width: 2em;
     height: 2em;
     object-fit: cover;
-    border-radius: var(--civ-border-radius-DEFAULT);
     border: 1px solid var(--civ-color-border);
   }
 
@@ -1703,8 +1705,12 @@
    * (no red — red is for errors). Sits below the form with a 1.5rem
    * top margin to separate it from the submit button.
    */
+  /* Static info block — display-only, so no border-radius per the
+     design rule (only interactive elements get rounded corners).
+     The left-edge accent rail + tinted background carry the
+     "this is help content" affordance without rounded corners. */
   .civ-form-support-resources {
-    @apply civ-mt-6 civ-p-4 civ-rounded;
+    @apply civ-mt-6 civ-p-4;
     background: var(--civ-color-primary-lightest);
     border-inline-start: 4px solid var(--civ-color-primary-dark);
   }
@@ -4426,12 +4432,13 @@
   }
 
   /* USWDS summary-box pattern: bordered light callout with a small
-     label on top and a larger semibold value below. */
+     label on top and a larger semibold value below. Display-only, so
+     no border-radius per the design rule (only interactive elements
+     get rounded corners). */
   .civ-confirmation-panel__reference {
     @apply civ-p-4 civ-mb-6;
     background-color: var(--civ-color-base-lightest);
     border: 1px solid var(--civ-color-base-lighter);
-    border-radius: var(--civ-border-radius-md);
   }
 
   .civ-confirmation-panel__reference-label {
@@ -5197,12 +5204,20 @@
      that scales from 1 column on mobile up to `--civ-metric-group-cols`
      on desktop. */
 
+  /* Container chrome (border / padding / background / surface color)
+     comes from the shared `civ-card civ-card--tertiary` classes
+     applied in the component template. The tile keeps only its own
+     internal layout here. The `civ-mb-4` from .civ-card is overridden
+     to 0 because civ-metric-group manages its grid gap; an extra
+     margin-bottom on each cell's child would yield inconsistent
+     row heights. */
   .civ-metric-tile {
-    @apply civ-flex civ-flex-col civ-gap-1 civ-p-4 civ-border civ-rounded;
-    background-color: var(--civ-color-surface);
-    border-color: var(--civ-color-border);
+    @apply civ-flex civ-flex-col civ-gap-1;
     color: var(--civ-color-base-darkest);
     min-width: 0;
+  }
+  .civ-metric-tile.civ-card {
+    margin-bottom: 0;
   }
 
   .civ-metric-tile__header {

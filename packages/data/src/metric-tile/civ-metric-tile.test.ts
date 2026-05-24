@@ -14,6 +14,19 @@ describe('civ-metric-tile', () => {
     expect(el.querySelector('.civ-metric-tile__value')?.textContent).toBe('1,234');
   });
 
+  it('applies the shared civ-card chrome on its root container', async () => {
+    // The metric tile composes civ-card's visual treatment via shared
+    // CSS classes so every "flat surface" container in CivUI looks the
+    // same. The root carries both .civ-metric-tile (internal layout)
+    // and .civ-card .civ-card--tertiary (shared chrome).
+    const el = await fixture<CivMetricTile>(`
+      <civ-metric-tile label="X" value="1"></civ-metric-tile>
+    `);
+    const root = el.querySelector('.civ-metric-tile')!;
+    expect(root.classList.contains('civ-card')).toBe(true);
+    expect(root.classList.contains('civ-card--tertiary')).toBe(true);
+  });
+
   it('omits the label header when only a value is set', async () => {
     const el = await fixture<CivMetricTile>(`
       <civ-metric-tile value="42"></civ-metric-tile>

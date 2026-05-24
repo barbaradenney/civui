@@ -807,6 +807,217 @@ describe('civ-file-upload upload status API', () => {
   });
 });
 
+describe('civ-file-upload password-protected files', () => {
+  it('renders an inline password input + Unlock button when status is locked', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'medical-record.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const unlockBlock = el.querySelector('[data-file-unlock]');
+    expect(unlockBlock).not.toBeNull();
+    const passwordInput = unlockBlock!.querySelector('civ-text-input');
+    expect(passwordInput).not.toBeNull();
+    expect(passwordInput!.getAttribute('type')).toBe('password');
+    expect(passwordInput!.getAttribute('autocomplete')).toBe('off');
+    expect(passwordInput!.hasAttribute('reveal-password')).toBe(true);
+  });
+
+  it('renders a lock icon (not error icon) for locked files', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const fileItem = el.querySelector('.civ-file-item')!;
+    expect(fileItem.querySelector('civ-icon[name="lock"]')).not.toBeNull();
+    expect(fileItem.querySelector('civ-icon[name="error"]')).toBeNull();
+  });
+
+  it('fires civ-file-unlock with the password and transitions to uploading', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'protected.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    // Simulate the user typing a password
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'hunter2' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    // Click Unlock
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(1);
+    expect(events[0].detail.index).toBe(0);
+    expect(events[0].detail.name).toBe('protected.pdf');
+    expect(events[0].detail.password).toBe('hunter2');
+    expect(events[0].detail.file).toBeInstanceOf(File);
+
+    // File moves to uploading so the user gets immediate feedback
+    expect(el._files[0].status).toBe('uploading');
+  });
+
+  it('does not fire civ-file-unlock when the password is empty', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(0);
+    expect(el._files[0].status).toBe('locked');
+  });
+
+  it('re-prompts with the incorrect-password error when the consumer reports a failure', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    // Consumer flow: user submitted, decrypt failed, consumer re-locks with error
+    el.setFileStatus(0, 'locked', { error: 'Incorrect password. Try again.' });
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    expect(passwordInput.getAttribute('error')).toBe('Incorrect password. Try again.');
+  });
+
+  it('does not retain the password after unlock dispatch', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    const file = new File(['x'], 'a.pdf', { type: 'application/pdf' });
+    el._addFiles([file]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'sensitive-dob-password' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._passwordEntries.get(el._files[0].file)).toBe('sensitive-dob-password');
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    // Password buffer cleared so it doesn't linger in component memory
+    expect(el._passwordEntries.get(el._files[0].file)).toBeUndefined();
+  });
+
+  it('clears the password buffer when the file is removed mid-unlock', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const fileRef = el._files[0].file;
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'patient-dob' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+    expect(el._passwordEntries.get(fileRef)).toBe('patient-dob');
+
+    el.removeFile(0);
+    await elementUpdated(el);
+    expect(el._passwordEntries.get(fileRef)).toBeUndefined();
+  });
+
+  it('hides the unlock affordance when the file is readonly', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" readonly></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    // The unlock block still renders (it's inside __content, not __actions),
+    // but the disabled state cascades from the host
+    const unlockBlock = el.querySelector('[data-file-unlock]');
+    expect(unlockBlock).not.toBeNull();
+  });
+
+  it('announces "Unlocking {name}" when unlock fires', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'med.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const announceSpy = vi.spyOn(el, 'announce');
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'pw' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(announceSpy).toHaveBeenCalledWith(expect.stringContaining('med.pdf'));
+  });
+
+  it('Enter in the password field submits the unlock', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'pw' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    passwordInput.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true,
+    }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(1);
+    expect(events[0].detail.password).toBe('pw');
+  });
+});
+
 describe('civ-file-upload interactions', () => {
   afterEach(cleanupFixtures);
 

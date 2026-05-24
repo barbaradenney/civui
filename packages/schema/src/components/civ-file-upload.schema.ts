@@ -157,6 +157,15 @@ const schema: ComponentSchema = {
         file: { type: 'string', description: 'The File object being retried' },
       },
     },
+    'civ-file-unlock': {
+      description: 'Fires when the user submits a password for a password-protected file (e.g. encrypted PDF or ZIP). Triggered when the consumer marks a file as `locked` via `setFileStatus(index, "locked")` and the user enters a password and clicks Unlock. The file status moves to `uploading` immediately; the consumer\'s upload pipeline owns decryption (server-side via qpdf/pdftk, or client-side via pdf.js). Call `setFileStatus(index, "locked", { error: "Incorrect password" })` to re-prompt with the error visible.',
+      detail: {
+        index: { type: 'number', description: 'Index of the locked file' },
+        name: { type: 'string', description: 'Locked file name' },
+        file: { type: 'string', description: 'The File object being unlocked' },
+        password: { type: 'string', description: 'The password the user entered. Treat as sensitive — log redaction, secure transport, do not persist beyond the decryption attempt. The component clears its internal buffer immediately after dispatch.' },
+      },
+    },
     'civ-file-upload-before-remove': {
       description: 'Cancelable. Fires before a file is removed. `preventDefault()` aborts. Listen here to insert a confirmation step (typically a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail matches `civ-file-removed` so the listener has everything it needs to build the modal copy',
       detail: {

@@ -139,6 +139,13 @@ export interface CivLocaleStrings {
   fileUploadCancelAriaLabel: string; // "Cancel upload for {name}"
   fileUploadRetryText: string; // "Retry"
   fileUploadRetryAriaLabel: string; // "Retry upload for {name}"
+  fileUploadLockedText: string; // "Password required to unlock {name}"
+  fileUploadPasswordLabel: string; // "Password"
+  fileUploadPasswordHint: string; // "Enter the password to unlock this file"
+  fileUploadUnlockText: string; // "Unlock"
+  fileUploadUnlockAriaLabel: string; // "Unlock {name}"
+  fileUploadUnlockAnnounce: string; // "Unlocking {name}"
+  fileUploadIncorrectPassword: string; // "Incorrect password. Try again."
   fileUploadProgressAriaLabel: string; // "Upload progress for {name}"
   fileUploadUploading: string; // "Uploading {name}, {progress} percent complete"
   fileUploadSuccess: string; // "{name} uploaded successfully"
@@ -873,6 +880,13 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadCancelAriaLabel: 'Cancel upload for {name}',
   fileUploadRetryText: 'Retry',
   fileUploadRetryAriaLabel: 'Retry upload for {name}',
+  fileUploadLockedText: 'Password required to unlock {name}',
+  fileUploadPasswordLabel: 'Password',
+  fileUploadPasswordHint: 'Enter the password to unlock this file',
+  fileUploadUnlockText: 'Unlock',
+  fileUploadUnlockAriaLabel: 'Unlock {name}',
+  fileUploadUnlockAnnounce: 'Unlocking {name}',
+  fileUploadIncorrectPassword: 'Incorrect password. Try again.',
   fileUploadProgressAriaLabel: 'Upload progress for {name}',
   fileUploadUploading: 'Uploading {name}, {progress} percent complete',
   fileUploadSuccess: '{name} uploaded successfully',

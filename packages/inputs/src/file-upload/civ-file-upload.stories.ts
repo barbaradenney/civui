@@ -233,6 +233,67 @@ export const UploadSimulation: Story = {
   },
 };
 
+// ── Password-protected files (encrypted PDFs, ZIPs) ────────────
+
+export const PasswordProtectedFiles: Story = {
+  name: 'Password-protected files (medical records)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Patients often receive medical records as password-protected PDFs (Kaiser, Mayo, VA Healthcare all do this). The password is typically the patient's date of birth or last 4 of SSN, sent in a separate email. Rather than rejecting the file or asking the user to strip the password externally, the consumer's upload handler marks the file `locked` and the component renders an inline password input with show/hide reveal. On unlock the component fires `civ-file-unlock` with the password; the consumer's pipeline decrypts (typically server-side via qpdf/pdftk, or client-side via pdf.js).\n\n**Try it:** upload any file. After a brief delay it will be marked as password-protected. Enter `dob-1985` to unlock successfully; any other password will show the incorrect-password error.",
+      },
+    },
+  },
+  render: () => {
+    const CORRECT = 'dob-1985';
+
+    const onUpload = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+      const detail = (e as CustomEvent).detail;
+      if (!el || !detail?.files?.length) return;
+
+      const totalFiles = el.files?.length ?? detail.files.length;
+      const startIndex = totalFiles - detail.files.length;
+      for (let i = startIndex; i < totalFiles; i++) {
+        const fileIndex = i;
+        el.setFileStatus(fileIndex, 'uploading', { progress: 0 });
+        setTimeout(() => el.setFileStatus(fileIndex, 'locked'), 600);
+      }
+    };
+
+    const onUnlock = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+      const detail = (e as CustomEvent).detail;
+      if (!el || detail?.index === undefined) return;
+      const fileIndex = detail.index;
+      setTimeout(() => {
+        if (detail.password === CORRECT) {
+          el.setFileStatus(fileIndex, 'success');
+        } else {
+          el.setFileStatus(fileIndex, 'locked', { error: 'Incorrect password. Try again.' });
+        }
+      }, 500);
+    };
+
+    return html`
+      <civ-file-upload
+        label="Upload medical records"
+        hint="Encrypted PDFs from your provider are supported. You'll be prompted for the password after upload."
+        name="medical"
+        accept=".pdf"
+        multiple
+        max-files="5"
+        @civ-change="${onUpload}"
+        @civ-file-unlock="${onUnlock}"
+      ></civ-file-upload>
+      <p class="civ-mt-4 civ-text-sm">
+        Demo password: <code>dob-1985</code>
+      </p>
+    `;
+  },
+};
+
 // ── Usage Example ─────────────────────────────────────────────
 
 export const GovernmentDocumentSubmission: Story = {

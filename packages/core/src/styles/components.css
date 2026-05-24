@@ -225,6 +225,14 @@
     @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
   }
 
+  /* Inline unlock affordance for password-protected files (encrypted PDFs,
+     password-protected ZIPs). Rendered inside __content beneath the file
+     name when status is 'locked'. Constrained width so the password input
+     doesn't stretch the full row on wide layouts. */
+  .civ-file-item__unlock {
+    max-width: 22rem;
+  }
+
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
   /* `civ-list-item { display: block }` lives in the host-display
      defaults section above. Without it, borders don't paint on the

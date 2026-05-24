@@ -9,8 +9,9 @@ import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, renderLabel,
 // shared delay / min-duration flash protection + the announce queue.
 import '@civui/layout/image';
 import '@civui/feedback/spinner';
+import '../text-input/civ-text-input.js';
 
-type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
+type FileStatus = 'pending' | 'uploading' | 'success' | 'error' | 'locked';
 
 /**
  * Represents a file that was uploaded in a previous session and is now
@@ -162,6 +163,7 @@ function formatAcceptedTypes(accept: string): string {
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
  * @fires civ-upload-cancel - When a file upload is cancelled, detail: { index, name }
  * @fires civ-upload-retry - When a file upload is retried, detail: { index, name, file }
+ * @fires civ-file-unlock - When the user submits a password for a password-protected file (e.g. encrypted PDF). Detail: { index, name, file, password }. Fired from the inline unlock affordance that appears when the consumer marks a file as `'locked'` via `setFileStatus(i, 'locked')`. The consumer's upload pipeline owns decryption — typically by retrying the upload with the password attached to the request, or by client-side decryption (PDF.js etc.). The file's status is moved to `'uploading'` immediately and the password buffer is cleared from the component. Set `setFileStatus(i, 'locked', { error: 'Incorrect password' })` to re-prompt with the error visible.
  * @fires civ-file-upload-before-remove - Cancelable. Fires before a file is removed. `preventDefault()` aborts the removal — wire this up to insert a confirmation step (e.g. a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail: { index, name, isInitial, id? }
  * @fires civ-file-removed - When any file is removed, detail: { index, name, isInitial, id? }
  *   For initial-files (isInitial=true), `id` echoes the server identifier so the
@@ -246,6 +248,14 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   private _previewUrls = new Map<File, string>();
   private _hydratedFromInitial = false;
 
+  /**
+   * Per-file password buffer for the inline unlock affordance. Keyed by the
+   * `File` object reference so the entry survives `_files` array reshuffles
+   * (e.g. when a sibling file is removed). Cleared on unlock dispatch and on
+   * file removal so passwords don't linger in memory.
+   */
+  private _passwordEntries = new WeakMap<File, string>();
+
   private _boundDragOver = this._onDragOver.bind(this);
   private _boundDragLeave = this._onDragLeave.bind(this);
   private _boundDrop = this._onDrop.bind(this);
@@ -271,6 +281,8 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
       this.announce(interpolate(t('fileUploadSuccess'), { name: file.name }));
     } else if (status === 'error' && prevStatus !== 'error') {
       this.announce(interpolate(t('fileUploadError'), { name: file.name, error: file.error || t('fileUploadUnknownError') }));
+    } else if (status === 'locked' && prevStatus !== 'locked') {
+      this.announce(interpolate(t('fileUploadLockedText'), { name: file.name }));
     }
   }
 
@@ -417,9 +429,11 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
             ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
             : file.status === 'error'
               ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
-              : file.status === 'uploading'
-                ? html`<civ-spinner size="sm" decorative class="civ-shrink-0"></civ-spinner>`
-                : nothing}
+              : file.status === 'locked'
+                ? html`<civ-icon name="lock" class="civ-shrink-0" aria-hidden="true"></civ-icon>`
+                : file.status === 'uploading'
+                  ? html`<civ-spinner size="sm" decorative class="civ-shrink-0"></civ-spinner>`
+                  : nothing}
         <div class="civ-file-item__content">
           <span class="civ-block">
             ${file.isInitial && file.url
@@ -434,6 +448,29 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           ` : nothing}
           ${file.status === 'error' && file.error ? html`
             <span class="civ-file-error-text civ-block civ-mt-1">${file.error}</span>
+          ` : nothing}
+          ${file.status === 'locked' ? html`
+            <div class="civ-file-item__unlock civ-mt-2" data-file-unlock>
+              <civ-text-input
+                label="${t('fileUploadPasswordLabel')}"
+                hint="${interpolate(t('fileUploadLockedText'), { name: file.name })}"
+                type="password"
+                reveal-password
+                autocomplete="off"
+                error="${file.error || ''}"
+                ?disabled="${this.disabled}"
+                @civ-input="${(e: CustomEvent<{ value: string }>) => this._onPasswordInput(index, e)}"
+                @keydown="${(e: KeyboardEvent) => { if (e.key === 'Enter') { e.preventDefault(); this._onUnlock(index); } }}"
+              ></civ-text-input>
+              <civ-action-button
+                class="civ-mt-2"
+                variant="secondary"
+                label="${t('fileUploadUnlockText')}"
+                aria-label="${interpolate(t('fileUploadUnlockAriaLabel'), { name: file.name })}"
+                ?disabled="${this.disabled}"
+                @click="${() => this._onUnlock(index)}"
+              ></civ-action-button>
+            </div>
           ` : nothing}
         </div>
         ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
@@ -679,6 +716,28 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     dispatch(this, 'civ-upload-retry', { index, name: file.name, file: file.file });
   }
 
+  private _onPasswordInput(index: number, event: CustomEvent<{ value: string }>): void {
+    const file = this._files[index];
+    if (!file) return;
+    this._passwordEntries.set(file.file, event.detail.value ?? '');
+  }
+
+  private _onUnlock(index: number): void {
+    const file = this._files[index];
+    if (!file) return;
+    const password = this._passwordEntries.get(file.file) ?? '';
+    if (!password) return;
+    // Clear the buffer immediately — consumers receive the password via the
+    // event payload; we don't keep it in memory beyond the dispatch.
+    this._passwordEntries.delete(file.file);
+    file.error = undefined;
+    file.status = 'uploading';
+    file.progress = 0;
+    this.requestUpdate();
+    this.announce(interpolate(t('fileUploadUnlockAnnounce'), { name: file.name }));
+    dispatch(this, 'civ-file-unlock', { index, name: file.name, file: file.file, password });
+  }
+
   /**
    * Returns true if `file` is already in the current list. Matches by
    * name + size + lastModified for browser-side files (close enough to
@@ -792,6 +851,9 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     }
 
     this._revokePreviewUrl(removed.file);
+    // Clear any buffered unlock password so it doesn't linger in memory
+    // after the user removes a file mid-unlock.
+    this._passwordEntries.delete(removed.file);
     // Abort any in-progress upload
     if (removed.abortController) {
       removed.abortController.abort();

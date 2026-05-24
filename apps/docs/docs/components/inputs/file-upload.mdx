@@ -74,6 +74,33 @@ File input with drag-and-drop, file list preview, size and type validation, uplo
 
 <StoryEmbed id="forms-inputs-file-upload--upload-simulation" />
 
+### Password-Protected Files
+
+Medical records (Kaiser, Mayo, VA Healthcare) and legal documents are commonly distributed as encrypted PDFs where the password is the recipient's date of birth or similar. Rather than rejecting the file or asking the user to strip the password externally, mark the file `locked` and the component renders an inline password input with show/hide reveal. On unlock the component fires `civ-file-unlock` with `{ index, name, file, password }`; the consumer's upload pipeline owns decryption (server-side via qpdf/pdftk, or client-side via pdf.js).
+
+```ts
+fileUpload.addEventListener('civ-change', async (e) => {
+  // ... upload each file, server detects encryption ...
+  if (serverResponse.status === 'password-required') {
+    fileUpload.setFileStatus(index, 'locked');
+  }
+});
+
+fileUpload.addEventListener('civ-file-unlock', async (e) => {
+  const { index, file, password } = e.detail;
+  const result = await retryUploadWithPassword(file, password);
+  if (result.ok) {
+    fileUpload.setFileStatus(index, 'success');
+  } else {
+    fileUpload.setFileStatus(index, 'locked', { error: 'Incorrect password. Try again.' });
+  }
+});
+```
+
+The password is cleared from the component's internal buffer immediately after dispatch — consumers must not log it, persist it, or send it over a non-HTTPS channel. The `<civ-text-input>` rendered for the password uses `type="password"`, `autocomplete="off"`, and `reveal-password` to support entering an unfamiliar DOB blind without errors.
+
+<StoryEmbed id="forms-inputs-file-upload--password-protected-files" />
+
 ### Government Document Submission
 
 <StoryEmbed id="forms-inputs-file-upload--government-document-submission" />

@@ -199,6 +199,8 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-metric-group': 'data/metric-tile.mdx',
   // Timeline item is documented on the timeline page.
   'civ-timeline-item': 'feedback/timeline.mdx',
+  // Process-list item is documented on the process-list page.
+  'civ-process-list-item': 'feedback/process-list.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

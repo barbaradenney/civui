@@ -55,15 +55,28 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     const headingText = this.heading || t('supportResourcesHeading');
     const variant = this.tone === 'crisis' ? 'error' : nothing;
-    const level = Math.max(2, Math.min(6, this.headingLevel));
+    // Guard NaN before clamping — Lit's `@property({ type: Number })`
+    // returns NaN for any non-numeric attribute value
+    // (e.g. `heading-level="three"`), which would propagate into
+    // `aria-level="NaN"` (invalid ARIA).
+    const rawLevel = Number.isFinite(this.headingLevel) ? this.headingLevel : 3;
+    const level = Math.max(2, Math.min(6, rawLevel));
 
     const headingId = this.generateId('heading');
 
+    // `aria-labelledby` resolves to the heading text via the rendered
+    // `<p>`'s id, but we also set `aria-label` as a safety net:
+    // landmark enumeration tools that scan before child custom
+    // elements upgrade still get a meaningful accessible name on
+    // the complementary region. Per ARIA spec, aria-labelledby
+    // takes precedence over aria-label when both are present, so
+    // the heading text wins under normal conditions.
     return html`
       <civ-callout
         class="civ-support-resources"
         variant="${variant}"
         role="complementary"
+        aria-label="${headingText}"
         aria-labelledby="${headingId}"
       >
         <p

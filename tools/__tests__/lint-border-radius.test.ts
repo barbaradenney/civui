@@ -12,6 +12,7 @@ import {
   appliesRadius,
   extractSimpleTokens,
   isAllowed,
+  stripNestedBlocks,
 } from '../lint-border-radius.js';
 
 describe('appliesRadius', () => {
@@ -33,6 +34,23 @@ describe('appliesRadius', () => {
     expect(appliesRadius('    border-radius: none;').yes).toBe(false);
     expect(appliesRadius('    border-radius: unset;').yes).toBe(false);
     expect(appliesRadius('    border-radius: inherit;').yes).toBe(false);
+  });
+
+  it('treats multi-value zero shorthand as NOT applying radius', () => {
+    // Border-radius shorthand: `border-radius: 0 0 0 0` (all four
+    // corners explicitly zero) is a legitimate reset and must not
+    // trip the lint. Same for two- and three-value forms.
+    expect(appliesRadius('    border-radius: 0 0 0 0;').yes).toBe(false);
+    expect(appliesRadius('    border-radius: 0 0;').yes).toBe(false);
+    expect(appliesRadius('    border-radius: 0px 0px 0px 0px;').yes).toBe(false);
+    expect(appliesRadius('    border-radius: 0% 0%;').yes).toBe(false);
+  });
+
+  it('flags partial-zero shorthand as APPLYING radius', () => {
+    // `border-radius: 0 0 4px 4px` rounds the bottom corners only —
+    // that IS a radius application and should still be flagged.
+    expect(appliesRadius('    border-radius: 0 0 4px 4px;').yes).toBe(true);
+    expect(appliesRadius('    border-radius: 4px 0 4px 0;').yes).toBe(true);
   });
 
   it('detects civ-rounded utilities in @apply', () => {
@@ -86,6 +104,29 @@ describe('extractSimpleTokens', () => {
   it('splits comma-separated selector lists', () => {
     const { classes } = extractSimpleTokens('.civ-foo, .civ-bar');
     expect(classes).toEqual(expect.arrayContaining(['civ-foo', 'civ-bar']));
+  });
+});
+
+describe('stripNestedBlocks', () => {
+  it('returns the input unchanged when no nesting is present', () => {
+    const input = '  color: red;\n  border: 1px solid;\n';
+    expect(stripNestedBlocks(input)).toBe(input);
+  });
+
+  it('blanks the contents of nested rule blocks while preserving newlines', () => {
+    // Native CSS nesting: an inner rule's body must NOT be scanned
+    // as part of the outer rule's body, but its line count must be
+    // preserved so the outer body's line numbers still align.
+    const input = '  color: red;\n  .inner {\n    border-radius: 4px;\n  }\n  font-size: 1rem;\n';
+    const stripped = stripNestedBlocks(input);
+    expect(stripped).not.toMatch(/border-radius/);
+    expect(stripped.split('\n').length).toBe(input.split('\n').length);
+  });
+
+  it('handles deeply nested blocks', () => {
+    const input = 'a { b { c { border-radius: 9999px; } } }';
+    const stripped = stripNestedBlocks(input);
+    expect(stripped).not.toMatch(/border-radius/);
   });
 });
 

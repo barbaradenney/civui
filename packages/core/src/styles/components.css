@@ -59,6 +59,8 @@
   civ-action-sheet,
   civ-timeline,
   civ-timeline-item,
+  civ-process-list,
+  civ-process-list-item,
   civ-address,
   civ-alert,
   civ-breadcrumb,
@@ -4592,16 +4594,177 @@
     @apply civ-block;
   }
 
-  .civ-timeline-item__body:has(*) {
+  /* Baseline body styling. The `:empty` opt-out below removes the
+     spacing for truly empty bodies. We deliberately do NOT use
+     `:has(*)` here — text-only slotted bodies (e.g.
+     `<civ-timeline-item action="X">plain text</civ-timeline-item>`)
+     contain only a Text node, which makes both `:empty` AND
+     `:has(*)` false; without the baseline rule those text-only
+     bodies would lose their margin/font-size. */
+  .civ-timeline-item__body {
     @apply civ-mt-1;
     font-size: var(--civ-typography-fontSize-sm);
   }
+  /* The slot target is rendered without an expression
+     (`<div data-civ-timeline-item-content></div>`), so when nothing
+     is slotted it is truly empty — no Lit ChildPart marker is
+     inserted — and `:empty` correctly suppresses the margin. */
+  .civ-timeline-item__body:empty {
+    @apply civ-mt-0;
+  }
 
-  /* ── Support Resources ───────────────────────────────────── */
+  /* ── Process List ────────────────────────────────────────────
+     Numbered vertical list of upcoming process steps. Visual is
+     close to the timeline (rail + connecting line + trailing
+     content) but with auto-incremented numbered markers via CSS
+     counters, no timestamp axis, and bigger markers / vertical
+     gaps so it reads as "here's the road ahead" rather than
+     "here's what happened." Used on intro pages before a form. */
+
+  .civ-process-list {
+    counter-reset: civ-process-list-step;
+  }
+
+  civ-process-list-item {
+    @apply civ-relative;
+    counter-increment: civ-process-list-step;
+  }
+  /* Defense-in-depth: when civ-process-list-item is used standalone
+     (without a wrapping civ-process-list parent), the counter-reset
+     on the OL never fires and adjacent items share the page-root
+     counter. Resetting on the first item of its type makes a
+     standalone item start at 1, and is a no-op inside a real list
+     because the parent OL already reset to 0. */
+  civ-process-list-item:first-of-type {
+    counter-reset: civ-process-list-step 0;
+  }
+
+  .civ-process-list-item {
+    @apply civ-flex civ-items-stretch civ-gap-4;
+    padding-bottom: var(--civ-spacing-6);
+  }
+
+  /* Suppress the connecting line on the last item. */
+  civ-process-list-item:last-child .civ-process-list-item__line {
+    display: none;
+  }
+  civ-process-list-item:last-child .civ-process-list-item {
+    padding-bottom: 0;
+  }
+
+  .civ-process-list-item__rail {
+    @apply civ-flex civ-flex-col civ-items-center;
+    flex-shrink: 0;
+    width: 2rem;
+  }
+
+  /* Marker is a primary-tinted circle holding either the auto-
+     incremented step number (via the :empty::before rule below) or
+     an icon when explicitly set / in complete state. Rounded by
+     identity — the pill shape IS the marker. Allowlisted in
+     tools/lint-border-radius.ts. */
+  .civ-process-list-item__marker {
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-font-bold;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: var(--civ-color-primary-lightest);
+    color: var(--civ-color-primary-dark);
+    flex-shrink: 0;
+    line-height: 1;
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* The auto-incremented step number is rendered via the dedicated
+     `__counter` child element's `::before` (rendered by the component
+     template when no icon is set). We deliberately do NOT use a
+     `:empty::before` rule on the marker itself, because lit-html
+     inserts a ChildPart comment marker for the template's `${...}`
+     expression — the marker `<span>` is never truly `:empty` and
+     such a rule would never fire. */
+  .civ-process-list-item__counter::before {
+    content: counter(civ-process-list-step);
+  }
+
+  /* Complete state — swap to a success-tinted background; the
+     `check` icon rendered in the template fills the marker. */
+  civ-process-list-item[state='complete'] .civ-process-list-item__marker {
+    background-color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-darkest);
+  }
+
+  /* Marker icon — same centering treatment as the timeline dot
+     icon: collapse host into block-flex, override the global
+     .civ-icon baseline offset so the SVG sits dead-center inside
+     the circle. */
+  .civ-process-list-item__marker-icon {
+    @apply civ-flex civ-items-center civ-justify-center;
+    width: 1rem;
+    height: 1rem;
+    line-height: 0;
+  }
+  .civ-process-list-item__marker-icon .civ-icon {
+    width: 100%;
+    height: 100%;
+    vertical-align: 0;
+    display: block;
+  }
+
+  .civ-process-list-item__line {
+    @apply civ-flex-1;
+    width: 2px;
+    background-color: var(--civ-color-base-lighter);
+    margin-top: var(--civ-spacing-1);
+  }
+
+  .civ-process-list-item__content {
+    @apply civ-flex civ-flex-col civ-flex-1 civ-min-w-0;
+  }
+
+  .civ-process-list-item__heading {
+    @apply civ-m-0 civ-mb-2 civ-font-bold;
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  /* See the timeline rule above for the rationale on `:empty` over
+     `:has(*)` — text-only slotted bodies would lose styling with
+     `:has(*)` because they contain only a Text node. */
+  .civ-process-list-item__body {
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* ── Support Resources ─────────────────────────────────────
+     The default (non-crisis) tone paints a primary-tinted help
+     card with a primary-dark left rail — the visual idiom for
+     "helpful, not alarming" that the previous bespoke
+     civ-form-support-resources chrome carried. The host is a
+     civ-callout (so the rail + padding skeleton comes from the
+     callout base rule); these overrides repaint the background
+     and switch the rail color. The crisis tone passes
+     `variant="error"` to civ-callout, which already changes the
+     rail color via the civ-callout[variant='error'] rule;
+     we override the background to error-lighter for matching
+     emphasis. */
+  .civ-support-resources {
+    background-color: var(--civ-color-primary-lightest);
+    border-inline-start-color: var(--civ-color-primary-dark);
+  }
+  .civ-support-resources[variant='error'] {
+    background-color: var(--civ-color-error-lighter);
+  }
 
   .civ-support-resources__heading {
     @apply civ-font-bold civ-mb-2 civ-m-0;
     font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  /* Suppress trailing margin on the last `<li>` so the panel's
+     bottom padding is visually consistent. (civ-form's
+     support-resources renders a `<ul>` of `<li class="civ-mb-1">`
+     items; without this rule the last item adds a stray
+     0.25rem below it.) */
+  .civ-support-resources__content ul li:last-child {
+    margin-bottom: 0;
   }
 
   .civ-support-resources__content {
@@ -5195,7 +5358,17 @@
      internal layout here. The `civ-mb-4` from .civ-card is overridden
      to 0 because civ-metric-group manages its grid gap; an extra
      margin-bottom on each cell's child would yield inconsistent
-     row heights. */
+     row heights.
+
+     Dark-mode note: by composing .civ-card the tile also inherits
+     the dark-mode `.civ-card { border-color: base-lightest }`
+     override, which differs from the previous self-contained
+     metric-tile's `var(--civ-color-border)` treatment. This is
+     deliberate — unifying tile and card chrome means dark-mode
+     consistency comes along for free. If a future visual review
+     prefers a subtler dark border on tiles specifically, add a
+     `.civ-metric-tile.civ-card { border-color: ... }` override
+     inside the dark-mode block. */
   .civ-metric-tile {
     @apply civ-flex civ-flex-col civ-gap-1;
     color: var(--civ-color-base-darkest);

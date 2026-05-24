@@ -131,6 +131,7 @@ const config: StorybookConfig = {
       '@civui/feedback/spinner': resolve(root, 'packages/feedback/src/spinner/index.ts'),
       '@civui/feedback/skeleton': resolve(root, 'packages/feedback/src/skeleton/index.ts'),
       '@civui/feedback/timeline': resolve(root, 'packages/feedback/src/timeline/index.ts'),
+      '@civui/feedback/process-list': resolve(root, 'packages/feedback/src/process-list/index.ts'),
       '@civui/feedback': resolve(root, 'packages/feedback/src/index.ts'),
       // Actions (button, action-button, filter-chip, link, link-card, skip-link, confirm-button, toggle-button)
       '@civui/actions/button': resolve(root, 'packages/actions/src/button/index.ts'),

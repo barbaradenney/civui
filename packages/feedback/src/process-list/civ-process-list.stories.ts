@@ -1,0 +1,164 @@
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import { html } from 'lit';
+import './civ-process-list.js';
+import './civ-process-list-item.js';
+
+const meta: Meta = {
+  title: 'Feedback/Process List',
+  component: 'civ-process-list',
+  tags: ['autodocs'],
+};
+export default meta;
+type Story = StoryObj;
+
+// ── Default — benefit application preview ──────────────────────
+
+export const BenefitApplication: Story = {
+  name: 'Benefit application — three-step preview',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Gather your documents">
+          <p class="civ-m-0">
+            You'll need your Social Security number, proof of income, and a
+            government-issued photo ID.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Fill out the application">
+          <p class="civ-m-0">
+            Most people finish in about 15 minutes. You can save and come
+            back later if you need to.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="We review your application">
+          <p class="civ-m-0">
+            A decision usually arrives within 30 days. You'll get a letter
+            in the mail with the result.
+          </p>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Mixed progress — some steps complete ──────────────────────
+
+export const MixedProgress: Story = {
+  name: 'Mixed progress — completed + upcoming',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Account created" state="complete">
+          <p class="civ-m-0">
+            You created your account on May 18, 2026.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Identity verified" state="complete">
+          <p class="civ-m-0">
+            We confirmed your identity using ID.me.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Submit your application">
+          <p class="civ-m-0">
+            You're here. Complete the form below to file your claim.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Decision arrives">
+          <p class="civ-m-0">
+            Within 30 days after submission.
+          </p>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Custom icons per step ─────────────────────────────────────
+
+export const CustomIcons: Story = {
+  name: 'Custom icons — affordance-specific markers',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Sign in to your account" icon="person">
+          <p class="civ-m-0">
+            Use your Login.gov or ID.me account.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Verify your email" icon="mail">
+          <p class="civ-m-0">
+            We'll send a confirmation link to the address on file.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Upload supporting documents" icon="document">
+          <p class="civ-m-0">
+            PDF, JPG, or PNG, up to 10 MB per file.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Review and submit" icon="check">
+          <p class="civ-m-0">
+            Double-check everything before sending.
+          </p>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Headings only — terse stage preview ───────────────────────
+
+export const HeadingsOnly: Story = {
+  name: 'Headings only — terse stage preview',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Apply"></civ-process-list-item>
+        <civ-process-list-item heading="Review"></civ-process-list-item>
+        <civ-process-list-item heading="Decision"></civ-process-list-item>
+        <civ-process-list-item heading="Appeal (if needed)"></civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Rich body content ─────────────────────────────────────────
+
+export const RichBody: Story = {
+  name: 'Rich body — nested lists and links',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Before you begin">
+          <p>You'll need the following:</p>
+          <ul>
+            <li>Your Social Security number</li>
+            <li>Your most recent W-2 or pay stub</li>
+            <li>Bank routing and account numbers (for direct deposit)</li>
+          </ul>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Complete the application">
+          <p>
+            The form takes about 20 minutes. Use the
+            <a href="#">save-and-continue</a> button if you need a break.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Track your status">
+          <p>
+            After submission, you can check the status of your application
+            in your <a href="#">account dashboard</a>.
+          </p>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};

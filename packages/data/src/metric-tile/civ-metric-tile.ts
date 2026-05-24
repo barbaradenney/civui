@@ -3,6 +3,12 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
+// Side-effect import: the tile composes civ-card's chrome via the
+// `civ-card civ-card--tertiary` classes applied on its root, so it
+// depends on `.civ-card` CSS being loaded. Importing the package
+// here declares the dependency so a consumer importing only
+// `@civui/data/metric-tile` gets the card styles automatically.
+import '@civui/layout/card';
 
 export type MetricTrend = 'up' | 'down' | 'flat' | '';
 export type MetricIntent = 'positive' | 'negative' | 'neutral' | '';

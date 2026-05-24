@@ -4198,6 +4198,43 @@
       "source": "packages/overlays/src/popover/civ-popover.stories.ts"
     }
   ],
+  "civ-process-list": [
+    {
+      "story": "BenefitApplication",
+      "name": "Benefit application — three-step preview",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Gather your documents\">\n          <p class=\"civ-m-0\">\n            You'll need your Social Security number, proof of income, and a\n            government-issued photo ID.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Fill out the application\">\n          <p class=\"civ-m-0\">\n            Most people finish in about 15 minutes. You can save and come\n            back later if you need to.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"We review your application\">\n          <p class=\"civ-m-0\">\n            A decision usually arrives within 30 days. You'll get a letter\n            in the mail with the result.\n          </p>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    },
+    {
+      "story": "CustomIcons",
+      "name": "Custom icons — affordance-specific markers",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Sign in to your account\" icon=\"person\">\n          <p class=\"civ-m-0\">\n            Use your Login.gov or ID.me account.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Verify your email\" icon=\"mail\">\n          <p class=\"civ-m-0\">\n            We'll send a confirmation link to the address on file.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Upload supporting documents\" icon=\"document\">\n          <p class=\"civ-m-0\">\n            PDF, JPG, or PNG, up to 10 MB per file.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Review and submit\" icon=\"check\">\n          <p class=\"civ-m-0\">\n            Double-check everything before sending.\n          </p>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    },
+    {
+      "story": "HeadingsOnly",
+      "name": "Headings only — terse stage preview",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Apply\"></civ-process-list-item>\n        <civ-process-list-item heading=\"Review\"></civ-process-list-item>\n        <civ-process-list-item heading=\"Decision\"></civ-process-list-item>\n        <civ-process-list-item heading=\"Appeal (if needed)\"></civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    },
+    {
+      "story": "MixedProgress",
+      "name": "Mixed progress — completed + upcoming",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Account created\" state=\"complete\">\n          <p class=\"civ-m-0\">\n            You created your account on May 18, 2026.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Identity verified\" state=\"complete\">\n          <p class=\"civ-m-0\">\n            We confirmed your identity using ID.me.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Submit your application\">\n          <p class=\"civ-m-0\">\n            You're here. Complete the form below to file your claim.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Decision arrives\">\n          <p class=\"civ-m-0\">\n            Within 30 days after submission.\n          </p>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    },
+    {
+      "story": "RichBody",
+      "name": "Rich body — nested lists and links",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Before you begin\">\n          <p>You'll need the following:</p>\n          <ul>\n            <li>Your Social Security number</li>\n            <li>Your most recent W-2 or pay stub</li>\n            <li>Bank routing and account numbers (for direct deposit)</li>\n          </ul>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Complete the application\">\n          <p>\n            The form takes about 20 minutes. Use the\n            <a href=\"#\">save-and-continue</a> button if you need a break.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Track your status\">\n          <p>\n            After submission, you can check the status of your application\n            in your <a href=\"#\">account dashboard</a>.\n          </p>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    }
+  ],
   "civ-progress-header": [
     {
       "story": "AllStates",

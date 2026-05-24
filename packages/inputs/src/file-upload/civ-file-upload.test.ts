@@ -1199,18 +1199,46 @@ describe('civ-file-upload dragenter/dragleave depth tracking', () => {
 });
 
 describe('civ-file-upload compact variant', () => {
-  it('does not double-render the file list below the inline trigger', async () => {
+  it('compact + single: trigger shows the filename, no list rendered', async () => {
     const el = await fixture('<civ-file-upload label="Upload" variant="compact" name="doc"></civ-file-upload>') as any;
     el._addFiles([new File(['x'], 'report.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
 
-    // Trigger shows the filename inline
-    const triggerText = el.querySelector('.civ-input')!.textContent;
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
     expect(triggerText).toContain('report.pdf');
-
-    // File list <ul> is not rendered
+    // No list — the trigger alone shows the chosen file
     expect(el.querySelector('ul.civ-list-none')).toBeNull();
     expect(el.querySelector('.civ-file-item')).toBeNull();
+  });
+
+  it('compact + multiple + N>1: trigger shows the count summary, list renders for per-file remove', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="compact" multiple name="doc"></civ-file-upload>') as any;
+    el._addFiles([
+      new File(['a'], 'a.pdf', { type: 'application/pdf' }),
+      new File(['b'], 'b.pdf', { type: 'application/pdf' }),
+      new File(['c'], 'c.pdf', { type: 'application/pdf' }),
+    ]);
+    await elementUpdated(el);
+
+    // Trigger shows "3 files chosen", not the comma-joined names
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).toBe('3 files chosen');
+
+    // File list IS rendered so the user can remove individual files
+    expect(el.querySelector('ul.civ-list-none')).not.toBeNull();
+    expect(el.querySelectorAll('.civ-file-item')).toHaveLength(3);
+    expect(el.querySelectorAll('[data-file-remove]')).toHaveLength(3);
+  });
+
+  it('compact + multiple + 1: trigger shows the filename (matches single-file UX)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="compact" multiple name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'only.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).toBe('only.pdf');
+    // List still renders so the user can still remove the single file
+    expect(el.querySelectorAll('.civ-file-item')).toHaveLength(1);
   });
 
   it('compact button has an accessible name from this.label', async () => {

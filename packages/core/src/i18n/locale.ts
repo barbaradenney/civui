@@ -120,6 +120,7 @@ export interface CivLocaleStrings {
   fileUploadShowAll: string; // "Show all {count} files"
   fileUploadDragText: string;
   fileUploadNoFileChosen: string;
+  fileUploadFilesChosen: string; // "{count} files chosen" — compact + multiple trigger summary
   fileUploadBrowseText: string;
   fileUploadAcceptedLabel: string;
   fileUploadMaxSizeLabel: string;
@@ -861,6 +862,7 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadShowAll: 'Show all {count} files',
   fileUploadDragText: 'Drag files here or',
   fileUploadNoFileChosen: 'No file chosen',
+  fileUploadFilesChosen: '{count} files chosen',
   fileUploadBrowseText: 'Choose from folder',
   fileUploadAcceptedLabel: 'Accepted: ',
   fileUploadMaxSizeLabel: 'Max size: ',

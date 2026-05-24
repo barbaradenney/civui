@@ -357,6 +357,20 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
    */
   private _renderTrigger() {
     if (this.variant === 'compact') {
+      // Compact trigger summary matches native <input type="file"> behavior:
+      //   - empty           → "No file chosen"
+      //   - single file     → "filename.ext"
+      //   - multiple + 1    → "filename.ext"
+      //   - multiple + N>1  → "N files chosen" (with the full list rendered
+      //                       below so the user can remove individual files)
+      // Joining all names in the trigger when multiple ran out of room and
+      // duplicated content that the list already showed; the count summary
+      // is the canonical way to surface "many files" inline.
+      const triggerText = this._files.length === 0
+        ? (this.dragText || t('fileUploadNoFileChosen'))
+        : this._files.length === 1
+          ? this._files[0].name
+          : interpolate(t('fileUploadFilesChosen'), { count: this._files.length });
       return html`
         <button
           type="button"
@@ -368,9 +382,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           ?disabled="${this.disabled}"
         >
           <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this.error ? 'true' : nothing}">
-            ${this._files.length > 0
-              ? this._files.map(f => f.name).join(', ')
-              : (this.dragText || t('fileUploadNoFileChosen'))}
+            ${triggerText}
           </span>
           <span class="civ-action-btn civ-action-btn--tertiary civ-action-btn--joined-start civ-shrink-0 civ-rounded-e">${this.browseText || t('fileUploadBrowseText')}</span>
         </button>`;
@@ -433,15 +445,17 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   /**
    * Render the selected-files list (status icon, name, progress bar, error,
    * action buttons) plus the "show all" expander when there are more than
-   * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty. Skipped
-   * for the compact variant — the trigger itself shows the chosen file
-   * names inline (matching native `<input type="file">` semantics), so a
-   * list below would double-render every name. Compact mode is single-file
-   * by convention; multi-file uploads should use `default` / `full`
-   * variant where the list affords per-file remove / retry.
+   * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty.
+   *
+   * Compact + single: skipped — the inline trigger already shows the file
+   * name; a single-row list below would just duplicate it.
+   *
+   * Compact + multiple: the list renders. The trigger collapses to a
+   * "{N} files chosen" summary so the two surfaces aren't redundant, and
+   * the list is the only way for the user to remove individual files.
    */
   private _renderFileList() {
-    if (this.variant === 'compact') return nothing;
+    if (this.variant === 'compact' && !this.multiple) return nothing;
     if (this._files.length === 0) return nothing;
     const visible = this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT);
     return html`

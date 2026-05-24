@@ -735,6 +735,13 @@
       "source": "packages/layout/src/callout/civ-callout.stories.ts"
     },
     {
+      "story": "InsideCallout",
+      "name": "Composed inside a callout",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-callout variant=\"warning\">\n        <p style=\"margin: 0 0 0.75rem; font-weight: bold;\">Before you continue</p>\n        <p style=\"margin: 0 0 1rem;\">\n          Make sure your identity documents are scanned and ready before\n          beginning the verification step. The session times out after\n          15 minutes of inactivity.\n        </p>\n        <civ-notice\n          intent=\"warning\"\n          spacing=\"sm\"\n          body=\"If your session times out, you will need to start over from the beginning.\"\n        ></civ-notice>\n      </civ-callout>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
       "story": "RichContent",
       "name": "Rich content (list)",
       "category": "Layout/Callout",
@@ -3806,6 +3813,70 @@
       "category": "Navigation/Nav",
       "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/admin\" label=\"Admin\" disabled></civ-nav-item>\n    </civ-nav>",
       "source": "packages/navigation/src/nav/civ-nav.stories.ts"
+    }
+  ],
+  "civ-notice": [
+    {
+      "story": "BodyOnly",
+      "name": "Body only — GOV.UK warning-text equivalent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"warning\"\n        body=\"You can be fined up to $5,000 if you do not register.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Compact",
+      "name": "Compact (spacing=sm)",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"info\"\n        spacing=\"sm\"\n        body=\"This step is optional. You can skip it and return later.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        header=\"You must register\"\n        body=\"You can be fined up to $5,000 if you do not register before the deadline.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "ErrorIntent",
+      "name": "Error intent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"error\"\n        header=\"Application not received\"\n        body=\"We do not have a record of your application. Please contact support to confirm before the deadline.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Info",
+      "name": "Info intent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"info\"\n        header=\"Document upload required\"\n        body=\"You will need a recent utility bill or bank statement to verify your address.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Neutral",
+      "name": "Neutral intent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"neutral\"\n        header=\"About this form\"\n        body=\"This form takes most veterans about 25 minutes to complete. You can save and return at any point.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Success",
+      "name": "Success intent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"success\"\n        header=\"Eligible for expedited review\"\n        body=\"Based on your service-connected disability rating, your claim qualifies for the priority review queue.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "Warning",
+      "name": "Warning intent",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"warning\"\n        header=\"Submission is final\"\n        body=\"Once you submit, you cannot edit your answers. Review them carefully.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
+    },
+    {
+      "story": "WithScreenReaderPrefix",
+      "name": "With screen-reader prefix",
+      "category": "Layout/Notice",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-notice\n        intent=\"warning\"\n        sr-prefix=\"Warning:\"\n        header=\"Identity verification required\"\n        body=\"You must complete identity verification with Login.gov before continuing.\"\n      ></civ-notice>\n    </div>",
+      "source": "packages/layout/src/notice/civ-notice.stories.ts"
     }
   ],
   "civ-number": [

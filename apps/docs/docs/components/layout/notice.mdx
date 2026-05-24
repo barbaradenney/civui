@@ -1,0 +1,152 @@
+---
+title: Notice
+sidebar_position: 5
+sidebar_label: Notice
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_notice.props.mdx";
+import EventsTable from "./_notice.events.mdx";
+
+# Notice
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-notice`](pathname:///civui/storybook/?path=/docs/contract-civ-notice--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-notice>`
+
+Icon-prefixed emphasis text for highlighting a specific passage inside
+longer content — legal, safety, or financial consequences a reader
+could miss in flowing prose. Based on GOV.UK's
+[warning text](https://design-system.service.gov.uk/components/warning-text/)
+pattern, generalized with semantic intents (`info` / `warning` /
+`error` / `success` / `neutral`).
+
+There is no background and no dismiss button — just a large semantic
+icon plus bold paragraphs. This is the lightweight inline variant of
+the alert / callout family.
+
+## When to use
+
+| You need | Use |
+|---|---|
+| Emphasis on a passage the user is already reading ("You can be fined…") | **`civ-notice`** |
+| A notification handed to the user with dismiss + live-region announce | [`civ-alert`](../feedback/alert) |
+| A panel surface with background + rich body content + inline links | [`civ-callout`](./callout) |
+| A panel with heading + body as a section opener | [`civ-section-intro`](../form/section-intro) |
+
+The component is display-only and not form-associated.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="layout-notice--default" />
+
+### Body only (GOV.UK warning-text equivalent)
+
+<StoryEmbed id="layout-notice--body-only" />
+
+### Intents
+
+<StoryEmbed id="layout-notice--info" />
+
+<StoryEmbed id="layout-notice--warning" />
+
+<StoryEmbed id="layout-notice--error-intent" />
+
+<StoryEmbed id="layout-notice--success" />
+
+<StoryEmbed id="layout-notice--neutral" />
+
+### Compact (`spacing="sm"`)
+
+<StoryEmbed id="layout-notice--compact" />
+
+### With screen-reader prefix
+
+<StoryEmbed id="layout-notice--with-screen-reader-prefix" />
+
+### Composed inside a callout
+
+<StoryEmbed id="layout-notice--inside-callout" />
+
+## Content model
+
+`header` and `body` are string props — the component owns the HTML so
+the rendered markup stays semantically correct. For body content that
+needs inline links or other rich markup, reach for
+[`civ-callout`](./callout) instead.
+
+```html
+<civ-notice
+  intent="warning"
+  header="You must register"
+  body="You can be fined up to $5,000 if you do not register."
+></civ-notice>
+```
+
+Either prop is optional; the icon renders even with no text. In
+practice, set at least `body`.
+
+## Intents and default icons
+
+Each intent picks a default icon from the CivUI icon library. Override
+via the `icon` prop when a placement needs a different glyph.
+
+| Intent | Default icon | Color |
+|---|---|---|
+| `info` (default) | `info` | info |
+| `warning` | `warning` | warning-dark |
+| `error` | `error` | error |
+| `success` | `check-circle` | success-dark |
+| `neutral` | `info` | base-dark (gray) |
+
+Color is never the sole signal — the icon shape and the bold weight
+on the header carry the emphasis too, so colorblind users get the
+full meaning.
+
+## Spacing
+
+| Value | When to use | Approximate sizes |
+|---|---|---|
+| `default` | Standalone block or inside a card / page section; matches GOV.UK warning-text presence | ~2rem icon + lg body text |
+| `sm` | Inline within body prose where the affordance shouldn't dominate the reading flow | ~1.25rem icon + base body text |
+
+## Accessibility
+
+- The icon carries `aria-hidden="true"`; the visual treatment isn't
+  re-announced by screen readers.
+- The optional `header` renders as `<p role="heading" aria-level="N">`
+  so the heading is surfaced via the screen-reader rotor without
+  forcing a specific `<h*>` level into the page outline.
+- For severity that should be spoken before the header, set
+  `sr-prefix` to a string like `"Warning:"`. It renders in a
+  visually-hidden span before the content. The prop is empty by
+  default — teams opt in per placement so the announcement matches
+  the editorial tone of the surrounding copy.
+- Body and header text inherit the default color (base-darkest), per
+  the CivUI rule that visual hierarchy comes from font size and
+  weight, not color muting.
+
+## Props
+
+<PropsTable />
+
+## Events
+
+`<civ-notice>` is display-only and fires no custom events.
+
+<EventsTable />
+
+## Related
+
+- [`civ-alert`](../feedback/alert) — dismissible banner with ARIA live
+  region. Use when the message is a notification.
+- [`civ-callout`](./callout) — panel with rail + background. Use when
+  the surface needs heading + rich body content.
+- [`civ-section-intro`](../form/section-intro) — section opener built
+  on `civ-callout` with a heading and a `role="region"` landmark.

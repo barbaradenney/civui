@@ -1,0 +1,12 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `intent` | `'info'` \| `'warning'` \| `'error'` \| `'success'` \| `'neutral'` | `'info'` | Severity / color treatment. Drives the default icon and the icon's color. `info` is the default; `neutral` is a gray variant for emphasis without status meaning. |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | `default` renders the GOV.UK-presence version (large icon + bold lg text); `sm` is the inline-compact variant for body-prose placements where the affordance shouldn't dominate the surrounding reading flow. |
+| `icon` | `string` | `''` | Override the intent's default icon. Defaults map per intent (`info` → `info`, `warning` → `warning`, `error` → `error`, `success` → `check-circle`, `neutral` → `info`). |
+| `header` | `string` | `''` | Optional bold heading rendered above the body. Rendered as `<p role="heading" aria-level="N">` so the heading is announced to screen readers without forcing a specific `<h*>` level into the page outline. |
+| `heading-level` | `number` | `3` | Heading level (2–6) applied to the `header` when set. Default is 3. |
+| `body` | `string` | `''` | Body text rendered below the header. For rich body content with inline links, use `civ-callout` instead — `civ-notice` owns its HTML so the surface stays consistent. |
+| `sr-prefix` | `string` | `''` | Optional visually-hidden screen-reader prefix (e.g. `Warning:`). Empty by default — teams opt in per placement when the severity needs to be announced verbally before the header text. |

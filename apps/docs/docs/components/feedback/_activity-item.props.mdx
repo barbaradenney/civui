@@ -1,0 +1,11 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `timestamp` | `string` | `''` | ISO 8601 timestamp string. Required for the `<time datetime>` wrapper to be valid. |
+| `timestamp-format` | `'relative'` \| `'absolute'` \| `'both'` | `'both'` | Visual timestamp format. `relative` shows "3 hours ago"; `absolute` shows the locale-formatted date/time; `both` shows the absolute label with the relative phrase in parentheses (default). |
+| `actor` | `string` | `''` | Person or system that took the action (e.g. "J. Martinez (Reviewer)", "System"). |
+| `action` | `string` | `''` | Short action label (e.g. "Application submitted", "Approved", "Documentation requested"). |
+| `intent` | `'success'` \| `'info'` \| `'warning'` \| `'error'` \| `'neutral'` | `'neutral'` | Semantic color for the rail dot. Drives the dot background and the default icon inside it. |
+| `icon` | `string` | `''` | Override icon name. Empty string suppresses the default intent icon and shows a plain colored dot. Defaults to the intent's semantic icon (success → check, info → info, warning → warning, error → error, neutral → no icon). |

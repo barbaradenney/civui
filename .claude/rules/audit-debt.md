@@ -92,6 +92,21 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Confirmation panel + activity timeline follow-ups
+
+- **Surfaced:** Form-submission components landing, 2026-05-24. Branch `claude/form-submission-components-9zmdH`.
+- **What landed:** Three new web components — `<civ-confirmation-panel>` (post-submission success surface in `@civui/form-patterns`; USWDS-aligned left-border success header, optional reference-number summary box, slot-based body / pending-reference / next-steps / actions, auto-focuses heading + `announce()`s on mount) and `<civ-activity-timeline>` + `<civ-activity-item>` (dated event list in `@civui/feedback`; `<ol role="list">` container, intent-colored rail dots with default semantic icons, `<time datetime>`-wrapped timestamps in relative / absolute / both formats via `Intl.RelativeTimeFormat`). Schemas (3 new), tests (36 new), Storybook stories, CSS, and Docusaurus pages all ship in the same change. `civ-activity-item` lives on the activity-timeline page via `HOST_PAGE_OVERRIDES`.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Confirmation-panel visual variants.** Only the success treatment is shipped. `info` / `warning` variants for partial submissions or "received but not yet validated" responses are speculative; add when a real case lands.
+  2. **Auto-formatting of the reference number.** The `reference` prop is passed through verbatim. No hyphen insertion, no monospace forcing, no copy-to-clipboard button. Consumers wanting "Copy reference" can compose `<civ-confirm-button>` in the actions slot.
+  3. **Timeline `reversed` prop / `compact` mode.** Items render in source order — consumers reverse the array themselves for newest-first audit logs. A `compact` density is not implemented; add when a dashboard placement needs it.
+  4. **Clickable timeline items.** Items are display-only. Consumers needing per-item drill-down render a `<button>` or `<civ-link>` inside the item's body slot.
+  5. **MutationObserver on the timeline.** Items added after `firstUpdated` are picked up by Lit's normal child capture flow, but dynamic `${items.map(...)}` patterns inside the timeline hit the known LightDomSlotMixin issue (see common-traps.md). Static authoring or wrapping the map in a static container is the documented workaround.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-confirmation-panel`, `civ-activity-timeline`, and `civ-activity-item` and they validate cleanly + produce Props/Events partials, but none are registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{ConfirmationPanel,ActivityTimeline,ActivityItem}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{ConfirmationPanel,ActivityTimeline,ActivityItem}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{confirmation-panel,activity-timeline,activity-item}/{name}.component.yml`). Pattern: shape `civ-confirmation-panel` after `civ-section-intro` (slot-projecting container with a heading + body composition); shape `civ-activity-timeline` after `civ-list` (parent container, slot-projects children); shape `civ-activity-item` after `civ-list-item` (per-row host with leading `aria-hidden` chrome + trailing content stack).
+- **Why deferred:** Same rationale as the existing native-stubs entry — auto-focus on mount, `Intl.RelativeTimeFormat`, and timeline rail rendering have platform quirks (SwiftUI `accessibilityFocus`, Compose `Modifier.focusable` + LiveRegion, native relative-time formatters per OS) that need device verification. Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

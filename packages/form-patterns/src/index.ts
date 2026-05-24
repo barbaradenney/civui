@@ -18,6 +18,9 @@ export { CivRepeater } from './repeater/index.js';
 export { CivSummary } from './summary/index.js';
 export type { SummarySection, SummaryItem } from './summary/index.js';
 
+// Confirmation Panel
+export { CivConfirmationPanel } from './confirmation-panel/index.js';
+
 // Data Field
 export { CivDataField } from './data-field/index.js';
 

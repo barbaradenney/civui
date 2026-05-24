@@ -124,6 +124,36 @@
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     }
   ],
+  "civ-activity-timeline": [
+    {
+      "story": "AllIntents",
+      "name": "All intents",
+      "category": "Feedback/Activity Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${daysAgo(5)}\"\n          action=\"Neutral intent — plain dot\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(4)}\"\n          action=\"Info intent\"\n          intent=\"info\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(3)}\"\n          action=\"Success intent\"\n          intent=\"success\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(2)}\"\n          action=\"Warning intent\"\n          intent=\"warning\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          action=\"Error intent\"\n          intent=\"error\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
+      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
+    },
+    {
+      "story": "AuditLog",
+      "name": "Audit log (newest first)",
+      "category": "Feedback/Activity Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(0.25)}\"\n          actor=\"admin@agency.gov\"\n          action=\"Role changed to Reviewer\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${hoursAgo(2)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Password reset requested\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${hoursAgo(8)}\"\n          actor=\"System\"\n          action=\"Failed login attempt\"\n          intent=\"error\"\n        >\n          Three consecutive failures from IP 198.51.100.42.\n        </civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"sarah.chen@agency.gov\"\n          action=\"Signed in\"\n          intent=\"neutral\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
+      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
+    },
+    {
+      "story": "ClaimHistory",
+      "name": "Claim history (chronological)",
+      "category": "Feedback/Activity Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${daysAgo(7)}\"\n          actor=\"Sarah Chen\"\n          action=\"Application submitted\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(5)}\"\n          actor=\"Benefits processing\"\n          action=\"Documentation requested\"\n          intent=\"warning\"\n        >\n          We need a copy of your DD-214 to verify service dates.\n        </civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(3)}\"\n          actor=\"Sarah Chen\"\n          action=\"DD-214 uploaded\"\n          intent=\"info\"\n        ></civ-activity-item>\n\n        <civ-activity-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"J. Martinez (Reviewer)\"\n          action=\"Approved\"\n          intent=\"success\"\n        >\n          All documentation verified. Award letter to follow within 5 business days.\n        </civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
+      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
+    },
+    {
+      "story": "RelativeOnly",
+      "name": "Relative-only timestamps",
+      "category": "Feedback/Activity Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-activity-timeline>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(0.5)}\"\n          actor=\"Sarah\"\n          action=\"Saved progress\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${hoursAgo(3)}\"\n          actor=\"Sarah\"\n          action=\"Uploaded passport scan\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n        <civ-activity-item\n          timestamp=\"${daysAgo(2)}\"\n          actor=\"Sarah\"\n          action=\"Started application\"\n          intent=\"neutral\"\n          timestamp-format=\"relative\"\n        ></civ-activity-item>\n      </civ-activity-timeline>\n    </div>",
+      "source": "packages/feedback/src/activity-timeline/civ-activity-timeline.stories.ts"
+    }
+  ],
   "civ-address": [
     {
       "story": "AllStates",
@@ -1156,6 +1186,35 @@
       "category": "Actions/Confirm Button",
       "html": "<civ-confirm-button\n      variant=\"inline\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    }
+  ],
+  "civ-confirmation-panel": [
+    {
+      "story": "Default",
+      "category": "Forms/Form/Confirmation Panel",
+      "html": "<civ-confirmation-panel\n      heading=\"${args.heading}\"\n      heading-level=\"${args.headingLevel}\"\n      reference=\"${args.reference}\"\n      reference-label=\"${args.referenceLabel}\"\n      ?no-autofocus=\"${args.noAutofocus}\"\n    >\n      <p>We have sent a confirmation email to sarah@example.gov.</p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          Your application will be reviewed within 5 working days. We'll contact\n          you if we need more information.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Print confirmation\" variant=\"secondary\"></civ-button>\n        <civ-link href=\"/dashboard\">Return to dashboard</civ-link>\n      </div>\n    </civ-confirmation-panel>",
+      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
+    },
+    {
+      "story": "Minimal",
+      "name": "Minimal (eligibility check)",
+      "category": "Forms/Form/Confirmation Panel",
+      "html": "<civ-confirmation-panel heading=\"You may be eligible\" no-autofocus>\n      <p>\n        Based on your answers, you appear to meet the basic eligibility\n        criteria. To confirm and apply, start the full application.\n      </p>\n\n      <div data-actions>\n        <civ-button label=\"Start application\" variant=\"primary\"></civ-button>\n      </div>\n    </civ-confirmation-panel>",
+      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
+    },
+    {
+      "story": "PendingReference",
+      "name": "Pending reference (async backend)",
+      "category": "Forms/Form/Confirmation Panel",
+      "html": "<civ-confirmation-panel heading=\"Claim received\" no-autofocus>\n      <p>\n        We're processing your claim. This usually takes a few minutes.\n      </p>\n\n      <p data-pending-reference>\n        <strong>We'll email your reference number within 24 hours</strong> to\n        sarah@example.gov. Use it when checking your claim status.\n      </p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          You'll get a decision letter by mail within 30 days. You can also\n          check your status online once you receive your reference number.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Check status\" variant=\"primary\"></civ-button>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
+      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
+    },
+    {
+      "story": "WithoutReference",
+      "name": "Without reference (informational submission)",
+      "category": "Forms/Form/Confirmation Panel",
+      "html": "<civ-confirmation-panel heading=\"Subscription confirmed\" no-autofocus>\n      <p>\n        You're signed up to receive benefit updates at sarah@example.gov.\n        Look out for our first email within the next week.\n      </p>\n\n      <div data-next-steps>\n        <h2>What you can do next</h2>\n        <ul>\n          <li>Update your contact preferences anytime</li>\n          <li>Browse benefit topics on the resources page</li>\n        </ul>\n      </div>\n\n      <div data-actions>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
+      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
     }
   ],
   "civ-count": [

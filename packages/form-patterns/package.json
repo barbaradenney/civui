@@ -15,6 +15,7 @@
     "./conditional": "./dist/conditional/index.js",
     "./repeater": "./dist/repeater/index.js",
     "./summary": "./dist/summary/index.js",
+    "./confirmation-panel": "./dist/confirmation-panel/index.js",
     "./data-field": "./dist/data-field/index.js",
     "./section-intro": "./dist/section-intro/index.js",
     "./progress": "./dist/progress/index.js",

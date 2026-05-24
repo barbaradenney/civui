@@ -186,6 +186,8 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-time-picker': 'inputs/time.mdx',
   // Metric group is documented as a sub-section of the metric tile page.
   'civ-metric-group': 'data/metric-tile.mdx',
+  // Activity item is documented on the activity-timeline page.
+  'civ-activity-item': 'feedback/activity-timeline.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

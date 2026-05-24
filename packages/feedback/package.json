@@ -12,7 +12,8 @@
     "./badge": "./dist/badge/index.js",
     "./count": "./dist/count/index.js",
     "./spinner": "./dist/spinner/index.js",
-    "./skeleton": "./dist/skeleton/index.js"
+    "./skeleton": "./dist/skeleton/index.js",
+    "./activity-timeline": "./dist/activity-timeline/index.js"
   },
   "files": [
     "dist"

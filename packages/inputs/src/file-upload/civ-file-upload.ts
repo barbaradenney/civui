@@ -439,7 +439,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
           ${file.status === 'uploading' ? html`
             <civ-action-button
-              variant="tertiary"
+              emphasis="tertiary"
               label="${t('fileUploadCancelText')}"
               aria-label="${interpolate(t('fileUploadCancelAriaLabel'), { name: file.name })}"
               @click="${() => this._cancelUpload(index)}"
@@ -447,7 +447,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           ` : nothing}
           ${file.status === 'error' ? html`
             <civ-action-button
-              variant="tertiary"
+              emphasis="tertiary"
               label="${t('fileUploadRetryText')}"
               aria-label="${interpolate(t('fileUploadRetryAriaLabel'), { name: file.name })}"
               @click="${() => this._retryUpload(index)}"

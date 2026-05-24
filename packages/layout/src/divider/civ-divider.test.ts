@@ -29,7 +29,7 @@ describe('civ-divider', () => {
   });
 
   it('applies primary variant class', async () => {
-    const el = await fixture('<civ-divider variant="primary"></civ-divider>');
+    const el = await fixture('<civ-divider emphasis="primary"></civ-divider>');
     const hr = el.querySelector('.civ-divider--primary');
     expect(hr).not.toBeNull();
   });
@@ -41,7 +41,7 @@ describe('civ-divider', () => {
   });
 
   it('combines primary variant with sm spacing', async () => {
-    const el = await fixture('<civ-divider variant="primary" spacing="sm"></civ-divider>');
+    const el = await fixture('<civ-divider emphasis="primary" spacing="sm"></civ-divider>');
     const hr = el.querySelector('hr')!;
     expect(hr.className).toContain('civ-divider--primary');
     expect(hr.className).toContain('civ-divider--sm');

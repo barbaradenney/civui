@@ -31,7 +31,7 @@ import gov.civui.tokens.CivTokens
 /**
  * Compact action button for toolbars, inline form controls, and secondary actions.
  *
- * Same variant system as [CivButton] but with smaller padding and font size.
+ * Same emphasis system as [CivButton] but with smaller padding and font size.
  * Can be used standalone or grouped inside a [CivButtonGroup] to form a
  * connected toolbar.
  *
@@ -50,7 +50,7 @@ import gov.civui.tokens.CivTokens
 fun CivActionButton(
     label: String,
     modifier: Modifier = Modifier,
-    variant: String = "tertiary",
+    emphasis: String = "tertiary",
     spacing: String = "default",
     type: String = "button",
     iconStart: String = "",
@@ -87,13 +87,13 @@ fun CivActionButton(
         }
 
     val handleClick: () -> Unit = {
-        onAnalytics?.invoke("click", mapOf("label" to label, "variant" to variant, "danger" to danger))
+        onAnalytics?.invoke("click", mapOf("label" to label, "emphasis" to emphasis, "danger" to danger))
         onClick?.invoke()
     }
 
     when {
         // Danger primary — filled red
-        danger && variant == "primary" -> {
+        danger && emphasis == "primary" -> {
             Button(
                 onClick = handleClick,
                 enabled = !disabled,
@@ -114,7 +114,7 @@ fun CivActionButton(
         }
         // Danger secondary/tertiary — outlined/text with error color
         danger -> {
-            if (variant == "secondary") {
+            if (emphasis == "secondary") {
                 OutlinedButton(
                     onClick = handleClick,
                     enabled = !disabled,
@@ -153,7 +153,7 @@ fun CivActionButton(
             }
         }
         // Primary — filled
-        variant == "primary" -> {
+        emphasis == "primary" -> {
             Button(
                 onClick = handleClick,
                 enabled = !disabled,
@@ -173,7 +173,7 @@ fun CivActionButton(
             }
         }
         // Secondary — outlined
-        variant == "secondary" -> {
+        emphasis == "secondary" -> {
             OutlinedButton(
                 onClick = handleClick,
                 enabled = !disabled,
@@ -266,16 +266,16 @@ fun CivButtonGroup(
 private fun CivActionButtonPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
         // Standalone variants
-        CivActionButton(label = "Primary", variant = "primary")
-        CivActionButton(label = "Secondary", variant = "secondary")
-        CivActionButton(label = "Tertiary", variant = "tertiary")
+        CivActionButton(label = "Primary", emphasis = "primary")
+        CivActionButton(label = "Secondary", emphasis = "secondary")
+        CivActionButton(label = "Tertiary", emphasis = "tertiary")
 
         // Pressed
-        CivActionButton(label = "Pressed", variant = "tertiary", pressed = true)
+        CivActionButton(label = "Pressed", emphasis = "tertiary", pressed = true)
 
         // Danger
-        CivActionButton(label = "Delete", variant = "primary", danger = true)
-        CivActionButton(label = "Remove", variant = "tertiary", danger = true)
+        CivActionButton(label = "Delete", emphasis = "primary", danger = true)
+        CivActionButton(label = "Remove", emphasis = "tertiary", danger = true)
 
         // Disabled
         CivActionButton(label = "Disabled", disabled = true)
@@ -289,9 +289,9 @@ private fun CivActionButtonPreview() {
 
         // Vertical toolbar
         CivButtonGroup(orientation = "vertical") {
-            CivActionButton(label = "Option 1", variant = "primary")
-            CivActionButton(label = "Option 2", variant = "primary", pressed = true)
-            CivActionButton(label = "Option 3", variant = "primary")
+            CivActionButton(label = "Option 1", emphasis = "primary")
+            CivActionButton(label = "Option 2", emphasis = "primary", pressed = true)
+            CivActionButton(label = "Option 3", emphasis = "primary")
         }
     }
 }

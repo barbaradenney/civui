@@ -41,7 +41,7 @@ export const Small: Story = {
 export const Primary: Story = {
   render: () => html`
     <p>Content above</p>
-    <civ-divider variant="primary"></civ-divider>
+    <civ-divider emphasis="primary"></civ-divider>
     <p>Content below</p>
   `,
 };
@@ -58,7 +58,7 @@ export const AllVariants: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary</p>
         <p>Content above</p>
-        <civ-divider variant="primary"></civ-divider>
+        <civ-divider emphasis="primary"></civ-divider>
         <p>Content below</p>
       </div>
       <div>
@@ -70,7 +70,7 @@ export const AllVariants: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary + Small spacing</p>
         <p>Content above</p>
-        <civ-divider variant="primary" spacing="sm"></civ-divider>
+        <civ-divider emphasis="primary" spacing="sm"></civ-divider>
         <p>Content below</p>
       </div>
     </div>

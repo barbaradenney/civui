@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Button
 status: stable
 group: CivUI Actions
-description: 'Action button with variant styles.'
+description: 'Action button with emphasis styles.'
 
 props:
   type: object
@@ -11,11 +11,11 @@ props:
       title: Label
       type: string
       description: 'Button text (alternative to default slot)'
-    variant:
+    emphasis:
       title: Variant
       type: string
       enum: ['primary', 'secondary', 'tertiary']
-      description: 'Visual style variant'
+      description: 'Visual style emphasis'
     danger:
       title: Danger
       type: boolean

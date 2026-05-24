@@ -71,7 +71,7 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
   @civ-close="${() => this.showModal = false}">
   <p>Are you sure you want to continue?</p>
   <div data-modal-footer>
-    <civ-button variant="secondary" label="Cancel"
+    <civ-button emphasis="secondary" label="Cancel"
       @click="${() => this.showModal = false}"></civ-button>
     <civ-button label="Continue"
       @click="${this.onConfirm}"></civ-button>
@@ -83,7 +83,7 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
   no-close-button no-backdrop-close>
   <p>This action cannot be undone.</p>
   <div data-modal-footer>
-    <civ-button variant="secondary" label="Cancel"
+    <civ-button emphasis="secondary" label="Cancel"
       @click="${() => this.showConfirm = false}"></civ-button>
     <civ-button danger label="Delete"
       @click="${this.onDelete}"></civ-button>

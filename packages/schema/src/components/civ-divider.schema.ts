@@ -15,7 +15,7 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', 'sm'],
     },
-    variant: {
+    emphasis: {
       type: 'enum',
       description: 'Visual emphasis. `default` is the standard subtle line; `primary` is slightly heavier for major section breaks',
       default: 'default',

@@ -34,7 +34,7 @@ import type { SlotConfig } from '@civui/core';
  * <civ-toolbar label="Applications toolbar">
  *   <civ-text-input label="Search" type="search"></civ-text-input>
  *   <civ-filter-chip-group></civ-filter-chip-group>
- *   <civ-button data-civ-toolbar-end variant="primary" label="Add new"></civ-button>
+ *   <civ-button data-civ-toolbar-end emphasis="primary" label="Add new"></civ-button>
  * </civ-toolbar>
  * ```
  */

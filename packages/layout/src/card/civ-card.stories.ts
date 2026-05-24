@@ -126,8 +126,8 @@ export const WithTagAndActions: Story = {
         <div class="civ-flex civ-justify-between civ-items-center">
           <h3 class="civ-heading-md">Disability compensation</h3>
           <div class="civ-flex civ-gap-2">
-            <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
-            <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+            <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
+            <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ export const DensityScale: Story = {
             <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -179,7 +179,7 @@ export const DensityScale: Story = {
             <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -196,7 +196,7 @@ export const DensityScale: Story = {
             <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -258,7 +258,7 @@ export const ClaimStatusCards: Story = {
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
             <civ-badge label="In progress" intent="info"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/123" class="civ-heading-md">Disability compensation</civ-link>
         </div>
@@ -270,7 +270,7 @@ export const ClaimStatusCards: Story = {
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
             <civ-badge label="Decision made" intent="success"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/456" class="civ-heading-md">Travel reimbursement</civ-link>
         </div>
@@ -282,7 +282,7 @@ export const ClaimStatusCards: Story = {
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
             <civ-badge label="Action needed" intent="error"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/789" class="civ-heading-md">Education benefits</civ-link>
         </div>
@@ -300,8 +300,8 @@ export const DependentCard: Story = {
         <div class="civ-flex civ-justify-between civ-items-center">
           <h3 class="civ-heading-md">Dependent: Jane Doe</h3>
           <div class="civ-flex civ-gap-2">
-            <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
-            <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+            <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
+            <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
           </div>
         </div>
       </div>

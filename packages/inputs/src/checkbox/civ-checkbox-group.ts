@@ -249,7 +249,7 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
           : nothing}
         ${this.showSelectAll ? html`
           <civ-action-button
-            variant="tertiary"
+            emphasis="tertiary"
             label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
             ?disabled="${this.disabled}"
             @click="${this._onToggleAll}"

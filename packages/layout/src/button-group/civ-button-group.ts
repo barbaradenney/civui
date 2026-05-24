@@ -300,7 +300,7 @@ export class CivButtonGroup extends LightDomSlotMixin(CivBaseElement) {
           <civ-button
             data-civ-popover-trigger
             data-civ-more-button
-            variant="secondary"
+            emphasis="secondary"
             icon-start="${this.overflowIcon}"
             label="${moreLabel}"
             icon-only
@@ -309,7 +309,7 @@ export class CivButtonGroup extends LightDomSlotMixin(CivBaseElement) {
             ${this._overflowItems.map((item) => html`
               <civ-button
                 class="civ-button-group__overflow-item"
-                variant="tertiary"
+                emphasis="tertiary"
                 label="${item.label}"
                 icon-start="${item.icon || nothing}"
                 href="${item.href || nothing}"

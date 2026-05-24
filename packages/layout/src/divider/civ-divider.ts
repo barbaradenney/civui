@@ -11,13 +11,13 @@ import { CivBaseElement } from '@civui/core';
  * @element civ-divider
  *
  * @prop {string} spacing - Vertical spacing: 'default' (md) or 'sm'
- * @prop {string} variant - Visual style: 'default' (1px, light) or 'primary' (2px, darker)
+ * @prop {'default' | 'primary'} emphasis - Visual style: 'default' (1px, light) or 'primary' (2px, darker)
  *
  * @example
  * ```html
  * <civ-divider></civ-divider>
  * <civ-divider spacing="sm"></civ-divider>
- * <civ-divider variant="primary"></civ-divider>
+ * <civ-divider emphasis="primary"></civ-divider>
  * ```
  */
 @customElement('civ-divider')
@@ -26,13 +26,13 @@ export class CivDivider extends CivBaseElement {
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /** Visual style: 'default' (1px, light) or 'primary' (2px, darker). */
-  @property({ type: String }) variant: 'default' | 'primary' = 'default';
+  @property({ type: String }) emphasis: 'default' | 'primary' = 'default';
 
   override render() {
     const classes = [
       'civ-divider',
       this.spacing === 'sm' ? 'civ-divider--sm' : '',
-      this.variant === 'primary' ? 'civ-divider--primary' : '',
+      this.emphasis === 'primary' ? 'civ-divider--primary' : '',
     ].filter(Boolean).join(' ');
 
     return html`<hr class="${classes}" />`;

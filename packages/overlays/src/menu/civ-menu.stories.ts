@@ -25,7 +25,7 @@ export const Default: Story = {
   render: () => html`
     <div style="min-height: 240px;">
       <civ-menu label="Row actions">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="More"></civ-button>
         <civ-menu-item value="edit">Edit</civ-menu-item>
         <civ-menu-item value="duplicate">Duplicate</civ-menu-item>
         <civ-menu-item value="archive">Archive</civ-menu-item>
@@ -38,7 +38,7 @@ export const WithIcons: Story = {
   render: () => html`
     <div style="min-height: 280px;">
       <civ-menu label="File actions">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="File actions"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="File actions"></civ-button>
         <civ-menu-item value="open" icon="open">Open</civ-menu-item>
         <civ-menu-item value="download" icon="download">Download</civ-menu-item>
         <civ-menu-item value="share" icon="share">Share</civ-menu-item>
@@ -51,7 +51,7 @@ export const WithDestructiveAction: Story = {
   render: () => html`
     <div style="min-height: 280px;">
       <civ-menu label="Record actions">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="Manage"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="Manage"></civ-button>
         <civ-menu-item value="edit">Edit</civ-menu-item>
         <civ-menu-item value="duplicate">Duplicate</civ-menu-item>
         <civ-menu-item value="delete" destructive>Delete</civ-menu-item>
@@ -65,7 +65,7 @@ export const AlignStart: Story = {
   render: () => html`
     <div style="min-height: 280px;">
       <civ-menu label="Sort options" align="start">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="Sort"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="Sort"></civ-button>
         <civ-menu-item value="recent">Most recent</civ-menu-item>
         <civ-menu-item value="oldest">Oldest first</civ-menu-item>
         <civ-menu-item value="name-az">Name (A–Z)</civ-menu-item>
@@ -79,7 +79,7 @@ export const WithDisabledItems: Story = {
   render: () => html`
     <div style="min-height: 280px;">
       <civ-menu label="Row actions">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="More"></civ-button>
         <civ-menu-item value="edit">Edit</civ-menu-item>
         <civ-menu-item value="duplicate" disabled>Duplicate (unavailable)</civ-menu-item>
         <civ-menu-item value="archive">Archive</civ-menu-item>
@@ -92,7 +92,7 @@ export const LinkItems: Story = {
   render: () => html`
     <div style="min-height: 280px;">
       <civ-menu label="Profile menu">
-        <civ-button data-civ-menu-trigger variant="tertiary" label="Profile"></civ-button>
+        <civ-button data-civ-menu-trigger emphasis="tertiary" label="Profile"></civ-button>
         <civ-menu-item href="/account">Account settings</civ-menu-item>
         <civ-menu-item href="/security">Security</civ-menu-item>
         <civ-menu-item href="/sign-out">Sign out</civ-menu-item>
@@ -107,7 +107,7 @@ export const DensityScale: Story = {
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-menu label="Row actions" open>
-          <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+          <civ-button data-civ-menu-trigger emphasis="tertiary" label="More"></civ-button>
           <civ-menu-item value="edit" label="Edit"></civ-menu-item>
           <civ-menu-item value="duplicate" label="Duplicate"></civ-menu-item>
           <civ-menu-item value="archive" label="Archive"></civ-menu-item>
@@ -116,7 +116,7 @@ export const DensityScale: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-menu label="Row actions" open>
-          <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+          <civ-button data-civ-menu-trigger emphasis="tertiary" label="More"></civ-button>
           <civ-menu-item value="edit" label="Edit"></civ-menu-item>
           <civ-menu-item value="duplicate" label="Duplicate"></civ-menu-item>
           <civ-menu-item value="archive" label="Archive"></civ-menu-item>
@@ -125,7 +125,7 @@ export const DensityScale: Story = {
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-menu label="Row actions" open>
-          <civ-button data-civ-menu-trigger variant="tertiary" label="More"></civ-button>
+          <civ-button data-civ-menu-trigger emphasis="tertiary" label="More"></civ-button>
           <civ-menu-item value="edit" label="Edit"></civ-menu-item>
           <civ-menu-item value="duplicate" label="Duplicate"></civ-menu-item>
           <civ-menu-item value="archive" label="Archive"></civ-menu-item>

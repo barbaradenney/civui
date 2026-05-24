@@ -44,7 +44,7 @@ export const FocusRing: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
       <civ-button label="Primary"></civ-button>
-      <civ-button variant="secondary" label="Secondary"></civ-button>
+      <civ-button emphasis="secondary" label="Secondary"></civ-button>
       <a href="#" class="civ-link">Link</a>
       <button class="civ-text-btn civ-text-btn--chip">Text button</button>
       <input
@@ -149,7 +149,7 @@ export const ScreenReaderAnnouncer: Story = {
         <div class="civ-flex civ-gap-2">
           <civ-button
             label="Announce politely"
-            variant="secondary"
+            emphasis="secondary"
             @click=${onPolite}
           ></civ-button>
           <civ-button

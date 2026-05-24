@@ -333,11 +333,11 @@ export const FullAdminLayout: Story = {
       <div style="display: flex; flex-direction: column; gap: 1rem;">
         <civ-toolbar label="Applications toolbar">
           <civ-text-input label="Search" type="search"></civ-text-input>
-          <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+          <civ-button data-civ-toolbar-end emphasis="primary" label="Add application"></civ-button>
         </civ-toolbar>
         <civ-bulk-actions class="story-full" count="0" item-name="application">
-          <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
-          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+          <civ-action-button emphasis="secondary" icon-start="download" label="Export"></civ-action-button>
+          <civ-action-button emphasis="secondary" danger label="Delete"></civ-action-button>
         </civ-bulk-actions>
         <civ-data-grid class="story-full" caption="Applications"></civ-data-grid>
       </div>
@@ -745,9 +745,9 @@ export const ExportToCsv: Story = {
           of printing — the utility is the same.
         </p>
         <div class="civ-flex civ-gap-2">
-          <civ-action-button id="story-export-csv" variant="secondary" icon-start="download" label="Export all (CSV)"></civ-action-button>
-          <civ-action-button id="story-export-json" variant="secondary" icon-start="download" label="Export all (JSON)"></civ-action-button>
-          <civ-action-button id="story-export-selected" variant="secondary" icon-start="download" label="Export selection (CSV)"></civ-action-button>
+          <civ-action-button id="story-export-csv" emphasis="secondary" icon-start="download" label="Export all (CSV)"></civ-action-button>
+          <civ-action-button id="story-export-json" emphasis="secondary" icon-start="download" label="Export all (JSON)"></civ-action-button>
+          <civ-action-button id="story-export-selected" emphasis="secondary" icon-start="download" label="Export selection (CSV)"></civ-action-button>
         </div>
         <civ-data-grid class="story-export" caption="Applications (export demo)"></civ-data-grid>
         <pre id="story-export-out" style="background: var(--civ-color-base-lightest); padding: var(--civ-spacing-3); border-radius: 4px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 0.85em;">Click an export button to preview the output.</pre>

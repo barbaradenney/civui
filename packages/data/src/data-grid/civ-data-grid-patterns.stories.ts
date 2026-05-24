@@ -162,7 +162,7 @@ export const BasicAdminList: Story = {
           ></civ-text-input>
           <civ-button
             data-civ-toolbar-end
-            variant="primary"
+            emphasis="primary"
             label="New application"
             icon-start="add"
           ></civ-button>
@@ -248,15 +248,15 @@ export const BulkOperations: Story = {
           <civ-text-input label="Search applicants" type="search"></civ-text-input>
           <civ-button
             data-civ-toolbar-end
-            variant="primary"
+            emphasis="primary"
             label="New application"
             icon-start="add"
           ></civ-button>
         </civ-toolbar>
         <civ-bulk-actions class="story-bulk" count="0" item-name="application">
-          <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
-          <civ-action-button variant="secondary" icon-start="forward" label="Reassign"></civ-action-button>
-          <civ-action-button variant="secondary" danger icon-start="delete" label="Delete"></civ-action-button>
+          <civ-action-button emphasis="secondary" icon-start="download" label="Export"></civ-action-button>
+          <civ-action-button emphasis="secondary" icon-start="forward" label="Reassign"></civ-action-button>
+          <civ-action-button emphasis="secondary" danger icon-start="delete" label="Delete"></civ-action-button>
         </civ-bulk-actions>
         <civ-data-grid class="story-bulk" caption="Applications"></civ-data-grid>
         <civ-pagination
@@ -349,7 +349,7 @@ export const PowerUserGrid: Story = {
           ></civ-column-visibility>
           <civ-button
             data-civ-toolbar-end
-            variant="primary"
+            emphasis="primary"
             label="New application"
             icon-start="add"
           ></civ-button>

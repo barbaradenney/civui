@@ -19,13 +19,13 @@ describe('civ-action-button', () => {
   });
 
   it('applies primary variant class', async () => {
-    const el = await fixture('<civ-action-button label="Save" variant="primary"></civ-action-button>');
+    const el = await fixture('<civ-action-button label="Save" emphasis="primary"></civ-action-button>');
     const btn = el.querySelector('button');
     expect(btn!.classList.contains('civ-action-btn--primary')).toBe(true);
   });
 
   it('applies secondary variant class', async () => {
-    const el = await fixture('<civ-action-button label="Info" variant="secondary"></civ-action-button>');
+    const el = await fixture('<civ-action-button label="Info" emphasis="secondary"></civ-action-button>');
     const btn = el.querySelector('button');
     expect(btn!.classList.contains('civ-action-btn--secondary')).toBe(true);
   });
@@ -80,19 +80,19 @@ describe('civ-action-button', () => {
   // components.css and danger buttons render without colors.
   // See tailwind.config.ts for the full explanation.
   it('applies the primary-danger variant class', async () => {
-    const el = await fixture('<civ-action-button label="Delete" danger variant="primary"></civ-action-button>');
+    const el = await fixture('<civ-action-button label="Delete" danger emphasis="primary"></civ-action-button>');
     const btn = el.querySelector('button');
     expect(btn!.className).toContain('civ-action-btn--primary-danger');
   });
 
   it('applies the secondary-danger variant class', async () => {
-    const el = await fixture('<civ-action-button label="Remove" danger variant="secondary"></civ-action-button>');
+    const el = await fixture('<civ-action-button label="Remove" danger emphasis="secondary"></civ-action-button>');
     const btn = el.querySelector('button');
     expect(btn!.className).toContain('civ-action-btn--secondary-danger');
   });
 
   it('applies the tertiary-danger variant class', async () => {
-    const el = await fixture('<civ-action-button label="Cancel" danger variant="tertiary"></civ-action-button>');
+    const el = await fixture('<civ-action-button label="Cancel" danger emphasis="tertiary"></civ-action-button>');
     const btn = el.querySelector('button');
     expect(btn!.className).toContain('civ-action-btn--tertiary-danger');
   });

@@ -74,10 +74,10 @@ export const ConfirmRemove: Story = {
           <p class="civ-font-semibold civ-m-0">Alex Chen</p>
           <p class="civ-text-caption civ-m-0">Spouse • Date of birth: April 12, 1985</p>
           <div class="civ-flex civ-gap-2 civ-justify-end civ-mt-3">
-            <civ-action-button variant="tertiary" label="Edit"></civ-action-button>
+            <civ-action-button emphasis="tertiary" label="Edit"></civ-action-button>
             <civ-action-button
               id="${id}-trigger"
-              variant="tertiary"
+              emphasis="tertiary"
               danger
               label="Remove dependent"
             ></civ-action-button>
@@ -96,7 +96,7 @@ export const ConfirmRemove: Story = {
             Alex Chen will be removed from your dependents list. This can't be undone.
           </p>
           <div data-civ-modal-footer class="civ-button-row civ-justify-end">
-            <civ-button data-cancel variant="secondary" label="Cancel"></civ-button>
+            <civ-button data-cancel emphasis="secondary" label="Cancel"></civ-button>
             <civ-button data-confirm danger label="Remove"></civ-button>
           </div>
         </civ-modal>
@@ -136,7 +136,7 @@ export const ConfirmDeleteFile: Story = {
             <span class="civ-list-item__actions">
               <civ-action-button
                 id="${id}-trigger"
-                variant="tertiary"
+                emphasis="tertiary"
                 danger
                 label="Delete file"
               ></civ-action-button>
@@ -157,7 +157,7 @@ export const ConfirmDeleteFile: Story = {
             application. You'll need to upload it again to include it.
           </p>
           <div data-civ-modal-footer class="civ-button-row civ-justify-end">
-            <civ-button data-cancel variant="secondary" label="Cancel"></civ-button>
+            <civ-button data-cancel emphasis="secondary" label="Cancel"></civ-button>
             <civ-button data-confirm danger label="Delete"></civ-button>
           </div>
         </civ-modal>
@@ -253,7 +253,7 @@ export const TypeToConfirm: Story = {
             name="confirm-phrase"
           ></civ-text-input>
           <div data-civ-modal-footer class="civ-button-row civ-justify-end">
-            <civ-button data-cancel variant="secondary" label="Cancel"></civ-button>
+            <civ-button data-cancel emphasis="secondary" label="Cancel"></civ-button>
             <civ-button data-confirm danger label="Withdraw claim" disabled></civ-button>
           </div>
         </civ-modal>

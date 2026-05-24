@@ -61,7 +61,7 @@ export const StickyFooter: Story = {
 
         <div data-drawer-footer>
           <civ-button
-            variant="secondary"
+            emphasis="secondary"
             label="Reset"
             @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
           ></civ-button>
@@ -176,7 +176,7 @@ export const NoCloseAffordance: Story = {
 
         <div data-drawer-footer>
           <civ-button
-            variant="secondary"
+            emphasis="secondary"
             label="Cancel"
             @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
           ></civ-button>

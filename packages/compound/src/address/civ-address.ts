@@ -378,7 +378,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         </div>
         <div data-modal-footer>
           ${this._suggestion && !this._validating ? html`
-            <civ-button variant="secondary" label="${t('addressValidationUseOriginal')}" @click="${this._onValidationKeepOriginal}"></civ-button>
+            <civ-button emphasis="secondary" label="${t('addressValidationUseOriginal')}" @click="${this._onValidationKeepOriginal}"></civ-button>
             <civ-button label="${t('addressValidationUseSuggested')}" @click="${this._onValidationUseSuggested}"></civ-button>
           ` : nothing}
         </div>

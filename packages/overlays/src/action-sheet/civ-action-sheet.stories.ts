@@ -100,7 +100,7 @@ export const WithFocusTrap: Story = {
             <p class="civ-heading-sm civ-mb-4">Confirm action</p>
             <p class="civ-mb-4">Are you sure you want to delete this item?</p>
             <div class="civ-button-row">
-              <civ-button variant="secondary" label="Cancel" @click="${close}"></civ-button>
+              <civ-button emphasis="secondary" label="Cancel" @click="${close}"></civ-button>
               <civ-button danger label="Delete" @click="${close}"></civ-button>
             </div>
           </div>

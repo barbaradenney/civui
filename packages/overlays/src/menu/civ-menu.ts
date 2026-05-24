@@ -45,7 +45,7 @@ import '../popover/civ-popover.js';
  * @example
  * ```html
  * <civ-menu label="Row actions">
- *   <civ-button data-civ-menu-trigger variant="tertiary" icon="more" icon-only label="More"></civ-button>
+ *   <civ-button data-civ-menu-trigger emphasis="tertiary" icon="more" icon-only label="More"></civ-button>
  *   <civ-menu-item value="edit">Edit</civ-menu-item>
  *   <civ-menu-item value="duplicate">Duplicate</civ-menu-item>
  *   <civ-menu-item value="delete" destructive>Delete</civ-menu-item>

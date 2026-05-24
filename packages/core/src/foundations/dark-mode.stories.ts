@@ -173,7 +173,7 @@ export const ComponentsInDark: Story = {
       </civ-alert>
       <div class="civ-button-row civ-mt-3">
         <civ-button label="Save and continue"></civ-button>
-        <civ-button variant="secondary" label="Save draft"></civ-button>
+        <civ-button emphasis="secondary" label="Save draft"></civ-button>
       </div>
     </div>
   `,

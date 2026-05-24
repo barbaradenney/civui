@@ -27,7 +27,7 @@ export const Default: Story = {
   render: () => html`
     <civ-toolbar label="Applications toolbar">
       <civ-text-input label="Search" type="search"></civ-text-input>
-      <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+      <civ-button data-civ-toolbar-end emphasis="primary" label="Add application"></civ-button>
     </civ-toolbar>
   `,
 };
@@ -42,7 +42,7 @@ export const WithFilters: Story = {
         <civ-filter-chip label="Approved" selected></civ-filter-chip>
         <civ-filter-chip label="Denied"></civ-filter-chip>
       </civ-filter-chip-group>
-      <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+      <civ-button data-civ-toolbar-end emphasis="primary" label="Add application"></civ-button>
     </civ-toolbar>
   `,
 };
@@ -50,8 +50,8 @@ export const WithFilters: Story = {
 export const ActionsOnly: Story = {
   render: () => html`
     <civ-toolbar label="Quick actions">
-      <civ-button data-civ-toolbar-end variant="tertiary" icon-start="download" label="Export"></civ-button>
-      <civ-button data-civ-toolbar-end variant="primary" label="Add new"></civ-button>
+      <civ-button data-civ-toolbar-end emphasis="tertiary" icon-start="download" label="Export"></civ-button>
+      <civ-button data-civ-toolbar-end emphasis="primary" label="Add new"></civ-button>
     </civ-toolbar>
   `,
 };
@@ -75,21 +75,21 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-toolbar label="Applications toolbar (dense)">
           <civ-text-input label="Search" type="search"></civ-text-input>
-          <civ-button data-civ-toolbar-end variant="primary" label="Add"></civ-button>
+          <civ-button data-civ-toolbar-end emphasis="primary" label="Add"></civ-button>
         </civ-toolbar>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-toolbar label="Applications toolbar (default)">
           <civ-text-input label="Search" type="search"></civ-text-input>
-          <civ-button data-civ-toolbar-end variant="primary" label="Add"></civ-button>
+          <civ-button data-civ-toolbar-end emphasis="primary" label="Add"></civ-button>
         </civ-toolbar>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-toolbar label="Applications toolbar (spacious)">
           <civ-text-input label="Search" type="search"></civ-text-input>
-          <civ-button data-civ-toolbar-end variant="primary" label="Add"></civ-button>
+          <civ-button data-civ-toolbar-end emphasis="primary" label="Add"></civ-button>
         </civ-toolbar>
       </div>
     </div>

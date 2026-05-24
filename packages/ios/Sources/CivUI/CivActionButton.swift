@@ -37,7 +37,7 @@ public struct CivActionButton: View {
     public let label: String
 
     /// Visual variant (primary, secondary, tertiary).
-    public var variant: ActionButtonVariant
+    public var emphasis: ActionButtonVariant
 
     /// Density variant (default, sm).
     public var spacing: ActionButtonSpacing
@@ -88,7 +88,7 @@ public struct CivActionButton: View {
 
     public init(
         label: String,
-        variant: ActionButtonVariant = .tertiary,
+        emphasis: ActionButtonVariant = .tertiary,
         spacing: ActionButtonSpacing = .default,
         isDanger: Bool = false,
         isDisabled: Bool = false,
@@ -103,7 +103,7 @@ public struct CivActionButton: View {
         href: String = ""
     ) {
         self.label = label
-        self.variant = variant
+        self.emphasis = emphasis
         self.spacing = spacing
         self.isDanger = isDanger
         self.isDisabled = isDisabled

@@ -470,8 +470,8 @@ Action button. Always renders a \`<button>\` element. For links, use \`<civ-link
 
 \`\`\`html
 <civ-button label="Submit" type="submit"></civ-button>
-<civ-button label="Cancel" variant="tertiary"></civ-button>
-<civ-button label="Delete" variant="secondary" danger></civ-button>
+<civ-button label="Cancel" emphasis="tertiary"></civ-button>
+<civ-button label="Delete" emphasis="secondary" danger></civ-button>
 \`\`\`
 
 ### civ-link
@@ -726,7 +726,7 @@ Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on 
 <civ-modal heading="Confirm submission" open>
   <p>Are you sure?</p>
   <civ-button label="Submit" type="submit"></civ-button>
-  <civ-button label="Cancel" variant="secondary"></civ-button>
+  <civ-button label="Cancel" emphasis="secondary"></civ-button>
 </civ-modal>
 \`\`\`
 

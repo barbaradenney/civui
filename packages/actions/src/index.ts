@@ -11,11 +11,11 @@ import './toggle-button/civ-toggle-button.js';
 
 // Button
 export { CivButton } from './button/index.js';
-export type { ButtonVariant, ButtonType } from './button/index.js';
+export type { ButtonEmphasis, ButtonType } from './button/index.js';
 
 // Action Button
 export { CivActionButton } from './action-button/index.js';
-export type { ActionButtonVariant } from './action-button/index.js';
+export type { ActionButtonEmphasis } from './action-button/index.js';
 
 // Filter Chip
 export { CivFilterChip } from './filter-chip/index.js';

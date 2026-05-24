@@ -1310,7 +1310,7 @@ export class CivDataGrid extends CivBaseElement {
         >
           <civ-action-button
             data-civ-menu-trigger
-            variant="tertiary"
+            emphasis="tertiary"
             icon-start="more-vert"
             icon-only
             label="${label}"

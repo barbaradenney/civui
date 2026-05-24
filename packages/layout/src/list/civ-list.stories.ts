@@ -364,15 +364,15 @@ export const WithActionButtons: Story = {
     <civ-list dividers>
       <civ-list-item heading="tax-return.pdf" description="1.2 MB">
         <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
       <civ-list-item heading="invalid-file.exe" error="This file type is not accepted">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
       <civ-list-item heading="uploading.pdf" description="Uploading...">
         <civ-icon data-list-item-start name="loading"></civ-icon>
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+        <civ-action-button data-list-item-end label="Cancel" emphasis="tertiary"></civ-action-button>
       </civ-list-item>
     </civ-list>
   `,
@@ -387,13 +387,13 @@ export const WithErrors: Story = {
       <civ-list-item heading="budget.xlsx" error="File type not accepted. Upload a PDF, JPG, or PNG.">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
         <span data-list-item-end style="display: flex; gap: 4px;">
-          <civ-action-button label="Retry" variant="tertiary"></civ-action-button>
-          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+          <civ-action-button label="Retry" emphasis="tertiary"></civ-action-button>
+          <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
         </span>
       </civ-list-item>
       <civ-list-item heading="photo.bmp" error="File exceeds 10 MB limit.">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
     </civ-list>
   `,

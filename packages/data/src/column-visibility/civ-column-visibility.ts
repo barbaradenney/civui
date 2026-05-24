@@ -143,7 +143,7 @@ export class CivColumnVisibility extends CivBaseElement {
         <civ-action-button
           data-civ-popover-trigger
           class="civ-column-visibility__trigger"
-          variant="tertiary"
+          emphasis="tertiary"
           icon-start="view-column"
           icon-end="chevron-down"
           label="${labelText}"

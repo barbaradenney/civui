@@ -1,0 +1,156 @@
+---
+title: Itemized Total
+sidebar_position: 8
+sidebar_label: Itemized Total
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import ItemizedTotalProps from "./_itemized-total.props.mdx";
+import ItemizedTotalEvents from "./_itemized-total.events.mdx";
+import ItemizedItemProps from "./_itemized-item.props.mdx";
+import ItemizedItemEvents from "./_itemized-item.events.mdx";
+
+# Itemized Total
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-itemized-total`](pathname:///civui/storybook/?path=/docs/contract-civ-itemized-total--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-itemized-total>` and `<civ-itemized-item>`
+
+Display-only ledger surface for showing a list of labeled amounts and
+their running total. Common in government work for benefit
+calculations (base rate + dependents + allowances), tax refund
+breakdowns, filing-fee schedules, and household-income totals for
+means-tested programs.
+
+The total auto-sums the child rows' `amount` values; pass
+`total-amount` when the figure comes from a server calculation —
+that's the safer default for financial work because it keeps
+client-side float math out of the official total.
+
+## When to use
+
+Use itemized total when the user needs to see a structured set of
+contributing amounts and a single bottom-line figure. The component is
+not interactive and not form-associated. If you need a single
+key-value figure without a list of contributors, use
+[`<civ-metric-tile>`](./metric-tile) instead. If you're displaying a
+summary of form fields (label + value pairs without arithmetic), use
+[`<civ-data-field>`](../form/summary) inside `<civ-summary>`.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="data-itemized-total--default" />
+
+### With heading
+
+<StoryEmbed id="data-itemized-total--with-heading" />
+
+### With server-calculated total
+
+<StoryEmbed id="data-itemized-total--with-server-total" />
+
+### Tax refund (negative line + total intent)
+
+<StoryEmbed id="data-itemized-total--tax-refund" />
+
+### Pending row (non-numeric value)
+
+<StoryEmbed id="data-itemized-total--with-pending-row" />
+
+### Composed inside a card
+
+<StoryEmbed id="data-itemized-total--inside-card" />
+
+## Auto-sum vs. server total
+
+By default, the component sums every child's `amount` to produce the
+total. Rows with a `value-label` (non-numeric placeholders like
+`Pending`) are skipped. This is convenient for static markup, but
+floating-point currency math has rounding edge cases — `0.1 + 0.2`
+is not exactly `0.3`.
+
+For any total that the user will see on a final statement, pass
+`total-amount` instead and let the server do the math:
+
+```html
+<civ-itemized-total total-amount="2074.47">
+  <civ-itemized-item label="Base disability rate" amount="1663.06"></civ-itemized-item>
+  <civ-itemized-item label="Spouse dependent" amount="185.00"></civ-itemized-item>
+  <civ-itemized-item label="Child under 18" amount="133.00"></civ-itemized-item>
+  <civ-itemized-item label="Clothing allowance" amount="93.41" note="Annual / 12"></civ-itemized-item>
+</civ-itemized-total>
+```
+
+The rows still render with their own amounts; only the bottom-line
+figure comes from the override.
+
+## Currency and locale
+
+`currency` (ISO 4217) and `locale` (BCP 47) are passed to
+`Intl.NumberFormat` for every row plus the total. Set them once on the
+parent — the children pick them up automatically.
+
+```html
+<civ-itemized-total currency="EUR" locale="de-DE">
+  <civ-itemized-item label="Grundrente" amount="1500"></civ-itemized-item>
+</civ-itemized-total>
+```
+
+If the host environment doesn't support the configured currency,
+`Intl.NumberFormat` throws and the component falls back to rendering
+the raw number — so the user still sees a readable value.
+
+## Per-row intent vs. total intent
+
+`intent` on `<civ-itemized-item>` tints just that row's amount;
+`total-intent` on `<civ-itemized-total>` tints just the total. They're
+independent — you can mark one row as a negative credit while keeping
+the total neutral, or highlight a successful net refund while leaving
+the contributing lines uncolored.
+
+| Use case | Where to set intent |
+|---|---|
+| Highlight a deduction in a list | `intent="negative"` on the row |
+| Highlight a refund total | `total-intent="positive"` on the parent |
+| Highlight both | Set per row AND on the parent |
+
+Color is never the sole signal — negative amounts also render with a
+locale-correct minus sign automatically.
+
+## Accessibility
+
+- The container has `role="group"` so screen readers announce the
+  rows as a related cluster.
+- The optional heading renders as `<p role="heading" aria-level="N">`
+  so screen-reader rotor navigation surfaces it without forcing a
+  specific `<h*>` level into the page outline.
+- Amounts use `font-variant-numeric: tabular-nums` so digits align
+  vertically — useful for sighted users scanning the column.
+- The total row uses a top border divider (the visual cue), not color
+  alone, so colorblind users see the total separated from the
+  contributing rows.
+
+## Props
+
+### `<civ-itemized-total>`
+
+<ItemizedTotalProps />
+
+### `<civ-itemized-item>`
+
+<ItemizedItemProps />
+
+## Events
+
+`<civ-itemized-total>` and `<civ-itemized-item>` are display-only and
+fire no custom events.
+
+<ItemizedTotalEvents />
+
+<ItemizedItemEvents />

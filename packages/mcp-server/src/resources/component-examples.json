@@ -814,6 +814,13 @@
       "source": "packages/layout/src/accordion/civ-accordion.stories.ts"
     },
     {
+      "story": "InsideCard",
+      "name": "Composed inside a card",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-card>\n        <h3 slot=\"data-card-header\" style=\"margin: 0;\">Estimated monthly benefit</h3>\n        <civ-itemized-total total-label=\"Total monthly amount\" total-intent=\"positive\">\n          <civ-itemized-item label=\"Base rate (70%)\" amount=\"1663.06\"></civ-itemized-item>\n          <civ-itemized-item label=\"Spouse dependent\" amount=\"185.00\"></civ-itemized-item>\n          <civ-itemized-item label=\"Child under 18\" amount=\"133.00\"></civ-itemized-item>\n          <civ-itemized-item\n            label=\"Clothing allowance\"\n            amount=\"93.41\"\n            note=\"Annual / 12\"\n          ></civ-itemized-item>\n        </civ-itemized-total>\n      </civ-card>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
       "story": "ReferralStatusTracker",
       "name": "Referral status tracker",
       "category": "Patterns/Healthcare",
@@ -2991,6 +2998,49 @@
       "category": "Layout/Input Group",
       "html": "<div class=\"civ-max-w-sm\">\n      <civ-input-group>\n        <civ-select label=\"State\" name=\"state\"></civ-select>\n        <civ-action-button label=\"Lookup\" variant=\"secondary\"></civ-action-button>\n      </civ-input-group>\n    </div>",
       "source": "packages/layout/src/input-group/civ-input-group.stories.ts"
+    }
+  ],
+  "civ-itemized-total": [
+    {
+      "story": "Default",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total>\n        <civ-itemized-item label=\"Base disability rate (70%)\" amount=\"1663.06\"></civ-itemized-item>\n        <civ-itemized-item label=\"Spouse dependent\" amount=\"185.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Child under 18\" amount=\"133.00\"></civ-itemized-item>\n        <civ-itemized-item\n          label=\"Clothing allowance\"\n          amount=\"93.41\"\n          note=\"Annual / 12\"\n        ></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
+      "story": "NonUsdCurrency",
+      "name": "Non-USD currency (EUR)",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total currency=\"EUR\" locale=\"de-DE\" heading=\"Monatliche Leistung\">\n        <civ-itemized-item label=\"Grundrente\" amount=\"1500.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Ehepartnerzuschlag\" amount=\"180.00\"></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
+      "story": "TaxRefund",
+      "name": "Tax refund — negative line + positive total",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total heading=\"Federal tax refund\" total-label=\"Refund amount\" total-intent=\"positive\">\n        <civ-itemized-item label=\"Federal income tax withheld\" amount=\"5400.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Earned income credit\" amount=\"2100.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Excess Social Security tax\" amount=\"250.00\"></civ-itemized-item>\n        <civ-itemized-item\n          label=\"Total tax owed\"\n          amount=\"-4200.00\"\n          intent=\"negative\"\n          note=\"From line 24\"\n        ></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
+      "story": "WithHeading",
+      "name": "With heading",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total heading=\"Monthly disability compensation\" total-label=\"Total monthly amount\">\n        <civ-itemized-item label=\"Base rate (70%)\" amount=\"1663.06\"></civ-itemized-item>\n        <civ-itemized-item label=\"Spouse dependent\" amount=\"185.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Child under 18\" amount=\"133.00\"></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
+      "story": "WithPendingRow",
+      "name": "With pending (non-numeric) row",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total heading=\"Service charges\">\n        <civ-itemized-item label=\"Application fee\" amount=\"350.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Biometric services\" amount=\"85.00\"></civ-itemized-item>\n        <civ-itemized-item\n          label=\"Expedited review\"\n          value-label=\"Pending\"\n          note=\"Confirmed after submission\"\n        ></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
+    },
+    {
+      "story": "WithServerTotal",
+      "name": "With server-calculated total",
+      "category": "Data/Itemized Total",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-itemized-total\n        heading=\"Filing fees\"\n        total-label=\"Total due\"\n        total-amount=\"425.00\"\n      >\n        <civ-itemized-item label=\"Application fee\" amount=\"350.00\"></civ-itemized-item>\n        <civ-itemized-item label=\"Biometric services\" amount=\"85.00\"></civ-itemized-item>\n        <civ-itemized-item\n          label=\"Discount applied\"\n          amount=\"-10.00\"\n          note=\"Veteran benefit\"\n        ></civ-itemized-item>\n      </civ-itemized-total>\n    </div>",
+      "source": "packages/data/src/itemized-total/civ-itemized-total.stories.ts"
     }
   ],
   "civ-link": [

@@ -94,6 +94,8 @@
   civ-image-preview,
   civ-income,
   civ-input-group,
+  civ-itemized-item,
+  civ-itemized-total,
   civ-link-card,
   civ-list,
   civ-back-to-top,
@@ -5451,6 +5453,94 @@
     .civ-metric-group {
       grid-template-columns: repeat(var(--civ-metric-group-cols, 4), minmax(0, 1fr));
     }
+  }
+
+  /* ── Itemized Total ───────────────────────────────────────────
+     Display-only ledger: a list of label / amount rows followed by
+     a divider and a single total row. Container is flat (no
+     border-radius) per the design rule that only interactive
+     elements get rounded corners — compose inside `civ-card` or
+     `civ-callout` when a surface is needed.
+
+     The amount column uses tabular-nums so digits in adjacent rows
+     line up vertically — important for at-a-glance scanning of a
+     numeric column. */
+  .civ-itemized-total {
+    @apply civ-flex civ-flex-col civ-gap-1;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-itemized-total__heading {
+    @apply civ-text-base civ-font-bold civ-m-0 civ-mb-2;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-itemized-total__items {
+    @apply civ-flex civ-flex-col;
+  }
+
+  .civ-itemized-row {
+    @apply civ-flex civ-items-baseline civ-justify-between civ-gap-4 civ-py-2;
+  }
+
+  .civ-itemized-row__label {
+    @apply civ-flex civ-flex-col civ-min-w-0;
+    flex: 1 1 auto;
+  }
+
+  .civ-itemized-row__label-text {
+    @apply civ-text-base;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-itemized-row__note {
+    @apply civ-text-sm civ-mt-1;
+    color: var(--civ-color-base-dark);
+  }
+
+  .civ-itemized-row__amount {
+    @apply civ-text-base civ-text-end;
+    color: var(--civ-color-base-darkest);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .civ-itemized-row__amount--positive {
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-itemized-row__amount--negative {
+    color: var(--civ-color-error-dark);
+  }
+
+  .civ-itemized-row__amount--neutral {
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-itemized-total__total {
+    @apply civ-flex civ-items-baseline civ-justify-between civ-gap-4 civ-pt-3 civ-mt-2;
+    border-top: 1px solid var(--civ-color-border);
+  }
+
+  .civ-itemized-total__total-label {
+    @apply civ-text-base civ-font-bold;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-itemized-total__total-amount {
+    @apply civ-text-lg civ-font-bold civ-text-end;
+    color: var(--civ-color-base-darkest);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .civ-itemized-total__total--positive .civ-itemized-total__total-amount {
+    color: var(--civ-color-success-dark);
+  }
+
+  .civ-itemized-total__total--negative .civ-itemized-total__total-amount {
+    color: var(--civ-color-error-dark);
   }
 
   /* ── Repeater row heading ─────────────────────────────────────

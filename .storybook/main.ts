@@ -183,6 +183,7 @@ const config: StorybookConfig = {
       '@civui/data/column-visibility': resolve(root, 'packages/data/src/column-visibility/index.ts'),
       '@civui/data/metric-tile': resolve(root, 'packages/data/src/metric-tile/index.ts'),
       '@civui/data/metric-group': resolve(root, 'packages/data/src/metric-group/index.ts'),
+      '@civui/data/itemized-total': resolve(root, 'packages/data/src/itemized-total/index.ts'),
       '@civui/data/export': resolve(root, 'packages/data/src/export/index.ts'),
       '@civui/data': resolve(root, 'packages/data/src/index.ts'),
       // Storybook utilities — used by stories that wrap demos in

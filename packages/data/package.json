@@ -1,7 +1,7 @@
 {
   "name": "@civui/data",
   "version": "0.1.0",
-  "description": "CivUI data-collection components — DataGrid, Pagination, Toolbar, BulkActions, FilterableList, MetricTile, MetricGroup",
+  "description": "CivUI data-collection components — DataGrid, Pagination, Toolbar, BulkActions, FilterableList, MetricTile, MetricGroup, ItemizedTotal",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -16,6 +16,7 @@
     "./column-visibility": "./dist/column-visibility/index.js",
     "./metric-tile": "./dist/metric-tile/index.js",
     "./metric-group": "./dist/metric-group/index.js",
+    "./itemized-total": "./dist/itemized-total/index.js",
     "./export": "./dist/export/index.js",
     "./filter": "./dist/filter/index.js",
     "./aggregate": "./dist/aggregate/index.js"

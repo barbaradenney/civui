@@ -1,0 +1,12 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `heading` | `string` | `''` | Optional heading rendered above the rows |
+| `heading-level` | `number` | `3` | Heading level (2–6) when `heading` is set. Defaults to 3. |
+| `total-label` | `string` | `'Total'` | Label for the total row. Defaults to `Total`. |
+| `total-amount` | `number` | — | Override for the total. When omitted, the component sums every child `amount` (skipping rows with a `value-label`). Pass this when the total comes from the server to avoid client-side float drift. |
+| `currency` | `string` | `'USD'` | ISO 4217 currency code passed to `Intl.NumberFormat` (e.g. `USD`, `EUR`). |
+| `locale` | `string` | `''` | BCP 47 locale for `Intl.NumberFormat`. Defaults to the browser locale. |
+| `total-intent` | `''` \| `'positive'` \| `'negative'` \| `'neutral'` | `''` | Color treatment for the total row only. `positive` (green), `negative` (red), `neutral` (default). Independent of any per-row `intent`. |

@@ -49,7 +49,7 @@ const setupConfirmModal = (story: HTMLElement, modalId: string, openerId: string
   cancelBtn?.addEventListener('click', () => {
     modal.open = false;
   });
-  modal.addEventListener('civ-modal-close', () => {
+  modal.addEventListener('civ-close', () => {
     modal.open = false;
   });
 };
@@ -213,7 +213,7 @@ export const TypeToConfirm: Story = {
       cancelBtn?.addEventListener('click', () => {
         modal.open = false;
       });
-      modal.addEventListener('civ-modal-close', () => {
+      modal.addEventListener('civ-close', () => {
         modal.open = false;
       });
     });

@@ -10,7 +10,7 @@ import type { SlotConfig } from '@civui/core';
  * on desktop and a fixed bottom sheet on mobile (≤480px).
  *
  * The parent component controls the `open` state — the action sheet
- * fires `civ-action-sheet-close` when it wants to close (escape key,
+ * fires `civ-close` when it wants to close (escape key,
  * click outside, backdrop tap) and the parent decides whether to
  * actually close.
  *
@@ -22,7 +22,7 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} trapFocus - Enable focus trapping (default false). HTML attribute: `trap-focus`.
  * @prop {boolean} noClickOutside - Disable click-outside close (default false)
  *
- * @fires civ-action-sheet-close - When the sheet wants to close
+ * @fires civ-close - When the sheet wants to close
  *
  * @example
  * ```html
@@ -166,7 +166,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _requestClose(): void {
-    dispatch(this, 'civ-action-sheet-close');
+    dispatch(this, 'civ-close');
   }
 }
 

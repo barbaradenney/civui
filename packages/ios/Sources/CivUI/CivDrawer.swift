@@ -52,7 +52,7 @@ public struct CivDrawer<Content: View>: View {
     /// When true, footer scrolls with the body instead of sticking to the bottom.
     public var noStickyFooter: Bool
 
-    /// Called when the drawer is closed (parallels `civ-drawer-close` event).
+    /// Called when the drawer is closed (parallels `civ-close` event).
     public var onClose: (() -> Void)?
 
     /// Content rendered inside the drawer.

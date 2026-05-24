@@ -42,7 +42,7 @@ const schema: ComponentSchema = {
   },
 
   events: {
-    'civ-action-sheet-close': {
+    'civ-close': {
       description: 'Fires when the sheet closes (via swipe-down, backdrop tap, Escape, or programmatic close)',
       detail: {},
     },

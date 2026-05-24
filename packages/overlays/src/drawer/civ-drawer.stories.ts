@@ -31,7 +31,7 @@ export const Default: Story = {
       <civ-drawer
         heading="Filter results"
         position="start"
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <p class="civ-text-body">Narrow your results by category. Slides in from the leading edge of the viewport.</p>
         <civ-button label="Apply filters"></civ-button>
@@ -52,7 +52,7 @@ export const StickyFooter: Story = {
         heading="Filter results"
         position="end"
         width="380px"
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <p class="civ-text-body">Long content scrolls behind the sticky header and footer. Try scrolling — the action buttons stay pinned at the bottom.</p>
         ${Array.from({ length: 25 }, (_, i) => html`
@@ -89,7 +89,7 @@ export const NonStickyHeaderAndFooter: Story = {
         width="400px"
         no-sticky-header
         no-sticky-footer
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <p class="civ-text-body">Both header and footer scroll away with body content — useful for reading-mode drawers where you want the full viewport for content as the user reads.</p>
         ${Array.from({ length: 15 }, (_, i) => html`
@@ -119,7 +119,7 @@ export const EndAnchored: Story = {
         heading="Display settings"
         position="end"
         width="360px"
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <div class="civ-flex civ-flex-col civ-gap-4">
           <civ-toggle label="Dark mode"></civ-toggle>
@@ -142,7 +142,7 @@ export const MainMenu: Story = {
       <civ-drawer
         label="Main menu"
         position="start"
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <nav aria-label="Main">
           <ul class="civ-list-reset civ-flex civ-flex-col civ-gap-2">
@@ -170,7 +170,7 @@ export const NoCloseAffordance: Story = {
         heading="Edit profile"
         position="end"
         no-close-button
-        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <p class="civ-text-body">Drawer renders no built-in close button — the sticky footer provides the dismiss action.</p>
 

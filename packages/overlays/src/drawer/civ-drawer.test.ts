@@ -115,12 +115,12 @@ describe('civ-drawer width', () => {
 });
 
 describe('civ-drawer close behavior', () => {
-  it('fires civ-drawer-close on cancel event (Escape)', async () => {
+  it('fires civ-close on cancel event (Escape)', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
@@ -132,7 +132,7 @@ describe('civ-drawer close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     const cancelEvent = new Event('cancel', { cancelable: true });
@@ -142,12 +142,12 @@ describe('civ-drawer close behavior', () => {
     expect(cancelEvent.defaultPrevented).toBe(true);
   });
 
-  it('fires civ-drawer-close on native close event', async () => {
+  it('fires civ-close on native close event', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('close'));
@@ -159,7 +159,7 @@ describe('civ-drawer close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     const event = new MouseEvent('click', { bubbles: true });
@@ -183,12 +183,12 @@ describe('civ-drawer close button', () => {
     expect(el.querySelector('.civ-drawer__close')).toBeNull();
   });
 
-  it('fires civ-drawer-close when close button clicked', async () => {
+  it('fires civ-close when close button clicked', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const closeBtn = el.querySelector('.civ-drawer__close') as HTMLElement;
     closeBtn.click();

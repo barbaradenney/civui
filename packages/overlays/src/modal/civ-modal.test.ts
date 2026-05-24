@@ -67,12 +67,12 @@ describe('civ-modal', () => {
 });
 
 describe('civ-modal close behavior', () => {
-  it('fires civ-modal-close on cancel event (Escape)', async () => {
+  it('fires civ-close on cancel event (Escape)', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
@@ -84,7 +84,7 @@ describe('civ-modal close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     const cancelEvent = new Event('cancel', { cancelable: true });
@@ -94,12 +94,12 @@ describe('civ-modal close behavior', () => {
     expect(cancelEvent.defaultPrevented).toBe(true);
   });
 
-  it('fires civ-modal-close on native close event', async () => {
+  it('fires civ-close on native close event', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('close'));
@@ -111,7 +111,7 @@ describe('civ-modal close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     // Simulate click directly on dialog element (backdrop area)
@@ -136,12 +136,12 @@ describe('civ-modal close button', () => {
     expect(el.querySelector('.civ-modal__close')).toBeNull();
   });
 
-  it('fires civ-modal-close when close button clicked', async () => {
+  it('fires civ-close when close button clicked', async () => {
     const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const closeBtn = el.querySelector('.civ-modal__close') as HTMLElement;
     closeBtn.click();
@@ -207,7 +207,7 @@ describe('civ-modal required decision', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-modal-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     // No close button
     expect(el.querySelector('.civ-modal__close')).toBeNull();

@@ -30,7 +30,7 @@ describe('action-sheet story flow', () => {
     const sheet = root.querySelector('civ-action-sheet') as HTMLElement & { open: boolean };
     const button = root.querySelector('button.open-trigger') as HTMLButtonElement;
     button.addEventListener('click', () => { sheet.open = !sheet.open; });
-    sheet.addEventListener('civ-action-sheet-close', () => { sheet.open = false; });
+    sheet.addEventListener('civ-close', () => { sheet.open = false; });
     return { root, sheet, button };
   }
 

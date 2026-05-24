@@ -561,19 +561,19 @@
     {
       "story": "Default",
       "category": "Overlays/Action Sheet",
-      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open action sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Choose an option\" @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm\">Choose an option</p>\n            <ul class=\"civ-list-none civ-p-0 civ-m-0\">\n              <li class=\"civ-py-2 civ-border-b civ-border-base-lighter\">Option 1</li>\n              <li class=\"civ-py-2 civ-border-b civ-border-base-lighter\">Option 2</li>\n              <li class=\"civ-py-2\">Option 3</li>\n            </ul>\n          </div>\n        </civ-action-sheet>\n      </div>",
+      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open action sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Choose an option\" @civ-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm\">Choose an option</p>\n            <ul class=\"civ-list-none civ-p-0 civ-m-0\">\n              <li class=\"civ-py-2 civ-border-b civ-border-base-lighter\">Option 1</li>\n              <li class=\"civ-py-2 civ-border-b civ-border-base-lighter\">Option 2</li>\n              <li class=\"civ-py-2\">Option 3</li>\n            </ul>\n          </div>\n        </civ-action-sheet>\n      </div>",
       "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
     },
     {
       "story": "Default",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer (start)\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"start\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Narrow your results by category. Slides in from the leading edge of the viewport.</p>\n        <civ-button label=\"Apply filters\"></civ-button>\n      </civ-drawer>\n    </div>",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer (start)\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"start\"\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Narrow your results by category. Slides in from the leading edge of the viewport.</p>\n        <civ-button label=\"Apply filters\"></civ-button>\n      </civ-drawer>\n    </div>",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
       "story": "Default",
       "category": "Overlays/Modal",
-      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open modal\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Example Modal\" @civ-modal-close=\"${close}\">\n          <p class=\"civ-text-body\">This is a general-purpose modal dialog. On mobile it renders as a bottom sheet.</p>\n          <div data-modal-footer>\n            <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button label=\"Confirm\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open modal\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Example Modal\" @civ-close=\"${close}\">\n          <p class=\"civ-text-body\">This is a general-purpose modal dialog. On mobile it renders as a bottom sheet.</p>\n          <div data-modal-footer>\n            <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button label=\"Confirm\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
       "source": "packages/overlays/src/modal/civ-modal.stories.ts"
     },
     {
@@ -592,7 +592,7 @@
       "story": "EndAnchored",
       "name": "End-anchored (settings panel)",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open settings\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Display settings\"\n        position=\"end\"\n        width=\"360px\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <div class=\"civ-flex civ-flex-col civ-gap-4\">\n          <civ-toggle label=\"Dark mode\"></civ-toggle>\n          <civ-toggle label=\"High contrast\"></civ-toggle>\n          <civ-toggle label=\"Reduce motion\"></civ-toggle>\n        </div>\n      </civ-drawer>\n    </div>",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open settings\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Display settings\"\n        position=\"end\"\n        width=\"360px\"\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <div class=\"civ-flex civ-flex-col civ-gap-4\">\n          <civ-toggle label=\"Dark mode\"></civ-toggle>\n          <civ-toggle label=\"High contrast\"></civ-toggle>\n          <civ-toggle label=\"Reduce motion\"></civ-toggle>\n        </div>\n      </civ-drawer>\n    </div>",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
@@ -619,21 +619,21 @@
       "story": "MainMenu",
       "name": "Usage: Mobile main menu",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open menu\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        label=\"Main menu\"\n        position=\"start\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <nav aria-label=\"Main\">\n          <ul class=\"civ-list-reset civ-flex civ-flex-col civ-gap-2\">\n            <li><civ-link href=\"#home\">Home</civ-link></li>\n            <li><civ-link href=\"#benefits\">Benefits</civ-link></li>\n            <li><civ-link href=\"#claims\">Claims</civ-link></li>\n            <li><civ-link href=\"#documents\">My documents</civ-link></li>\n            <li><civ-link href=\"#account\">Account settings</civ-link></li>\n          </ul>\n        </nav>\n      </civ-drawer>\n    </div>",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open menu\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        label=\"Main menu\"\n        position=\"start\"\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <nav aria-label=\"Main\">\n          <ul class=\"civ-list-reset civ-flex civ-flex-col civ-gap-2\">\n            <li><civ-link href=\"#home\">Home</civ-link></li>\n            <li><civ-link href=\"#benefits\">Benefits</civ-link></li>\n            <li><civ-link href=\"#claims\">Claims</civ-link></li>\n            <li><civ-link href=\"#documents\">My documents</civ-link></li>\n            <li><civ-link href=\"#account\">Account settings</civ-link></li>\n          </ul>\n        </nav>\n      </civ-drawer>\n    </div>",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
       "story": "NoCloseAffordance",
       "name": "Custom dismiss (no built-in close)",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Edit profile\"\n        position=\"end\"\n        no-close-button\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Drawer renders no built-in close button — the sticky footer provides the dismiss action.</p>\n\n        <div data-drawer-footer>\n          <civ-button\n            variant=\"secondary\"\n            label=\"Cancel\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n          <civ-button\n            label=\"Save\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n        </div>\n      </civ-drawer>\n    </div>",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Edit profile\"\n        position=\"end\"\n        no-close-button\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Drawer renders no built-in close button — the sticky footer provides the dismiss action.</p>\n\n        <div data-drawer-footer>\n          <civ-button\n            variant=\"secondary\"\n            label=\"Cancel\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n          <civ-button\n            label=\"Save\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n        </div>\n      </civ-drawer>\n    </div>",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
       "story": "NonStickyHeaderAndFooter",
       "name": "Non-sticky header and footer (scroll with content)",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Article preview\"\n        position=\"end\"\n        width=\"400px\"\n        no-sticky-header\n        no-sticky-footer\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Both header and footer scroll away with body content — useful for reading-mode drawers where you want the full viewport for content as the user reads.</p>\n        ${Array.from({ length: 15 }, (_, i) => html",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Article preview\"\n        position=\"end\"\n        width=\"400px\"\n        no-sticky-header\n        no-sticky-footer\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Both header and footer scroll away with body content — useful for reading-mode drawers where you want the full viewport for content as the user reads.</p>\n        ${Array.from({ length: 15 }, (_, i) => html",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
@@ -646,7 +646,7 @@
       "story": "RequiredDecision",
       "name": "Required Decision (No Close)",
       "category": "Overlays/Modal",
-      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open required decision\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Confirm deletion\" no-close-button no-backdrop-close @civ-modal-close=\"${close}\">\n          <p class=\"civ-text-body\">Are you sure you want to delete this application? This cannot be undone.</p>\n          <div data-modal-footer>\n            <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open required decision\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Confirm deletion\" no-close-button no-backdrop-close @civ-close=\"${close}\">\n          <p class=\"civ-text-body\">Are you sure you want to delete this application? This cannot be undone.</p>\n          <div data-modal-footer>\n            <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
       "source": "packages/overlays/src/modal/civ-modal.stories.ts"
     },
     {
@@ -666,7 +666,7 @@
       "story": "StickyFooter",
       "name": "Sticky footer with action buttons",
       "category": "Overlays/Drawer",
-      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"end\"\n        width=\"380px\"\n        @civ-drawer-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Long content scrolls behind the sticky header and footer. Try scrolling — the action buttons stay pinned at the bottom.</p>\n        ${Array.from({ length: 25 }, (_, i) => html",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Open drawer\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Filter results\"\n        position=\"end\"\n        width=\"380px\"\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">Long content scrolls behind the sticky header and footer. Try scrolling — the action buttons stay pinned at the bottom.</p>\n        ${Array.from({ length: 25 }, (_, i) => html",
       "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
     },
     {
@@ -685,7 +685,7 @@
     {
       "story": "WithFocusTrap",
       "category": "Overlays/Action Sheet",
-      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open modal sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Confirm action\" trap-focus @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Confirm action</p>\n            <p class=\"civ-mb-4\">Are you sure you want to delete this item?</p>\n            <div class=\"civ-button-row\">\n              <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n              <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
+      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open modal sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Confirm action\" trap-focus @civ-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Confirm action</p>\n            <p class=\"civ-mb-4\">Are you sure you want to delete this item?</p>\n            <div class=\"civ-button-row\">\n              <civ-button variant=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n              <civ-button danger label=\"Delete\" @click=\"${close}\"></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
       "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
     },
     {
@@ -698,7 +698,7 @@
       "story": "WithMaxHeight",
       "name": "Custom Max Height",
       "category": "Overlays/Action Sheet",
-      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open tall sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Long list\" max-height=\"70vh\" @civ-action-sheet-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm\">Long list</p>\n            <ul class=\"civ-list-none civ-p-0 civ-m-0\">\n              ${Array.from({ length: 20 }, (_, i) => html",
+      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Open tall sheet\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Long list\" max-height=\"70vh\" @civ-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm\">Long list</p>\n            <ul class=\"civ-list-none civ-p-0 civ-m-0\">\n              ${Array.from({ length: 20 }, (_, i) => html",
       "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
     }
   ],

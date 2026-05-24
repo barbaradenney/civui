@@ -58,8 +58,8 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
 | \`<civ-alert>\` | Feedback | \`variant\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`alert-style\` | \`civ-dismiss\` |
-| \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-modal-close\` |
-| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-action-sheet-close\` |
+| \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-close\` |
+| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-close\` |
 | \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
 | \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
 | \`<civ-direct-deposit>\` | Compound | \`legend\`, \`heading-level\`, \`size\` | \`{ value: DirectDepositValue }\` |
@@ -720,7 +720,7 @@ Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on 
 
 **Props:** \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\`
 
-**Events:** \`civ-modal-close\`
+**Events:** \`civ-close\`
 
 \`\`\`html
 <civ-modal heading="Confirm submission" open>
@@ -738,7 +738,7 @@ Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
 
 **Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\`
 
-**Events:** \`civ-action-sheet-close\`
+**Events:** \`civ-close\`
 
 ---
 

@@ -34,7 +34,7 @@ export const Default: Story = {
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open action sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet label="Choose an option" @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Choose an option" @civ-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm">Choose an option</p>
             <ul class="civ-list-none civ-p-0 civ-m-0">
@@ -65,7 +65,7 @@ export const WithMaxHeight: Story = {
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open tall sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet label="Long list" max-height="70vh" @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Long list" max-height="70vh" @civ-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm">Long list</p>
             <ul class="civ-list-none civ-p-0 civ-m-0">
@@ -95,7 +95,7 @@ export const WithFocusTrap: Story = {
     return html`
       <div class="action-sheet-demo" style="position: relative;">
         <civ-button label="Open modal sheet" @click="${toggle}"></civ-button>
-        <civ-action-sheet label="Confirm action" trap-focus @civ-action-sheet-close="${close}">
+        <civ-action-sheet label="Confirm action" trap-focus @civ-close="${close}">
           <div class="civ-p-4">
             <p class="civ-heading-sm civ-mb-4">Confirm action</p>
             <p class="civ-mb-4">Are you sure you want to delete this item?</p>

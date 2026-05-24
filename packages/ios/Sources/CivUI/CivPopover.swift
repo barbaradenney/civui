@@ -32,10 +32,10 @@ public struct CivPopover: View {
     /// noEscapeClose
     public var noEscapeClose: Bool
 
-    /// Called on `civ-popover-open`.
+    /// Called on `civ-open`.
     public var onPopoverOpen: (() -> Void)?
 
-    /// Called on `civ-popover-close`.
+    /// Called on `civ-close`.
     public var onPopoverClose: (() -> Void)?
 
     /// Called on `civ-popover-trigger-arrow`.

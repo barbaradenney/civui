@@ -48,7 +48,7 @@ const schema: ComponentSchema = {
   },
 
   events: {
-    'civ-modal-close': {
+    'civ-close': {
       description: 'Fires when the modal closes (via close button, backdrop, Escape, or programmatic close)',
       detail: {},
     },

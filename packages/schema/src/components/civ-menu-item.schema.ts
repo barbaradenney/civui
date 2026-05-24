@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-menu-item',
-  description: 'Individual item inside a `civ-menu`. Renders as a `<button>` by default, or as an `<a>` when `href` is set. The parent menu listens for clicks at the panel level and dispatches `civ-menu-select`, so consumers typically do not need to wire per-item handlers. The native `click` event still fires on the item if a more granular listener is desired.',
+  description: 'Individual item inside a `civ-menu`. Renders as a `<button>` by default, or as an `<a>` when `href` is set. The parent menu listens for clicks at the panel level and dispatches `civ-select`, so consumers typically do not need to wire per-item handlers. The native `click` event still fires on the item if a more granular listener is desired.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -33,7 +33,7 @@ const schema: ComponentSchema = {
     },
     value: {
       type: 'string',
-      description: 'Stable identifier surfaced in the parent menu\'s `civ-menu-select` event detail. Use to identify which item was activated when handling selection at the menu level',
+      description: 'Stable identifier surfaced in the parent menu\'s `civ-select` event detail. Use to identify which item was activated when handling selection at the menu level',
       default: '',
     },
     icon: {

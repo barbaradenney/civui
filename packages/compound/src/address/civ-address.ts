@@ -356,7 +356,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
         heading="${t('addressValidationHeading')}"
         no-backdrop-close
         no-close-button
-        @civ-modal-close="${this._onValidationKeepOriginal}"
+        @civ-close="${this._onValidationKeepOriginal}"
       >
         <div class="civ-flex civ-flex-col civ-gap-6">
           ${this._validating ? html`

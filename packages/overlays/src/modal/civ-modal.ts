@@ -16,7 +16,7 @@ import type { SlotConfig } from '@civui/core';
  * - Automatic top-layer stacking
  *
  * The parent component controls the `open` state. The modal fires
- * `civ-modal-close` when the user tries to close it, and the parent
+ * `civ-close` when the user tries to close it, and the parent
  * decides whether to actually close.
  *
  * **Heading level:** Renders at `heading-level` (default 2). Set to match
@@ -33,7 +33,7 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
  * @prop {boolean} noEscapeClose - Disable closing via Escape key
  *
- * @fires civ-modal-close - When the user tries to close the modal
+ * @fires civ-close - When the user tries to close the modal
  */
 @customElement('civ-modal')
 export class CivModal extends LightDomSlotMixin(CivBaseElement) {
@@ -166,7 +166,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _requestClose(): void {
-    dispatch(this, 'civ-modal-close');
+    dispatch(this, 'civ-close');
   }
 }
 

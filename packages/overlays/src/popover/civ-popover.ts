@@ -39,8 +39,8 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noClickOutsideClose - Disable click-outside close. Default false.
  * @prop {boolean} noEscapeClose - Disable Escape close. Default false.
  *
- * @fires civ-popover-open - When the popover opens.
- * @fires civ-popover-close - When the popover closes.
+ * @fires civ-open - When the popover opens.
+ * @fires civ-close - When the popover closes.
  * @fires civ-popover-trigger-arrow - When ArrowDown / ArrowUp is pressed on the trigger. `detail.direction` is `'down'` or `'up'`. Composers (civ-menu) use this to pre-focus the first / last item once the panel renders.
  *
  * @slot data-civ-popover-trigger - The activator. Must be a focusable element (typically `<button>` or `<civ-button>`). The popover auto-wires click + keyboard handlers and ARIA on it.
@@ -295,13 +295,13 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
   private _requestOpen(): void {
     if (this.open) return;
     this.open = true;
-    dispatch(this, 'civ-popover-open');
+    dispatch(this, 'civ-open');
   }
 
   private _requestClose(returnFocus = false): void {
     if (!this.open) return;
     this.open = false;
-    dispatch(this, 'civ-popover-close');
+    dispatch(this, 'civ-close');
     if (returnFocus) {
       const trigger = this._getTrigger();
       trigger?.focus?.();

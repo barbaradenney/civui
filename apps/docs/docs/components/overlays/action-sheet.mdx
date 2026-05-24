@@ -20,7 +20,7 @@ import EventsTable from "./_action-sheet.events.mdx";
 
 A shared popup/overlay component that renders as an absolute dropdown on desktop and a fixed bottom sheet on mobile (≤480px). Use it for any popup content. Menus, confirmations, option lists, or custom overlays.
 
-The parent component controls the `open` state. The action sheet fires `civ-action-sheet-close` when it wants to close and the parent decides whether to close.
+The parent component controls the `open` state. The action sheet fires `civ-close` when it wants to close and the parent decides whether to close.
 
 ## Examples
 
@@ -63,7 +63,7 @@ Renders as a fixed bottom sheet:
 
 ### Keyboard
 
-- **Escape:** fires `civ-action-sheet-close`
+- **Escape:** fires `civ-close`
 - **Tab:** cycles through focusable elements (when `trap-focus` is set)
 
 ## Usage
@@ -74,7 +74,7 @@ Renders as a fixed bottom sheet:
   <civ-button label="Options" @click="${() => this.menuOpen = !this.menuOpen}"></civ-button>
   <civ-action-sheet
     ?open="${this.menuOpen}"
-    @civ-action-sheet-close="${() => this.menuOpen = false}"
+    @civ-close="${() => this.menuOpen = false}"
   >
     <ul>
       <li>Edit</li>
@@ -88,7 +88,7 @@ Renders as a fixed bottom sheet:
 <civ-action-sheet
   ?open="${this.confirmOpen}"
   trap-focus
-  @civ-action-sheet-close="${() => this.confirmOpen = false}"
+  @civ-close="${() => this.confirmOpen = false}"
 >
   <div class="civ-p-4">
     <p>Are you sure?</p>

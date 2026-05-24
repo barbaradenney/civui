@@ -23,7 +23,7 @@ import type { SlotConfig } from '@civui/core';
  *   filter panel) needs the full viewport height the soft keyboard
  *   doesn't get to push around.
  *
- * The parent controls `open`. The drawer fires `civ-drawer-close` when
+ * The parent controls `open`. The drawer fires `civ-close` when
  * the user tries to close it; the parent decides whether to actually
  * flip `open` to false.
  *
@@ -41,12 +41,12 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noStickyHeader - Header scrolls with body content instead of sticking to the top
  * @prop {boolean} noStickyFooter - Footer scrolls with body content instead of sticking to the bottom
  *
- * @fires civ-drawer-close - When the user tries to close the drawer
+ * @fires civ-close - When the user tries to close the drawer
  *
  * @example Slide-in main navigation (mobile)
  * ```html
  * <civ-drawer ?open=${this._navOpen} position="start" label="Main menu"
- *             @civ-drawer-close=${() => this._navOpen = false}>
+ *             @civ-close=${() => this._navOpen = false}>
  *   <nav aria-label="Main">
  *     <civ-link href="/">Home</civ-link>
  *     <civ-link href="/benefits">Benefits</civ-link>
@@ -196,7 +196,7 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _requestClose(): void {
-    dispatch(this, 'civ-drawer-close');
+    dispatch(this, 'civ-close');
   }
 }
 

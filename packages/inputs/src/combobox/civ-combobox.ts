@@ -45,6 +45,8 @@ export type LoadOptionsFn = (query: string) => Promise<ComboboxOption[]>;
  *
  * @fires civ-change - When a selection is made, detail: { value }
  * @fires civ-input - When the filter text changes, detail: { value }
+ * @fires civ-open - When the listbox opens
+ * @fires civ-close - When the listbox closes
  * @fires civ-analytics - Analytics tracking event on change
  */
 @customElement('civ-combobox')
@@ -444,8 +446,10 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     this._open = open;
     if (open) {
       this._clickOutside.add();
+      dispatch(this, 'civ-open');
     } else {
       this._clickOutside.remove();
+      dispatch(this, 'civ-close');
     }
   }
 

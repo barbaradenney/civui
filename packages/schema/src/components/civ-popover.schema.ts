@@ -59,11 +59,11 @@ const schema: ComponentSchema = {
   },
 
   events: {
-    'civ-popover-open': {
+    'civ-open': {
       description: 'Fires when the popover opens (via trigger click, keyboard, or programmatic `open = true`)',
       detail: {},
     },
-    'civ-popover-close': {
+    'civ-close': {
       description: 'Fires when the popover closes (via Escape, Tab, click outside, or programmatic `open = false`)',
       detail: {},
     },

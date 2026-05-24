@@ -68,7 +68,7 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 ```html
 <!-- Standard modal with footer actions -->
 <civ-modal ?open="${this.showModal}" heading="Confirm"
-  @civ-modal-close="${() => this.showModal = false}">
+  @civ-close="${() => this.showModal = false}">
   <p>Are you sure you want to continue?</p>
   <div data-modal-footer>
     <civ-button variant="secondary" label="Cancel"

@@ -96,7 +96,7 @@ Two patterns:
 **Listen at the menu level** (recommended for row-action lists):
 
 ```html
-<civ-menu @civ-menu-select="${(e) => handleAction(e.detail.value, e.detail.index)}">
+<civ-menu @civ-select="${(e) => handleAction(e.detail.value, e.detail.index)}">
   <civ-button data-civ-menu-trigger label="More"></civ-button>
   <civ-menu-item value="edit">Edit</civ-menu-item>
   <civ-menu-item value="delete" destructive>Delete</civ-menu-item>

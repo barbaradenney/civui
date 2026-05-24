@@ -35,9 +35,9 @@ import '../popover/civ-popover.js';
  * @prop {string} label - Accessible name for the menu (aria-label on the menuitem container). Strongly recommended.
  * @prop {'start' | 'end'} align - Horizontal alignment of the panel relative to the trigger. Defaults to 'end' (right-aligned).
  *
- * @fires civ-menu-open - When the menu opens
- * @fires civ-menu-close - When the menu closes
- * @fires civ-menu-select - When a menu item is activated. detail: { value?: string, index: number }
+ * @fires civ-open - When the menu opens
+ * @fires civ-close - When the menu closes
+ * @fires civ-select - When a menu item is activated. detail: { value?: string, index: number }
  *
  * @slot data-civ-menu-trigger - The activator. Must be a focusable element (typically `<civ-button>` or `<button>`).
  * @slot - Menu items (`<civ-menu-item>` children).
@@ -69,7 +69,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
    * Ordering invariant: `_onTriggerArrow` (which sets this) runs in the
    * same synchronous click-handler chain as `_onPopoverOpen` (which
    * reads it after `updateComplete`). Both come from civ-popover's
-   * keydown handler, which dispatches `civ-popover-open` *before*
+   * keydown handler, which dispatches `civ-open` *before*
    * `civ-popover-trigger-arrow` — so the read happens after the write
    * because the `updateComplete.then(...)` callback queues behind the
    * remaining synchronous dispatch. Swapping that dispatch order would
@@ -116,8 +116,8 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
         panel-role="menu"
         trigger-haspopup="menu"
         label="${this.label || t('menuLabel')}"
-        @civ-popover-open="${this._onPopoverOpen}"
-        @civ-popover-close="${this._onPopoverClose}"
+        @civ-open="${this._onPopoverOpen}"
+        @civ-close="${this._onPopoverClose}"
         @civ-popover-trigger-arrow="${this._onTriggerArrow}"
       >
         <span data-civ-popover-trigger data-civ-menu-trigger-slot></span>
@@ -168,7 +168,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     if (!this.open) {
       this.open = true;
     }
-    dispatch(this, 'civ-menu-open');
+    dispatch(this, 'civ-open');
     // After the panel renders, focus the first item (or whichever index
     // ArrowUp/ArrowDown on the trigger preselected — see the
     // _pendingFocusIndex docstring for the ordering invariant).
@@ -188,7 +188,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
       this.open = false;
     }
     this._activeIndex = -1;
-    dispatch(this, 'civ-menu-close');
+    dispatch(this, 'civ-close');
   };
 
   private _onTriggerArrow = (e: Event): void => {
@@ -219,7 +219,7 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     const items = this._getItems();
     const index = items.indexOf(item);
     const value = item.getAttribute('value') ?? undefined;
-    dispatch(this, 'civ-menu-select', { value, index });
+    dispatch(this, 'civ-select', { value, index });
     // Close after selection — single-select menu semantics. Return focus
     // to the trigger for keyboard users.
     this.open = false;

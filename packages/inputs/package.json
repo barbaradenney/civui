@@ -47,6 +47,8 @@
     "@civui/actions": "workspace:*",
     "@civui/core": "workspace:*",
     "@civui/controls": "workspace:*",
+    "@civui/feedback": "workspace:*",
+    "@civui/layout": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {

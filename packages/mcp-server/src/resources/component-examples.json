@@ -2825,6 +2825,12 @@
       "source": "packages/layout/src/image/civ-image.stories.ts"
     },
     {
+      "story": "ModernFormats",
+      "category": "Layout/Image",
+      "html": "<div style=\"max-width: 480px;\">\n      <civ-image\n        src=\"https://picsum.photos/seed/formats/800/450\"\n        webp-src=\"https://picsum.photos/seed/formats/800/450.webp\"\n        avif-src=\"https://picsum.photos/seed/formats/800/450.avif\"\n        alt=\"Modern-format demo — Inspect the DOM to see picture + source\"\n        ratio=\"16:9\"\n      ></civ-image>\n    </div>",
+      "source": "packages/layout/src/image/civ-image.stories.ts"
+    },
+    {
       "story": "Ratios",
       "category": "Layout/Image",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"max-width: 480px;\">\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"1:1\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r1/800/800\" alt=\"Square placeholder\" ratio=\"1:1\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"4:3\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r2/800/600\" alt=\"4 by 3 placeholder\" ratio=\"4:3\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"16:9\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r3/800/450\" alt=\"16 by 9 placeholder\" ratio=\"16:9\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"21:9\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r4/800/343\" alt=\"21 by 9 placeholder\" ratio=\"21:9\"></civ-image>\n      </div>\n      <div>\n        <p class=\"civ-italic civ-mb-1\">ratio=\"3:2\"</p>\n        <civ-image src=\"https://picsum.photos/seed/r5/800/533\" alt=\"3 by 2 placeholder\" ratio=\"3:2\"></civ-image>\n      </div>\n    </div>",

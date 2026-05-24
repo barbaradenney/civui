@@ -36,12 +36,12 @@
     "@civui/actions": "workspace:*",
     "@civui/controls": "workspace:*",
     "@civui/core": "workspace:*",
+    "@civui/feedback": "workspace:*",
     "@civui/inputs": "workspace:*",
     "@civui/overlays": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {
-    "@civui/feedback": "workspace:*",
     "@civui/layout": "workspace:*",
     "@civui/test-utils": "workspace:*",
     "@civui/tokens": "workspace:*",

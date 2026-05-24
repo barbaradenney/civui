@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t } from '@civui/core';
 import '@civui/overlays/popover';
+import '@civui/actions/action-button';
 import '@civui/controls/checkbox';
 import type { GridColumn } from '../data-grid/civ-data-grid.types.js';
 
@@ -139,15 +140,14 @@ export class CivColumnVisibility extends CivBaseElement {
         @civ-popover-open="${this._onPopoverOpen}"
         @civ-popover-close="${this._onPopoverClose}"
       >
-        <button
+        <civ-action-button
           data-civ-popover-trigger
-          type="button"
-          class="civ-action-btn civ-action-btn--tertiary civ-column-visibility__trigger"
-        >
-          <civ-icon name="view-column" aria-hidden="true"></civ-icon>
-          <span class="civ-column-visibility__trigger-label">${labelText}</span>
-          <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
-        </button>
+          class="civ-column-visibility__trigger"
+          variant="tertiary"
+          icon-start="view-column"
+          icon-end="chevron-down"
+          label="${labelText}"
+        ></civ-action-button>
         <div class="civ-column-visibility__options">
           ${this.columns.map(
             (col) => html`

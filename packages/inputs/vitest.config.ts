@@ -19,6 +19,9 @@ export default defineConfig({
       // civ-button today, but if one ever does we want it to resolve
       // to source instead of failing at module load.
       '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
+      '@civui/feedback': resolve(__dirname, '../feedback/src/index.ts'),
+      '@civui/layout/image': resolve(__dirname, '../layout/src/image/index.ts'),
+      '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),
     },
   },
 });

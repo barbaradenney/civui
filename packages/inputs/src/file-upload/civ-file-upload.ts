@@ -3,6 +3,12 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, renderLabel, renderFormHeader, t } from '@civui/core';
+// Compose sibling primitives instead of re-implementing image preview
+// chrome or a hand-rolled loading icon — civ-image gets lazy-load,
+// decoding=async, and CLS-safe layout for free; civ-spinner gets the
+// shared delay / min-duration flash protection + the announce queue.
+import '@civui/layout/image';
+import '@civui/feedback/spinner';
 
 type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
 
@@ -400,13 +406,19 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     return html`
       <li class="civ-file-item">
         ${this.showPreview && file.type?.startsWith('image/')
-          ? html`<img class="civ-file-preview civ-shrink-0" src="${this._getPreviewUrl(file.file)}" alt="" />`
+          ? html`<civ-image
+              class="civ-file-preview civ-shrink-0"
+              src="${this._getPreviewUrl(file.file)}"
+              alt=""
+              variant="thumbnail"
+              size="32"
+            ></civ-image>`
           : file.status === 'success'
             ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
             : file.status === 'error'
               ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
               : file.status === 'uploading'
-                ? html`<civ-icon name="loading" class="civ-shrink-0"></civ-icon>`
+                ? html`<civ-spinner size="sm" decorative class="civ-shrink-0"></civ-spinner>`
                 : nothing}
         <div class="civ-file-item__content">
           <span class="civ-block">

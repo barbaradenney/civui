@@ -312,10 +312,6 @@
     @apply civ-py-2 civ-px-6 civ-text-sm;
   }
 
-  .civ-list--sm [data-civ-list-item-heading-slot] > *,
-  .civ-list--sm .civ-list-item-heading-prop {
-  }
-
   .civ-list--sm [data-civ-list-item-description-slot] > * {
     @apply civ-text-xs;
   }
@@ -686,49 +682,12 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Shared close/clear/dismiss button — used across inputs, modals, alerts,
-     chips. The button is square (1.5em × 1.5em) so `rounded-full` paints
-     the hover background as a perfect circle, which reads cleanly when
-     the button overlays an input or sits adjacent to other elements. */
-  .civ-close-btn {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.5em;
-    height: 1.5em;
-    padding: 0;
-    font-size: inherit;
-  }
-  /* @media (hover: hover) gates :hover styling to devices with a primary
-     pointer that can hover (mouse, trackpad, stylus). On touch devices
-     :hover fires on tap and sticks until another tap elsewhere, leaving
-     a "phantom hover" state on whichever button was last touched. */
-  @media (hover: hover) {
-    .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-close-btn:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-
   /* Escape-hatch slot for consumer-provided trailing action buttons (copy,
      paste, generate, scan, etc.). The slot container is flush with the
-     input — no border, no padding — and consumers apply `.civ-input-action`
-     to the button itself for chrome that matches `.civ-close-btn`. */
+     input — no border, no padding. */
   .civ-input-action-slot {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     flex-shrink: 0;
-  }
-
-  .civ-input-action {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.75em;
-    height: 1.75em;
-    padding: 0;
-    font-size: inherit;
   }
 
   /* ── Input helper row ─────────────────────────────────────────
@@ -835,19 +794,6 @@
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
   }
-  @media (hover: hover) {
-    .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-input-action:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-  .civ-input-action:disabled {
-    @apply civ-cursor-not-allowed;
-    opacity: var(--civ-opacity-disabled);
-  }
-
   /* WCAG 2.5.8 — minimum target size 44×44 CSS pixels for pointer
      inputs. Desktop keeps the compact em-sized chrome (cursor precision
      makes 24–28px targets fine); mobile bumps every input-inset action
@@ -857,7 +803,6 @@
      already meets 44×44 site-wide via the shared block further down,
      so it isn't repeated here. */
   @media (max-width: 480px) {
-    .civ-input-action,
     .civ-datepicker-today-btn,
     .civ-file-cancel-btn,
     .civ-file-retry-btn {
@@ -3574,9 +3519,6 @@
     @apply civ-p-4;
   }
 
-  .civ-alert__body {
-  }
-
   /* ── Alert: Border colors per variant ──────────────────────── */
 
   .civ-alert--info { border-color: var(--civ-color-info-dark); }
@@ -3698,7 +3640,7 @@
     @apply civ-flex-1;
     height: 8px;
     background-color: var(--civ-color-base-lighter);
-    transition: background-color var(--civ-motion-duration-fast, 150ms) var(--civ-motion-easing-ease-out, ease);
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-progress-segment--completed {
@@ -4819,9 +4761,6 @@
   .civ-section-intro__heading {
     @apply civ-font-bold civ-mb-1;
     font-size: var(--civ-typography-fontSize-lg);
-  }
-
-  .civ-section-intro__body {
   }
 
   .civ-section-intro__body ul,
@@ -6573,7 +6512,7 @@
   .civ-spinner__svg {
     width: 100%;
     height: 100%;
-    animation: civ-spin var(--civ-motion-duration-slower, 750ms) var(--civ-motion-easing-linear, linear) infinite;
+    animation: civ-spin var(--civ-motion-duration-slower, 500ms) var(--civ-motion-easing-linear, linear) infinite;
   }
 
   .civ-spinner__track {

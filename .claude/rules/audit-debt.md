@@ -147,6 +147,20 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Table primitive follow-ups
+
+- **Surfaced:** Table primitive landing, 2026-05-24. Branch `claude/table-component-P3Xz3`.
+- **What landed:** CSS classes only — `.civ-table` + `.civ-table--bordered` + `.civ-table--striped` + `.civ-table--compact` + `.civ-table__num` (cell helper) + `.civ-table-wrap` (scroll container). Lives in `packages/core/src/styles/components.css` next to `.civ-data-grid`. Storybook stories in `packages/core/src/foundations/table.stories.ts`. Docs page at `apps/docs/docs/components/data/table.mdx`. No `civ-table` custom element, no schema entry, no Drupal SDC, no native parity stub.
+- **Why no custom element:** `<thead>` / `<tbody>` / `<tr>` are foster-parented by the HTML parser when placed inside an unknown element — a slot-based component would silently break authored markup. The platform-blessed path for a thin styled-table primitive is a CSS class on a real `<table>`. Bootstrap, Tailwind UI, USWDS, GOV.UK Design System all follow the same pattern for the same reason.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Sortable headers, row selection, pagination, inline editing, row actions, sticky headers, column resize, mobile-stacked layout.** Every interactive table feature is `civ-data-grid`'s job. The split keeps `.civ-table` honest as a styling primitive — there's no growth path from CSS classes into JS-driven behavior.
+  2. **Custom element wrapping a real `<table>`** (a `civ-table` element that nests a real `<table>` child for styling/caption pass-through). Rejected because the double-element pattern is awkward and the contract surface a custom element provides (schema, native parity) isn't worth it for what's fundamentally a CSS class.
+  3. **Mobile-stacked layout.** Wide tables that overflow narrow viewports use the `.civ-table-wrap` horizontal-scroll container (WCAG SC 1.4.10 Reflow exemption pattern). Stacking rows into label/value blocks on mobile is what `civ-data-grid` does — if you need that, you need data-grid.
+- **No native + Drupal stubs to defer.** Unlike most components, there's nothing for the iOS / Android / Drupal SDC implementations to mirror — `.civ-table` is just a styling treatment. The Drupal docs page shows the Twig template pattern (write the same `<table class="civ-table">` markup in Twig); iOS / Android consumers use the platform's native `Table` / `LazyColumn { Row {} }` primitives.
+- **What to watch for in future audits:** If consumers start hand-rolling `.civ-table-{feature}` modifier classes for sortable, selectable, etc., that's a signal they should be using `civ-data-grid` instead — push back rather than growing the primitive.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

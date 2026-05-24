@@ -3227,6 +3227,126 @@
     }
   }
 
+  /* ── Table (static styled <table> — CSS-only primitive) ───── */
+  /* Visual treatment for static reference tables in content pages
+     (benefit schedules, fee comparisons, eligibility matrices).
+     There is no `<civ-table>` custom element: `<thead>`, `<tbody>`,
+     `<tr>` are foster-parented by the HTML parser when placed inside
+     an unknown element, so a slot-based component would silently
+     break. The consumer writes a real `<table class="civ-table">`.
+
+     For sortable / selectable / paginated / inline-editable tables,
+     use <civ-data-grid> instead.
+
+     :where() wraps default-cell selectors so they have tag-only
+     specificity (0,0,1). That lets utility classes on individual
+     cells (`civ-text-end`, `civ-text-sm`, etc.) override naturally
+     without `!important` ladders. */
+
+  :where(.civ-table) {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    caption-side: top;
+    color: var(--civ-color-base-darkest);
+  }
+
+  :where(.civ-table) caption {
+    text-align: start;
+    padding-bottom: var(--civ-spacing-2);
+    font-weight: 600;
+  }
+
+  :where(.civ-table) th {
+    text-align: start;
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    font-weight: 600;
+    font-size: var(--civ-typography-fontSize-sm);
+    color: var(--civ-color-base-darkest);
+    border-bottom: 2px solid var(--civ-color-border);
+    vertical-align: bottom;
+  }
+
+  :where(.civ-table) td {
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
+    color: var(--civ-color-base-darkest);
+    border-bottom: 1px solid var(--civ-color-border);
+    vertical-align: top;
+  }
+
+  /* Row-header cells (scope="row") are data, not column headers —
+     keep semi-bold weight but match the body-row divider weight. */
+  :where(.civ-table) tbody th[scope="row"] {
+    border-bottom: 1px solid var(--civ-color-border);
+    vertical-align: top;
+  }
+
+  /* tfoot — summary / total rows. Top border + semi-bold so the
+     totals row reads as distinct from the body. */
+  :where(.civ-table) tfoot tr:first-child th,
+  :where(.civ-table) tfoot tr:first-child td {
+    border-top: 2px solid var(--civ-color-border);
+    padding-top: var(--civ-spacing-3);
+  }
+  :where(.civ-table) tfoot th,
+  :where(.civ-table) tfoot td {
+    font-weight: 600;
+  }
+
+  /* Modifier: bordered — vertical dividers between cells. */
+  :where(.civ-table--bordered) th,
+  :where(.civ-table--bordered) td {
+    border-inline-end: 1px solid var(--civ-color-border);
+  }
+  :where(.civ-table--bordered) th:last-child,
+  :where(.civ-table--bordered) td:last-child {
+    border-inline-end: 0;
+  }
+
+  /* Modifier: striped — zebra striping on body rows. */
+  :where(.civ-table--striped) tbody tr:nth-child(odd) {
+    background-color: var(--civ-color-base-lightest);
+  }
+
+  /* Modifier: compact — denser cell padding for reference tables
+     with many short rows (currency amounts, ID codes). */
+  :where(.civ-table--compact) th,
+  :where(.civ-table--compact) td {
+    padding: var(--civ-spacing-1) var(--civ-spacing-2);
+  }
+
+  /* Cell helper: numeric — right-align + tabular figures so columns
+     of currency / quantities line up vertically. Apply per-cell:
+     `<td class="civ-table__num">`. Class-class specificity (0,2,0)
+     beats the :where()-wrapped defaults. */
+  .civ-table .civ-table__num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scroll wrapper — opt-in horizontal scroll for tables that
+     overflow narrow viewports. Consumer wraps with:
+
+       <figure class="civ-table-wrap" role="region"
+               aria-labelledby="caption-id" tabindex="0">
+         <table class="civ-table">…</table>
+       </figure>
+
+     The role=region + tabindex=0 + accessible name (aria-labelledby
+     pointing at the <caption>, or an aria-label on the figure) make
+     the scroll container reachable by keyboard and named to AT —
+     WCAG 2.1 SC 1.4.10 Reflow exemption for tables that can't be
+     restructured for narrow viewports. */
+  .civ-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .civ-table-wrap:focus {
+    outline: 2px solid var(--civ-color-primary-DEFAULT);
+    outline-offset: 2px;
+  }
+
   /* ── Pagination ────────────────────────────────────────────── */
 
   .civ-pagination {

@@ -1,0 +1,222 @@
+---
+title: Table
+sidebar_position: 9
+sidebar_label: Table
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Table
+
+`.civ-table` (CSS class — there is no `civ-table` custom element)
+
+Static styled `<table>` for reference content: benefit schedules, fee tables, income limits, plan-comparison matrices, eligibility rules. Apply CSS classes to a real `<table>` — no JavaScript, no schema, no contract surface. The browser parses the table semantics natively, and the consumer writes ordinary HTML.
+
+## When to use Table vs Data Grid
+
+| Use [`<civ-data-grid>`](./data-grid) when… | Use `.civ-table` when… |
+|---|---|
+| Users sort columns, select rows, paginate | The table is read-only reference content |
+| Cells need inline editing or action menus | All rows fit on one screen (or a scrollable region) |
+| Rows are loaded dynamically from a JS data source | The content is authored in MDX, Twig, or a CMS |
+| The admin / back-office side of an application | The public-facing content side of an application |
+
+If you find yourself reaching for sortable / selectable behaviors on `.civ-table`, switch to `civ-data-grid` — that's its job.
+
+## Why no `civ-table` custom element
+
+`<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` are only valid HTML inside a `<table>`. When the parser encounters them inside an unknown element (a custom tag the browser hasn't seen yet), it foster-parents them — moves them out of the wrapper, or in the worst case strips them entirely. A slot-based `civ-table` web component would silently break authored markup. CSS classes on a real `<table>` are the WHATWG-blessed path.
+
+Tailwind UI, Bootstrap, USWDS, and GOV.UK Design System all use this same pattern for the same reason.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="foundations-table--default" />
+
+```html
+<table class="civ-table">
+  <caption>2026 monthly benefit amounts</caption>
+  <thead>
+    <tr>
+      <th scope="col">Category</th>
+      <th scope="col" class="civ-table__num">Monthly amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Single veteran, no dependents</td>
+      <td class="civ-table__num">$2,500</td>
+    </tr>
+    <!-- ... -->
+  </tbody>
+</table>
+```
+
+### Bordered
+
+Vertical dividers between cells for grids where the column structure matters more than the rows.
+
+<StoryEmbed id="foundations-table--bordered" />
+
+```html
+<table class="civ-table civ-table--bordered">
+  <!-- ... -->
+</table>
+```
+
+### Striped
+
+Zebra striping for tables where the row is the unit of comparison and horizontal scanning matters.
+
+<StoryEmbed id="foundations-table--striped" />
+
+```html
+<table class="civ-table civ-table--striped">
+  <!-- ... -->
+</table>
+```
+
+### Bordered + striped
+
+Modifiers compose. Use both for dense comparison matrices where users need to scan both columns and rows.
+
+<StoryEmbed id="foundations-table--bordered-striped" />
+
+### With totals (`<tfoot>`)
+
+Use a real `<tfoot>` for summary / total rows — it gets a top border, semi-bold text, and (importantly) is announced to screen readers as the table footer.
+
+<StoryEmbed id="foundations-table--with-total" />
+
+```html
+<table class="civ-table">
+  <thead>...</thead>
+  <tbody>...</tbody>
+  <tfoot>
+    <tr>
+      <th scope="row">Total</th>
+      <td class="civ-table__num">$15,500.00</td>
+    </tr>
+  </tfoot>
+</table>
+```
+
+### Compact density
+
+For reference tables with many short rows (state codes, ID lookups, abbreviation glossaries).
+
+<StoryEmbed id="foundations-table--compact" />
+
+```html
+<table class="civ-table civ-table--compact civ-table--striped">
+  <!-- ... -->
+</table>
+```
+
+### Row headers
+
+When the first column identifies the row (plan name, feature name, label), use `<th scope="row">` instead of `<td>`. Screen readers announce the row header alongside each cell value as the user navigates across the row.
+
+<StoryEmbed id="foundations-table--row-headers" />
+
+```html
+<table class="civ-table civ-table--bordered">
+  <tbody>
+    <tr>
+      <th scope="row">Monthly visits</th>
+      <td>4</td><td>10</td><td>Unlimited</td>
+    </tr>
+    <!-- ... -->
+  </tbody>
+</table>
+```
+
+### Responsive horizontal scroll
+
+Wide tables that can't reflow below the 320px viewport floor opt into a horizontal scroll region via `.civ-table-wrap`. The `role="region"` + `tabindex="0"` + `aria-labelledby` pattern makes the scroll container keyboard-reachable and named to assistive tech — the WCAG 2.1 SC 1.4.10 Reflow exemption for tables.
+
+<StoryEmbed id="foundations-table--responsive" />
+
+```html
+<figure
+  class="civ-table-wrap"
+  role="region"
+  aria-labelledby="schedule-caption"
+  tabindex="0"
+>
+  <table class="civ-table civ-table--bordered" style="min-width: 720px;">
+    <caption id="schedule-caption">Processing schedule by quarter</caption>
+    <!-- ... -->
+  </table>
+</figure>
+```
+
+If your table fits the viewport at the design's minimum width (320px), don't wrap it — the wrapper adds an unnecessary tab stop.
+
+## Class reference
+
+| Class | Target | Effect |
+|---|---|---|
+| `.civ-table` | `<table>` | Base styling: full width, border-collapse, default cell padding, header underline, row dividers |
+| `.civ-table--bordered` | `<table>` | Adds vertical borders between cells |
+| `.civ-table--striped` | `<table>` | Zebra striping on `<tbody>` rows |
+| `.civ-table--compact` | `<table>` | Reduces cell padding for dense reference tables |
+| `.civ-table__num` | `<td>` / `<th>` | Right-align + tabular figures — for currency, quantities, percentages |
+| `.civ-table-wrap` | `<figure>` wrapping the table | Horizontal-scroll container for tables that overflow narrow viewports |
+
+## Accessibility
+
+The styling is just chrome. The semantics come from your markup:
+
+- **Always include `<caption>`.** Even if you visually hide it with utility classes, it's the table's accessible name and the first thing screen readers announce.
+- **Use `<th scope="col">` on column headers and `<th scope="row">` on row headers.** Screen readers tie data cells back to their headers via `scope`.
+- **Apply `.civ-table__num` to numeric `<td>`s and `<th>`s in the same column.** Right-aligning headers too keeps the column visually coherent and the numbers vertically aligned.
+- **Don't use `.civ-table` on layout tables.** If you're using a table to lay out non-tabular content, you're doing the wrong thing — use CSS Grid or Flexbox instead, and add `role="presentation"` if a `<table>` element is genuinely unavoidable.
+- **For scroll wrappers, name the region.** `aria-labelledby="caption-id"` pointing at the `<caption>` (or an `aria-label` on the `<figure>`) tells a screen-reader user what scrollable content they've landed on.
+
+## What this primitive doesn't do
+
+Deliberately out of scope — if you need any of these, use [`<civ-data-grid>`](./data-grid) instead:
+
+- Sortable column headers
+- Row selection (checkboxes, radio buttons)
+- Row-action menus
+- Pagination
+- Inline cell editing
+- Sticky headers
+- Column resize
+- Mobile stacked layout (rows collapse into label/value blocks)
+
+These are all data-grid features. Splitting them out keeps `.civ-table` honest as a styling primitive — there's no growth path from CSS classes into interactive behavior, so consumers won't try to bend it.
+
+## Implementation notes
+
+The CSS lives in `packages/core/src/styles/components.css`. There is no `@civui/table` package, no schema entry, and no native / Drupal parity stub — it's a styling primitive, like `.civ-button-row` or `.civ-bottom-sheet`.
+
+For Drupal templates, write the same HTML in Twig:
+
+```twig
+<table class="civ-table civ-table--bordered">
+  <caption>{{ caption }}</caption>
+  <thead>
+    <tr>
+      {% for header in headers %}
+        <th scope="col">{{ header }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+      <tr>
+        {% for cell in row %}
+          <td>{{ cell }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+```
+
+For iOS / Android, use the platform's native table / column primitives — there is no CivUI native abstraction to mirror.

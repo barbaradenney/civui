@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
-export type TagVariant =
+export type TagColor =
   | 'blue'
   | 'orange'
   | 'purple'
@@ -29,16 +29,16 @@ export type TagStyle = 'primary' | 'secondary';
  * @element civ-tag
  *
  * @prop {string} label - Tag text content
- * @prop {TagVariant} variant - Color variant (categorization palette)
+ * @prop {TagColor} color - Color variant (categorization palette)
  * @prop {TagStyle} tagStyle - Emphasis level: 'primary' (dark bg) or 'secondary' (light bg, default)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {string} iconStart - Icon name to render before the label
  *
  * @example
  * ```html
- * <civ-tag label="Personal" variant="blue" icon-start="person"></civ-tag>
- * <civ-tag label="Important" variant="purple" tag-style="primary" icon-start="star"></civ-tag>
- * <civ-tag label="Mailed" variant="orange"></civ-tag>
+ * <civ-tag label="Personal" color="blue" icon-start="person"></civ-tag>
+ * <civ-tag label="Important" color="purple" tag-style="primary" icon-start="star"></civ-tag>
+ * <civ-tag label="Mailed" color="orange"></civ-tag>
  * ```
  */
 @customElement('civ-tag')
@@ -47,7 +47,7 @@ export class CivTag extends CivBaseElement {
   @property({ type: String }) label = '';
 
   /** Color variant. */
-  @property({ type: String }) variant: TagVariant = 'gray';
+  @property({ type: String }) color: TagColor = 'gray';
 
   /** Emphasis: 'primary' (dark bg, light text) or 'secondary' (light bg, dark text). */
   @property({ type: String, attribute: 'tag-style' }) tagStyle: TagStyle = 'secondary';
@@ -60,8 +60,8 @@ export class CivTag extends CivBaseElement {
 
   override render() {
     const styleClass = this.tagStyle === 'primary'
-      ? `civ-tag--${this.variant}-primary`
-      : `civ-tag--${this.variant}`;
+      ? `civ-tag--${this.color}-primary`
+      : `civ-tag--${this.color}`;
 
     const classes = [
       'civ-tag',

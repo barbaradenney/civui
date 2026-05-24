@@ -24,7 +24,7 @@ import gov.civui.tokens.CivTokens
 @Composable
 fun CivTag(
     label: String,
-    variant: String = "gray",
+    color: String = "gray",
     size: String = "default",
     tagStyle: String = "secondary",
     spacing: String = "default",

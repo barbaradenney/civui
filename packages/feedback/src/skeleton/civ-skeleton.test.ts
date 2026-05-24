@@ -25,17 +25,17 @@ describe('civ-skeleton', () => {
   });
 
   it('applies the heading variant class', async () => {
-    const el = await fixture<CivSkeleton>('<civ-skeleton variant="heading"></civ-skeleton>');
+    const el = await fixture<CivSkeleton>('<civ-skeleton shape="heading"></civ-skeleton>');
     expect(el.querySelector('.civ-skeleton--heading')).not.toBeNull();
   });
 
   it('applies the block variant class', async () => {
-    const el = await fixture<CivSkeleton>('<civ-skeleton variant="block"></civ-skeleton>');
+    const el = await fixture<CivSkeleton>('<civ-skeleton shape="block"></civ-skeleton>');
     expect(el.querySelector('.civ-skeleton--block')).not.toBeNull();
   });
 
   it('applies the circle variant class', async () => {
-    const el = await fixture<CivSkeleton>('<civ-skeleton variant="circle"></civ-skeleton>');
+    const el = await fixture<CivSkeleton>('<civ-skeleton shape="circle"></civ-skeleton>');
     expect(el.querySelector('.civ-skeleton--circle')).not.toBeNull();
   });
 
@@ -60,7 +60,7 @@ describe('civ-skeleton', () => {
   });
 
   it('defaults to 2.5rem width for circle variant', async () => {
-    const el = await fixture<CivSkeleton>('<civ-skeleton variant="circle"></civ-skeleton>');
+    const el = await fixture<CivSkeleton>('<civ-skeleton shape="circle"></civ-skeleton>');
     const node = el.querySelector<HTMLElement>('.civ-skeleton')!;
     expect(node.style.width).toBe('2.5rem');
   });
@@ -128,7 +128,7 @@ describe('civ-skeleton', () => {
   it('updates reactively when variant changes', async () => {
     const el = await fixture<CivSkeleton>('<civ-skeleton></civ-skeleton>');
     expect(el.querySelector('.civ-skeleton--text')).not.toBeNull();
-    el.variant = 'block';
+    el.shape = 'block';
     await elementUpdated(el);
     expect(el.querySelector('.civ-skeleton--block')).not.toBeNull();
     expect(el.querySelector('.civ-skeleton--text')).toBeNull();

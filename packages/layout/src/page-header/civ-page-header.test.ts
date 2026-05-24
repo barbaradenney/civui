@@ -49,7 +49,7 @@ describe('civ-page-header', () => {
   it('renders tag slot above eyebrow', async () => {
     const el = await fixture(`
       <civ-page-header>
-        <civ-tag data-tag label="Healthcare" variant="blue"></civ-tag>
+        <civ-tag data-tag label="Healthcare" color="blue"></civ-tag>
         <span data-eyebrow>Benefits</span>
         <h1 data-heading>Title</h1>
       </civ-page-header>
@@ -102,7 +102,7 @@ describe('civ-page-header', () => {
   it('renders all slots in correct order (tag → eyebrow → heading → subheading)', async () => {
     const el = await fixture(`
       <civ-page-header>
-        <civ-tag data-tag label="Healthcare" variant="blue"></civ-tag>
+        <civ-tag data-tag label="Healthcare" color="blue"></civ-tag>
         <span data-eyebrow>Category</span>
         <h1 data-heading>Title</h1>
         <span data-subheading>Subtitle</span>

@@ -214,7 +214,7 @@ export const AppointmentCards: Story = {
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
         <div data-card-header>
-          <civ-tag label="In person" variant="blue"></civ-tag>
+          <civ-tag label="In person" color="blue"></civ-tag>
           <h3 class="civ-heading-md">Primary care</h3>
         </div>
         <p>Dr. Smith — January 15, 2026 at 2:30 PM</p>
@@ -226,7 +226,7 @@ export const AppointmentCards: Story = {
 
       <civ-card>
         <div data-card-header>
-          <civ-tag label="Video" variant="purple"></civ-tag>
+          <civ-tag label="Video" color="purple"></civ-tag>
           <h3 class="civ-heading-md">Mental health</h3>
         </div>
         <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>

@@ -46,7 +46,7 @@ const schema: ComponentSchema = {
       values: ['vertical', 'horizontal'],
       reflect: true,
     },
-    variant: {
+    layout: {
       type: 'enum',
       description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only',
       default: 'auto',

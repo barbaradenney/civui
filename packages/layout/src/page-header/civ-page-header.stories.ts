@@ -85,7 +85,7 @@ export const AllSlotCombinations: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Stacked Tag + Eyebrow + Heading + Inline Badge + Subheading</p>
         <civ-page-header>
-          <civ-tag data-tag label="Claim #12345678" variant="gray"></civ-tag>
+          <civ-tag data-tag label="Claim #12345678" color="gray"></civ-tag>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation

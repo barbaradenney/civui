@@ -50,7 +50,7 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'race-error',
     },
-    variant: {
+    layout: {
       type: 'enum',
       description: 'Tile rendering variant forwarded to both inner groups. auto picks card for ≤4 options and list for 5+. Race (6 options) renders as list, Ethnicity (3 options) stays card',
       default: 'auto',

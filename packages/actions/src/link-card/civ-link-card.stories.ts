@@ -329,7 +329,7 @@ export const WithSlots: Story = {
           description="File a claim for a service-connected disability."
           variant="tertiary"
         >
-          <civ-tag label="New" variant="blue"></civ-tag>
+          <civ-tag label="New" color="blue"></civ-tag>
         </civ-link-card>
       </div>
       <div>
@@ -351,7 +351,7 @@ export const WithSlots: Story = {
           description="File a claim for a service-connected disability."
           variant="tertiary"
         >
-          <civ-tag label="Updated" variant="purple"></civ-tag>
+          <civ-tag label="Updated" color="purple"></civ-tag>
           <civ-badge data-civ-link-card-end label="In progress" intent="warning"></civ-badge>
         </civ-link-card>
       </div>

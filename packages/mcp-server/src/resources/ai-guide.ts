@@ -494,8 +494,8 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 **Props:** \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary)
 
 \`\`\`html
-<civ-tag label="Healthcare" variant="blue"></civ-tag>
-<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
+<civ-tag label="Healthcare" color="blue"></civ-tag>
+<civ-tag label="Disability" color="purple" tag-style="primary"></civ-tag>
 \`\`\`
 
 ### civ-badge

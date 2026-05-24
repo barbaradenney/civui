@@ -22,7 +22,7 @@ public enum CivTagSize: String {
 /// ```
 public struct CivTag: View {
     public let label: String
-    public var variant: CivTagVariant
+    public var color: CivTagVariant
     public var size: CivTagSize
     public var tagStyle: String
     public var spacing: String
@@ -32,14 +32,14 @@ public struct CivTag: View {
 
     public init(
         label: String,
-        variant: CivTagVariant = .gray,
+        color: CivTagVariant = .gray,
         size: CivTagSize = .default,
         tagStyle: String = "secondary",
         spacing: String = "default",
         iconStart: String = ""
     ) {
         self.label = label
-        self.variant = variant
+        self.color = color
         self.size = size
         self.tagStyle = tagStyle
         self.spacing = spacing

@@ -50,4 +50,4 @@ export type { SpinnerSize } from './spinner/index.js';
 
 // Skeleton
 export { CivSkeleton } from './skeleton/index.js';
-export type { SkeletonVariant } from './skeleton/index.js';
+export type { SkeletonShape } from './skeleton/index.js';

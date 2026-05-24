@@ -235,7 +235,7 @@ export const VsTagAndCount: Story = {
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
       <div>Badge (status): <civ-badge intent="success" label="Approved"></civ-badge></div>
-      <div>Tag (category): <civ-tag variant="purple" label="Healthcare"></civ-tag></div>
+      <div>Tag (category): <civ-tag color="purple" label="Healthcare"></civ-tag></div>
       <div>Count (number): Inbox <civ-count count="12"></civ-count></div>
     </div>
   `,

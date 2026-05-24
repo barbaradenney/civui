@@ -31,10 +31,10 @@ public struct CivFilterChip: View {
     public var isDisabled: Bool
 
     /// Chip style variant (e.g., "default", "outline").
-    public var chipStyle: String
+    public var emphasis: String
 
     /// ARIA role for the chip (e.g., "checkbox", "radio").
-    public var chipRole: String
+    public var variant: String
 
     /// Spacing variant.
     public var spacing: String
@@ -69,8 +69,8 @@ public struct CivFilterChip: View {
         selected: Bool = false,
         removable: Bool = false,
         isDisabled: Bool = false,
-        chipStyle: String = "default",
-        chipRole: String = "checkbox",
+        emphasis: String = "default",
+        variant: String = "checkbox",
         spacing: String = "default",
         iconStart: String = "",
         iconEnd: String = "",
@@ -84,8 +84,8 @@ public struct CivFilterChip: View {
         self.selected = selected
         self.removable = removable
         self.isDisabled = isDisabled
-        self.chipStyle = chipStyle
-        self.chipRole = chipRole
+        self.emphasis = emphasis
+        self.variant = variant
         self.spacing = spacing
         self.iconStart = iconStart
         self.iconEnd = iconEnd

@@ -51,7 +51,7 @@ export const Default: Story = {
     <civ-filter-chip
       label="${args.label}"
       value="${args.value}"
-      chip-style="${args.chipStyle || 'secondary'}"
+      emphasis="${args.emphasis || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       ?selected="${args.selected}"
       ?removable="${args.removable}"
@@ -134,9 +134,9 @@ export const Styles: Story = {
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Primary</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <civ-filter-chip label="Healthcare" value="healthcare" chip-style="primary"></civ-filter-chip>
-          <civ-filter-chip label="Education" value="education" chip-style="primary" selected></civ-filter-chip>
-          <civ-filter-chip label="Housing" value="housing" chip-style="primary" selected></civ-filter-chip>
+          <civ-filter-chip label="Healthcare" value="healthcare" emphasis="primary"></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" emphasis="primary" selected></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" emphasis="primary" selected></civ-filter-chip>
         </div>
       </div>
     </div>
@@ -224,7 +224,7 @@ export const VsTagAndBadge: Story = {
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
       <div>Filter chip (interactive): <civ-filter-chip label="Healthcare" selected></civ-filter-chip></div>
-      <div>Tag (static category): <civ-tag label="Healthcare" variant="blue"></civ-tag></div>
+      <div>Tag (static category): <civ-tag label="Healthcare" color="blue"></civ-tag></div>
       <div>Badge (status): <civ-badge label="Approved" intent="success"></civ-badge></div>
     </div>
   `,

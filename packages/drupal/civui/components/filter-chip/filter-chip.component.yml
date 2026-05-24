@@ -29,14 +29,14 @@ props:
       title: Disabled
       type: boolean
       default: false
-    chip_style:
-      title: Chip style
+    emphasis:
+      title: Emphasis
       type: string
       enum: ['primary', 'secondary']
       default: 'secondary'
       description: 'Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background'
-    chip_role:
-      title: Chip role
+    variant:
+      title: Variant
       type: string
       enum: ['toggle', 'radio']
       default: 'toggle'

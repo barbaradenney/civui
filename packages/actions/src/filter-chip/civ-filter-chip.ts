@@ -4,8 +4,8 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, renderCloseButton, t } from '@civui/core';
 import '@civui/feedback/count';
 
-export type FilterChipStyle = 'primary' | 'secondary';
-export type FilterChipRole = 'toggle' | 'radio';
+export type FilterChipEmphasis = 'primary' | 'secondary';
+export type FilterChipVariant = 'toggle' | 'radio';
 
 /**
  * CivUI Filter Chip
@@ -23,8 +23,8 @@ export type FilterChipRole = 'toggle' | 'radio';
  * an optional dismiss button when `removable`). This avoids nested
  * interactive content.
  *
- * **ARIA mode.** `chip-role="toggle"` (default) uses `aria-pressed`;
- * `chip-role="radio"` uses `role="radio"` + `aria-checked` for use inside
+ * **ARIA mode.** `variant="toggle"` (default) uses `aria-pressed`;
+ * `variant="radio"` uses `role="radio"` + `aria-checked` for use inside
  * a single-select `civ-filter-chip-group`.
  *
  * **Emphasis levels** (apply when selected; unselected always renders the
@@ -39,8 +39,8 @@ export type FilterChipRole = 'toggle' | 'radio';
  * @prop {boolean} selected - Active/inactive state (reflected attribute)
  * @prop {boolean} removable - When true, renders a trailing `×` dismiss button
  * @prop {boolean} disabled - Disabled state
- * @prop {FilterChipStyle} chipStyle - Selected-state emphasis
- * @prop {FilterChipRole} chipRole - ARIA role: 'toggle' (default) or 'radio'
+ * @prop {FilterChipEmphasis} emphasis - Selected-state emphasis
+ * @prop {FilterChipVariant} variant - ARIA role: 'toggle' (default) or 'radio'
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {string} iconStart - Icon name to render before the label when not selected
  * @prop {string} iconEnd - Icon name to render after the label
@@ -59,10 +59,10 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   /** Selected-state emphasis: 'primary' (filled) or 'secondary' (light tint, default). */
-  @property({ type: String, attribute: 'chip-style' }) chipStyle: FilterChipStyle = 'secondary';
+  @property({ type: String, attribute: 'emphasis' }) emphasis: FilterChipEmphasis = 'secondary';
 
   /** ARIA mode: 'toggle' (aria-pressed) or 'radio' (aria-checked). Set automatically by civ-filter-chip-group in single mode. */
-  @property({ type: String, attribute: 'chip-role' }) chipRole: FilterChipRole = 'toggle';
+  @property({ type: String }) variant: FilterChipVariant = 'toggle';
 
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
@@ -83,7 +83,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   private get _wrapperClasses(): string {
     return [
       'civ-filter-chip',
-      `civ-filter-chip--style-${this.chipStyle}`,
+      `civ-filter-chip--style-${this.emphasis}`,
       this.selected ? 'civ-filter-chip--selected' : '',
       this.spacing === 'sm' ? 'civ-filter-chip--sm' : '',
       this.disabled ? 'civ-filter-chip--disabled' : '',
@@ -95,7 +95,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
 
   override render() {
     const showCount = this.count !== null && this.count !== undefined;
-    const isRadio = this.chipRole === 'radio';
+    const isRadio = this.variant === 'radio';
     const stateValue = this.selected ? 'true' : 'false';
 
     return html`
@@ -132,7 +132,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
     if (this.disabled) return;
     // In radio mode, clicking the already-selected chip is a no-op
     // (you can't deselect a radio by re-clicking it).
-    if (this.chipRole === 'radio' && this.selected) return;
+    if (this.variant === 'radio' && this.selected) return;
 
     this.selected = !this.selected;
     dispatch(this, 'civ-change', { value: this.value, selected: this.selected });

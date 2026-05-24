@@ -404,23 +404,23 @@ export const VitalsDisplay: Story = {
         <div style="display: grid; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Blood pressure" value="128/82 mmHg" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Elevated" variant="orange" spacing="sm"></civ-tag>
+            <civ-tag label="Elevated" color="orange" spacing="sm"></civ-tag>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Heart rate" value="72 bpm" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Normal" variant="blue" spacing="sm"></civ-tag>
+            <civ-tag label="Normal" color="blue" spacing="sm"></civ-tag>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Temperature" value="98.6 °F" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Normal" variant="blue" spacing="sm"></civ-tag>
+            <civ-tag label="Normal" color="blue" spacing="sm"></civ-tag>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Respiratory rate" value="16 breaths/min" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Normal" variant="blue" spacing="sm"></civ-tag>
+            <civ-tag label="Normal" color="blue" spacing="sm"></civ-tag>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Oxygen saturation" value="97%" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Normal" variant="blue" spacing="sm"></civ-tag>
+            <civ-tag label="Normal" color="blue" spacing="sm"></civ-tag>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="Weight" value="185 lbs" style="flex: 1;"></civ-data-field>
@@ -430,7 +430,7 @@ export const VitalsDisplay: Story = {
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <civ-data-field label="BMI" value="26.5" style="flex: 1;"></civ-data-field>
-            <civ-tag label="Overweight" variant="orange" spacing="sm"></civ-tag>
+            <civ-tag label="Overweight" color="orange" spacing="sm"></civ-tag>
           </div>
         </div>
       </civ-card>

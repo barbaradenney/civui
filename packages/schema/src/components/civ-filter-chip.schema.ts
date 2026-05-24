@@ -21,19 +21,18 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
-    chipStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background',
       default: 'secondary',
       values: ['primary', 'secondary'],
-      attribute: 'chip-style',
+      attribute: 'emphasis',
     },
-    chipRole: {
+    variant: {
       type: 'enum',
       description: 'Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity)',
       default: 'toggle',
       values: ['toggle', 'radio'],
-      attribute: 'chip-role',
     },
     spacing: {
       type: 'enum',

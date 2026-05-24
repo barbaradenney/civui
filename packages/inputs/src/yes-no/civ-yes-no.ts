@@ -2,7 +2,7 @@
 
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, buildDescribedBy, resolveGroupNavIndex, isRtl, renderFormHeader, renderLegend, renderSkipButton } from '@civui/core';
 
 /**
  * CivUI Yes/No
@@ -142,17 +142,14 @@ export class CivYesNo extends LegendHeadingMixin(CivFormElement) {
           ` : nothing}
         </div>
         ${this.skipLabel
-          ? html`
-              <button
-                type="button"
-                class="civ-yes-no__skip civ-link--secondary"
-                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
-                ?aria-readonly="${this.readonly}"
-                data-civ-skip
-                ?disabled="${this.disabled}"
-                @click="${() => this._selectSkip()}"
-              >${this.skipLabel}</button>
-            `
+          ? renderSkipButton({
+              label: this.skipLabel,
+              isPressed: this.value === this.skipValue,
+              onClick: () => this._selectSkip(),
+              disabled: this.disabled,
+              readonly: this.readonly,
+              extraClass: 'civ-yes-no__skip',
+            })
           : nothing}
       </div>
     `;

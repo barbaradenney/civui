@@ -29,6 +29,7 @@ import {
   inputClasses,
   applyDateMask,
   renderLabel,
+  renderCloseButton,
   renderFormHeader,
   t,
   type CalendarDay,
@@ -339,14 +340,10 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               @input="${this._onTextInput}"
               @change="${this._onTextChange}"
             />
-            ${this.value && !this.disabled ? html`
-              <button
-                type="button"
-                class="civ-close-btn"
-                aria-label="${this.clearLabel || t('datePickerClearLabel')}"
-                @click="${this._onClear}"
-              ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-            ` : nothing}
+            ${this.value && !this.disabled ? renderCloseButton({
+              label: this.clearLabel || t('datePickerClearLabel'),
+              onClick: this._onClear,
+            }) : nothing}
           </div>
           <button
             id="${this._buttonId}"

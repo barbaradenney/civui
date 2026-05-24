@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, renderCloseButton, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -86,14 +86,11 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
             ${this.heading ? html`
               <span id="${this._headingId}" class="civ-heading-lg civ-m-0" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>
             ` : nothing}
-            ${!this.noCloseButton ? html`
-              <button
-                type="button"
-                class="civ-close-btn civ-modal__close"
-                aria-label="${t('closeLabel')}"
-                @click="${this._requestClose}"
-              ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-            ` : nothing}
+            ${!this.noCloseButton ? renderCloseButton({
+              label: t('closeLabel'),
+              onClick: this._requestClose,
+              extraClass: 'civ-modal__close',
+            }) : nothing}
           </div>
         ` : nothing}
         <div class="civ-modal__body" data-civ-modal-body></div>

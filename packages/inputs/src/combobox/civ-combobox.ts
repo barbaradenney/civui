@@ -3,7 +3,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, inputClasses, inputWidthClass, clickOutside, renderLabel, renderFormHeader, t, interpolate, debounce, SEARCH_ANNOUNCE_MS } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, inputClasses, inputWidthClass, clickOutside, renderLabel, renderCloseButton, renderFormHeader, t, interpolate, debounce, SEARCH_ANNOUNCE_MS } from '@civui/core';
 import type { InputWidth } from '@civui/core';
 
 export interface ComboboxOption {
@@ -275,14 +275,10 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             @blur="${this._onBlur}"
             @keydown="${this._onKeydown}"
           />
-          ${this.value && !this.disabled && !this.readonly ? html`
-            <button
-              type="button"
-              class="civ-close-btn"
-              aria-label="${t('comboboxClearLabel')}"
-              @click="${this._onClear}"
-            ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-          ` : nothing}
+          ${this.value && !this.disabled && !this.readonly ? renderCloseButton({
+            label: t('comboboxClearLabel'),
+            onClick: this._onClear,
+          }) : nothing}
           <button
             type="button"
             class="civ-combobox-chevron"

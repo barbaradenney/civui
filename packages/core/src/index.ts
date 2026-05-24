@@ -71,6 +71,7 @@ export {
   inputWidthClass,
 } from './templates/form-templates.js';
 export type { InputWidth, HeadingLevel, LabelSize } from './templates/form-templates.js';
+export { renderCloseButton, renderSkipButton } from './templates/chrome-templates.js';
 
 // Preset data
 export { resolvePresetOptions } from './data/select-presets.js';

@@ -15,6 +15,7 @@ import {
   processRawInput,
   interpolate,
   renderLabel,
+  renderCloseButton,
   renderFormHeader,
   t,
   validate,
@@ -635,9 +636,7 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
       >${hasPrefix
         ? html`<span class="civ-input-prefix" aria-hidden="true">${isCurrency ? '$' : this.prefix}</span>`
         : nothing}${inputEl}${needsClearButton
-        ? html`<button type="button" class="civ-close-btn" aria-label="${t('clearButton')}" @click="${this._onClear}">
-            <civ-icon name="close"></civ-icon>
-          </button>`
+        ? renderCloseButton({ label: t('clearButton'), onClick: this._onClear })
         : nothing}${hasSuffix
         ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
         : nothing}${showLeadingIcon

@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, t } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, renderCloseButton, t } from '@civui/core';
 import '@civui/feedback/count';
 
 export type FilterChipStyle = 'primary' | 'secondary';
@@ -117,13 +117,12 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
           : nothing}${this.iconEnd
           ? html`<civ-icon name="${this.iconEnd}" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
           : nothing}</button>${this.removable
-        ? html`<button
-            type="button"
-            class="civ-close-btn civ-filter-chip__remove"
-            aria-label="${interpolate(t('filterChipRemoveLabel'), { label: this._text })}"
-            ?disabled="${this.disabled}"
-            @click="${this._onRemove}"
-          ><civ-icon name="close" aria-hidden="true"></civ-icon></button>`
+        ? renderCloseButton({
+            label: interpolate(t('filterChipRemoveLabel'), { label: this._text }),
+            onClick: this._onRemove,
+            extraClass: 'civ-filter-chip__remove',
+            disabled: this.disabled,
+          })
         : nothing}
       </span>
     `;

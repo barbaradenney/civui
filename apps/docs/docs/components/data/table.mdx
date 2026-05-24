@@ -115,6 +115,8 @@ For reference tables with many short rows (state codes, ID lookups, abbreviation
 </table>
 ```
 
+`.civ-table--compact` is a per-table opt-in and **overrides** the page-level `[data-civ-scale]` density system. Use it when you want this specific table to be dense regardless of the surrounding density (e.g. a dense lookup table inside a `[data-civ-scale="spacious"]` marketing surface). If you want the table to follow the page-level density, omit the modifier.
+
 ### Row headers
 
 When the first column identifies the row (plan name, feature name, label), use `<th scope="row">` instead of `<td>`. Screen readers announce the row header alongside each cell value as the user navigates across the row.
@@ -135,12 +137,12 @@ When the first column identifies the row (plan name, feature name, label), use `
 
 ### Responsive horizontal scroll
 
-Wide tables that can't reflow below the 320px viewport floor opt into a horizontal scroll region via `.civ-table-wrap`. The `role="region"` + `tabindex="0"` + `aria-labelledby` pattern makes the scroll container keyboard-reachable and named to assistive tech — the WCAG 2.1 SC 1.4.10 Reflow exemption for tables.
+Wide tables that can't reflow below the 320px viewport floor opt into a horizontal scroll region via `.civ-table-wrap`. The `role="region"` + `tabindex="0"` + `aria-labelledby` pattern makes the scroll container keyboard-reachable and named to assistive tech — the WCAG 2.1 SC 1.4.10 Reflow pattern for tables that can't be restructured for narrow viewports. Same host element (`<div role="region">`) as `civ-data-grid`'s scroll wrapper.
 
 <StoryEmbed id="foundations-table--responsive" />
 
 ```html
-<figure
+<div
   class="civ-table-wrap"
   role="region"
   aria-labelledby="schedule-caption"
@@ -150,7 +152,7 @@ Wide tables that can't reflow below the 320px viewport floor opt into a horizont
     <caption id="schedule-caption">Processing schedule by quarter</caption>
     <!-- ... -->
   </table>
-</figure>
+</div>
 ```
 
 If your table fits the viewport at the design's minimum width (320px), don't wrap it — the wrapper adds an unnecessary tab stop.
@@ -164,7 +166,7 @@ If your table fits the viewport at the design's minimum width (320px), don't wra
 | `.civ-table--striped` | `<table>` | Zebra striping on `<tbody>` rows |
 | `.civ-table--compact` | `<table>` | Reduces cell padding for dense reference tables |
 | `.civ-table__num` | `<td>` / `<th>` | Right-align + tabular figures — for currency, quantities, percentages |
-| `.civ-table-wrap` | `<figure>` wrapping the table | Horizontal-scroll container for tables that overflow narrow viewports |
+| `.civ-table-wrap` | `<div>` wrapping the table | Horizontal-scroll container for tables that overflow narrow viewports |
 
 ## Accessibility
 
@@ -174,7 +176,7 @@ The styling is just chrome. The semantics come from your markup:
 - **Use `<th scope="col">` on column headers and `<th scope="row">` on row headers.** Screen readers tie data cells back to their headers via `scope`.
 - **Apply `.civ-table__num` to numeric `<td>`s and `<th>`s in the same column.** Right-aligning headers too keeps the column visually coherent and the numbers vertically aligned.
 - **Don't use `.civ-table` on layout tables.** If you're using a table to lay out non-tabular content, you're doing the wrong thing — use CSS Grid or Flexbox instead, and add `role="presentation"` if a `<table>` element is genuinely unavoidable.
-- **For scroll wrappers, name the region.** `aria-labelledby="caption-id"` pointing at the `<caption>` (or an `aria-label` on the `<figure>`) tells a screen-reader user what scrollable content they've landed on.
+- **For scroll wrappers, name the region.** `aria-labelledby="caption-id"` pointing at the `<caption>` (or an `aria-label` on the `<div>`) tells a screen-reader user what scrollable content they've landed on.
 
 ## What this primitive doesn't do
 

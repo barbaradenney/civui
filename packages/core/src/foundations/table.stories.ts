@@ -11,7 +11,7 @@ const meta: Meta = {
         component:
           'Static styled `<table>` primitive. CSS classes only — there is no `civ-table` custom element. ' +
           'For sortable / selectable / paginated tables, use `civ-data-grid` instead. ' +
-          'See the [Table docs page](/civui/docs/components/data/table) for the full reference.',
+          'See the [Table docs page](/civui/components/data/table) for the full reference.',
       },
     },
   },
@@ -167,11 +167,12 @@ export const RowHeaders: Story = {
 export const Responsive: Story = {
   name: 'Responsive scroll wrapper',
   render: () => html`
-    <!-- The .civ-table-wrap figure provides horizontal scroll when the
+    <!-- The .civ-table-wrap div provides horizontal scroll when the
          table overflows its container. role=region + tabindex=0 +
          aria-labelledby make the scroll container keyboard-reachable
-         and named to AT (WCAG 2.1 SC 1.4.10 Reflow exemption). -->
-    <figure class="civ-table-wrap" role="region" aria-labelledby="schedule-caption" tabindex="0">
+         and named to AT (WCAG 2.1 SC 1.4.10 Reflow pattern). Matches
+         the host element used by civ-data-grid's scroll wrapper. -->
+    <div class="civ-table-wrap" role="region" aria-labelledby="schedule-caption" tabindex="0">
       <table class="civ-table civ-table--bordered" style="min-width: 720px;">
         <caption id="schedule-caption">
           Application processing schedule by quarter and region
@@ -194,7 +195,7 @@ export const Responsive: Story = {
           <tr><td>West</td><td>110 days</td><td>108 days</td><td>115 days</td><td>112 days</td><td class="civ-table__num">111</td></tr>
         </tbody>
       </table>
-    </figure>
+    </div>
   `,
 };
 

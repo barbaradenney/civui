@@ -9,6 +9,14 @@ import {
   t,
 } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
+// Collapsible mode uses a hand-rolled <details>/<summary> rather
+// than composing <civ-accordion-item> because actions → feedback
+// (button + filter-chip pull spinner / count) would create a
+// cycle if feedback → layout. Both implementations stay in lockstep
+// visually (chevron right + 90° rotation) — see the
+// "shared disclosure primitive" note in .claude/rules/audit-debt.md
+// for the future refactor that would let alert truly compose
+// accordion-item.
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
@@ -33,10 +41,10 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  *
  * **Collapsible mode** (`collapsible` + `heading`): wraps heading +
  * body in a native `<details>`/`<summary>` so the body collapses
- * behind a clickable chevron. Useful for long-form alerts that
- * benefit from a summary-then-detail read. `open` reflects + drives
- * the expanded state; the component fires `civ-toggle` on change.
- * Without `heading` the prop is a dev-mode no-op (the toggle has no
+ * behind a clickable chevron. Visually mirrors `<civ-accordion-item>`
+ * (same chevron + 90° rotation) and emits the same `civ-toggle`
+ * event. `open` reflects + drives the expanded state. Without
+ * `heading` the prop is a dev-mode no-op (the toggle has no
  * clickable surface).
  *
  * **Full-width mode** (`fullWidth`): treats the alert as a persistent

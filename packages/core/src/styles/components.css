@@ -3623,12 +3623,13 @@
   }
 
   /* ── Alert: Collapsible mode ────────────────────────────────
-     The heading sits inside a native <summary>; the body is a
-     sibling <div> that <details> hides/shows. The chevron rotates
-     90° on open to match the civ-disclosure / civ-accordion idiom.
-     The summary uses cursor:pointer + removes the default
-     ::-webkit-details-marker triangle so only the chevron reads
-     as the toggle affordance. */
+     Hand-rolled <details>/<summary> rather than composing
+     <civ-accordion-item> — actions → feedback (button + filter-chip
+     pull spinner / count) would create a cycle if feedback → layout.
+     Visually mirrors the accordion-item idiom (chevron right + 90°
+     rotation, same motion tokens) so users see the same affordance
+     across surfaces. See "shared disclosure primitive" in
+     .claude/rules/audit-debt.md for the future refactor. */
   .civ-alert--collapsible .civ-alert__details {
     @apply civ-flex-1 civ-min-w-0;
   }

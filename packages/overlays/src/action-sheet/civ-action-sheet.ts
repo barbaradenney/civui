@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus as runTrapFocus, clickOutside, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus as runTrapFocus, clickOutside, renderCloseButton, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -84,12 +84,10 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
         style="--civ-action-sheet-max-height: ${this.maxHeight}"
       >
         <div class="civ-action-sheet__mobile-close">
-          <button
-            type="button"
-            class="civ-close-btn"
-            aria-label="${t('closeLabel')}"
-            @click="${this._requestClose}"
-          ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
+          ${renderCloseButton({
+            label: t('closeLabel'),
+            onClick: this._requestClose,
+          })}
         </div>
         <div data-civ-action-sheet-content></div>
       </div>

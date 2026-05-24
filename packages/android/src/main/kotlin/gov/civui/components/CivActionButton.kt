@@ -59,6 +59,9 @@ fun CivActionButton(
     danger: Boolean = false,
     disabled: Boolean = false,
     pressed: Boolean = false,
+    // Marks this button as the current item in a navigation set
+    // (e.g. active page in pagination). Web equivalent: aria-current="page".
+    current: Boolean = false,
     href: String = "",
     onClick: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

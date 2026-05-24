@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, dispatch, t } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, dispatch, renderCloseButton, t } from '@civui/core';
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
@@ -87,14 +87,10 @@ export class CivAlert extends LightDomTextMixin(CivBaseElement) {
               <div class="civ-alert__body">${this._bodyText}</div>
             </div>
             ${this.dismissible
-              ? html`
-                  <button
-                    type="button"
-                    class="civ-close-btn"
-                    aria-label="${t('alertDismissLabel')}"
-                    @click="${this._onDismiss}"
-                  ><civ-icon name="close" aria-hidden="true"></civ-icon></button>
-                `
+              ? renderCloseButton({
+                  label: t('alertDismissLabel'),
+                  onClick: this._onDismiss,
+                })
               : nothing}
           </div>
         </div>

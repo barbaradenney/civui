@@ -48,15 +48,29 @@ const DROPPED_IMG_ATTRS = ['srcset', 'sizes', 'usemap', 'ismap'] as const;
  *   scale (32 / 48 / 64 / 96 / 128 px). Use for avatars and
  *   inline thumbnails. `rounded` makes it circular.
  *
+ * **Modern image formats (WebP / AVIF).** Set `webp-src` and / or
+ * `avif-src` to consumer-produced alternate-format files. When either
+ * is set, the component wraps the `<img>` in a `<picture>` element
+ * with `<source type="image/avif">` and `<source type="image/webp">`
+ * children — the browser picks the first format it understands, so
+ * modern browsers download the smaller AVIF/WebP and older browsers
+ * fall back to the original `src` (JPEG / PNG / GIF). The component
+ * does NOT convert anything itself; consumers produce the alternates
+ * at build time, via a CDN, or by hand. See the docs page
+ * (`/components/layout/image`) for the implementation guide.
+ *
  * **Dropped attributes.** `srcset`, `sizes`, `usemap`, `ismap` are
- * not forwarded — `<picture>` art direction is deliberately out of
- * v1 scope. Consumers attaching these to the host get a dev-warn.
- * For optimization-critical attributes that ARE forwarded, use the
+ * not forwarded — responsive `srcset` / `<picture>` art direction
+ * (multiple crops per breakpoint) is deliberately out of v1 scope.
+ * Consumers attaching these to the host get a dev-warn. For
+ * optimization-critical attributes that ARE forwarded, use the
  * `fetchpriority`, `crossorigin`, and `decoding` props.
  *
  * @element civ-image
  *
- * @prop {string} src - Image URL. Required.
+ * @prop {string} src - Image URL. Required. The "universal fallback" — used directly in `<img>` when no alternates are set, or as the `<picture>` fallback for browsers that don't understand WebP / AVIF.
+ * @prop {string} webpSrc - URL to a WebP alternate. When set, the component renders `<picture>` with a `<source type="image/webp">` child. WebP saves ~25–35% vs JPEG at equivalent quality (Google's own measurement).
+ * @prop {string} avifSrc - URL to an AVIF alternate. When set, the component renders an AVIF `<source>` above the WebP source. AVIF saves ~50% vs JPEG at equivalent quality but has narrower browser support, hence the layered fallback (AVIF → WebP → original).
  * @prop {string} alt - Alt text. Required. Pass `""` for decorative — never omit.
  * @prop {number} width - Intrinsic width in px. Used with `height` to compute aspect-ratio when `ratio` is `auto`.
  * @prop {number} height - Intrinsic height in px.
@@ -84,11 +98,36 @@ const DROPPED_IMG_ATTRS = ['srcset', 'sizes', 'usemap', 'ismap'] as const;
  *
  * <!-- Above-the-fold hero with priority hint -->
  * <civ-image src="/hero.jpg" alt="..." ratio="16:9" loading="eager" decoding="sync" fetch-priority="high"></civ-image>
+ *
+ * <!-- Modern formats with universal fallback (browser picks the smallest it supports) -->
+ * <civ-image
+ *   src="/photo.jpg"
+ *   webp-src="/photo.webp"
+ *   avif-src="/photo.avif"
+ *   alt="A veteran salutes the flag"
+ *   ratio="16:9"
+ * ></civ-image>
  * ```
  */
 @customElement('civ-image')
 export class CivImage extends CivBaseElement {
   @property({ type: String }) src = '';
+
+  /**
+   * URL to a WebP alternate. When set (alone or alongside `avifSrc`),
+   * the component renders a `<picture>` wrapper with the appropriate
+   * `<source>` elements. The browser picks the smallest format it
+   * supports; consumers produce these files at build time or via a
+   * format-negotiating CDN.
+   */
+  @property({ type: String, attribute: 'webp-src' }) webpSrc = '';
+
+  /**
+   * URL to an AVIF alternate. AVIF beats WebP on compression but has
+   * narrower browser support, so it's listed first inside `<picture>`
+   * and falls through to WebP (if set), then to `src`.
+   */
+  @property({ type: String, attribute: 'avif-src' }) avifSrc = '';
 
   /**
    * Alt text. Use empty string (`alt=""`) for decorative images.
@@ -228,13 +267,11 @@ export class CivImage extends CivBaseElement {
 
     const ratioStyle = this._aspectRatioStyle;
 
-    // The box wrapper carried aspect-ratio in the v1 design, but
-    // `.civ-image__img { height: 100% }` collapses to 0 when the box
-    // has no ratio. Putting the aspect-ratio directly on the <img>
-    // lets `height: auto` fall back to the natural ratio cleanly
-    // when no ratio is set — and unifies the content/thumbnail
-    // render paths.
-    return html`
+    // The aspect-ratio sits inline on the <img> itself so `height: auto`
+    // falls back to the natural ratio cleanly when no ratio is set —
+    // and the same single render path handles content + thumbnail
+    // variants.
+    const imgTemplate = html`
       <img
         class="civ-image__img"
         src="${this.src}"
@@ -249,6 +286,26 @@ export class CivImage extends CivBaseElement {
         style="${ratioStyle || nothing}"
       />
     `;
+
+    // When the consumer supplied modern-format alternates, wrap the
+    // <img> in a <picture>. AVIF first (best compression but narrower
+    // support), then WebP, then the universal <img> fallback. The
+    // browser walks the sources top-down and picks the first MIME
+    // type it understands; if neither is set we skip the wrapper.
+    if (this.avifSrc || this.webpSrc) {
+      return html`
+        <picture>
+          ${this.avifSrc
+            ? html`<source type="image/avif" srcset="${this.avifSrc}" />`
+            : nothing}
+          ${this.webpSrc
+            ? html`<source type="image/webp" srcset="${this.webpSrc}" />`
+            : nothing}
+          ${imgTemplate}
+        </picture>
+      `;
+    }
+    return imgTemplate;
   }
 }
 

@@ -22,19 +22,22 @@ async function mount(initial: { columns?: GridColumn[]; hiddenColumns?: string[]
 }
 
 describe('civ-column-visibility', () => {
-  it('renders the trigger as a native <button> with the default i18n label', async () => {
+  it('renders the trigger as a civ-action-button (focusable native <button> inside)', async () => {
     const el = await mount();
-    const trigger = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
+    const trigger = el.querySelector('civ-action-button.civ-column-visibility__trigger');
     expect(trigger).not.toBeNull();
-    expect(trigger.tagName).toBe('BUTTON');
-    const labelSpan = trigger.querySelector('.civ-column-visibility__trigger-label') as HTMLElement;
-    expect(labelSpan?.textContent?.trim()).toBeTruthy();
+    // The inner native <button> is what AT + civ-popover wire onto.
+    const innerBtn = trigger!.querySelector('button') as HTMLButtonElement;
+    expect(innerBtn).not.toBeNull();
+    expect(innerBtn.tagName).toBe('BUTTON');
+    expect(innerBtn.textContent?.trim()).toBeTruthy();
   });
 
   it('uses the custom label prop when set', async () => {
     const el = await fixture('<civ-column-visibility label="Show columns"></civ-column-visibility>') as any;
-    const labelSpan = el.querySelector('.civ-column-visibility__trigger-label') as HTMLElement;
-    expect(labelSpan.textContent?.trim()).toBe('Show columns');
+    const trigger = el.querySelector('civ-action-button.civ-column-visibility__trigger') as HTMLElement;
+    // civ-action-button renders the label as text inside the button.
+    expect(trigger.textContent?.trim()).toBe('Show columns');
   });
 
   it('starts with the panel closed', async () => {
@@ -48,7 +51,9 @@ describe('civ-column-visibility', () => {
 
   it('opens the panel when the trigger is clicked', async () => {
     const el = await mount();
-    const triggerBtn = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
+    // civ-popover wires the click handler onto the inner native <button>
+    // inside our civ-action-button trigger.
+    const triggerBtn = el.querySelector('civ-action-button.civ-column-visibility__trigger button') as HTMLButtonElement;
     triggerBtn.click();
     await elementUpdated(el);
     expect(el.open).toBe(true);
@@ -186,10 +191,12 @@ describe('civ-column-visibility', () => {
 
   it('wires aria-expanded + aria-haspopup + aria-controls on the focusable trigger button', async () => {
     const el = await mount();
-    // ARIA must land on the *focusable* native <button>, not just the host
-    // — screen readers reading the focused button would otherwise miss the
-    // popup affordance.
-    const trigger = el.querySelector('button.civ-column-visibility__trigger') as HTMLButtonElement;
+    // ARIA must land on the *focusable* native <button>, not just the
+    // civ-action-button host — civ-popover walks into the slot looking
+    // for the first focusable, finds the inner <button>, and wires
+    // ARIA there so AT users hear the popup affordance on the focused
+    // element.
+    const trigger = el.querySelector('civ-action-button.civ-column-visibility__trigger button') as HTMLButtonElement;
     expect(trigger).not.toBeNull();
     expect(trigger.getAttribute('aria-haspopup')).toBe('true');
     expect(trigger.getAttribute('aria-expanded')).toBe('false');

@@ -32,6 +32,19 @@ const schema: ComponentSchema = {
       description: 'Tri-state pressed/active indicator. `true` = active (e.g. favorited); `false` = inactive but toggle-aware (sets aria-pressed="false"); omitted = no toggle semantics',
       reflect: true,
     },
+    current: {
+      type: 'boolean',
+      description: 'Marks this button as the current item in a navigation set (e.g. active page in pagination, current step in a wizard). Renders `aria-current="page"` on the inner `<button>`. Distinct from `pressed` (toggle-button semantics)',
+      default: false,
+      reflect: true,
+    },
+    ariaLabel: {
+      type: 'string',
+      description: 'Override the inner `<button>`\'s accessible name with a richer label for AT (e.g. pagination "Page 3 of 10" vs the visible "3"). When unset, the visible `label` doubles as the accessible name. Native platforms handle this through their own accessibility APIs (`.accessibilityLabel` on iOS, `contentDescription` on Android) so this prop is web-specific',
+      default: '',
+      attribute: 'aria-label',
+      webOnly: true,
+    },
     type: {
       type: 'enum',
       description: 'HTML button type',
@@ -92,7 +105,6 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'button',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },
@@ -109,9 +121,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

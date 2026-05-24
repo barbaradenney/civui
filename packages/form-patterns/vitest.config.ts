@@ -14,6 +14,8 @@ export default defineConfig({
       '@civui/layout/callout': resolve(__dirname, '../layout/src/callout/index.ts'),
       '@civui/layout/list': resolve(__dirname, '../layout/src/list/index.ts'),
       '@civui/layout/divider': resolve(__dirname, '../layout/src/divider/index.ts'),
+      // Needed for civ-file-upload's transitive import of <civ-image>.
+      '@civui/layout/image': resolve(__dirname, '../layout/src/image/index.ts'),
       '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),
       '@civui/actions/button': resolve(__dirname, '../actions/src/button/index.ts'),
       '@civui/actions/action-button': resolve(__dirname, '../actions/src/action-button/index.ts'),

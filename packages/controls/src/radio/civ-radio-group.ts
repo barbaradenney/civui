@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, GroupListenerMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, resolvePresetOptions, renderFormHeader, renderLegend, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, LightDomSlotMixin, GroupListenerMixin, dispatch, resolveGroupNavIndex, isRtl, syncGroupDisabled, resolvePresetOptions, renderFormHeader, renderLegend, renderSkipButton, buildDescribedBy } from '@civui/core';
 import type { SlotConfig, SelectPresetName } from '@civui/core';
 import type { CivRadio } from './civ-radio.js';
 import './civ-radio.js';
@@ -209,16 +209,13 @@ export class CivRadioGroup extends LegendHeadingMixin(GroupListenerMixin(LightDo
           aria-required="${this.required || nothing}"
         >${presetOptions.map(opt => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`)}</div>
         ${this.skipLabel
-          ? html`
-              <button
-                type="button"
-                class="civ-radio-group__skip civ-link--secondary"
-                aria-pressed="${this.value === this.skipValue ? 'true' : 'false'}"
-                data-civ-skip
-                ?disabled="${this.disabled}"
-                @click="${this._onSkipClick}"
-              >${this.skipLabel}</button>
-            `
+          ? renderSkipButton({
+              label: this.skipLabel,
+              isPressed: this.value === this.skipValue,
+              onClick: this._onSkipClick,
+              disabled: this.disabled,
+              extraClass: 'civ-radio-group__skip',
+            })
           : nothing}
       </fieldset>
     `;

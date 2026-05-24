@@ -4,6 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
 import '@civui/controls/checkbox';
+import '@civui/feedback/spinner';
 import '@civui/inputs/text-input';
 import '@civui/inputs/number';
 import '@civui/inputs/select';
@@ -369,7 +370,7 @@ export class CivDataGrid extends CivBaseElement {
       return html`
         <tr>
           <td colspan="${colCount}" class="civ-data-grid__state civ-data-grid__state--loading" role="status" aria-live="polite">
-            <civ-icon name="loading" aria-hidden="true"></civ-icon>
+            <civ-spinner size="sm" decorative></civ-spinner>
             ${t('dataGridLoading')}
           </td>
         </tr>

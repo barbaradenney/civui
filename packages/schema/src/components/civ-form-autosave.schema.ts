@@ -74,7 +74,6 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'none',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },
@@ -86,9 +85,9 @@ const schema: ComponentSchema = {
   renderOrder: [{ type: 'container' }],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 
   platform: {

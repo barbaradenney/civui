@@ -100,7 +100,9 @@ describe('civ-pagination', () => {
     const handler = vi.fn();
     el.addEventListener('civ-page-change', handler);
 
-    const current = el.querySelector('.civ-pagination__page[aria-current="page"]') as HTMLButtonElement;
+    // Page buttons are civ-action-button; aria-current lands on the
+    // inner native <button> (where it matters for AT).
+    const current = el.querySelector('.civ-pagination__page button[aria-current="page"]') as HTMLButtonElement;
     current.click();
 
     expect(handler).not.toHaveBeenCalled();

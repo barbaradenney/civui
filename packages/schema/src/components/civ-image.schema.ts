@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-image',
-  description: 'General-purpose accessible image. Distinct from `civ-image-preview`, which is upload chrome (filename + filesize caption). Use `civ-image` for content imagery — marketing visuals, illustrations, profile photos, avatar thumbnails. Defaults bake in good behavior: native `loading="lazy"`, `decoding="async"`, CSS `aspect-ratio` reserved from `ratio` or `width`/`height` to prevent layout shift (CLS) before the bytes arrive. Required `alt` per Section 508 / WCAG 1.1.1 — pass `alt=""` (empty string) explicitly for decorative; the component dev-warns if `alt` is undefined. Two variants: `content` (default fluid) and `thumbnail` (fixed-size on a Primer-style stepped scale, with optional `rounded` for circular avatars).',
+  description: 'General-purpose accessible image. Distinct from `civ-image-preview`, which is upload chrome (filename + filesize caption). Use `civ-image` for content imagery — marketing visuals, illustrations, profile photos, avatar thumbnails. Defaults bake in good behavior: native `loading="lazy"`, `decoding="async"`, CSS `aspect-ratio` reserved from `ratio` or `width`/`height` to prevent layout shift (CLS) before the bytes arrive. Required `alt` per Section 508 / WCAG 1.1.1 — pass `alt=""` (empty string) explicitly for decorative; the component dev-warns if `alt` is undefined. Two variants: `content` (default fluid) and `thumbnail` (fixed-size on a Primer-style stepped scale, with optional `rounded` for circular avatars). Optional `webpSrc` / `avifSrc` props wrap the `<img>` in `<picture>` with format-negotiating `<source>` children so modern browsers download the smaller AVIF / WebP and older browsers fall back to `src` — consumers produce the alternate files at build time, via a CDN, or by hand (component does not convert anything itself).',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -11,8 +11,20 @@ const schema: ComponentSchema = {
   props: {
     src: {
       type: 'string',
-      description: 'Image source URL. Required',
+      description: 'Image source URL. Required. Acts as the universal fallback — used directly in `<img>` when no alternates are set, or as the `<picture>` fallback when `webpSrc` / `avifSrc` are set',
       default: '',
+    },
+    webpSrc: {
+      type: 'string',
+      description: 'URL to a WebP alternate. When set (alone or alongside `avifSrc`), the component wraps the `<img>` in a `<picture>` with a `<source type="image/webp">` child. Browser picks the smallest format it supports. Consumers produce these files at build time, via a CDN, or by hand — the component does not convert anything',
+      default: '',
+      attribute: 'webp-src',
+    },
+    avifSrc: {
+      type: 'string',
+      description: 'URL to an AVIF alternate. AVIF beats WebP on compression but has narrower browser support, so it\'s listed first inside `<picture>` and falls through to WebP (if set) then `src`. Consumers produce these files at build time or via a CDN',
+      default: '',
+      attribute: 'avif-src',
     },
     alt: {
       type: 'string',
@@ -98,7 +110,6 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'img',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },
@@ -111,9 +122,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

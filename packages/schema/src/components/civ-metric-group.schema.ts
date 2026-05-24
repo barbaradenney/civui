@@ -33,9 +33,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 
   platform: {

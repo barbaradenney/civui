@@ -25,7 +25,6 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'link',
     requiredIndicator: 'none',
     errorAnnouncement: 'none',
   },
@@ -39,9 +38,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

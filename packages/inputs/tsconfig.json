@@ -8,6 +8,8 @@
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.stories.ts"],
   "references": [
-    { "path": "../core" }
+    { "path": "../core" },
+    { "path": "../layout" },
+    { "path": "../feedback" }
   ]
 }

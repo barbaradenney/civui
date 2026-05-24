@@ -1,0 +1,6 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `mode` | `'full'` \| `'last4'` | `'full'` | SSN collection mode. `full` (default) collects the entire 9-digit number with the standard mask and `ssn` validator. `last4` collects only the last four digits with a 4-char maxlength, no mask, and no validator — the minimization pattern used to re-identify a record without storing the full SSN |

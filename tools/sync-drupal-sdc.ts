@@ -84,6 +84,8 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-link-card', drupal: 'link-card' },
   { schema: 'civ-skip-link', drupal: 'skip-link' },
   { schema: 'civ-action-button', drupal: 'action-button' },
+  { schema: 'civ-confirm-button', drupal: 'confirm-button' },
+  { schema: 'civ-toggle-button', drupal: 'toggle-button' },
   { schema: 'civ-button-group', drupal: 'button-group' },
   { schema: 'civ-icon', drupal: 'icon' },
   { schema: 'civ-filter-chip', drupal: 'filter-chip' },
@@ -91,6 +93,21 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-disclosure', drupal: 'disclosure' },
   { schema: 'civ-read-more', drupal: 'read-more' },
   { schema: 'civ-time-picker', drupal: 'time-picker' },
+  // Preset input wrappers — thin sugar over civ-text-input / civ-combobox.
+  // Schemas declare the wrapper-specific props (mode, international,
+  // extended, etc.) and sync mirrors them into the Drupal SDC.
+  { schema: 'civ-ssn', drupal: 'ssn' },
+  { schema: 'civ-ein', drupal: 'ein' },
+  { schema: 'civ-phone', drupal: 'phone' },
+  { schema: 'civ-email', drupal: 'email' },
+  { schema: 'civ-zip', drupal: 'zip' },
+  { schema: 'civ-currency', drupal: 'currency' },
+  { schema: 'civ-routing-number', drupal: 'routing-number' },
+  { schema: 'civ-va-file-number', drupal: 'va-file-number' },
+  { schema: 'civ-country', drupal: 'country' },
+  // Layout primitives whose Drupal SDCs need to track the schema.
+  { schema: 'civ-image-preview', drupal: 'image-preview' },
+  { schema: 'civ-input-group', drupal: 'input-group' },
 ];
 
 import { INHERITED_FORM_PROPS } from './lib/inherited.js';

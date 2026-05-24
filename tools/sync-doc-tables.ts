@@ -203,6 +203,19 @@ const HOST_PAGE_OVERRIDES: Record<string, string> = {
   'civ-timeline-item': 'feedback/timeline.mdx',
   // Process-list item is documented on the process-list page.
   'civ-process-list-item': 'feedback/process-list.mdx',
+  // Preset input wrappers — documented as sections inside grouped
+  // host pages (pii / contact / text-input / number / combobox) rather
+  // than each getting their own MDX. Keeps the docs sidebar from
+  // ballooning with one entry per format-specific sugar wrapper.
+  'civ-ssn': 'inputs/pii.mdx',
+  'civ-ein': 'inputs/pii.mdx',
+  'civ-va-file-number': 'inputs/pii.mdx',
+  'civ-phone': 'inputs/contact.mdx',
+  'civ-email': 'inputs/contact.mdx',
+  'civ-zip': 'inputs/text-input.mdx',
+  'civ-currency': 'inputs/number.mdx',
+  'civ-routing-number': 'inputs/number.mdx',
+  'civ-country': 'inputs/combobox.mdx',
 };
 
 /** Locate the component doc page directory for a given schema component name. */

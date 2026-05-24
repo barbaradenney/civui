@@ -17,7 +17,7 @@ props:
       description: 'Transient receipt label shown during the success window ("Copied", "Generated").'
     success_ms:
       title: Success ms
-      type: number
+      type: integer
       default: 1500
       description: 'How long the success state stays visible, in milliseconds.'
     variant:

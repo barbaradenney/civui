@@ -36,6 +36,9 @@ public struct CivToggleButton: View {
     /// Visual variant (chip = prominent pill, inline = text-link style).
     public var variant: ToggleButtonVariant
 
+    /// Optional leading icon name from the CivUI icon library.
+    public var iconStart: String
+
     /// Whether the button is disabled.
     public var isDisabled: Bool
 
@@ -50,6 +53,7 @@ public struct CivToggleButton: View {
         pressedLabel: String = "",
         pressed: Binding<Bool> = .constant(false),
         variant: ToggleButtonVariant = .chip,
+        iconStart: String = "",
         isDisabled: Bool = false,
         onToggle: ((Bool) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
@@ -58,6 +62,7 @@ public struct CivToggleButton: View {
         self.pressedLabel = pressedLabel
         self._pressed = pressed
         self.variant = variant
+        self.iconStart = iconStart
         self.isDisabled = isDisabled
         self.onToggle = onToggle
         self.onAnalytics = onAnalytics

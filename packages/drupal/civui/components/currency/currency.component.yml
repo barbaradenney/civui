@@ -42,11 +42,11 @@ props:
       description: 'Number of decimal places displayed (default 2 for cents)'
     min:
       title: Min
-      type: number
+      type: integer
       description: 'Inclusive minimum value'
     max:
       title: Max
-      type: number
+      type: integer
       description: 'Inclusive maximum value'
     allow_negative:
       title: Allow negative

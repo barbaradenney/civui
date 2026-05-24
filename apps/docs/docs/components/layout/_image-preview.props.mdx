@@ -1,0 +1,15 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `src` | `string` | `''` | Image source URL or object URL. Required for the component to render; an empty `src` renders nothing |
+| `webp-src` | `string` | `''` | URL to a WebP alternate. Forwarded to the inner `civ-image`, which wraps the `<img>` in a `<picture>` and lets the browser pick the smaller format |
+| `avif-src` | `string` | `''` | URL to an AVIF alternate. Forwarded to the inner `civ-image` for format negotiation. AVIF beats WebP on compression but has narrower browser support, so it falls through to WebP then `src` |
+| `alt` | `string` | `''` | Alt text describing the image content. Required per Section 508 / WCAG 1.1.1 — for an ID document upload, the alt should describe what the image contains (e.g. "Front of driver's license"). Component dev-warns when `alt` is omitted |
+| `filename` | `string` | `''` | Filename displayed below the image inside the `<figcaption>` |
+| `file-size` | `string` | `''` | File size displayed in the `<figcaption>` after the filename, formatted as a human-readable string (e.g. "2.4 MB") |
+| `size` | `'sm'` \| `'md'` \| `'lg'` \| `'full'` | `'md'` | Preview size tier: `sm` (120px max), `md` (240px, default), `lg` (360px), `full` (100% of the parent width) |
+| `width` | `number` | — | Intrinsic width in px, forwarded to the inner `civ-image`. Combined with `height` (or `ratio`) reserves layout space before the bytes load so the caption does not jump (CLS prevention) |
+| `height` | `number` | — | Intrinsic height in px, forwarded to the inner `civ-image`. Combined with `width` reserves layout space before the image loads |
+| `ratio` | `'1:1'` \| `'4:3'` \| `'16:9'` \| `'21:9'` \| `'3:2'` \| `'auto'` | `'auto'` | Aspect ratio forwarded to the inner `civ-image`. `auto` (default) defers to `width`/`height` when both are set, otherwise uses the natural image ratio once loaded |

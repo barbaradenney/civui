@@ -4397,6 +4397,17 @@
     padding: var(--civ-spacing-3) var(--civ-spacing-4);
   }
 
+  /* Secondary weight — thinner rail for subtler emphasis. Only the
+     rail width changes; padding + per-variant rail color stay the
+     same so consumers can swap `callout-style` without re-balancing
+     the surrounding layout. The base rule sets 5px first; this
+     attribute selector overrides for [callout-style='secondary'].
+     `civ-support-resources` (which composes civ-callout but doesn't
+     set callout-style) is unaffected and keeps the 5px rail. */
+  civ-callout[callout-style='secondary'] {
+    border-inline-start-width: 3px;
+  }
+
   civ-callout[variant='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
   civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
   civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }

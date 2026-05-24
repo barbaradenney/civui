@@ -111,6 +111,53 @@ describe('civ-callout', () => {
     warn.mockRestore();
   });
 
+  // Secondary weight (thinner rail). The default `primary` value is
+  // suppressed from the host attribute (useDefault: true) so the
+  // base `civ-callout { ... }` 5px rule keeps rendering today's
+  // markup unchanged.
+  describe('calloutStyle', () => {
+    it('keeps the default primary value off the host attribute (useDefault behavior)', async () => {
+      const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
+      await elementUpdated(el);
+      expect(el.calloutStyle).toBe('primary');
+      expect(el.getAttribute('callout-style')).toBeNull();
+    });
+
+    it('reflects the secondary value to the host attribute', async () => {
+      const el = await fixture<CivCallout>(
+        '<civ-callout callout-style="secondary"><p>x</p></civ-callout>',
+      );
+      await elementUpdated(el);
+      expect(el.calloutStyle).toBe('secondary');
+      expect(el.getAttribute('callout-style')).toBe('secondary');
+    });
+
+    it('combines with variant — both attributes round-trip independently', async () => {
+      const el = await fixture<CivCallout>(
+        '<civ-callout variant="warning" callout-style="secondary"><p>x</p></civ-callout>',
+      );
+      await elementUpdated(el);
+      expect(el.variant).toBe('warning');
+      expect(el.calloutStyle).toBe('secondary');
+      expect(el.getAttribute('variant')).toBe('warning');
+      expect(el.getAttribute('callout-style')).toBe('secondary');
+    });
+
+    it('warns when an unknown calloutStyle is set', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
+      await elementUpdated(el);
+      el.calloutStyle = 'tertiary' as CivCallout['calloutStyle'];
+      await elementUpdated(el);
+      expect(warn).toHaveBeenCalled();
+      const message = warn.mock.calls[0]?.[0] as string;
+      expect(message).toContain('civ-callout');
+      expect(message).toContain('calloutStyle');
+      expect(message).toContain('tertiary');
+      warn.mockRestore();
+    });
+  });
+
   // Composition tests. Callout's detached-renderRoot pattern means
   // children live directly as light-DOM descendants of the host — no
   // capture, no relocation. Custom elements work the same as plain

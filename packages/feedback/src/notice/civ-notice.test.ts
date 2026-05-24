@@ -52,7 +52,7 @@ describe('civ-notice', () => {
     expect(el.querySelector('.civ-notice__body')).toBeNull();
   });
 
-  it('defaults to the filled icon variant for the intent', async () => {
+  it('defaults to the filled icon (primary weight) for the intent', async () => {
     const el = await fixture<CivNotice>(`
       <civ-notice intent="warning" body="Heads up"></civ-notice>
     `);
@@ -61,7 +61,7 @@ describe('civ-notice', () => {
     expect(icon?.getAttribute('aria-hidden')).toBe('true');
   });
 
-  it('maps each intent to its filled-variant default icon', async () => {
+  it('maps each intent to its primary (filled) default icon', async () => {
     const cases: Array<['info' | 'warning' | 'error' | 'success' | 'neutral', string]> = [
       ['info', 'info-fill'],
       ['warning', 'warning-fill'],
@@ -77,7 +77,7 @@ describe('civ-notice', () => {
     }
   });
 
-  it('switches to outline-variant icons when icon-style="outline"', async () => {
+  it('switches to outlined-variant icons when notice-style="secondary"', async () => {
     const cases: Array<['info' | 'warning' | 'error' | 'success' | 'neutral', string]> = [
       ['info', 'info'],
       ['warning', 'warning'],
@@ -87,22 +87,22 @@ describe('civ-notice', () => {
     ];
     for (const [intent, expected] of cases) {
       const el = await fixture<CivNotice>(`
-        <civ-notice intent="${intent}" icon-style="outline" body="x"></civ-notice>
+        <civ-notice intent="${intent}" notice-style="secondary" body="x"></civ-notice>
       `);
       expect(el.querySelector('civ-icon.civ-notice__icon')?.getAttribute('name')).toBe(expected);
     }
   });
 
-  it('reflects icon-style to the host attribute', async () => {
+  it('reflects notice-style to the host attribute', async () => {
     const el = await fixture<CivNotice>(`
       <civ-notice body="x"></civ-notice>
     `);
-    // Default is filled and reflects to the host so consumer CSS
-    // overrides can target the variant.
-    expect(el.getAttribute('icon-style')).toBe('filled');
-    el.iconStyle = 'outline';
+    // Default is primary and reflects to the host so consumer CSS
+    // overrides can target the weight.
+    expect(el.getAttribute('notice-style')).toBe('primary');
+    el.noticeStyle = 'secondary';
     await elementUpdated(el);
-    expect(el.getAttribute('icon-style')).toBe('outline');
+    expect(el.getAttribute('notice-style')).toBe('secondary');
   });
 
   it('uses the override icon when set', async () => {

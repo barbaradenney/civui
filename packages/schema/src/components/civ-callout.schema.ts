@@ -15,6 +15,14 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', 'info', 'warning', 'error', 'success'],
     },
+    calloutStyle: {
+      type: 'enum',
+      description: 'Visual weight. `primary` (default) keeps the 5px accent rail — the established callout treatment. `secondary` drops the rail to 3px for a subtler affordance that doesn\'t compete with body content when stacked next to primary surfaces. Padding, variant colors, and content layout stay identical so the two styles read as the same family at different weights.',
+      default: 'primary',
+      values: ['primary', 'secondary'],
+      attribute: 'callout-style',
+      reflect: true,
+    },
   },
 
   events: {},

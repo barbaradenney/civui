@@ -55,6 +55,10 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
 
 <StoryEmbed id="feedback-callout--all-variants" />
 
+### Secondary weight (thinner rail)
+
+<StoryEmbed id="feedback-callout--secondary" />
+
 ### Rich content (list)
 
 <StoryEmbed id="feedback-callout--rich-content" />
@@ -84,6 +88,26 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
 <StoryEmbed id="feedback-callout--composed-rich-body" />
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-callout--default)
+
+## Weight
+
+| `callout-style` | Rail width | When to use |
+|---|---|---|
+| `primary` _(default)_ | 5px | Standalone callouts, "before you start" blocks, anything that should command attention. |
+| `secondary` | 3px | Subtler emphasis when a callout sits near a primary callout or body content that shouldn't be visually overpowered. |
+
+Padding and per-variant rail color stay identical across both
+weights — swapping `callout-style` doesn't reflow surrounding layout.
+
+```html
+<civ-callout variant="info">
+  <p>5px rail — the established treatment.</p>
+</civ-callout>
+
+<civ-callout variant="info" callout-style="secondary">
+  <p>3px rail — quieter affordance for nested or stacked placements.</p>
+</civ-callout>
+```
 
 ## Composing other CivUI components inside
 

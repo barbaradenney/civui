@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-notice.js';
-import '@civui/layout/callout';
+import '../callout/civ-callout.js';
 
 const meta: Meta = {
   title: 'Feedback/Notice',

@@ -229,11 +229,11 @@ interface HeadingOptions {
  * for components that want screen-reader heading semantics WITHOUT
  * forcing a specific `<h1>`–`<h6>` into the page outline.
  *
- * Used by `civ-alert`, `civ-section-intro`, `civ-confirmation-panel`
- * (and any future surface that needs a configurable-level heading
- * inside its chrome but shouldn't dictate the document's heading
- * structure — a card on a marketing page can sit at any logical
- * depth, the component shouldn't pick).
+ * Used by `civ-alert` and `civ-section-intro` (and any future surface
+ * that needs a configurable-level heading inside its chrome but
+ * shouldn't dictate the document's heading structure — a card on a
+ * marketing page can sit at any logical depth, the component shouldn't
+ * pick).
  *
  * **Not for cases where a real `<hN>` element is the right answer.**
  * `civ-accordion-item` renders real `<h1>`–`<h6>` because each

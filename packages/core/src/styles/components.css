@@ -71,7 +71,6 @@
   civ-checkbox-group,
   civ-combobox,
   civ-conditional,
-  civ-confirmation-panel,
   civ-country,
   civ-currency,
   civ-data-field,
@@ -4508,105 +4507,6 @@
     @apply civ-mb-6;
   }
 
-  /* ── Confirmation Panel ──────────────────────────────────────
-     Post-submission success surface. USWDS-aligned visual: restrained
-     left-border success treatment on the header, summary-box pattern
-     for the reference number, generous vertical rhythm between blocks.
-     Not a full-bleed GOV.UK-style banner. */
-
-  civ-confirmation-panel {
-    @apply civ-mb-6;
-  }
-
-  .civ-confirmation-panel__header {
-    @apply civ-flex civ-items-center civ-gap-3 civ-p-4 civ-mb-4;
-    background-color: var(--civ-color-success-lighter);
-    border-inline-start: 5px solid var(--civ-color-success-dark);
-  }
-
-  .civ-confirmation-panel__icon {
-    color: var(--civ-color-success-dark);
-    flex-shrink: 0;
-  }
-
-  /* Headings inside the success header keep their default
-     base-darkest color and pick up the page-heading scale. */
-  .civ-confirmation-panel__heading {
-    @apply civ-font-bold civ-m-0;
-    font-size: var(--civ-typography-fontSize-2xl);
-    line-height: var(--civ-typography-lineHeight-tight);
-  }
-
-  /* Remove the default focus ring when the heading is programmatically
-     focused on mount — the visual cue is the success header itself,
-     and the ring on a non-interactive heading reads as a bug. Scoped
-     under the host so a designer reusing the BEM class outside the
-     panel keeps the global focus indicator. */
-  civ-confirmation-panel .civ-confirmation-panel__heading:focus { outline: none; }
-  civ-confirmation-panel .civ-confirmation-panel__heading:focus-visible { outline: none; }
-
-  /* Slot-target spacing. The slot containers are rendered
-     unconditionally (so LightDomSlotMixin has a stable target to
-     relocate into), but margins only apply when the slot actually
-     contains an element child — `:has(*)` correctly handles the
-     whitespace-text-node case that defeats `:empty`. Reversing the
-     logic this way (apply-when-has-content instead of
-     remove-when-empty) means an empty container collapses to zero
-     visual cost. */
-  .civ-confirmation-panel__body:has(*) {
-    @apply civ-mb-4;
-  }
-
-  /* USWDS summary-box pattern: bordered light callout with a small
-     label on top and a larger semibold value below. Display-only, so
-     no border-radius per the design rule (only interactive elements
-     get rounded corners). */
-  .civ-confirmation-panel__reference {
-    @apply civ-p-4 civ-mb-6;
-    background-color: var(--civ-color-base-lightest);
-    border: 1px solid var(--civ-color-base-lighter);
-  }
-
-  .civ-confirmation-panel__reference-label {
-    @apply civ-font-semibold civ-m-0 civ-mb-1;
-    font-size: var(--civ-typography-fontSize-sm);
-  }
-
-  .civ-confirmation-panel__reference-value {
-    @apply civ-font-bold civ-m-0;
-    font-size: var(--civ-typography-fontSize-xl);
-    line-height: var(--civ-typography-lineHeight-tight);
-  }
-
-  .civ-confirmation-panel__pending:has(*) {
-    @apply civ-mb-6;
-  }
-
-  .civ-confirmation-panel__next-steps:has(*) {
-    @apply civ-mb-6;
-  }
-
-  /* The actions row uses the same .civ-button-row class on the
-     element itself (set in the component template). An empty
-     container has 0 inherent height as a flex item, so no
-     :empty / :hidden rule is needed — empty actions collapse to
-     zero visual cost. */
-
-  /* Print: drop the action row (Print / Return navigation isn't
-     meaningful on paper), keep everything else intact. The reference
-     callout becomes the primary visual artifact. */
-  @media print {
-    .civ-confirmation-panel__actions {
-      display: none !important;
-    }
-    .civ-confirmation-panel__header {
-      break-inside: avoid;
-    }
-    .civ-confirmation-panel__reference {
-      break-inside: avoid;
-    }
-  }
-
   /* ── Timeline ───────────────────────────────────────────────
      Vertical list of dated events with an intent-colored rail
      connecting the entries. The dot + connecting line live inside
@@ -5629,12 +5529,14 @@
   }
 
   .civ-itemized-row__note {
-    @apply civ-text-sm civ-mt-1;
+    @apply civ-text-sm;
     color: var(--civ-color-base-dark);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-itemized-row__amount {
-    @apply civ-text-base civ-text-end;
+    @apply civ-text-base civ-font-bold civ-text-end;
     color: var(--civ-color-base-darkest);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -6339,6 +6241,13 @@
 
   .civ-data-field {
     @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4 civ-py-2;
+  }
+
+  /* When a hint follows the row, drop the row's bottom padding so the
+     hint reads as attached to the value above it. The hint's
+     `text-box-trim` already trims its own half-leading. */
+  .civ-data-field:has(+ .civ-hint) {
+    padding-bottom: 0;
   }
 
   .civ-data-field--sm {

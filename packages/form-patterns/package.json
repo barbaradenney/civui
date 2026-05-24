@@ -1,7 +1,7 @@
 {
   "name": "@civui/form-patterns",
   "version": "0.1.0",
-  "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps, confirmation panel",
+  "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -15,7 +15,6 @@
     "./conditional": "./dist/conditional/index.js",
     "./repeater": "./dist/repeater/index.js",
     "./summary": "./dist/summary/index.js",
-    "./confirmation-panel": "./dist/confirmation-panel/index.js",
     "./data-field": "./dist/data-field/index.js",
     "./section-intro": "./dist/section-intro/index.js",
     "./progress": "./dist/progress/index.js",
@@ -37,6 +36,7 @@
   "dependencies": {
     "@civui/core": "workspace:*",
     "@civui/actions": "workspace:*",
+    "@civui/feedback": "workspace:*",
     "@civui/layout": "workspace:*",
     "lit": "^3.2.0"
   },

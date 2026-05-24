@@ -39,11 +39,11 @@
     "@civui/core": "workspace:*",
     "@civui/feedback": "workspace:*",
     "@civui/inputs": "workspace:*",
+    "@civui/layout": "workspace:*",
     "@civui/overlays": "workspace:*",
     "lit": "^3.2.0"
   },
   "devDependencies": {
-    "@civui/layout": "workspace:*",
     "@civui/test-utils": "workspace:*",
     "@civui/tokens": "workspace:*",
     "typescript": "^5.6.0",

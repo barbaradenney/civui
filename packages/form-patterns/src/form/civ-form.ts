@@ -341,6 +341,18 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
           `
         : nothing}
       <div data-civ-form-disclosures-slot></div>
+      <!-- Rendered unconditionally and toggled via the hidden
+           attribute rather than conditionally mounted.
+           civ-support-resources extends LightDomSlotMixin, and
+           round-tripping a mixin element through unmount/mount/
+           unmount can crash lit-html's _$clear walk against
+           detached ChildPart markers — see
+           .claude/rules/common-traps.md "LightDomSlotMixin
+           composition with dynamic Lit children" for the full
+           rationale. The hidden attribute removes the panel from
+           the accessibility tree and hides it visually while
+           keeping the element's structural identity stable across
+           re-renders. -->
       <civ-support-resources
         heading="${this.supportResourcesHeading || nothing}"
         data-civ-support-resources

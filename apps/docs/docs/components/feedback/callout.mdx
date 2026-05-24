@@ -33,57 +33,57 @@ For status updates that need to be announced to assistive tech, use `civ-alert` 
 
 ### Default
 
-<StoryEmbed id="layout-callout--default" />
+<StoryEmbed id="feedback-callout--default" />
 
 ### Info
 
-<StoryEmbed id="layout-callout--info" />
+<StoryEmbed id="feedback-callout--info" />
 
 ### Warning
 
-<StoryEmbed id="layout-callout--warning" />
+<StoryEmbed id="feedback-callout--warning" />
 
 ### Error
 
-<StoryEmbed id="layout-callout--error" />
+<StoryEmbed id="feedback-callout--error" />
 
 ### Success
 
-<StoryEmbed id="layout-callout--success" />
+<StoryEmbed id="feedback-callout--success" />
 
 ### All variants
 
-<StoryEmbed id="layout-callout--all-variants" />
+<StoryEmbed id="feedback-callout--all-variants" />
 
 ### Rich content (list)
 
-<StoryEmbed id="layout-callout--rich-content" />
+<StoryEmbed id="feedback-callout--rich-content" />
 
 ### As an ARIA landmark
 
-<StoryEmbed id="layout-callout--as-landmark" />
+<StoryEmbed id="feedback-callout--as-landmark" />
 
 ### Composed with civ-notice
 
-<StoryEmbed id="layout-callout--composed-with-notice" />
+<StoryEmbed id="feedback-callout--composed-with-notice" />
 
 ### Composed with multiple civ-notice (layered consequences)
 
-<StoryEmbed id="layout-callout--composed-with-multiple-notices" />
+<StoryEmbed id="feedback-callout--composed-with-multiple-notices" />
 
 ### Composed with civ-badge — status summary
 
-<StoryEmbed id="layout-callout--composed-with-badge" />
+<StoryEmbed id="feedback-callout--composed-with-badge" />
 
 ### Composed with multiple civ-badge — multi-step status
 
-<StoryEmbed id="layout-callout--composed-with-badge-list" />
+<StoryEmbed id="feedback-callout--composed-with-badge-list" />
 
 ### Composed with badge + notice + descriptive copy
 
-<StoryEmbed id="layout-callout--composed-rich-body" />
+<StoryEmbed id="feedback-callout--composed-rich-body" />
 
-[Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-callout--default)
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-callout--default)
 
 ## Composing other CivUI components inside
 
@@ -94,12 +94,12 @@ compose freely — no slot wiring, no special props.
 
 | Pair callout with | When to reach for it |
 |---|---|
-| [`civ-notice`](../feedback/notice) | Highlight a specific consequence inside the callout's body — legal warning, financial impact, safety detail |
-| [`civ-badge`](../feedback/badge) | Add a status label to summarize what state the surrounding copy describes ("In review", "Verified", "Pending") |
+| [`civ-notice`](./notice) | Highlight a specific consequence inside the callout's body — legal warning, financial impact, safety detail |
+| [`civ-badge`](./badge) | Add a status label to summarize what state the surrounding copy describes ("In review", "Verified", "Pending") |
 | Both | Status badge at top → context paragraph → must-not-miss notice below |
 
 For the same composition surface with banner chrome + dismiss button +
-ARIA live region, use [`civ-alert`](../feedback/alert) instead — it
+ARIA live region, use [`civ-alert`](./alert) instead — it
 accepts the same children via the same Light-DOM mixin pattern.
 
 ## Props
@@ -143,6 +143,6 @@ accepts the same children via the same Light-DOM mixin pattern.
 
 ## Related
 
-- [`civ-alert`](../feedback/alert) — dismissible, live-region alert with status / error roles. Use when the message needs to be announced.
+- [`civ-alert`](./alert) — dismissible, live-region alert with status / error roles. Use when the message needs to be announced.
 - [`civ-section-intro`](../form/section-intro) — adds an accessible heading and a `role="region"` landmark on top of the callout chrome. Use at the top of a sensitive or complex form section.
-- [`civ-card`](./card) — a different framing primitive for grouped, self-contained content blocks.
+- [`civ-card`](../layout/card) — a different framing primitive for grouped, self-contained content blocks.

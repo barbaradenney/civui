@@ -56,6 +56,10 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-alert>` | Feedback | `variant`, `heading`, `dismissible`, `slim`, `alert-style`, `heading-level` | `civ-dismiss` |
 | `<civ-badge>` | Feedback | `label`, `dot`, `variant`, `badge-style`, `spacing`, `overlay`, `with-icon`, `icon-start`, `icon-end` | — |
 | `<civ-count>` | Feedback | `count`, `max`, `variant`, `count-style`, `spacing`, `overlay`, `live` | — |
+| `<civ-timeline>` | Feedback | — (slot-only container, renders `<ol role="list">`) | — |
+| `<civ-timeline-item>` | Feedback | `intent` (info/success/warning/error/neutral), `timestamp` (ISO 8601), `timestamp-format` (relative/absolute/both), `icon`, `heading-level` (2-6), `action` | — |
+| `<civ-process-list>` | Feedback | — (slot-only container, renders `<ol role="list">` with a CSS-counter step numbering) | — |
+| `<civ-process-list-item>` | Feedback | `heading`, `heading-level` (2-6), `state` (default/complete), `icon` | — |
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
@@ -1354,6 +1358,18 @@ Drupal stories are co-located next to web component source as `*.drupal.stories.
 
 - **Checkbox**: Choice requires a form submit to take effect. "I agree", "Select features", preference lists.
 - **Toggle**: Takes effect immediately on click. "Enable notifications", "Dark mode", feature switches.
+
+### process-list vs progress-steps vs timeline
+
+All three render an ordered list of steps / events. Pick by **temporal stance**:
+
+| Scenario | Component | Why |
+|----------|-----------|-----|
+| "Here's what to expect" before a multi-step form starts | `civ-process-list` | Forward-looking *preview*. Numbered markers (CSS counter), `complete` state for mixed "done + upcoming" surfaces, optional `icon` per item for affordance-specific markers (`mail`, `lock`). |
+| "You are here" inside an in-flight multi-step form | `civ-progress-steps` | Active progress indicator. Tracks current step, marks past steps complete, hides future ones. |
+| "Here's what happened" — audit log, version history, document workflow | `civ-timeline` | Backward-looking *dated events*. `<time datetime>` timestamps in relative / absolute / both formats, intent-colored rail dots, semantic icons. |
+
+Don't hand-roll an `<ol>` with custom rail / counter / chevron chrome — all three of these compose a shared rail-plus-trailing-content idiom and any of them is the right answer to "I need to show a series of steps".
 
 ---
 

@@ -774,70 +774,70 @@
   "civ-callout": [
     {
       "story": "AllVariants",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\" style=\"max-width: 600px;\">\n      <civ-callout>\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Default (neutral)</p>\n        <p class=\"civ-m-0\">The base accent border is a neutral gray — use when no semantic variant applies.</p>\n      </civ-callout>\n      <civ-callout variant=\"info\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Info</p>\n        <p class=\"civ-m-0\">Neutral informational message.</p>\n      </civ-callout>\n      <civ-callout variant=\"warning\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Warning</p>\n        <p class=\"civ-m-0\">Heads-up; user attention recommended.</p>\n      </civ-callout>\n      <civ-callout variant=\"error\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Error</p>\n        <p class=\"civ-m-0\">Action required to proceed.</p>\n      </civ-callout>\n      <civ-callout variant=\"success\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Success</p>\n        <p class=\"civ-m-0\">Action completed.</p>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "AsLandmark",
       "name": "As an ARIA landmark",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\" role=\"region\" aria-labelledby=\"region-heading\">\n      <p id=\"region-heading\" class=\"civ-m-0 civ-font-bold civ-mb-1\">Important notice</p>\n      <p class=\"civ-m-0\">This region is announced as a landmark to assistive tech.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "ComposedRichBody",
       "name": "Composed with badge + notice + descriptive copy",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div style=\"max-width: 600px;\">\n      <civ-callout variant=\"error\">\n        <div class=\"civ-mb-2\">\n          <civ-badge label=\"Verification expired\" variant=\"error\" badge-style=\"primary\" with-icon></civ-badge>\n        </div>\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Action required</p>\n        <p>\n          Your identity verification with Login.gov expired on January 15, 2026.\n          Until you re-verify, you cannot submit new claims or view sensitive documents.\n        </p>\n        <civ-notice\n          intent=\"error\"\n          spacing=\"sm\"\n          body=\"You have 30 days to re-verify before your account is locked.\"\n        ></civ-notice>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "ComposedWithBadge",
       "name": "Composed with civ-badge — status summary",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div style=\"max-width: 600px;\">\n      <civ-callout variant=\"info\">\n        <div class=\"civ-mb-2\">\n          <civ-badge label=\"In review\" variant=\"info\" badge-style=\"primary\" with-icon></civ-badge>\n        </div>\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Application status</p>\n        <p class=\"civ-m-0\">\n          A reviewer was assigned to your application on January 18, 2026.\n          You'll receive a written notice once a decision is made — usually within 7 business days.\n        </p>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "ComposedWithBadgeList",
       "name": "Composed with multiple civ-badge — multi-step status",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div style=\"max-width: 600px;\">\n      <civ-callout variant=\"info\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-2\">Your benefits enrollment</p>\n        <ul class=\"civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2\">\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" variant=\"success\" with-icon></civ-badge>\n            <span>Personal information</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" variant=\"success\" with-icon></civ-badge>\n            <span>Direct deposit setup</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"In progress\" variant=\"info\" with-icon></civ-badge>\n            <span>Document upload</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Pending\" variant=\"warning\" with-icon></civ-badge>\n            <span>Identity verification</span>\n          </li>\n        </ul>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "ComposedWithMultipleNotices",
       "name": "Composed with multiple civ-notice (layered consequences)",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div style=\"max-width: 600px;\">\n      <civ-callout variant=\"warning\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Before you submit</p>\n        <p>Review these conditions carefully — they apply to every applicant:</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-2 civ-mt-2\">\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"Once submitted, you cannot edit your answers.\"\n          ></civ-notice>\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"A non-refundable processing fee of $35.00 will be charged on submission.\"\n          ></civ-notice>\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"Knowingly providing false information is punishable by fine or imprisonment.\"\n          ></civ-notice>\n        </div>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "ComposedWithNotice",
       "name": "Composed with civ-notice",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<div style=\"max-width: 600px;\">\n      <civ-callout variant=\"info\">\n        <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Before you continue</p>\n        <p>\n          The next section asks for your bank routing and account numbers\n          so we can deposit benefit payments directly.\n        </p>\n        <civ-notice\n          intent=\"warning\"\n          spacing=\"sm\"\n          body=\"Double-check the numbers — a mistyped account causes a 30-day delay before payment can be reissued.\"\n        ></civ-notice>\n      </civ-callout>\n    </div>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "Default",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Note</p>\n      <p class=\"civ-m-0\">You must complete this section before continuing to the next step.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "Error",
       "name": "Error",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Action needed</p>\n      <p class=\"civ-m-0\">Your application is missing required documents.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "Info",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Information</p>\n      <p class=\"civ-m-0\">Processing times are currently 3–5 business days.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "InsideCallout",
@@ -849,21 +849,21 @@
     {
       "story": "RichContent",
       "name": "Rich content (list)",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Before you start</p>\n      <p>To finish this section, have the following ready:</p>\n      <ul>\n        <li>Your Social Security number</li>\n        <li>Your most recent W-2</li>\n        <li>Bank routing and account numbers</li>\n      </ul>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "Success",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Complete</p>\n      <p class=\"civ-m-0\">Your information has been verified successfully.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
       "story": "Warning",
-      "category": "Layout/Callout",
+      "category": "Feedback/Callout",
       "html": "<civ-callout variant=\"${args.variant}\">\n      <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Important</p>\n      <p class=\"civ-m-0\">Your session will expire in 15 minutes. Save your progress.</p>\n    </civ-callout>",
-      "source": "packages/layout/src/callout/civ-callout.stories.ts"
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     }
   ],
   "civ-card": [
@@ -1275,35 +1275,6 @@
       "category": "Actions/Confirm Button",
       "html": "<civ-confirm-button\n      variant=\"inline\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
-    }
-  ],
-  "civ-confirmation-panel": [
-    {
-      "story": "Default",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel\n      heading=\"${args.heading}\"\n      heading-level=\"${args.headingLevel}\"\n      reference=\"${args.reference}\"\n      reference-label=\"${args.referenceLabel}\"\n      ?no-autofocus=\"${args.noAutofocus}\"\n    >\n      <p>We have sent a confirmation email to sarah@example.gov.</p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          Your application will be reviewed within 5 working days. We'll contact\n          you if we need more information.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Print confirmation\" variant=\"secondary\"></civ-button>\n        <civ-link href=\"/dashboard\">Return to dashboard</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "Minimal",
-      "name": "Minimal (eligibility check)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"You may be eligible\" no-autofocus>\n      <p>\n        Based on your answers, you appear to meet the basic eligibility\n        criteria. To confirm and apply, start the full application.\n      </p>\n\n      <div data-actions>\n        <civ-button label=\"Start application\" variant=\"primary\"></civ-button>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "PendingReference",
-      "name": "Pending reference (async backend)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"Claim received\" no-autofocus>\n      <p>\n        We're processing your claim. This usually takes a few minutes.\n      </p>\n\n      <p data-pending-reference>\n        <strong>We'll email your reference number within 24 hours</strong> to\n        sarah@example.gov. Use it when checking your claim status.\n      </p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          You'll get a decision letter by mail within 30 days. You can also\n          check your status online once you receive your reference number.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Check status\" variant=\"primary\"></civ-button>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "WithoutReference",
-      "name": "Without reference (informational submission)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"Subscription confirmed\" no-autofocus>\n      <p>\n        You're signed up to receive benefit updates at sarah@example.gov.\n        Look out for our first email within the next week.\n      </p>\n\n      <div data-next-steps>\n        <h2>What you can do next</h2>\n        <ul>\n          <li>Update your contact preferences anytime</li>\n          <li>Browse benefit topics on the resources page</li>\n        </ul>\n      </div>\n\n      <div data-actions>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
     }
   ],
   "civ-count": [

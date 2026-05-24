@@ -204,6 +204,13 @@
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
+      "story": "ComposedWithNotice",
+      "name": "Composed with civ-notice",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-alert variant=\"warning\" heading=\"Action needed before submission\" dismissible>\n        <civ-notice\n          intent=\"warning\"\n          spacing=\"sm\"\n          body=\"You must complete identity verification before you can submit this application.\"\n        ></civ-notice>\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
       "story": "ConfirmationPage",
       "name": "Confirmation page — submitted files",
       "category": "Forms/Patterns/File Display",

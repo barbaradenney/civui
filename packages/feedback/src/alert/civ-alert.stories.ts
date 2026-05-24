@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-alert.js';
+import '@civui/layout/notice';
 
 const meta: Meta = {
   title: 'Feedback/Alert',
@@ -236,6 +237,33 @@ export const Compact: Story = {
           Your application is being reviewed.
         </civ-alert>
       </div>
+    </div>
+  `,
+};
+
+export const ComposedWithNotice: Story = {
+  name: 'Composed with civ-notice',
+  parameters: {
+    docs: {
+      description: {
+        story: `Civ-alert accepts rich children when \`label\` is unset. The
+example below composes a \`civ-notice\` inside the alert body so the
+banner chrome (background, ARIA live region, dismiss button) is paired
+with the icon-prefixed emphasis text from notice. Useful when an
+alert needs to draw attention to a specific consequence inside its
+body.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-alert variant="warning" heading="Action needed before submission" dismissible>
+        <civ-notice
+          intent="warning"
+          spacing="sm"
+          body="You must complete identity verification before you can submit this application."
+        ></civ-notice>
+      </civ-alert>
     </div>
   `,
 };

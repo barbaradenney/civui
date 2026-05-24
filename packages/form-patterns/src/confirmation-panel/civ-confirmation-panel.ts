@@ -1,6 +1,6 @@
-import { html, nothing } from 'lit';
+import { html, nothing, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, devWarn, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -12,10 +12,16 @@ import type { SlotConfig } from '@civui/core';
  * action row. Aligned with the USWDS confirmation pattern — restrained
  * left-border success treatment rather than a full-bleed banner.
  *
- * The host receives focus on mount (so screen readers announce the
- * heading immediately) and is exposed as a `role="status"` region.
- * Set `no-autofocus` to suppress this when the surrounding page is
- * managing focus itself.
+ * On mount, focus moves to the heading. The host is exposed as a
+ * `role="status"` region labelled by the heading, so screen readers
+ * announce it politely on first paint. (Announcement is left to the
+ * region's implicit live region — the component does NOT additionally
+ * call `announce()` to avoid duplicate read-outs.) Set `no-autofocus`
+ * to opt out when the surrounding page manages focus itself.
+ *
+ * When `heading` is omitted, a fallback `aria-label` is set so the
+ * region still has an accessible name; a dev-mode warning suggests
+ * setting a real heading.
  *
  * **Heading level:** Defaults to `1` because confirmation pages
  * almost always replace the form page entirely. Lower it to `2` when
@@ -106,36 +112,75 @@ export class CivConfirmationPanel extends LightDomSlotMixin(CivBaseElement) {
 
   override firstUpdated(): void {
     this._relocateSlots();
-    if (!this.noAutofocus) {
-      // Defer to the next frame so the rendered heading is in place
-      // and the live region has a chance to attach.
+    if (!this.heading) {
+      devWarn(
+        'civ-confirmation-panel',
+        'Rendered without a `heading` — set one so screen readers can ' +
+        'announce the confirmation. A generic fallback aria-label is being ' +
+        'used; this is not a substitute for a real success message.',
+        'no-heading',
+      );
+    }
+    if (!this.noAutofocus && this.heading) {
+      // Defer to the next microtask so the rendered heading is in place
+      // before we try to move focus.
       queueMicrotask(() => this._focusHeading());
     }
   }
 
+  /**
+   * Re-fire the auto-focus when an async consumer populates `heading`
+   * after mount (initial mount had empty heading → firstUpdated didn't
+   * focus; later property assignment renders the heading element for
+   * the first time and needs the same focus treatment).
+   */
+  override updated(changed: PropertyValues): void {
+    super.updated(changed);
+    if (!this.noAutofocus && changed.has('heading')) {
+      const prev = changed.get('heading') as string | undefined;
+      if (!prev && this.heading) {
+        queueMicrotask(() => this._focusHeading());
+      }
+    }
+  }
+
   private _focusHeading(): void {
+    // Skip if the panel was removed between scheduling and the microtask
+    // running (e.g. SPA route change race).
+    if (!this.isConnected) return;
     // generateId() produces an ID-safe token, so a plain getElementById
     // lookup avoids needing CSS.escape (which jsdom doesn't ship).
     const headingEl = this.querySelector<HTMLElement>(
       `[id="${this._headingId}"]`,
     );
     if (!headingEl) return;
-    // The heading is a static <p role="heading">; make it programmatically
-    // focusable just long enough to move focus, then drop tabindex so the
-    // user's Tab key doesn't land on it again.
+    // The heading is a static <p role="heading">; tabindex="-1" makes it
+    // programmatically focusable (mouse + JS) without putting it in the
+    // sequential Tab order. The attribute is left in place so subsequent
+    // re-focuses (e.g. anchor links, screen-reader rotor) keep working.
     headingEl.setAttribute('tabindex', '-1');
-    headingEl.focus({ preventScroll: false });
-    if (this.heading) this.announce(this.heading, 'polite');
+    headingEl.focus({ preventScroll: true });
+    // Announcement is handled by the section's role="status" implicit
+    // live region — calling announce() here would cause a duplicate
+    // read-out on screen readers that pick up both signals.
   }
 
   override render() {
     const hasReference = Boolean(this.reference);
+    // Clamp the heading level to the valid ARIA range (1–6); a bad
+    // attribute value like heading-level="0" or "foo" would otherwise
+    // emit aria-level="0" / "NaN" which is invalid.
+    const level = Math.min(
+      6,
+      Math.max(1, Number(this.headingLevel) || 1),
+    );
 
     return html`
       <section
         class="civ-confirmation-panel"
         role="status"
         aria-labelledby="${this.heading ? this._headingId : nothing}"
+        aria-label="${this.heading ? nothing : t('confirmationDefaultLabel')}"
       >
         <div class="civ-confirmation-panel__header">
           <civ-icon
@@ -148,7 +193,7 @@ export class CivConfirmationPanel extends LightDomSlotMixin(CivBaseElement) {
                 id="${this._headingId}"
                 class="civ-confirmation-panel__heading"
                 role="heading"
-                aria-level="${this.headingLevel}"
+                aria-level="${level}"
               >${this.heading}</p>`
             : nothing}
         </div>

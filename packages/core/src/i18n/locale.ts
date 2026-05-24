@@ -520,6 +520,9 @@ export interface CivLocaleStrings {
   taskStatusError: string;
   taskStatusReview: string;
 
+  // Confirmation panel
+  confirmationDefaultLabel: string; // fallback aria-label when no `heading` set
+
   // Summary
   summaryDefaultHeading: string; // fallback aria-label when no `heading` set
   summaryEditLink: string;
@@ -1215,6 +1218,7 @@ const defaultStrings: CivLocaleStrings = {
   taskStatusError: 'There is a problem',
   taskStatusReview: 'Review',
 
+  confirmationDefaultLabel: 'Confirmation',
   summaryDefaultHeading: 'Summary',
   summaryEditLink: 'Edit',
   summaryEditAriaLabel: 'Edit {section}',

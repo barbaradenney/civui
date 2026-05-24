@@ -182,4 +182,51 @@ describe('civ-confirmation-panel', () => {
     );
     expect(el.shadowRoot).toBeNull();
   });
+
+  it('falls back to aria-label when heading is not set so the status region still has a name', async () => {
+    const el = await fixture<CivConfirmationPanel>(`
+      <civ-confirmation-panel no-autofocus></civ-confirmation-panel>
+    `);
+    const region = el.querySelector('[role="status"]')!;
+    expect(region.getAttribute('aria-labelledby')).toBeNull();
+    // Fallback aria-label comes from the locale string.
+    expect(region.getAttribute('aria-label')).toBeTruthy();
+  });
+
+  it('clamps an out-of-range heading-level attribute to the valid aria-level range', async () => {
+    const el = await fixture<CivConfirmationPanel>(`
+      <civ-confirmation-panel heading="X" heading-level="0" no-autofocus></civ-confirmation-panel>
+    `);
+    const heading = el.querySelector('[role="heading"]')!;
+    expect(heading.getAttribute('aria-level')).toBe('1');
+  });
+
+  it('clamps a high heading-level value down to 6', async () => {
+    const el = await fixture<CivConfirmationPanel>(`
+      <civ-confirmation-panel heading="X" heading-level="9" no-autofocus></civ-confirmation-panel>
+    `);
+    const heading = el.querySelector('[role="heading"]')!;
+    expect(heading.getAttribute('aria-level')).toBe('6');
+  });
+
+  it('re-focuses when heading is populated after mount (async heading)', async () => {
+    // Some consumers fetch the heading text asynchronously and set
+    // the prop after mount; the focus-on-mount flow should still
+    // fire once the heading element actually exists.
+    const el = await fixture<CivConfirmationPanel>(`
+      <civ-confirmation-panel></civ-confirmation-panel>
+    `);
+    await Promise.resolve();
+    await elementUpdated(el);
+    expect(el.querySelector('[role="heading"]')).toBeNull();
+
+    el.heading = 'Application complete';
+    await elementUpdated(el);
+    await Promise.resolve();
+    await elementUpdated(el);
+
+    const heading = el.querySelector('[role="heading"]') as HTMLElement;
+    expect(heading).not.toBeNull();
+    expect(document.activeElement).toBe(heading);
+  });
 });

@@ -4407,16 +4407,22 @@
 
   /* Remove the default focus ring when the heading is programmatically
      focused on mount — the visual cue is the success header itself,
-     and the ring on a non-interactive heading reads as a bug. */
-  .civ-confirmation-panel__heading:focus { outline: none; }
-  .civ-confirmation-panel__heading:focus-visible { outline: none; }
+     and the ring on a non-interactive heading reads as a bug. Scoped
+     under the host so a designer reusing the BEM class outside the
+     panel keeps the global focus indicator. */
+  civ-confirmation-panel .civ-confirmation-panel__heading:focus { outline: none; }
+  civ-confirmation-panel .civ-confirmation-panel__heading:focus-visible { outline: none; }
 
-  .civ-confirmation-panel__body {
+  /* Slot-target spacing. The slot containers are rendered
+     unconditionally (so LightDomSlotMixin has a stable target to
+     relocate into), but margins only apply when the slot actually
+     contains an element child — `:has(*)` correctly handles the
+     whitespace-text-node case that defeats `:empty`. Reversing the
+     logic this way (apply-when-has-content instead of
+     remove-when-empty) means an empty container collapses to zero
+     visual cost. */
+  .civ-confirmation-panel__body:has(*) {
     @apply civ-mb-4;
-  }
-
-  .civ-confirmation-panel__body:empty {
-    @apply civ-mb-0;
   }
 
   /* USWDS summary-box pattern: bordered light callout with a small
@@ -4439,25 +4445,19 @@
     line-height: var(--civ-typography-lineHeight-tight);
   }
 
-  .civ-confirmation-panel__pending {
+  .civ-confirmation-panel__pending:has(*) {
     @apply civ-mb-6;
   }
 
-  .civ-confirmation-panel__pending:empty {
-    @apply civ-mb-0;
-  }
-
-  .civ-confirmation-panel__next-steps {
+  .civ-confirmation-panel__next-steps:has(*) {
     @apply civ-mb-6;
   }
 
-  .civ-confirmation-panel__next-steps:empty {
-    @apply civ-mb-0;
-  }
-
-  .civ-confirmation-panel__actions:empty {
-    @apply civ-hidden;
-  }
+  /* The actions row uses the same .civ-button-row class on the
+     element itself (set in the component template). An empty
+     container has 0 inherent height as a flex item, so no
+     :empty / :hidden rule is needed — empty actions collapse to
+     zero visual cost. */
 
   /* Print: drop the action row (Print / Return navigation isn't
      meaningful on paper), keep everything else intact. The reference

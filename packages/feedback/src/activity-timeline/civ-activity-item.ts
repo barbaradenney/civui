@@ -31,8 +31,11 @@ const INTENT_DEFAULT_ICON: Record<ActivityIntent, string> = {
  * - `both` — absolute first with relative in muted parentheses (default)
  *
  * Intent drives the dot color and the default icon inside the dot.
- * Pass `icon=""` (empty) to suppress the default icon and show a
- * plain colored dot, or pass `icon="some-name"` to override.
+ * Pass `icon=""` (empty string) to suppress the default icon and
+ * show a plain colored dot, or pass `icon="some-name"` to override.
+ * The property defaults to `null` / `undefined` meaning "use intent
+ * default"; only an empty-string value (set via attribute or JS)
+ * counts as the explicit suppression sentinel.
  *
  * The rail uses `aria-hidden` so screen readers hear only the
  * timestamp + actor + action + body content, not the decorative
@@ -72,7 +75,7 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
   intent: ActivityIntent = 'neutral';
 
   /** Override icon name. Empty string suppresses the default icon. */
-  @property({ type: String }) icon: string | null = null;
+  @property({ type: String }) icon: string | null | undefined = null;
 
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-activity-item-content]' };
@@ -88,10 +91,13 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
   }
 
   /** Resolve the icon name shown inside the dot. Empty string means
-   *  "no icon — plain dot". */
+   *  "no icon — plain dot". Both `null` and `undefined` are treated
+   *  as "use the intent's default icon" so JS consumers passing
+   *  `undefined` don't accidentally render `name="undefined"`. */
   private get _resolvedIcon(): string {
-    if (this.icon !== null) return this.icon;
-    return INTENT_DEFAULT_ICON[this.intent] ?? '';
+    // Loose equality `== null` matches both null and undefined.
+    if (this.icon == null) return INTENT_DEFAULT_ICON[this.intent] ?? '';
+    return this.icon;
   }
 
   /** Build the absolute display: "Jan 15, 2026, 10:30 AM" — uses
@@ -121,14 +127,23 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
     const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
     const diffMs = parsed.getTime() - Date.now();
     const diffSec = Math.round(diffMs / 1000);
-    const abs = Math.abs(diffSec);
 
-    if (abs < 60) return rtf.format(diffSec, 'second');
-    if (abs < 3600) return rtf.format(Math.round(diffSec / 60), 'minute');
-    if (abs < 86400) return rtf.format(Math.round(diffSec / 3600), 'hour');
-    if (abs < 2592000) return rtf.format(Math.round(diffSec / 86400), 'day');
-    if (abs < 31536000) return rtf.format(Math.round(diffSec / 2592000), 'month');
-    return rtf.format(Math.round(diffSec / 31536000), 'year');
+    // Comparing the ROUNDED value (not raw seconds) against the next-unit
+    // boundary avoids "60 minutes ago" / "24 hours ago" / "30 days ago"
+    // edge cases where Math.round(diffSec / 60) lands on exactly the
+    // next-unit's boundary inside the smaller-unit branch.
+    const seconds = diffSec;
+    if (Math.abs(seconds) < 60) return rtf.format(seconds, 'second');
+    const minutes = Math.round(diffSec / 60);
+    if (Math.abs(minutes) < 60) return rtf.format(minutes, 'minute');
+    const hours = Math.round(diffSec / 3600);
+    if (Math.abs(hours) < 24) return rtf.format(hours, 'hour');
+    const days = Math.round(diffSec / 86400);
+    if (Math.abs(days) < 30) return rtf.format(days, 'day');
+    const months = Math.round(diffSec / 2592000);
+    if (Math.abs(months) < 12) return rtf.format(months, 'month');
+    const years = Math.round(diffSec / 31536000);
+    return rtf.format(years, 'year');
   }
 
   private _renderTimestamp() {
@@ -136,6 +151,11 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
     const fmt = this.timestampFormat;
     const abs = this._absoluteLabel;
     const rel = this._relativeLabel;
+    // Skip the <time> wrapper when the value can't be parsed — HTML5
+    // forbids invalid datetime attributes, and assistive tech that
+    // consumes <time datetime> would otherwise either skip the element
+    // or speak the raw garbage. Render as a plain <span> in that case.
+    const isValid = !Number.isNaN(new Date(this.timestamp).getTime());
 
     let primary = '';
     let secondary = '';
@@ -148,14 +168,14 @@ export class CivActivityItem extends LightDomSlotMixin(CivBaseElement) {
       secondary = rel;
     }
 
-    return html`
-      <time
-        class="civ-activity-item__timestamp"
-        datetime="${this.timestamp}"
-      >${primary}${secondary
-        ? html` <span class="civ-activity-item__timestamp-relative">(${secondary})</span>`
-        : nothing}</time>
-    `;
+    const inner = html`${primary}${secondary
+      ? html` <span class="civ-activity-item__timestamp-relative">(${secondary})</span>`
+      : nothing}`;
+
+    if (!isValid) {
+      return html`<span class="civ-activity-item__timestamp">${inner}</span>`;
+    }
+    return html`<time class="civ-activity-item__timestamp" datetime="${this.timestamp}">${inner}</time>`;
   }
 
   override render() {

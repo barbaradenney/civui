@@ -1,7 +1,7 @@
 {
   "name": "@civui/form-patterns",
   "version": "0.1.0",
-  "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps",
+  "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps, confirmation panel",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",

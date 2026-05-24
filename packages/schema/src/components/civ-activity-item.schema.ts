@@ -40,8 +40,10 @@ const schema: ComponentSchema = {
     },
     icon: {
       type: 'string',
-      description: 'Override icon name. Empty string suppresses the default intent icon and shows a plain colored dot. Defaults to the intent\'s semantic icon (success → check, info → info, warning → warning, error → error, neutral → no icon).',
-      default: '',
+      description: 'Override icon name. When unset, the intent\'s semantic icon is used (success → check, info → info, warning → warning, error → error, neutral → no icon). Empty string explicitly suppresses the icon and shows a plain colored dot.',
+      // No `default` field: the absence of a value means "use the
+      // intent's default icon"; supplying `''` is the explicit
+      // suppress sentinel, supplying a name overrides.
     },
   },
 

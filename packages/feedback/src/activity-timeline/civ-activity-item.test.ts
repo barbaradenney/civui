@@ -52,7 +52,10 @@ describe('civ-activity-item', () => {
     expect(el.querySelector('time')).toBeNull();
   });
 
-  it('falls back to raw value when timestamp is not parseable', async () => {
+  it('renders unparseable timestamps as plain text (no <time> wrapper)', async () => {
+    // <time datetime="not-a-date"> is invalid HTML5 — render the raw
+    // value in a <span> instead so assistive tech doesn't see a
+    // bogus machine-readable date.
     const el = await fixture<CivActivityItem>(`
       <civ-activity-item
         action="X"
@@ -60,8 +63,12 @@ describe('civ-activity-item', () => {
         timestamp-format="absolute"
       ></civ-activity-item>
     `);
-    const time = el.querySelector('time')!;
-    expect(time.textContent).toContain('not-a-date');
+    const time = el.querySelector('time');
+    expect(time).toBeNull();
+    const fallback = el.querySelector('.civ-activity-item__timestamp')!;
+    expect(fallback).not.toBeNull();
+    expect(fallback.tagName.toLowerCase()).toBe('span');
+    expect(fallback.textContent).toContain('not-a-date');
   });
 
   it('renders absolute-only format without a relative parenthesis', async () => {
@@ -113,6 +120,37 @@ describe('civ-activity-item', () => {
       <civ-activity-item action="X" intent="success" icon=""></civ-activity-item>
     `);
     expect(el.querySelector('.civ-activity-item__dot-icon')).toBeNull();
+  });
+
+  it('treats icon=undefined (JS-set) the same as null — uses intent default', async () => {
+    // A TypeScript consumer writing `el.icon = undefined` should NOT
+    // accidentally render <civ-icon name="undefined">; the resolver
+    // must treat null and undefined identically.
+    const el = await fixture<CivActivityItem>(`
+      <civ-activity-item action="X" intent="success" icon=""></civ-activity-item>
+    `);
+    (el as unknown as { icon: string | null | undefined }).icon = undefined;
+    await elementUpdated(el);
+    const icon = el.querySelector('.civ-activity-item__dot-icon');
+    expect(icon).not.toBeNull();
+    expect(icon!.getAttribute('name')).toBe('check');
+  });
+
+  it('relative-time renders "an hour ago" / "1 hour ago" near the 60-minute boundary, not "60 minutes ago"', async () => {
+    // The previous fixed-divisor cascade reported 3599 seconds as
+    // "60 minutes ago" because the if-cascade compared raw `abs`,
+    // not the rounded display value. The fix bumps to the next-larger
+    // unit when the rounded value crosses the boundary.
+    const sec = 3599;
+    const iso = new Date(Date.now() - sec * 1000).toISOString();
+    const el = await fixture<CivActivityItem>(
+      `<civ-activity-item action="X" timestamp="${iso}" timestamp-format="relative"></civ-activity-item>`,
+    );
+    const time = el.querySelector('time')!;
+    expect(time.textContent!.trim()).not.toContain('60 minutes');
+    // Either "1 hour ago" or "an hour ago" depending on the locale's
+    // numeric: 'auto' rendering — both contain "hour" though.
+    expect(time.textContent!.trim()).toMatch(/hour/i);
   });
 
   it('reflects intent to the host attribute for CSS targeting', async () => {

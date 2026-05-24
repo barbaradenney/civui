@@ -82,9 +82,20 @@ function formatType(def: PropDef): string {
   return `\`${def.type}\``;
 }
 
-function renderProps(name: string, props: Record<string, PropDef>): string {
+function renderProps(name: string, props: Record<string, PropDef>, extendsClass: string): string {
   const entries = Object.entries(props).filter(([, def]) => !def.webOnly === false || true);
-  if (entries.length === 0) return `${GENERATED_BANNER}_${name} has no documented props beyond the inherited form-element chrome (label / hint / error / required / disabled / name / value)._\n`;
+  if (entries.length === 0) {
+    // The form-element chrome disclaimer (`label`, `hint`, `error`,
+    // `required`, `disabled`, `name`, `value`) only applies to
+    // CivFormElement subclasses. CivBaseElement subclasses (display-only
+    // components like activity-timeline, alert, callout) inherit none of
+    // those — calling them out as "inherited form chrome" misleads
+    // consumers into trying form-only props that are silently ignored.
+    if (extendsClass === 'CivFormElement') {
+      return `${GENERATED_BANNER}_${name} has no documented props beyond the inherited form-element chrome (label / hint / error / required / disabled / name / value)._\n`;
+    }
+    return `${GENERATED_BANNER}_${name} has no component-specific props._\n`;
+  }
 
   const rows = entries.map(([propName, def]) => {
     const attr = def.attribute ?? propName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
@@ -244,7 +255,7 @@ async function main(): Promise<void> {
     const propsPath = path.join(dir, `_${tag}.props.mdx`);
     const eventsPath = path.join(dir, `_${tag}.events.mdx`);
 
-    await fs.writeFile(propsPath, renderProps(schema.name, schema.props ?? {}));
+    await fs.writeFile(propsPath, renderProps(schema.name, schema.props ?? {}, schema.extends));
     propsWritten++;
 
     await fs.writeFile(eventsPath, renderEvents(schema.name, schema.events ?? {}));

@@ -8,4 +8,4 @@
 | `actor` | `string` | `''` | Person or system that took the action (e.g. "J. Martinez (Reviewer)", "System"). |
 | `action` | `string` | `''` | Short action label (e.g. "Application submitted", "Approved", "Documentation requested"). |
 | `intent` | `'success'` \| `'info'` \| `'warning'` \| `'error'` \| `'neutral'` | `'neutral'` | Semantic color for the rail dot. Drives the dot background and the default icon inside it. |
-| `icon` | `string` | `''` | Override icon name. Empty string suppresses the default intent icon and shows a plain colored dot. Defaults to the intent's semantic icon (success → check, info → info, warning → warning, error → error, neutral → no icon). |
+| `icon` | `string` | — | Override icon name. When unset, the intent's semantic icon is used (success → check, info → info, warning → warning, error → error, neutral → no icon). Empty string explicitly suppresses the icon and shows a plain colored dot. |

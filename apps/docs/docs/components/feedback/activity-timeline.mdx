@@ -35,6 +35,12 @@ Items are direct children. Order in the markup is the visual order — author ol
 
 The rail (dot + connecting line) is rendered by each item, not the container. This keeps the rail aligned with the content even as items are added or removed dynamically.
 
+:::caution Dynamic items
+
+Avoid `${items.map(...)}` patterns that mutate the items array AFTER mount — the timeline uses `LightDomSlotMixin`, which captures children once in `connectedCallback`. Items added/removed by an outer template's later re-render can appear duplicated or missing. See [common-traps.md → LightDomSlotMixin composition with dynamic Lit children](https://github.com/barbaradenney/civui/blob/main/.claude/rules/common-traps.md) for the safe pattern. Static authoring (or wrapping the dynamic list in a stable container) works correctly.
+
+:::
+
 ## Examples
 
 ### Claim history (chronological)

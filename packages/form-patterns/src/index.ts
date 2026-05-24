@@ -1,3 +1,12 @@
+// Side-effect import ensures the \@customElement decorator on
+// CivConfirmationPanel runs even when the package is imported only
+// for its named re-exports — without it, consumers using
+// `import '@civui/form-patterns'` as a bare side-effect import would
+// not get the element registered if the bundler tree-shakes the
+// unused name binding. Other form-patterns components have the same
+// gap historically; see CLAUDE.md "Cross-Package Component Imports".
+import './confirmation-panel/civ-confirmation-panel.js';
+
 // Form
 export { CivForm } from './form/index.js';
 export type { FormFieldError, CivFormFieldLike } from './form/index.js';

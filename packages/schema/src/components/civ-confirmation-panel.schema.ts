@@ -54,8 +54,14 @@ const schema: ComponentSchema = {
       children: [
         { type: 'label', condition: 'heading', bindings: { text: 'heading', headingLevel: 'headingLevel' } },
         { type: 'slot', bindings: { name: 'default' } },
+        // The reference callout and the pending-reference slot are
+        // mutually exclusive — `reference` set renders the callout
+        // and suppresses the pending slot; `reference` empty does
+        // the opposite. The `!reference` convention is the same
+        // negation pattern used in civ-modal / civ-drawer
+        // (`!noCloseButton`) and civ-form-step (`!hideNav`).
         { type: 'label', condition: 'reference', bindings: { text: 'reference' } },
-        { type: 'slot', bindings: { name: 'pending-reference' } },
+        { type: 'slot', condition: '!reference', bindings: { name: 'pending-reference' } },
         { type: 'slot', bindings: { name: 'next-steps' } },
         { type: 'slot', bindings: { name: 'actions' } },
       ],

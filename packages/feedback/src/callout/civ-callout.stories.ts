@@ -317,3 +317,57 @@ live region.`,
     </div>
   `,
 };
+
+export const Secondary: Story = {
+  name: 'Secondary weight (thinner rail)',
+  parameters: {
+    controls: { exclude: ['variant'] },
+    docs: {
+      description: {
+        story: `\`callout-style="secondary"\` drops the accent rail from
+5px to 3px for a quieter affordance. Use when a callout sits next to a
+primary callout or near body content that shouldn't be visually
+overpowered. Padding and variant colors stay identical so the two
+weights read as the same family.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6" style="max-width: 600px;">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Side-by-side — primary above, secondary below</p>
+        <div class="civ-flex civ-flex-col civ-gap-3">
+          <civ-callout variant="warning">
+            <p class="civ-m-0 civ-font-bold civ-mb-1">Primary (5px rail)</p>
+            <p class="civ-m-0">Your session will expire in 15 minutes — the rail commands attention.</p>
+          </civ-callout>
+          <civ-callout variant="warning" callout-style="secondary">
+            <p class="civ-m-0 civ-font-bold civ-mb-1">Secondary (3px rail)</p>
+            <p class="civ-m-0">Same variant + same content; thinner rail recedes for a quieter tone.</p>
+          </civ-callout>
+        </div>
+      </div>
+
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">All variants at secondary weight</p>
+        <div class="civ-flex civ-flex-col civ-gap-3">
+          <civ-callout callout-style="secondary">
+            <p class="civ-m-0">Default — neutral accent, subtle.</p>
+          </civ-callout>
+          <civ-callout variant="info" callout-style="secondary">
+            <p class="civ-m-0">Info — quieter routine guidance.</p>
+          </civ-callout>
+          <civ-callout variant="warning" callout-style="secondary">
+            <p class="civ-m-0">Warning — softer heads-up.</p>
+          </civ-callout>
+          <civ-callout variant="error" callout-style="secondary">
+            <p class="civ-m-0">Error — toned-down problem callout.</p>
+          </civ-callout>
+          <civ-callout variant="success" callout-style="secondary">
+            <p class="civ-m-0">Success — gentle confirmation.</p>
+          </civ-callout>
+        </div>
+      </div>
+    </div>
+  `,
+};

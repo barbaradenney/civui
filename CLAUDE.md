@@ -28,7 +28,7 @@ Build order: `tokens → core → layout → actions, navigation, overlays → i
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |
 | `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
-| `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge, count, spinner, skeleton, timeline, process-list) |
+| `@civui/feedback` | `packages/feedback/` | Feedback components (alert, callout, notice, badge, count, spinner, skeleton, timeline, process-list) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |

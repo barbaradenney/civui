@@ -36,7 +36,7 @@ the alert / callout family, and it sits in `@civui/feedback` alongside
 |---|---|
 | Emphasis on a passage the user is already reading ("You can be fined…") | **`civ-notice`** |
 | A notification handed to the user with dismiss + live-region announce | [`civ-alert`](./alert) |
-| A panel surface with background + rich body content + inline links | [`civ-callout`](../layout/callout) |
+| A panel surface with background + rich body content + inline links | [`civ-callout`](./callout) |
 | A panel with heading + body as a section opener | [`civ-section-intro`](../form/section-intro) |
 
 The component is display-only and not form-associated.
@@ -84,7 +84,7 @@ The component is display-only and not form-associated.
 `header` and `body` are string props — the component owns the HTML so
 the rendered markup stays semantically correct. For body content that
 needs inline links or other rich markup, reach for
-[`civ-callout`](../layout/callout) instead.
+[`civ-callout`](./callout) instead.
 
 ```html
 <civ-notice
@@ -163,7 +163,7 @@ full meaning.
 - [`civ-alert`](./alert) — dismissible banner with ARIA live region.
   Use when the message is a notification. Accepts `civ-notice` as a
   composed child for the icon-prefixed body emphasis.
-- [`civ-callout`](../layout/callout) — panel with rail + background.
+- [`civ-callout`](./callout) — panel with rail + background.
   Use when the surface needs heading + rich body content. Also
   accepts `civ-notice` as a composed child.
 - [`civ-section-intro`](../form/section-intro) — section opener built

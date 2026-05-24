@@ -5482,12 +5482,14 @@
   }
 
   .civ-itemized-row__note {
-    @apply civ-text-sm civ-mt-1;
+    @apply civ-text-sm;
     color: var(--civ-color-base-dark);
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
   }
 
   .civ-itemized-row__amount {
-    @apply civ-text-base civ-text-end;
+    @apply civ-text-base civ-font-bold civ-text-end;
     color: var(--civ-color-base-darkest);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -6221,6 +6223,13 @@
 
   .civ-data-field {
     @apply civ-m-0 civ-flex civ-items-baseline civ-gap-4 civ-py-2;
+  }
+
+  /* When a hint follows the row, drop the row's bottom padding so the
+     hint reads as attached to the value above it. The hint's
+     `text-box-trim` already trims its own half-leading. */
+  .civ-data-field:has(+ .civ-hint) {
+    padding-bottom: 0;
   }
 
   .civ-data-field--sm {

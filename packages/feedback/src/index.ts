@@ -1,6 +1,7 @@
 // Side-effect imports ensure custom elements are registered.
 import './alert/civ-alert.js';
 import './badge/civ-badge.js';
+import './callout/civ-callout.js';
 import './count/civ-count.js';
 import './notice/civ-notice.js';
 import './spinner/civ-spinner.js';
@@ -13,6 +14,10 @@ import './process-list/civ-process-list-item.js';
 // Alert
 export { CivAlert } from './alert/index.js';
 export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.js';
+
+// Callout
+export { CivCallout } from './callout/index.js';
+export type { CalloutVariant } from './callout/index.js';
 
 // Notice
 export { CivNotice } from './notice/index.js';

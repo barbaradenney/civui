@@ -126,6 +126,7 @@ const config: StorybookConfig = {
       '@civui/form-patterns': resolve(root, 'packages/form-patterns/src/index.ts'),
       '@civui/feedback/alert': resolve(root, 'packages/feedback/src/alert/index.ts'),
       '@civui/feedback/badge': resolve(root, 'packages/feedback/src/badge/index.ts'),
+      '@civui/feedback/callout': resolve(root, 'packages/feedback/src/callout/index.ts'),
       '@civui/feedback/count': resolve(root, 'packages/feedback/src/count/index.ts'),
       '@civui/feedback/notice': resolve(root, 'packages/feedback/src/notice/index.ts'),
       '@civui/feedback/spinner': resolve(root, 'packages/feedback/src/spinner/index.ts'),
@@ -162,7 +163,6 @@ const config: StorybookConfig = {
       '@civui/overlays': resolve(root, 'packages/overlays/src/index.ts'),
       // Layout
       '@civui/layout/accordion': resolve(root, 'packages/layout/src/accordion/index.ts'),
-      '@civui/layout/callout': resolve(root, 'packages/layout/src/callout/index.ts'),
       '@civui/layout/card': resolve(root, 'packages/layout/src/card/index.ts'),
       '@civui/layout/divider': resolve(root, 'packages/layout/src/divider/index.ts'),
       '@civui/layout/input-group': resolve(root, 'packages/layout/src/input-group/index.ts'),

@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
       '@civui/inputs': resolve(__dirname, '../inputs/src/index.ts'),
       '@civui/core': resolve(__dirname, '../core/src/index.ts'),
-      '@civui/layout/callout': resolve(__dirname, '../layout/src/callout/index.ts'),
+      '@civui/feedback/callout': resolve(__dirname, '../feedback/src/callout/index.ts'),
       '@civui/layout/list': resolve(__dirname, '../layout/src/list/index.ts'),
       '@civui/layout/divider': resolve(__dirname, '../layout/src/divider/index.ts'),
       // Needed for civ-file-upload's transitive import of <civ-image>.

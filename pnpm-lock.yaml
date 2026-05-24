@@ -342,6 +342,9 @@ importers:
       '@civui/inputs':
         specifier: workspace:*
         version: link:../inputs
+      '@civui/layout':
+        specifier: workspace:*
+        version: link:../layout
       '@civui/overlays':
         specifier: workspace:*
         version: link:../overlays
@@ -349,9 +352,6 @@ importers:
         specifier: ^3.2.0
         version: 3.3.2
     devDependencies:
-      '@civui/layout':
-        specifier: workspace:*
-        version: link:../layout
       '@civui/test-utils':
         specifier: workspace:*
         version: link:../test-utils

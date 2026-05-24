@@ -78,6 +78,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/audit-debt.md',
     anchor: 'native-platform-implementation-pass-ios--android',
   },
+  'border-radius': {
+    path: '.claude/rules/design-rules.md',
+    anchor: 'only-interactive-elements-get-rounded-corners',
+  },
 };
 
 /**

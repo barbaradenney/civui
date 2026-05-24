@@ -75,8 +75,21 @@ export class CivProcessListItem extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const markerIcon = this._markerIcon;
-    const level = Math.max(2, Math.min(6, this.headingLevel));
+    // Clamp the heading level into the legal range, but guard NaN
+    // first — Lit's `@property({ type: Number })` converter returns
+    // NaN for any non-numeric attribute value (e.g. `heading-level=
+    // "h3"`), and an unguarded `Math.max(2, Math.min(6, NaN))`
+    // propagates NaN into `aria-level="NaN"`, which violates ARIA.
+    const rawLevel = Number.isFinite(this.headingLevel) ? this.headingLevel : 3;
+    const level = Math.max(2, Math.min(6, rawLevel));
 
+    // The marker's content is rendered explicitly here rather than via
+    // a CSS `:empty::before` counter pseudo, because lit-html inserts
+    // a ChildPart comment marker for the `${...}` expression — the
+    // marker `<span>` is never truly `:empty`, so a `:empty::before`
+    // rule would never fire and the auto-numbered step number would
+    // never render. The CSS rule for `.civ-process-list-item__counter`
+    // fires unconditionally on its `::before`.
     return html`
       <div class="civ-process-list-item">
         <div class="civ-process-list-item__rail" aria-hidden="true">
@@ -86,7 +99,7 @@ export class CivProcessListItem extends LightDomSlotMixin(CivBaseElement) {
                   class="civ-process-list-item__marker-icon"
                   name="${markerIcon}"
                 ></civ-icon>`
-              : nothing}
+              : html`<span class="civ-process-list-item__counter"></span>`}
           </span>
           <span class="civ-process-list-item__line"></span>
         </div>

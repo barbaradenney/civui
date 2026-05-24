@@ -485,10 +485,43 @@ describe('civ-form support resources', () => {
     expect(links[0].getAttribute('href')).toBe('tel:988');
   });
 
-  it('does not render the footer when no resources are provided', async () => {
+  it('hides the support-resources footer when no resources are provided', async () => {
+    // The civ-support-resources element is rendered unconditionally
+    // and toggled with `?hidden` rather than being conditionally
+    // mounted — conditional rendering of a LightDomSlotMixin element
+    // is the documented broken pattern in common-traps.md
+    // (round-trip empty→non-empty→empty can crash lit-html's _$clear
+    // walk against detached markers). Hidden is functionally
+    // equivalent: removed from the accessibility tree and visually
+    // hidden, with the element still in the DOM for stable
+    // structural identity across re-renders.
     const el = await fixture('<civ-form></civ-form>');
     await elementUpdated(el);
-    expect(el.querySelector('[data-civ-support-resources]')).toBeNull();
+    const panel = el.querySelector('[data-civ-support-resources]');
+    expect(panel).not.toBeNull();
+    expect(panel!.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('surfaces and hides the footer cleanly across a round-trip mutation', async () => {
+    // Regression for the LightDomSlotMixin conditional-mount trap.
+    // Round-tripping the array between non-empty and empty must not
+    // crash and must produce the expected hidden / visible toggle.
+    const el = await fixture('<civ-form></civ-form>') as any;
+    el.supportResources = [{ label: '988', href: 'tel:988' }];
+    await elementUpdated(el);
+    let panel = el.querySelector('[data-civ-support-resources]') as HTMLElement;
+    expect(panel.hasAttribute('hidden')).toBe(false);
+
+    el.supportResources = [];
+    await elementUpdated(el);
+    panel = el.querySelector('[data-civ-support-resources]') as HTMLElement;
+    expect(panel.hasAttribute('hidden')).toBe(true);
+
+    el.supportResources = [{ label: 'Hotline', href: 'tel:18002738255' }];
+    await elementUpdated(el);
+    panel = el.querySelector('[data-civ-support-resources]') as HTMLElement;
+    expect(panel.hasAttribute('hidden')).toBe(false);
+    expect(panel.querySelector('a')!.getAttribute('href')).toBe('tel:18002738255');
   });
 
   it('accepts resources via JS property assignment', async () => {

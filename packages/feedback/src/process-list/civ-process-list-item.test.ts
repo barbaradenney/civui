@@ -52,16 +52,34 @@ describe('civ-process-list-item', () => {
     ).toBe('2');
   });
 
-  it('default state renders an empty marker (CSS counter fills the number)', async () => {
+  it('default state renders a counter span (CSS ::before fills the number)', async () => {
     // The auto-incremented step number is rendered via a CSS counter
-    // on the parent <ol>'s ::before pseudo-element; in jsdom, what we
-    // assert is that the marker contains NO rendered children so the
-    // pseudo can take over.
+    // on a dedicated `.civ-process-list-item__counter` child span's
+    // `::before` pseudo. We deliberately don't rely on the marker
+    // span itself being `:empty` — lit-html inserts a ChildPart
+    // comment marker around the `${...}` expression, so the marker
+    // is never truly `:empty` and a `:empty::before` rule would
+    // never fire. Assert the dedicated counter child renders and
+    // no icon is present.
     const el = await fixture<CivProcessListItem>(`
       <civ-process-list-item heading="One"></civ-process-list-item>
     `);
     const marker = el.querySelector('.civ-process-list-item__marker')!;
     expect(marker.querySelector('civ-icon')).toBeNull();
+    expect(marker.querySelector('.civ-process-list-item__counter')).not.toBeNull();
+  });
+
+  it('non-numeric heading-level falls back to default (3) instead of emitting aria-level="NaN"', async () => {
+    // Lit's `@property({ type: Number })` returns NaN for any
+    // non-numeric attribute (e.g. `heading-level="h3"`). Without
+    // the Number.isFinite guard in render, Math.max(2, Math.min(6,
+    // NaN)) propagates NaN and we emit `aria-level="NaN"` which
+    // violates ARIA. Verify the guard clamps the level back to 3.
+    const el = await fixture<CivProcessListItem>(`
+      <civ-process-list-item heading="X" heading-level="not-a-number"></civ-process-list-item>
+    `);
+    const heading = el.querySelector('.civ-process-list-item__heading')!;
+    expect(heading.getAttribute('aria-level')).toBe('3');
   });
 
   it('complete state renders a check icon inside the marker', async () => {

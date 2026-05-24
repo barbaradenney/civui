@@ -301,9 +301,16 @@ export function appliesRadius(line: string): { yes: boolean; via?: string } {
   const declMatch = line.match(/\bborder(?:-[a-z-]+)?-radius\s*:\s*([^;]+)/i);
   if (declMatch) {
     const value = declMatch[1].trim().toLowerCase();
-    // Allow explicit zero-radius resets — those REMOVE rounded corners,
-    // they don't add them.
-    if (value === '0' || value === '0px' || value === '0%' || value === 'none' || value === 'unset' || value === 'initial' || value === 'inherit') {
+    // Keyword resets.
+    if (value === 'none' || value === 'unset' || value === 'initial' || value === 'inherit') {
+      return { yes: false };
+    }
+    // Numeric resets — handles both single-value `0` / `0px` / `0%`
+    // and the multi-value shorthand `0 0 0 0` (and any subset).
+    // Splits on whitespace and checks that every token parses as
+    // explicit zero with optional `px` or `%` suffix.
+    const tokens = value.split(/\s+/).filter(Boolean);
+    if (tokens.length > 0 && tokens.every((t) => /^0(?:px|%)?$/.test(t))) {
       return { yes: false };
     }
     return { yes: true, via: 'border-radius' };
@@ -317,6 +324,28 @@ export function appliesRadius(line: string): { yes: boolean; via?: string } {
     return { yes: true, via: token };
   }
   return { yes: false };
+}
+
+/**
+ * Blank out the contents of nested `{...}` blocks, preserving newlines
+ * so line-number alignment is unaffected. Used when scanning an outer
+ * rule's body so a native-CSS-nested inner rule's `border-radius:`
+ * declaration isn't double-attributed to the outer selector. Today
+ * components.css doesn't use native nesting, but the lint is built
+ * to handle it the moment someone adopts the feature.
+ */
+export function stripNestedBlocks(body: string): string {
+  let depth = 0;
+  let out = '';
+  for (const ch of body) {
+    if (ch === '{') { depth++; out += ' '; continue; }
+    if (ch === '}') { depth--; out += ' '; continue; }
+    if (depth === 0) { out += ch; continue; }
+    // Inside a nested block — preserve newlines for line-number
+    // alignment, replace other characters with spaces.
+    out += ch === '\n' ? '\n' : ' ';
+  }
+  return out;
 }
 
 /** Extract every class name (without the leading dot) and every tag
@@ -401,8 +430,15 @@ async function main(): Promise<void> {
   for (const block of parseRules(css)) {
     if (isAllowed(block.selector)) continue;
 
-    for (let i = 0; i < block.body.length; i++) {
-      const lineText = block.body[i];
+    // Strip the contents of any nested `{...}` blocks (native CSS
+    // nesting) so we don't double-attribute an inner declaration to
+    // the outer selector. Newlines are preserved so line numbers
+    // still align with `block.bodyLines`.
+    const scanText = stripNestedBlocks(block.body.join('\n'));
+    const scanLines = scanText.split('\n');
+
+    for (let i = 0; i < scanLines.length; i++) {
+      const lineText = scanLines[i];
       const lineNumber = block.bodyLines[i];
       const verdict = appliesRadius(lineText);
       if (!verdict.yes) continue;

@@ -341,29 +341,26 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
           `
         : nothing}
       <div data-civ-form-disclosures-slot></div>
-      ${this.supportResources.length > 0
-        ? html`
-            <civ-support-resources
-              heading="${this.supportResourcesHeading || nothing}"
-              data-civ-support-resources
-            >
-              <ul class="civ-list-none civ-p-0 civ-m-0">
-                ${this.supportResources
-                  .filter((r) => r && r.label && this._isSafeHref(r.href))
-                  .map(
-                    (r) => html`
-                      <li class="civ-mb-1">
-                        <civ-link href="${r.href}" label="${r.label}"></civ-link>
-                        ${r.description
-                          ? html`<span class="civ-text-sm civ-ms-2">${r.description}</span>`
-                          : nothing}
-                      </li>
-                    `,
-                  )}
-              </ul>
-            </civ-support-resources>
-          `
-        : nothing}
+      <civ-support-resources
+        heading="${this.supportResourcesHeading || nothing}"
+        data-civ-support-resources
+        ?hidden=${this.supportResources.length === 0}
+      >
+        <ul class="civ-list-none civ-p-0 civ-m-0">
+          ${this.supportResources
+            .filter((r) => r && r.label && this._isSafeHref(r.href))
+            .map(
+              (r) => html`
+                <li class="civ-mb-1">
+                  <civ-link href="${r.href}" label="${r.label}"></civ-link>
+                  ${r.description
+                    ? html`<span class="civ-text-sm civ-ms-2">${r.description}</span>`
+                    : nothing}
+                </li>
+              `,
+            )}
+        </ul>
+      </civ-support-resources>
     `;
   }
 

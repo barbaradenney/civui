@@ -2,6 +2,7 @@
 import './accordion/civ-accordion.js';
 import './accordion/civ-accordion-item.js';
 import './callout/civ-callout.js';
+import './notice/civ-notice.js';
 import './card/civ-card.js';
 import './disclosure/civ-disclosure.js';
 import './read-more/civ-read-more.js';
@@ -22,6 +23,10 @@ export type { AccordionVariant } from './accordion/index.js';
 // Callout
 export { CivCallout } from './callout/index.js';
 export type { CalloutVariant } from './callout/index.js';
+
+// Notice
+export { CivNotice } from './notice/index.js';
+export type { NoticeIntent, NoticeSpacing, NoticeHeadingLevel } from './notice/index.js';
 
 // Card
 export { CivCard } from './card/index.js';

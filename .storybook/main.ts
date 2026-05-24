@@ -162,6 +162,7 @@ const config: StorybookConfig = {
       // Layout
       '@civui/layout/accordion': resolve(root, 'packages/layout/src/accordion/index.ts'),
       '@civui/layout/callout': resolve(root, 'packages/layout/src/callout/index.ts'),
+      '@civui/layout/notice': resolve(root, 'packages/layout/src/notice/index.ts'),
       '@civui/layout/card': resolve(root, 'packages/layout/src/card/index.ts'),
       '@civui/layout/divider': resolve(root, 'packages/layout/src/divider/index.ts'),
       '@civui/layout/input-group': resolve(root, 'packages/layout/src/input-group/index.ts'),

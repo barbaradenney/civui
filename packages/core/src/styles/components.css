@@ -106,6 +106,7 @@
   civ-modal,
   civ-name,
   civ-nav,
+  civ-notice,
   civ-number,
   civ-on-this-page,
   civ-side-nav,
@@ -4362,6 +4363,93 @@
     list-style: revert;
     padding-inline-start: 1.5em;
     margin: var(--civ-spacing-1) 0;
+  }
+
+  /* ── Notice ───────────────────────────────────────────────────
+     Icon-prefixed emphasis text — GOV.UK warning-text pattern,
+     generalized with semantic intents. No background, no border;
+     just a large semantic icon plus bold body text, intended to
+     highlight a passage in flowing content. Distinct from
+     `civ-alert` (banner with chrome + dismiss) and `civ-callout`
+     (panel with rail + padding). */
+  .civ-notice {
+    @apply civ-flex civ-items-start civ-gap-3;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-notice__icon {
+    @apply civ-flex-shrink-0;
+    color: var(--civ-color-info-DEFAULT);
+    line-height: 1;
+  }
+
+  .civ-notice__content {
+    @apply civ-flex civ-flex-col civ-min-w-0;
+    flex: 1 1 auto;
+  }
+
+  .civ-notice__header {
+    @apply civ-font-bold civ-m-0;
+    color: var(--civ-color-base-darkest);
+  }
+
+  .civ-notice__body {
+    @apply civ-m-0;
+    color: var(--civ-color-base-darkest);
+  }
+
+  /* When both header and body are present, the body inherits a small
+     top margin so the two blocks read as separated lines, not a wall
+     of text. */
+  .civ-notice__header + .civ-notice__body {
+    @apply civ-mt-1;
+  }
+
+  /* Spacing variants — `default` matches GOV.UK warning-text
+     presence (large icon, bold text); `sm` is the inline-compact
+     variant for body-prose placements where the affordance shouldn't
+     dominate the surrounding reading flow. */
+  .civ-notice--default {
+    @apply civ-py-2;
+  }
+  .civ-notice--default .civ-notice__icon {
+    font-size: 2rem;
+  }
+  .civ-notice--default .civ-notice__header,
+  .civ-notice--default .civ-notice__body {
+    font-size: var(--civ-typography-fontSize-lg);
+  }
+
+  .civ-notice--sm {
+    @apply civ-py-1;
+  }
+  .civ-notice--sm .civ-notice__icon {
+    font-size: 1.25rem;
+  }
+  .civ-notice--sm .civ-notice__header,
+  .civ-notice--sm .civ-notice__body {
+    font-size: var(--civ-typography-fontSize-base);
+  }
+
+  /* Intent palette — icon color reflects severity. The body / header
+     text stay base-darkest because color isn't the sole emphasis
+     signal (the icon + bold weight already carry it), and dimming
+     body text below default would violate the "no muted body text"
+     rule from .claude/rules/common-traps.md. */
+  .civ-notice--info .civ-notice__icon {
+    color: var(--civ-color-info-DEFAULT);
+  }
+  .civ-notice--warning .civ-notice__icon {
+    color: var(--civ-color-warning-dark);
+  }
+  .civ-notice--error .civ-notice__icon {
+    color: var(--civ-color-error-DEFAULT);
+  }
+  .civ-notice--success .civ-notice__icon {
+    color: var(--civ-color-success-dark);
+  }
+  .civ-notice--neutral .civ-notice__icon {
+    color: var(--civ-color-base-dark);
   }
 
   /* ── Section Intro (composes civ-callout) ───────────────────── */

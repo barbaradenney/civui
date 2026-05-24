@@ -57,6 +57,20 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Notice follow-ups
+
+- **Surfaced:** Notice landing, 2026-05-24. Branch `claude/itemized-totals-component-N2dSw` (landed alongside itemized-total in the same branch since both were small additions in the same audit conversation).
+- **What landed:** One new web component in `@civui/layout` — `<civ-notice>` (icon-prefixed emphasis text, GOV.UK warning-text pattern generalized with five semantic intents: `info` / `warning` / `error` / `success` / `neutral`). Display-only, no background, no dismiss; `header` + `body` props for guaranteed-correct HTML; intent drives the default icon (override via `icon` prop); `spacing` `default` (GOV.UK-presence) / `sm` (inline-compact); optional opt-in `sr-prefix` for visually-hidden screen-reader severity announcement. Schema, tests (15 new tests), Storybook stories, CSS, and a Docusaurus page (`docs/components/layout/notice.mdx`) all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Rich body content with inline links.** `body` is a string prop; for body text that needs a link or other inline markup, consumers should use `civ-callout` instead. A body slot is a possible v2 if a real placement needs it.
+  2. **Auto-derived screen-reader prefix.** `sr-prefix` is empty by default and opt-in per placement — teams decide when the severity needs to be announced verbally before the header. No hardcoded "Warning:" / "Success:" mapping.
+  3. **Refactoring `civ-alert` to compose `civ-notice` internally.** The two components share visual DNA (icon + text + semantic intent) but `civ-alert` has additional behavior (dismiss, ARIA live region, focus management) that wasn't part of this scope. If a future audit decides to unify the icon + intent treatment, both can be migrated to a shared internal primitive.
+  4. **Dismiss button.** That's `civ-alert`'s job. Notice is for emphasis in flowing content, not a notification handed to the user.
+- **Native + Drupal stubs (parity coverage) deferred.** Schema exists for `civ-notice` and validates cleanly + produces Props/Events partials, but it is NOT registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add an iOS Swift stub (`packages/ios/Sources/CivUI/CivNotice.swift`), an Android Kotlin stub (`packages/android/src/main/kotlin/gov/civui/components/CivNotice.kt`), and a Drupal SDC YAML (`packages/drupal/civui/components/notice/notice.component.yml`). Pattern: shape after `civ-alert` (props-driven container with icon + heading + body) — the SF Symbols / Material Icons mapping per intent should match what `civ-alert` already does on each platform.
+- **Why deferred:** Same rationale as the existing native-stubs entry — icon rendering and screen-reader prefix semantics (visually-hidden text vs. `accessibilityLabel`) have platform-specific equivalents that need device verification. Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Navigation components follow-ups
 
 - **Surfaced:** Navigation components landing, 2026-05-18. Branch `claude/add-navigation-components-YikKk`.

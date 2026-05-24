@@ -134,6 +134,19 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Process list follow-ups
+
+- **Surfaced:** Process-list landing, 2026-05-24. Branch `claude/form-submission-components-9zmdH` (shipped alongside the confirmation-panel + timeline rename in the same PR train).
+- **What landed:** Two new web components in `@civui/feedback` — `<civ-process-list>` (numbered vertical preview of upcoming steps; renders as `<ol role="list">`, auto-increments step numbers via a CSS counter on the parent list) and `<civ-process-list-item>` (rail + connecting line + heading + slotted body; `state="complete"` swaps the numbered marker for a check icon on a success-tinted background, and an explicit `icon` prop overrides both for affordance-specific markers like `lock` / `mail`). Schemas (2 new), tests (15 new), Storybook stories, CSS, and a Docusaurus page (`docs/components/feedback/process-list.mdx` — covers both components via `HOST_PAGE_OVERRIDES`) all ship in the same change.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **`active` / in-progress state.** Only `default` (upcoming) and `complete` (finished) are modelled. The "you are here" pattern belongs to `civ-progress-steps`, not the process-list — process-list is a *preview*, not an active progress indicator. If a future mixed surface needs to highlight one step as in-progress inside an otherwise-preview list, add an `active` enum value rather than re-purposing the component.
+  2. **Branching / sub-steps.** Items are a flat sequence — no nested children, no parallel branches. Consumers needing a tree should compose nested lists inside an item's body slot.
+  3. **MutationObserver on the list.** Items captured once in `firstUpdated` via `LightDomSlotMixin`; dynamic `${items.map(...)}` patterns hit the same trap as timeline (see common-traps.md). Static authoring or wrapping the map in a static container is the documented workaround. The docs page calls this out in a `:::caution` block.
+- **Native + Drupal stubs (parity coverage) deferred.** Schemas exist for `civ-process-list` and `civ-process-list-item` and they validate cleanly + produce Props/Events partials, but neither is registered in `tools/schema-parity.ts` `COVERED_COMPONENTS`. To register: add iOS Swift stubs (`packages/ios/Sources/CivUI/Civ{ProcessList,ProcessListItem}.swift`), Android Kotlin stubs (`packages/android/src/main/kotlin/gov/civui/components/Civ{ProcessList,ProcessListItem}.kt`), and Drupal SDC YAMLs (`packages/drupal/civui/components/{process-list,process-list-item}/{name}.component.yml`). Pattern: shape `civ-process-list` after `civ-list` (parent container, slot-projects children); shape `civ-process-list-item` after `civ-timeline-item` (per-row host with leading `aria-hidden` rail + numbered/icon marker + trailing heading/body stack). On native, the auto-numbering comes from the parent's `ForEach` / `LazyColumn` index rather than a CSS counter.
+- **Why deferred:** Same rationale as the existing native-stubs entry — numbered-rail rendering and CSS-counter equivalents need device verification (SwiftUI `ForEach(Array(items.enumerated()))` indexing, Compose `itemsIndexed`). Schemas being in place keeps the contract stable for whoever picks this up.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

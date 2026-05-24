@@ -28,7 +28,7 @@ Build order: `tokens → core → layout → actions, navigation, overlays → i
 | `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |
 | `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
-| `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge, count) |
+| `@civui/feedback` | `packages/feedback/` | Feedback components (alert, badge, count, spinner, skeleton, timeline, process-list) |
 | `@civui/test-utils` | `packages/test-utils/` | Test helpers: `fixture`, `cleanupFixtures`, `elementUpdated`, `pressKey`, `typeText` |
 | `@civui/cli` | `packages/cli/` | CLI tooling |
 | `@civui/content` | `packages/content/` | Content/copy management |
@@ -249,6 +249,7 @@ Why schemas matter:
 - Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`, `civ-icon`
 - Actions: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
 - Navigation: (none registered yet — schemas exist for `civ-nav`, `civ-breadcrumb`, `civ-tabs`, `civ-tab-nav`, `civ-side-nav`, `civ-on-this-page`, `civ-back-to-top` and their item sub-components, but native + Drupal stubs are deferred per `.claude/rules/audit-debt.md`)
+- Display-only feedback: (none registered yet — schemas exist for `civ-timeline` + `civ-timeline-item` and `civ-process-list` + `civ-process-list-item`, but native + Drupal stubs are deferred per `.claude/rules/audit-debt.md`)
 
 Five CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.

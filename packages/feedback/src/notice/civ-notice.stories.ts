@@ -167,15 +167,18 @@ export const InsideCallout: Story = {
   `,
 };
 
-export const OutlineIcons: Story = {
-  name: 'Outline icon variant',
+export const Secondary: Story = {
+  name: 'Secondary weight (passive emphasis)',
   parameters: {
     docs: {
       description: {
-        story: `\`civ-notice\` defaults to filled icons for heavier visual
-presence. Set \`icon-style="outline"\` for the lighter outlined glyphs
-when the placement competes with surrounding chrome and a softer cue
-reads better.`,
+        story: `\`civ-notice\` defaults to \`notice-style="primary"\` —
+filled icons for heavier visual presence. Set
+\`notice-style="secondary"\` for a more passive callout where the
+placement competes with surrounding chrome and a softer cue reads
+better. The icon switches to its outlined glyph counterpart per
+intent (\`info-fill\` → \`info\`, etc.); padding, header weight, and
+body styling stay identical.`,
       },
     },
   },
@@ -183,23 +186,127 @@ reads better.`,
     <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 560px;">
       <civ-notice
         intent="info"
-        icon-style="outline"
-        body="Outline-info: lighter affordance for ambient information."
+        notice-style="secondary"
+        body="Info — quieter affordance for ambient information."
       ></civ-notice>
       <civ-notice
         intent="warning"
-        icon-style="outline"
-        body="Outline-warning: softer cue when nested in a colored panel."
+        notice-style="secondary"
+        body="Warning — softer cue when nested in a colored panel."
       ></civ-notice>
       <civ-notice
         intent="error"
-        icon-style="outline"
-        body="Outline-error: less visually loud than the filled default."
+        notice-style="secondary"
+        body="Error — less visually loud than the primary default."
       ></civ-notice>
       <civ-notice
         intent="success"
-        icon-style="outline"
-        body="Outline-success: same shape, lighter weight."
+        notice-style="secondary"
+        body="Success — same shape, lighter weight."
+      ></civ-notice>
+    </div>
+  `,
+};
+
+// ── Custom icons (notice as a general icon-prefixed emphasis tool) ──
+// The five built-in intents map to status icons (info / warning /
+// error / check-circle), but `icon` accepts ANY name from the CivUI
+// icon library — these stories show common non-status uses so
+// consumers see notice as more than a status indicator.
+
+export const CustomIconCalendar: Story = {
+  name: 'Custom icon — appointment reminder',
+  parameters: {
+    docs: {
+      description: {
+        story: `Override \`icon\` with any glyph from the CivUI icon
+library when the notice is communicating something beyond the five
+built-in intents. Here a calendar icon flags an upcoming appointment.
+Pair with \`intent="neutral"\` so the icon color reads as informational
+rather than status.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-notice
+        intent="neutral"
+        icon="calendar"
+        header="Your appointment is scheduled"
+        body="Tuesday, February 4, 2026 at 9:00 AM. Bring photo ID and your appointment confirmation."
+      ></civ-notice>
+    </div>
+  `,
+};
+
+export const CustomIconMail: Story = {
+  name: 'Custom icon — confirmation by mail',
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-notice
+        intent="info"
+        icon="mail"
+        header="Confirmation mailed"
+        body="A paper confirmation was sent to the address on file. Allow 7–10 business days for delivery."
+      ></civ-notice>
+    </div>
+  `,
+};
+
+export const CustomIconDocument: Story = {
+  name: 'Custom icon — required document',
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-notice
+        intent="warning"
+        icon="upload"
+        header="Document required to continue"
+        body="Upload a recent utility bill or bank statement to verify your address before submitting."
+      ></civ-notice>
+    </div>
+  `,
+};
+
+export const CustomIconPhone: Story = {
+  name: 'Custom icon — contact instruction',
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-notice
+        intent="neutral"
+        icon="phone"
+        header="Need help completing this form?"
+        body="Call 1-800-827-1000, Monday through Friday, 8:00 AM to 9:00 PM Eastern Time."
+      ></civ-notice>
+    </div>
+  `,
+};
+
+export const CustomIconSecondaryWeight: Story = {
+  name: 'Custom icon + secondary weight',
+  parameters: {
+    docs: {
+      description: {
+        story: `\`notice-style="secondary"\` only picks the default
+glyph for the intent — when \`icon\` is overridden the consumer's
+glyph is used regardless. The secondary weight is still useful with
+custom icons because the visual difference comes from CSS (icon size,
+spacing) rather than the glyph variant.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 560px;">
+      <civ-notice
+        intent="neutral"
+        notice-style="secondary"
+        icon="calendar"
+        body="Renewal due February 28, 2026."
+      ></civ-notice>
+      <civ-notice
+        intent="info"
+        notice-style="secondary"
+        icon="mail"
+        body="Your benefit letter was mailed on January 18."
       ></civ-notice>
     </div>
   `,

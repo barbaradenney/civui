@@ -2,6 +2,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, warnInvalidProp } from '@civui/core';
 
 export type CalloutVariant = 'default' | 'info' | 'warning' | 'error' | 'success';
+export type CalloutStyle = 'primary' | 'secondary';
 
 const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
   'default',
@@ -10,6 +11,8 @@ const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
   'error',
   'success',
 ]);
+
+const VALID_STYLES: ReadonlySet<CalloutStyle> = new Set(['primary', 'secondary']);
 
 /**
  * CivUI Callout
@@ -46,9 +49,17 @@ const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
  *    detached div, so component-scoped CSS would be dropped. Add
  *    styles to `packages/core/src/styles/components.css` instead.
  *
+ * **Weight.** `callout-style="primary"` (default) keeps the 5px
+ * accent rail; `callout-style="secondary"` drops the rail to 3px for
+ * a quieter affordance that doesn't compete with body content when
+ * stacked next to primary surfaces. Padding, variant colors, and
+ * content layout stay identical so the two styles read as the same
+ * family at different weights.
+ *
  * @element civ-callout
  *
  * @prop {CalloutVariant} variant - Accent border color
+ * @prop {CalloutStyle} calloutStyle - `primary` (default, 5px rail) or `secondary` (3px rail for subtle emphasis)
  *
  * @example
  * ```html
@@ -59,6 +70,10 @@ const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
  *
  * <civ-callout variant="warning">
  *   <p>Your session will expire in 15 minutes.</p>
+ * </civ-callout>
+ *
+ * <civ-callout variant="info" callout-style="secondary">
+ *   <p>You can return to this section later from your dashboard.</p>
  * </civ-callout>
  *
  * <!-- As a labelled landmark — role goes on the callout itself. -->
@@ -79,6 +94,18 @@ export class CivCallout extends CivBaseElement {
    */
   @property({ type: String, reflect: true, useDefault: true })
   variant: CalloutVariant = 'default';
+
+  /**
+   * Visual weight. `primary` keeps the 5px accent rail (the
+   * established callout treatment); `secondary` drops it to 3px for
+   * a subtler affordance. With `useDefault: true` the initial
+   * `'primary'` value is NOT reflected to the attribute, so plain
+   * `<civ-callout>` markup matches today's rendered output exactly
+   * — the secondary rule only kicks in when the attribute is
+   * explicitly set to `'secondary'`.
+   */
+  @property({ type: String, reflect: true, useDefault: true, attribute: 'callout-style' })
+  calloutStyle: CalloutStyle = 'primary';
 
   /**
    * Render into a detached throwaway root. See the class-level JSDoc
@@ -104,6 +131,14 @@ export class CivCallout extends CivBaseElement {
         'variant',
         "one of 'default' | 'info' | 'warning' | 'error' | 'success'",
         this.variant,
+      );
+    }
+    if (changed.has('calloutStyle') && !VALID_STYLES.has(this.calloutStyle)) {
+      warnInvalidProp(
+        'civ-callout',
+        'calloutStyle',
+        "one of 'primary' | 'secondary'",
+        this.calloutStyle,
       );
     }
   }

@@ -17,14 +17,14 @@ export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.
 
 // Callout
 export { CivCallout } from './callout/index.js';
-export type { CalloutVariant } from './callout/index.js';
+export type { CalloutVariant, CalloutStyle } from './callout/index.js';
 
 // Notice
 export { CivNotice } from './notice/index.js';
 export type {
   NoticeIntent,
   NoticeSpacing,
-  NoticeIconStyle,
+  NoticeStyle,
   NoticeHeadingLevel,
 } from './notice/index.js';
 

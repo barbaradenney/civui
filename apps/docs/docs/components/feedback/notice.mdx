@@ -1,6 +1,6 @@
 ---
 title: Notice
-sidebar_position: 5
+sidebar_position: 4
 sidebar_label: Notice
 ---
 
@@ -27,15 +27,16 @@ pattern, generalized with semantic intents (`info` / `warning` /
 
 There is no background and no dismiss button — just a large semantic
 icon plus bold paragraphs. This is the lightweight inline variant of
-the alert / callout family.
+the alert / callout family, and it sits in `@civui/feedback` alongside
+`civ-alert` and `civ-badge`.
 
 ## When to use
 
 | You need | Use |
 |---|---|
 | Emphasis on a passage the user is already reading ("You can be fined…") | **`civ-notice`** |
-| A notification handed to the user with dismiss + live-region announce | [`civ-alert`](../feedback/alert) |
-| A panel surface with background + rich body content + inline links | [`civ-callout`](./callout) |
+| A notification handed to the user with dismiss + live-region announce | [`civ-alert`](./alert) |
+| A panel surface with background + rich body content + inline links | [`civ-callout`](../layout/callout) |
 | A panel with heading + body as a section opener | [`civ-section-intro`](../form/section-intro) |
 
 The component is display-only and not form-associated.
@@ -44,42 +45,46 @@ The component is display-only and not form-associated.
 
 ### Default
 
-<StoryEmbed id="layout-notice--default" />
+<StoryEmbed id="feedback-notice--default" />
 
 ### Body only (GOV.UK warning-text equivalent)
 
-<StoryEmbed id="layout-notice--body-only" />
+<StoryEmbed id="feedback-notice--body-only" />
 
 ### Intents
 
-<StoryEmbed id="layout-notice--info" />
+<StoryEmbed id="feedback-notice--info" />
 
-<StoryEmbed id="layout-notice--warning" />
+<StoryEmbed id="feedback-notice--warning" />
 
-<StoryEmbed id="layout-notice--error-intent" />
+<StoryEmbed id="feedback-notice--error-intent" />
 
-<StoryEmbed id="layout-notice--success" />
+<StoryEmbed id="feedback-notice--success" />
 
-<StoryEmbed id="layout-notice--neutral" />
+<StoryEmbed id="feedback-notice--neutral" />
 
 ### Compact (`spacing="sm"`)
 
-<StoryEmbed id="layout-notice--compact" />
+<StoryEmbed id="feedback-notice--compact" />
 
 ### With screen-reader prefix
 
-<StoryEmbed id="layout-notice--with-screen-reader-prefix" />
+<StoryEmbed id="feedback-notice--with-screen-reader-prefix" />
+
+### Outline icon variant
+
+<StoryEmbed id="feedback-notice--outline-icons" />
 
 ### Composed inside a callout
 
-<StoryEmbed id="layout-notice--inside-callout" />
+<StoryEmbed id="feedback-notice--inside-callout" />
 
 ## Content model
 
 `header` and `body` are string props — the component owns the HTML so
 the rendered markup stays semantically correct. For body content that
 needs inline links or other rich markup, reach for
-[`civ-callout`](./callout) instead.
+[`civ-callout`](../layout/callout) instead.
 
 ```html
 <civ-notice
@@ -94,27 +99,38 @@ practice, set at least `body`.
 
 ## Intents and default icons
 
-Each intent picks a default icon from the CivUI icon library. Override
-via the `icon` prop when a placement needs a different glyph.
+Each intent picks a default icon from the CivUI icon library. The
+`iconStyle` prop chooses between two visual treatments — `filled`
+(default, heavier presence) and `outline` (lighter, softer cue).
+Override the icon name entirely via the `icon` prop when a placement
+needs a different glyph.
 
-| Intent | Default icon | Color |
-|---|---|---|
-| `info` (default) | `info` | info |
-| `warning` | `warning` | warning-dark |
-| `error` | `error` | error |
-| `success` | `check-circle` | success-dark |
-| `neutral` | `info` | base-dark (gray) |
+| Intent | Filled default (default) | Outline default | Color |
+|---|---|---|---|
+| `info` (default) | `info-fill` | `info` | info |
+| `warning` | `warning-fill` | `warning` | warning-dark |
+| `error` | `error-fill` | `error` | error |
+| `success` | `check-circle-fill` | `check-circle` | success-dark |
+| `neutral` | `info-fill` | `info` | base-dark (gray) |
 
 Color is never the sole signal — the icon shape and the bold weight
 on the header carry the emphasis too, so colorblind users get the
 full meaning.
 
+```html
+<!-- Default: filled icon -->
+<civ-notice intent="warning" body="You can be fined up to $5,000."></civ-notice>
+
+<!-- Opt into the lighter outline glyph -->
+<civ-notice intent="warning" icon-style="outline" body="Optional reminder."></civ-notice>
+```
+
 ## Spacing
 
 | Value | When to use | Approximate sizes |
 |---|---|---|
-| `default` | Standalone block or inside a card / page section; matches GOV.UK warning-text presence | ~2rem icon + lg body text |
-| `sm` | Inline within body prose where the affordance shouldn't dominate the reading flow | ~1.25rem icon + base body text |
+| `default` | Standalone block or inside a card / page section; matches GOV.UK warning-text presence | ~2.5rem icon + lg body text |
+| `sm` | Inline within body prose where the affordance shouldn't dominate the reading flow | ~1.5rem icon + base body text |
 
 ## Accessibility
 
@@ -144,9 +160,13 @@ full meaning.
 
 ## Related
 
-- [`civ-alert`](../feedback/alert) — dismissible banner with ARIA live
-  region. Use when the message is a notification.
-- [`civ-callout`](./callout) — panel with rail + background. Use when
-  the surface needs heading + rich body content.
+- [`civ-alert`](./alert) — dismissible banner with ARIA live region.
+  Use when the message is a notification. Accepts `civ-notice` as a
+  composed child for the icon-prefixed body emphasis.
+- [`civ-callout`](../layout/callout) — panel with rail + background.
+  Use when the surface needs heading + rich body content. Also
+  accepts `civ-notice` as a composed child.
 - [`civ-section-intro`](../form/section-intro) — section opener built
   on `civ-callout` with a heading and a `role="region"` landmark.
+- [`civ-badge`](./badge) — small status indicator. Pairs well with
+  notice inside an alert or callout body.

@@ -56,6 +56,12 @@ export const icons: Record<string, IconDef> = {
     ios: 'checkmark.circle',
     android: 'check_circle',
   },
+  'check-circle-fill': {
+    label: 'Success',
+    path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
+    ios: 'checkmark.circle.fill',
+    android: 'check_circle',
+  },
   'chevron-down': {
     label: 'Expand',
     path: 'M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z',
@@ -128,6 +134,12 @@ export const icons: Record<string, IconDef> = {
     ios: 'exclamationmark.circle',
     android: 'error',
   },
+  'error-fill': {
+    label: 'Error',
+    path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z',
+    ios: 'exclamationmark.circle.fill',
+    android: 'error',
+  },
   'external-link': {
     label: 'Opens in new tab',
     path: 'M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z',
@@ -138,6 +150,12 @@ export const icons: Record<string, IconDef> = {
     label: 'Information',
     path: 'M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z',
     ios: 'info.circle',
+    android: 'info',
+  },
+  'info-fill': {
+    label: 'Information',
+    path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z',
+    ios: 'info.circle.fill',
     android: 'info',
   },
   loading: {
@@ -162,6 +180,12 @@ export const icons: Record<string, IconDef> = {
     label: 'Warning',
     path: 'M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z',
     ios: 'exclamationmark.triangle',
+    android: 'warning',
+  },
+  'warning-fill': {
+    label: 'Warning',
+    path: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
+    ios: 'exclamationmark.triangle.fill',
     android: 'warning',
   },
   // ─── Common UI actions ─────────────────────────────────────────

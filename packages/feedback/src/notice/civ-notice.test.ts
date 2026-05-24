@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-notice.js';
-import '@civui/feedback';
+import '../alert/civ-alert.js';
 import type { CivNotice } from './civ-notice.js';
 
 afterEach(cleanupFixtures);
@@ -52,16 +52,32 @@ describe('civ-notice', () => {
     expect(el.querySelector('.civ-notice__body')).toBeNull();
   });
 
-  it('uses the intent-default icon when no override is set', async () => {
+  it('defaults to the filled icon variant for the intent', async () => {
     const el = await fixture<CivNotice>(`
       <civ-notice intent="warning" body="Heads up"></civ-notice>
     `);
     const icon = el.querySelector('civ-icon.civ-notice__icon');
-    expect(icon?.getAttribute('name')).toBe('warning');
+    expect(icon?.getAttribute('name')).toBe('warning-fill');
     expect(icon?.getAttribute('aria-hidden')).toBe('true');
   });
 
-  it('maps each intent to its default icon', async () => {
+  it('maps each intent to its filled-variant default icon', async () => {
+    const cases: Array<['info' | 'warning' | 'error' | 'success' | 'neutral', string]> = [
+      ['info', 'info-fill'],
+      ['warning', 'warning-fill'],
+      ['error', 'error-fill'],
+      ['success', 'check-circle-fill'],
+      ['neutral', 'info-fill'],
+    ];
+    for (const [intent, expected] of cases) {
+      const el = await fixture<CivNotice>(`
+        <civ-notice intent="${intent}" body="x"></civ-notice>
+      `);
+      expect(el.querySelector('civ-icon.civ-notice__icon')?.getAttribute('name')).toBe(expected);
+    }
+  });
+
+  it('switches to outline-variant icons when icon-style="outline"', async () => {
     const cases: Array<['info' | 'warning' | 'error' | 'success' | 'neutral', string]> = [
       ['info', 'info'],
       ['warning', 'warning'],
@@ -71,10 +87,22 @@ describe('civ-notice', () => {
     ];
     for (const [intent, expected] of cases) {
       const el = await fixture<CivNotice>(`
-        <civ-notice intent="${intent}" body="x"></civ-notice>
+        <civ-notice intent="${intent}" icon-style="outline" body="x"></civ-notice>
       `);
       expect(el.querySelector('civ-icon.civ-notice__icon')?.getAttribute('name')).toBe(expected);
     }
+  });
+
+  it('reflects icon-style to the host attribute', async () => {
+    const el = await fixture<CivNotice>(`
+      <civ-notice body="x"></civ-notice>
+    `);
+    // Default is filled and reflects to the host so consumer CSS
+    // overrides can target the variant.
+    expect(el.getAttribute('icon-style')).toBe('filled');
+    el.iconStyle = 'outline';
+    await elementUpdated(el);
+    expect(el.getAttribute('icon-style')).toBe('outline');
   });
 
   it('uses the override icon when set', async () => {

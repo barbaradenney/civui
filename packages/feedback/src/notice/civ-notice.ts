@@ -6,9 +6,18 @@ import { CivBaseElement } from '@civui/core';
 
 export type NoticeIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
 export type NoticeSpacing = 'default' | 'sm';
+export type NoticeIconStyle = 'filled' | 'outline';
 export type NoticeHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
-const DEFAULT_ICONS: Record<NoticeIntent, string> = {
+const DEFAULT_ICONS_FILLED: Record<NoticeIntent, string> = {
+  info: 'info-fill',
+  warning: 'warning-fill',
+  error: 'error-fill',
+  success: 'check-circle-fill',
+  neutral: 'info-fill',
+};
+
+const DEFAULT_ICONS_OUTLINE: Record<NoticeIntent, string> = {
   info: 'info',
   warning: 'warning',
   error: 'error',
@@ -40,6 +49,7 @@ const DEFAULT_ICONS: Record<NoticeIntent, string> = {
  *
  * @prop {NoticeIntent} intent - Severity / color treatment (`info`, `warning`, `error`, `success`, `neutral`). Default `info`.
  * @prop {NoticeSpacing} spacing - `default` (GOV.UK presence — larger icon + bold text) or `sm` (inline-compact). Default `default`.
+ * @prop {NoticeIconStyle} iconStyle - `filled` (default) uses the solid Material Icons variants for heavier presence; `outline` uses the lighter outlined glyphs.
  * @prop {string} icon - Override for the intent's default icon
  * @prop {string} header - Optional heading text (renders bold)
  * @prop {NoticeHeadingLevel} headingLevel - Heading level 2-6 (default 3) when `header` is set
@@ -55,12 +65,17 @@ const DEFAULT_ICONS: Record<NoticeIntent, string> = {
  * ></civ-notice>
  *
  * <civ-notice intent="info" spacing="sm" body="This step is optional."></civ-notice>
+ *
+ * <!-- Outline icon variant for a lighter visual touch -->
+ * <civ-notice intent="info" icon-style="outline" body="..."></civ-notice>
  * ```
  */
 @customElement('civ-notice')
 export class CivNotice extends CivBaseElement {
   @property({ type: String, reflect: true }) intent: NoticeIntent = 'info';
   @property({ type: String, reflect: true }) spacing: NoticeSpacing = 'default';
+  @property({ type: String, attribute: 'icon-style', reflect: true })
+  iconStyle: NoticeIconStyle = 'filled';
   @property({ type: String }) icon = '';
   @property({ type: String }) header = '';
   @property({ type: Number, attribute: 'heading-level' })
@@ -70,7 +85,8 @@ export class CivNotice extends CivBaseElement {
 
   private get _iconName(): string {
     if (this.icon) return this.icon;
-    return DEFAULT_ICONS[this.intent] ?? DEFAULT_ICONS.info;
+    const map = this.iconStyle === 'outline' ? DEFAULT_ICONS_OUTLINE : DEFAULT_ICONS_FILLED;
+    return map[this.intent] ?? map.info;
   }
 
   override render() {

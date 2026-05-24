@@ -4413,7 +4413,7 @@
     @apply civ-py-2;
   }
   .civ-notice--default .civ-notice__icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   .civ-notice--default .civ-notice__header,
   .civ-notice--default .civ-notice__body {
@@ -4424,7 +4424,7 @@
     @apply civ-py-1;
   }
   .civ-notice--sm .civ-notice__icon {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
   .civ-notice--sm .civ-notice__header,
   .civ-notice--sm .civ-notice__body {

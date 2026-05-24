@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-callout.js';
-import '../notice/civ-notice.js';
+// `@civui/feedback` registers both `civ-notice` and `civ-badge` for
+// the composition tests below.
 import '@civui/feedback';
 import type { CivCallout } from './civ-callout.js';
 

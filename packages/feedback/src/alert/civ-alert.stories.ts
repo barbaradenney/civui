@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-alert.js';
 import '../badge/civ-badge.js';
-import '@civui/layout/notice';
+import '../notice/civ-notice.js';
 
 const meta: Meta = {
   title: 'Feedback/Alert',

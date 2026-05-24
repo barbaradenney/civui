@@ -23,9 +23,17 @@ const schema: ComponentSchema = {
       default: 'default',
       reflect: true,
     },
+    iconStyle: {
+      type: 'enum',
+      description: '`filled` (default) uses the solid Material Icons variants (`info-fill`, `warning-fill`, `error-fill`, `check-circle-fill`) for heavier visual presence. `outline` uses the lighter outlined glyphs (`info`, `warning`, `error`, `check-circle`) when the placement competes with surrounding chrome and a softer cue reads better.',
+      values: ['filled', 'outline'],
+      default: 'filled',
+      attribute: 'icon-style',
+      reflect: true,
+    },
     icon: {
       type: 'string',
-      description: 'Override the intent\'s default icon. Defaults map per intent (`info` → `info`, `warning` → `warning`, `error` → `error`, `success` → `check-circle`, `neutral` → `info`).',
+      description: 'Override the intent\'s default icon. When unset, the default is picked from `iconStyle`: filled gives `info-fill` / `warning-fill` / `error-fill` / `check-circle-fill` / `info-fill`; outline gives `info` / `warning` / `error` / `check-circle` / `info`.',
       default: '',
     },
     header: {

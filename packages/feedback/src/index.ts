@@ -2,6 +2,7 @@
 import './alert/civ-alert.js';
 import './badge/civ-badge.js';
 import './count/civ-count.js';
+import './notice/civ-notice.js';
 import './spinner/civ-spinner.js';
 import './skeleton/civ-skeleton.js';
 import './timeline/civ-timeline.js';
@@ -12,6 +13,15 @@ import './process-list/civ-process-list-item.js';
 // Alert
 export { CivAlert } from './alert/index.js';
 export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.js';
+
+// Notice
+export { CivNotice } from './notice/index.js';
+export type {
+  NoticeIntent,
+  NoticeSpacing,
+  NoticeIconStyle,
+  NoticeHeadingLevel,
+} from './notice/index.js';
 
 // Timeline
 export { CivTimeline, CivTimelineItem } from './timeline/index.js';

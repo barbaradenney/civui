@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-notice.js';
-import '../callout/civ-callout.js';
+import '@civui/layout/callout';
 
 const meta: Meta = {
-  title: 'Layout/Notice',
+  title: 'Feedback/Notice',
   component: 'civ-notice',
   tags: ['autodocs'],
   parameters: {
@@ -163,6 +163,44 @@ export const InsideCallout: Story = {
           body="If your session times out, you will need to start over from the beginning."
         ></civ-notice>
       </civ-callout>
+    </div>
+  `,
+};
+
+export const OutlineIcons: Story = {
+  name: 'Outline icon variant',
+  parameters: {
+    docs: {
+      description: {
+        story: `\`civ-notice\` defaults to filled icons for heavier visual
+presence. Set \`icon-style="outline"\` for the lighter outlined glyphs
+when the placement competes with surrounding chrome and a softer cue
+reads better.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 560px;">
+      <civ-notice
+        intent="info"
+        icon-style="outline"
+        body="Outline-info: lighter affordance for ambient information."
+      ></civ-notice>
+      <civ-notice
+        intent="warning"
+        icon-style="outline"
+        body="Outline-warning: softer cue when nested in a colored panel."
+      ></civ-notice>
+      <civ-notice
+        intent="error"
+        icon-style="outline"
+        body="Outline-error: less visually loud than the filled default."
+      ></civ-notice>
+      <civ-notice
+        intent="success"
+        icon-style="outline"
+        body="Outline-success: same shape, lighter weight."
+      ></civ-notice>
     </div>
   `,
 };

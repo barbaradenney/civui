@@ -5,7 +5,8 @@
 |-----------|------|---------|-------------|
 | `intent` | `'info'` \| `'warning'` \| `'error'` \| `'success'` \| `'neutral'` | `'info'` | Severity / color treatment. Drives the default icon and the icon's color. `info` is the default; `neutral` is a gray variant for emphasis without status meaning. |
 | `spacing` | `'default'` \| `'sm'` | `'default'` | `default` renders the GOV.UK-presence version (large icon + bold lg text); `sm` is the inline-compact variant for body-prose placements where the affordance shouldn't dominate the surrounding reading flow. |
-| `icon` | `string` | `''` | Override the intent's default icon. Defaults map per intent (`info` → `info`, `warning` → `warning`, `error` → `error`, `success` → `check-circle`, `neutral` → `info`). |
+| `icon-style` | `'filled'` \| `'outline'` | `'filled'` | `filled` (default) uses the solid Material Icons variants (`info-fill`, `warning-fill`, `error-fill`, `check-circle-fill`) for heavier visual presence. `outline` uses the lighter outlined glyphs (`info`, `warning`, `error`, `check-circle`) when the placement competes with surrounding chrome and a softer cue reads better. |
+| `icon` | `string` | `''` | Override the intent's default icon. When unset, the default is picked from `iconStyle`: filled gives `info-fill` / `warning-fill` / `error-fill` / `check-circle-fill` / `info-fill`; outline gives `info` / `warning` / `error` / `check-circle` / `info`. |
 | `header` | `string` | `''` | Optional bold heading rendered above the body. Rendered as `<p role="heading" aria-level="N">` so the heading is announced to screen readers without forcing a specific `<h*>` level into the page outline. |
 | `heading-level` | `number` | `3` | Heading level (2–6) applied to the `header` when set. Default is 3. |
 | `body` | `string` | `''` | Body text rendered below the header. For rich body content with inline links, use `civ-callout` instead — `civ-notice` owns its HTML so the surface stays consistent. |

@@ -1,22 +1,37 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanupFixtures } from '@civui/test-utils';
 import './civ-image-preview.js';
 import type { CivImagePreview } from './civ-image-preview.js';
 
 describe('civ-image-preview', () => {
   afterEach(cleanupFixtures);
+  // Most rendering tests don't care about the dev-warns civ-image fires
+  // (CLS warnings when no dimensions are passed). Mock at the suite
+  // level so unrelated tests don't flood stderr. Dedicated dev-warn
+  // tests below explicitly spy + assert on the relevant message.
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
 
   it('renders nothing when src is empty', async () => {
     const el = await fixture<CivImagePreview>('<civ-image-preview></civ-image-preview>');
     expect(el.querySelector('figure')).toBeNull();
   });
 
-  it('renders an image with src and alt', async () => {
+  it('renders an image with src and alt (delegated to civ-image)', async () => {
     const el = await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Test image"></civ-image-preview>');
+    // The inner civ-image renders a real <img>; assert against it
+    // since that's what AT + browsers see.
     const img = el.querySelector('img');
     expect(img).not.toBeNull();
     expect(img!.getAttribute('src')).toBe('test.jpg');
     expect(img!.getAttribute('alt')).toBe('Test image');
+  });
+
+  it('composes civ-image as the inner image element', async () => {
+    const el = await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Test"></civ-image-preview>');
+    expect(el.querySelector('civ-image')).not.toBeNull();
   });
 
   it('renders filename in caption', async () => {
@@ -50,7 +65,7 @@ describe('civ-image-preview', () => {
     expect(figure.style.maxWidth).toBe('100%');
   });
 
-  it('uses lazy loading', async () => {
+  it('uses lazy loading (inherited from civ-image default)', async () => {
     const el = await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Test"></civ-image-preview>');
     const img = el.querySelector('img');
     expect(img!.getAttribute('loading')).toBe('lazy');
@@ -87,25 +102,55 @@ describe('civ-image-preview', () => {
   });
 
   it('warns when alt text is missing', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<CivImagePreview>('<civ-image-preview src="test.jpg"></civ-image-preview>');
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('missing an alt attribute')
+    const altWarnings = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /civ-image-preview.*alt/i.test(m),
     );
-    warnSpy.mockRestore();
+    expect(altWarnings.length).toBeGreaterThan(0);
   });
 
-  it('does not warn when alt text is provided', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  it('does not warn (about alt) when alt text is provided', async () => {
     await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Photo"></civ-image-preview>');
-    expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
+    // Filter for the image-preview's own alt warning specifically —
+    // the inner civ-image may fire an unrelated CLS warn since this
+    // fixture doesn't pass dimensions; that's not what this test
+    // asserts.
+    const altWarnings = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /civ-image-preview.*alt/i.test(m),
+    );
+    expect(altWarnings.length).toBe(0);
   });
 
-  it('applies border and rounded classes to image', async () => {
+  it('applies border and rounded classes to the inner civ-image host', async () => {
     const el = await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Test"></civ-image-preview>');
-    const img = el.querySelector('img');
-    expect(img!.classList.contains('civ-rounded')).toBe(true);
-    expect(img!.classList.contains('civ-border')).toBe(true);
+    const civImage = el.querySelector('civ-image')!;
+    expect(civImage.classList.contains('civ-rounded')).toBe(true);
+    expect(civImage.classList.contains('civ-border')).toBe(true);
+    // `civ-overflow-hidden` ensures the inner <img> corners get clipped
+    // by the rounded host border.
+    expect(civImage.classList.contains('civ-overflow-hidden')).toBe(true);
+  });
+
+  it('forwards webp-src + avif-src to the inner civ-image for format negotiation', async () => {
+    const el = await fixture<CivImagePreview>(
+      '<civ-image-preview src="/p.jpg" webp-src="/p.webp" avif-src="/p.avif" alt="x"></civ-image-preview>'
+    );
+    const civImage = el.querySelector('civ-image')!;
+    expect(civImage.getAttribute('webp-src')).toBe('/p.webp');
+    expect(civImage.getAttribute('avif-src')).toBe('/p.avif');
+    // The inner civ-image actually emits a <picture> with both <source> children.
+    expect(el.querySelector('picture source[type="image/webp"]')).not.toBeNull();
+    expect(el.querySelector('picture source[type="image/avif"]')).not.toBeNull();
+  });
+
+  it('forwards width + height to the inner civ-image (for CLS prevention)', async () => {
+    const el = await fixture<CivImagePreview>(
+      '<civ-image-preview src="/p.jpg" alt="x" width="800" height="600"></civ-image-preview>'
+    );
+    const img = el.querySelector('img')!;
+    expect(img.getAttribute('width')).toBe('800');
+    expect(img.getAttribute('height')).toBe('600');
+    // Aspect-ratio inline style derived from width/height.
+    expect((img as HTMLImageElement).style.aspectRatio).toBe('800 / 600');
   });
 });

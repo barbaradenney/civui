@@ -1891,7 +1891,8 @@
   }
 
   .civ-dropzone[aria-invalid="true"] {
-    @apply civ-border-error;
+    @apply civ-border-error civ-border-s-4;
+    border-inline-start-style: solid;
   }
 
   .civ-dropzone:disabled {

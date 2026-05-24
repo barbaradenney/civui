@@ -324,7 +324,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           @click="${this._onDropzoneClick}"
           ?disabled="${this.disabled}"
         >
-          <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
+          <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this.error ? 'true' : nothing}" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
             ${this._files.length > 0
               ? this._files.map(f => f.name).join(', ')
               : (this.dragText || t('fileUploadNoFileChosen'))}

@@ -48,6 +48,21 @@ props:
       enum: ['default', 'sm']
       default: 'default'
       description: 'Vertical padding. `default` for standalone alerts; `sm` for nested/dense contexts'
+    collapsible:
+      title: Collapsible
+      type: boolean
+      default: false
+      description: 'Wrap heading + body in a native `<details>`/`<summary>` so the body collapses behind a clickable chevron. Requires `heading`.'
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'When `collapsible`, controls and reflects the expanded state.'
+    full_width:
+      title: Full width
+      type: boolean
+      default: false
+      description: 'Render as a persistent site-wide banner with `role="region"` landmark semantics and content centered to the site max-width.'
 
 
 slots:

@@ -50,12 +50,37 @@ const schema: ComponentSchema = {
       default: 'default',
       values: ['default', 'sm'],
     },
+    collapsible: {
+      type: 'boolean',
+      description: 'Wrap heading + body in a native `<details>`/`<summary>` so the body collapses behind a clickable chevron. Requires `heading` — the heading is the toggle. Combines with `dismissible` (close button + chevron both fit in the heading row). Without `heading` the prop is a dev-mode no-op.',
+      default: false,
+      reflect: true,
+    },
+    open: {
+      type: 'boolean',
+      description: 'When `collapsible`, controls and reflects the expanded state. Set initially to start open; the component flips it on each user toggle and fires `civ-toggle`.',
+      default: false,
+      reflect: true,
+    },
+    fullWidth: {
+      type: 'boolean',
+      description: 'Render as a persistent site-wide banner. ARIA role auto-switches from `alert`/`status` (live region) to `region` (landmark) and `aria-label` is auto-derived from `heading`. Inner content centers to `--civ-site-max-width` (default 80rem) so the banner spans the viewport edge-to-edge. Place as the first child of `<body>` or your outermost site wrapper.',
+      default: false,
+      reflect: true,
+      attribute: 'full-width',
+    },
   },
 
   events: {
     'civ-dismiss': {
       description: 'Fires (cancelable) when the user clicks the dismiss button. Call `preventDefault()` to keep the alert visible (e.g. while async cleanup runs)',
       detail: {},
+    },
+    'civ-toggle': {
+      description: 'Fires when a `collapsible` alert is expanded or collapsed by the user',
+      detail: {
+        open: { type: 'boolean', description: 'New expanded state' },
+      },
     },
   },
 

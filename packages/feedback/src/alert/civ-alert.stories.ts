@@ -409,3 +409,140 @@ the alert; the alert provides the surrounding chrome and live region.`,
     </div>
   `,
 };
+
+// ── Collapsible (accordion) mode ─────────────────────────────
+// `civ-alert--collapsible` literal here so Tailwind's content
+// scanner emits the class CSS — see lint:purged-variants.
+
+export const Collapsible: Story = {
+  name: 'Collapsible (accordion) alert',
+  parameters: {
+    docs: {
+      description: {
+        story: `When set, the heading becomes a clickable toggle and the body
+collapses behind a chevron. Built on the native \`<details>\`/\`<summary>\`
+primitive so keyboard navigation and screen-reader announcements come
+for free. Combines with \`dismissible\`. Without a \`heading\` the prop
+is a dev-mode no-op — the heading is the toggle.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert
+        variant="info"
+        heading="Why we ask for your Social Security number"
+        collapsible
+      >
+        We use your Social Security number to verify your identity, prevent
+        fraud, and match your application to existing records on file.
+        Federal law authorizes this collection under 38 U.S.C. § 5101.
+        You can decline, but doing so may delay or prevent processing
+        of your claim.
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const CollapsibleOpen: Story = {
+  name: 'Collapsible — initially open',
+  parameters: {
+    docs: {
+      description: {
+        story: `Add \`open\` to render expanded on first paint. Useful when
+the consumer wants the details visible by default but still wants
+the user to be able to collapse them.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert
+        variant="warning"
+        heading="Action needed before your benefits start"
+        collapsible
+        open
+      >
+        Your direct deposit information is incomplete. Visit the Banking
+        section to add a routing number and account number — payments
+        cannot be issued until both are on file. Your first payment will
+        be released within 5 business days of completion.
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const CollapsibleDismissible: Story = {
+  name: 'Collapsible + dismissible',
+  parameters: {
+    docs: {
+      description: {
+        story: `The two affordances coexist — chevron + close button both
+sit in the heading row. Clicking the close button dismisses the alert
+without toggling the disclosure (the click handler stops propagation
+so the click doesn't bubble into the summary).`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert
+        variant="info"
+        heading="New: Save and continue later"
+        collapsible
+        dismissible
+      >
+        You can now save your application at any step and return to it
+        later from your account dashboard. Your draft is saved automatically
+        every 30 seconds. Drafts expire after 60 days of inactivity.
+      </civ-alert>
+    </div>
+  `,
+};
+
+// ── Full-width site banner mode ──────────────────────────────
+// `civ-alert--full-width` literal here so Tailwind's content
+// scanner emits the class CSS — see lint:purged-variants.
+
+export const FullWidthBanner: Story = {
+  name: 'Full-width site banner',
+  parameters: {
+    docs: {
+      description: {
+        story: `For persistent site-wide notices placed at the top of every
+page. The role auto-switches from \`alert\`/\`status\` (live region) to
+\`region\` (landmark) and \`aria-label\` is auto-derived from the
+heading — so the banner appears in the screen-reader rotor as a named
+landmark without re-announcing on every navigation. Inner content
+centers to \`--civ-site-max-width\` so the banner spans the viewport
+edge-to-edge while the text stays readable.`,
+      },
+    },
+  },
+  render: () => html`
+    <civ-alert full-width variant="warning" heading="System maintenance scheduled">
+      We will perform planned maintenance from 11:00 PM Friday to 6:00 AM
+      Saturday Eastern Time. Online applications and account dashboard will
+      be unavailable during this window.
+    </civ-alert>
+  `,
+};
+
+export const FullWidthBannerDismissible: Story = {
+  name: 'Full-width site banner — dismissible',
+  parameters: {
+    docs: {
+      description: {
+        story: `Combine \`full-width\` with \`dismissible\` for site-wide
+notices the user can clear once they've read them. The close button
+sits at the right edge of the centered content max-width.`,
+      },
+    },
+  },
+  render: () => html`
+    <civ-alert full-width variant="info" heading="Form update available" dismissible>
+      We've simplified the dependent claim form. You'll see fewer questions
+      this year, and we'll pre-fill any answers we already have on file.
+    </civ-alert>
+  `,
+};

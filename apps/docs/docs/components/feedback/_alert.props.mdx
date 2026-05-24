@@ -10,3 +10,6 @@
 | `dismissible` | `boolean` | `false` | Render a dismiss (×) button. Fires `civ-dismiss` (cancelable) when clicked |
 | `slim` | `boolean` | `false` | Compact single-line layout (no heading, smaller padding). Use for inline / inside-form messages |
 | `spacing` | `'default'` \| `'sm'` | `'default'` | Vertical padding. `default` for standalone alerts; `sm` for nested/dense contexts |
+| `collapsible` | `boolean` | `false` | Wrap heading + body in a native `<details>`/`<summary>` so the body collapses behind a clickable chevron. Requires `heading` — the heading is the toggle. Combines with `dismissible` (close button + chevron both fit in the heading row). Without `heading` the prop is a dev-mode no-op. |
+| `open` | `boolean` | `false` | When `collapsible`, controls and reflects the expanded state. Set initially to start open; the component flips it on each user toggle and fires `civ-toggle`. |
+| `full-width` | `boolean` | `false` | Render as a persistent site-wide banner. ARIA role auto-switches from `alert`/`status` (live region) to `region` (landmark) and `aria-label` is auto-derived from `heading`. Inner content centers to `--civ-site-max-width` (default 80rem) so the banner spans the viewport edge-to-edge. Place as the first child of `<body>` or your outermost site wrapper. |

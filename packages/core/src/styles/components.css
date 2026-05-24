@@ -3621,6 +3621,55 @@
     color: var(--civ-color-white-DEFAULT);
   }
 
+  /* ── Alert: Collapsible mode ────────────────────────────────
+     Composes the shared `renderDisclosure()` helper from @civui/core
+     for the <details>/<summary>/chevron mechanics. The alert provides
+     border + bg + dismiss chrome; the primitive provides the toggle
+     surface.
+
+     Per-mode classes here only add the parts that don't generalize:
+     - flex-fill the disclosure inside the alert's flex row so the
+       dismiss button stays right-anchored;
+     - layout the alert summary's heading row (flex + gap + cross-axis
+       alignment for the chevron + h-tag combination);
+     - extra top margin on the body when expanded, and indent the
+       body so the panel aligns under the heading text rather than
+       jumping back to the summary's left edge. */
+  .civ-alert--collapsible .civ-alert__details {
+    @apply civ-flex-1 civ-min-w-0;
+  }
+  .civ-alert--collapsible .civ-alert__summary {
+    @apply civ-flex civ-items-start civ-gap-2;
+  }
+  .civ-alert--collapsible .civ-alert__details[open] .civ-alert__body {
+    @apply civ-mt-2;
+  }
+  .civ-alert--collapsible .civ-alert__body {
+    padding-inline-start: calc(1em + 0.5rem);
+  }
+
+  /* ── Alert: Full-width site banner ──────────────────────────
+     A persistent landmark for site-wide notices. Strips the 2px
+     border (replaced by 1px top + bottom so the banner has a
+     boundary but doesn't look like a stray card) and centers the
+     inner content to `--civ-site-max-width` so the banner spans
+     the viewport while the text stays readable on wide screens.
+
+     Place full-width alerts as the first child of <body> or the
+     outermost site wrapper so they actually span edge-to-edge —
+     a parent with constrained width clips them to its container. */
+  .civ-alert--full-width {
+    @apply civ-mb-0 civ-border-0;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+  }
+  .civ-alert--full-width .civ-alert__content {
+    max-width: var(--civ-site-max-width, 80rem);
+    margin-inline: auto;
+  }
+
   /* ── Shared Close Button ─────────────────────────────────── */
   /* Used by modal, alert, and any component with a dismiss/close action.
      Renders as a minimal icon-only button with WCAG-compliant touch target. */
@@ -4735,23 +4784,21 @@
   }
 
   /* ── Support Resources ─────────────────────────────────────
-     The default (non-crisis) tone paints a primary-tinted help
-     card with a primary-dark left rail — the visual idiom for
-     "helpful, not alarming" that the previous bespoke
-     civ-form-support-resources chrome carried. The host is a
-     civ-callout (so the rail + padding skeleton comes from the
-     callout base rule); these overrides repaint the background
-     and switch the rail color. The crisis tone passes
-     `variant="error"` to civ-callout, which already changes the
-     rail color via the civ-callout[variant='error'] rule;
-     we override the background to error-lighter for matching
-     emphasis. */
+     Composes `civ-callout` for the rail + padding skeleton. The
+     default tone repaints the rail in primary-dark to signal
+     "helpful, not alarming" — distinct from callout's neutral
+     base-DEFAULT rail. The crisis tone passes `variant="error"`
+     to civ-callout, which already paints the rail in error-DEFAULT
+     via the base callout rules, so no override is needed here.
+
+     **No background fill on either tone.** Background tints are
+     reserved for `civ-alert` (notifications handed to the user
+     with live regions). Support resources sit inline in form
+     chrome — the left rail + padding alone gives enough emphasis
+     without competing with the page background or the alert
+     surfaces that legitimately need a fill. */
   .civ-support-resources {
-    background-color: var(--civ-color-primary-lightest);
     border-inline-start-color: var(--civ-color-primary-dark);
-  }
-  .civ-support-resources[variant='error'] {
-    background-color: var(--civ-color-error-lighter);
   }
 
   .civ-support-resources__heading {
@@ -5699,38 +5746,65 @@
    * marker is suppressed and replaced with a chevron rotation via the
    * `[open]` selector.
    */
+  /* ── Disclosure primitive (shared by civ-disclosure, civ-accordion-item, civ-alert--collapsible) ──
+   *
+   * Markup comes from `renderDisclosure()` in @civui/core. The base
+   * classes carry the shared visual treatment so each consumer can
+   * add a single per-component class for variant chrome (chip,
+   * full-row trigger, alert summary) without duplicating the
+   * details/summary plumbing.
+   *
+   * What lives here:
+   * - Native `<details>` marker reset (so only the chevron reads as
+   *   the toggle)
+   * - Chevron rotation 90° on open — fixed visual contract, single
+   *   motion-duration / easing token so every disclosure on a page
+   *   reads as the same affordance
+   * - Inset focus indicator (same shape and tokens as the
+   *   accordion-item focus pattern — INSIDE the trigger bounds so
+   *   the yellow halo doesn't escape rounded wrappers or overlap
+   *   the panel content below the summary)
+   */
+  .civ-disclosure-primitive__summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .civ-disclosure-primitive__summary::-webkit-details-marker {
+    display: none;
+  }
+  .civ-disclosure-primitive__summary::marker {
+    content: '';
+  }
+  .civ-disclosure-primitive__summary:focus {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color),
+      inset 0 0 0 var(--civ-focus-outline-width) var(--civ-focus-shadow-color);
+  }
+  .civ-disclosure-primitive__icon {
+    flex-shrink: 0;
+    transition: transform var(--civ-motion-duration-fast, 100ms)
+      var(--civ-motion-easing-ease-out, ease);
+  }
+  .civ-disclosure-primitive[open] > .civ-disclosure-primitive__summary
+    > .civ-disclosure-primitive__icon {
+    transform: rotate(90deg);
+  }
+
   .civ-disclosure {
     @apply civ-my-2;
   }
 
   /*
    * Disclosure trigger composes the shared `civ-text-btn civ-text-btn--chip`
-   * palette. Component-specific class survives for marker suppression
-   * and icon-rotation rules below that don't generalize.
+   * palette. The marker reset + chevron rotation come from the
+   * `.civ-disclosure-primitive*` rules above; this class only adds
+   * the chip layout flex (the parent civ-text-btn--chip already
+   * supplies the bg, padding, hover, and color).
    */
   .civ-disclosure__trigger {
-    list-style: none;
-  }
-
-  .civ-disclosure__trigger::-webkit-details-marker {
-    display: none;
-  }
-
-  .civ-disclosure__trigger::marker {
-    content: '';
-  }
-
-  /*
-   * Caret rotation. `chevron-right` rotates 90° clockwise to point
-   * down on open — fixed visual contract; the component intentionally
-   * exposes no `icon` override so every disclosure on a page reads
-   * as the same affordance.
-   */
-  .civ-disclosure__trigger > civ-icon[name='chevron-right'] {
-    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
-  }
-  .civ-disclosure[open] > .civ-disclosure__trigger > civ-icon[name='chevron-right'] {
-    transform: rotate(90deg);
+    display: inline-flex;
+    align-items: center;
   }
 
   /*
@@ -5936,60 +6010,15 @@
   /* ── Trigger base (all variants) ──────────────────────────── */
 
   /*
-   * Trigger — the `<summary>` element. Variant rules above
-   * override colors and padding; this base owns layout, the
-   * cursor, and the native marker suppression.
+   * Trigger — the `<summary>` element. Variant rules above override
+   * colors and padding; this base only adds full-row flex layout +
+   * font-weight. The cursor, native marker suppression, and inset
+   * focus indicator come from `.civ-disclosure-primitive__summary`
+   * (in @civui/core's components.css — shared with civ-disclosure
+   * and the civ-alert collapsible mode).
    */
   .civ-accordion-item__trigger {
-    @apply civ-flex civ-items-center civ-gap-2 civ-cursor-pointer civ-font-semibold civ-w-full;
-    list-style: none;
-  }
-  .civ-accordion-item__trigger::-webkit-details-marker {
-    display: none;
-  }
-  .civ-accordion-item__trigger::marker {
-    content: '';
-  }
-
-  /*
-   * Focus indicator — inset variant of the global focus pattern.
-   *
-   * The default civ.css focus rule paints `outline: 3px solid dark`
-   * at the element's outer edge with a 3px yellow box-shadow halo
-   * extending OUTSIDE. For an accordion-item trigger that produces
-   * two visual problems:
-   *
-   * 1. **Open-item content overlap.** When the item is open and the
-   *    summary is focused, the yellow halo extends DOWN past the
-   *    summary into the content panel. The content's top text
-   *    (which sits flush at the panel's top with no padding) gets
-   *    overlapped by the halo, "obstructing viewing the text."
-   * 2. **Corner overflow.** The outline is rectangular even when
-   *    the trigger sits inside a rounded wrapper (tertiary) or has
-   *    its own rounded corners (secondary / primary closed state).
-   *    The square focus-ring corners poke past the rounded
-   *    wrapper / item edges, breaking the visual.
-   *
-   * The override replaces `outline + box-shadow` with two INSET
-   * box-shadows that paint inside the trigger:
-   * - `var(--civ-focus-shadow-radius)` (6px) yellow halo on the
-   *   inner edge
-   * - `var(--civ-focus-outline-width)` (3px) dark band overlaid on
-   *   the outer 3px of the halo
-   *
-   * Net layering matches the global pattern (dark closest to row
-   * edge, yellow further in), but stays INSIDE the trigger so it
-   * doesn't escape the row's bounds. With 1rem trigger padding,
-   * there's ~10px breathing room between the focus indicator and
-   * the label text. `box-shadow: inset` respects the trigger's
-   * `border-radius`, so secondary / primary closed-state focus
-   * rings follow the rounded corners cleanly.
-   */
-  .civ-accordion-item__trigger:focus {
-    outline: none;
-    box-shadow:
-      inset 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color),
-      inset 0 0 0 var(--civ-focus-outline-width) var(--civ-focus-shadow-color);
+    @apply civ-flex civ-items-center civ-gap-2 civ-font-semibold civ-w-full;
   }
 
   /*
@@ -6017,21 +6046,10 @@
     cursor: not-allowed;
   }
 
-  /*
-   * Chevron rotation. Uses the BEM class on the icon (not an
-   * attribute selector on the icon name) so theme overrides and
-   * future leading-icon additions stay scoped. Same motion duration
-   * token as civ-disclosure so the two read as the same affordance.
-   * The global `prefers-reduced-motion` rule disables the
-   * transition for users who request reduced motion.
-   */
-  .civ-accordion-item__icon {
-    transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
-    flex-shrink: 0;
-  }
-  .civ-accordion-item[open] > .civ-accordion-item__trigger > .civ-accordion-item__icon {
-    transform: rotate(90deg);
-  }
+  /* Chevron rotation comes from `.civ-disclosure-primitive__icon`
+     (in @civui/core's components.css — shared with civ-disclosure
+     and the civ-alert collapsible mode). The accordion-item no
+     longer needs its own `.civ-accordion-item__icon` rule. */
 
   /*
    * Label fills the row width. When `heading-level` is set the

@@ -4824,23 +4824,21 @@
   }
 
   /* ── Support Resources ─────────────────────────────────────
-     The default (non-crisis) tone paints a primary-tinted help
-     card with a primary-dark left rail — the visual idiom for
-     "helpful, not alarming" that the previous bespoke
-     civ-form-support-resources chrome carried. The host is a
-     civ-callout (so the rail + padding skeleton comes from the
-     callout base rule); these overrides repaint the background
-     and switch the rail color. The crisis tone passes
-     `variant="error"` to civ-callout, which already changes the
-     rail color via the civ-callout[variant='error'] rule;
-     we override the background to error-lighter for matching
-     emphasis. */
+     Composes `civ-callout` for the rail + padding skeleton. The
+     default tone repaints the rail in primary-dark to signal
+     "helpful, not alarming" — distinct from callout's neutral
+     base-DEFAULT rail. The crisis tone passes `variant="error"`
+     to civ-callout, which already paints the rail in error-DEFAULT
+     via the base callout rules, so no override is needed here.
+
+     **No background fill on either tone.** Background tints are
+     reserved for `civ-alert` (notifications handed to the user
+     with live regions). Support resources sit inline in form
+     chrome — the left rail + padding alone gives enough emphasis
+     without competing with the page background or the alert
+     surfaces that legitimately need a fill. */
   .civ-support-resources {
-    background-color: var(--civ-color-primary-lightest);
     border-inline-start-color: var(--civ-color-primary-dark);
-  }
-  .civ-support-resources[variant='error'] {
-    background-color: var(--civ-color-error-lighter);
   }
 
   .civ-support-resources__heading {

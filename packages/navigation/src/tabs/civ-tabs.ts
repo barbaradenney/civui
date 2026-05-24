@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, dispatch, isRtl, resolveGroupNavIndex } from '@civui/core';
 import type { CivTab } from './civ-tab.js';
 import type { CivTabPanel } from './civ-tab-panel.js';
 
@@ -145,9 +145,6 @@ export class CivTabs extends CivBaseElement {
   };
 
   private _onKeydown = (event: KeyboardEvent): void => {
-    const navKeys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
-    if (!navKeys.includes(event.key)) return;
-
     const enabled = this._tabs.filter((t) => !t.disabled);
     if (enabled.length === 0) return;
 
@@ -155,23 +152,8 @@ export class CivTabs extends CivBaseElement {
     const currentIndex = enabled.findIndex((t) => t.contains(active));
     if (currentIndex === -1) return;
 
-    let nextIndex = currentIndex;
-    switch (event.key) {
-      case 'ArrowRight':
-        nextIndex = (currentIndex + 1) % enabled.length;
-        break;
-      case 'ArrowLeft':
-        nextIndex = (currentIndex - 1 + enabled.length) % enabled.length;
-        break;
-      case 'Home':
-        nextIndex = 0;
-        break;
-      case 'End':
-        nextIndex = enabled.length - 1;
-        break;
-    }
-
-    if (nextIndex === currentIndex) return;
+    const nextIndex = resolveGroupNavIndex(event.key, currentIndex, enabled.length, isRtl(this));
+    if (nextIndex === undefined || nextIndex === currentIndex) return;
     event.preventDefault();
 
     const nextTab = enabled[nextIndex];

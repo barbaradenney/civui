@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, resolveGroupNavIndex, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import '../popover/civ-popover.js';
 
@@ -203,23 +203,11 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
     if (!this.open) return;
     const items = this._getItems();
     if (items.length === 0) return;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      this._activeIndex = (this._activeIndex + 1) % items.length;
-      items[this._activeIndex]?.focus();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      this._activeIndex = (this._activeIndex - 1 + items.length) % items.length;
-      items[this._activeIndex]?.focus();
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      this._activeIndex = 0;
-      items[0]?.focus();
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      this._activeIndex = items.length - 1;
-      items[items.length - 1]?.focus();
-    }
+    const nextIndex = resolveGroupNavIndex(e.key, this._activeIndex, items.length);
+    if (nextIndex === undefined) return;
+    e.preventDefault();
+    this._activeIndex = nextIndex;
+    items[nextIndex]?.focus();
   }
 
   private _onItemsClick(e: Event): void {

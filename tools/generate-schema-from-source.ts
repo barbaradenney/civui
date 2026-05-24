@@ -396,7 +396,7 @@ function parseFlags(argv: string[]): {
   return { positional, category, extendsBase };
 }
 
-const VALID_CATEGORIES = ['form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation'];
+const VALID_CATEGORIES = ['form-control', 'form-group', 'form-container', 'ui', 'feedback', 'navigation', 'overlay'];
 const VALID_EXTENDS = ['CivFormElement', 'CivBaseElement'];
 
 function main(): number {

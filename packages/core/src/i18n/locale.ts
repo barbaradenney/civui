@@ -140,8 +140,8 @@ export interface CivLocaleStrings {
   fileUploadRetryText: string; // "Retry"
   fileUploadRetryAriaLabel: string; // "Retry upload for {name}"
   fileUploadLockedText: string; // "Password required to unlock {name}"
-  fileUploadPasswordLabel: string; // "Password"
-  fileUploadPasswordHint: string; // "Enter the password to unlock this file"
+  fileUploadPasswordLabel: string; // "Password to unlock {name}"
+  fileUploadPasswordEmpty: string; // "Enter a password to unlock {name}"
   fileUploadUnlockText: string; // "Unlock"
   fileUploadUnlockAriaLabel: string; // "Unlock {name}"
   fileUploadUnlockAnnounce: string; // "Unlocking {name}"
@@ -881,8 +881,8 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadRetryText: 'Retry',
   fileUploadRetryAriaLabel: 'Retry upload for {name}',
   fileUploadLockedText: 'Password required to unlock {name}',
-  fileUploadPasswordLabel: 'Password',
-  fileUploadPasswordHint: 'Enter the password to unlock this file',
+  fileUploadPasswordLabel: 'Password to unlock {name}',
+  fileUploadPasswordEmpty: 'Enter a password to unlock {name}',
   fileUploadUnlockText: 'Unlock',
   fileUploadUnlockAriaLabel: 'Unlock {name}',
   fileUploadUnlockAnnounce: 'Unlocking {name}',

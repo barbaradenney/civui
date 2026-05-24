@@ -2257,6 +2257,13 @@
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {
+      "story": "PasswordProtectedFiles",
+      "name": "Password-protected files (medical records)",
+      "category": "Forms/Inputs/File Upload",
+      "html": "<civ-file-upload\n        label=\"Upload medical records\"\n        hint=\"Encrypted PDFs from your provider are supported. You'll be prompted for the password after upload.\"\n        name=\"medical\"\n        accept=\".pdf\"\n        multiple\n        max-files=\"5\"\n        @civ-change=\"${onUpload}\"\n        @civ-file-unlock=\"${onUnlock}\"\n      ></civ-file-upload>\n      <p class=\"civ-mt-4 civ-text-sm\">\n        Demo password: <code>dob-1985</code>\n      </p>",
+      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
+    },
+    {
       "story": "Required",
       "category": "Forms/Inputs/File Upload",
       "html": "<civ-file-upload label=\"Upload identification\" name=\"identification\" accept=\".pdf,.jpg,.png\" required></civ-file-upload>",

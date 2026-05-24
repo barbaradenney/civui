@@ -204,6 +204,34 @@
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
+      "story": "ComposedRichBody",
+      "name": "Composed with badge + notice + descriptive copy",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert variant=\"error\" heading=\"Action required\" dismissible>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <div>\n            <civ-badge label=\"Verification expired\" variant=\"error\" badge-style=\"primary\" with-icon></civ-badge>\n          </div>\n          <p class=\"civ-m-0\">\n            Your identity verification with Login.gov expired on January 15, 2026.\n            Until you re-verify, you cannot submit new claims or view sensitive documents.\n          </p>\n          <civ-notice\n            intent=\"error\"\n            spacing=\"sm\"\n            body=\"You have 30 days to re-verify before your account is locked.\"\n          ></civ-notice>\n        </div>\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "ComposedWithBadge",
+      "name": "Composed with civ-badge — status summary",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-alert variant=\"info\" heading=\"Application status\">\n        <div class=\"civ-flex civ-flex-col civ-gap-2\">\n          <div>\n            <civ-badge label=\"In review\" variant=\"info\" badge-style=\"primary\" with-icon></civ-badge>\n          </div>\n          <p class=\"civ-m-0\">\n            A reviewer was assigned to your application on January 18, 2026.\n            You'll receive a written notice once a decision is made — usually within 7 business days.\n          </p>\n        </div>\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "ComposedWithBadgeList",
+      "name": "Composed with multiple civ-badge — multi-step status",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert variant=\"info\" heading=\"Your benefits enrollment\">\n        <ul class=\"civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2\">\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" variant=\"success\" with-icon></civ-badge>\n            <span>Personal information</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" variant=\"success\" with-icon></civ-badge>\n            <span>Direct deposit setup</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"In progress\" variant=\"info\" with-icon></civ-badge>\n            <span>Document upload</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Pending\" variant=\"warning\" with-icon></civ-badge>\n            <span>Identity verification</span>\n          </li>\n        </ul>\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "ComposedWithMultipleNotices",
+      "name": "Composed with multiple civ-notice (layered consequences)",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert variant=\"warning\" heading=\"Before you submit\">\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"Once submitted, you cannot edit your answers.\"\n          ></civ-notice>\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"A non-refundable processing fee of $35.00 will be charged on submission.\"\n          ></civ-notice>\n          <civ-notice\n            intent=\"warning\"\n            spacing=\"sm\"\n            body=\"Knowingly providing false information is punishable by fine or imprisonment.\"\n          ></civ-notice>\n        </div>\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
       "story": "ComposedWithNotice",
       "name": "Composed with civ-notice",
       "category": "Feedback/Alert",

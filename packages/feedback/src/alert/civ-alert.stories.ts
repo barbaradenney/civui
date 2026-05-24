@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-alert.js';
+import '../badge/civ-badge.js';
 import '@civui/layout/notice';
 
 const meta: Meta = {
@@ -263,6 +264,147 @@ body.`,
           spacing="sm"
           body="You must complete identity verification before you can submit this application."
         ></civ-notice>
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const ComposedWithMultipleNotices: Story = {
+  name: 'Composed with multiple civ-notice (layered consequences)',
+  parameters: {
+    docs: {
+      description: {
+        story: `When a single alert needs to list several consequences,
+stack multiple \`civ-notice\` rows inside its body. Each row carries
+its own icon + bold emphasis so the consequences read independently.
+Common in pre-submission confirmation banners on government forms.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert variant="warning" heading="Before you submit">
+        <div class="civ-flex civ-flex-col civ-gap-3">
+          <civ-notice
+            intent="warning"
+            spacing="sm"
+            body="Once submitted, you cannot edit your answers."
+          ></civ-notice>
+          <civ-notice
+            intent="warning"
+            spacing="sm"
+            body="A non-refundable processing fee of $35.00 will be charged on submission."
+          ></civ-notice>
+          <civ-notice
+            intent="warning"
+            spacing="sm"
+            body="Knowingly providing false information is punishable by fine or imprisonment."
+          ></civ-notice>
+        </div>
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const ComposedWithBadge: Story = {
+  name: 'Composed with civ-badge — status summary',
+  parameters: {
+    docs: {
+      description: {
+        story: `Use a status badge inside an alert to surface the current
+state at a glance, paired with descriptive copy below. The badge sits
+on its own line above the body text so it reads as a label for the
+explanation that follows. The alert's heading carries the question
+("What's the status?"); the badge answers it.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 560px;">
+      <civ-alert variant="info" heading="Application status">
+        <div class="civ-flex civ-flex-col civ-gap-2">
+          <div>
+            <civ-badge label="In review" variant="info" badge-style="primary" with-icon></civ-badge>
+          </div>
+          <p class="civ-m-0">
+            A reviewer was assigned to your application on January 18, 2026.
+            You'll receive a written notice once a decision is made — usually within 7 business days.
+          </p>
+        </div>
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const ComposedWithBadgeList: Story = {
+  name: 'Composed with multiple civ-badge — multi-step status',
+  parameters: {
+    docs: {
+      description: {
+        story: `For multi-step or multi-document status summaries, lay out a
+short list of badges inside the alert body. Each badge labels one
+sub-item and uses the variant that matches its real state — colorblind
+users get the meaning from the icon + label, not just the color. Useful
+on landing pages, dashboards, and "what's left" reminders.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert variant="info" heading="Your benefits enrollment">
+        <ul class="civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2">
+          <li class="civ-flex civ-items-center civ-gap-3">
+            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <span>Personal information</span>
+          </li>
+          <li class="civ-flex civ-items-center civ-gap-3">
+            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <span>Direct deposit setup</span>
+          </li>
+          <li class="civ-flex civ-items-center civ-gap-3">
+            <civ-badge label="In progress" variant="info" with-icon></civ-badge>
+            <span>Document upload</span>
+          </li>
+          <li class="civ-flex civ-items-center civ-gap-3">
+            <civ-badge label="Pending" variant="warning" with-icon></civ-badge>
+            <span>Identity verification</span>
+          </li>
+        </ul>
+      </civ-alert>
+    </div>
+  `,
+};
+
+export const ComposedRichBody: Story = {
+  name: 'Composed with badge + notice + descriptive copy',
+  parameters: {
+    docs: {
+      description: {
+        story: `Real placements mix multiple primitives in one alert body.
+This example pairs a leading status badge (the answer), a paragraph
+of context (the explanation), and a trailing \`civ-notice\` (the
+emphasis the user must not miss). All three live as siblings inside
+the alert; the alert provides the surrounding chrome and live region.`,
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 640px;">
+      <civ-alert variant="error" heading="Action required" dismissible>
+        <div class="civ-flex civ-flex-col civ-gap-3">
+          <div>
+            <civ-badge label="Verification expired" variant="error" badge-style="primary" with-icon></civ-badge>
+          </div>
+          <p class="civ-m-0">
+            Your identity verification with Login.gov expired on January 15, 2026.
+            Until you re-verify, you cannot submit new claims or view sensitive documents.
+          </p>
+          <civ-notice
+            intent="error"
+            spacing="sm"
+            body="You have 30 days to re-verify before your account is locked."
+          ></civ-notice>
+        </div>
       </civ-alert>
     </div>
   `,

@@ -4347,14 +4347,14 @@
      attribute selector overrides for [callout-style='secondary'].
      `civ-support-resources` (which composes civ-callout but doesn't
      set callout-style) is unaffected and keeps the 5px rail. */
-  civ-callout[callout-style='secondary'] {
+  civ-callout[emphasis='secondary'] {
     border-inline-start-width: 3px;
   }
 
-  civ-callout[variant='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
-  civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
-  civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
-  civ-callout[variant='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+  civ-callout[intent='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
+  civ-callout[intent='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
+  civ-callout[intent='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
+  civ-callout[intent='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
 
   /* Restore list markers inside callout body — Tailwind's preflight
      strips them globally and a callout is one of the few places where

@@ -225,7 +225,7 @@ export const VsTagAndBadge: Story = {
     <div style="display: grid; gap: 0.75rem;">
       <div>Filter chip (interactive): <civ-filter-chip label="Healthcare" selected></civ-filter-chip></div>
       <div>Tag (static category): <civ-tag label="Healthcare" variant="blue"></civ-tag></div>
-      <div>Badge (status): <civ-badge label="Approved" variant="success"></civ-badge></div>
+      <div>Badge (status): <civ-badge label="Approved" intent="success"></civ-badge></div>
     </div>
   `,
 };

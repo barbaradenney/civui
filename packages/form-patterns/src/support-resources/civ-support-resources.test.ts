@@ -35,7 +35,7 @@ describe('civ-support-resources', () => {
     await elementUpdated(el);
     const callout = el.querySelector('civ-callout');
     expect(callout).not.toBeNull();
-    expect(callout!.getAttribute('variant')).toBe('error');
+    expect(callout!.getAttribute('intent')).toBe('error');
   });
 
   it('uses Light DOM', async () => {

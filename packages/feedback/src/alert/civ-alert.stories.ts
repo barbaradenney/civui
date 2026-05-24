@@ -13,7 +13,7 @@ const meta: Meta = {
       control: 'select',
       options: ['info', 'warning', 'error', 'success'],
     },
-    alertStyle: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary', 'tertiary'],
       name: 'alert-style',
@@ -37,14 +37,14 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     variant: 'info',
-    alertStyle: 'secondary',
+    emphasis: 'secondary',
     heading: 'Informational status',
     label: 'This is an informational alert to provide general context about the page or process.',
   },
   render: (args) => html`
     <civ-alert
-      variant="${args.variant}"
-      alert-style="${args.alertStyle}"
+      intent="${args.variant}"
+      emphasis="${args.emphasis}"
       heading="${args.heading}"
       label="${args.label}"
       ?dismissible="${args.dismissible}"
@@ -57,7 +57,7 @@ export const Default: Story = {
 
 export const Info: Story = {
   render: () => html`
-    <civ-alert variant="info" heading="Information">
+    <civ-alert intent="info" heading="Information">
       Your application is being processed. You will receive a decision within 30 days.
     </civ-alert>
   `,
@@ -65,7 +65,7 @@ export const Info: Story = {
 
 export const Warning: Story = {
   render: () => html`
-    <civ-alert variant="warning" heading="Warning">
+    <civ-alert intent="warning" heading="Warning">
       Your session will expire in 5 minutes. Save your progress to avoid losing data.
     </civ-alert>
   `,
@@ -73,7 +73,7 @@ export const Warning: Story = {
 
 export const Error: Story = {
   render: () => html`
-    <civ-alert variant="error" heading="There is a problem">
+    <civ-alert intent="error" heading="There is a problem">
       We could not save your information. Check your internet connection and try again.
     </civ-alert>
   `,
@@ -81,7 +81,7 @@ export const Error: Story = {
 
 export const Success: Story = {
   render: () => html`
-    <civ-alert variant="success" heading="Application submitted">
+    <civ-alert intent="success" heading="Application submitted">
       Your application was submitted successfully. Your confirmation number is APP-2026-04-19-0042.
     </civ-alert>
   `,
@@ -92,16 +92,16 @@ export const Success: Story = {
 export const AllVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-alert variant="info" heading="Information">
+      <civ-alert intent="info" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
-      <civ-alert variant="warning" heading="Warning">
+      <civ-alert intent="warning" heading="Warning">
         Your password will expire in 7 days.
       </civ-alert>
-      <civ-alert variant="error" heading="Error">
+      <civ-alert intent="error" heading="Error">
         Unable to save changes. Check your connection.
       </civ-alert>
-      <civ-alert variant="success" heading="Success">
+      <civ-alert intent="success" heading="Success">
         Your form has been submitted.
       </civ-alert>
     </div>
@@ -113,16 +113,16 @@ export const AllVariants: Story = {
 export const PrimaryStyle: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-alert variant="info" alert-style="primary" heading="Information">
+      <civ-alert intent="info" emphasis="primary" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
-      <civ-alert variant="warning" alert-style="primary" heading="Warning">
+      <civ-alert intent="warning" emphasis="primary" heading="Warning">
         Your password will expire in 7 days.
       </civ-alert>
-      <civ-alert variant="error" alert-style="primary" heading="Error">
+      <civ-alert intent="error" emphasis="primary" heading="Error">
         Unable to save changes. Check your connection.
       </civ-alert>
-      <civ-alert variant="success" alert-style="primary" heading="Success">
+      <civ-alert intent="success" emphasis="primary" heading="Success">
         Your form has been submitted.
       </civ-alert>
     </div>
@@ -132,16 +132,16 @@ export const PrimaryStyle: Story = {
 export const TertiaryStyle: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
-      <civ-alert variant="info" alert-style="tertiary" heading="Information">
+      <civ-alert intent="info" emphasis="tertiary" heading="Information">
         Routine maintenance is scheduled for this weekend.
       </civ-alert>
-      <civ-alert variant="warning" alert-style="tertiary" heading="Warning">
+      <civ-alert intent="warning" emphasis="tertiary" heading="Warning">
         Your password will expire in 7 days.
       </civ-alert>
-      <civ-alert variant="error" alert-style="tertiary" heading="Error">
+      <civ-alert intent="error" emphasis="tertiary" heading="Error">
         Unable to save changes. Check your connection.
       </civ-alert>
-      <civ-alert variant="success" alert-style="tertiary" heading="Success">
+      <civ-alert intent="success" emphasis="tertiary" heading="Success">
         Your form has been submitted.
       </civ-alert>
     </div>
@@ -152,9 +152,9 @@ export const Slim: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2">
       <civ-alert slim>Informational: Your profile was updated.</civ-alert>
-      <civ-alert variant="warning" slim>Warning: Some fields are incomplete.</civ-alert>
-      <civ-alert variant="error" slim>Error: File upload failed.</civ-alert>
-      <civ-alert variant="success" slim>Success: Changes saved.</civ-alert>
+      <civ-alert intent="warning" slim>Warning: Some fields are incomplete.</civ-alert>
+      <civ-alert intent="error" slim>Error: File upload failed.</civ-alert>
+      <civ-alert intent="success" slim>Success: Changes saved.</civ-alert>
     </div>
   `,
 };
@@ -174,19 +174,19 @@ export const DensityScale: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
-        <civ-alert variant="info" heading="Information">
+        <civ-alert intent="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
-        <civ-alert variant="info" heading="Information">
+        <civ-alert intent="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
-        <civ-alert variant="info" heading="Information">
+        <civ-alert intent="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
@@ -200,7 +200,7 @@ export const GovernmentFormValidation: Story = {
   name: 'Usage: Form Validation Feedback',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
-      <civ-alert variant="error" heading="There is a problem with your application">
+      <civ-alert intent="error" heading="There is a problem with your application">
         <ul class="civ-mt-2 civ-mb-0 civ-ps-5">
           <li><a href="#name" style="color: inherit;">Enter your full name</a></li>
           <li><a href="#email" style="color: inherit;">Enter a valid email address</a></li>
@@ -208,12 +208,12 @@ export const GovernmentFormValidation: Story = {
         </ul>
       </civ-alert>
 
-      <civ-alert variant="success" heading="Application submitted">
+      <civ-alert intent="success" heading="Application submitted">
         We received your application on April 19, 2026. Your confirmation number is APP-2026-04-19-0042.
         We will review your application and notify you of our decision within 30 days.
       </civ-alert>
 
-      <civ-alert variant="warning" heading="Your session is about to expire">
+      <civ-alert intent="warning" heading="Your session is about to expire">
         For your security, we will sign you out in 5 minutes due to inactivity.
         Select "Continue session" to keep working.
       </civ-alert>
@@ -228,13 +228,13 @@ export const Compact: Story = {
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
         <p class="civ-font-semibold civ-mb-2">Default</p>
-        <civ-alert variant="info" heading="Information">
+        <civ-alert intent="info" heading="Information">
           Your application is being reviewed.
         </civ-alert>
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
-        <civ-alert variant="info" heading="Information" spacing="sm">
+        <civ-alert intent="info" heading="Information" spacing="sm">
           Your application is being reviewed.
         </civ-alert>
       </div>
@@ -258,7 +258,7 @@ body.`,
   },
   render: () => html`
     <div style="max-width: 560px;">
-      <civ-alert variant="warning" heading="Action needed before submission" dismissible>
+      <civ-alert intent="warning" heading="Action needed before submission" dismissible>
         <civ-notice
           intent="warning"
           spacing="sm"
@@ -283,7 +283,7 @@ Common in pre-submission confirmation banners on government forms.`,
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-alert variant="warning" heading="Before you submit">
+      <civ-alert intent="warning" heading="Before you submit">
         <div class="civ-flex civ-flex-col civ-gap-3">
           <civ-notice
             intent="warning"
@@ -321,10 +321,10 @@ explanation that follows. The alert's heading carries the question
   },
   render: () => html`
     <div style="max-width: 560px;">
-      <civ-alert variant="info" heading="Application status">
+      <civ-alert intent="info" heading="Application status">
         <div class="civ-flex civ-flex-col civ-gap-2">
           <div>
-            <civ-badge label="In review" variant="info" badge-style="primary" with-icon></civ-badge>
+            <civ-badge label="In review" intent="info" emphasis="primary" with-icon></civ-badge>
           </div>
           <p class="civ-m-0">
             A reviewer was assigned to your application on January 18, 2026.
@@ -351,22 +351,22 @@ on landing pages, dashboards, and "what's left" reminders.`,
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-alert variant="info" heading="Your benefits enrollment">
+      <civ-alert intent="info" heading="Your benefits enrollment">
         <ul class="civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2">
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <civ-badge label="Complete" intent="success" with-icon></civ-badge>
             <span>Personal information</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <civ-badge label="Complete" intent="success" with-icon></civ-badge>
             <span>Direct deposit setup</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="In progress" variant="info" with-icon></civ-badge>
+            <civ-badge label="In progress" intent="info" with-icon></civ-badge>
             <span>Document upload</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Pending" variant="warning" with-icon></civ-badge>
+            <civ-badge label="Pending" intent="warning" with-icon></civ-badge>
             <span>Identity verification</span>
           </li>
         </ul>
@@ -390,10 +390,10 @@ the alert; the alert provides the surrounding chrome and live region.`,
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-alert variant="error" heading="Action required" dismissible>
+      <civ-alert intent="error" heading="Action required" dismissible>
         <div class="civ-flex civ-flex-col civ-gap-3">
           <div>
-            <civ-badge label="Verification expired" variant="error" badge-style="primary" with-icon></civ-badge>
+            <civ-badge label="Verification expired" intent="error" emphasis="primary" with-icon></civ-badge>
           </div>
           <p class="civ-m-0">
             Your identity verification with Login.gov expired on January 15, 2026.
@@ -430,7 +430,7 @@ is a dev-mode no-op — the heading is the toggle.`,
   render: () => html`
     <div style="max-width: 640px;">
       <civ-alert
-        variant="info"
+        intent="info"
         heading="Why we ask for your Social Security number"
         collapsible
       >
@@ -458,7 +458,7 @@ the user to be able to collapse them.`,
   render: () => html`
     <div style="max-width: 640px;">
       <civ-alert
-        variant="warning"
+        intent="warning"
         heading="Action needed before your benefits start"
         collapsible
         open
@@ -487,7 +487,7 @@ so the click doesn't bubble into the summary).`,
   render: () => html`
     <div style="max-width: 640px;">
       <civ-alert
-        variant="info"
+        intent="info"
         heading="New: Save and continue later"
         collapsible
         dismissible
@@ -520,7 +520,7 @@ edge-to-edge while the text stays readable.`,
     },
   },
   render: () => html`
-    <civ-alert full-width variant="warning" heading="System maintenance scheduled">
+    <civ-alert full-width intent="warning" heading="System maintenance scheduled">
       We will perform planned maintenance from 11:00 PM Friday to 6:00 AM
       Saturday Eastern Time. Online applications and account dashboard will
       be unavailable during this window.
@@ -540,7 +540,7 @@ sits at the right edge of the centered content max-width.`,
     },
   },
   render: () => html`
-    <civ-alert full-width variant="info" heading="Form update available" dismissible>
+    <civ-alert full-width intent="info" heading="Form update available" dismissible>
       We've simplified the dependent claim form. You'll see fewer questions
       this year, and we'll pre-fill any answers we already have on file.
     </civ-alert>

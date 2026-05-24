@@ -23,12 +23,12 @@ const schema: ComponentSchema = {
       default: 'default',
       reflect: true,
     },
-    noticeStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual weight. `primary` (default) uses the heavier filled-icon variants (`info-fill` / `warning-fill` / `error-fill` / `check-circle-fill`) for full emphasis — the established notice treatment. `secondary` uses the lighter outlined glyphs (`info` / `warning` / `error` / `check-circle`) for a more passive callout when the placement competes with surrounding chrome. When `icon` is overridden the consumer\'s glyph is used regardless; `noticeStyle` only picks the *default* glyph for the intent.',
       values: ['primary', 'secondary'],
       default: 'primary',
-      attribute: 'notice-style',
+      attribute: 'emphasis',
       reflect: true,
     },
     icon: {

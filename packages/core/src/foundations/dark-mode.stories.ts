@@ -162,13 +162,13 @@ export const ComponentsInDark: Story = {
         <civ-radio value="phone" label="Phone"></civ-radio>
       </civ-radio-group>
       <civ-alert
-        variant="error"
+        intent="error"
         heading="Sign-in failed"
         class="civ-mb-3"
       >
         Your username or password didn't match. Try again.
       </civ-alert>
-      <civ-alert variant="success" heading="Application saved">
+      <civ-alert intent="success" heading="Application saved">
         We've saved your progress. You can return anytime.
       </civ-alert>
       <div class="civ-button-row civ-mt-3">

@@ -507,10 +507,10 @@ Compact status indicator (text or dot). Carries \`role="status"\` for label mode
 Set \`with-icon\` to render the variant's semantic icon at the start (success → check-circle, warning → warning, error → error, info → info). Use \`icon-start\` / \`icon-end\` for explicit overrides.
 
 \`\`\`html
-<civ-badge label="Approved" variant="success" with-icon></civ-badge>
-<civ-badge label="Denied" variant="error" badge-style="primary" with-icon></civ-badge>
-<civ-badge label="Read more" variant="info" icon-end="chevron-right"></civ-badge>
-<civ-badge dot label="Unread messages" variant="error"></civ-badge>
+<civ-badge label="Approved" intent="success" with-icon></civ-badge>
+<civ-badge label="Denied" intent="error" emphasis="primary" with-icon></civ-badge>
+<civ-badge label="Read more" intent="info" icon-end="chevron-right"></civ-badge>
+<civ-badge dot label="Unread messages" intent="error"></civ-badge>
 \`\`\`
 
 ### civ-count
@@ -521,10 +521,10 @@ Numeric annotation — match counts in filter chips, item counts in nav, notific
 
 \`\`\`html
 <span>Inbox <civ-count count="12"></civ-count></span>
-<civ-count count="3" variant="error" count-style="primary"></civ-count>
+<civ-count count="3" intent="error" emphasis="primary"></civ-count>
 <span class="civ-badge-anchor">
   <civ-icon name="mail"></civ-icon>
-  <civ-count overlay count="3" variant="error" count-style="primary"></civ-count>
+  <civ-count overlay count="3" intent="error" emphasis="primary"></civ-count>
 </span>
 \`\`\`
 
@@ -536,11 +536,11 @@ Structured page heading with four slot areas: tag, eyebrow, heading, subheading.
 
 \`\`\`html
 <civ-page-header>
-  <civ-badge data-tag label="Active" variant="success"></civ-badge>
+  <civ-badge data-tag label="Active" intent="success"></civ-badge>
   <span data-eyebrow>Benefits</span>
   <h1 data-heading class="civ-heading-xl">
     Apply for disability compensation
-    <civ-badge label="In progress" variant="info"></civ-badge>
+    <civ-badge label="In progress" intent="info"></civ-badge>
   </h1>
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
@@ -568,7 +568,7 @@ Structured container with header, body, and footer slots.
 \`\`\`html
 <civ-card>
   <div data-card-header>
-    <civ-badge label="In progress" variant="info"></civ-badge>
+    <civ-badge label="In progress" intent="info"></civ-badge>
     <h3 class="civ-heading-md">Disability compensation</h3>
   </div>
   <p>Filed: March 10, 2026</p>
@@ -598,16 +598,16 @@ The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-li
 <civ-list dividers>
   <civ-list-item href="#/personal">
     <span class="civ-block civ-font-bold">Personal info</span>
-    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/contact">
     <span class="civ-block civ-font-bold">Contact info</span>
     <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
-    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Service history</span>
-    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 \`\`\`
@@ -708,8 +708,8 @@ Accessible alert for informational, warning, error, or success messages.
 **Props:** \`variant\` (info/warning/error/success), \`heading\`, \`label\` (body text), \`dismissible\`, \`slim\`, \`alert-style\` (primary/secondary/tertiary), \`heading-level\` (2-6)
 
 \`\`\`html
-<civ-alert variant="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
-<civ-alert variant="info" label="Processing takes up to 3 business days." slim></civ-alert>
+<civ-alert intent="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
+<civ-alert intent="info" label="Processing takes up to 3 business days." slim></civ-alert>
 \`\`\`
 
 ---

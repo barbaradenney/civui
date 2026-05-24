@@ -74,7 +74,7 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
     return html`
       <civ-callout
         class="civ-support-resources"
-        variant="${variant}"
+        intent="${variant}"
         role="complementary"
         aria-label="${headingText}"
         aria-labelledby="${headingId}"

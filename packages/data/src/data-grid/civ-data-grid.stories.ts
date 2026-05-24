@@ -26,14 +26,14 @@ const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 
 const statusBadge = (value: unknown) => {
   const v = String(value ?? '');
   const variant = STATUS_VARIANT[v] ?? 'neutral';
-  return html`<civ-badge label="${v}" variant="${variant}" spacing="sm" with-icon></civ-badge>`;
+  return html`<civ-badge label="${v}" intent="${variant}" spacing="sm" with-icon></civ-badge>`;
 };
 
 /** Default-spacing badge — used only by the side-by-side density-comparison story. */
 const statusBadgeDefault = (value: unknown) => {
   const v = String(value ?? '');
   const variant = STATUS_VARIANT[v] ?? 'neutral';
-  return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
+  return html`<civ-badge label="${v}" intent="${variant}" with-icon></civ-badge>`;
 };
 
 const meta: Meta = {

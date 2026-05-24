@@ -13,18 +13,18 @@ import './process-list/civ-process-list-item.js';
 
 // Alert
 export { CivAlert } from './alert/index.js';
-export type { AlertVariant, AlertStyle, AlertHeadingLevel } from './alert/index.js';
+export type { AlertIntent, AlertEmphasis, AlertHeadingLevel } from './alert/index.js';
 
 // Callout
 export { CivCallout } from './callout/index.js';
-export type { CalloutVariant, CalloutStyle } from './callout/index.js';
+export type { CalloutIntent, CalloutEmphasis } from './callout/index.js';
 
 // Notice
 export { CivNotice } from './notice/index.js';
 export type {
   NoticeIntent,
   NoticeSpacing,
-  NoticeStyle,
+  NoticeEmphasis,
   NoticeHeadingLevel,
 } from './notice/index.js';
 
@@ -38,11 +38,11 @@ export type { ProcessListItemState } from './process-list/index.js';
 
 // Badge
 export { CivBadge } from './badge/index.js';
-export type { BadgeVariant, BadgeStyle } from './badge/index.js';
+export type { BadgeIntent, BadgeEmphasis } from './badge/index.js';
 
 // Count
 export { CivCount } from './count/index.js';
-export type { CountVariant, CountStyle, CountLive } from './count/index.js';
+export type { CountIntent, CountEmphasis, CountLive } from './count/index.js';
 
 // Spinner
 export { CivSpinner } from './spinner/index.js';

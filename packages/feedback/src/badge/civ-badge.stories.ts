@@ -12,7 +12,7 @@ const meta: Meta = {
       control: 'select',
       options: ['info', 'warning', 'error', 'success', 'neutral'],
     },
-    badgeStyle: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary'],
       name: 'badge-style',
@@ -44,14 +44,14 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     variant: 'success',
-    badgeStyle: 'secondary',
+    emphasis: 'secondary',
     spacing: 'default',
     label: 'Approved',
   },
   render: (args) => html`
     <civ-badge
-      variant="${args.variant}"
-      badge-style="${args.badgeStyle || 'secondary'}"
+      intent="${args.variant}"
+      emphasis="${args.emphasis || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       label="${args.label}"
       icon-start="${args.iconStart || ''}"
@@ -66,11 +66,11 @@ export const Default: Story = {
 export const StatusVariants: Story = {
   render: () => html`
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-      <civ-badge variant="info" label="Info"></civ-badge>
-      <civ-badge variant="success" label="Approved"></civ-badge>
-      <civ-badge variant="warning" label="Pending"></civ-badge>
-      <civ-badge variant="error" label="Denied"></civ-badge>
-      <civ-badge variant="neutral" label="Draft"></civ-badge>
+      <civ-badge intent="info" label="Info"></civ-badge>
+      <civ-badge intent="success" label="Approved"></civ-badge>
+      <civ-badge intent="warning" label="Pending"></civ-badge>
+      <civ-badge intent="error" label="Denied"></civ-badge>
+      <civ-badge intent="neutral" label="Draft"></civ-badge>
     </div>
   `,
 };
@@ -87,11 +87,11 @@ export const WithIcon: Story = {
   },
   render: () => html`
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-      <civ-badge variant="info" label="Info" with-icon></civ-badge>
-      <civ-badge variant="success" label="Approved" with-icon></civ-badge>
-      <civ-badge variant="warning" label="Pending" with-icon></civ-badge>
-      <civ-badge variant="error" label="Denied" with-icon></civ-badge>
-      <civ-badge variant="neutral" label="Draft" with-icon></civ-badge>
+      <civ-badge intent="info" label="Info" with-icon></civ-badge>
+      <civ-badge intent="success" label="Approved" with-icon></civ-badge>
+      <civ-badge intent="warning" label="Pending" with-icon></civ-badge>
+      <civ-badge intent="error" label="Denied" with-icon></civ-badge>
+      <civ-badge intent="neutral" label="Draft" with-icon></civ-badge>
     </div>
   `,
 };
@@ -109,14 +109,14 @@ export const ExplicitIcons: Story = {
   render: () => html`
     <div style="display: grid; gap: 0.5rem;">
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-        <civ-badge variant="success" label="Approved" icon-start="star"></civ-badge>
-        <civ-badge variant="info" label="Read more" icon-end="chevron-right"></civ-badge>
-        <civ-badge variant="success" label="Verified" with-icon icon-end="lock"></civ-badge>
+        <civ-badge intent="success" label="Approved" icon-start="star"></civ-badge>
+        <civ-badge intent="info" label="Read more" icon-end="chevron-right"></civ-badge>
+        <civ-badge intent="success" label="Verified" with-icon icon-end="lock"></civ-badge>
       </div>
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-        <civ-badge variant="success" label="Approved" badge-style="primary" with-icon></civ-badge>
-        <civ-badge variant="warning" label="Action needed" badge-style="primary" with-icon></civ-badge>
-        <civ-badge variant="error" label="Denied" badge-style="primary" with-icon></civ-badge>
+        <civ-badge intent="success" label="Approved" emphasis="primary" with-icon></civ-badge>
+        <civ-badge intent="warning" label="Action needed" emphasis="primary" with-icon></civ-badge>
+        <civ-badge intent="error" label="Denied" emphasis="primary" with-icon></civ-badge>
       </div>
     </div>
   `,
@@ -125,9 +125,9 @@ export const ExplicitIcons: Story = {
 export const Dots: Story = {
   render: () => html`
     <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-      <span>Messages <civ-badge dot label="Unread messages" variant="error"></civ-badge></span>
-      <span>Tasks <civ-badge dot label="New tasks" variant="info"></civ-badge></span>
-      <span>Status <civ-badge dot label="Online" variant="success"></civ-badge></span>
+      <span>Messages <civ-badge dot label="Unread messages" intent="error"></civ-badge></span>
+      <span>Tasks <civ-badge dot label="New tasks" intent="info"></civ-badge></span>
+      <span>Status <civ-badge dot label="Online" intent="success"></civ-badge></span>
     </div>
   `,
 };
@@ -146,21 +146,21 @@ export const Styles: Story = {
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Secondary (default)</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <civ-badge variant="info" label="Info"></civ-badge>
-          <civ-badge variant="success" label="Approved"></civ-badge>
-          <civ-badge variant="warning" label="Pending"></civ-badge>
-          <civ-badge variant="error" label="Denied"></civ-badge>
-          <civ-badge variant="neutral" label="Draft"></civ-badge>
+          <civ-badge intent="info" label="Info"></civ-badge>
+          <civ-badge intent="success" label="Approved"></civ-badge>
+          <civ-badge intent="warning" label="Pending"></civ-badge>
+          <civ-badge intent="error" label="Denied"></civ-badge>
+          <civ-badge intent="neutral" label="Draft"></civ-badge>
         </div>
       </div>
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Primary</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <civ-badge variant="info" badge-style="primary" label="Info"></civ-badge>
-          <civ-badge variant="success" badge-style="primary" label="Approved"></civ-badge>
-          <civ-badge variant="warning" badge-style="primary" label="Pending"></civ-badge>
-          <civ-badge variant="error" badge-style="primary" label="Denied"></civ-badge>
-          <civ-badge variant="neutral" badge-style="primary" label="Draft"></civ-badge>
+          <civ-badge intent="info" emphasis="primary" label="Info"></civ-badge>
+          <civ-badge intent="success" emphasis="primary" label="Approved"></civ-badge>
+          <civ-badge intent="warning" emphasis="primary" label="Pending"></civ-badge>
+          <civ-badge intent="error" emphasis="primary" label="Denied"></civ-badge>
+          <civ-badge intent="neutral" emphasis="primary" label="Draft"></civ-badge>
         </div>
       </div>
     </div>
@@ -180,15 +180,15 @@ export const Spacing: Story = {
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <civ-badge variant="success" label="Approved"></civ-badge>
-          <civ-badge variant="error" badge-style="primary" label="Denied"></civ-badge>
+          <civ-badge intent="success" label="Approved"></civ-badge>
+          <civ-badge intent="error" emphasis="primary" label="Denied"></civ-badge>
         </div>
       </div>
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <civ-badge variant="success" spacing="sm" label="Approved"></civ-badge>
-          <civ-badge variant="error" badge-style="primary" spacing="sm" label="Denied"></civ-badge>
+          <civ-badge intent="success" spacing="sm" label="Approved"></civ-badge>
+          <civ-badge intent="error" emphasis="primary" spacing="sm" label="Denied"></civ-badge>
         </div>
       </div>
     </div>
@@ -208,15 +208,15 @@ export const Overlay: Story = {
     <div style="display: flex; gap: 1.5rem; align-items: center;">
       <span class="civ-badge-anchor">
         <civ-icon name="mail" size="lg"></civ-icon>
-        <civ-badge overlay dot label="New mail" variant="error"></civ-badge>
+        <civ-badge overlay dot label="New mail" intent="error"></civ-badge>
       </span>
       <span class="civ-badge-anchor">
         <civ-icon name="settings" size="lg"></civ-icon>
-        <civ-badge overlay dot label="Updates available" variant="info"></civ-badge>
+        <civ-badge overlay dot label="Updates available" intent="info"></civ-badge>
       </span>
       <span class="civ-badge-anchor">
         <civ-icon name="person" size="lg"></civ-icon>
-        <civ-badge overlay label="New" variant="success" badge-style="primary"></civ-badge>
+        <civ-badge overlay label="New" intent="success" emphasis="primary"></civ-badge>
       </span>
     </div>
   `,
@@ -234,7 +234,7 @@ export const VsTagAndCount: Story = {
   },
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
-      <div>Badge (status): <civ-badge variant="success" label="Approved"></civ-badge></div>
+      <div>Badge (status): <civ-badge intent="success" label="Approved"></civ-badge></div>
       <div>Tag (category): <civ-tag variant="purple" label="Healthcare"></civ-tag></div>
       <div>Count (number): Inbox <civ-count count="12"></civ-count></div>
     </div>

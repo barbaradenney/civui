@@ -135,7 +135,7 @@ export const InsuranceCardUpload: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-alert variant="info" slim>
+      <civ-alert intent="info" slim>
         Please upload clear photos of the front and back of your insurance card.
         Accepted formats: JPG, PNG, or PDF.
       </civ-alert>
@@ -200,7 +200,7 @@ export const AppointmentConfirmation: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-alert variant="success" heading="Appointment confirmed">
+      <civ-alert intent="success" heading="Appointment confirmed">
         Your appointment has been scheduled. You will receive a confirmation email shortly.
       </civ-alert>
       <civ-card>
@@ -218,7 +218,7 @@ export const AppointmentConfirmation: Story = {
           <civ-link label="Cancel appointment" href="#cancel"></civ-link>
         </div>
       </civ-card>
-      <civ-alert variant="info" slim>
+      <civ-alert intent="info" slim>
         Please arrive 15 minutes early and bring your insurance card and photo ID.
       </civ-alert>
     </div>
@@ -255,7 +255,7 @@ export const SymptomChecker: Story = {
       </civ-conditional>
 
       <civ-conditional when="symptoms" equals="breathing">
-        <civ-alert variant="warning" slim>
+        <civ-alert intent="warning" slim>
           If you are having severe difficulty breathing, please call 911 or go to the nearest emergency room.
         </civ-alert>
         <civ-radio-group legend="When does the shortness of breath occur?" required name="breathing_when">
@@ -339,7 +339,7 @@ export const MedicalHistoryScreening: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-alert variant="info" slim>
+      <civ-alert intent="info" slim>
         Please answer the following questions about your medical history. This information helps your provider give you the best care.
       </civ-alert>
 
@@ -466,29 +466,29 @@ export const ReferralStatusTracker: Story = {
 
         <civ-list dividers>
           <civ-list-item>
-            <civ-badge slot="start" label="Complete" variant="success"></civ-badge>
+            <civ-badge slot="start" label="Complete" intent="success"></civ-badge>
             <span slot="heading">Referral submitted</span>
             <span slot="description">April 28, 2026 — Submitted by Dr. Chen's office</span>
           </civ-list-item>
           <civ-list-item>
-            <civ-badge slot="start" label="Complete" variant="success"></civ-badge>
+            <civ-badge slot="start" label="Complete" intent="success"></civ-badge>
             <span slot="heading">Insurance pre-authorization requested</span>
             <span slot="description">April 29, 2026 — Sent to insurance for review</span>
           </civ-list-item>
           <civ-list-item>
-            <civ-badge slot="start" label="In progress" variant="warning"></civ-badge>
+            <civ-badge slot="start" label="In progress" intent="warning"></civ-badge>
             <span slot="heading">Insurance review</span>
             <span slot="description">Estimated completion: May 3, 2026</span>
           </civ-list-item>
           <civ-list-item>
-            <civ-badge slot="start" label="Pending" variant="info"></civ-badge>
+            <civ-badge slot="start" label="Pending" intent="info"></civ-badge>
             <span slot="heading">Schedule appointment</span>
             <span slot="description">Available after authorization is approved</span>
           </civ-list-item>
         </civ-list>
       </civ-card>
 
-      <civ-alert variant="info" slim>
+      <civ-alert intent="info" slim>
         You will receive a notification when your authorization is approved and you can schedule your appointment.
       </civ-alert>
     </div>

@@ -5,12 +5,12 @@
 import SwiftUI
 
 /// Alert variant determines the header bar color and semantic role.
-public enum AlertVariant: String, CaseIterable {
+public enum AlertIntent: String, CaseIterable {
     case info, warning, error, success
 }
 
 /// Alert style controls the content area background treatment.
-public enum AlertStyle: String, CaseIterable {
+public enum AlertEmphasis: String, CaseIterable {
     case primary, secondary, tertiary
 }
 
@@ -18,7 +18,7 @@ public enum AlertStyle: String, CaseIterable {
 ///
 /// Displays a notification with a colored header bar and content area below.
 /// The header bar color changes per variant (info=blue, warning=amber, error=red,
-/// success=green). The content area background changes per alertStyle. Mirrors
+/// success=green). The content area background changes per emphasis. Mirrors
 /// the web `civ-alert` component.
 ///
 /// VoiceOver announces error alerts immediately; other variants use polite announcements.
@@ -35,10 +35,10 @@ public struct CivAlert: View {
     // MARK: - Properties
 
     /// Alert type — sets header color and ARIA role.
-    public let variant: AlertVariant
+    public let intent: AlertIntent
 
     /// Visual treatment for the content area background.
-    public var alertStyle: AlertStyle
+    public var emphasis: AlertEmphasis
 
     /// Heading text displayed in the colored header bar.
     public var heading: String?
@@ -83,8 +83,8 @@ public struct CivAlert: View {
     // MARK: - Initializer
 
     public init(
-        variant: AlertVariant = .info,
-        alertStyle: AlertStyle = .secondary,
+        intent: AlertIntent = .info,
+        emphasis: AlertEmphasis = .secondary,
         heading: String? = nil,
         label: String,
         dismissible: Bool = false,
@@ -97,8 +97,8 @@ public struct CivAlert: View {
         open: Bool = false,
         fullWidth: Bool = false
     ) {
-        self.variant = variant
-        self.alertStyle = alertStyle
+        self.intent = intent
+        self.emphasis = emphasis
         self.heading = heading
         self.label = label
         self.dismissible = dismissible
@@ -278,7 +278,7 @@ public struct CivAlert: View {
     }
 
     private var contentBackgroundColor: Color {
-        switch alertStyle {
+        switch emphasis {
         case .primary:
             return variantContentPrimaryColor
         case .secondary:
@@ -352,7 +352,7 @@ struct CivAlert_Previews: PreviewProvider {
 
                     CivAlert(
                         variant: .warning,
-                        alertStyle: .primary,
+                        emphasis: .primary,
                         heading: "Action required",
                         label: "Your session will expire in 5 minutes.",
                         dismissible: true

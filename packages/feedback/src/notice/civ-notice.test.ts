@@ -77,7 +77,7 @@ describe('civ-notice', () => {
     }
   });
 
-  it('switches to outlined-variant icons when notice-style="secondary"', async () => {
+  it('switches to outlined-variant icons when emphasis="secondary"', async () => {
     const cases: Array<['info' | 'warning' | 'error' | 'success' | 'neutral', string]> = [
       ['info', 'info'],
       ['warning', 'warning'],
@@ -87,7 +87,7 @@ describe('civ-notice', () => {
     ];
     for (const [intent, expected] of cases) {
       const el = await fixture<CivNotice>(`
-        <civ-notice intent="${intent}" notice-style="secondary" body="x"></civ-notice>
+        <civ-notice intent="${intent}" emphasis="secondary" body="x"></civ-notice>
       `);
       expect(el.querySelector('civ-icon.civ-notice__icon')?.getAttribute('name')).toBe(expected);
     }
@@ -99,10 +99,10 @@ describe('civ-notice', () => {
     `);
     // Default is primary and reflects to the host so consumer CSS
     // overrides can target the weight.
-    expect(el.getAttribute('notice-style')).toBe('primary');
-    el.noticeStyle = 'secondary';
+    expect(el.getAttribute('emphasis')).toBe('primary');
+    el.emphasis = 'secondary';
     await elementUpdated(el);
-    expect(el.getAttribute('notice-style')).toBe('secondary');
+    expect(el.getAttribute('emphasis')).toBe('secondary');
   });
 
   it('uses the override icon when set', async () => {
@@ -183,7 +183,7 @@ describe('civ-notice composed inside civ-alert', () => {
 
   it('relocates a civ-notice child into the alert body when label is unset', async () => {
     const el = await fixture(`
-      <civ-alert variant="warning">
+      <civ-alert intent="warning">
         <civ-notice intent="warning" body="Embedded notice body"></civ-notice>
       </civ-alert>
     `);
@@ -195,7 +195,7 @@ describe('civ-notice composed inside civ-alert', () => {
 
   it('hides children when label is set (label-wins rule preserved)', async () => {
     const el = await fixture(`
-      <civ-alert variant="info" label="Label wins">
+      <civ-alert intent="info" label="Label wins">
         <civ-notice intent="info" body="Should be hidden"></civ-notice>
       </civ-alert>
     `);
@@ -209,7 +209,7 @@ describe('civ-notice composed inside civ-alert', () => {
 
   it('preserves the alert role + ARIA labelling around composed children', async () => {
     const el = await fixture(`
-      <civ-alert variant="error" heading="Action needed">
+      <civ-alert intent="error" heading="Action needed">
         <civ-notice intent="error" body="Composed body"></civ-notice>
       </civ-alert>
     `);

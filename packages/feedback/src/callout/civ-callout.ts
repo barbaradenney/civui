@@ -1,10 +1,10 @@
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, warnInvalidProp } from '@civui/core';
 
-export type CalloutVariant = 'default' | 'info' | 'warning' | 'error' | 'success';
-export type CalloutStyle = 'primary' | 'secondary';
+export type CalloutIntent = 'default' | 'info' | 'warning' | 'error' | 'success';
+export type CalloutEmphasis = 'primary' | 'secondary';
 
-const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
+const VALID_INTENTS: ReadonlySet<CalloutIntent> = new Set([
   'default',
   'info',
   'warning',
@@ -12,7 +12,7 @@ const VALID_VARIANTS: ReadonlySet<CalloutVariant> = new Set([
   'success',
 ]);
 
-const VALID_STYLES: ReadonlySet<CalloutStyle> = new Set(['primary', 'secondary']);
+const VALID_EMPHASIS: ReadonlySet<CalloutEmphasis> = new Set(['primary', 'secondary']);
 
 /**
  * CivUI Callout
@@ -58,8 +58,8 @@ const VALID_STYLES: ReadonlySet<CalloutStyle> = new Set(['primary', 'secondary']
  *
  * @element civ-callout
  *
- * @prop {CalloutVariant} variant - Accent border color
- * @prop {CalloutStyle} calloutStyle - `primary` (default, 5px rail) or `secondary` (3px rail for subtle emphasis)
+ * @prop {CalloutIntent} intent - Accent border color
+ * @prop {CalloutEmphasis} emphasis - `primary` (default, 5px rail) or `secondary` (3px rail for subtle emphasis)
  *
  * @example
  * ```html
@@ -68,16 +68,16 @@ const VALID_STYLES: ReadonlySet<CalloutStyle> = new Set(['primary', 'secondary']
  *   <p>You must complete this section before continuing.</p>
  * </civ-callout>
  *
- * <civ-callout variant="warning">
+ * <civ-callout intent="warning">
  *   <p>Your session will expire in 15 minutes.</p>
  * </civ-callout>
  *
- * <civ-callout variant="info" callout-style="secondary">
+ * <civ-callout intent="info" emphasis="secondary">
  *   <p>You can return to this section later from your dashboard.</p>
  * </civ-callout>
  *
  * <!-- As a labelled landmark — role goes on the callout itself. -->
- * <civ-callout variant="warning" role="region" aria-labelledby="h">
+ * <civ-callout intent="warning" role="region" aria-labelledby="h">
  *   <p id="h" class="civ-font-bold">Important notice</p>
  *   <p>Body text.</p>
  * </civ-callout>
@@ -93,7 +93,7 @@ export class CivCallout extends CivBaseElement {
    * restores the property to `'default'` rather than leaving it null.
    */
   @property({ type: String, reflect: true, useDefault: true })
-  variant: CalloutVariant = 'default';
+  intent: CalloutIntent = 'default';
 
   /**
    * Visual weight. `primary` keeps the 5px accent rail (the
@@ -104,8 +104,8 @@ export class CivCallout extends CivBaseElement {
    * — the secondary rule only kicks in when the attribute is
    * explicitly set to `'secondary'`.
    */
-  @property({ type: String, reflect: true, useDefault: true, attribute: 'callout-style' })
-  calloutStyle: CalloutStyle = 'primary';
+  @property({ type: String, reflect: true, useDefault: true, attribute: 'emphasis' })
+  emphasis: CalloutEmphasis = 'primary';
 
   /**
    * Render into a detached throwaway root. See the class-level JSDoc
@@ -125,20 +125,20 @@ export class CivCallout extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('variant') && !VALID_VARIANTS.has(this.variant)) {
+    if (changed.has('intent') && !VALID_INTENTS.has(this.intent)) {
       warnInvalidProp(
         'civ-callout',
-        'variant',
+        'intent',
         "one of 'default' | 'info' | 'warning' | 'error' | 'success'",
-        this.variant,
+        this.intent,
       );
     }
-    if (changed.has('calloutStyle') && !VALID_STYLES.has(this.calloutStyle)) {
+    if (changed.has('emphasis') && !VALID_EMPHASIS.has(this.emphasis)) {
       warnInvalidProp(
         'civ-callout',
-        'calloutStyle',
+        'emphasis',
         "one of 'primary' | 'secondary'",
-        this.calloutStyle,
+        this.emphasis,
       );
     }
   }

@@ -340,7 +340,7 @@ export const WithSlots: Story = {
           description="File a claim for a service-connected disability."
           variant="tertiary"
         >
-          <civ-badge data-civ-link-card-end label="In progress" variant="warning"></civ-badge>
+          <civ-badge data-civ-link-card-end label="In progress" intent="warning"></civ-badge>
         </civ-link-card>
       </div>
       <div>
@@ -352,7 +352,7 @@ export const WithSlots: Story = {
           variant="tertiary"
         >
           <civ-tag label="Updated" variant="purple"></civ-tag>
-          <civ-badge data-civ-link-card-end label="In progress" variant="warning"></civ-badge>
+          <civ-badge data-civ-link-card-end label="In progress" intent="warning"></civ-badge>
         </civ-link-card>
       </div>
     </div>
@@ -381,7 +381,7 @@ export const WithEyebrow: Story = {
           description="Filed January 15, 2026"
           variant="tertiary"
         >
-          <civ-badge label="In Progress" variant="warning"></civ-badge>
+          <civ-badge label="In Progress" intent="warning"></civ-badge>
         </civ-link-card>
       </div>
       <div>

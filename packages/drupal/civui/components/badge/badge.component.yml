@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Badge
 status: stable
 group: CivUI Layout
-description: 'Notification badge with count display and dot variant.'
+description: 'Notification badge with count display and dot intent.'
 
 props:
   type: object
@@ -24,12 +24,12 @@ props:
       type: boolean
       default: false
       description: 'Show as dot indicator instead of count'
-    variant:
+    intent:
       title: Variant
       type: string
-      description: 'Color variant'
-    badge_style:
-      title: Badge style
+      description: 'Color intent'
+    emphasis:
+      title: Emphasis
       type: string
       description: 'Visual style of the badge'
     with_icon:

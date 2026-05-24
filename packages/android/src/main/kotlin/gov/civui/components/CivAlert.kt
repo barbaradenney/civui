@@ -1,5 +1,5 @@
 // CivUI — CivAlert for Jetpack Compose
-// Accessible notification banner with variant-colored header bar and content area.
+// Accessible notification banner with intent-colored header bar and content area.
 // Renders: header bar (heading + dismiss) -> content area (Section 508 compliant)
 
 package gov.civui.components
@@ -46,17 +46,17 @@ import gov.civui.tokens.CivTokens
  * button, plus a content area below with body text. Mirrors the web
  * `civ-alert` component.
  *
- * The `variant` controls semantic meaning and header bar color (info, warning,
- * error, success). The `alertStyle` controls content area background intensity
+ * The `intent` controls semantic meaning and header bar color (info, warning,
+ * error, success). The `emphasis` controls content area background intensity
  * (primary, secondary, tertiary).
  *
- * TalkBack announces the alert with its variant role. Error variants use
+ * TalkBack announces the alert with its intent role. Error variants use
  * `role="alert"` semantics for assertive announcement.
  *
  * Usage:
  * ```kotlin
  * CivAlert(
- *     variant = "error",
+ *     intent = "error",
  *     heading = "Form submission failed",
  *     label = "Please correct the errors below and try again.",
  *     dismissible = true,
@@ -67,8 +67,8 @@ import gov.civui.tokens.CivTokens
 @Composable
 fun CivAlert(
     modifier: Modifier = Modifier,
-    variant: String = "info",
-    alertStyle: String = "secondary",
+    intent: String = "info",
+    emphasis: String = "secondary",
     heading: String = "",
     label: String = "",
     dismissible: Boolean = false,
@@ -89,24 +89,24 @@ fun CivAlert(
     var dismissed by remember { mutableStateOf(false) }
     if (dismissed) return
 
-    // Header bar color based on variant
-    val headerColor = when (variant) {
+    // Header bar color based on intent
+    val headerColor = when (intent) {
         "error" -> if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
         "warning" -> if (isDark) CivTokens.DarkColors.Warning.default_ else CivTokens.Colors.Warning.default_
         "success" -> if (isDark) CivTokens.DarkColors.Success.default_ else CivTokens.Colors.Success.default_
         else -> if (isDark) CivTokens.DarkColors.Info.default_ else CivTokens.Colors.Info.default_
     }
 
-    // Content area background based on alertStyle
-    val contentBg = when (alertStyle) {
-        "primary" -> when (variant) {
+    // Content area background based on emphasis
+    val contentBg = when (emphasis) {
+        "primary" -> when (intent) {
             "error" -> if (isDark) CivTokens.DarkColors.Error.default_ else CivTokens.Colors.Error.default_
             "warning" -> if (isDark) CivTokens.DarkColors.Warning.default_ else CivTokens.Colors.Warning.default_
             "success" -> if (isDark) CivTokens.DarkColors.Success.default_ else CivTokens.Colors.Success.default_
             else -> if (isDark) CivTokens.DarkColors.Info.default_ else CivTokens.Colors.Info.default_
         }
         "tertiary" -> if (isDark) CivTokens.DarkColors.Base.lightest else CivTokens.Colors.White.default_
-        else -> when (variant) {
+        else -> when (intent) {
             "error" -> if (isDark) CivTokens.DarkColors.Error.lighter else CivTokens.Colors.Error.lighter
             "warning" -> if (isDark) CivTokens.DarkColors.Warning.lighter else CivTokens.Colors.Warning.lighter
             "success" -> if (isDark) CivTokens.DarkColors.Success.lighter else CivTokens.Colors.Success.lighter
@@ -115,16 +115,16 @@ fun CivAlert(
     }
 
     // Text colors
-    val headerTextColor = when (alertStyle) {
+    val headerTextColor = when (emphasis) {
         "primary" -> if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.White.default_
         else -> if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.White.default_
     }
-    val bodyTextColor = when (alertStyle) {
+    val bodyTextColor = when (emphasis) {
         "primary" -> if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.White.default_
         else -> if (isDark) CivTokens.DarkColors.Base.darkest else CivTokens.Colors.Base.darkest
     }
 
-    val isError = variant == "error"
+    val isError = intent == "error"
 
     Column(
         modifier = modifier
@@ -132,7 +132,7 @@ fun CivAlert(
             .padding(bottom = CivTokens.Spacing._4)
             .semantics(mergeDescendants = true) {
                 contentDescription = buildString {
-                    append("$variant alert")
+                    append("$intent alert")
                     if (heading.isNotEmpty()) append(": $heading")
                     if (label.isNotEmpty()) append(". $label")
                 }
@@ -168,7 +168,7 @@ fun CivAlert(
                 if (dismissible) {
                     IconButton(
                         onClick = {
-                            onAnalytics?.invoke("dismiss", mapOf("variant" to variant))
+                            onAnalytics?.invoke("dismiss", mapOf("intent" to intent))
                             onDismiss?.invoke()
                             dismissed = true
                         },
@@ -208,7 +208,7 @@ fun CivAlert(
                     Spacer(modifier = Modifier.width(CivTokens.Spacing._2))
                     IconButton(
                         onClick = {
-                            onAnalytics?.invoke("dismiss", mapOf("variant" to variant))
+                            onAnalytics?.invoke("dismiss", mapOf("intent" to intent))
                             onDismiss?.invoke()
                             dismissed = true
                         },
@@ -232,40 +232,40 @@ fun CivAlert(
 private fun CivAlertPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
         CivAlert(
-            variant = "info",
+            intent = "info",
             heading = "Informational message",
             label = "This is an informational alert with additional details.",
         )
 
         CivAlert(
-            variant = "error",
+            intent = "error",
             heading = "Form submission failed",
             label = "Please correct the errors below and try again.",
             dismissible = true,
         )
 
         CivAlert(
-            variant = "warning",
-            alertStyle = "tertiary",
+            intent = "warning",
+            emphasis = "tertiary",
             heading = "Scheduled maintenance",
             label = "The system will be unavailable on Saturday from 2-4 AM EST.",
         )
 
         CivAlert(
-            variant = "success",
+            intent = "success",
             heading = "Application submitted",
             label = "Your application has been received. You will receive a confirmation email.",
             dismissible = true,
         )
 
         CivAlert(
-            variant = "info",
+            intent = "info",
             label = "This is a slim informational alert.",
             slim = true,
         )
 
         CivAlert(
-            variant = "error",
+            intent = "error",
             label = "This is a slim error alert with dismiss.",
             slim = true,
             dismissible = true,

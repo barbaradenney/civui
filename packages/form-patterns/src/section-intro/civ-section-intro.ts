@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, renderHeading, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 import '@civui/layout/callout';
 
@@ -73,12 +73,12 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
         aria-label="${regionLabel ?? nothing}"
       >
         ${this.heading
-          ? html`<p
-              id="${this._headingId}"
-              class="civ-section-intro__heading"
-              role="heading"
-              aria-level="${this.headingLevel}"
-            >${this.heading}</p>`
+          ? renderHeading({
+              level: this.headingLevel,
+              text: this.heading,
+              id: this._headingId,
+              className: 'civ-section-intro__heading',
+            })
           : nothing}
         <div class="civ-section-intro__body" data-civ-section-intro-body></div>
       </civ-callout>

@@ -7,6 +7,7 @@ import {
   dispatch,
   renderCloseButton,
   renderDisclosure,
+  renderHeading,
   t,
 } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
@@ -152,9 +153,12 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
     const ariaLabelledBy = !this.fullWidth && hasHeading ? this._headingId : null;
 
     const headingTpl = hasHeading
-      ? html`<p id="${this._headingId}" class="civ-alert__heading"
-             role="heading" aria-level="${level}"
-        >${this.heading}</p>`
+      ? renderHeading({
+          level,
+          text: this.heading,
+          id: this._headingId,
+          className: 'civ-alert__heading',
+        })
       : nothing;
 
     const bodyTpl = html`<div class="civ-alert__body">${
@@ -184,15 +188,15 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
             open: this.open,
             onToggle: this._onToggle,
             // `collapsibleActive` requires `heading` so the heading
-            // template is guaranteed non-empty here — re-rendered
-            // inline so the type narrows to TemplateResult without
-            // a cast on the shared `headingTpl` union.
-            summaryContent: html`<p
-              id="${this._headingId}"
-              class="civ-alert__heading"
-              role="heading"
-              aria-level="${level}"
-            >${this.heading}</p>`,
+            // is guaranteed non-empty here — re-rendered via the
+            // shared helper so the type narrows to TemplateResult
+            // without a cast on the shared `headingTpl` union.
+            summaryContent: renderHeading({
+              level,
+              text: this.heading,
+              id: this._headingId,
+              className: 'civ-alert__heading',
+            }),
             panelContent: bodyTpl,
             rootClass: 'civ-alert__details',
             summaryClass: 'civ-alert__summary',

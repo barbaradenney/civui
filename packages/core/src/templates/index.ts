@@ -10,4 +10,9 @@ export {
   inputWidthClass,
 } from './form-templates.js';
 export type { InputWidth, HeadingLevel, LabelSize } from './form-templates.js';
-export { renderCloseButton, renderSkipButton, renderDisclosure } from './chrome-templates.js';
+export {
+  renderCloseButton,
+  renderSkipButton,
+  renderDisclosure,
+  renderHeading,
+} from './chrome-templates.js';

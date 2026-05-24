@@ -1,6 +1,6 @@
 import { html, nothing, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, devWarn, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, devWarn, renderHeading, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -189,12 +189,12 @@ export class CivConfirmationPanel extends LightDomSlotMixin(CivBaseElement) {
             aria-hidden="true"
           ></civ-icon>
           ${this.heading
-            ? html`<p
-                id="${this._headingId}"
-                class="civ-confirmation-panel__heading"
-                role="heading"
-                aria-level="${level}"
-              >${this.heading}</p>`
+            ? renderHeading({
+                level,
+                text: this.heading,
+                id: this._headingId,
+                className: 'civ-confirmation-panel__heading',
+              })
             : nothing}
         </div>
 

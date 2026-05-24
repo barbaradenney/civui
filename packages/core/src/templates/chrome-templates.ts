@@ -208,3 +208,51 @@ export function renderDisclosure({
     class="${panelClasses}"
   >${panelContent}</div></details>`;
 }
+
+interface HeadingOptions {
+  /**
+   * Semantic heading level (1–6). The component's `headingLevel`
+   * prop is passed through; values outside 1–6 are clamped so the
+   * rendered `aria-level` stays valid.
+   */
+  level: number;
+  /** Heading text content. */
+  text: string;
+  /** Optional id — useful for `aria-labelledby` wiring on a parent landmark. */
+  id?: string;
+  /** Optional class on the rendered element (e.g. `civ-alert__heading`). */
+  className?: string;
+}
+
+/**
+ * Shared heading template — renders `<p role="heading" aria-level="N">`
+ * for components that want screen-reader heading semantics WITHOUT
+ * forcing a specific `<h1>`–`<h6>` into the page outline.
+ *
+ * Used by `civ-alert`, `civ-section-intro`, `civ-confirmation-panel`
+ * (and any future surface that needs a configurable-level heading
+ * inside its chrome but shouldn't dictate the document's heading
+ * structure — a card on a marketing page can sit at any logical
+ * depth, the component shouldn't pick).
+ *
+ * **Not for cases where a real `<hN>` element is the right answer.**
+ * `civ-accordion-item` renders real `<h1>`–`<h6>` because each
+ * accordion section IS a sub-section of the surrounding outline —
+ * screen-reader rotor navigation by heading depends on the real tag.
+ * That switch lives in `civ-accordion-item._renderLabel()` and isn't
+ * shared (single consumer, different semantics).
+ */
+export function renderHeading({
+  level,
+  text,
+  id,
+  className,
+}: HeadingOptions): TemplateResult {
+  const safeLevel = Math.max(1, Math.min(6, Math.trunc(level)));
+  return html`<p
+    id="${id ?? nothing}"
+    class="${className ?? nothing}"
+    role="heading"
+    aria-level="${safeLevel}"
+  >${text}</p>`;
+}

@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-callout.js';
-// `@civui/feedback` registers both `civ-notice` and `civ-badge` for
-// the composition stories below.
-import '@civui/feedback';
+// Sibling imports register `civ-notice` and `civ-badge` for the
+// composition stories below.
+import '../notice/civ-notice.js';
+import '../badge/civ-badge.js';
 
 const meta: Meta = {
-  title: 'Layout/Callout',
+  title: 'Feedback/Callout',
   component: 'civ-callout',
   tags: ['autodocs'],
   argTypes: {

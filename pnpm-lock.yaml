@@ -447,6 +447,9 @@ importers:
       '@civui/core':
         specifier: workspace:*
         version: link:../core
+      '@civui/feedback':
+        specifier: workspace:*
+        version: link:../feedback
       '@civui/layout':
         specifier: workspace:*
         version: link:../layout

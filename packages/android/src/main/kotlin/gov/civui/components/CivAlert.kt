@@ -75,6 +75,13 @@ fun CivAlert(
     slim: Boolean = false,
     headingLevel: Int = 4,
     spacing: String = "default",
+    // Parity-only parameters; the collapse/banner behaviors are
+    // deferred per the native-stubs entry in .claude/rules/audit-debt.md
+    // (modal/disclosure presentation has Compose-specific quirks that
+    // need device verification).
+    collapsible: Boolean = false,
+    open: Boolean = false,
+    fullWidth: Boolean = false,
     onDismiss: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {

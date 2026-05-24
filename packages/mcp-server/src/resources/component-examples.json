@@ -198,6 +198,27 @@
       "source": "packages/form-patterns/src/patterns/healthcare-examples.stories.ts"
     },
     {
+      "story": "Collapsible",
+      "name": "Collapsible (accordion) alert",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert\n        variant=\"info\"\n        heading=\"Why we ask for your Social Security number\"\n        collapsible\n      >\n        We use your Social Security number to verify your identity, prevent\n        fraud, and match your application to existing records on file.\n        Federal law authorizes this collection under 38 U.S.C. § 5101.\n        You can decline, but doing so may delay or prevent processing\n        of your claim.\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "CollapsibleDismissible",
+      "name": "Collapsible + dismissible",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert\n        variant=\"info\"\n        heading=\"New: Save and continue later\"\n        collapsible\n        dismissible\n      >\n        You can now save your application at any step and return to it\n        later from your account dashboard. Your draft is saved automatically\n        every 30 seconds. Drafts expire after 60 days of inactivity.\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "CollapsibleOpen",
+      "name": "Collapsible — initially open",
+      "category": "Feedback/Alert",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert\n        variant=\"warning\"\n        heading=\"Action needed before your benefits start\"\n        collapsible\n        open\n      >\n        Your direct deposit information is incomplete. Visit the Banking\n        section to add a routing number and account number — payments\n        cannot be issued until both are on file. Your first payment will\n        be released within 5 business days of completion.\n      </civ-alert>\n    </div>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
       "story": "Compact",
       "category": "Feedback/Alert",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Default</p>\n        <civ-alert variant=\"info\" heading=\"Information\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n      <div>\n        <p class=\"civ-font-semibold civ-mb-2\">Compact (sm)</p>\n        <civ-alert variant=\"info\" heading=\"Information\" spacing=\"sm\">\n          Your application is being reviewed.\n        </civ-alert>\n      </div>\n    </div>",
@@ -267,6 +288,20 @@
       "story": "Error",
       "category": "Feedback/Alert",
       "html": "<civ-alert variant=\"error\" heading=\"There is a problem\">\n      We could not save your information. Check your internet connection and try again.\n    </civ-alert>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "FullWidthBanner",
+      "name": "Full-width site banner",
+      "category": "Feedback/Alert",
+      "html": "<civ-alert full-width variant=\"warning\" heading=\"System maintenance scheduled\">\n      We will perform planned maintenance from 11:00 PM Friday to 6:00 AM\n      Saturday Eastern Time. Online applications and account dashboard will\n      be unavailable during this window.\n    </civ-alert>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
+      "story": "FullWidthBannerDismissible",
+      "name": "Full-width site banner — dismissible",
+      "category": "Feedback/Alert",
+      "html": "<civ-alert full-width variant=\"info\" heading=\"Form update available\" dismissible>\n      We've simplified the dependent claim form. You'll see fewer questions\n      this year, and we'll pre-fill any answers we already have on file.\n    </civ-alert>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {

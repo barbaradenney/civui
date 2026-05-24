@@ -70,6 +70,14 @@ const RUNTIME_DEFINED_VARS = new Set<string>([
   // has a `, 4` fallback so the unstyled state still renders.
   // Per-instance API surface, not a global design token.
   '--civ-metric-group-cols',
+  // Consumer-overridable site-wide content max-width. Read by
+  // .civ-alert--full-width to constrain the centered banner content
+  // so the text stays readable on wide viewports. The var() reference
+  // has an `80rem` fallback so the banner renders correctly even
+  // when no consumer sets the variable. Sites that already have a
+  // content-shell max-width can mirror it via
+  // `--civ-site-max-width: ...` on their site wrapper.
+  '--civ-site-max-width',
 ]);
 
 function* walk(path: string): Generator<string> {

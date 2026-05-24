@@ -3622,6 +3622,64 @@
     color: var(--civ-color-white-DEFAULT);
   }
 
+  /* ── Alert: Collapsible mode ────────────────────────────────
+     The heading sits inside a native <summary>; the body is a
+     sibling <div> that <details> hides/shows. The chevron rotates
+     90° on open to match the civ-disclosure / civ-accordion idiom.
+     The summary uses cursor:pointer + removes the default
+     ::-webkit-details-marker triangle so only the chevron reads
+     as the toggle affordance. */
+  .civ-alert--collapsible .civ-alert__details {
+    @apply civ-flex-1 civ-min-w-0;
+  }
+  .civ-alert--collapsible .civ-alert__summary {
+    @apply civ-flex civ-items-start civ-gap-2 civ-cursor-pointer;
+    list-style: none;
+  }
+  .civ-alert--collapsible .civ-alert__summary::-webkit-details-marker {
+    display: none;
+  }
+  .civ-alert--collapsible .civ-alert__chevron {
+    @apply civ-flex-shrink-0;
+    margin-top: 0.125rem;
+    transition: transform var(--civ-motion-duration-fast, 100ms)
+      var(--civ-motion-easing-ease-out, ease);
+  }
+  .civ-alert--collapsible .civ-alert__details[open] .civ-alert__chevron {
+    transform: rotate(90deg);
+  }
+  .civ-alert--collapsible .civ-alert__details[open] .civ-alert__body {
+    @apply civ-mt-2;
+  }
+  /* Body padding-left aligns under the heading text (past the
+     chevron) so the open-state content doesn't jump back to the
+     summary's left edge. */
+  .civ-alert--collapsible .civ-alert__body {
+    padding-inline-start: calc(1em + 0.5rem);
+  }
+
+  /* ── Alert: Full-width site banner ──────────────────────────
+     A persistent landmark for site-wide notices. Strips the 2px
+     border (replaced by 1px top + bottom so the banner has a
+     boundary but doesn't look like a stray card) and centers the
+     inner content to `--civ-site-max-width` so the banner spans
+     the viewport while the text stays readable on wide screens.
+
+     Place full-width alerts as the first child of <body> or the
+     outermost site wrapper so they actually span edge-to-edge —
+     a parent with constrained width clips them to its container. */
+  .civ-alert--full-width {
+    @apply civ-mb-0 civ-border-0;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+  }
+  .civ-alert--full-width .civ-alert__content {
+    max-width: var(--civ-site-max-width, 80rem);
+    margin-inline: auto;
+  }
+
   /* ── Shared Close Button ─────────────────────────────────── */
   /* Used by modal, alert, and any component with a dismiss/close action.
      Renders as a minimal icon-only button with WCAG-compliant touch target. */

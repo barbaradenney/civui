@@ -64,6 +64,17 @@ public struct CivAlert: View {
     /// Spacing variant ("default", "compact").
     public var spacing: String
 
+    /// Parity-only properties for the web-side `collapsible` /
+    /// `open` / `fullWidth` modes. SwiftUI implementations of the
+    /// collapse + site-banner behaviors are deferred per the
+    /// native-stubs entry in `.claude/rules/audit-debt.md` —
+    /// presentation patterns have platform quirks that need device
+    /// verification. These declarations exist so schema-parity
+    /// passes; the rendered Swift view ignores them today.
+    public var collapsible: Bool
+    public var open: Bool
+    public var fullWidth: Bool
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -81,7 +92,10 @@ public struct CivAlert: View {
         onDismiss: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         headingLevel: Int = 4,
-        spacing: String = "default"
+        spacing: String = "default",
+        collapsible: Bool = false,
+        open: Bool = false,
+        fullWidth: Bool = false
     ) {
         self.variant = variant
         self.alertStyle = alertStyle
@@ -93,6 +107,9 @@ public struct CivAlert: View {
         self.onAnalytics = onAnalytics
         self.headingLevel = headingLevel
         self.spacing = spacing
+        self.collapsible = collapsible
+        self.open = open
+        self.fullWidth = fullWidth
     }
 
     // MARK: - Body

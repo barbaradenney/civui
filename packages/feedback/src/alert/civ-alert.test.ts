@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-alert.js';
-import type { CivAlert } from './civ-alert.js';
+import type { CivAlert, AlertVariant } from './civ-alert.js';
 
 afterEach(cleanupFixtures);
 
@@ -286,5 +286,156 @@ describe('civ-alert', () => {
 
     expect(el.shadowRoot).toBeNull();
     expect(el.querySelector('.civ-alert')).not.toBeNull();
+  });
+
+  // ── Collapsible mode ────────────────────────────────────────
+  describe('collapsible mode', () => {
+    it('wraps heading + body in <details>/<summary> when collapsible + heading are set', async () => {
+      const el = await fixture(
+        '<civ-alert collapsible heading="Details">Body content.</civ-alert>',
+      );
+      const details = el.querySelector('details.civ-alert__details');
+      expect(details).not.toBeNull();
+      const summary = details!.querySelector('summary.civ-alert__summary');
+      expect(summary).not.toBeNull();
+      // Heading is inside summary (the toggle surface).
+      expect(summary!.querySelector('.civ-alert__heading')?.textContent).toBe('Details');
+      // Body is a sibling of summary (collapses with the <details>).
+      expect(details!.querySelector('.civ-alert__body')?.textContent).toContain('Body content.');
+      expect(el.querySelector('.civ-alert')?.classList.contains('civ-alert--collapsible')).toBe(true);
+    });
+
+    it('starts closed by default and reflects the open attribute', async () => {
+      const el = await fixture<CivAlert>(
+        '<civ-alert collapsible heading="Details">Body.</civ-alert>',
+      );
+      expect(el.open).toBe(false);
+      expect(el.hasAttribute('open')).toBe(false);
+      const details = el.querySelector('details.civ-alert__details') as HTMLDetailsElement;
+      expect(details.open).toBe(false);
+    });
+
+    it('starts open when open attribute is set on the host', async () => {
+      const el = await fixture<CivAlert>(
+        '<civ-alert collapsible open heading="Details">Body.</civ-alert>',
+      );
+      expect(el.open).toBe(true);
+      const details = el.querySelector('details.civ-alert__details') as HTMLDetailsElement;
+      expect(details.open).toBe(true);
+    });
+
+    it('fires civ-toggle on expand and collapse', async () => {
+      const el = await fixture<CivAlert>(
+        '<civ-alert collapsible heading="Details">Body.</civ-alert>',
+      );
+      const handler = vi.fn();
+      el.addEventListener('civ-toggle', handler);
+      const details = el.querySelector('details.civ-alert__details') as HTMLDetailsElement;
+      details.open = true;
+      details.dispatchEvent(new Event('toggle'));
+      await elementUpdated(el);
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler.mock.calls[0][0].detail).toEqual({ open: true });
+      expect(el.open).toBe(true);
+
+      details.open = false;
+      details.dispatchEvent(new Event('toggle'));
+      await elementUpdated(el);
+      expect(handler).toHaveBeenCalledTimes(2);
+      expect(handler.mock.calls[1][0].detail).toEqual({ open: false });
+    });
+
+    it('renders close button alongside summary when collapsible + dismissible', async () => {
+      const el = await fixture(
+        '<civ-alert collapsible dismissible heading="Details">Body.</civ-alert>',
+      );
+      const details = el.querySelector('details.civ-alert__details');
+      const closeBtn = el.querySelector('.civ-close-btn');
+      expect(details).not.toBeNull();
+      expect(closeBtn).not.toBeNull();
+      // The close button must NOT be inside the summary — otherwise
+      // clicking it would also toggle the details.
+      expect(closeBtn!.closest('summary')).toBeNull();
+    });
+
+    it('dismiss click stops propagation so it does not toggle a collapsible alert', async () => {
+      const el = await fixture<CivAlert>(
+        '<civ-alert collapsible dismissible heading="Details">Body.</civ-alert>',
+      );
+      const toggleHandler = vi.fn();
+      el.addEventListener('civ-toggle', toggleHandler);
+      const btn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
+      btn.click();
+      // dismiss may microtask-defer removal; sync check that no
+      // toggle fired during the dismiss click itself.
+      expect(toggleHandler).not.toHaveBeenCalled();
+    });
+
+    it('falls back to non-collapsible render with a dev warning when heading is missing', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      // Reset the devWarn dedupe so this test always sees the warning even
+      // if another test in the file triggered the same key.
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      const el = await fixture('<civ-alert collapsible>Body with no heading.</civ-alert>');
+      expect(el.querySelector('details.civ-alert__details')).toBeNull();
+      expect(el.querySelector('.civ-alert__body')?.textContent).toContain('Body with no heading.');
+      expect(warn).toHaveBeenCalled();
+      const message = warn.mock.calls[0]?.[0] as string;
+      expect(message).toContain('civ-alert');
+      expect(message).toContain('collapsible');
+      warn.mockRestore();
+    });
+  });
+
+  // ── Full-width site banner mode ─────────────────────────────
+  describe('full-width mode', () => {
+    it('applies the civ-alert--full-width class', async () => {
+      const el = await fixture('<civ-alert full-width heading="Site notice">Body.</civ-alert>');
+      expect(el.querySelector('.civ-alert')?.classList.contains('civ-alert--full-width')).toBe(true);
+    });
+
+    it('switches role to "region" regardless of variant (landmark, not live region)', async () => {
+      // role="alert" / role="status" would re-announce the banner on
+      // every page navigation — wrong for a persistent site-wide notice.
+      const cases: AlertVariant[] = ['info', 'warning', 'error', 'success'];
+      for (const variant of cases) {
+        const el = await fixture(
+          `<civ-alert full-width variant="${variant}" heading="Site notice">Body.</civ-alert>`,
+        );
+        expect(el.querySelector('.civ-alert')?.getAttribute('role')).toBe('region');
+      }
+    });
+
+    it('uses aria-label (from heading) instead of aria-labelledby in full-width mode', async () => {
+      const el = await fixture(
+        '<civ-alert full-width heading="System maintenance">Body.</civ-alert>',
+      );
+      const banner = el.querySelector('.civ-alert')!;
+      expect(banner.getAttribute('aria-label')).toBe('System maintenance');
+      // No aria-labelledby because a landmark's name comes from
+      // aria-label directly (avoids depending on heading-id lookup
+      // across nested constraint).
+      expect(banner.getAttribute('aria-labelledby')).toBeNull();
+    });
+
+    it('falls back to the variant label for aria-label when no heading', async () => {
+      const el = await fixture(
+        '<civ-alert full-width variant="warning">Body without heading.</civ-alert>',
+      );
+      const banner = el.querySelector('.civ-alert')!;
+      // The variant-label string ("Warning", "Information", etc.)
+      // becomes the landmark's accessible name.
+      expect(banner.getAttribute('aria-label')).toBeTruthy();
+      expect(banner.getAttribute('aria-label')?.length).toBeGreaterThan(0);
+    });
+
+    it('reflects full-width to the host attribute', async () => {
+      const el = await fixture<CivAlert>('<civ-alert>Body.</civ-alert>');
+      expect(el.hasAttribute('full-width')).toBe(false);
+      el.fullWidth = true;
+      await elementUpdated(el);
+      expect(el.hasAttribute('full-width')).toBe(true);
+    });
   });
 });

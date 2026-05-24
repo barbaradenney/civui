@@ -282,4 +282,80 @@ describe('civ-image', () => {
     // so a thumbnail with a custom ratio actually works now.
     expect(img.style.aspectRatio).toBe('16 / 9');
   });
+
+  // ── Modern image formats (WebP / AVIF) ──────────────────────────
+
+  it('renders a bare <img> when no alternate formats are set', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/photo.jpg" alt="x" ratio="16:9"></civ-image>',
+    );
+    expect(el.querySelector('picture')).toBeNull();
+    expect(el.querySelector('img')).not.toBeNull();
+  });
+
+  it('wraps the <img> in <picture> when webp-src is set', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/photo.jpg" webp-src="/photo.webp" alt="x" ratio="16:9"></civ-image>',
+    );
+    const picture = el.querySelector('picture');
+    expect(picture).not.toBeNull();
+    expect(picture!.querySelector('img')).not.toBeNull();
+  });
+
+  it('emits <source type="image/webp"> with the webp URL', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/photo.jpg" webp-src="/photo.webp" alt="x" ratio="16:9"></civ-image>',
+    );
+    const source = el.querySelector('source[type="image/webp"]')!;
+    expect(source).not.toBeNull();
+    expect(source.getAttribute('srcset')).toBe('/photo.webp');
+  });
+
+  it('emits <source type="image/avif"> with the avif URL', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/photo.jpg" avif-src="/photo.avif" alt="x" ratio="16:9"></civ-image>',
+    );
+    const source = el.querySelector('source[type="image/avif"]')!;
+    expect(source).not.toBeNull();
+    expect(source.getAttribute('srcset')).toBe('/photo.avif');
+  });
+
+  it('lists AVIF before WebP so browsers prefer the smaller format', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/p.jpg" webp-src="/p.webp" avif-src="/p.avif" alt="x" ratio="16:9"></civ-image>',
+    );
+    const sources = el.querySelectorAll('source');
+    expect(sources.length).toBe(2);
+    expect(sources[0].getAttribute('type')).toBe('image/avif');
+    expect(sources[1].getAttribute('type')).toBe('image/webp');
+  });
+
+  it('keeps the original src as the universal <img> fallback inside <picture>', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/photo.jpg" webp-src="/photo.webp" avif-src="/photo.avif" alt="x" ratio="16:9"></civ-image>',
+    );
+    const img = el.querySelector('picture img')!;
+    expect(img.getAttribute('src')).toBe('/photo.jpg');
+  });
+
+  it('preserves all <img> attributes (alt, loading, decoding, width/height, aspect-ratio) inside <picture>', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/p.jpg" webp-src="/p.webp" alt="hero" ratio="16:9" width="800" height="450" loading="eager" decoding="sync"></civ-image>',
+    );
+    const img = el.querySelector('picture img') as HTMLImageElement;
+    expect(img.getAttribute('alt')).toBe('hero');
+    expect(img.getAttribute('loading')).toBe('eager');
+    expect(img.getAttribute('decoding')).toBe('sync');
+    expect(img.getAttribute('width')).toBe('800');
+    expect(img.getAttribute('height')).toBe('450');
+    expect(img.style.aspectRatio).toBe('16 / 9');
+  });
+
+  it('thumbnail variant still wraps in <picture> when alternates are set', async () => {
+    const el = await fixture<CivImage>(
+      '<civ-image src="/a.jpg" webp-src="/a.webp" alt="A" variant="thumbnail" size="48"></civ-image>',
+    );
+    expect(el.querySelector('picture')).not.toBeNull();
+    expect(el.querySelector('source[type="image/webp"]')).not.toBeNull();
+  });
 });

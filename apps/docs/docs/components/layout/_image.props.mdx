@@ -3,7 +3,9 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `src` | `string` | `''` | Image source URL. Required |
+| `src` | `string` | `''` | Image source URL. Required. Acts as the universal fallback — used directly in `<img>` when no alternates are set, or as the `<picture>` fallback when `webpSrc` / `avifSrc` are set |
+| `webp-src` | `string` | `''` | URL to a WebP alternate. When set (alone or alongside `avifSrc`), the component wraps the `<img>` in a `<picture>` with a `<source type="image/webp">` child. Browser picks the smallest format it supports. Consumers produce these files at build time, via a CDN, or by hand — the component does not convert anything |
+| `avif-src` | `string` | `''` | URL to an AVIF alternate. AVIF beats WebP on compression but has narrower browser support, so it's listed first inside `<picture>` and falls through to WebP (if set) then `src`. Consumers produce these files at build time or via a CDN |
 | `alt` | `string` | `''` | Alt text. Required per Section 508 / WCAG 1.1.1. For purely decorative images, pass `alt=""` (empty string) — that's the WAI-documented opt-out, never omit the attribute. Filenames are deliberately never used as a fallback (.gov uploads often have opaque names that read worse than nothing) |
 | `width` | `number` | — | Intrinsic width in px. Combined with `height` to compute aspect-ratio when `ratio` is `auto` — set both to reserve layout space before the bytes load |
 | `height` | `number` | — | Intrinsic height in px. Combined with `width` for aspect-ratio when `ratio` is `auto` |

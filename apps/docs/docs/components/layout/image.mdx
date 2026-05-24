@@ -69,6 +69,152 @@ For the LCP image, combine `loading="eager"` (don't defer the fetch) + `decoding
 
 <StoryEmbed id="layout-image--hero-priority" />
 
+### Modern image formats (WebP / AVIF)
+
+Set `webp-src` and / or `avif-src` to consumer-produced alternate files. The component wraps the `<img>` in a `<picture>` element with format-negotiating `<source>` children; the browser picks the first format it understands.
+
+```html
+<civ-image
+  src="/photo.jpg"
+  webp-src="/photo.webp"
+  avif-src="/photo.avif"
+  alt="A veteran salutes the flag"
+  ratio="16:9"
+></civ-image>
+```
+
+Renders:
+
+```html
+<picture>
+  <source type="image/avif" srcset="/photo.avif" />
+  <source type="image/webp" srcset="/photo.webp" />
+  <img src="/photo.jpg" alt="..." loading="lazy" decoding="async" ... />
+</picture>
+```
+
+<StoryEmbed id="layout-image--modern-formats" />
+
+## Image optimization — implementation guide
+
+`civ-image` does **not** convert images at runtime. Doing so in the browser would be the wrong layer — by the time the original bytes have downloaded, the savings are gone. The component's job is to surface the `<picture>` + `<source>` pattern so the browser fetches the right file the first time. Producing the alternate files is a build-time or server-side concern.
+
+This matters for accessibility because the people most affected by large image payloads are:
+
+- **Users on metered or slow connections** — common in gov audiences, rural broadband gaps, public-Wi-Fi waiting rooms.
+- **Mobile users on data caps** — every megabyte saved is a megabyte off the user's bill.
+- **Older devices with limited CPU/memory** — smaller files decode faster and produce less paint jank.
+- **Assistive-tech users on shared bandwidth** — screen-reader cadence stays smooth when the page isn't competing with a slow image fetch.
+
+A 200KB photo shrinks to roughly:
+
+| Format | Typical size vs JPEG | Browser support (2024+) |
+|--------|----------------------|--------------------------|
+| **AVIF** | ~50% smaller (often ~100KB) | Chrome / Firefox / Safari 16.4+ / Edge — ~93% of users |
+| **WebP** | ~25–35% smaller (~130KB) | All evergreen browsers — ~97% of users |
+| **JPEG** | baseline (200KB) | Universal — fallback for the long tail |
+
+So a `<picture>` with all three lets the browser save ~50% bandwidth on modern engines while older browsers still get the original. The `<picture>` itself adds zero overhead — no JavaScript, no extra request — just a few bytes of markup.
+
+### Producing the alternate files
+
+Pick whichever of these matches your stack. They're listed roughly in order of "easiest to adopt for an existing project."
+
+#### Option 1 — Format-negotiating CDN (zero-touch on your code)
+
+Best for sites already on a CDN. The CDN serves the original URL but returns AVIF / WebP based on the request's `Accept` header. Your `<img src="/photo.jpg">` automatically becomes WebP for browsers that ask for it, no markup change needed.
+
+- **Cloudflare Polish** — `Settings → Speed → Optimization → Polish: Lossy` (or `Lossless`). Add the `WebP` toggle. Pro plans include AVIF via Polish + Mirage.
+- **Cloudinary** — URL-based transformations: `/image/upload/f_auto/q_auto/photo.jpg` returns AVIF / WebP automatically.
+- **Imgix** — `?auto=format&q=auto` query string does the same.
+- **Vercel Image Optimization** / **Netlify Image CDN** — built-in for sites hosted on those platforms.
+
+If you use this approach, you don't need `webp-src` / `avif-src` on `civ-image` at all — the CDN handles negotiation transparently. The component's `loading="lazy"` + `decoding="async"` + aspect-ratio reservation still apply.
+
+#### Option 2 — Build-time conversion (most control)
+
+Best when you ship images as part of your build (static-site generators, Vite / Next / Astro projects). Generate the alternates once, commit them, reference all three URLs in markup.
+
+**Node-based** (works in any pipeline):
+
+```bash
+npm install --save-dev sharp
+```
+
+```js
+// scripts/optimize-images.mjs
+import sharp from 'sharp';
+import { readdirSync } from 'node:fs';
+import { join, parse } from 'node:path';
+
+const inputDir = 'public/images';
+for (const file of readdirSync(inputDir)) {
+  if (!/\.(jpe?g|png)$/i.test(file)) continue;
+  const { name } = parse(file);
+  const src = join(inputDir, file);
+  await sharp(src).webp({ quality: 80 }).toFile(join(inputDir, `${name}.webp`));
+  await sharp(src).avif({ quality: 60 }).toFile(join(inputDir, `${name}.avif`));
+}
+```
+
+Run as `node scripts/optimize-images.mjs` (CI step or `prebuild` script). Quality settings: WebP `quality: 80` is visually lossless for photos; AVIF `quality: 60` matches WebP `80` at roughly half the size.
+
+**Vite plugin** (auto-emit on build):
+
+```bash
+npm install --save-dev vite-imagetools
+```
+
+```ts
+// vite.config.ts
+import { imagetools } from 'vite-imagetools';
+export default { plugins: [imagetools()] };
+```
+
+Then import images with format directives:
+
+```ts
+import heroJpg from './hero.jpg';
+import heroWebp from './hero.jpg?format=webp';
+import heroAvif from './hero.jpg?format=avif';
+```
+
+**Astro** has this built in via `astro:assets`; **Next.js** has `next/image` (which is a different component model entirely — if you use it, skip `civ-image` for that image).
+
+#### Option 3 — Manual CLI for a small set of files
+
+Best when you have a handful of images and don't want a pipeline. The reference encoders ship as command-line tools.
+
+```bash
+# WebP — included with libwebp (brew install webp / apt install webp)
+cwebp -q 80 photo.jpg -o photo.webp
+
+# AVIF — libavif via cargo, or use the @squoosh/cli package
+npx @squoosh/cli --avif '{"quality":60}' photo.jpg
+```
+
+Squoosh is also Google's free web app — drag a JPEG in, get AVIF / WebP out — for one-off conversions.
+
+#### Option 4 — Drupal / WordPress / Sitecore
+
+Most CMSes have a WebP/AVIF module:
+
+- **Drupal** — [`image_optimize`](https://www.drupal.org/project/image_optimize) + [`webp`](https://www.drupal.org/project/webp) modules; image style derivatives emit the alternates automatically.
+- **WordPress** — Cloudflare / Jetpack / WP Rocket all include AVIF / WebP delivery; the Site Health screen will tell you which formats your install is serving.
+- **Sitecore** — see Sitecore Content Hub's media-derivatives features.
+
+### What "good" looks like
+
+Run [WebPageTest](https://www.webpagetest.org/) or Chrome DevTools' Lighthouse → "Properly size images" + "Serve images in next-gen formats". A green report means the alternates are reaching the browser; a red one means the CDN / build step isn't kicking in.
+
+Bandwidth budget rule of thumb: **a single page should ship under 1MB of imagery on mobile**. For .gov forms with a few content photos, this is achievable easily with AVIF + WebP; for image-heavy landing pages, lean harder on `loading="lazy"` (which `civ-image` defaults to) and crop tightly.
+
+### Limitations
+
+- `civ-image` doesn't ship *responsive* `srcset` (multiple resolutions of the same format). That's a separate `<picture>` art-direction feature — deferred to a future version. Until then, ship one `webp-src` and one `avif-src` sized for your largest reasonable container; the browser scales down for smaller viewports.
+- SVG and GIF don't need WebP / AVIF — they're already compact or animated-with-transparency. Leave them on `src` only.
+- Icons are inline SVG via `civ-icon` — no `<img>` involved.
+
 ## Accessibility
 
 - **Alt is required.** WCAG 1.1.1 / Section 508 §1194.22(a). The component dev-warns if `alt` is undefined. Pass `alt=""` (empty string) for decorative images — that's the documented opt-out, never omit.

@@ -167,3 +167,30 @@ export const HeroPriority: Story = {
     </div>
   `,
 };
+
+/**
+ * Modern image formats with universal fallback — the component renders
+ * a `<picture>` element with AVIF + WebP `<source>` children; the
+ * browser picks the smallest format it understands and falls back to
+ * the original `src` (JPEG / PNG) on older browsers. The component
+ * does NOT convert anything — consumers produce the alternate files
+ * at build time, via a CDN, or by hand. See the docs page for the
+ * implementation guide.
+ *
+ * (picsum.photos doesn't serve WebP / AVIF natively, so the demo
+ * URLs below are illustrative — Inspect the rendered markup to see
+ * the `<picture>` + `<source>` structure that ships to the browser.)
+ */
+export const ModernFormats: Story = {
+  render: () => html`
+    <div style="max-width: 480px;">
+      <civ-image
+        src="https://picsum.photos/seed/formats/800/450"
+        webp-src="https://picsum.photos/seed/formats/800/450.webp"
+        avif-src="https://picsum.photos/seed/formats/800/450.avif"
+        alt="Modern-format demo — Inspect the DOM to see picture + source"
+        ratio="16:9"
+      ></civ-image>
+    </div>
+  `,
+};

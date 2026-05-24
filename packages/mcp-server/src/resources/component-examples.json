@@ -4511,7 +4511,7 @@
       "story": "HeaderWithPercent",
       "name": "Header + Percent (paired)",
       "category": "Forms/Form/Progress",
-      "html": "<div class=\"civ-mb-4\">\n      <div class=\"civ-flex civ-justify-between civ-items-center civ-mb-1\">\n        <civ-progress-header current=\"2\" total=\"5\" step-title=\"Employment History\" size=\"secondary\"></civ-progress-header>\n        <span class=\"civ-text-sm civ-font-bold\">40%</span>\n      </div>\n      <civ-progress-percent value=\"40\" label=\"Form completion\" .showPercent=\"${false}\"></civ-progress-percent>\n    </div>",
+      "html": "<div class=\"civ-mb-4\">\n      <div class=\"civ-flex civ-justify-between civ-items-center civ-mb-1\">\n        <civ-progress-header current=\"2\" total=\"5\" step-title=\"Employment History\" emphasis=\"secondary\"></civ-progress-header>\n        <span class=\"civ-text-sm civ-font-bold\">40%</span>\n      </div>\n      <civ-progress-percent value=\"40\" label=\"Form completion\" .showPercent=\"${false}\"></civ-progress-percent>\n    </div>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
     },
     {
@@ -4558,21 +4558,21 @@
       "story": "ProgressHeaderPrimary",
       "name": "Header — Primary",
       "category": "Forms/Form/Progress",
-      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      size=\"primary\"\n    ></civ-progress-header>",
+      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      emphasis=\"primary\"\n    ></civ-progress-header>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
     },
     {
       "story": "ProgressHeaderSecondary",
       "name": "Header — Secondary",
       "category": "Forms/Form/Progress",
-      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      size=\"secondary\"\n    ></civ-progress-header>",
+      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      emphasis=\"secondary\"\n    ></civ-progress-header>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
     },
     {
       "story": "ProgressHeaderTertiary",
       "name": "Header — Tertiary",
       "category": "Forms/Form/Progress",
-      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      size=\"tertiary\"\n    ></civ-progress-header>",
+      "html": "<civ-progress-header\n      current=\"1\"\n      total=\"4\"\n      step-title=\"Contact Information\"\n      emphasis=\"tertiary\"\n    ></civ-progress-header>",
       "source": "packages/form-patterns/src/progress/civ-progress-steps.stories.ts"
     },
     {

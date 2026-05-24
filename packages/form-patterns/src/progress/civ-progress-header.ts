@@ -6,9 +6,9 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
  * CivUI Progress Header
  *
  * A step counter for multi-step forms. Displays
- * "Step X of Y: Title" with configurable size and heading level.
+ * "Step X of Y: Title" with configurable emphasis and heading level.
  *
- * Three sizes:
+ * Three emphasis levels:
  * - `primary` — divider lines, large heading, generous spacing. Use as a standalone page heading.
  * - `secondary` — no dividers, base font. Use inline in form sections.
  * - `tertiary` — compact, small font. Use alongside civ-progress-steps or civ-progress-percent.
@@ -21,7 +21,7 @@ import { CivBaseElement, announce, t, interpolate } from '@civui/core';
  * @prop {number} current - Current step index (0-based, clamped to 0..total-1)
  * @prop {number} total - Total number of steps
  * @prop {string} stepTitle - Title of the current step
- * @prop {'primary'|'secondary'|'tertiary'} size - Visual size variant
+ * @prop {'primary'|'secondary'|'tertiary'} emphasis - Visual emphasis level (renamed from `size`; the prop never controlled pixel size, only prominence)
  * @prop {number} headingLevel - Semantic heading level (1–6)
  */
 @customElement('civ-progress-header')
@@ -35,8 +35,8 @@ export class CivProgressHeader extends CivBaseElement {
   /** Title of the current step. */
   @property({ type: String, attribute: 'step-title' }) stepTitle = '';
 
-  /** Visual size: 'primary' (large with dividers), 'secondary' (medium, default), 'tertiary' (compact). */
-  @property({ type: String }) size: 'primary' | 'secondary' | 'tertiary' = 'secondary';
+  /** Visual emphasis: 'primary' (large with dividers), 'secondary' (medium, default), 'tertiary' (compact). */
+  @property({ type: String }) emphasis: 'primary' | 'secondary' | 'tertiary' = 'secondary';
 
   /** Semantic heading level (1–6). */
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: number = 2;
@@ -64,7 +64,7 @@ export class CivProgressHeader extends CivBaseElement {
     const idx = this._safeCurrent;
 
     return html`
-      <div class="civ-progress-header--${this.size}">
+      <div class="civ-progress-header--${this.emphasis}">
         <span class="civ-progress-header__counter">
           ${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(this.total) })}:
         </span>

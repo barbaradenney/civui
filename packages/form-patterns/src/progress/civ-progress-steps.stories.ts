@@ -128,7 +128,7 @@ export const ProgressHeaderPrimary: Story = {
       current="1"
       total="4"
       step-title="Contact Information"
-      size="primary"
+      emphasis="primary"
     ></civ-progress-header>
   `,
 };
@@ -140,7 +140,7 @@ export const ProgressHeaderSecondary: Story = {
       current="1"
       total="4"
       step-title="Contact Information"
-      size="secondary"
+      emphasis="secondary"
     ></civ-progress-header>
   `,
 };
@@ -152,7 +152,7 @@ export const ProgressHeaderTertiary: Story = {
       current="1"
       total="4"
       step-title="Contact Information"
-      size="tertiary"
+      emphasis="tertiary"
     ></civ-progress-header>
   `,
 };
@@ -177,7 +177,7 @@ export const HeaderWithPercent: Story = {
   render: () => html`
     <div class="civ-mb-4">
       <div class="civ-flex civ-justify-between civ-items-center civ-mb-1">
-        <civ-progress-header current="2" total="5" step-title="Employment History" size="secondary"></civ-progress-header>
+        <civ-progress-header current="2" total="5" step-title="Employment History" emphasis="secondary"></civ-progress-header>
         <span class="civ-text-sm civ-font-bold">40%</span>
       </div>
       <civ-progress-percent value="40" label="Form completion" .showPercent="${false}"></civ-progress-percent>

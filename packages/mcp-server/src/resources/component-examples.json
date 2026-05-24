@@ -1165,35 +1165,6 @@
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     }
   ],
-  "civ-confirmation-panel": [
-    {
-      "story": "Default",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel\n      heading=\"${args.heading}\"\n      heading-level=\"${args.headingLevel}\"\n      reference=\"${args.reference}\"\n      reference-label=\"${args.referenceLabel}\"\n      ?no-autofocus=\"${args.noAutofocus}\"\n    >\n      <p>We have sent a confirmation email to sarah@example.gov.</p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          Your application will be reviewed within 5 working days. We'll contact\n          you if we need more information.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Print confirmation\" variant=\"secondary\"></civ-button>\n        <civ-link href=\"/dashboard\">Return to dashboard</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "Minimal",
-      "name": "Minimal (eligibility check)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"You may be eligible\" no-autofocus>\n      <p>\n        Based on your answers, you appear to meet the basic eligibility\n        criteria. To confirm and apply, start the full application.\n      </p>\n\n      <div data-actions>\n        <civ-button label=\"Start application\" variant=\"primary\"></civ-button>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "PendingReference",
-      "name": "Pending reference (async backend)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"Claim received\" no-autofocus>\n      <p>\n        We're processing your claim. This usually takes a few minutes.\n      </p>\n\n      <p data-pending-reference>\n        <strong>We'll email your reference number within 24 hours</strong> to\n        sarah@example.gov. Use it when checking your claim status.\n      </p>\n\n      <div data-next-steps>\n        <h2>What happens next</h2>\n        <p>\n          You'll get a decision letter by mail within 30 days. You can also\n          check your status online once you receive your reference number.\n        </p>\n      </div>\n\n      <div data-actions>\n        <civ-button label=\"Check status\" variant=\"primary\"></civ-button>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    },
-    {
-      "story": "WithoutReference",
-      "name": "Without reference (informational submission)",
-      "category": "Forms/Form/Confirmation Panel",
-      "html": "<civ-confirmation-panel heading=\"Subscription confirmed\" no-autofocus>\n      <p>\n        You're signed up to receive benefit updates at sarah@example.gov.\n        Look out for our first email within the next week.\n      </p>\n\n      <div data-next-steps>\n        <h2>What you can do next</h2>\n        <ul>\n          <li>Update your contact preferences anytime</li>\n          <li>Browse benefit topics on the resources page</li>\n        </ul>\n      </div>\n\n      <div data-actions>\n        <civ-link href=\"/\">Return to home</civ-link>\n      </div>\n    </civ-confirmation-panel>",
-      "source": "packages/form-patterns/src/confirmation-panel/civ-confirmation-panel.stories.ts"
-    }
-  ],
   "civ-count": [
     {
       "story": "Default",

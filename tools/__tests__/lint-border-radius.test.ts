@@ -168,7 +168,6 @@ describe('isAllowed', () => {
     expect(isAllowed('.civ-metric-tile')).toBe(false);
     expect(isAllowed('.civ-file-preview')).toBe(false);
     expect(isAllowed('.civ-form-support-resources')).toBe(false);
-    expect(isAllowed('.civ-confirmation-panel__reference')).toBe(false);
   });
 
   it('forbids ad-hoc new card-shaped classes', () => {

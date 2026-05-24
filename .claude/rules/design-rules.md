@@ -42,7 +42,6 @@ and trains users not to trust it.
 - `civ-metric-tile` — composes `civ-card`, inherits flat.
 - `civ-callout` — left-accent rail + padding, no radius.
 - `civ-file-preview` (image / file thumbnail).
-- `civ-confirmation-panel__reference` (USWDS summary box).
 - Any new "card-shaped" display container — use `civ-card` or
   `civ-callout` instead of hand-rolling chrome.
 
@@ -89,7 +88,6 @@ treatment fragments.
 | Inline loading indicator | `<civ-spinner>` | Hand-rolled CSS animation |
 | Single key figure / KPI tile | `<civ-metric-tile>` | Hand-rolled "stat card" |
 | Dated event sequence | `<civ-timeline>` + `<civ-timeline-item>` | Hand-rolled list with dates |
-| Post-submit confirmation page | `<civ-confirmation-panel>` | Hand-rolled success surface |
 | Form input | `<civ-text-input>` / etc. | Native `<input>` with own label/hint chrome |
 | Group of related inputs | `<civ-fieldset>` (true grouping) or self-contained group component (`<civ-radio-group>`, etc.) | Manual fieldset / legend |
 | Tab strip | `<civ-tabs>` + `<civ-tab>` + `<civ-tab-panel>` | Hand-rolled `role="tablist"` plumbing |

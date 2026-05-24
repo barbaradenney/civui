@@ -25,7 +25,7 @@ import {
 import '../select/civ-select.js';
 import '../combobox/civ-combobox.js';
 import '../text-input/civ-text-input.js';
-import '@civui/controls/segmented-control';
+import '@civui/inputs/segmented-control';
 
 export type { TimePickerFormat } from './time-utils.js';
 export type TimePickerMode = 'select' | 'combo' | 'text';

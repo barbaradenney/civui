@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@civui/actions": "workspace:*",
-    "@civui/controls": "workspace:*",
     "@civui/core": "workspace:*",
     "@civui/feedback": "workspace:*",
     "@civui/inputs": "workspace:*",

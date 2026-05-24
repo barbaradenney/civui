@@ -12,7 +12,7 @@ const render = (twigFn: (ctx: Record<string, any>) => string, props: Record<stri
   html`${unsafeHTML(twigFn(props))}`;
 
 const meta: Meta = {
-  title: 'Forms/Controls/Radio/Drupal SDC',
+  title: 'Forms/Inputs/Radio/Drupal SDC',
 
 };
 export default meta;

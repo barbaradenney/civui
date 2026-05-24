@@ -956,9 +956,9 @@
   "civ-checkbox": [
     {
       "story": "AllStates",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-checkbox label=\"Normal (unchecked)\" name=\"normal\"></civ-checkbox>\n      <civ-checkbox label=\"Checked\" name=\"checked\" checked></civ-checkbox>\n      <civ-checkbox label=\"With hint\" name=\"hint\" hint=\"Additional context for this option\"></civ-checkbox>\n      <civ-checkbox label=\"With error\" name=\"error\" error=\"You must select this option\" required></civ-checkbox>\n      <civ-checkbox label=\"Disabled (unchecked)\" name=\"disabled-off\" disabled></civ-checkbox>\n      <civ-checkbox label=\"Disabled (checked)\" name=\"disabled-on\" disabled checked></civ-checkbox>\n      <civ-checkbox label=\"Indeterminate\" name=\"indeterminate\" indeterminate></civ-checkbox>\n    </div>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "CheckboxConditional",
@@ -970,59 +970,59 @@
     {
       "story": "Default",
       "name": "agree",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox\n      label=\"${args.label}\"\n      name=\"${args.name}\"\n      ?checked=\"${args.checked}\"\n      ?tile=\"${args.tile}\"\n      ?required=\"${args.required}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "DensityScale",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"dense-agree\"></civ-checkbox>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"default-agree\"></civ-checkbox>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-checkbox label=\"I agree to the terms and conditions\" name=\"spacious-agree\"></civ-checkbox>\n      </div>\n    </div>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "Disabled",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox label=\"Previously accepted\" name=\"locked\" disabled checked></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "Indeterminate",
       "name": "Indeterminate (Select All)",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<fieldset class=\"civ-border-0 civ-p-0 civ-m-0\">\n      <legend class=\"civ-label civ-mb-2\">Manage notifications</legend>\n      <civ-checkbox\n        label=\"Select all\"\n        name=\"select-all\"\n        indeterminate\n        @civ-change=${(e: Event) => {\n          const target = e.target as HTMLElement;\n          const checked = (target as any).checked;\n          const children = target\n            .closest('fieldset')!\n            .querySelectorAll<any>('civ-checkbox:not([name=\"select-all\"])');\n          children.forEach((cb: any) => {\n            cb.checked = checked;\n          });\n          (target as any).indeterminate = false;\n        }}\n      ></civ-checkbox>\n      <div class=\"civ-ps-6 civ-border-s-2 civ-border-base-lighter civ-ms-4\">\n        ${['Email', 'Text message', 'Push notification'].map(\n          (label) => html",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "Required",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox\n      label=\"I agree to the privacy policy\"\n      name=\"privacy\"\n      required\n    ></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "Spacing",
       "name": "Spacing — default vs sm",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">Default (tile)</p>\n        <civ-checkbox label=\"I agree to the terms\" name=\"agree-default\"></civ-checkbox>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" + label (column-toggle pattern)</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Visible label, no tile chrome. Used by civ-column-visibility for the toggle panel.</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-1\">\n          <civ-checkbox spacing=\"sm\" label=\"Application ID\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" label=\"Applicant\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" label=\"Status\"></civ-checkbox>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-bold\">spacing=\"sm\" + aria-label only (data-grid row-select pattern)</p>\n        <p class=\"civ-m-0 civ-mb-2 civ-text-sm\">Bare input, no visible chrome. aria-label names the control for AT.</p>\n        <div class=\"civ-flex civ-gap-2 civ-items-center\">\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 1\"></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 2\" checked></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 3\" indeterminate></civ-checkbox>\n          <civ-checkbox spacing=\"sm\" aria-label=\"Select row 4\" disabled></civ-checkbox>\n        </div>\n      </div>\n    </div>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "WithDescription",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox\n      label=\"Email notifications\"\n      name=\"email-notifications\"\n      description=\"Receive weekly updates about your application status\"\n    ></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "WithError",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox\n      label=\"I certify this information is correct\"\n      name=\"certify\"\n      error=\"You must certify before submitting\"\n      required\n    ></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "WithHint",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox\n      label=\"Subscribe to email updates\"\n      name=\"subscribe\"\n      hint=\"We will send you a weekly digest of important announcements\"\n    ></civ-checkbox>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     }
   ],
   "civ-checkbox-group": [
@@ -1036,54 +1036,54 @@
     {
       "story": "GovernmentCertificationForm",
       "name": "Usage: Certification Checkboxes",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<form\n      @submit=${(e: Event) => {\n        e.preventDefault();\n        const fd = new FormData(e.target as HTMLFormElement);\n        alert('Submitted: ' + JSON.stringify(Object.fromEntries(fd)));\n      }}\n    >\n      <civ-checkbox-group legend=\"Certifications\" hint=\"You must agree to all statements below\" required name=\"certifications\">\n        <civ-checkbox label=\"I certify that all information provided is true and complete\" value=\"truth\"></civ-checkbox>\n        <civ-checkbox label=\"I understand that false statements may result in penalties\" value=\"penalties\"></civ-checkbox>\n        <civ-checkbox label=\"I agree to notify the agency of any changes to my information\" value=\"notify\"></civ-checkbox>\n      </civ-checkbox-group>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Submit</civ-button>\n    </form>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "Group",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Notification preferences\" hint=\"Select all that apply\">\n      <civ-checkbox label=\"Email\" name=\"notifications\" value=\"email\"></civ-checkbox>\n      <civ-checkbox label=\"Text message\" name=\"notifications\" value=\"sms\"></civ-checkbox>\n      <civ-checkbox label=\"Push notifications\" name=\"notifications\" value=\"push\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "GroupHorizontal",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Available days\" name=\"days\" orientation=\"horizontal\">\n      <civ-checkbox label=\"Mon\" value=\"mon\"></civ-checkbox>\n      <civ-checkbox label=\"Tue\" value=\"tue\"></civ-checkbox>\n      <civ-checkbox label=\"Wed\" value=\"wed\"></civ-checkbox>\n      <civ-checkbox label=\"Thu\" value=\"thu\"></civ-checkbox>\n      <civ-checkbox label=\"Fri\" value=\"fri\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "GroupListVariant",
       "name": "Group: List variant (joined tiles)",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Race\" hint=\"Select one or more\" name=\"race\" variant=\"list\">\n      <civ-checkbox label=\"American Indian or Alaska Native\" value=\"aian\"></civ-checkbox>\n      <civ-checkbox label=\"Asian\" value=\"asian\"></civ-checkbox>\n      <civ-checkbox label=\"Black or African American\" value=\"black\"></civ-checkbox>\n      <civ-checkbox label=\"Native Hawaiian or Other Pacific Islander\" value=\"nhpi\"></civ-checkbox>\n      <civ-checkbox label=\"White\" value=\"white\"></civ-checkbox>\n      <civ-checkbox label=\"Prefer not to answer\" value=\"skip\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "GroupTileVariant",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Benefits you are applying for\" hint=\"Select all that apply\">\n      <civ-checkbox\n        label=\"Health care\"\n        name=\"benefits\"\n        value=\"health\"\n        description=\"Medical, dental, and vision coverage\"\n      ></civ-checkbox>\n      <civ-checkbox\n        label=\"Education\"\n        name=\"benefits\"\n        value=\"education\"\n        description=\"GI Bill and tuition assistance\"\n      ></civ-checkbox>\n      <civ-checkbox\n        label=\"Housing assistance\"\n        name=\"benefits\"\n        value=\"housing\"\n        description=\"Home loan guaranty and housing grants\"\n      ></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "GroupWithError",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Notification preferences\" error=\"Select at least one method\" required>\n      <civ-checkbox label=\"Email\" name=\"notifications\" value=\"email\"></civ-checkbox>\n      <civ-checkbox label=\"Text message\" name=\"notifications\" value=\"sms\"></civ-checkbox>\n      <civ-checkbox label=\"Push notifications\" name=\"notifications\" value=\"push\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "MinAndMaxSelections",
       "name": "Min and max selections",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Languages spoken\" name=\"languages\" min-selections=\"1\" max-selections=\"3\">\n      <civ-checkbox label=\"English\" value=\"en\"></civ-checkbox>\n      <civ-checkbox label=\"Spanish\" value=\"es\"></civ-checkbox>\n      <civ-checkbox label=\"Tagalog\" value=\"tl\"></civ-checkbox>\n      <civ-checkbox label=\"Vietnamese\" value=\"vi\"></civ-checkbox>\n      <civ-checkbox label=\"Chinese\" value=\"zh\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "MinSelections",
       "name": "Minimum selections required",
-      "category": "Forms/Controls/Checkbox",
+      "category": "Forms/Inputs/Checkbox",
       "html": "<civ-checkbox-group legend=\"Preferred contact methods\" hint=\"We'll use these to reach you about your application.\" name=\"contact\" min-selections=\"2\">\n      <civ-checkbox label=\"Email\" value=\"email\"></civ-checkbox>\n      <civ-checkbox label=\"Phone\" value=\"phone\"></civ-checkbox>\n      <civ-checkbox label=\"Postal mail\" value=\"mail\"></civ-checkbox>\n      <civ-checkbox label=\"Text message\" value=\"sms\"></civ-checkbox>\n    </civ-checkbox-group>",
-      "source": "packages/controls/src/checkbox/civ-checkbox.stories.ts"
+      "source": "packages/inputs/src/checkbox/civ-checkbox.stories.ts"
     },
     {
       "story": "SymptomChecker",
@@ -4585,41 +4585,41 @@
   "civ-radio-group": [
     {
       "story": "AllStates",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-radio-group legend=\"Normal\" name=\"normal\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"With hint\" hint=\"Select one option\" name=\"hint\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"With error\" error=\"Select an option\" required name=\"error\">\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n      <civ-radio-group legend=\"Disabled\" name=\"disabled\" value=\"a\" disabled>\n        <civ-radio label=\"Option A\" value=\"a\"></civ-radio>\n        <civ-radio label=\"Option B\" value=\"b\"></civ-radio>\n      </civ-radio-group>\n    </div>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "Default",
       "name": "contact",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"${args.legend}\" hint=\"${args.hint}\" error=\"${args.error}\" name=\"${args.name}\" value=\"${args.value}\">\n      <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n      <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n      <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "DensityScale",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"dense-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"default-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-radio-group legend=\"Contact preference\" name=\"spacious-contact\">\n          <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n          <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n          <civ-radio label=\"Mail\" value=\"mail\"></civ-radio>\n        </civ-radio-group>\n      </div>\n    </div>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "Disabled",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Preferred contact method\" name=\"contact\" value=\"email\" disabled>\n      <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n      <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n      <civ-radio label=\"U.S. Mail\" value=\"mail\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "GovernmentEligibilityForm",
       "name": "Usage: Eligibility Questions",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<form\n      @submit=\"${(e: Event) => {\n        e.preventDefault();\n        const data = new FormData(e.target as HTMLFormElement);\n        alert(JSON.stringify(Object.fromEntries(data)));\n      }}\"\n    >\n      <civ-radio-group legend=\"What is your relationship to the Veteran?\" required name=\"relationship\">\n        <civ-radio label=\"I am the Veteran\" value=\"self\"></civ-radio>\n        <civ-radio label=\"Spouse\" value=\"spouse\"></civ-radio>\n        <civ-radio label=\"Dependent child\" value=\"child\"></civ-radio>\n        <civ-radio label=\"Caregiver\" value=\"caregiver\"></civ-radio>\n      </civ-radio-group>\n      <civ-button type=\"submit\" class=\"civ-mt-4\">Continue</civ-button>\n    </form>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "Horizontal",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Preferred language\" name=\"language\" orientation=\"horizontal\">\n      <civ-radio label=\"English\" value=\"en\"></civ-radio>\n      <civ-radio label=\"Spanish\" value=\"es\"></civ-radio>\n      <civ-radio label=\"Chinese\" value=\"zh\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "HorizontalRadioGroup",
@@ -4630,9 +4630,9 @@
     {
       "story": "ListVariant",
       "name": "List variant (joined tiles)",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Ethnicity\" name=\"ethnicity\" variant=\"list\">\n      <civ-radio label=\"Hispanic or Latino\" value=\"hispanic\"></civ-radio>\n      <civ-radio label=\"Not Hispanic or Latino\" value=\"not-hispanic\"></civ-radio>\n      <civ-radio label=\"Prefer not to answer\" value=\"skip\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "PharmacySelection",
@@ -4650,9 +4650,9 @@
     },
     {
       "story": "Required",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Preferred contact method\" required name=\"contact\">\n      <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n      <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n      <civ-radio label=\"U.S. Mail\" value=\"mail\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "SelectionControls",
@@ -4663,34 +4663,34 @@
     },
     {
       "story": "TileVariant",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Account type\" name=\"account-type\">\n      <civ-radio\n        label=\"Checking\"\n        value=\"checking\"\n        description=\"For everyday transactions and direct deposit\"\n      ></civ-radio>\n      <civ-radio\n        label=\"Savings\"\n        value=\"savings\"\n        description=\"For long-term savings with interest\"\n      ></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "WithDescriptions",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Appointment type\" name=\"appointment\">\n      <civ-radio\n        label=\"In person\"\n        value=\"in-person\"\n        description=\"Visit your local office for a face-to-face meeting\"\n      ></civ-radio>\n      <civ-radio\n        label=\"Phone call\"\n        value=\"phone\"\n        description=\"We will call you at your listed phone number\"\n      ></civ-radio>\n      <civ-radio\n        label=\"Video conference\"\n        value=\"video\"\n        description=\"Join a secure video call from any device\"\n      ></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "WithError",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Preferred contact method\" error=\"Select a contact method to continue\" required name=\"contact\">\n      <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n      <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n      <civ-radio label=\"U.S. Mail\" value=\"mail\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "WithHint",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Preferred contact method\" hint=\"How should we reach you about your application?\" name=\"contact\">\n      <civ-radio label=\"Email\" value=\"email\"></civ-radio>\n      <civ-radio label=\"Phone\" value=\"phone\"></civ-radio>\n      <civ-radio label=\"U.S. Mail\" value=\"mail\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     },
     {
       "story": "WithPreferNotToAnswer",
       "name": "With ",
-      "category": "Forms/Controls/Radio",
+      "category": "Forms/Inputs/Radio",
       "html": "<civ-radio-group legend=\"Do you identify as Hispanic or Latino?\" hint=\"This information is optional and used only for program reporting.\" name=\"ethnicity\" skip-label=\"Prefer not to answer\" skip-value=\"prefer_not_to_say\">\n      <civ-radio label=\"Yes\" value=\"yes\"></civ-radio>\n      <civ-radio label=\"No\" value=\"no\"></civ-radio>\n    </civ-radio-group>",
-      "source": "packages/controls/src/radio/civ-radio.stories.ts"
+      "source": "packages/inputs/src/radio/civ-radio.stories.ts"
     }
   ],
   "civ-read-more": [
@@ -5104,66 +5104,66 @@
   "civ-segmented-control": [
     {
       "story": "AllStates",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-segmented-control legend=\"Normal\" name=\"normal\" value=\"a\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"With hint\" hint=\"Choose one option\" name=\"hint\" value=\"a\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"With error\" error=\"Select an option\" required name=\"error\">\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n      <civ-segmented-control legend=\"Disabled\" name=\"disabled\" value=\"a\" disabled>\n        <civ-segment label=\"Option A\" value=\"a\"></civ-segment>\n        <civ-segment label=\"Option B\" value=\"b\"></civ-segment>\n      </civ-segmented-control>\n    </div>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "Default",
       "name": "view",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"${args.legend}\" hint=\"${args.hint}\" error=\"${args.error}\" name=\"${args.name}\" value=\"${args.value}\">\n      <civ-segment label=\"List\" value=\"list\"></civ-segment>\n      <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "DensityScale",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-segmented-control legend=\"View mode\" name=\"dense-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-segmented-control legend=\"View mode\" name=\"default-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-segmented-control legend=\"View mode\" name=\"spacious-view\" value=\"list\">\n          <civ-segment label=\"List\" value=\"list\"></civ-segment>\n          <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n          <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n        </civ-segmented-control>\n      </div>\n    </div>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "Disabled",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"Display format\" name=\"format\" value=\"list\" disabled>\n      <civ-segment label=\"List\" value=\"list\"></civ-segment>\n      <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n      <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "FiveOptions",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"Priority level\" name=\"priority\" value=\"medium\">\n      <civ-segment label=\"Critical\" value=\"critical\"></civ-segment>\n      <civ-segment label=\"High\" value=\"high\"></civ-segment>\n      <civ-segment label=\"Medium\" value=\"medium\"></civ-segment>\n      <civ-segment label=\"Low\" value=\"low\"></civ-segment>\n      <civ-segment label=\"None\" value=\"none\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "GovernmentReportFilter",
       "name": "Usage: Report Time Range",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<form\n      @submit=${(e: Event) => {\n        e.preventDefault();\n        const fd = new FormData(e.target as HTMLFormElement);\n        alert('Filter: ' + JSON.stringify(Object.fromEntries(fd)));\n      }}\n    >\n      <civ-segmented-control legend=\"Report time range\" required name=\"range\" value=\"quarter\">\n        <civ-segment label=\"Month\" value=\"month\"></civ-segment>\n        <civ-segment label=\"Quarter\" value=\"quarter\"></civ-segment>\n        <civ-segment label=\"Year\" value=\"year\"></civ-segment>\n        <civ-segment label=\"All time\" value=\"all\"></civ-segment>\n      </civ-segmented-control>\n      <div class=\"civ-flex civ-gap-2 civ-mt-4\">\n        <civ-button type=\"submit\">Generate report</civ-button>\n      </div>\n    </form>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "Mobile",
       "name": "Mobile (full-width)",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<p class=\"civ-mb-4 civ-text-sm\">\n      Below 481px viewports, <code>civ-segmented-control</code> expands to fill its row\n      and the segments split the width evenly. Matches the design-system rule that\n      flips primary buttons (<code>.civ-btn</code>) and form sub-fields\n      (<code>civ-memorable-date</code>, <code>civ-time-picker</code> hour/minute) to\n      full width on narrow viewports — a full-width tap target with equal-size segments\n      is more accessible than the desktop \"natural width\" layout pinned to the start\n      of the row.\n    </p>\n    <civ-segmented-control legend=\"Report period\" required name=\"period\" value=\"quarterly\">\n      <civ-segment label=\"Monthly\" value=\"monthly\"></civ-segment>\n      <civ-segment label=\"Quarterly\" value=\"quarterly\"></civ-segment>\n      <civ-segment label=\"Annual\" value=\"annual\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "Required",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"Report period\" required name=\"period\">\n      <civ-segment label=\"Monthly\" value=\"monthly\"></civ-segment>\n      <civ-segment label=\"Quarterly\" value=\"quarterly\"></civ-segment>\n      <civ-segment label=\"Annual\" value=\"annual\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "WithError",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"Display format\" error=\"Select a display format\" required name=\"format\">\n      <civ-segment label=\"List\" value=\"list\"></civ-segment>\n      <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     },
     {
       "story": "WithHint",
-      "category": "Forms/Controls/Segmented Control",
+      "category": "Forms/Inputs/Segmented Control",
       "html": "<civ-segmented-control legend=\"Display format\" hint=\"Choose how search results are displayed\" name=\"format\" value=\"list\">\n      <civ-segment label=\"List\" value=\"list\"></civ-segment>\n      <civ-segment label=\"Grid\" value=\"grid\"></civ-segment>\n      <civ-segment label=\"Table\" value=\"table\"></civ-segment>\n    </civ-segmented-control>",
-      "source": "packages/controls/src/segmented-control/civ-segmented-control.stories.ts"
+      "source": "packages/inputs/src/segmented-control/civ-segmented-control.stories.ts"
     }
   ],
   "civ-select": [

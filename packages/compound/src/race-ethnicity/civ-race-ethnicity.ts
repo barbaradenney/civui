@@ -1,8 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
-import '@civui/controls/checkbox';
-import '@civui/controls/radio';
+import '@civui/inputs/checkbox';
+import '@civui/inputs/radio';
 
 const ETHNICITY_OPTIONS = [
   { value: 'hispanic-latino', label: 'Hispanic or Latino' },

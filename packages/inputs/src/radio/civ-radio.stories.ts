@@ -6,7 +6,7 @@ import './civ-radio-group.js';
 import '@civui/actions';
 
 const meta: Meta = {
-  title: 'Forms/Controls/Radio',
+  title: 'Forms/Inputs/Radio',
   component: 'civ-radio-group',
   tags: ['autodocs'],
   argTypes: {

@@ -3,7 +3,7 @@ import { ref } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, dispatch, t, generateId, devWarn } from '@civui/core';
 import '@civui/actions/action-button';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 import '@civui/feedback/spinner';
 import '@civui/inputs/text-input';
 import '@civui/inputs/number';

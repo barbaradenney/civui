@@ -122,7 +122,7 @@ For the full schema (input / output types), call any tool's MCP discovery endpoi
 
 ## What this is not
 
-- **Not a UI library:** install `@civui/inputs`, `@civui/controls`, `@civui/compound`, etc. for the actual web components.
+- **Not a UI library:** install `@civui/inputs`, `@civui/inputs`, `@civui/compound`, etc. for the actual web components.
 - **Not a runtime dependency for apps:** tools are agent-time helpers, not browser code.
 - **Not a substitute for the schemas:** `@civui/schema` is the canonical contract. Tools read from it; they don't replace it.
 

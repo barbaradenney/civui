@@ -228,9 +228,6 @@ importers:
       '@civui/actions':
         specifier: workspace:*
         version: link:../actions
-      '@civui/controls':
-        specifier: workspace:*
-        version: link:../controls
       '@civui/core':
         specifier: workspace:*
         version: link:../core
@@ -284,28 +281,6 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.5.0)(jiti@1.21.7)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4)
 
-  packages/controls:
-    dependencies:
-      '@civui/core':
-        specifier: workspace:*
-        version: link:../core
-      lit:
-        specifier: ^3.2.0
-        version: 3.3.2
-    devDependencies:
-      '@civui/test-utils':
-        specifier: workspace:*
-        version: link:../test-utils
-      '@civui/tokens':
-        specifier: workspace:*
-        version: link:../tokens
-      typescript:
-        specifier: ^5.6.0
-        version: 5.9.3
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@25.5.0)(jiti@1.21.7)(jsdom@28.1.0)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.4)
-
   packages/core:
     dependencies:
       lit:
@@ -330,9 +305,6 @@ importers:
       '@civui/actions':
         specifier: workspace:*
         version: link:../actions
-      '@civui/controls':
-        specifier: workspace:*
-        version: link:../controls
       '@civui/core':
         specifier: workspace:*
         version: link:../core
@@ -407,9 +379,6 @@ importers:
       '@civui/actions':
         specifier: workspace:*
         version: link:../actions
-      '@civui/controls':
-        specifier: workspace:*
-        version: link:../controls
       '@civui/feedback':
         specifier: workspace:*
         version: link:../feedback
@@ -478,9 +447,6 @@ importers:
       '@civui/actions':
         specifier: workspace:*
         version: link:../actions
-      '@civui/controls':
-        specifier: workspace:*
-        version: link:../controls
       '@civui/core':
         specifier: workspace:*
         version: link:../core

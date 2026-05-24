@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import './civ-partnership-history.js';
 
 afterEach(cleanupFixtures);

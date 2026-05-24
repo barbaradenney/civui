@@ -3,7 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
-import '@civui/controls/radio';
+import '@civui/inputs/radio';
 import '@civui/actions/button';
 import '@civui/actions/link';
 import '@civui/actions/skip-link';

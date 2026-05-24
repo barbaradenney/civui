@@ -26,7 +26,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import '@civui/inputs';
-import '@civui/controls';
+import '@civui/inputs';
 import '../address/civ-address.js';
 import '../name/civ-name.js';
 import '../direct-deposit/civ-direct-deposit.js';

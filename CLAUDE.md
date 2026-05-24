@@ -14,7 +14,7 @@ Accessibility-first web components for government applications.
 
 ## Package Structure
 
-Build order: `tokens → core → layout → actions, navigation, overlays → inputs → controls → compound → form-patterns`
+Build order: `tokens → core → layout → actions, navigation, overlays → inputs → compound → form-patterns`
 
 | Package | Path | Description |
 |---------|------|-------------|
@@ -24,8 +24,7 @@ Build order: `tokens → core → layout → actions, navigation, overlays → i
 | `@civui/navigation` | `packages/navigation/` | Navigation surfaces (breadcrumb, nav, side-nav, tabs, tab-nav, on-this-page, back-to-top). Pulled out of `@civui/actions` once the cluster grew big enough — these are link/list containers, not single affordances, so the polymorphism argument that keeps button-and-link together doesn't apply |
 | `@civui/overlays` | `packages/overlays/` | Overlay components (modal, action-sheet, drawer, menu) |
 | `@civui/layout` | `packages/layout/` | Layout components (card, divider, input-group, list, page-header, tag, pagination, data-grid) |
-| `@civui/inputs` | `packages/inputs/` | Input components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country) |
-| `@civui/controls` | `packages/controls/` | Selection controls (checkbox, radio, segmented-control) |
+| `@civui/inputs` | `packages/inputs/` | Input + selection-control components (text-input, textarea, select, combobox, date-picker, file-upload, toggle, yes-no, checkbox, radio, segmented-control) + preset wrappers (ssn, ein, phone, email, zip, currency, routing-number, va-file-number, country). Selection controls used to live in their own `@civui/controls` package; consolidated since consumers always reached for both packages together |
 | `@civui/compound` | `packages/compound/` | Compound fields (address, name, direct-deposit, signature, race-ethnicity, relationship, partnership-history, service-history) |
 | `@civui/form-patterns` | `packages/form-patterns/` | Form orchestration (form, form-step, repeater, summary, prefill, progress, conditional) |
 | `@civui/feedback` | `packages/feedback/` | Feedback components (alert, callout, notice, badge, count, spinner, skeleton, timeline, process-list) |
@@ -63,7 +62,7 @@ When a component renders child components from another `@civui/*` package (e.g.,
 // CORRECT — direct sub-path imports, always preserved by bundlers
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
-import '@civui/controls/radio';
+import '@civui/inputs/radio';
 
 // AVOID — barrel imports can be tree-shaken by Vite/esbuild
 import '@civui/inputs';  // may get dropped!

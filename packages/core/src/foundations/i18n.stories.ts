@@ -4,7 +4,7 @@ import '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/email';
 import '@civui/inputs/phone';
-import '@civui/controls/radio';
+import '@civui/inputs/radio';
 import '@civui/inputs/memorable-date';
 
 const meta: Meta = {

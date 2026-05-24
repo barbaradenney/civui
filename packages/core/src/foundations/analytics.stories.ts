@@ -3,7 +3,7 @@ import { html } from 'lit';
 import '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
-import '@civui/controls/checkbox';
+import '@civui/inputs/checkbox';
 import '@civui/inputs/toggle';
 import '@civui/actions/button';
 

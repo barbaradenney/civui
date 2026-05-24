@@ -26,6 +26,12 @@ export default defineConfig({
       '@civui/actions/confirm-button': resolve(__dirname, '../actions/src/confirm-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
+      // Inputs transitively pulls in civ-time-picker, which imports
+      // segmented-control via its sub-path. Resolve it to source.
+      '@civui/controls/segmented-control': resolve(__dirname, '../controls/src/segmented-control/index.ts'),
+      // Resolve test-utils to source so tests run without a prebuilt
+      // @civui/test-utils dist (fresh CI checkouts).
+      '@civui/test-utils': resolve(__dirname, '../test-utils/src/index.ts'),
     },
   },
 });

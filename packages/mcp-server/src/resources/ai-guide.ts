@@ -59,12 +59,12 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
 | \`<civ-alert>\` | Feedback | \`variant\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`alert-style\` | \`civ-dismiss\` |
 | \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-close\` |
-| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-close\` |
-| \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
-| \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
+| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside-close\` | \`civ-close\` |
+| \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`hide-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
+| \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`hide-middle\`, \`hide-suffix\` | \`{ value: NameValue }\` |
 | \`<civ-direct-deposit>\` | Compound | \`legend\`, \`heading-level\`, \`size\` | \`{ value: DirectDepositValue }\` |
 | \`<civ-signature>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
-| \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
+| \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`hide-name\` | \`{ value: RelationshipValue }\` |
 | \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
 | \`<civ-partnership-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: PartnershipValue }\` |
 | \`<civ-service-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
@@ -654,7 +654,7 @@ Segmented step indicator for multi-step forms. Each step is a rectangle — fill
 
 Percentage-based progress indicator for dynamic forms.
 
-**Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`show-percent\`
+**Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`hide-percent\`
 
 \`\`\`html
 <civ-progress-percent value="37" label="Application progress" status="3 of 8 sections complete"></civ-progress-percent>
@@ -736,7 +736,7 @@ Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on 
 
 Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
 
-**Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\`
+**Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside-close\`
 
 **Events:** \`civ-close\`
 
@@ -746,7 +746,7 @@ Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
 
 Compound address component with street, city, state, ZIP.
 
-**Props:** \`legend\`, \`show-street2\` (default true), \`show-street3\`, \`show-country\`, \`show-military\`, \`validate-address\` (JS only). Per-field errors: \`street-error\`, \`city-error\`, \`state-error\`, \`zip-error\`.
+**Props:** \`legend\`, \`hide-street2\` (default true), \`show-street3\`, \`show-country\`, \`show-military\`, \`validate-address\` (JS only). Per-field errors: \`street-error\`, \`city-error\`, \`state-error\`, \`zip-error\`.
 
 \`\`\`html
 <civ-address legend="Mailing address" name="mailingAddress" required></civ-address>
@@ -758,7 +758,7 @@ Compound address component with street, city, state, ZIP.
 
 Compound name component with first, middle, last, suffix fields.
 
-**Props:** \`legend\`, \`show-middle\` (default true), \`show-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`. Field labels read "First name or given name" and "Last name or family name" so they apply to any naming convention.
+**Props:** \`legend\`, \`hide-middle\` (default true), \`hide-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`. Field labels read "First name or given name" and "Last name or family name" so they apply to any naming convention.
 
 \`\`\`html
 <civ-name legend="Your full legal name" name="fullName" required></civ-name>
@@ -794,7 +794,7 @@ Electronic signature with certification statement, name input, and confirm check
 
 Compound component for a person and their relationship to the applicant.
 
-**Props:** \`legend\`, \`preset\` (general/dependent/survivor/benefits-survivor/immigration/tax), \`show-name\`, \`show-deceased\`, \`show-divorce-date\`, \`show-adoption-date\`, \`deceased-assumed\`. Per-field errors: \`name-error\`, \`relationship-error\`, \`marriage-date-error\`, etc.
+**Props:** \`legend\`, \`preset\` (general/dependent/survivor/benefits-survivor/immigration/tax), \`hide-name\`, \`show-deceased\`, \`show-divorce-date\`, \`show-adoption-date\`, \`deceased-assumed\`. Per-field errors: \`name-error\`, \`relationship-error\`, \`marriage-date-error\`, etc.
 
 \`\`\`html
 <civ-relationship legend="About the dependent" name="dependent" preset="dependent" required></civ-relationship>

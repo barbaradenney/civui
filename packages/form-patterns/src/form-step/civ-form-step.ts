@@ -280,7 +280,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
           <civ-progress-percent
             value="${pct}"
             label="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
-            .showPercent="${false}"
+            .hidePercent="${false}"
           ></civ-progress-percent>
         `;
       }

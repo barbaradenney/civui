@@ -49,7 +49,7 @@ fun CivProgressPercent(
     modifier: Modifier = Modifier,
     label: String = "Progress",
     status: String = "",
-    showPercent: Boolean = true,
+    hidePercent: Boolean = true,
 ) {
     val isDark = isSystemInDarkTheme()
     val clamped = value.coerceIn(0f, 100f)
@@ -90,7 +90,7 @@ fun CivProgressPercent(
                 )
             }
 
-            if (showPercent) {
+            if (hidePercent) {
                 Text(
                     text = "${clamped.toInt()}%",
                     fontSize = CivTokens.Typography.FontSize.sm,
@@ -144,7 +144,7 @@ private fun CivProgressPercentPreview() {
 
         CivProgressPercent(
             value = 75f,
-            showPercent = false,
+            hidePercent = false,
         )
     }
 }

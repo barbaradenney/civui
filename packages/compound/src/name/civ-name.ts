@@ -54,11 +54,11 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
 
   // headingLevel inherited from LegendHeadingMixin (default: undefined).
 
-  /** Whether to show the middle name field. */
-  @property({ type: Boolean, attribute: 'show-middle' }) showMiddle = true;
+  /** Hide the middle name field. Defaults to false (middle name renders). */
+  @property({ type: Boolean, attribute: 'hide-middle' }) hideMiddle = false;
 
-  /** Whether to show the suffix field. */
-  @property({ type: Boolean, attribute: 'show-suffix' }) showSuffix = true;
+  /** Hide the suffix field. Defaults to false (suffix renders). */
+  @property({ type: Boolean, attribute: 'hide-suffix' }) hideSuffix = false;
 
   /** Error for first name field. */
   @property({ type: String, attribute: 'first-error' }) firstError = '';
@@ -87,7 +87,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('_data') || changed.has('showSuffix')) {
+    if (changed.has('_data') || changed.has('hideSuffix')) {
       this._syncSuffixOptions();
     }
   }
@@ -125,7 +125,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
           @civ-change="${(e: CustomEvent) => this._onSubChange('first', e)}"
         ></civ-text-input>
 
-        ${this.showMiddle ? html`
+        ${!this.hideMiddle ? html`
           <civ-text-input
             label="${t('nameMiddle')}"
             name="${this.name ? `${this.name}.middle` : ''}"
@@ -152,7 +152,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
           @civ-change="${(e: CustomEvent) => this._onSubChange('last', e)}"
         ></civ-text-input>
 
-        ${this.showSuffix ? html`
+        ${!this.hideSuffix ? html`
           <div class="civ-field-width-sm">
             <civ-select
               label="${t('nameSuffix')}"

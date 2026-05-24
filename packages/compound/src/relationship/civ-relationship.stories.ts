@@ -96,7 +96,7 @@ export const WithoutName: Story = {
       size="lg" legend="Relationship to veteran"
       name="rel"
       preset="survivor"
-      show-name="false"
+      hide-name
     ></civ-relationship>
   `,
 };

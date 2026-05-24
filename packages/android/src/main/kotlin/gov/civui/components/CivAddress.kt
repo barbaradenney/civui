@@ -123,7 +123,7 @@ fun CivAddress(
     required: Boolean = false,
     disabled: Boolean = false,
     readonly: Boolean = false,
-    showStreet2: Boolean = true,
+    hideStreet2: Boolean = true,
     showCountry: Boolean = false,
     showMilitary: Boolean = false,
     showStreet3: Boolean = false,
@@ -228,7 +228,7 @@ fun CivAddress(
         )
 
         // 5. Street address line 2
-        if (showStreet2) {
+        if (hideStreet2) {
             AddressTextField(
                 label = "Street address line 2",
                 value = value.street2,
@@ -577,7 +577,7 @@ private fun CivAddressPreview() {
             legend = "Home address",
             value = homeAddress,
             onValueChange = { homeAddress = it },
-            showStreet2 = false,
+            hideStreet2 = false,
         )
 
         CivAddress(

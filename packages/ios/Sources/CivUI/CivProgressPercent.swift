@@ -34,7 +34,7 @@ public struct CivProgressPercent: View {
     public var status: String?
 
     /// Whether to show the percentage text.
-    public var showPercent: Bool
+    public var hidePercent: Bool
 
     // MARK: - Internal State
 
@@ -46,12 +46,12 @@ public struct CivProgressPercent: View {
         value: Double,
         label: String = "Progress",
         status: String? = nil,
-        showPercent: Bool = true
+        hidePercent: Bool = true
     ) {
         self.value = value
         self.label = label
         self.status = status
-        self.showPercent = showPercent
+        self.hidePercent = hidePercent
     }
 
     // MARK: - Body
@@ -75,7 +75,7 @@ public struct CivProgressPercent: View {
 
                 Spacer()
 
-                if showPercent {
+                if hidePercent {
                     Text("\(rounded)%")
                         .font(.system(size: CivTokens.Typography.FontSize.sm,
                                       weight: CivTokens.Typography.FontWeight.bold))
@@ -169,7 +169,7 @@ struct CivProgressPercent_Previews: PreviewProvider {
                     CivProgressPercent(
                         value: 50,
                         label: "Upload progress",
-                        showPercent: false
+                        hidePercent: false
                     )
                 }
                 .padding()

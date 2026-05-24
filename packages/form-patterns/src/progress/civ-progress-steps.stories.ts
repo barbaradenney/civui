@@ -180,7 +180,7 @@ export const HeaderWithPercent: Story = {
         <civ-progress-header current="2" total="5" step-title="Employment History" emphasis="secondary"></civ-progress-header>
         <span class="civ-text-sm civ-font-bold">40%</span>
       </div>
-      <civ-progress-percent value="40" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+      <civ-progress-percent value="40" label="Form completion" .hidePercent="${false}"></civ-progress-percent>
     </div>
   `,
 };
@@ -195,7 +195,7 @@ export const ProgressBar: Story = {
         <civ-progress-header current="2" total="8" step-title="Employment"></civ-progress-header>
         <span class="civ-text-sm civ-font-bold">25%</span>
       </div>
-      <civ-progress-percent value="25" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+      <civ-progress-percent value="25" label="Form completion" .hidePercent="${false}"></civ-progress-percent>
     </div>
   `,
 };
@@ -208,7 +208,7 @@ export const ProgressBarComplete: Story = {
         <civ-progress-header current="7" total="8" step-title="Submit"></civ-progress-header>
         <span class="civ-text-sm civ-font-bold">100%</span>
       </div>
-      <civ-progress-percent value="100" label="Form completion" .showPercent="${false}"></civ-progress-percent>
+      <civ-progress-percent value="100" label="Form completion" .hidePercent="${false}"></civ-progress-percent>
     </div>
   `,
 };

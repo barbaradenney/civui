@@ -20,7 +20,7 @@ import type { SlotConfig } from '@civui/core';
  * @prop {string} maxHeight - Max height on mobile (default '50vh')
  * @prop {string} label - Accessible label announced as the dialog name
  * @prop {boolean} trapFocus - Enable focus trapping (default false). HTML attribute: `trap-focus`.
- * @prop {boolean} noClickOutside - Disable click-outside close (default false)
+ * @prop {boolean} noClickOutsideClose - Disable click-outside close (default false)
  *
  * @fires civ-close - When the sheet wants to close
  *
@@ -37,7 +37,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String, attribute: 'max-height' }) maxHeight = '50vh';
   @property({ type: String }) label = '';
   @property({ type: Boolean, attribute: 'trap-focus' }) trapFocus = false;
-  @property({ type: Boolean, attribute: 'no-click-outside' }) noClickOutside = false;
+  @property({ type: Boolean, attribute: 'no-click-outside-close' }) noClickOutsideClose = false;
 
   private _clickOutside = clickOutside(this, () => this._requestClose());
   private _cleanupTrap: (() => void) | null = null;
@@ -97,7 +97,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   private async _onOpen(): Promise<void> {
     this._previouslyFocused = document.activeElement;
 
-    if (!this.noClickOutside) {
+    if (!this.noClickOutsideClose) {
       this._clickOutside.add();
     }
     document.addEventListener('keydown', this._boundOnKeydown);

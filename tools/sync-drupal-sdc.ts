@@ -123,7 +123,7 @@ export function camelToSnake(name: string): string {
  *
  * - When the schema declares `attribute: 'foo-bar'`, Drupal uses `foo_bar`.
  * - Otherwise Lit defaults to the lowercased property name; Drupal uses
- *   snake_case so `showMiddle` becomes `show_middle`.
+ *   snake_case so `hideMiddle` becomes `hide_middle`.
  */
 export function drupalKeyFor(propName: string, def: any): string {
   if (def.attribute) return def.attribute.replace(/-/g, '_');
@@ -131,7 +131,7 @@ export function drupalKeyFor(propName: string, def: any): string {
 }
 
 function camelToTitle(name: string): string {
-  // showStreet2 → "Show street 2"
+  // hideStreet2 → "Show street 2"
   return name
     .replace(/([A-Z]+)/g, ' $1')
     .replace(/(\d+)/g, ' $1')

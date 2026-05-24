@@ -16,7 +16,7 @@ const schema: ComponentSchema = {
     },
     label: {
       type: 'string',
-      description: 'Visible label rendered above the bar. Also used as aria-label when showPercent is false',
+      description: 'Visible label rendered above the bar. Also used as aria-label when hidePercent is false',
       default: 'Progress',
     },
     status: {
@@ -25,11 +25,11 @@ const schema: ComponentSchema = {
       default: '',
       values: ['', 'success', 'error'],
     },
-    showPercent: {
+    hidePercent: {
       type: 'boolean',
       description: 'When true, render the numeric percentage alongside the label',
       default: true,
-      attribute: 'show-percent',
+      attribute: 'hide-percent',
     },
   },
 

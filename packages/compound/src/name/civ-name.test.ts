@@ -21,16 +21,16 @@ describe('civ-name', () => {
     expect(el.querySelectorAll('select').length).toBe(1); // suffix
   });
 
-  it('hides middle name when showMiddle is false', async () => {
+  it('hides middle name when hideMiddle is true', async () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
-    (el as any).showMiddle = false;
+    (el as any).hideMiddle = true;
     await elementUpdated(el);
     expect(el.querySelectorAll('input').length).toBe(2); // first, last only
   });
 
-  it('hides suffix when showSuffix is false', async () => {
+  it('hides suffix when hideSuffix is true', async () => {
     const el = await fixture<CivName>('<civ-name legend="Name"></civ-name>') as CivName;
-    (el as any).showSuffix = false;
+    (el as any).hideSuffix = true;
     await elementUpdated(el);
     expect(el.querySelectorAll('select').length).toBe(0);
   });

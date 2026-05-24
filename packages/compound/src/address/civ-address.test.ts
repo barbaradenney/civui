@@ -57,9 +57,9 @@ describe('civ-address', () => {
     expect(zipInput.getAttribute('inputmode')).toBeNull();
   });
 
-  it('hides street2 when showStreet2 is false', async () => {
+  it('hides street2 when hideStreet2 is true', async () => {
     const el = await fixture<CivAddress>('<civ-address legend="Address" name="addr"></civ-address>');
-    (el as any).showStreet2 = false;
+    (el as any).hideStreet2 = true;
     await elementUpdated(el);
 
     const inputs = el.querySelectorAll('input');

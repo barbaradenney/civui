@@ -27,17 +27,17 @@ const schema: ComponentSchema = {
       values: ['sm', 'md', 'lg', 'xl'],
       webOnly: true,
     },
-    showMiddle: {
+    hideMiddle: {
       type: 'boolean',
       description: 'Render the middle-name input',
       default: true,
-      attribute: 'show-middle',
+      attribute: 'hide-middle',
     },
-    showSuffix: {
+    hideSuffix: {
       type: 'boolean',
       description: 'Render the suffix select (Jr, Sr, II, III, etc.)',
       default: true,
-      attribute: 'show-suffix',
+      attribute: 'hide-suffix',
     },
     firstError: {
       type: 'string',
@@ -90,9 +90,9 @@ const schema: ComponentSchema = {
         { type: 'hint', condition: 'hint', bindings: { text: 'hint' } },
         { type: 'error', condition: 'error', bindings: { text: 'error' } },
         { type: 'slot', bindings: { name: 'first' } },
-        { type: 'slot', condition: 'showMiddle', bindings: { name: 'middle' } },
+        { type: 'slot', condition: 'hideMiddle', bindings: { name: 'middle' } },
         { type: 'slot', bindings: { name: 'last' } },
-        { type: 'slot', condition: 'showSuffix', bindings: { name: 'suffix' } },
+        { type: 'slot', condition: 'hideSuffix', bindings: { name: 'suffix' } },
       ],
     },
   ],

@@ -13,7 +13,7 @@ fun CivActionSheet(
     maxHeight: String = "50vh",
     label: String = "",
     trapFocus: Boolean = false,
-    noClickOutside: Boolean = false,
+    noClickOutsideClose: Boolean = false,
     onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},

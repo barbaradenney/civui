@@ -122,8 +122,8 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
 
   // headingLevel + size inherited from LegendHeadingMixin.
 
-  /** Whether to show the Street address line 2 field. */
-  @property({ type: Boolean, attribute: 'show-street2' }) showStreet2 = true;
+  /** Hide the Street address line 2 field. Defaults to false (street2 renders). */
+  @property({ type: Boolean, attribute: 'hide-street2' }) hideStreet2 = false;
 
   /** Whether to show the country selector (enables international addresses). */
   @property({ type: Boolean, attribute: 'show-country' }) showCountry = false;
@@ -209,7 +209,7 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
 
         ${this.showCountry ? this._renderCountryField() : nothing}
         ${this._renderTextField('street1', t('addressStreet1'), 'address-line1', { error: this.streetError, required: this.required })}
-        ${this.showStreet2 ? this._renderTextField('street2', t('addressStreet2'), 'address-line2') : nothing}
+        ${!this.hideStreet2 ? this._renderTextField('street2', t('addressStreet2'), 'address-line2') : nothing}
         ${this.showStreet3 ? this._renderTextField('street3', t('addressStreet3'), 'address-line3') : nothing}
         ${this._renderTextField('city', t('addressCity'), 'address-level2', { error: this.cityError, required: this.required })}
         ${this._renderStateField()}

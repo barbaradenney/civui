@@ -133,6 +133,97 @@ export const Compact: Story = {
   `,
 };
 
+export const DensityComparison: Story = {
+  name: 'Density comparison (default vs compact, scale variants)',
+  render: () => {
+    const sampleTable = (modifierClass: string, caption: string) => html`
+      <table class="civ-table ${modifierClass}">
+        <caption>${caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col" class="civ-table__num">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Single veteran</td><td class="civ-table__num">$2,500</td></tr>
+          <tr><td>With spouse</td><td class="civ-table__num">$2,750</td></tr>
+          <tr><td>With spouse + child</td><td class="civ-table__num">$2,900</td></tr>
+        </tbody>
+      </table>
+    `;
+
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-6" style="max-width: 880px;">
+        <p class="civ-m-0">
+          CivUI exposes <strong>two complementary density mechanisms</strong>.
+          Use them together when you need a dense table on an otherwise-spacious
+          page, or vice versa.
+        </p>
+
+        <div>
+          <h3 class="civ-m-0 civ-mb-2">1. Page-level scale (CSS) — affects everything</h3>
+          <p class="civ-m-0 civ-mb-3">
+            <code>[data-civ-scale="dense|spacious"]</code> on a parent
+            redefines the <code>--civ-spacing-*</code> and
+            <code>--civ-typography-fontSize-*</code> tokens. The table picks
+            it up automatically because its padding and header font-size both
+            read from those tokens.
+          </p>
+          <div class="civ-grid civ-gap-4" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div data-civ-scale="dense">
+              ${sampleTable('', 'data-civ-scale="dense"')}
+            </div>
+            <div>
+              ${sampleTable('', 'default scale')}
+            </div>
+            <div data-civ-scale="spacious">
+              ${sampleTable('', 'data-civ-scale="spacious"')}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="civ-m-0 civ-mb-2">2. Per-table modifier — only padding</h3>
+          <p class="civ-m-0 civ-mb-3">
+            <code>.civ-table--compact</code> ratchets the cell padding one
+            step tighter (<code>spacing-1 / spacing-2</code> instead of
+            <code>spacing-2 / spacing-3</code>). Font-size is untouched —
+            this is the "this specific table is dense" opt-in.
+          </p>
+          <div class="civ-grid civ-gap-4" style="grid-template-columns: 1fr 1fr;">
+            ${sampleTable('', 'default padding')}
+            ${sampleTable('civ-table--compact', '.civ-table--compact')}
+          </div>
+        </div>
+
+        <div>
+          <h3 class="civ-m-0 civ-mb-2">3. Composed — scale and modifier together</h3>
+          <p class="civ-m-0 civ-mb-3">
+            The two stack: the tokens follow the scale, the modifier ratchets
+            padding one step tighter on top of that. "Compact within spacious"
+            still reads denser than "default within spacious".
+          </p>
+          <div class="civ-grid civ-gap-4" style="grid-template-columns: 1fr 1fr;">
+            <div data-civ-scale="spacious">
+              ${sampleTable('', 'spacious + default')}
+            </div>
+            <div data-civ-scale="spacious">
+              ${sampleTable('civ-table--compact', 'spacious + --compact')}
+            </div>
+            <div data-civ-scale="dense">
+              ${sampleTable('', 'dense + default')}
+            </div>
+            <div data-civ-scale="dense">
+              ${sampleTable('civ-table--compact', 'dense + --compact')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+};
+
 export const RowHeaders: Story = {
   name: 'Row headers (scope="row")',
   render: () => html`

@@ -20,6 +20,14 @@ const schema: ComponentSchema = {
       default: 'secondary',
       values: ['primary', 'secondary', 'back'],
     },
+    as: {
+      type: 'enum',
+      description: 'Render shape. `link` (default) emits an `<a>` for real navigation; `button` emits a `<button>` styled with link chrome for affordances that read as a link but fire a callback (e.g. inline "Try again" after a fetch error). In button mode the navigation props (href, target, rel, download, type, newTab) are silently ignored. Web-only — native platforms have distinct Button / Link affordances and don\'t need link-as-button polymorphism (native consumers use civ-button directly for actions)',
+      default: 'link',
+      values: ['link', 'button'],
+      reflect: true,
+      webOnly: true,
+    },
     type: {
       type: 'enum',
       description: 'Device-action type. Auto-builds the href, leading icon, and default display text. `phone` → `tel:` with phone icon; `email` → `mailto:` with mail icon and optional subject; `download` → passthrough href with download icon and optional filename / file-size suffix',

@@ -4,11 +4,16 @@ import { CivBaseElement, LightDomTextMixin, devWarn, sanitizeHref, t } from '@ci
 
 export type LinkVariant = 'primary' | 'secondary' | 'back';
 export type LinkType = 'phone' | 'email' | 'download';
+export type LinkAs = 'link' | 'button';
 
 /**
  * CivUI Link
  *
- * An accessible link component. Renders an `<a>` element.
+ * An accessible link component. Renders an `<a>` element by default;
+ * pass `as="button"` to render a `<button>` instead — same link
+ * chrome (underline, color, variant icons), but for actions that
+ * don't navigate (e.g. inline "Try again" affordances that fire a
+ * callback). See "Button mode" below.
  *
  * **Variants** (visual style):
  * - `primary` — bold underlined link with trailing caret icon (most emphasis)
@@ -25,15 +30,25 @@ export type LinkType = 'phone' | 'email' | 'download';
  * - `email` — `mailto:` href with mail icon and optional subject
  * - `download` — passthrough href + download attribute, with optional file-size hint
  *
+ * **Button mode** (`as="button"`). Renders the link visual on a
+ * `<button>` element. Use when the affordance reads as a link but
+ * fires a callback rather than navigating — e.g. inline "Try again"
+ * after a fetch error. The href / target / rel / download / type
+ * props are silently ignored in button mode (a dev-warn fires if any
+ * are set, since they imply navigation that the button can't carry
+ * out). `newTab` is also a no-op. `disabled` uses the native
+ * `disabled` attribute instead of `aria-disabled`.
+ *
  * Add `danger` attribute to any variant for destructive action styling.
  * All variants are underlined for accessibility.
  *
  * @element civ-link
  *
  * @prop {string} label - Link text (preferred over child text). When `type` is set, falls back to a formatted display string
- * @prop {string} href - Link destination. When `type` is `phone`/`email`, ignored — the type-specific props build the href instead
+ * @prop {string} href - Link destination. When `type` is `phone`/`email`, ignored — the type-specific props build the href instead. Ignored when `as="button"`
  * @prop {LinkVariant} variant - Visual variant
- * @prop {LinkType} type - Device-action type (phone / email / download)
+ * @prop {LinkAs} as - Render shape: `link` (default, `<a>`) or `button` (`<button>` for action-not-navigation cases)
+ * @prop {LinkType} type - Device-action type (phone / email / download). Ignored when `as="button"`
  * @prop {string} number - Phone number (when type="phone")
  * @prop {string} address - Email address (when type="email")
  * @prop {string} subject - Pre-filled email subject (when type="email")
@@ -48,6 +63,15 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) href = '';
   @property({ type: String }) variant: LinkVariant = 'secondary';
+  /**
+   * Render shape. `link` (default) emits an `<a>`; `button` emits a
+   * `<button>` styled with link chrome — for affordances that read
+   * as a link but fire a callback instead of navigating. In button
+   * mode the navigation props (href, target, rel, download, type,
+   * newTab) are silently ignored; a dev-warn fires if any are set
+   * since the consumer probably meant the link mode.
+   */
+  @property({ type: String, reflect: true }) as: LinkAs = 'link';
   @property({ type: String }) type?: LinkType;
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -140,6 +164,8 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
 
   /** Tracks whether the icon-only-without-label dev warning has fired for this instance. */
   private _warnedNoAccessibleName = false;
+  /** Tracks whether the as=button-with-navigation-props warning has fired. */
+  private _warnedNavPropsInButtonMode = false;
 
   /** Return sanitized href, stripping dangerous protocols. */
   private get _safeHref(): string {
@@ -170,6 +196,39 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
       this._warnedNoAccessibleName = true;
     }
 
+    // Button mode: navigation props don't apply. Warn once if the
+    // consumer set any of them — they probably meant `as="link"`.
+    if (this.as === 'button' && !this._warnedNavPropsInButtonMode) {
+      const navProps = [
+        this.href && 'href',
+        this.target && 'target',
+        this.rel && 'rel',
+        this.download && 'download',
+        this.newTab && 'new-tab',
+        this.type && 'type',
+      ].filter(Boolean) as string[];
+      if (navProps.length > 0) {
+        devWarn(
+          'civ-link',
+          `\`${navProps.join('`, `')}\` ${navProps.length === 1 ? 'is' : 'are'} ignored when \`as="button"\` — buttons fire callbacks, they don't navigate. Remove the prop, or drop \`as="button"\` and use the default link mode.`,
+        );
+        this._warnedNavPropsInButtonMode = true;
+      }
+    }
+
+    // ── Button mode ─────────────────────────────────────────────
+    if (this.as === 'button') {
+      return html`
+        <button
+          type="button"
+          class="${this._classes}"
+          ?disabled="${this.disabled}"
+          @click="${this._onClick}"
+        >${this._leadingIcon}${this._text}${this._trailingIcon}</button>
+      `;
+    }
+
+    // ── Link mode (default) ─────────────────────────────────────
     if (this.disabled) {
       return html`
         <a

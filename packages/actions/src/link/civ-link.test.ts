@@ -258,3 +258,90 @@ describe('civ-link', () => {
     expect(icon?.getAttribute('name')).toBe('info');
   });
 });
+
+describe('civ-link as="button" mode', () => {
+  it('renders a <button> instead of <a>', async () => {
+    const el = await fixture('<civ-link as="button" label="Try again"></civ-link>');
+    expect(el.querySelector('button')).not.toBeNull();
+    expect(el.querySelector('a')).toBeNull();
+  });
+
+  it('button defaults to type="button" (not submit)', async () => {
+    const el = await fixture('<civ-link as="button" label="Try again"></civ-link>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.getAttribute('type')).toBe('button');
+  });
+
+  it('applies the same link chrome classes (variant + underline)', async () => {
+    const el = await fixture('<civ-link as="button" label="Try again"></civ-link>');
+    const btn = el.querySelector('button')!;
+    expect(btn.className).toContain('civ-link--secondary');
+  });
+
+  it('renders the secondary variant by default', async () => {
+    const el = await fixture('<civ-link as="button" label="Try again"></civ-link>');
+    const btn = el.querySelector('button')!;
+    expect(btn.className).toContain('civ-link--secondary');
+  });
+
+  it('renders other variants in button mode', async () => {
+    const el = await fixture('<civ-link as="button" variant="primary" label="Try"></civ-link>');
+    const btn = el.querySelector('button')!;
+    expect(btn.className).toContain('civ-link--primary');
+  });
+
+  it('renders leading icon (back variant chevron) in button mode', async () => {
+    const el = await fixture('<civ-link as="button" variant="back" label="Go back"></civ-link>');
+    const icon = el.querySelector('button > civ-icon')!;
+    expect(icon.getAttribute('name')).toBe('chevron-left');
+  });
+
+  it('renders trailing icon (primary variant caret) in button mode', async () => {
+    const el = await fixture('<civ-link as="button" variant="primary" label="Continue"></civ-link>');
+    const icons = el.querySelectorAll('button > civ-icon');
+    expect(icons[icons.length - 1].getAttribute('name')).toBe('chevron-right');
+  });
+
+  it('uses native disabled attribute (not aria-disabled) in button mode', async () => {
+    const el = await fixture('<civ-link as="button" disabled label="Retry"></civ-link>');
+    const btn = el.querySelector('button') as HTMLButtonElement;
+    expect(btn.disabled).toBe(true);
+    // aria-disabled is for the link branch — button has native disabled.
+    expect(btn.hasAttribute('aria-disabled')).toBe(false);
+  });
+
+  it('fires civ-analytics on click in button mode', async () => {
+    const el = await fixture('<civ-link as="button" label="Try"></civ-link>');
+    const handler = vi.fn();
+    el.addEventListener('civ-analytics', handler as EventListener);
+    (el.querySelector('button') as HTMLButtonElement).click();
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it('dev-warns when navigation props are set with as="button"', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture('<civ-link as="button" href="/somewhere" label="Try"></civ-link>');
+    const calls = warnSpy.mock.calls.flat().filter(
+      (m) => typeof m === 'string' && /href|button/i.test(m),
+    );
+    expect(calls.length).toBeGreaterThan(0);
+    warnSpy.mockRestore();
+  });
+
+  it('does NOT emit href on the rendered <button>', async () => {
+    const el = await fixture('<civ-link as="button" href="/wherever" label="Try"></civ-link>');
+    const btn = el.querySelector('button')!;
+    expect(btn.hasAttribute('href')).toBe(false);
+  });
+
+  it('reflects as attribute to the host for CSS / selector targeting', async () => {
+    const el = await fixture('<civ-link as="button" label="x"></civ-link>');
+    expect(el.getAttribute('as')).toBe('button');
+  });
+
+  it('default mode (link) still renders <a> when as is unset', async () => {
+    const el = await fixture('<civ-link href="/x" label="Plain link"></civ-link>');
+    expect(el.querySelector('a')).not.toBeNull();
+    expect(el.querySelector('button')).toBeNull();
+  });
+});

@@ -4,6 +4,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivBaseElement, LightDomSlotMixin, dispatch, generateId, t, interpolate, warnInvalidProp } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
+import '@civui/actions/link';
 import type { PrefillData, PrefillMeta } from '../prefill/types.js';
 
 export interface FormFieldError {
@@ -288,7 +289,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       ${this._prefillError
         ? html`<div class="civ-mb-4 civ-text-error" role="alert">
             <p>${t('prefillError')}
-              <button type="button" class="civ-link civ-underline" @click="${this._fetchPrefillData}">${t('prefillRetry')}</button>
+              <civ-link as="button" @click="${this._fetchPrefillData}">${t('prefillRetry')}</civ-link>
             </p>
           </div>`
         : nothing}

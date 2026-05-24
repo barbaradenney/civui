@@ -71,9 +71,29 @@ The component is display-only and not form-associated.
 
 <StoryEmbed id="feedback-notice--with-screen-reader-prefix" />
 
-### Outline icon variant
+### Secondary weight (passive emphasis)
 
-<StoryEmbed id="feedback-notice--outline-icons" />
+<StoryEmbed id="feedback-notice--secondary" />
+
+### Custom icon — appointment reminder
+
+<StoryEmbed id="feedback-notice--custom-icon-calendar" />
+
+### Custom icon — confirmation by mail
+
+<StoryEmbed id="feedback-notice--custom-icon-mail" />
+
+### Custom icon — required document
+
+<StoryEmbed id="feedback-notice--custom-icon-document" />
+
+### Custom icon — contact instruction
+
+<StoryEmbed id="feedback-notice--custom-icon-phone" />
+
+### Custom icon + secondary weight
+
+<StoryEmbed id="feedback-notice--custom-icon-secondary-weight" />
 
 ### Composed inside a callout
 
@@ -97,15 +117,32 @@ needs inline links or other rich markup, reach for
 Either prop is optional; the icon renders even with no text. In
 practice, set at least `body`.
 
+## Weight
+
+`notice-style` picks the visual weight, matching the
+`primary` / `secondary` convention used by `civ-callout`,
+`civ-alert`, `civ-tag`, and `civ-badge`.
+
+| `notice-style` | Default icon variant | When to use |
+|---|---|---|
+| `primary` _(default)_ | Filled (`info-fill`, `warning-fill`, etc.) | Standalone callouts, dedicated emphasis lines, anything that should command attention. |
+| `secondary` | Outlined (`info`, `warning`, etc.) | Passive callouts where the placement competes with surrounding chrome — nested inside a colored panel, alongside body text that shouldn't be overpowered. |
+
+```html
+<!-- Default: primary weight, filled icon -->
+<civ-notice intent="warning" body="You can be fined up to $5,000."></civ-notice>
+
+<!-- Passive emphasis with the lighter outlined glyph -->
+<civ-notice intent="warning" notice-style="secondary" body="Optional reminder."></civ-notice>
+```
+
 ## Intents and default icons
 
-Each intent picks a default icon from the CivUI icon library. The
-`iconStyle` prop chooses between two visual treatments — `filled`
-(default, heavier presence) and `outline` (lighter, softer cue).
-Override the icon name entirely via the `icon` prop when a placement
-needs a different glyph.
+Each intent picks a default icon from the CivUI icon library based on
+`notice-style`. Override the icon name entirely via the `icon` prop
+when a placement needs a different glyph (see [Custom icons](#custom-icons-beyond-status)).
 
-| Intent | Filled default (default) | Outline default | Color |
+| Intent | Primary icon (default) | Secondary icon | Color |
 |---|---|---|---|
 | `info` (default) | `info-fill` | `info` | info |
 | `warning` | `warning-fill` | `warning` | warning-dark |
@@ -117,13 +154,49 @@ Color is never the sole signal — the icon shape and the bold weight
 on the header carry the emphasis too, so colorblind users get the
 full meaning.
 
-```html
-<!-- Default: filled icon -->
-<civ-notice intent="warning" body="You can be fined up to $5,000."></civ-notice>
+## Custom icons (beyond status)
 
-<!-- Opt into the lighter outline glyph -->
-<civ-notice intent="warning" icon-style="outline" body="Optional reminder."></civ-notice>
+The five intents map to status icons, but `civ-notice` is also a
+general-purpose icon-prefixed emphasis tool. Override `icon` with any
+glyph from the CivUI icon library when the notice is communicating
+something beyond status — a calendar reminder, a mailed confirmation,
+a required document, a contact phone number. Pair with
+`intent="neutral"` so the icon color reads as informational rather
+than status-coded.
+
+```html
+<civ-notice
+  intent="neutral"
+  icon="calendar"
+  header="Your appointment is scheduled"
+  body="Tuesday, February 4, 2026 at 9:00 AM."
+></civ-notice>
+
+<civ-notice
+  intent="info"
+  icon="mail"
+  header="Confirmation mailed"
+  body="A paper confirmation was sent to the address on file."
+></civ-notice>
+
+<civ-notice
+  intent="warning"
+  icon="upload"
+  header="Document required to continue"
+  body="Upload a recent utility bill to verify your address."
+></civ-notice>
+
+<civ-notice
+  intent="neutral"
+  icon="phone"
+  header="Need help completing this form?"
+  body="Call 1-800-827-1000, Monday through Friday, 8 AM to 9 PM Eastern."
+></civ-notice>
 ```
+
+When `icon` is set, `notice-style` only affects CSS rendering (icon
+color via intent + base styling) — the consumer's chosen glyph is
+used regardless of primary / secondary.
 
 ## Spacing
 

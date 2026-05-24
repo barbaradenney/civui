@@ -24,7 +24,7 @@ export { CivNotice } from './notice/index.js';
 export type {
   NoticeIntent,
   NoticeSpacing,
-  NoticeIconStyle,
+  NoticeStyle,
   NoticeHeadingLevel,
 } from './notice/index.js';
 

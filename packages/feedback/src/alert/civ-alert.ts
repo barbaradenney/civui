@@ -6,17 +6,16 @@ import {
   devWarn,
   dispatch,
   renderCloseButton,
+  renderDisclosure,
   t,
 } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
-// Collapsible mode uses a hand-rolled <details>/<summary> rather
-// than composing <civ-accordion-item> because actions → feedback
-// (button + filter-chip pull spinner / count) would create a
-// cycle if feedback → layout. Both implementations stay in lockstep
-// visually (chevron right + 90° rotation) — see the
-// "shared disclosure primitive" note in .claude/rules/audit-debt.md
-// for the future refactor that would let alert truly compose
-// accordion-item.
+// Collapsible mode composes the shared `renderDisclosure()` helper
+// from @civui/core — same `<details>`/`<summary>`/chevron primitive
+// that powers civ-disclosure and civ-accordion-item. The helper
+// lives in core (not in @civui/layout where the component variants
+// live) so feedback → layout's actions → feedback cycle stays
+// broken.
 
 export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
 export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
@@ -40,12 +39,12 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * level below the nearest parent heading in your document outline.
  *
  * **Collapsible mode** (`collapsible` + `heading`): wraps heading +
- * body in a native `<details>`/`<summary>` so the body collapses
- * behind a clickable chevron. Visually mirrors `<civ-accordion-item>`
- * (same chevron + 90° rotation) and emits the same `civ-toggle`
- * event. `open` reflects + drives the expanded state. Without
- * `heading` the prop is a dev-mode no-op (the toggle has no
- * clickable surface).
+ * body in a native `<details>`/`<summary>` via the shared
+ * `renderDisclosure()` helper so the body collapses behind a
+ * clickable chevron — identical primitive to `<civ-disclosure>` and
+ * `<civ-accordion-item>`. `open` reflects + drives the expanded
+ * state. Without `heading` the prop is a dev-mode no-op (the toggle
+ * has no clickable surface).
  *
  * **Full-width mode** (`fullWidth`): treats the alert as a persistent
  * site-wide notice rather than a transient notification. ARIA role
@@ -172,28 +171,33 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
       : nothing;
 
     // Inner-content layout differs by mode:
-    //  - Collapsible: heading sits in <summary>, body in a sibling div
-    //    that the <details> collapses. Dismiss button (if any) is
-    //    a sibling of the summary so the click doesn't bubble into
-    //    the toggle.
+    //  - Collapsible: renderDisclosure() supplies the details/summary
+    //    chrome + chevron + focus inset. The alert's heading template
+    //    sits inside <summary> as the toggle surface; the body
+    //    template is the panel content. Dismiss button (if any) is
+    //    a sibling of the <details> so its click reaches the dismiss
+    //    handler without bubbling into the summary toggle.
     //  - Default: heading + body stacked, dismiss button to the right.
     const inner = collapsibleActive
       ? html`
-          <details
-            class="civ-alert__details"
-            ?open="${this.open}"
-            @toggle="${this._onToggle}"
-          >
-            <summary class="civ-alert__summary">
-              <civ-icon
-                name="chevron-right"
-                class="civ-alert__chevron"
-                aria-hidden="true"
-              ></civ-icon>
-              ${headingTpl}
-            </summary>
-            ${bodyTpl}
-          </details>
+          ${renderDisclosure({
+            open: this.open,
+            onToggle: this._onToggle,
+            // `collapsibleActive` requires `heading` so the heading
+            // template is guaranteed non-empty here — re-rendered
+            // inline so the type narrows to TemplateResult without
+            // a cast on the shared `headingTpl` union.
+            summaryContent: html`<p
+              id="${this._headingId}"
+              class="civ-alert__heading"
+              role="heading"
+              aria-level="${level}"
+            >${this.heading}</p>`,
+            panelContent: bodyTpl,
+            rootClass: 'civ-alert__details',
+            summaryClass: 'civ-alert__summary',
+            panelClass: 'civ-alert__panel',
+          })}
           ${dismissTpl}
         `
       : html`

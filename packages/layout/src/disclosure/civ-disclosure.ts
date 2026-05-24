@@ -2,7 +2,12 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, t } from '@civui/core';
+import {
+  CivBaseElement,
+  LightDomSlotMixin,
+  renderDisclosure,
+  t,
+} from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -47,19 +52,15 @@ export class CivDisclosure extends LightDomSlotMixin(CivBaseElement) {
 
   override render() {
     const labelText = this.label || t('disclosureDefaultLabel');
-    return html`
-      <details
-        class="civ-disclosure"
-        ?open="${this.open}"
-        @toggle="${this._onToggle}"
-      >
-        <summary class="civ-text-btn civ-text-btn--chip civ-disclosure__trigger">
-          <civ-icon name="chevron-right" class="civ-disclosure__icon" aria-hidden="true"></civ-icon>
-          <span class="civ-disclosure__label">${labelText}</span>
-        </summary>
-        <div class="civ-disclosure__content" data-civ-disclosure-content></div>
-      </details>
-    `;
+    return renderDisclosure({
+      open: this.open,
+      onToggle: this._onToggle,
+      summaryContent: html`<span class="civ-disclosure__label">${labelText}</span>`,
+      panelContent: html`<div data-civ-disclosure-content></div>`,
+      rootClass: 'civ-disclosure',
+      summaryClass: 'civ-text-btn civ-text-btn--chip civ-disclosure__trigger',
+      panelClass: 'civ-disclosure__content',
+    });
   }
 
   /**

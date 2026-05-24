@@ -8,7 +8,7 @@
 // elements, so they introduce zero new tags and have no package
 // dependency requirements beyond what the consumer already imports.
 
-import { html, type TemplateResult } from 'lit';
+import { html, nothing, type TemplateResult } from 'lit';
 
 // civ-icon is registered in @civui/core so all consumers already
 // have it available — we render `<civ-icon>` inline rather than
@@ -114,4 +114,97 @@ export function renderSkipButton({
     ?disabled="${disabled}"
     @click="${onClick}"
   >${label}</button>`;
+}
+
+interface DisclosureOptions {
+  /** Whether the disclosure is currently open. Drives `<details open>`. */
+  open: boolean;
+  /**
+   * Toggle handler. Receives the native `toggle` event from the
+   * underlying `<details>`. Consumers read `(e.target as HTMLDetailsElement).open`
+   * to get the new state and update their own reactive state.
+   * They MAY revert `e.target.open` here if the change should be
+   * rejected (e.g. accordion-item's disabled gate).
+   */
+  onToggle: (event: Event) => void;
+  /**
+   * Content rendered inside the `<summary>` after the chevron. Each
+   * caller renders their own label markup (heading element, span,
+   * id wiring) so the helper stays neutral on heading semantics.
+   */
+  summaryContent: TemplateResult;
+  /**
+   * Content rendered inside the disclosure's panel wrapper (the
+   * div that `<details>` shows / hides). Callers pass their slot-target
+   * div (`data-civ-X-content`) here so their LightDomSlotMixin can
+   * relocate authored children into it.
+   */
+  panelContent: TemplateResult;
+  /** Extra class appended to the `<details>` root (e.g. `civ-accordion-item`). */
+  rootClass?: string;
+  /** Extra class appended to the `<summary>` (e.g. `civ-accordion-item__trigger`). */
+  summaryClass?: string;
+  /** Extra class appended to the panel wrapper (e.g. `civ-accordion-item__content`). */
+  panelClass?: string;
+  /**
+   * Disabled state. Applies `aria-disabled="true"` and `tabindex="-1"`
+   * on `<summary>` so keyboard users skip it. The caller is also
+   * responsible for reverting `details.open` inside `onToggle` if
+   * the browser opens it on click.
+   */
+  disabled?: boolean;
+}
+
+/**
+ * Shared `<details>`/`<summary>` disclosure primitive — single source
+ * of truth for the markup, chevron icon, rotation animation, marker
+ * reset, and inset focus indicator used by `civ-disclosure`,
+ * `civ-accordion-item`, and the collapsible mode of `civ-alert`.
+ *
+ * The helper renders `<details class="civ-disclosure-primitive"><summary>
+ * [chevron] [summaryContent]</summary><div>[panelContent]</div></details>`.
+ * Per-consumer chrome (chip styling, full-row trigger, etc.) layers
+ * via the optional `rootClass` / `summaryClass` / `panelClass`
+ * options — the canonical `civ-disclosure-primitive*` classes carry
+ * the shared visual treatment.
+ *
+ * Lives in @civui/core so all packages can call it without inverting
+ * the dep graph (actions → feedback → layout cycle would otherwise
+ * block civ-alert from composing civ-accordion-item).
+ */
+export function renderDisclosure({
+  open,
+  onToggle,
+  summaryContent,
+  panelContent,
+  rootClass,
+  summaryClass,
+  panelClass,
+  disabled,
+}: DisclosureOptions): TemplateResult {
+  const detailsClasses = rootClass
+    ? `civ-disclosure-primitive ${rootClass}`
+    : 'civ-disclosure-primitive';
+  const summaryClasses = summaryClass
+    ? `civ-disclosure-primitive__summary ${summaryClass}`
+    : 'civ-disclosure-primitive__summary';
+  const panelClasses = panelClass
+    ? `civ-disclosure-primitive__panel ${panelClass}`
+    : 'civ-disclosure-primitive__panel';
+
+  return html`<details
+    class="${detailsClasses}"
+    ?open="${open}"
+    @toggle="${onToggle}"
+  ><summary
+    class="${summaryClasses}"
+    aria-disabled="${disabled ? 'true' : nothing}"
+    tabindex="${disabled ? '-1' : nothing}"
+  ><civ-icon
+      name="chevron-right"
+      class="civ-disclosure-primitive__icon"
+      aria-hidden="true"
+    ></civ-icon>${summaryContent}</summary><div
+    class="${panelClasses}"
+  >${panelContent}</div></details>`;
 }

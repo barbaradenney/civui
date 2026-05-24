@@ -2,8 +2,12 @@
 
 import { html, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { CivBaseElement, LightDomSlotMixin, warnInvalidProp } from '@civui/core';
+import {
+  CivBaseElement,
+  LightDomSlotMixin,
+  renderDisclosure,
+  warnInvalidProp,
+} from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -161,24 +165,16 @@ export class CivAccordionItem extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
-    const disabled = this._effectivelyDisabled;
-    return html`
-      <details
-        class="civ-accordion-item"
-        ?open="${this.open}"
-        @toggle="${this._onToggle}"
-      >
-        <summary
-          class="civ-accordion-item__trigger"
-          aria-disabled="${ifDefined(disabled ? 'true' : undefined)}"
-          tabindex="${ifDefined(disabled ? '-1' : undefined)}"
-        >
-          <civ-icon name="chevron-right" class="civ-accordion-item__icon" aria-hidden="true"></civ-icon>
-          ${this._renderLabel()}
-        </summary>
-        <div class="civ-accordion-item__content" data-civ-accordion-item-content></div>
-      </details>
-    `;
+    return renderDisclosure({
+      open: this.open,
+      onToggle: this._onToggle,
+      summaryContent: this._renderLabel(),
+      panelContent: html`<div data-civ-accordion-item-content></div>`,
+      rootClass: 'civ-accordion-item',
+      summaryClass: 'civ-accordion-item__trigger',
+      panelClass: 'civ-accordion-item__content',
+      disabled: this._effectivelyDisabled,
+    });
   }
 
   private _renderLabel(): TemplateResult {

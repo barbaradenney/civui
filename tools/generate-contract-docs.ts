@@ -173,6 +173,11 @@ function renderA11y(a11y: ComponentSchema['a11y']): string {
 
 function renderForm(form: ComponentSchema['form']): string {
   if (!form) return '';
+  // Display-only components (valueMode='none') don't participate in
+  // forms — suppress the section entirely rather than emitting a
+  // confusing "Value mode: none" line that contractors would have to
+  // parse meaning out of.
+  if (form.valueMode === 'none') return '';
   const lines: string[] = [];
   if (form.valueMode) lines.push(`- **Value mode:** \`${form.valueMode}\``);
   if (form.formAssociated !== undefined) lines.push(`- **Form-associated:** ${form.formAssociated ? 'yes (participates in form submission via ElementInternals)' : 'no'}`);

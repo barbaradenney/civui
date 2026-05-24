@@ -28,7 +28,6 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'group',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },
@@ -41,9 +40,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

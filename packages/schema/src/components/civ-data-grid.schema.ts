@@ -241,7 +241,6 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'table',
     requiredIndicator: 'none',
     errorAnnouncement: 'assertive',
   },
@@ -256,9 +255,9 @@ const schema: ComponentSchema = {
   ],
 
   form: {
-    valueMode: 'string',
+    valueMode: 'none',
     formAssociated: false,
-    resetBehavior: 'restore-default-value',
+    resetBehavior: 'none',
   },
 };
 

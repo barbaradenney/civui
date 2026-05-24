@@ -9,10 +9,12 @@
 import {
   COMPONENT_BASE_CLASSES,
   COMPONENT_CATEGORIES,
+  FORM_RESET_BEHAVIORS,
   FORM_VALUE_MODES,
   PROP_TYPES,
   RENDER_ELEMENT_TYPES,
   type ComponentSchema,
+  type FormResetBehavior,
   type FormValueMode,
   type PropType,
 } from './schema.types.js';
@@ -28,6 +30,7 @@ export interface ValidationError {
 // category, render type, etc. requires touching exactly one file.
 const VALID_PROP_TYPES: readonly PropType[] = PROP_TYPES;
 const VALID_VALUE_MODES: readonly FormValueMode[] = FORM_VALUE_MODES;
+const VALID_RESET_BEHAVIORS: readonly FormResetBehavior[] = FORM_RESET_BEHAVIORS;
 const VALID_RENDER_TYPES: readonly string[] = RENDER_ELEMENT_TYPES;
 const VALID_CATEGORIES: readonly string[] = COMPONENT_CATEGORIES;
 const VALID_BASE_CLASSES: readonly string[] = COMPONENT_BASE_CLASSES;
@@ -282,8 +285,14 @@ function validateMethods(methods: Record<string, unknown>, errors: ValidationErr
 }
 
 function validateA11y(a11y: Record<string, unknown>, errors: ValidationError[]): void {
-  if (!a11y['role'] || typeof a11y['role'] !== 'string') {
-    errors.push({ path: 'a11y.role', message: 'a11y must have a string role', severity: 'error' });
+  // role is optional — display-only components (civ-image, civ-icon,
+  // civ-spinner, civ-skeleton, civ-tag, civ-card, civ-divider, etc.)
+  // render native elements whose implicit role is the contract, and
+  // declaring a redundant `role` here would mislead cross-platform
+  // contractors into adding one explicitly. If `role` IS set, it must
+  // be a non-empty string.
+  if (a11y['role'] !== undefined && (typeof a11y['role'] !== 'string' || !a11y['role'])) {
+    errors.push({ path: 'a11y.role', message: 'a11y.role, when set, must be a non-empty string', severity: 'error' });
   }
 
   const validIndicators = ['asterisk', 'text', 'none'];
@@ -332,6 +341,10 @@ function validateForm(form: Record<string, unknown>, schema: ComponentSchema, er
     errors.push({ path: 'form.valueMode', message: `Invalid valueMode "${form['valueMode']}". Must be one of: ${VALID_VALUE_MODES.join(', ')}`, severity: 'error' });
   }
 
+  if (form['resetBehavior'] && !VALID_RESET_BEHAVIORS.includes(form['resetBehavior'] as FormResetBehavior)) {
+    errors.push({ path: 'form.resetBehavior', message: `Invalid resetBehavior "${form['resetBehavior']}". Must be one of: ${VALID_RESET_BEHAVIORS.join(', ')}`, severity: 'error' });
+  }
+
   if (typeof form['formAssociated'] !== 'boolean') {
     errors.push({ path: 'form.formAssociated', message: 'formAssociated must be a boolean', severity: 'error' });
   }
@@ -346,6 +359,18 @@ function validateForm(form: Record<string, unknown>, schema: ComponentSchema, er
     const props = schema.props;
     if (!props['checked']) {
       errors.push({ path: 'form.valueMode', message: 'Boolean valueMode components should have a "checked" prop', severity: 'warning' });
+    }
+  }
+
+  // `none` valueMode contract: formAssociated MUST be false,
+  // resetBehavior MUST be 'none'. Catches consumers who set
+  // valueMode='none' but forgot to clean up the sibling fields.
+  if (form['valueMode'] === 'none') {
+    if (form['formAssociated'] === true) {
+      errors.push({ path: 'form.formAssociated', message: 'valueMode="none" requires formAssociated=false (display-only components do not participate in forms)', severity: 'error' });
+    }
+    if (form['resetBehavior'] && form['resetBehavior'] !== 'none') {
+      errors.push({ path: 'form.resetBehavior', message: 'valueMode="none" requires resetBehavior="none" (display-only components have no value to restore)', severity: 'error' });
     }
   }
 }

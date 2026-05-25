@@ -43,7 +43,7 @@ props:
       type: string
       enum: ['default', 'sm']
       default: 'default'
-      description: 'Trigger density. `default` for standalone; `sm` for compact placements. Same shape as every other CivUI density prop per `.claude/rules/density-convention.md`.'
+      description: 'Trigger padding density. Matches the design-system `spacing` convention shared by `civ-alert`, `civ-card`, `civ-list-item`, and the data-grid input controls.'
 
 slots:
   teaser:

@@ -32,15 +32,15 @@ const schema: ComponentSchema = {
       description: 'Optional icon name from the civ-icon library shown before the label. Empty by default. The trigger text alone is the affordance. Pass e.g. `chevron-down` for a 180° rotate-on-expand visual cue.',
       default: '',
     },
-    size: {
+    spacing: {
       type: 'enum',
-      description: '**Deprecated** — use `spacing="sm"` instead. Trigger text size. Both `size` and `spacing` currently produce the same `--sm` chrome but `size` fires a one-time dev-mode console warning so consumers can migrate. The prop will be removed in a future release.',
+      description: 'Trigger padding density. Matches the design-system `spacing` convention shared by `civ-alert`, `civ-card`, `civ-list-item`, and the data-grid input controls.',
       default: 'default',
       values: ['default', 'sm'],
     },
-    spacing: {
+    size: {
       type: 'enum',
-      description: 'Trigger density. `default` for standalone; `sm` for compact placements. Same shape as every other CivUI density prop per `.claude/rules/density-convention.md`.',
+      description: '**Deprecated** — use `spacing` instead. Same allowed values, same effect (both produce the `civ-text-btn--sm` CSS class when set to `sm`). The `size` prop will be removed in a future release; setting it emits a one-time dev-mode console warning.',
       default: 'default',
       values: ['default', 'sm'],
     },

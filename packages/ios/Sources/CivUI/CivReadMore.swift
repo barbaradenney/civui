@@ -23,11 +23,15 @@ public struct CivReadMore: View {
     /// Optional icon name shown before the label.
     public var icon: String
 
-    /// **Deprecated** — use `spacing` instead. Trigger size: "default" or "sm".
-    public var size: String
-
-    /// Trigger density: "default" or "sm". Standard density prop.
+    /// Trigger padding density: "default" or "sm". Matches the
+    /// design-system `spacing` convention shared with `CivAlert`,
+    /// `CivCard`, `CivListItem`, and the data-grid input controls.
     public var spacing: String
+
+    /// Trigger size: "default" or "sm". **Deprecated** — use `spacing`
+    /// instead. Same allowed values, same effect. Will be removed in a
+    /// future release.
+    public var size: String
 
     /// Render inline so the trigger flows as the last words of the teaser.
     public var isInline: Bool
@@ -48,8 +52,8 @@ public struct CivReadMore: View {
         moreLabel: String = "",
         lessLabel: String = "",
         icon: String = "",
-        size: String = "default",
         spacing: String = "default",
+        size: String = "default",
         isInline: Bool = false,
         isNoFadeTrigger: Bool = false,
         onToggle: ((Bool) -> Void)? = nil,
@@ -59,8 +63,8 @@ public struct CivReadMore: View {
         self.moreLabel = moreLabel
         self.lessLabel = lessLabel
         self.icon = icon
-        self.size = size
         self.spacing = spacing
+        self.size = size
         self.isInline = isInline
         self.isNoFadeTrigger = isNoFadeTrigger
         self.onToggle = onToggle

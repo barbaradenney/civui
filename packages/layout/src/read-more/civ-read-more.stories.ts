@@ -28,7 +28,7 @@ disclosure when there is no useful teaser to show.
     moreLabel: { control: 'text' },
     lessLabel: { control: 'text' },
     icon: { control: 'text' },
-    size: { control: 'select', options: ['default', 'sm'] },
+    spacing: { control: 'select', options: ['default', 'sm'] },
     inline: { control: 'boolean' },
     noFadeTrigger: { control: 'boolean' },
   },
@@ -127,7 +127,7 @@ export const ExpandedByDefault: Story = {
 export const SmallSize: Story = {
   name: 'Small size',
   render: () => html`
-    <civ-read-more size="sm">
+    <civ-read-more spacing="sm">
       <p class="civ-text-sm">
         Your application has been received and is in review.
       </p>

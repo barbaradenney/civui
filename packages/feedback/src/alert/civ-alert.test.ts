@@ -142,52 +142,18 @@ describe('civ-alert', () => {
     expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 
-  it('applies the --sm density class when slim is true', async () => {
-    // `slim` is the legacy boolean alias; it produces the same
-    // `civ-alert--sm` class as the standard `spacing="sm"` prop on
-    // the host. See .claude/rules/density-convention.md.
+  it('applies sm modifier class when slim is true', async () => {
     const el = await fixture('<civ-alert slim>Compact message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--sm');
   });
 
-  it('applies the --sm density class when spacing="sm" is set', async () => {
+  it('applies sm modifier class when spacing="sm"', async () => {
     const el = await fixture('<civ-alert spacing="sm">Compact message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--sm');
-  });
-
-  describe('slim deprecation', () => {
-    it('fires a one-time dev warning when the deprecated `slim` boolean is used', async () => {
-      // Reset the devWarn session-global dedupe so this test runs
-      // even if an earlier test already triggered the warning.
-      const { resetDevWarnDedupe } = await import('@civui/core');
-      resetDevWarnDedupe();
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      await fixture('<civ-alert slim>Compact message.</civ-alert>');
-
-      expect(warn).toHaveBeenCalled();
-      const message = warn.mock.calls[0][0];
-      expect(message).toContain('civ-alert');
-      expect(message).toContain('slim');
-      expect(message).toContain('spacing="sm"');
-
-      warn.mockRestore();
-    });
-
-    it('does NOT warn when `spacing="sm"` is used instead', async () => {
-      const { resetDevWarnDedupe } = await import('@civui/core');
-      resetDevWarnDedupe();
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      await fixture('<civ-alert spacing="sm">Compact message.</civ-alert>');
-
-      expect(warn).not.toHaveBeenCalled();
-      warn.mockRestore();
-    });
   });
 
   it('shows dismiss button when dismissible is true', async () => {

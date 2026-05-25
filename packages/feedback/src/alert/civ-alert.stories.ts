@@ -351,7 +351,7 @@ on landing pages, dashboards, and "what's left" reminders.`,
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-alert intent="info" heading="Your benefits enrollment">
+      <civ-alert intent="info" emphasis="tertiary" heading="Your benefits enrollment">
         <ul class="civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2">
           <li class="civ-flex civ-items-center civ-gap-3">
             <civ-badge label="Complete" intent="success" with-icon></civ-badge>
@@ -520,7 +520,7 @@ edge-to-edge while the text stays readable.`,
     },
   },
   render: () => html`
-    <civ-alert full-width intent="warning" heading="System maintenance scheduled">
+    <civ-alert full-width emphasis="primary" intent="warning" heading="System maintenance scheduled">
       We will perform planned maintenance from 11:00 PM Friday to 6:00 AM
       Saturday Eastern Time. Online applications and account dashboard will
       be unavailable during this window.
@@ -540,7 +540,7 @@ sits at the right edge of the centered content max-width.`,
     },
   },
   render: () => html`
-    <civ-alert full-width intent="info" heading="Form update available" dismissible>
+    <civ-alert full-width emphasis="primary" intent="info" heading="Form update available" dismissible>
       We've simplified the dependent claim form. You'll see fewer questions
       this year, and we'll pre-fill any answers we already have on file.
     </civ-alert>

@@ -26,11 +26,17 @@ const schema: ComponentSchema = {
       default: 1500,
       attribute: 'success-ms',
     },
+    emphasis: {
+      type: 'enum',
+      description: 'Visual emphasis. `secondary` (default) is the gray pill — the common case (helper-row Copy buttons). `primary` is the filled brand pill for a louder inline CTA (e.g. "Generate" alongside a read-only field). `tertiary` is the transparent text-link style for quiet shortcuts inside dense surfaces',
+      default: 'secondary',
+      values: ['primary', 'secondary', 'tertiary'],
+    },
     variant: {
       type: 'enum',
-      description: 'Picks the text-btn modifier. `chip` (default) renders the prominent gray pill — typical for helper-row Copy buttons. `inline` renders the transparent text-link style — typical when the button needs to read as quiet inside denser surfaces',
-      default: 'chip',
-      values: ['chip', 'inline'],
+      description: '**Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Setting this prop emits a one-time dev warning and overrides `emphasis`. Will be removed in the next major release',
+      default: '',
+      values: ['', 'chip', 'inline'],
     },
   },
 

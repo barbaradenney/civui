@@ -50,11 +50,29 @@ describe('civ-toggle-button', () => {
     expect(el.pressed).toBe(false);
   });
 
-  it('honors the variant prop on the rendered button class (default chip)', async () => {
-    const chip = await fixture('<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>');
-    expect(chip.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
-    const inline = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="inline"></civ-toggle-button>');
-    expect(inline.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
+  it('defaults to secondary emphasis (civ-text-btn--chip class)', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
+  });
+
+  it('renders primary emphasis class when emphasis="primary"', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" emphasis="primary"></civ-toggle-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--primary')).toBe(true);
+  });
+
+  it('renders tertiary emphasis as the inline alias class', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" emphasis="tertiary"></civ-toggle-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
+  });
+
+  it('backward-compat: variant="chip" maps to civ-text-btn--chip', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="chip"></civ-toggle-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
+  });
+
+  it('backward-compat: variant="inline" maps to civ-text-btn--inline', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" variant="inline"></civ-toggle-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
   });
 
   it('renders a leading icon when icon-start is set', async () => {

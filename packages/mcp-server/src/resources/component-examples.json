@@ -237,7 +237,7 @@
     {
       "story": "AllVariants",
       "category": "Feedback/Alert",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n      <civ-alert intent=\"neutral\" heading=\"Heads up\">\n        Drafts older than 60 days are removed automatically.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
@@ -278,21 +278,21 @@
       "story": "ComposedRichBody",
       "name": "Composed with badge + notice + descriptive copy",
       "category": "Feedback/Alert",
-      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert intent=\"error\" heading=\"Action required\" dismissible>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <div>\n            <civ-badge label=\"Verification expired\" intent=\"error\" emphasis=\"primary\" with-icon></civ-badge>\n          </div>\n          <p class=\"civ-m-0\">\n            Your identity verification with Login.gov expired on January 15, 2026.\n            Until you re-verify, you cannot submit new claims or view sensitive documents.\n          </p>\n          <civ-notice\n            intent=\"error\"\n            spacing=\"sm\"\n            body=\"You have 30 days to re-verify before your account is locked.\"\n          ></civ-notice>\n        </div>\n      </civ-alert>\n    </div>",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert intent=\"error\" heading=\"Action required\" dismissible>\n        <civ-badge\n          data-civ-alert-prefix\n          label=\"Verification expired\"\n          intent=\"error\"\n          emphasis=\"primary\"\n          with-icon\n        ></civ-badge>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <p class=\"civ-m-0\">\n            Your identity verification with Login.gov expired on January 15, 2026.\n            Until you re-verify, you cannot submit new claims or view sensitive documents.\n          </p>\n          <civ-notice\n            intent=\"error\"\n            spacing=\"sm\"\n            body=\"You have 30 days to re-verify before your account is locked.\"\n          ></civ-notice>\n        </div>\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
       "story": "ComposedWithBadge",
       "name": "Composed with civ-badge — status summary",
       "category": "Feedback/Alert",
-      "html": "<div style=\"max-width: 560px;\">\n      <civ-alert intent=\"info\" heading=\"Application status\">\n        <div class=\"civ-flex civ-flex-col civ-gap-2\">\n          <div>\n            <civ-badge label=\"In review\" intent=\"info\" emphasis=\"primary\" with-icon></civ-badge>\n          </div>\n          <p class=\"civ-m-0\">\n            A reviewer was assigned to your application on January 18, 2026.\n            You'll receive a written notice once a decision is made — usually within 7 business days.\n          </p>\n        </div>\n      </civ-alert>\n    </div>",
+      "html": "<div style=\"max-width: 560px;\">\n      <civ-alert intent=\"info\" heading=\"Application status\">\n        <civ-badge\n          data-civ-alert-prefix\n          label=\"In review\"\n          intent=\"info\"\n          emphasis=\"primary\"\n          with-icon\n        ></civ-badge>\n        <p class=\"civ-m-0\">\n          A reviewer was assigned to your application on January 18, 2026.\n          You'll receive a written notice once a decision is made — usually within 7 business days.\n        </p>\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
       "story": "ComposedWithBadgeList",
       "name": "Composed with multiple civ-badge — multi-step status",
       "category": "Feedback/Alert",
-      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert intent=\"info\" heading=\"Your benefits enrollment\">\n        <ul class=\"civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2\">\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" intent=\"success\" with-icon></civ-badge>\n            <span>Personal information</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" intent=\"success\" with-icon></civ-badge>\n            <span>Direct deposit setup</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"In progress\" intent=\"info\" with-icon></civ-badge>\n            <span>Document upload</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Pending\" intent=\"warning\" with-icon></civ-badge>\n            <span>Identity verification</span>\n          </li>\n        </ul>\n      </civ-alert>\n    </div>",
+      "html": "<div style=\"max-width: 640px;\">\n      <civ-alert intent=\"info\" emphasis=\"tertiary\" heading=\"Your benefits enrollment\">\n        <ul class=\"civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2\">\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" intent=\"success\" with-icon></civ-badge>\n            <span>Personal information</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Complete\" intent=\"success\" with-icon></civ-badge>\n            <span>Direct deposit setup</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"In progress\" intent=\"info\" with-icon></civ-badge>\n            <span>Document upload</span>\n          </li>\n          <li class=\"civ-flex civ-items-center civ-gap-3\">\n            <civ-badge label=\"Pending\" intent=\"warning\" with-icon></civ-badge>\n            <span>Identity verification</span>\n          </li>\n        </ul>\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
@@ -344,21 +344,21 @@
       "story": "FullWidthBanner",
       "name": "Full-width site banner",
       "category": "Feedback/Alert",
-      "html": "<civ-alert full-width intent=\"warning\" heading=\"System maintenance scheduled\">\n      We will perform planned maintenance from 11:00 PM Friday to 6:00 AM\n      Saturday Eastern Time. Online applications and account dashboard will\n      be unavailable during this window.\n    </civ-alert>",
+      "html": "<civ-alert full-width emphasis=\"primary\" intent=\"warning\" heading=\"System maintenance scheduled\">\n      We will perform planned maintenance from 11:00 PM Friday to 6:00 AM\n      Saturday Eastern Time. Online applications and account dashboard will\n      be unavailable during this window.\n    </civ-alert>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
       "story": "FullWidthBannerDismissible",
       "name": "Full-width site banner — dismissible",
       "category": "Feedback/Alert",
-      "html": "<civ-alert full-width intent=\"info\" heading=\"Form update available\" dismissible>\n      We've simplified the dependent claim form. You'll see fewer questions\n      this year, and we'll pre-fill any answers we already have on file.\n    </civ-alert>",
+      "html": "<civ-alert full-width emphasis=\"primary\" intent=\"info\" heading=\"Form update available\" dismissible>\n      We've simplified the dependent claim form. You'll see fewer questions\n      this year, and we'll pre-fill any answers we already have on file.\n    </civ-alert>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
       "story": "GovernmentFormValidation",
       "name": "Usage: Form Validation Feedback",
       "category": "Feedback/Alert",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-alert intent=\"error\" heading=\"There is a problem with your application\">\n        <ul class=\"civ-mt-2 civ-mb-0 civ-ps-5\">\n          <li><a href=\"#name\" style=\"color: inherit;\">Enter your full name</a></li>\n          <li><a href=\"#email\" style=\"color: inherit;\">Enter a valid email address</a></li>\n          <li><a href=\"#ssn\" style=\"color: inherit;\">Enter a valid Social Security number</a></li>\n        </ul>\n      </civ-alert>\n\n      <civ-alert intent=\"success\" heading=\"Application submitted\">\n        We received your application on April 19, 2026. Your confirmation number is APP-2026-04-19-0042.\n        We will review your application and notify you of our decision within 30 days.\n      </civ-alert>\n\n      <civ-alert intent=\"warning\" heading=\"Your session is about to expire\">\n        For your security, we will sign you out in 5 minutes due to inactivity.\n        Select \"Continue session\" to keep working.\n      </civ-alert>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <civ-alert intent=\"error\" heading=\"There is a problem with your application\">\n        <p class=\"civ-m-0 civ-mb-2\">Fix the following before continuing:</p>\n        <ul>\n          <li><a href=\"#name\">Enter your full name</a></li>\n          <li><a href=\"#email\">Enter a valid email address</a></li>\n          <li><a href=\"#ssn\">Enter a valid Social Security number</a></li>\n        </ul>\n      </civ-alert>\n\n      <civ-alert intent=\"success\" heading=\"Application submitted\">\n        We received your application on April 19, 2026. Your confirmation number is APP-2026-04-19-0042.\n        We will review your application and notify you of our decision within 30 days.\n      </civ-alert>\n\n      <civ-alert intent=\"warning\" heading=\"Your session is about to expire\">\n        For your security, we will sign you out in 5 minutes due to inactivity.\n        Select \"Continue session\" to keep working.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
@@ -382,9 +382,15 @@
       "source": "packages/form-patterns/src/patterns/healthcare-examples.stories.ts"
     },
     {
+      "story": "Neutral",
+      "category": "Feedback/Alert",
+      "html": "<civ-alert intent=\"neutral\" heading=\"New: Save and continue later\">\n      You can now save your application at any step and return to it\n      later from your account dashboard. Drafts are kept for 60 days.\n    </civ-alert>",
+      "source": "packages/feedback/src/alert/civ-alert.stories.ts"
+    },
+    {
       "story": "PrimaryStyle",
       "category": "Feedback/Alert",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" emphasis=\"primary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" emphasis=\"primary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" emphasis=\"primary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" emphasis=\"primary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" emphasis=\"primary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" emphasis=\"primary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" emphasis=\"primary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" emphasis=\"primary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n      <civ-alert intent=\"neutral\" emphasis=\"primary\" heading=\"Heads up\">\n        Drafts older than 60 days are removed automatically.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
@@ -402,7 +408,7 @@
     {
       "story": "TertiaryStyle",
       "category": "Feedback/Alert",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" emphasis=\"tertiary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" emphasis=\"tertiary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" emphasis=\"tertiary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" emphasis=\"tertiary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-4\">\n      <civ-alert intent=\"info\" emphasis=\"tertiary\" heading=\"Information\">\n        Routine maintenance is scheduled for this weekend.\n      </civ-alert>\n      <civ-alert intent=\"warning\" emphasis=\"tertiary\" heading=\"Warning\">\n        Your password will expire in 7 days.\n      </civ-alert>\n      <civ-alert intent=\"error\" emphasis=\"tertiary\" heading=\"Error\">\n        Unable to save changes. Check your connection.\n      </civ-alert>\n      <civ-alert intent=\"success\" emphasis=\"tertiary\" heading=\"Success\">\n        Your form has been submitted.\n      </civ-alert>\n      <civ-alert intent=\"neutral\" emphasis=\"tertiary\" heading=\"Heads up\">\n        Drafts older than 60 days are removed automatically.\n      </civ-alert>\n    </div>",
       "source": "packages/feedback/src/alert/civ-alert.stories.ts"
     },
     {
@@ -597,6 +603,13 @@
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
+      "story": "Compact",
+      "name": "Compact (spacing=",
+      "category": "Overlays/Modal",
+      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Open compact modal\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Reassign row\" spacing=\"sm\" @civ-close=\"${close}\">\n          <p class=\"civ-text-body civ-m-0\">Move 3 selected rows to a different owner.</p>\n          <div data-modal-footer>\n            <civ-button emphasis=\"secondary\" label=\"Cancel\" @click=\"${close}\"></civ-button>\n            <civ-button label=\"Reassign\" @click=\"${close}\"></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "source": "packages/overlays/src/modal/civ-modal.stories.ts"
+    },
+    {
       "story": "Danger",
       "category": "Actions/Button",
       "html": "<div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n      <civ-button emphasis=\"primary\" danger>Delete account</civ-button>\n      <civ-button emphasis=\"secondary\" danger>Remove dependent</civ-button>\n      <civ-button emphasis=\"tertiary\" danger>Cancel claim</civ-button>\n    </div>",
@@ -659,11 +672,39 @@
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
+      "story": "FormActionsLongLabels",
+      "name": "Form Actions (long labels — auto-stack in narrow containers)",
+      "category": "Actions/Button",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div>\n        <p class=\"civ-mb-2 civ-text-sm civ-font-semibold\">In a wide container (1000px)</p>\n        <div style=\"max-width: 1000px;\">\n          <div class=\"civ-button-row\">\n            <civ-button label=\"Save this draft and continue\"></civ-button>\n            <civ-button emphasis=\"tertiary\" label=\"Go back to the previous step\"></civ-button>\n          </div>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-mb-2 civ-text-sm civ-font-semibold\">In a narrow container (380px) — auto-stacks</p>\n        <div style=\"max-width: 380px;\">\n          <div class=\"civ-button-row\">\n            <civ-button label=\"Save this draft and continue\"></civ-button>\n            <civ-button emphasis=\"tertiary\" label=\"Go back to the previous step\"></civ-button>\n          </div>\n        </div>\n      </div>\n      <div>\n        <p class=\"civ-mb-2 civ-text-sm civ-font-semibold\">Narrow container + <code>--no-stack</code> — stays side-by-side, equal share</p>\n        <div style=\"max-width: 380px;\">\n          <div class=\"civ-button-row civ-button-row--no-stack\">\n            <civ-button label=\"Save this draft and continue\"></civ-button>\n            <civ-button emphasis=\"tertiary\" label=\"Go back to the previous step\"></civ-button>\n          </div>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
       "story": "FormActionsMobile",
       "name": "Form Actions (mobile)",
       "category": "Actions/Button",
       "html": "<p class=\"civ-mb-4 civ-text-sm\">\n      Below 481px viewports, <code>.civ-button-row</code> stacks the cluster vertically so\n      every button picks up the design system's full-width-on-mobile rule. Compare to plain\n      <code>civ-flex civ-gap-3</code>, which keeps the row horizontal at every width and\n      shrinks each button to its share of the row.\n    </p>\n    <div class=\"civ-button-row\">\n      <civ-button>Save and continue</civ-button>\n      <civ-button emphasis=\"tertiary\">Back</civ-button>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "LongFooterLabels",
+      "name": "Long footer button labels — auto-stack",
+      "category": "Overlays/Action Sheet",
+      "html": "<div class=\"action-sheet-demo\" style=\"position: relative;\">\n        <civ-button label=\"Show long-label demo\" @click=\"${toggle}\"></civ-button>\n        <civ-action-sheet label=\"Confirm submission\" trap-focus @civ-close=\"${close}\">\n          <div class=\"civ-p-4\">\n            <p class=\"civ-heading-sm civ-mb-4\">Submit your application?</p>\n            <p class=\"civ-mb-4\">\n              Once submitted, you cannot edit your answers. You'll receive a\n              confirmation email within 24 hours.\n            </p>\n            <div class=\"civ-button-row\">\n              <civ-button\n                emphasis=\"secondary\"\n                label=\"Go back to review my answers\"\n                @click=\"${close}\"\n              ></civ-button>\n              <civ-button\n                label=\"Submit my application now\"\n                @click=\"${close}\"\n              ></civ-button>\n            </div>\n          </div>\n        </civ-action-sheet>\n      </div>",
+      "source": "packages/overlays/src/action-sheet/civ-action-sheet.stories.ts"
+    },
+    {
+      "story": "LongFooterLabels",
+      "name": "Long footer button labels — auto-stack",
+      "category": "Overlays/Drawer",
+      "html": "<div class=\"drawer-demo\">\n      <civ-button\n        label=\"Show long-label demo\"\n        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}\n      ></civ-button>\n      <civ-drawer\n        heading=\"Edit your contact information\"\n        align=\"end\"\n        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n      >\n        <p class=\"civ-text-body\">\n          Update the address and phone number we use to send notices about\n          your application.\n        </p>\n        <div data-drawer-footer>\n          <civ-button\n            emphasis=\"secondary\"\n            label=\"Discard my changes\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n          <civ-button\n            label=\"Save and return to the form\"\n            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}\n          ></civ-button>\n        </div>\n      </civ-drawer>\n    </div>",
+      "source": "packages/overlays/src/drawer/civ-drawer.stories.ts"
+    },
+    {
+      "story": "LongFooterLabels",
+      "name": "Long footer button labels — auto-stack",
+      "category": "Overlays/Modal",
+      "html": "<div class=\"modal-demo\">\n        <civ-button label=\"Show long-label demo\" @click=\"${toggle}\"></civ-button>\n        <civ-modal heading=\"Save your application?\" @civ-close=\"${close}\">\n          <p class=\"civ-text-body\">\n            We can save your progress so you can finish later. Your draft will\n            be kept for 60 days.\n          </p>\n          <div data-modal-footer>\n            <civ-button\n              emphasis=\"secondary\"\n              label=\"Go back to the previous step\"\n              @click=\"${close}\"\n            ></civ-button>\n            <civ-button\n              label=\"Save this draft and continue\"\n              @click=\"${close}\"\n            ></civ-button>\n          </div>\n        </civ-modal>\n      </div>",
+      "source": "packages/overlays/src/modal/civ-modal.stories.ts"
     },
     {
       "story": "MainMenu",
@@ -833,6 +874,13 @@
       "name": "As an ARIA landmark",
       "category": "Feedback/Callout",
       "html": "<civ-callout intent=\"${args.variant}\" role=\"region\" aria-labelledby=\"region-heading\">\n      <p id=\"region-heading\" class=\"civ-m-0 civ-font-bold civ-mb-1\">Important notice</p>\n      <p class=\"civ-m-0\">This region is announced as a landmark to assistive tech.</p>\n    </civ-callout>",
+      "source": "packages/feedback/src/callout/civ-callout.stories.ts"
+    },
+    {
+      "story": "Compact",
+      "name": "Compact (spacing=",
+      "category": "Feedback/Callout",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\" style=\"max-width: 600px;\">\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default vs sm — same intent, side-by-side</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-3\">\n          <civ-callout intent=\"info\">\n            <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Default padding (12 / 16)</p>\n            <p class=\"civ-m-0\">Established callout spacing. Use in normal page flow.</p>\n          </civ-callout>\n          <civ-callout intent=\"info\" spacing=\"sm\">\n            <p class=\"civ-m-0 civ-font-bold civ-mb-1\">Compact padding (8 / 12)</p>\n            <p class=\"civ-m-0\">One step denser. Use inside dense admin surfaces.</p>\n          </civ-callout>\n        </div>\n      </div>\n\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">All variants at sm</p>\n        <div class=\"civ-flex civ-flex-col civ-gap-2\">\n          <civ-callout spacing=\"sm\">\n            <p class=\"civ-m-0\">Default — neutral accent.</p>\n          </civ-callout>\n          <civ-callout intent=\"info\" spacing=\"sm\">\n            <p class=\"civ-m-0\">Info — routine guidance.</p>\n          </civ-callout>\n          <civ-callout intent=\"warning\" spacing=\"sm\">\n            <p class=\"civ-m-0\">Warning — heads-up.</p>\n          </civ-callout>\n          <civ-callout intent=\"error\" spacing=\"sm\">\n            <p class=\"civ-m-0\">Error — problem callout.</p>\n          </civ-callout>\n          <civ-callout intent=\"success\" spacing=\"sm\">\n            <p class=\"civ-m-0\">Success — confirmation.</p>\n          </civ-callout>\n        </div>\n      </div>\n    </div>",
       "source": "packages/feedback/src/callout/civ-callout.stories.ts"
     },
     {
@@ -1648,6 +1696,13 @@
       "name": "Row Actions (kebab menu)",
       "category": "Layout/Data Grid",
       "html": "<civ-data-grid class=\"story-actions\" caption=\"Applications with row actions\"></civ-data-grid>",
+      "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "RowDensityLadder",
+      "name": "Row density ladder (default / sm / xs)",
+      "category": "Layout/Data Grid",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">spacing=\"default\" — px-3 py-2 (12 / 8px)</p>\n          <civ-data-grid class=\"story-density-row-default\" caption=\"Applications (default rows)\"></civ-data-grid>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">spacing=\"sm\" — px-2 py-1 (8 / 4px)</p>\n          <civ-data-grid class=\"story-density-row-sm\" caption=\"Applications (compact rows)\"></civ-data-grid>\n        </div>\n        <div>\n          <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">spacing=\"xs\" — px-2 py-0.5 (8 / 2px) — ultra-dense</p>\n          <civ-data-grid class=\"story-density-row-xs\" caption=\"Applications (ultra-dense rows)\"></civ-data-grid>\n        </div>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
@@ -4884,7 +4939,7 @@
       "story": "SmallSize",
       "name": "Small size",
       "category": "Layout/Read More",
-      "html": "<civ-read-more size=\"sm\">\n      <p class=\"civ-text-sm\">\n        Your application has been received and is in review.\n      </p>\n      <div data-rest>\n        <p class=\"civ-text-sm\">\n          The average review time is 3–5 business days. You will receive an\n          email with the decision and any next steps.\n        </p>\n      </div>\n    </civ-read-more>",
+      "html": "<civ-read-more spacing=\"sm\">\n      <p class=\"civ-text-sm\">\n        Your application has been received and is in review.\n      </p>\n      <div data-rest>\n        <p class=\"civ-text-sm\">\n          The average review time is 3–5 business days. You will receive an\n          email with the decision and any next steps.\n        </p>\n      </div>\n    </civ-read-more>",
       "source": "packages/layout/src/read-more/civ-read-more.stories.ts"
     },
     {
@@ -6111,6 +6166,47 @@
       "category": "Layout/Tag",
       "html": "<div class=\"civ-flex civ-gap-2 civ-flex-wrap civ-items-center\">\n      <civ-tag label=\"Personal\" color=\"blue\" icon-start=\"person\"></civ-tag>\n      <civ-tag label=\"Important\" color=\"purple\" icon-start=\"star\" tag-style=\"primary\"></civ-tag>\n      <civ-tag label=\"Mailed\" color=\"orange\" icon-start=\"mail\"></civ-tag>\n      <civ-tag label=\"Locked\" color=\"gray\" icon-start=\"lock\" tag-style=\"primary\"></civ-tag>\n    </div>",
       "source": "packages/layout/src/tag/civ-tag.stories.ts"
+    }
+  ],
+  "civ-text-button": [
+    {
+      "story": "Default",
+      "category": "Actions/Text Button",
+      "html": "<civ-text-button\n      label=\"${args.label}\"\n      emphasis=\"${args.emphasis || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      icon-start=\"${args.iconStart || ''}\"\n      icon-end=\"${args.iconEnd || ''}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-text-button>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "Disabled",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;\">\n      <civ-text-button label=\"Show more\" disabled></civ-text-button>\n      <civ-text-button label=\"Generate\" emphasis=\"primary\" disabled></civ-text-button>\n      <civ-text-button label=\"Today\" emphasis=\"tertiary\" disabled></civ-text-button>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "Emphasis",
+      "name": "Emphasis levels",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;\">\n      <civ-text-button label=\"Generate\" emphasis=\"primary\"></civ-text-button>\n      <civ-text-button label=\"Show more\" emphasis=\"secondary\"></civ-text-button>\n      <civ-text-button label=\"Today\" emphasis=\"tertiary\"></civ-text-button>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "InsideHelperRow",
+      "name": "Inside an input helper row",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"max-width: 24rem;\">\n      <label class=\"civ-label\" for=\"text-btn-helper-demo\">Search</label>\n      <div class=\"civ-input-icon-wrap\"><input id=\"text-btn-helper-demo\" class=\"civ-input\" placeholder=\"Type to search…\" /></div>\n      <div class=\"civ-input-helper-row\">\n        <civ-text-button label=\"Clear\" emphasis=\"tertiary\"></civ-text-button>\n        <civ-text-button label=\"Recent searches\" emphasis=\"tertiary\"></civ-text-button>\n      </div>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "name": "Spacing (default vs sm)",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-text-button label=\"Show more\"></civ-text-button>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-text-button label=\"Show more\" spacing=\"sm\"></civ-text-button>\n      </div>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "WithIcons",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;\">\n      <civ-text-button label=\"Today\" emphasis=\"tertiary\" icon-start=\"today\"></civ-text-button>\n      <civ-text-button label=\"Show details\" emphasis=\"secondary\" icon-end=\"chevron-down\"></civ-text-button>\n      <civ-text-button label=\"Generate\" emphasis=\"primary\" icon-start=\"refresh\"></civ-text-button>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
     }
   ],
   "civ-text-input": [

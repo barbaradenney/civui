@@ -49,6 +49,7 @@
   civ-segment,
   civ-tab,
   civ-tab-nav-item,
+  civ-text-button,
   civ-toggle-button {
     display: inline-block;
   }
@@ -743,20 +744,35 @@
 
   /* ── Text button — shared base ────────────────────────────────
    *
-   * A button with no fill / no border that reads as inline text. Two
-   * variants:
+   * A small button with no border that reads as inline text. Three
+   * emphasis levels exposed by `<civ-text-button>` (and inherited by
+   * `<civ-confirm-button>` / `<civ-toggle-button>`):
    *
-   * - `--chip` — gray pill, neutral color. Quiet toggle disclosure
-   *   ("Show more / Hide / Open"). Used by `civ-disclosure` and
-   *   `civ-read-more`. Doesn't compete with a primary action in
-   *   the same view.
+   * - `--primary` — filled brand, white text. Loudest text-btn — use
+   *   sparingly for an inline CTA that should outweigh siblings (e.g.
+   *   "Generate" in a key-generation row). NOT a substitute for
+   *   `civ-button` primary; that's the page-level CTA contract.
    *
-   * - `--inline` — transparent, primary-dark color. Fire-and-forget
-   *   action shortcut ("Today / Now / Copy"). Used by date-picker,
-   *   time-picker, and the text-input trailing-action slot.
+   * - `--secondary` / `--chip` — gray pill, neutral text color. Quiet
+   *   toggle disclosure ("Show more / Hide / Open"). Used by
+   *   `civ-disclosure`, `civ-read-more`, and the default emphasis of
+   *   `civ-confirm-button` / `civ-toggle-button`. Doesn't compete with
+   *   a primary action in the same view.
    *
-   * Decision: chip for state-toggling; inline for one-shot actions.
-   * See `.claude/rules/common-traps.md` → "Text-button variant choice".
+   * - `--tertiary` / `--inline` — transparent, primary-dark color.
+   *   Fire-and-forget action shortcut ("Today / Now / Copy"). Used by
+   *   date-picker, time-picker, and the text-input trailing-action
+   *   slot.
+   *
+   * The legacy `--chip` and `--inline` classes are retained as aliases
+   * of `--secondary` / `--tertiary` so existing consumers (disclosure,
+   * read-more, popover, accordion) don't need to migrate. New code
+   * should reach for the emphasis names.
+   *
+   * Decision: pick by emphasis level. State-toggling defaults to
+   * secondary; one-shot actions inside dense surfaces default to
+   * tertiary. See `.claude/rules/common-traps.md` → "Text-button
+   * variant choice".
    *
    * `:focus` falls through to the global focus rule in `civ.css` so we
    * don't repeat the outline/box-shadow here.
@@ -770,7 +786,24 @@
     opacity: var(--civ-opacity-disabled);
   }
 
-  /* Chip variant — gray pill, neutral text color. */
+  /* Primary emphasis — filled brand color, white text. The loudest
+     text-btn. Use sparingly when the small affordance still needs to
+     read as a CTA inside its surface (e.g. "Generate" alongside a
+     read-only field). Not a replacement for the page-level civ-button. */
+  .civ-text-btn--primary {
+    @apply civ-gap-1 civ-px-2 civ-py-1 civ-text-sm;
+    background-color: var(--civ-color-primary-dark);
+    color: var(--civ-color-white-DEFAULT);
+  }
+  @media (hover: hover) {
+    .civ-text-btn--primary:hover { background-color: var(--civ-color-primary-darker); }
+  }
+  .civ-text-btn--primary:active { background-color: var(--civ-color-primary-darker); }
+
+  /* Secondary emphasis (alias `--chip`) — gray pill, neutral text color.
+     Default for state-toggling affordances (disclosure, read-more,
+     confirm, toggle). Components emit the legacy `--chip` class name
+     directly; the schema-level prop name is `emphasis="secondary"`. */
   .civ-text-btn--chip {
     @apply civ-gap-1 civ-px-2 civ-py-1 civ-text-sm;
     background-color: var(--civ-color-base-lightest);
@@ -781,12 +814,15 @@
   }
   .civ-text-btn--chip:active { background-color: var(--civ-color-base-light); }
 
-  /* Compact size for chip — used inside dense prose / read-more. */
+  /* Compact size — used inside dense prose / read-more. Applies to any
+     emphasis level. */
   .civ-text-btn--sm {
     @apply civ-px-1 civ-text-xs;
   }
 
-  /* Inline variant — transparent, primary color, text-shortcut feel. */
+  /* Tertiary emphasis (alias `--inline`) — transparent, primary color,
+     text-shortcut feel. Components emit the legacy `--inline` class
+     name directly; the schema-level prop name is `emphasis="tertiary"`. */
   .civ-text-btn--inline {
     @apply civ-justify-center civ-bg-transparent;
     color: var(--civ-color-primary-dark);

@@ -1,0 +1,48 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Text Button
+status: stable
+group: CivUI Actions
+description: 'Small inline text-button — the primitive shared by confirm-button, toggle-button, disclosure, and read-more.'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Button text. Required — there is no fallback because the verb is intent-specific'
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary', 'tertiary']
+      default: 'secondary'
+      description: 'Visual emphasis. primary = filled brand pill; secondary = gray pill (default); tertiary = transparent text-link style'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name'
+    type:
+      title: Type
+      type: string
+      enum: ['button', 'submit', 'reset']
+      default: 'button'
+      description: 'HTML button type'
+
+slots:
+  default:
+    title: Default
+    description: 'Child content (alternative to label prop).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

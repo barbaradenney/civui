@@ -20,6 +20,8 @@ import ToggleButtonEvents from "./_toggle-button.events.mdx";
 
 Text button with two persistent labels and an `aria-pressed` state. Click flips `pressed` and swaps the visible label. Use for show/hide toggles where each state has a clear name — password reveal (Show / Hide), mute / unmute, expand / collapse on a custom surface.
 
+Shares the [text-button](./text-button) chrome and `emphasis` levels (`primary` / `secondary` / `tertiary`) — pick the emphasis by visual weight, pick the component by behavior. For a plain click without the toggle state, use [`civ-text-button`](./text-button); for fire-and-forget with a transient receipt use [`civ-confirm-button`](./confirm-button).
+
 The `pressed` property reflects to the host attribute, so consumers can two-way bind by setting `.pressed` externally or by listening for `civ-toggle`. Padding stays stable across the swap — the variant class is held constant; only the label text and `aria-pressed` flip.
 
 ## Examples
@@ -60,6 +62,7 @@ The `pressed` property reflects to the host attribute, so consumers can two-way 
 |---|---|
 | Two persistent labels with a press state (Show / Hide, Mute / Unmute) | `<civ-toggle-button>` |
 | Fire-and-forget action with receipt (Copy / Paste / Scan) | `<civ-confirm-button>` |
+| Plain text button with no built-in behavior | [`<civ-text-button>`](./text-button) |
 | Native disclosure (open/closed `<details>`) | `<civ-disclosure>` |
 | Read-more expansion of prose | `<civ-read-more>` |
 | Primary form CTA (Submit, Continue) | `<civ-button>` |

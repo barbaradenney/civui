@@ -13,7 +13,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-/** Visual variant for the text-button family. */
+/** Visual emphasis level for the text-button family. */
+enum class ConfirmButtonEmphasis { PRIMARY, SECONDARY, TERTIARY }
+
+/**
+ * Visual variant for the text-button family.
+ *
+ * @deprecated Use [ConfirmButtonEmphasis] instead. Kept for schema parity
+ *   with the web component's backward-compat alias.
+ */
 enum class ConfirmButtonVariant { CHIP, INLINE }
 
 /**
@@ -29,7 +37,8 @@ fun CivConfirmButton(
     label: String = "",
     successLabel: String = "",
     successMs: Int = 1500,
-    variant: ConfirmButtonVariant = ConfirmButtonVariant.CHIP,
+    emphasis: ConfirmButtonEmphasis = ConfirmButtonEmphasis.SECONDARY,
+    variant: ConfirmButtonVariant? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
     onConfirm: (() -> Unit)? = null,

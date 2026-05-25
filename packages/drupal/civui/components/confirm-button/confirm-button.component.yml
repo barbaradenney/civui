@@ -20,12 +20,18 @@ props:
       type: integer
       default: 1500
       description: 'How long the success state stays visible, in milliseconds.'
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary', 'tertiary']
+      default: 'secondary'
+      description: 'Visual emphasis. primary = filled brand pill; secondary = gray pill (default); tertiary = transparent text-link style.'
     variant:
       title: Variant
       type: string
-      enum: ['chip', 'inline']
-      default: 'chip'
-      description: 'Picks the text-btn modifier. chip = prominent gray pill; inline = transparent text-link style.'
+      enum: ['', 'chip', 'inline']
+      default: ''
+      description: 'Deprecated alias for emphasis. variant=chip → emphasis=secondary; variant=inline → emphasis=tertiary. Will be removed in the next major release.'
 
 slots:
   default:

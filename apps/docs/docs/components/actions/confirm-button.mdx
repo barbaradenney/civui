@@ -20,6 +20,8 @@ import ConfirmButtonEvents from "./_confirm-button.events.mdx";
 
 Text button that fires an action and shows a transient ✓ confirmation before reverting. Used for fire-and-forget actions whose feedback should be visible inline without yanking the user to a toast — Copy, Paste, Scan, Generate.
 
+Shares the [text-button](./text-button) chrome and `emphasis` levels (`primary` / `secondary` / `tertiary`) — pick the emphasis by visual weight, pick the component by behavior. For a plain click without the receipt machinery, use [`civ-text-button`](./text-button); for two-state toggles use [`civ-toggle-button`](./toggle-button).
+
 The consumer does the actual work in the `civ-confirm` event listener; the component manages the success-window timing and visual swap. **Padding stays stable across states** (the variant class is held constant; only `.is-success` is added), so the button doesn't visibly shrink mid-confirmation.
 
 ## Examples
@@ -60,9 +62,9 @@ The consumer does the actual work in the `civ-confirm` event listener; the compo
 |---|---|
 | Fire-and-forget action with receipt (Copy, Paste, Scan, Generate) | `<civ-confirm-button>` |
 | Two-state toggle (Show / Hide, mute / unmute) | `<civ-toggle-button>` |
+| Plain text button with no built-in behavior | [`<civ-text-button>`](./text-button) |
 | Primary form CTA (Submit, Continue) | `<civ-button>` |
 | Toolbar action (Edit, Delete, …) | `<civ-action-button>` |
-| Bare text button with no built-in behavior | `<button class="civ-text-btn civ-text-btn--chip">` |
 
 ## Handling failure
 

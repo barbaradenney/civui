@@ -26,11 +26,17 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    emphasis: {
+      type: 'enum',
+      description: 'Visual emphasis. `secondary` (default) is the gray pill — the common case (helper rows, standalone toggles, password reveal). `primary` is the filled brand pill. `tertiary` is the transparent text-link style for surfaces where the toggle should read as quiet',
+      default: 'secondary',
+      values: ['primary', 'secondary', 'tertiary'],
+    },
     variant: {
       type: 'enum',
-      description: 'Picks the text-btn modifier. `chip` (default) is the prominent gray pill — the common case (helper rows, standalone toggles, password reveal). `inline` is the transparent text-link style for surfaces where the toggle should read as quiet',
-      default: 'chip',
-      values: ['chip', 'inline'],
+      description: '**Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Setting this prop emits a one-time dev warning and overrides `emphasis`. Will be removed in the next major release',
+      default: '',
+      values: ['', 'chip', 'inline'],
     },
     iconStart: {
       type: 'string',

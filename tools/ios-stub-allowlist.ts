@@ -82,6 +82,7 @@ export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivTabNavItem.swift',
   'CivTabPanel.swift',
   'CivTabs.swift',
+  'CivTextButton.swift',
   'CivTimePicker.swift',
   'CivTimeline.swift',
   'CivTimelineItem.swift',

@@ -10,7 +10,14 @@
 
 import SwiftUI
 
+/// Visual emphasis level for the text-button family.
+public enum ToggleButtonEmphasis: String, CaseIterable {
+    case primary, secondary, tertiary
+}
+
 /// Text-button variant determines the visual treatment.
+/// - Note: Deprecated; use `ToggleButtonEmphasis` instead. Kept for
+///   schema parity with the web component's backward-compat alias.
 public enum ToggleButtonVariant: String, CaseIterable {
     case chip, inline
 }
@@ -33,8 +40,13 @@ public struct CivToggleButton: View {
     /// rendered label and accessibility trait without going through a tap.
     @Binding public var pressed: Bool
 
-    /// Visual variant (chip = prominent pill, inline = text-link style).
-    public var variant: ToggleButtonVariant
+    /// Visual emphasis (primary = filled brand, secondary = gray pill, tertiary = transparent text-link).
+    public var emphasis: ToggleButtonEmphasis
+
+    /// Deprecated visual variant — kept for backward compatibility.
+    /// Use `emphasis` instead. `variant="chip"` ≡ `emphasis="secondary"`;
+    /// `variant="inline"` ≡ `emphasis="tertiary"`.
+    public var variant: ToggleButtonVariant?
 
     /// Optional leading icon name from the CivUI icon library.
     public var iconStart: String
@@ -52,7 +64,8 @@ public struct CivToggleButton: View {
         label: String = "",
         pressedLabel: String = "",
         pressed: Binding<Bool> = .constant(false),
-        variant: ToggleButtonVariant = .chip,
+        emphasis: ToggleButtonEmphasis = .secondary,
+        variant: ToggleButtonVariant? = nil,
         iconStart: String = "",
         isDisabled: Bool = false,
         onToggle: ((Bool) -> Void)? = nil,
@@ -61,6 +74,7 @@ public struct CivToggleButton: View {
         self.label = label
         self.pressedLabel = pressedLabel
         self._pressed = pressed
+        self.emphasis = emphasis
         self.variant = variant
         self.iconStart = iconStart
         self.isDisabled = isDisabled

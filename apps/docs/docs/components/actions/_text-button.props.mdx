@@ -1,0 +1,11 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | `string` | `''` | Button text. Required — there is no fallback because the verb is intent-specific |
+| `emphasis` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Visual emphasis. `primary` is a filled brand pill — loudest text-btn, reserve for the rare inline CTA. `secondary` (default) is the gray pill, the common case (state-toggling, helper-row affordances). `tertiary` is the transparent text-link style for quiet shortcuts inside dense surfaces (date-picker "Today", time-picker "Now") |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Density. `sm` shrinks padding and font-size for dense prose / read-more contexts |
+| `icon-start` | `string` | `''` | Leading icon name. Rendered with `aria-hidden="true"` so the label remains the accessible name |
+| `icon-end` | `string` | `''` | Trailing icon name. Rendered with `aria-hidden="true"` |
+| `type` | `'button'` \| `'submit'` \| `'reset'` | `'button'` | HTML button type. Defaults to `button` so the text-button never accidentally submits a surrounding form when placed inside one |

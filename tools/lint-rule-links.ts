@@ -82,6 +82,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/design-rules.md',
     anchor: 'only-interactive-elements-get-rounded-corners',
   },
+  'density-modifier-names': {
+    path: '.claude/rules/density-convention.md',
+    anchor: 'naming-standard',
+  },
 };
 
 /**

@@ -151,10 +151,10 @@ export const TertiaryStyle: Story = {
 export const Slim: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-2">
-      <civ-alert slim>Informational: Your profile was updated.</civ-alert>
-      <civ-alert intent="warning" slim>Warning: Some fields are incomplete.</civ-alert>
-      <civ-alert intent="error" slim>Error: File upload failed.</civ-alert>
-      <civ-alert intent="success" slim>Success: Changes saved.</civ-alert>
+      <civ-alert spacing="sm">Informational: Your profile was updated.</civ-alert>
+      <civ-alert intent="warning" spacing="sm">Warning: Some fields are incomplete.</civ-alert>
+      <civ-alert intent="error" spacing="sm">Error: File upload failed.</civ-alert>
+      <civ-alert intent="success" spacing="sm">Success: Changes saved.</civ-alert>
     </div>
   `,
 };

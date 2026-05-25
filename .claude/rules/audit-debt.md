@@ -165,21 +165,23 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 - **Surfaced:** Cross-component density audit, 2026-05-25. Branch `claude/density-convention-D3nz1`.
 - **Convention doc:** [`.claude/rules/density-convention.md`](./density-convention.md). The rule prescribes `spacing="sm"` (prop) + `--sm` (CSS modifier) as the standard, Contract A vs Contract B contracts, and the page-level scale guarantee.
-- **What the audit found:** CivUI's density system has TWO mechanisms (page-level `data-civ-scale` and per-component opt-in). The scale mechanism works well overall (most components use spacing tokens). The opt-in has fragmented: 15 classes use `--sm`, 2 use `--compact` (including the just-shipped `.civ-table--compact`), 1 uses `--slim`, 1 uses `--full` (opposite direction); the `spacing` prop has THREE conflated semantics (layout mode / pure shrink / surrounding margin) across 18 components.
+- **What the audit found:** CivUI's density system has TWO mechanisms (page-level `data-civ-scale` and per-component opt-in). The scale mechanism works well overall (most components use spacing tokens). The opt-in has fragmented: 15 classes use `--sm`, 2 use `--compact` (including the just-shipped `.civ-table--compact`), 1 uses `--slim`, 1 uses `--full` (opposite direction); the `spacing` prop has THREE conflated semantics (layout mode / pure shrink / surrounding margin) across 18 components. (Tier 1 cleared 2026-05-25: all `--compact` / `--slim` modifiers renamed to `--sm`. The `--full` opposite-direction modifier is intentional and out of scope.)
 
 ### Tier 1 — uncontroversial fixes (CSS-only renames, no consumer migration needed)
 
 | Item | Action | Notes |
 |---|---|---|
-| ~~`.civ-table--compact` → `.civ-table--sm`~~ | **Done** in `claude/table-component-P3Xz3` — table primitive shipped with `--sm` directly. | The density audit's "this still says `--compact`" reading was from a mid-stream version of the table branch; the landed code uses `--sm`. |
-| ~~`.civ-progress-track--compact` → `.civ-progress-track--sm`~~ | **Done** in `claude/table-component-P3Xz3`. | No public API surface — internal to file-upload and progress-track. |
-| ~~`.civ-alert--slim` → `.civ-alert--sm`~~ | **Done** in `claude/table-component-P3Xz3`. | Component already aliases `slim` boolean to `spacing="sm"`, so the rename only touched the CSS-class output. |
+| ~~`.civ-table--compact` → `.civ-table--sm`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Renamed CSS, story export (`Compact` → `Sm`), docs page, and table-primitive audit-debt entry below. |
+| ~~`.civ-progress-track--compact` → `.civ-progress-track--sm`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Internal-only — `civ-file-upload` was the sole consumer. |
+| ~~`.civ-alert--slim` → `.civ-alert--sm`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | `slim` boolean and `spacing="sm"` prop still produce the class; only the modifier name changed. Test coverage extended to lock both code paths produce `--sm`. Enforced going forward by `pnpm lint:density-modifier-names`. |
+
+A new `pnpm lint:density-modifier-names` (wired into `pnpm validate:lints` and the drift-lints CI gate) prevents the next `--compact` / `--slim` / `--cozy` / `--tight` / `--small` modifier from being introduced — extend its allowlist (`tools/lint-density-modifier-names.ts`) only when a genuinely-justified non-`--sm` density step is added (e.g. an `--xs` for a three-step ladder).
 
 ### Tier 2 — prop renames with deprecation window
 
 | Item | Action | Notes |
 |---|---|---|
-| `civ-alert.slim` boolean → `civ-alert.spacing="sm"` | Deprecate the boolean, keep producing same CSS class until removal | The alias already exists; just need the deprecation warning + a release window. |
+| ~~`civ-alert.slim` boolean → `civ-alert.spacing="sm"`~~ | ✅ Deprecation warning landed in `claude/table-component-P3Xz3` (2026-05-25) | `slim` is now `@deprecated` in JSDoc and emits a `devWarn` when used. Removal scheduled for a subsequent major. Stories migrated to `spacing="sm"`. |
 | `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | Add `spacing` prop, deprecate `size` over one release | `size` is the only outlier in the read-more component — semantically it's density, not hierarchy. |
 | ~~`civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"`~~ | **Superseded** by the variant rename in `claude/file-upload-error-border-IOQWO` (PR #158). | `variant` enum was renamed: `compact` → `inline`, `full` → `large` — values now describe **layout**, not density. File-upload has no `spacing` prop today (file pickers don't typically appear in density-sensitive surfaces); add one if a real placement needs it. |
 

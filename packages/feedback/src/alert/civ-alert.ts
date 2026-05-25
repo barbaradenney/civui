@@ -64,7 +64,7 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child content)
  * @prop {boolean} dismissible - Shows close button
- * @prop {boolean} slim - Compact single-line variant (no heading)
+ * @prop {boolean} slim - **Deprecated.** Use `spacing="sm"` instead. Compact single-line variant (no heading). Emits a dev-mode warning when set.
  * @prop {boolean} collapsible - Wrap heading + body in a `<details>` disclosure; requires `heading`
  * @prop {boolean} open - When `collapsible`, controls / reflects the expanded state
  * @prop {boolean} fullWidth - Render as a site-wide banner (role="region", content centered to `--civ-site-max-width`)
@@ -85,6 +85,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
   @property({ type: String }) label = '';
   @property({ type: Boolean }) dismissible = false;
+  /** @deprecated Use `spacing="sm"` instead. Will be removed in a future major. */
   @property({ type: Boolean }) slim = false;
   @property({ type: Boolean, reflect: true }) collapsible = false;
   @property({ type: Boolean, reflect: true }) open = false;
@@ -122,6 +123,13 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
         'civ-alert',
         '`collapsible` requires `heading` — the heading IS the toggle. Falling back to non-collapsible render.',
         'civ-alert:collapsible-no-heading',
+      );
+    }
+    if (this.slim) {
+      devWarn(
+        'civ-alert',
+        '`slim` is deprecated. Use `spacing="sm"` for the same render. The boolean will be removed in a subsequent major.',
+        'civ-alert:slim-deprecated',
       );
     }
 

@@ -4623,7 +4623,7 @@
     @apply civ-py-2;
   }
   .civ-notice--default .civ-notice__icon {
-    font-size: 2.5rem;
+    font-size: var(--civ-typography-fontSize-2xl);
   }
   .civ-notice--default .civ-notice__header,
   .civ-notice--default .civ-notice__body {
@@ -4634,7 +4634,7 @@
     @apply civ-py-1;
   }
   .civ-notice--sm .civ-notice__icon {
-    font-size: 1.5rem;
+    font-size: var(--civ-typography-fontSize-lg);
   }
   .civ-notice--sm .civ-notice__header,
   .civ-notice--sm .civ-notice__body {
@@ -5195,17 +5195,20 @@
   /* Secondary (default) — bare colored text, no chrome. Inherits parent color
      by default, swaps to semantic colors when variant is set. */
 
-  /* Secondary — tinted background pill with semantic text */
+  /* Secondary — tinted background pill with semantic text. Pill chrome
+     (min-width + line-height) reads from spacing tokens so the badge
+     tracks the page-level `[data-civ-scale]` instead of staying full-size
+     inside dense surfaces. */
   .civ-count--style-secondary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
-    min-width: 1.25rem;
-    line-height: 1.25rem;
+    min-width: var(--civ-spacing-4);
+    line-height: var(--civ-spacing-4);
     text-align: center;
   }
 
   .civ-count--style-secondary.civ-count--sm {
-    min-width: 1rem;
-    line-height: 1rem;
+    min-width: var(--civ-spacing-3);
+    line-height: var(--civ-spacing-3);
     @apply civ-px-1;
   }
 
@@ -5246,14 +5249,14 @@
 
   .civ-count--style-primary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
-    min-width: 1.25rem;
+    min-width: var(--civ-spacing-4);
     text-align: center;
-    line-height: 1.25rem;
+    line-height: var(--civ-spacing-4);
   }
 
   .civ-count--style-primary.civ-count--sm {
-    min-width: 1rem;
-    line-height: 1rem;
+    min-width: var(--civ-spacing-3);
+    line-height: var(--civ-spacing-3);
     @apply civ-px-1;
   }
 
@@ -5320,8 +5323,12 @@
     border: 0;
     cursor: pointer;
     font: inherit;
-    /* Touch target: ensure ≥ 24px tall in default size; --sm is enforced below. */
-    min-height: 1.75rem;
+    /* Token-driven chrome scaling so the chip responds to
+       `[data-civ-scale]`, with `1.5rem` (24px) as the WCAG SC 2.5.8
+       Target Size (Minimum) floor — guarantees the touch target stays
+       ≥ 24px even under `data-civ-scale="dense"` where `--civ-spacing-6`
+       resolves smaller (30px × 0.75 = 22.5px). */
+    min-height: max(var(--civ-spacing-6), 1.5rem);
   }
 
   /* Move the focus ring to the outer wrapper because `.civ-filter-chip`
@@ -5354,10 +5361,13 @@
     cursor: not-allowed;
   }
 
-  /* Compact size: shrink padding while keeping a 24px-tall touch target. */
+  /* Compact size: shrink padding while keeping a 24px-tall touch target.
+     `max(..., 1.5rem)` clamps the WCAG SC 2.5.8 floor — under
+     `data-civ-scale="dense"` `--civ-spacing-5` would shrink below 24px
+     (25 × 0.75 = 18.75px), so the floor takes over. */
   .civ-filter-chip--sm .civ-filter-chip__action {
     @apply civ-px-2 civ-py-0.5 civ-text-sm;
-    min-height: 1.5rem;
+    min-height: max(var(--civ-spacing-5), 1.5rem);
   }
 
   @media (hover: hover) {

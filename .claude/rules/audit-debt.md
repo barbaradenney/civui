@@ -187,7 +187,7 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 | Item | Action | Notes |
 |---|---|---|
-| `civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary) | Replace with `var(--civ-spacing-4)` or `civ-p-4` | **Biggest scale-system bypass** — accordions inside `[data-civ-scale="dense"]` admin surfaces stay full-size while everything around them shrinks. Most visible win. |
+| ~~`civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary)~~ | **Done** in `claude/accordion-item-scale-tokens`. Three full-row variants use `var(--civ-spacing-4)` uniformly; the primary chip-button variant uses asymmetric `var(--civ-spacing-3) var(--civ-spacing-4)` to preserve its button-like proportions (close to the original `1rem 1.25rem`). Accordions now respond to `[data-civ-scale="dense|spacious"]` automatically. |
 | `civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon) | Replace with `var(--civ-typography-fontSize-2xl)` / `fontSize-lg` | Notice icons don't scale with the page today. |
 | `civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm) | Move to `var(--civ-spacing-*)` equivalents | Style-secondary / style-primary variants. |
 | `civ-filter-chip` — `min-height: 1.75rem` (default), `1.5rem` (`--sm`) | Move to `var(--civ-spacing-6)` / `--civ-spacing-5` | Pill height doesn't track scale today. |

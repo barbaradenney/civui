@@ -147,6 +147,71 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Density convention rollout
+
+- **Surfaced:** Cross-component density audit, 2026-05-25. Branch `claude/density-convention-D3nz1`.
+- **Convention doc:** [`.claude/rules/density-convention.md`](./density-convention.md). The rule prescribes `spacing="sm"` (prop) + `--sm` (CSS modifier) as the standard, Contract A vs Contract B contracts, and the page-level scale guarantee.
+- **What the audit found:** CivUI's density system has TWO mechanisms (page-level `data-civ-scale` and per-component opt-in). The scale mechanism works well overall (most components use spacing tokens). The opt-in has fragmented: 15 classes use `--sm`, 2 use `--compact` (including the just-shipped `.civ-table--compact`), 1 uses `--slim`, 1 uses `--full` (opposite direction); the `spacing` prop has THREE conflated semantics (layout mode / pure shrink / surrounding margin) across 18 components.
+
+### Tier 1 — uncontroversial fixes (CSS-only renames, no consumer migration needed)
+
+| Item | Action | Notes |
+|---|---|---|
+| `.civ-table--compact` → `.civ-table--sm` | Rename CSS class + update docs + update story | Just landed in `claude/table-component-P3Xz3`. Cheaper to rename before any consumers depend on it than after. |
+| `.civ-progress-track--compact` → `.civ-progress-track--sm` | Rename CSS class | No public API surface — internal to file-upload and progress-track. |
+| `.civ-alert--slim` → `.civ-alert--sm` | Rename CSS class | Component already aliases `slim` boolean to `spacing="sm"`, so the rename only touches the CSS-class output. |
+
+### Tier 2 — prop renames with deprecation window
+
+| Item | Action | Notes |
+|---|---|---|
+| `civ-alert.slim` boolean → `civ-alert.spacing="sm"` | Deprecate the boolean, keep producing same CSS class until removal | The alias already exists; just need the deprecation warning + a release window. |
+| `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | Add `spacing` prop, deprecate `size` over one release | `size` is the only outlier in the read-more component — semantically it's density, not hierarchy. |
+| `civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"` | Two-prop migration | `variant` then only carries layout mode, `spacing` only carries density. The current single-prop conflation prevents a "full layout + compact spacing" combination. |
+
+### Tier 3 — hardcoded-value cleanup (responds to `[data-civ-scale]` automatically once fixed)
+
+| Item | Action | Notes |
+|---|---|---|
+| `civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary) | Replace with `var(--civ-spacing-4)` or `civ-p-4` | **Biggest scale-system bypass** — accordions inside `[data-civ-scale="dense"]` admin surfaces stay full-size while everything around them shrinks. Most visible win. |
+| `civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon) | Replace with `var(--civ-typography-fontSize-2xl)` / `fontSize-lg` | Notice icons don't scale with the page today. |
+| `civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm) | Move to `var(--civ-spacing-*)` equivalents | Style-secondary / style-primary variants. |
+| `civ-filter-chip` — `min-height: 1.75rem` (default), `1.5rem` (`--sm`) | Move to `var(--civ-spacing-6)` / `--civ-spacing-5` | Pill height doesn't track scale today. |
+| `civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;` | **Keep hardcoded** — WCAG 2.5.5 tap-target floor | Add `/* not density: WCAG 2.5.5 tap target floor */` comment to suppress future audit confusion. |
+| Spinner sizes, signature-preview height, file-preview thumbnails | **Keep hardcoded** | Decorative dimensions. Add `/* not density: decorative dimension */` comments. |
+
+### Tier 4 — coverage gaps (need design decision before implementing)
+
+These components likely should expose `spacing="sm"` but don't. Each needs a design call on whether the placement justifies the opt-in:
+
+| Component | Justification | Decision needed |
+|---|---|---|
+| `civ-data-grid` | Admin tables routinely need 3 row densities. Its `.civ-table` sibling has `--sm`; asymmetric API. | 2-step (`default \| sm`) or 3-step (`default \| sm \| xs`) ladder? |
+| `civ-modal` / `civ-drawer` / `civ-action-sheet` | Dense admin "quick action" overlays don't need full-size chrome. | Add `spacing="sm"` to all three. |
+| `civ-callout` | Inline emphasis inside dense surfaces (data-grid empty state, sidebar notes). | Add `spacing="sm"`. |
+| `civ-btn` | Toolbars + table action menus want smaller buttons. Today consumers route through `civ-action-button` for that. | Add `spacing="sm"` to `civ-btn` OR document `civ-action-button` as the canonical small-button affordance. |
+| `civ-input-group` | When `civ-input--sm` is used the group's border-radius / icon padding stay default and read mismatched. | Cascade `spacing` to the group's chrome. |
+| `civ-radio-group` / `civ-checkbox-group` | Leaf radio/checkbox supports `spacing="sm"`; group container's gap doesn't track. | Cascade `spacing` to children, or document `data-civ-scale` as the answer. |
+
+### Tier 5 — `spacing` prop conflated semantics (architectural fix)
+
+| Item | Action | Notes |
+|---|---|---|
+| `civ-page-header.spacing="sm"` controls **`margin-bottom`** of the surrounding container, not the component's own padding | Rename to `margin="sm"` or `rhythm="sm"`, or move the rhythm control to the parent | Same prop name, different semantic from every other use. Confusing. |
+| `civ-divider.spacing="sm"` controls **vertical margin** around the divider, not its own dimensions | Same as above | Same problem. |
+
+### Lint proposal (deferred)
+
+Once Tiers 1–3 are mostly cleared, add `lint:hardcoded-spacing` to the drift-lints CI gate. It scans `components.css` for `padding`/`margin`/`gap`/`font-size`/`width`/`height` declarations with hardcoded `rem` / `px` values and flags any class not on a curated decorative-exception allowlist (tap-target floors, thumbnail dimensions, spinner sizes, decorative cursive font, etc.). Premature today — too many intentional decorative hardcodes — but the right end state.
+
+### Process
+
+Tiers 1, 2, 3 can each ship as independent PRs against this convention. No tier blocks another. Tier 4 each needs design discussion before code. Tier 5 likely needs a release-note prop deprecation.
+
+**Convention bypass requires sign-off:** if a future component needs a density modifier that doesn't fit Contract A or Contract B, document the new contract in `density-convention.md` in the same PR.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

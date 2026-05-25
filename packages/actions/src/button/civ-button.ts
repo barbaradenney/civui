@@ -121,13 +121,10 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _classes(): string {
-    const variantClass = this.danger
-      ? `civ-btn--${this.emphasis}-danger`
-      : `civ-btn--${this.emphasis}`;
-
     return [
       'civ-btn',
-      variantClass,
+      `civ-btn--${this.emphasis}`,
+      this.danger ? 'civ-btn--danger' : '',
       // Link mode adds an underline so the navigation affordance reads
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-btn--link' : '',

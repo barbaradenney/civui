@@ -130,8 +130,8 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
           fieldset: true,
         })}
 
-        <div class="civ-income-fields">
-          <div class="civ-income-amount">
+        <div class="civ-income__fields">
+          <div class="civ-income__amount">
             <civ-currency
               label="${amountLabel}"
               name="${this.name ? `${this.name}.amount` : 'amount'}"
@@ -144,7 +144,7 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
               @civ-change="${(e: CustomEvent) => this._onSubChange('amount', e)}"
             ></civ-currency>
           </div>
-          <div class="civ-income-frequency">
+          <div class="civ-income__frequency">
             <civ-select
               label="${frequencyLabel}"
               name="${this.name ? `${this.name}.frequency` : 'frequency'}"

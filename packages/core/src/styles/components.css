@@ -225,6 +225,30 @@
     @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
   }
 
+  /* Inline unlock affordance for password-protected files (encrypted PDFs,
+     password-protected ZIPs). Rendered inside __content beneath the file
+     name when status is 'locked'. Constrained width so the password input
+     doesn't stretch the full row on wide layouts. */
+  .civ-file-item__unlock {
+    max-width: 22rem;
+  }
+
+  /* Joined-edge modifiers for compact inline triggers (e.g. the compact
+     file-upload variant pairs an .civ-input span with a .civ-action-btn
+     to form a single visual control). Replaces hand-rolled inline styles
+     so consumers can compose the same pattern without redefining the
+     border / radius overrides each time. */
+  .civ-input--joined-end {
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .civ-action-btn--joined-start {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
   /* `civ-list-item { display: block }` lives in the host-display
      defaults section above. Without it, borders don't paint on the
@@ -334,34 +358,34 @@
 
   /* ── Memorable Date ───────────────────────────────────────── */
 
-  .civ-memorable-date-fields {
+  .civ-memorable-date__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-memorable-date-month {
+  .civ-memorable-date__month {
     width: 10rem;
   }
 
-  .civ-memorable-date-day {
+  .civ-memorable-date__day {
     width: 5rem;
   }
 
-  .civ-memorable-date-year {
+  .civ-memorable-date__year {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-memorable-date-fields {
+    .civ-memorable-date__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-memorable-date-month {
+    .civ-memorable-date__month {
       width: 100%;
     }
 
-    .civ-memorable-date-day,
-    .civ-memorable-date-year {
+    .civ-memorable-date__day,
+    .civ-memorable-date__year {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
   }
@@ -385,33 +409,33 @@
      instead of the red from `civ-border-error`. Using the side-specific
      property eliminates the ambiguity and the inline-start always
      reads as error. */
-  :is(.civ-memorable-date-month, .civ-memorable-date-day, .civ-memorable-date-year)[data-civ-error="true"] .civ-input {
+  :is(.civ-memorable-date__month, .civ-memorable-date__day, .civ-memorable-date__year)[data-civ-error="true"] .civ-input {
     border-inline-start-width: 4px;
     border-inline-start-style: solid;
     border-inline-start-color: var(--civ-color-error-DEFAULT);
   }
 
-  .civ-income-fields {
+  .civ-income__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-income-amount {
+  .civ-income__amount {
     width: 12rem;
   }
 
-  .civ-income-frequency {
+  .civ-income__frequency {
     flex: 1;
     min-width: 14rem;
   }
 
   @media (max-width: 480px) {
-    .civ-income-fields {
+    .civ-income__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-income-amount,
-    .civ-income-frequency {
+    .civ-income__amount,
+    .civ-income__frequency {
       width: 100%;
     }
   }
@@ -423,13 +447,13 @@
      `<civ-select>` and `<civ-segmented-control>`. Aligning by the
      bottom (the previous behavior) pulled the shorter AM/PM column
      down and visibly broke the label row. */
-  .civ-time-picker-fields {
+  .civ-time-picker__fields {
     @apply civ-flex civ-flex-wrap civ-items-start;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-time-picker-hour,
-  .civ-time-picker-minute {
+  .civ-time-picker__hour,
+  .civ-time-picker__minute {
     width: 5.5rem;
   }
 
@@ -439,16 +463,16 @@
    * hour width (5.5rem) and the combo input (default) — enough room
    * for a leading "12:" and trailing padding.
    */
-  .civ-time-picker-time-input {
+  .civ-time-picker__time-input {
     width: 7rem;
   }
 
-  .civ-time-picker-period {
+  .civ-time-picker__period {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-time-picker-fields {
+    .civ-time-picker__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
@@ -461,13 +485,13 @@
      * tap targets work better full-width than squeezed into a third
      * of the screen.
      */
-    .civ-time-picker-hour,
-    .civ-time-picker-minute {
+    .civ-time-picker__hour,
+    .civ-time-picker__minute {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
 
-    .civ-time-picker-time-input,
-    .civ-time-picker-period {
+    .civ-time-picker__time-input,
+    .civ-time-picker__period {
       width: 100%;
     }
 
@@ -1318,7 +1342,10 @@
     color: var(--civ-color-base-light);
   }
 
-  /* Mobile: collapse dropzone to compact browse button (no drag on touch) */
+  /* Mobile: collapse dropzone to inline browse button (no drag on touch).
+     This is a viewport-driven layout change, not the same axis as the
+     `variant="inline"` opt-in — both end up rendering the same compact
+     pseudo-input + browse pill, so the CSS overrides converge here. */
   @media (max-width: 480px) {
     .civ-dropzone {
       @apply civ-py-3 civ-px-4 civ-text-start civ-border civ-border-solid;
@@ -1326,13 +1353,16 @@
     .civ-dropzone > span:first-child {
       display: none;
     }
-    .civ-dropzone--full {
+    .civ-dropzone--large {
       min-height: auto;
       @apply civ-py-3;
     }
   }
 
-  .civ-dropzone--full {
+  /* Larger drag target — pairs with `variant="large"`. Previously named
+     `.civ-dropzone--full`; renamed in lockstep with the schema enum
+     rename to keep CSS class names aligned with the public API. */
+  .civ-dropzone--large {
     @apply civ-py-20;
     min-height: 250px;
   }
@@ -1836,7 +1866,8 @@
   }
 
   .civ-dropzone[aria-invalid="true"] {
-    @apply civ-border-error;
+    @apply civ-border-error civ-border-s-4;
+    border-inline-start-style: solid;
   }
 
   .civ-dropzone:disabled {
@@ -1945,43 +1976,56 @@
   }
 
   /* ── Danger variants ───────────────────────────────────────── */
+  /*
+   * Templates emit `civ-btn--{emphasis}` plus an additional
+   * `civ-btn--danger` class when danger is set. The CSS uses compound
+   * selectors so each (emphasis × danger) combination targets the
+   * right element without duplicating the per-emphasis structure.
+   *
+   * Why not collapse to CSS-var palette swap? The primary palette has
+   * a `darker` shade (used for `.civ-btn--primary:active`) that the
+   * error palette doesn't. A full var-swap would force one or the
+   * other palette to change shape (either add `darker` to error or
+   * shift primary to use `dark + brightness`). Out of scope for this
+   * refactor; revisit when the palettes are aligned.
+   */
 
-  .civ-btn--primary-danger {
+  .civ-btn--primary.civ-btn--danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
   @media (hover: hover) {
-    .civ-btn--primary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--primary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       @apply civ-bg-error-dark civ-border-error-dark;
     }
   }
-  .civ-btn--primary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--primary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
     filter: brightness(var(--civ-brightness-active));
   }
 
-  .civ-btn--secondary-danger {
+  .civ-btn--secondary.civ-btn--danger {
     background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
   @media (hover: hover) {
-    .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--secondary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       background-color: var(--civ-color-error-lighter);
     }
   }
-  .civ-btn--secondary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--secondary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     background-color: var(--civ-color-error-light);
   }
 
-  .civ-btn--tertiary-danger {
+  .civ-btn--tertiary.civ-btn--danger {
     @apply civ-bg-transparent civ-text-error civ-border-error;
   }
   @media (hover: hover) {
-    .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--tertiary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       @apply civ-bg-error civ-text-white;
     }
   }
-  .civ-btn--tertiary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--tertiary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
   }
 
@@ -2289,33 +2333,35 @@
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
 
-  /* Action button danger variants */
-  .civ-action-btn--primary-danger {
+  /* Action button danger variants — see comment block above the
+     .civ-btn--*.civ-btn--danger rules for the design rationale on
+     splitting emphasis and danger into separate classes. */
+  .civ-action-btn--primary.civ-action-btn--danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
   @media (hover: hover) {
-    .civ-action-btn--primary-danger:hover:not(:disabled) {
+    .civ-action-btn--primary.civ-action-btn--danger:hover:not(:disabled) {
       @apply civ-bg-error-dark civ-border-error-dark;
     }
   }
 
-  .civ-action-btn--secondary-danger {
+  .civ-action-btn--secondary.civ-action-btn--danger {
     background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
   @media (hover: hover) {
-    .civ-action-btn--secondary-danger:hover:not(:disabled) {
+    .civ-action-btn--secondary.civ-action-btn--danger:hover:not(:disabled) {
       background-color: var(--civ-color-error-lighter);
     }
   }
 
-  .civ-action-btn--tertiary-danger {
+  .civ-action-btn--tertiary.civ-action-btn--danger {
     @apply civ-text-error civ-border-error;
     background-color: var(--civ-color-error-lightest);
   }
   @media (hover: hover) {
-    .civ-action-btn--tertiary-danger:hover:not(:disabled) {
+    .civ-action-btn--tertiary.civ-action-btn--danger:hover:not(:disabled) {
       background-color: var(--civ-color-error-lighter);
     }
   }
@@ -3471,25 +3517,28 @@
   }
 
   /* ── Danger link variants ──────────────────────────────────── */
+  /* Templates emit `civ-link--{variant}` plus an additional
+     `civ-link--danger` class when danger is set; CSS uses compound
+     selectors to target the (variant × danger) intersection. */
 
-  .civ-link--primary-danger {
+  .civ-link--primary.civ-link--danger {
     @apply civ-inline-flex civ-items-center civ-gap-1
            civ-font-sans civ-font-bold civ-cursor-pointer
            civ-text-error civ-underline;
   }
   @media (hover: hover) {
-    .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
+    .civ-link--primary.civ-link--danger:hover:not([aria-disabled="true"]) {
       @apply civ-text-error-dark;
     }
   }
 
-  .civ-link--secondary-danger {
+  .civ-link--secondary.civ-link--danger {
     @apply civ-inline-flex civ-items-center
            civ-font-sans civ-cursor-pointer
            civ-text-error civ-underline;
   }
   @media (hover: hover) {
-    .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
+    .civ-link--secondary.civ-link--danger:hover:not([aria-disabled="true"]) {
       @apply civ-text-error-dark;
     }
   }
@@ -5535,7 +5584,7 @@
      lets consumers keep the lowercase `item-label` they already use
      for the Add button and announcements. */
 
-  .civ-repeater-row-heading {
+  .civ-repeater__row-heading {
     @apply civ-text-lg civ-font-bold civ-m-0 civ-mb-3;
     text-transform: capitalize;
   }
@@ -5544,12 +5593,12 @@
      `max` has been reached. Same visual weight as `civ-hint--group` —
      small, gray, subordinate — so it reads as guidance not as an error. */
 
-  .civ-repeater-max-hint {
+  .civ-repeater__max-hint {
     @apply civ-text-sm civ-m-0;
     color: var(--civ-color-base-dark);
   }
 
-  .civ-repeater-empty-state {
+  .civ-repeater__empty-state {
     @apply civ-text-sm civ-m-0 civ-mb-3 civ-italic;
     color: var(--civ-color-base-dark);
   }

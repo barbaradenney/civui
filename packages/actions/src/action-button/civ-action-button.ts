@@ -101,13 +101,10 @@ export class CivActionButton extends CivBaseElement {
   }
 
   private get _classes(): string {
-    const variantClass = this.danger
-      ? `civ-action-btn--${this.emphasis}-danger`
-      : `civ-action-btn--${this.emphasis}`;
-
     return [
       'civ-action-btn',
-      variantClass,
+      `civ-action-btn--${this.emphasis}`,
+      this.danger ? 'civ-action-btn--danger' : '',
       // Link mode adds an underline so the navigation affordance reads
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-action-btn--link' : '',

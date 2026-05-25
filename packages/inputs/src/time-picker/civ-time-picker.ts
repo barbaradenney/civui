@@ -707,8 +707,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
           error: this.error,
           fieldset: true,
         })}
-        <div class="civ-time-picker-fields">
-          <div class="civ-time-picker-time-input">
+        <div class="civ-time-picker__fields">
+          <div class="civ-time-picker__time-input">
             <civ-text-input
               label="${t('timePickerTimeLabel')}"
               name="${this.name ? `${this.name}-time` : 'time'}"
@@ -727,7 +727,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
           </div>
           ${this.format === '12'
             ? html`
-                <div class="civ-time-picker-period">
+                <div class="civ-time-picker__period">
                   <civ-segmented-control
                     legend="${periodLabel}"
                     name="${this.name ? `${this.name}-period` : 'period'}"
@@ -774,8 +774,8 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
     const hideMarkerOnChildren = legendIsVisible || this.hideRequiredIndicator;
 
     const fields = html`
-      <div class="civ-time-picker-fields">
-        <div class="civ-time-picker-hour">
+      <div class="civ-time-picker__fields">
+        <div class="civ-time-picker__hour">
           <civ-select
             label="${hourLabel}"
             name="${this.name ? `${this.name}-hour` : 'hour'}"
@@ -787,7 +787,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
             disable-analytics
           ></civ-select>
         </div>
-        <div class="civ-time-picker-minute">
+        <div class="civ-time-picker__minute">
           <civ-select
             label="${minuteLabel}"
             name="${this.name ? `${this.name}-minute` : 'minute'}"
@@ -801,7 +801,7 @@ export class CivTimePicker extends LegendHeadingMixin(CivFormElement) {
         </div>
         ${this.format === '12'
           ? html`
-              <div class="civ-time-picker-period">
+              <div class="civ-time-picker__period">
                 <civ-segmented-control
                   legend="${periodLabel}"
                   name="${this.name ? `${this.name}-period` : 'period'}"

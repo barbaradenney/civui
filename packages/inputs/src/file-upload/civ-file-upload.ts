@@ -9,8 +9,10 @@ import { CivFormElement, LegendHeadingMixin, dispatch, interpolate, renderLabel,
 // shared delay / min-duration flash protection + the announce queue.
 import '@civui/layout/image';
 import '@civui/feedback/spinner';
+import '@civui/actions/action-button';
+import '../text-input/civ-text-input.js';
 
-type FileStatus = 'pending' | 'uploading' | 'success' | 'error';
+type FileStatus = 'pending' | 'uploading' | 'success' | 'error' | 'locked';
 
 /**
  * Represents a file that was uploaded in a previous session and is now
@@ -162,6 +164,7 @@ function formatAcceptedTypes(accept: string): string {
  * @fires civ-change - When files are added or removed, detail: { files: File[] }
  * @fires civ-upload-cancel - When a file upload is cancelled, detail: { index, name }
  * @fires civ-upload-retry - When a file upload is retried, detail: { index, name, file }
+ * @fires civ-file-unlock - When the user submits a password for a password-protected file (e.g. encrypted PDF). Detail: { index, name, file, password }. Fired from the inline unlock affordance that appears when the consumer marks a file as `'locked'` via `setFileStatus(i, 'locked')`. The consumer's upload pipeline owns decryption — typically by retrying the upload with the password attached to the request, or by client-side decryption (PDF.js etc.). The file's status is moved to `'uploading'` immediately and the password buffer is cleared from the component. Set `setFileStatus(i, 'locked', { error: 'Incorrect password' })` to re-prompt with the error visible.
  * @fires civ-file-upload-before-remove - Cancelable. Fires before a file is removed. `preventDefault()` aborts the removal — wire this up to insert a confirmation step (e.g. a `civ-modal`), then re-call `removeFile(index, { skipConfirm: true })` from the confirm handler. Detail: { index, name, isInitial, id? }
  * @fires civ-file-removed - When any file is removed, detail: { index, name, isInitial, id? }
  *   For initial-files (isInitial=true), `id` echoes the server identifier so the
@@ -195,12 +198,22 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) capture: FileUploadCapture = '';
 
   /**
-   * Upload zone variant:
-   * - `default` — medium dropzone with icon and text
-   * - `compact` — inline text field with browse button (no drag zone)
-   * - `full` — large dropzone filling available space
+   * Upload zone visual layout:
+   * - `default` — medium dropzone with drag-and-drop and inline browse pill
+   * - `inline` — compact pseudo-input + browse button row (no dropzone,
+   *   no drag-and-drop). Matches the layout of native `<input type="file">`
+   *   for placement in dense forms. The previous value name `compact` was
+   *   renamed in v0.x to disambiguate from the system-wide `spacing="sm"`
+   *   density convention used by every other CivUI component
+   * - `large` — taller drag target with `min-height: 250px`, for landing
+   *   pages or document-heavy workflows where the upload is the primary
+   *   action on the page. Previously named `full`
+   *
+   * These three values describe **layout**, not density. There is no
+   * density / chrome-size knob on file-upload today (a future `spacing`
+   * prop would be additive).
    */
-  @property({ type: String }) variant: 'default' | 'compact' | 'full' = 'default';
+  @property({ type: String }) variant: 'default' | 'inline' | 'large' = 'default';
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
@@ -246,7 +259,26 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   private _previewUrls = new Map<File, string>();
   private _hydratedFromInitial = false;
 
+  /**
+   * Per-file password buffer for the inline unlock affordance. Keyed by the
+   * `File` object reference so the entry survives `_files` array reshuffles
+   * (e.g. when a sibling file is removed). Cleared on unlock dispatch and on
+   * file removal so passwords don't linger in memory.
+   */
+  private _passwordEntries = new WeakMap<File, string>();
+
+  /**
+   * Counter for dragenter/dragleave events. The dropzone button has
+   * descendant spans (the text + browse pill); native dragleave fires when
+   * the cursor moves between descendants of the drop target, which would
+   * otherwise flicker `_dragging` off. Tracking enter/leave as a depth
+   * counter and only flipping `_dragging` when the depth returns to zero
+   * keeps the highlight stable while the cursor is anywhere inside the zone.
+   */
+  private _dragDepth = 0;
+
   private _boundDragOver = this._onDragOver.bind(this);
+  private _boundDragEnter = this._onDragEnter.bind(this);
   private _boundDragLeave = this._onDragLeave.bind(this);
   private _boundDrop = this._onDrop.bind(this);
 
@@ -254,23 +286,38 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     return this._files.map((f) => f.file);
   }
 
-  /** Update a file's upload status. Call from your upload handler. */
+  /**
+   * Update a file's upload status from the consumer's upload pipeline.
+   * Transitions clear any stale `file.error` from a previous state — pass
+   * `opts.error` explicitly to set a new one (typical with `'error'` /
+   * `'locked'`). Out-of-range index is a no-op.
+   */
   setFileStatus(index: number, status: FileStatus, opts?: { progress?: number; error?: string }): void {
-    const file = this._files[index];
-    if (!file) return;
-    const prevStatus = file.status;
-    file.status = status;
-    if (opts?.progress !== undefined) file.progress = opts.progress;
-    if (opts?.error) file.error = opts.error;
-    this.requestUpdate();
+    const existing = this._files[index];
+    if (!existing) return;
+    const prevStatus = existing.status;
+    // Immutable update: rebuild the row so Lit's reactivity tracks the
+    // change via array-element identity, not in-place mutation of a
+    // @state()-tracked object. Clears `error` on every transition unless
+    // a new one was passed — otherwise transitioning from error → locked
+    // leaves the old "Server returned 503" sitting under the password input.
+    const next: UploadedFile = {
+      ...existing,
+      status,
+      progress: opts?.progress !== undefined ? opts.progress : existing.progress,
+      error: opts?.error !== undefined ? opts.error : undefined,
+    };
+    this._files = this._files.map((f, i) => (i === index ? next : f));
 
     // Screen reader announcements
     if (status === 'uploading') {
-      this._announceProgress(file.name, file.progress);
+      this._announceProgress(next.file, next.name, next.progress);
     } else if (status === 'success') {
-      this.announce(interpolate(t('fileUploadSuccess'), { name: file.name }));
+      this.announce(interpolate(t('fileUploadSuccess'), { name: next.name }));
     } else if (status === 'error' && prevStatus !== 'error') {
-      this.announce(interpolate(t('fileUploadError'), { name: file.name, error: file.error || t('fileUploadUnknownError') }));
+      this.announce(interpolate(t('fileUploadError'), { name: next.name, error: next.error || t('fileUploadUnknownError') }));
+    } else if (status === 'locked' && prevStatus !== 'locked') {
+      this.announce(interpolate(t('fileUploadLockedText'), { name: next.name }));
     }
   }
 
@@ -278,10 +325,13 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   getAbortController(index: number): AbortController | undefined {
     const file = this._files[index];
     if (!file) return undefined;
-    if (!file.abortController) {
-      file.abortController = new AbortController();
-    }
-    return file.abortController;
+    if (file.abortController) return file.abortController;
+    // Immutable update: install a fresh controller and record it on the
+    // file row. AbortController identity matters here (cancel callers must
+    // get the same instance back), so we cache the new one before returning.
+    const controller = new AbortController();
+    this._files = this._files.map((f, i) => (i === index ? { ...f, abortController: controller } : f));
+    return controller;
   }
 
   override render() {
@@ -312,30 +362,47 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Render the visible file-picker trigger — either the compact "Browse" pill
-   * or the full dropzone with drag/drop affordances.
+   * Render the visible file-picker trigger — either the inline browse pill
+   * (variant=inline) or the dropzone with drag-and-drop affordances
+   * (variant=default | large).
    */
   private _renderTrigger() {
-    if (this.variant === 'compact') {
+    if (this.variant === 'inline') {
+      // Compact trigger summary matches native <input type="file"> behavior:
+      //   - empty           → "No file chosen"
+      //   - single file     → "filename.ext"
+      //   - multiple + 1    → "filename.ext"
+      //   - multiple + N>1  → "N files chosen" (with the full list rendered
+      //                       below so the user can remove individual files)
+      // Joining all names in the trigger when multiple ran out of room and
+      // duplicated content that the list already showed; the count summary
+      // is the canonical way to surface "many files" inline.
+      const triggerText = this._files.length === 0
+        ? (this.dragText || t('fileUploadNoFileChosen'))
+        : this._files.length === 1
+          ? this._files[0].name
+          : interpolate(t('fileUploadFilesChosen'), { count: this._files.length });
       return html`
         <button
           type="button"
           class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded"
           @click="${this._onDropzoneClick}"
+          aria-label="${this.label}"
+          aria-required="${this.required || nothing}"
+          aria-invalid="${this.error ? 'true' : nothing}"
           ?disabled="${this.disabled}"
         >
-          <span class="civ-input civ-flex-1 civ-truncate civ-text-start civ-rounded-s" style="border-inline-end:0;border-start-end-radius:0;border-end-end-radius:0;">
-            ${this._files.length > 0
-              ? this._files.map(f => f.name).join(', ')
-              : (this.dragText || t('fileUploadNoFileChosen'))}
+          <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this.error ? 'true' : nothing}">
+            ${triggerText}
           </span>
-          <span class="civ-action-btn civ-action-btn--tertiary civ-shrink-0 civ-rounded-e" style="border-start-start-radius:0;border-end-start-radius:0;">${this.browseText || t('fileUploadBrowseText')}</span>
+          <span class="civ-action-btn civ-action-btn--tertiary civ-action-btn--joined-start civ-shrink-0 civ-rounded-e">${this.browseText || t('fileUploadBrowseText')}</span>
         </button>`;
     }
     return html`
       <button
         type="button"
-        class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''}"
+        class="civ-dropzone ${this.variant === 'large' ? 'civ-dropzone--large' : ''}"
+        @dragenter="${this._boundDragEnter}"
         @dragover="${this._boundDragOver}"
         @dragleave="${this._boundDragLeave}"
         @drop="${this._boundDrop}"
@@ -360,7 +427,15 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
       </button>`;
   }
 
-  /** Render the offscreen native `<input type="file">` that backs the picker. */
+  /**
+   * Render the offscreen native `<input type="file">` that backs the picker.
+   * Intentionally omits the `required` attribute: HTML5 form validation
+   * focuses required controls when they fail, and a tabindex=-1 +
+   * aria-hidden input is not focusable — Chrome logs "An invalid form
+   * control is not focusable" and the focus jumps nowhere. The dropzone
+   * button carries `aria-required="true"` for AT, and `<civ-form>` /
+   * consumers gate submission via `getFormData()` / `validate()`.
+   */
   private _renderHiddenInput() {
     return html`
       <input
@@ -371,7 +446,6 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         capture="${this.capture || nothing}"
         ?multiple="${this.multiple}"
         ?disabled="${this.disabled || this.readonly}"
-        ?required="${this.required && this._files.length === 0}"
         class="civ-hidden"
         @change="${this._onFileSelect}"
         aria-hidden="true"
@@ -383,8 +457,16 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
    * Render the selected-files list (status icon, name, progress bar, error,
    * action buttons) plus the "show all" expander when there are more than
    * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty.
+   *
+   * Inline + single: skipped — the inline trigger already shows the file
+   * name; a single-row list below would just duplicate it.
+   *
+   * Inline + multiple: the list renders. The trigger collapses to a
+   * "{N} files chosen" summary so the two surfaces aren't redundant, and
+   * the list is the only way for the user to remove individual files.
    */
   private _renderFileList() {
+    if (this.variant === 'inline' && !this.multiple) return nothing;
     if (this._files.length === 0) return nothing;
     const visible = this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT);
     return html`
@@ -414,12 +496,14 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
               size="32"
             ></civ-image>`
           : file.status === 'success'
-            ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success"></civ-icon>`
+            ? html`<civ-icon name="check-circle" class="civ-shrink-0 civ-text-success" aria-hidden="true"></civ-icon>`
             : file.status === 'error'
-              ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error"></civ-icon>`
-              : file.status === 'uploading'
-                ? html`<civ-spinner size="sm" decorative class="civ-shrink-0"></civ-spinner>`
-                : nothing}
+              ? html`<civ-icon name="error" class="civ-shrink-0 civ-text-error" aria-hidden="true"></civ-icon>`
+              : file.status === 'locked'
+                ? html`<civ-icon name="lock" class="civ-shrink-0" aria-hidden="true"></civ-icon>`
+                : file.status === 'uploading'
+                  ? html`<civ-spinner size="sm" decorative class="civ-shrink-0"></civ-spinner>`
+                  : nothing}
         <div class="civ-file-item__content">
           <span class="civ-block">
             ${file.isInitial && file.url
@@ -434,6 +518,29 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           ` : nothing}
           ${file.status === 'error' && file.error ? html`
             <span class="civ-file-error-text civ-block civ-mt-1">${file.error}</span>
+          ` : nothing}
+          ${file.status === 'locked' ? html`
+            <div class="civ-file-item__unlock civ-mt-2" data-file-unlock>
+              <civ-text-input
+                label="${interpolate(t('fileUploadPasswordLabel'), { name: file.name })}"
+                type="password"
+                reveal-password
+                autocomplete="off"
+                error="${file.error || ''}"
+                ?disabled="${this.disabled}"
+                data-file-unlock-input
+                @civ-input="${(e: CustomEvent<{ value: string }>) => this._onPasswordInput(index, e)}"
+                @keydown="${(e: KeyboardEvent) => { if (e.key === 'Enter') { e.preventDefault(); this._onUnlock(index); } }}"
+              ></civ-text-input>
+              <civ-action-button
+                class="civ-mt-2"
+                variant="secondary"
+                label="${t('fileUploadUnlockText')}"
+                aria-label="${interpolate(t('fileUploadUnlockAriaLabel'), { name: file.name })}"
+                ?disabled="${this.disabled}"
+                @click="${() => this._onUnlock(index)}"
+              ></civ-action-button>
+            </div>
           ` : nothing}
         </div>
         ${this.readonly ? nothing : html`<span class="civ-file-item__actions">
@@ -528,18 +635,18 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
    * Announce upload progress at quarter milestones (25/50/75/100) per
    * file. Continuous announcements would be too noisy on long uploads
    * — AT users only need confirmation that progress is happening.
-   * The map tracks the highest milestone announced per file name so
-   * we don't re-announce the same threshold if progress oscillates.
+   * Keyed by `File` reference so two files sharing a name (e.g. two
+   * `scan.pdf` uploads) get independent milestone tracking.
    */
-  private _progressMilestones = new Map<string, number>();
+  private _progressMilestones = new WeakMap<File, number>();
 
-  private _announceProgress(name: string, progress: number): void {
+  private _announceProgress(file: File, name: string, progress: number): void {
     const milestones = [25, 50, 75, 100];
-    const lastAnnounced = this._progressMilestones.get(name) ?? 0;
+    const lastAnnounced = this._progressMilestones.get(file) ?? 0;
     // Highest milestone reached so far; jumping from 50 to 100 announces 100, not 75.
     const reached = milestones.filter((m) => m <= progress).at(-1);
     if (reached === undefined || reached <= lastAnnounced) return;
-    this._progressMilestones.set(name, reached);
+    this._progressMilestones.set(file, reached);
     this.announce(interpolate(t('fileUploadUploading'), { name, progress: String(reached) }));
   }
 
@@ -597,12 +704,14 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   /**
    * Run a callback after the next render completes. Surfaces a thrown
    * error through console.error rather than swallowing it as an
-   * unobserved promise rejection.
+   * unobserved promise rejection. Supports async callbacks — useful when
+   * the callback needs to await a child component's own updateComplete
+   * before reading from its rendered DOM.
    */
-  private async _afterUpdate(context: string, fn: () => void): Promise<void> {
+  private async _afterUpdate(context: string, fn: () => void | Promise<void>): Promise<void> {
     try {
       await this.updateComplete;
-      fn();
+      await fn();
     } catch (err) {
       console.error(`civ-file-upload: failed after update (${context})`, err);
     }
@@ -613,12 +722,36 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     if (!this.disabled && !this.readonly) this._dragging = true;
   }
 
-  private _onDragLeave(): void {
-    this._dragging = false;
+  /**
+   * Track entry depth so dragleave-on-children doesn't flicker the
+   * highlight. The dropzone button has descendant spans (text + browse
+   * pill); native dragleave fires whenever the cursor crosses a child
+   * boundary, so we count enter/leave pairs and only flip `_dragging`
+   * off when the cursor truly exits the dropzone.
+   */
+  private _onDragEnter(e: DragEvent): void {
+    e.preventDefault();
+    if (this.disabled || this.readonly) return;
+    this._dragDepth += 1;
+    this._dragging = true;
+  }
+
+  private _onDragLeave(e?: DragEvent): void {
+    if (this.disabled || this.readonly) return;
+    this._dragDepth = Math.max(0, this._dragDepth - 1);
+    if (this._dragDepth === 0) this._dragging = false;
+    // Defensive: cursor leaving the document entirely surfaces as
+    // `relatedTarget === null`. Force-reset so a missed dragenter
+    // doesn't leave the highlight stuck.
+    if (e && e.relatedTarget === null) {
+      this._dragDepth = 0;
+      this._dragging = false;
+    }
   }
 
   private _onDrop(e: DragEvent): void {
     e.preventDefault();
+    this._dragDepth = 0;
     this._dragging = false;
     if (this.disabled || this.readonly || !e.dataTransfer) return;
     this._addFiles(Array.from(e.dataTransfer.files));
@@ -658,10 +791,12 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     if (file.abortController) {
       file.abortController.abort();
     }
-    file.status = 'error';
-    file.error = t('fileUploadCancelled');
-    file.progress = 0;
-    this.requestUpdate();
+    this._files = this._files.map((f, i) => (i === index ? {
+      ...f,
+      status: 'error' as FileStatus,
+      error: t('fileUploadCancelled'),
+      progress: 0,
+    } : f));
     dispatch(this, 'civ-upload-cancel', { index, name: file.name });
     this.announce(interpolate(t('fileUploadCancelledAnnounce'), { name: file.name }));
   }
@@ -669,14 +804,66 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   private _retryUpload(index: number): void {
     const file = this._files[index];
     if (!file) return;
-    file.status = 'pending';
-    file.error = undefined;
-    file.progress = 0;
-    file.abortController = undefined;
-    this._progressMilestones.delete(file.name);
-    this.requestUpdate();
+    this._progressMilestones.delete(file.file);
+    this._files = this._files.map((f, i) => (i === index ? {
+      ...f,
+      status: 'pending' as FileStatus,
+      error: undefined,
+      progress: 0,
+      abortController: undefined,
+    } : f));
     this.announce(interpolate(t('fileUploadRetryAnnounce'), { name: file.name }));
     dispatch(this, 'civ-upload-retry', { index, name: file.name, file: file.file });
+  }
+
+  private _onPasswordInput(index: number, event: CustomEvent<{ value: string }>): void {
+    const file = this._files[index];
+    if (!file) return;
+    this._passwordEntries.set(file.file, event.detail.value ?? '');
+  }
+
+  private _onUnlock(index: number): void {
+    const file = this._files[index];
+    if (!file) return;
+    const password = this._passwordEntries.get(file.file) ?? '';
+    if (!password) {
+      // Empty submit (button click or Enter on a blank field): announce
+      // and refocus the password input. The previous silent no-op left
+      // AT users with no feedback that anything happened.
+      this.announce(interpolate(t('fileUploadPasswordEmpty'), { name: file.name }));
+      const passwordInput = this.querySelectorAll<HTMLElement>('[data-file-unlock-input]')[index];
+      passwordInput?.focus();
+      return;
+    }
+    // Clear the buffer immediately — consumers receive the password via the
+    // event payload; we don't keep it in memory beyond the dispatch.
+    this._passwordEntries.delete(file.file);
+    this._files = this._files.map((f, i) => (i === index ? {
+      ...f,
+      status: 'uploading' as FileStatus,
+      error: undefined,
+      progress: 0,
+    } : f));
+    this.announce(interpolate(t('fileUploadUnlockAnnounce'), { name: file.name }));
+    dispatch(this, 'civ-file-unlock', { index, name: file.name, file: file.file, password });
+    // The password input + Unlock button just unmounted (status moved off
+    // 'locked'); focus would otherwise fall to document.body. Move it
+    // onto the row's Cancel button (or remove button as fallback) so
+    // keyboard users stay in context.
+    void this._afterUpdate('restore focus after unlock', async () => {
+      const actions = this.querySelectorAll<HTMLElement>('.civ-file-item__actions');
+      const cluster = actions[index];
+      if (!cluster) return;
+      // civ-action-button has its own render cycle; await it so its inner
+      // <button> exists before we try to focus. Without this, jsdom finds
+      // no focusable child and focus is lost to document.body.
+      const child = cluster.querySelector('civ-action-button') as HTMLElement & { updateComplete?: Promise<unknown> };
+      if (child?.updateComplete) await child.updateComplete;
+      // civ-action-button doesn't override focus(); reach the inner native
+      // <button> directly so jsdom + real browsers both move focus.
+      const focusable = cluster.querySelector<HTMLElement>('button');
+      focusable?.focus();
+    });
   }
 
   /**
@@ -792,6 +979,9 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     }
 
     this._revokePreviewUrl(removed.file);
+    // Clear any buffered unlock password so it doesn't linger in memory
+    // after the user removes a file mid-unlock.
+    this._passwordEntries.delete(removed.file);
     // Abort any in-progress upload
     if (removed.abortController) {
       removed.abortController.abort();
@@ -804,7 +994,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     if (this._files.length <= CivFileUpload._FILE_LIST_LIMIT) {
       this._showAllFiles = false;
     }
-    this._progressMilestones.delete(removed.name);
+    this._progressMilestones.delete(removed.file);
     this._updateFormData();
     this._dispatchChange();
     const detail: {

@@ -5,9 +5,11 @@ import './civ-link.js';
 afterEach(cleanupFixtures);
 
 // Tailwind content-scanner protection (`pnpm lint:purged-variants`).
-// civ-link builds the danger classes via template literal
-// `civ-link--${variant}-danger`:
-//   civ-link--primary-danger  civ-link--secondary-danger
+// civ-link emits `civ-link--{variant}` and adds a standalone
+// `civ-link--danger` class when danger is set; CSS uses a compound
+// selector. Both halves need to be visible in source so Tailwind
+// doesn't purge either rule.
+//   civ-link--primary  civ-link--secondary  civ-link--danger
 
 describe('civ-link', () => {
   it('renders an <a> element', async () => {

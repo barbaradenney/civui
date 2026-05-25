@@ -151,11 +151,11 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ### Tier 1 — uncontroversial fixes (CSS-only renames, no consumer migration needed)
 
-| Item | Action | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| `.civ-table--compact` → `.civ-table--sm` | Rename CSS class + update docs + update story | Just landed in `claude/table-component-P3Xz3`. Cheaper to rename before any consumers depend on it than after. |
-| `.civ-progress-track--compact` → `.civ-progress-track--sm` | Rename CSS class | No public API surface — internal to file-upload and progress-track. |
-| `.civ-alert--slim` → `.civ-alert--sm` | Rename CSS class | Component already aliases `slim` boolean to `spacing="sm"`, so the rename only touches the CSS-class output. |
+| `.civ-table--compact` → `.civ-table--sm` | Pending | Source branch `claude/table-component-P3Xz3` not yet merged to main. Rename when the table component lands. |
+| `.civ-progress-track--compact` → `.civ-progress-track--sm` | ✅ Done (slice 7.1) | Renamed in components.css + civ-file-upload.ts. |
+| `.civ-alert--slim` → `.civ-alert--sm` | ✅ Done (slice 7.1) | Renamed CSS class output. Component still accepts the legacy `slim` boolean attribute (Tier 2 will deprecate it formally). |
 
 ### Tier 2 — prop renames with deprecation window
 

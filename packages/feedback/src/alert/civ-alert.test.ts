@@ -142,11 +142,21 @@ describe('civ-alert', () => {
     expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 
-  it('applies slim class when slim is true', async () => {
+  it('applies the --sm density class when slim is true', async () => {
+    // `slim` is the legacy boolean alias; it produces the same
+    // `civ-alert--sm` class as the standard `spacing="sm"` prop on
+    // the host. See .claude/rules/density-convention.md.
     const el = await fixture('<civ-alert slim>Compact message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
-    expect(alert.className).toContain('civ-alert--slim');
+    expect(alert.className).toContain('civ-alert--sm');
+  });
+
+  it('applies the --sm density class when spacing="sm" is set', async () => {
+    const el = await fixture('<civ-alert spacing="sm">Compact message.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.className).toContain('civ-alert--sm');
   });
 
   it('shows dismiss button when dismissible is true', async () => {

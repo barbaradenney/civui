@@ -1369,7 +1369,11 @@
 
   /* File items use the .civ-file-item layout */
 
-  .civ-progress-track--compact {
+  /* Compact-density progress rail — opted into via the file-upload
+     row layout. Naming follows the `--sm` modifier standard from
+     .claude/rules/density-convention.md so the modifier vocabulary
+     is consistent with every other density opt-in. */
+  .civ-progress-track--sm {
     height: 4px;
   }
 
@@ -3554,7 +3558,11 @@
     @apply civ-mb-4 civ-border-2;
   }
 
-  .civ-alert--slim .civ-alert__content {
+  /* Compact-density alert — opted into via either the legacy `slim`
+     boolean attribute or the standard `spacing="sm"` prop on the
+     host. Naming follows the `--sm` modifier standard from
+     .claude/rules/density-convention.md. */
+  .civ-alert--sm .civ-alert__content {
     @apply civ-py-2 civ-px-4;
   }
 

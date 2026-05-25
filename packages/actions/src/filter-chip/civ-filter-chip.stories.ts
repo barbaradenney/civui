@@ -13,14 +13,13 @@ const meta: Meta = {
     value: { control: 'text' },
     selected: { control: 'boolean' },
     disabled: { control: 'boolean' },
-    chipStyle: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary'],
-      name: 'chip-style',
     },
     spacing: {
       control: 'select',
-      options: ['default', 'sm'],
+      options: ['default', 'sm', 'lg'],
     },
   },
   parameters: {
@@ -42,7 +41,7 @@ export const Default: Story = {
     value: 'healthcare',
     selected: false,
     disabled: false,
-    chipStyle: 'secondary',
+    emphasis: 'secondary',
     spacing: 'default',
   },
   render: (args) => html`

@@ -47,21 +47,23 @@ export const LEGEND_HEADING_MIXIN_PATTERN = /LegendHeadingMixin\s*\(/;
 
 /**
  * Props provided by `LoadingMixin`
- * (packages/core/src/base/loading-mixin.ts). Filtered ONLY for
- * components that actually compose the mixin in their `extends` /
- * `mixin(...)` chain (every button-shaped component: civ-button,
- * civ-action-button, civ-text-button). A bare `loading` prop on a
- * non-button component would be a real component-specific prop and
- * should be diffed normally.
+ * (packages/core/src/base/loading-mixin.ts). Unlike LEGEND_HEADING_MIXIN_PROPS
+ * (which are inherited form-chrome props that get FILTERED from cross-
+ * platform diffs), the loading props are REAL public props that every
+ * platform (Lit, iOS, Android, Drupal SDC) must declare. The parity
+ * tool SEEDS these onto the source-side prop list when the Lit source
+ * composes the mixin (so the schema's `loading` / `loadingLabel`
+ * declarations have a source-side counterpart even though the
+ * `@property` decorators live in the mixin file, not the component).
  *
- * The schema-parity parser uses `LOADING_MIXIN_PATTERN` to detect
- * mixin use in the Lit source; if absent, these props are NOT treated
- * as inherited.
+ * Iterate this set in `tools/schema-parity.ts` when seeding — adding a
+ * new mixin prop here picks it up automatically without re-editing
+ * the parity tool.
  */
-export const LOADING_MIXIN_PROPS: ReadonlySet<string> = new Set([
-  'loading',
-  'loadingLabel',
-]);
+export const LOADING_MIXIN_PROPS: ReadonlyArray<{ name: string; type: 'boolean' | 'string'; default: string; attribute?: string }> = [
+  { name: 'loading', type: 'boolean', default: 'false' },
+  { name: 'loadingLabel', type: 'string', default: "''", attribute: 'loading-label' },
+];
 
 /** Regex used by the parity tool to detect LoadingMixin composition. */
 export const LOADING_MIXIN_PATTERN = /LoadingMixin\s*\(/;

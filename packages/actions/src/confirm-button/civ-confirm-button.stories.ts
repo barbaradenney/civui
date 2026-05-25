@@ -28,11 +28,11 @@ export const Default: Story = {
   `,
 };
 
-export const Inline: Story = {
-  name: 'Inline variant (transparent text-link style)',
+export const Tertiary: Story = {
+  name: 'Tertiary emphasis (transparent text-link style)',
   render: () => html`
     <civ-confirm-button
-      variant="inline"
+      emphasis="tertiary"
       label="Copy"
       success-label="Copied"
       @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}

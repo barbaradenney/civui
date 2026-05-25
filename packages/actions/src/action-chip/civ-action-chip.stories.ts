@@ -11,7 +11,7 @@ const meta: Meta = {
     label: { control: 'text' },
     value: { control: 'text' },
     disabled: { control: 'boolean' },
-    spacing: { control: 'select', options: ['default', 'sm'] },
+    spacing: { control: 'select', options: ['default', 'sm', 'lg'] },
     iconStart: { control: 'text', name: 'icon-start' },
     iconEnd: { control: 'text', name: 'icon-end' },
     count: { control: 'number' },

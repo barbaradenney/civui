@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { LoadingMixin } from './loading-mixin.js';
+import { cleanupLiveRegions } from '../a11y/live-region.js';
 import * as liveRegion from '../a11y/live-region.js';
 
 @customElement('civ-loading-test-host')
@@ -52,6 +53,10 @@ async function makeHost<T extends LitElement>(tag: string, attrs: Record<string,
 
 afterEach(() => {
   document.body.innerHTML = '';
+  // Reset the live-region module state (politeQueue / politeTimer /
+  // politeRegion ref) so a queued announcement from one test doesn't
+  // leak into the next.
+  cleanupLiveRegions();
 });
 
 describe('LoadingMixin', () => {
@@ -113,12 +118,23 @@ describe('LoadingMixin', () => {
     expect(spy).toHaveBeenCalledWith('Saving…', 'polite');
   });
 
+  it('does NOT announce on initial mount when the component is already loading (prevents polite-queue overrun on hydration of N in-flight buttons)', async () => {
+    const spy = vi.spyOn(liveRegion, 'announce');
+    await makeHost<CivLoadingTestHost>('civ-loading-test-host', {
+      'loading-label': 'Saving…',
+      loading: '',
+    });
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it('does not re-announce when other props change while still loading', async () => {
     const spy = vi.spyOn(liveRegion, 'announce');
     const el = await makeHost<CivLoadingTestHost>('civ-loading-test-host', {
       'loading-label': 'Saving…',
-      loading: '',
     });
+    // Trigger an idle→loading transition first so we have an established announce.
+    el.loading = true;
+    await el.updateComplete;
     expect(spy).toHaveBeenCalledTimes(1);
     spy.mockClear();
 
@@ -155,5 +171,24 @@ describe('LoadingMixin', () => {
     await el.updateComplete;
     expect(spy).not.toHaveBeenCalled();
     expect(el.querySelector('button')!.getAttribute('aria-busy')).toBe('false');
+  });
+
+  it('detects transitions driven by subclass-overridden `isLoading` even when `loading` itself did not change (e.g. href-toggled link mode)', async () => {
+    const spy = vi.spyOn(liveRegion, 'announce');
+    // Start: loading=true + link=true → isLoading is suppressed (false).
+    const el = await makeHost<CivLoadingTestSuppressed>('civ-loading-test-suppressed', {
+      link: '',
+      'loading-label': 'Saving…',
+    });
+    el.loading = true;
+    await el.updateComplete;
+    expect(spy).not.toHaveBeenCalled();
+
+    // Clear link mode — isLoading flips false→true even though `loading`
+    // didn't change. The mixin must detect this and announce.
+    el.link = false;
+    await el.updateComplete;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('Saving…', 'polite');
   });
 });

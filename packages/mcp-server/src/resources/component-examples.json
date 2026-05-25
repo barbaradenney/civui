@@ -1382,10 +1382,10 @@
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     },
     {
-      "story": "Inline",
-      "name": "Inline variant (transparent text-link style)",
+      "story": "Tertiary",
+      "name": "Tertiary emphasis (transparent text-link style)",
       "category": "Actions/Confirm Button",
-      "html": "<civ-confirm-button\n      variant=\"inline\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
+      "html": "<civ-confirm-button\n      emphasis=\"tertiary\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     }
   ],
@@ -6789,13 +6789,6 @@
   ],
   "civ-toggle-button": [
     {
-      "story": "Chip",
-      "name": "Chip variant (prominent pill)",
-      "category": "Actions/Toggle Button",
-      "html": "<civ-toggle-button variant=\"chip\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
-      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
-    },
-    {
       "story": "Default",
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\"></civ-toggle-button>",
@@ -6826,6 +6819,13 @@
       "name": "Pre-pressed state",
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\" pressed></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "Secondary",
+      "name": "Secondary emphasis (prominent gray pill)",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button emphasis=\"secondary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
       "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
     }
   ],

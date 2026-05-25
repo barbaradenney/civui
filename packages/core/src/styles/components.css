@@ -736,8 +736,23 @@
   .civ-input-helper-row {
     @apply civ-flex civ-flex-wrap civ-items-center civ-gap-2 civ-mt-1;
   }
+  /* On mobile, helper-row buttons go full-width for a comfortable tap
+     target. The selector must match BOTH the raw `<button class="civ-text-btn">`
+     pattern (still used by civ-disclosure, civ-read-more, popover, accordion
+     internals) AND the new custom-element wrappers (civ-text-button,
+     civ-confirm-button, civ-toggle-button) — the `.civ-text-btn` class lives
+     on the INNER `<button>` of those, not the host, so the direct-child
+     combinator `>` would miss without listing the hosts explicitly. */
   @media (max-width: 480px) {
-    .civ-input-helper-row > .civ-text-btn {
+    .civ-input-helper-row > .civ-text-btn,
+    .civ-input-helper-row > civ-text-button,
+    .civ-input-helper-row > civ-confirm-button,
+    .civ-input-helper-row > civ-toggle-button {
+      @apply civ-w-full civ-justify-center;
+    }
+    .civ-input-helper-row > civ-text-button > button,
+    .civ-input-helper-row > civ-confirm-button > button,
+    .civ-input-helper-row > civ-toggle-button > button {
       @apply civ-w-full civ-justify-center;
     }
   }
@@ -5635,20 +5650,41 @@
     min-height: max(var(--civ-spacing-5), 1.5rem);
   }
 
-  /* Large size: WCAG 2.5.5 (AAA) Enhanced target — `min-height` AND
-     `min-width` both clamp to 44px. Use on surfaces where AAA
-     compliance is required, on mobile-heavy chip rows, or wherever a
-     more confident tap target is preferred. `--civ-spacing-10` is
-     50px at default scale and 37.5px at dense; the 2.75rem floor
-     guarantees the AAA target even when the scale shrinks. */
+  /* Large size: WCAG 2.5.5 (AAA) Enhanced target. Applies to the
+     INTERACTIVE chip kinds — civ-filter-chip's __action button and
+     civ-action-chip's button surface. The min-height AND min-width
+     both clamp to 44px so even narrow chips ("Yes", "10:00 AM") meet
+     the target. `--civ-spacing-10` is 50px at default scale and ~38px
+     at dense; the 2.75rem floor guarantees the AAA target even when
+     the scale shrinks. */
   .civ-chip--lg .civ-chip__action,
-  button.civ-chip.civ-chip--lg.civ-chip--action,
+  button.civ-chip.civ-chip--lg.civ-chip--action {
+    @apply civ-px-4 civ-py-2 civ-text-base;
+    /* not density: WCAG 2.5.5 AAA tap-target floor (44×44). */
+    min-height: max(var(--civ-spacing-10), 2.75rem);
+    min-width: 2.75rem;
+  }
+
+  /* civ-input-chip's label is non-interactive — only the × is a
+     button. Apply the lg sizing to the label for visual rhythm
+     (matching height + padding + font-size of the sibling chips) but
+     DON'T force the 44px min-width — short tokens like "JS", "CA",
+     "#1" would be oversized for no a11y benefit. The AAA target
+     belongs on the × remove button below. */
   .civ-chip--input.civ-chip--lg .civ-chip__label {
     @apply civ-px-4 civ-py-2 civ-text-base;
-    /* not density: WCAG 2.5.5 AAA tap-target floor (44×44). The
-       max() guarantees the floor even when scale-dense shrinks the
-       spacing token below 44px; the min-width literal is the same
-       floor applied to narrow chips ("Yes", "10:00 AM"). */
+    /* not density: WCAG 2.5.5 AAA height to match the chip's
+       interactive sibling, but width grows with content. */
+    min-height: max(var(--civ-spacing-10), 2.75rem);
+  }
+
+  /* The × remove button is the only interactive control on
+     civ-input-chip. In lg mode it must also hit the AAA 44×44 floor
+     so the chip's advertised AAA contract is satisfied at the actual
+     tap target. */
+  .civ-chip--input.civ-chip--lg .civ-chip__remove {
+    /* not density: WCAG 2.5.5 AAA tap-target floor on the only
+       interactive control of civ-input-chip[spacing="lg"]. */
     min-height: max(var(--civ-spacing-10), 2.75rem);
     min-width: 2.75rem;
   }

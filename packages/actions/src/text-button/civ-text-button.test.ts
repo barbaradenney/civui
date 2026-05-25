@@ -74,10 +74,10 @@ describe('civ-text-button', () => {
       expect(el.querySelector('civ-icon[name="chevron-down"]')).toBeNull();
     });
 
-    it('renders the spinner at size="xs" to match the text-button scale', async () => {
+    it('renders the spinner at size="sm" (the smallest size civ-spinner supports — the previous "xs" rendered 0×0 because no CSS rule exists)', async () => {
       const el = await fixture('<civ-text-button loading label="Generate"></civ-text-button>');
       const spinner = el.querySelector('civ-spinner') as HTMLElement;
-      expect(spinner.getAttribute('size')).toBe('xs');
+      expect(spinner.getAttribute('size')).toBe('sm');
       expect(spinner.hasAttribute('decorative')).toBe(true);
     });
 

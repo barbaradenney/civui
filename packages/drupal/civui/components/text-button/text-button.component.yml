@@ -20,9 +20,9 @@ props:
     spacing:
       title: Spacing
       type: string
-      enum: ['default', 'sm', 'lg']
+      enum: ['default', 'sm']
       default: 'default'
-      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts; lg hits the WCAG 2.5.5 AAA Enhanced target (44px) for AAA-conscious or fingertip-heavy surfaces.'
+      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts.'
     icon_start:
       title: Icon start
       type: string
@@ -46,11 +46,6 @@ props:
       title: Loading label
       type: string
       description: 'Accessible name applied as aria-label while loading is true. Falls back to the locale buttonLoadingLabel ("Loading…").'
-
-slots:
-  default:
-    title: Default
-    description: 'Child content (alternative to label prop).'
 
 libraryOverrides:
   dependencies:

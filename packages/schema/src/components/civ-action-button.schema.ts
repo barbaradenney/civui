@@ -52,8 +52,7 @@ const schema: ComponentSchema = {
     },
     ariaLabel: {
       type: 'string',
-      description: 'Override the inner `<button>`\'s accessible name with a richer label for AT (e.g. pagination "Page 3 of 10" vs the visible "3"). When unset, the visible `label` doubles as the accessible name. Native platforms handle this through their own accessibility APIs (`.accessibilityLabel` on iOS, `contentDescription` on Android) so this prop is web-specific',
-      default: '',
+      description: 'Override the inner `<button>`\'s accessible name with a richer label for AT (e.g. pagination "Page 3 of 10" vs the visible "3"). When unset (omitted) or set to the empty string, the visible `label` doubles as the accessible name (an empty `aria-label` would otherwise strip the accessible name per ARIA spec — the component coerces it to "no override"). While `loading` is true, the host\'s `aria-label` is replaced by `loadingLabel` for the duration of the loading state; the consumer-supplied override is restored when loading flips off. Native platforms handle this through their own accessibility APIs (`.accessibilityLabel` on iOS, `contentDescription` on Android) so this prop is web-specific',
       attribute: 'aria-label',
       webOnly: true,
     },

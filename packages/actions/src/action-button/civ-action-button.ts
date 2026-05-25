@@ -103,6 +103,30 @@ export class CivActionButton extends LoadingMixin(CivBaseElement) {
   private _warnedNoAccessibleName = false;
   /** Tracks whether the loading-on-link-mode dev warning has fired. */
   private _warnedLoadingOnLink = false;
+  /** Tracks whether the `pressed="false"` HTML-boolean-trap dev warning has fired. */
+  private _warnedPressedLiteralFalse = false;
+
+  /**
+   * HTML boolean attributes are truthy whenever present — `pressed="false"`
+   * coerces to `pressed=true` and renders `aria-pressed="true"`, the
+   * opposite of intent. Catch the literal `"false"` string at attribute
+   * change time and dev-warn the author. Same pattern as `civ-relationship`
+   * (see `.claude/rules/common-traps.md#html-boolean-attributes-are-truthy-whenever-present`).
+   */
+  override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
+    super.attributeChangedCallback(name, old, value);
+    if (
+      name === 'pressed' &&
+      value === 'false' &&
+      !this._warnedPressedLiteralFalse
+    ) {
+      devWarn(
+        'civ-action-button',
+        '`pressed="false"` is treated as truthy (HTML boolean attribute trap). Use `.pressed=${false}` property binding or omit the attribute entirely to express the unpressed state.',
+      );
+      this._warnedPressedLiteralFalse = true;
+    }
+  }
 
   private get _isLink(): boolean {
     return Boolean(this.href);
@@ -207,10 +231,20 @@ export class CivActionButton extends LoadingMixin(CivBaseElement) {
     // label so AT users re-tabbing to the button hear the busy
     // verb ("Applying…") instead of the original label. The
     // consumer's `aria-label` override (if any) is honored when not
-    // loading.
+    // loading. NOTE: when the consumer sets BOTH a custom `aria-label`
+    // and `loading=true`, the loading label wins for the duration of
+    // the loading state — document this in the loadingLabel prop
+    // JSDoc so consumers expect it.
+    //
+    // `||` not `??` so that an explicit empty `aria-label=""` (truthy-
+    // false) falls through to `nothing`, preventing an empty
+    // aria-label attribute from stripping the button's accessible name
+    // entirely. Empty `aria-label=""` is ARIA-invalid; we coerce it to
+    // "no override" so the visible label text becomes the accessible
+    // name instead.
     const effectiveAriaLabel = this.isLoading
       ? this.effectiveLoadingLabel
-      : this.ariaLabel ?? null;
+      : (this.ariaLabel || null);
 
     return html`
       <button

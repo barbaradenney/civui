@@ -11,7 +11,7 @@ const meta: Meta = {
     label: { control: 'text' },
     value: { control: 'text' },
     disabled: { control: 'boolean' },
-    spacing: { control: 'select', options: ['default', 'sm'] },
+    spacing: { control: 'select', options: ['default', 'sm', 'lg'] },
   },
   parameters: {
     docs: {
@@ -101,7 +101,7 @@ export const AppliedFilterReadout: Story = {
     docs: {
       description: {
         story:
-          'Read-only summary of which filters are currently active, rendered above search results. The × removes the filter and re-fetches. (For interactive on/off toggles in a filter row, use civ-filter-chip with `removable` instead.)',
+          'Read-only summary of which filters are currently active, rendered above search results. The × removes the filter and re-fetches. (For interactive on/off filter selection — without a × handle — use civ-filter-chip instead.)',
       },
     },
   },
@@ -152,7 +152,7 @@ export const InputVsFilter: Story = {
     docs: {
       description: {
         story:
-          'Side-by-side comparison: input chips represent user-entered content (no `selected` state, always removable). Filter chips toggle a selection from a known list (with optional `removable`).',
+          'Side-by-side comparison: input chips represent user-entered content (no `selected` state, always removable via ×). Filter chips toggle a selection from a known list (no × handle — use input-chip if you need one).',
       },
     },
   },

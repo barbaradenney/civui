@@ -27,9 +27,16 @@ describe('civ-filter-chip', () => {
     expect(action(el).getAttribute('type')).toBe('button');
   });
 
-  it('marks the wrapper role="presentation" so the wrapper chrome does not surface as a presentational landmark', async () => {
+  it('renders a non-interactive <span role="presentation"> wrapper holding the action button — so a future addition of a second interactive child does not produce a button-in-button or implicit landmark', async () => {
     const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-    expect(wrapper(el).getAttribute('role')).toBe('presentation');
+    const w = wrapper(el);
+    expect(w.tagName).toBe('SPAN');
+    expect(w.getAttribute('role')).toBe('presentation');
+    // The action button is a direct child of the wrapper (not the host).
+    // This guards against a refactor that elides the wrapper — if it
+    // happens, the test fails, signalling that any future second
+    // interactive child would need a new structural wrapper.
+    expect(w.querySelector(':scope > .civ-chip__action')).not.toBeNull();
   });
 
   it('does not render a remove affordance', async () => {

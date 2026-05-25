@@ -88,9 +88,9 @@ export class CivTextButton extends LoadingMixin(CivBaseElement) {
   override render() {
     // Loading swaps the leading icon for a decorative spinner so the
     // overall footprint stays stable across the state transition.
-    // `xs` matches the text-button's smaller chrome.
+    // `sm` is the smallest size civ-spinner supports.
     const leadingSlot = this.isLoading
-      ? this.renderLoadingSpinner('xs')
+      ? this.renderLoadingSpinner('sm')
       : this.iconStart
         ? html`<civ-icon name="${this.iconStart}" aria-hidden="true"></civ-icon>`
         : null;

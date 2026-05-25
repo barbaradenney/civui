@@ -17,7 +17,7 @@ export interface LoadingMixinInterface {
   loadingLabel: string;
   readonly effectiveLoadingLabel: string;
   readonly isLoading: boolean;
-  renderLoadingSpinner(size?: 'xs' | 'sm' | 'md'): TemplateResult;
+  renderLoadingSpinner(size?: 'sm' | 'md' | 'lg'): TemplateResult;
 }
 
 /**
@@ -92,8 +92,13 @@ export function LoadingMixin<T extends Constructor<LitElement>>(superClass: T) {
      */
     @property({ type: String, attribute: 'loading-label' }) loadingLabel = '';
 
-    /** Tracks the last `isLoading` value to detect transitions. */
+    /** Tracks the last `isLoading` value to detect transitions. Seeded
+     * in `firstUpdated()` so the initial render of a button mounted
+     * with `loading=true` (e.g. SSR hydration of in-flight submissions)
+     * does NOT enqueue an announcement — that would overflow the
+     * polite queue when N hydrating buttons land at once. */
     private _wasLoading = false;
+    private _seededWasLoading = false;
 
     /** Resolved label — explicit `loadingLabel` or the locale default. */
     get effectiveLoadingLabel(): string {
@@ -118,22 +123,37 @@ export function LoadingMixin<T extends Constructor<LitElement>>(superClass: T) {
      * `aria-busy` is the AT signal — nesting a live region inside an
      * aria-busy subtree would be swallowed by NVDA/JAWS.
      *
-     * Consumers must import `@civui/feedback/spinner` so the element
-     * is registered.
+     * Size matches `SpinnerSize` from `@civui/feedback/spinner` —
+     * `'sm' | 'md' | 'lg'`. Consumers must import the spinner so the
+     * element is registered.
      */
-    renderLoadingSpinner(size: 'xs' | 'sm' | 'md' = 'sm'): TemplateResult {
+    renderLoadingSpinner(size: 'sm' | 'md' | 'lg' = 'sm'): TemplateResult {
       return html`<civ-spinner size="${size}" decorative></civ-spinner>`;
     }
 
     override updated(changed: Map<string, unknown>): void {
       super.updated(changed);
-      if (changed.has('loading') || changed.has('loadingLabel')) {
-        const nowLoading = this.isLoading;
-        if (nowLoading && !this._wasLoading) {
-          announce(this.effectiveLoadingLabel, 'polite');
-        }
-        this._wasLoading = nowLoading;
+      // Seed `_wasLoading` from the initial `isLoading` value on the
+      // first updated() pass so a component that mounts already in the
+      // loading state (SSR-hydrated `<civ-button loading>`) does NOT
+      // enqueue an initial announce — we treat the mount as the
+      // "starting state", not a transition.
+      if (!this._seededWasLoading) {
+        this._wasLoading = this.isLoading;
+        this._seededWasLoading = true;
+        return;
       }
+      // Re-evaluate `isLoading` on EVERY updated() pass — not just when
+      // `loading`/`loadingLabel` change. Subclasses override `isLoading`
+      // to depend on other props (e.g. `href` toggles link-mode
+      // suppression on civ-button / civ-action-button); gating on only
+      // `loading`/`loadingLabel` would miss transitions driven by those
+      // other props and leave `_wasLoading` stale.
+      const nowLoading = this.isLoading;
+      if (nowLoading && !this._wasLoading) {
+        announce(this.effectiveLoadingLabel, 'polite');
+      }
+      this._wasLoading = nowLoading;
     }
   }
   return Loading as unknown as Constructor<LoadingMixinInterface> & T;

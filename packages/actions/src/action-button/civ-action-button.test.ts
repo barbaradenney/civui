@@ -252,3 +252,45 @@ describe('CivActionButton loading state', () => {
     expect(el.querySelector('a')).not.toBeNull();
   });
 });
+
+describe('CivActionButton aria-label semantics', () => {
+  it('honors a consumer-supplied aria-label when not loading', async () => {
+    const el = await fixture(
+      '<civ-action-button aria-label="Archive 3 selected rows" label="Archive"></civ-action-button>',
+    );
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archive 3 selected rows');
+  });
+
+  it('empty aria-label="" falls through to "no override" — the visible label becomes the accessible name (prevents ARIA-invalid empty aria-label from stripping the name)', async () => {
+    const el = await fixture('<civ-action-button aria-label="" label="Save"></civ-action-button>');
+    // The button should NOT carry an empty aria-label attribute that
+    // strips its accessible name; the visible label "Save" is the name.
+    expect(el.querySelector('button')!.hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('loading-label takes precedence over consumer aria-label while loading', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Archiving…" aria-label="Archive 3 rows" label="Archive"></civ-action-button>',
+    );
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archiving…');
+  });
+
+  it('restores consumer aria-label when loading flips back off', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Archiving…" aria-label="Archive 3 rows" label="Archive"></civ-action-button>',
+    ) as any;
+    el.loading = false;
+    await elementUpdated(el);
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archive 3 rows');
+  });
+});
+
+describe('CivActionButton pressed="false" HTML boolean trap', () => {
+  it('dev-warns when the literal string "false" is set on the pressed attribute', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture('<civ-action-button pressed="false" label="Mute"></civ-action-button>');
+    const warnCalls = warnSpy.mock.calls.map((c) => c.join(' '));
+    expect(warnCalls.some((m) => /pressed=\"false\".*truthy|HTML boolean attribute trap/i.test(m))).toBe(true);
+    warnSpy.mockRestore();
+  });
+});

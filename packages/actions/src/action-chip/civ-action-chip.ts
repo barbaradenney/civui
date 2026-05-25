@@ -48,7 +48,7 @@ export class CivActionChip extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /** Padding size: 'default' or 'sm' for compact layouts. */
+  /** Padding size: 'default', 'sm' for compact layouts, or 'lg' for the WCAG 2.5.5 AAA Enhanced tap target (44×44). */
   @property({ type: String }) spacing: 'default' | 'sm' | 'lg' = 'default';
 
   /** Icon name to render before the label. */

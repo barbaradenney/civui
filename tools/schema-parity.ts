@@ -304,11 +304,15 @@ export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitPro
   // make the source-side prop list reflect their presence even though
   // the `@property` decorators live in the mixin file.
   if (LOADING_MIXIN_PATTERN.test(src)) {
-    if (!props.some((p) => p.name === 'loading')) {
-      props.push({ name: 'loading', type: 'boolean', default: 'false', attribute: undefined });
-    }
-    if (!props.some((p) => p.name === 'loadingLabel')) {
-      props.push({ name: 'loadingLabel', type: 'string', default: "''", attribute: 'loading-label' });
+    for (const mixinProp of LOADING_MIXIN_PROPS) {
+      if (!props.some((p) => p.name === mixinProp.name)) {
+        props.push({
+          name: mixinProp.name,
+          type: mixinProp.type,
+          default: mixinProp.default,
+          attribute: mixinProp.attribute,
+        });
+      }
     }
   }
   return props;

@@ -48,6 +48,11 @@ public struct CivImage: View {
     /// Variant. `content` (default flow) | `thumbnail` (decorative dimension).
     public var variant: String
 
+    /// Thumbnail-size ladder when `variant` is `thumbnail`. Component-specific
+    /// (NOT the `size` from LegendHeadingMixin) — `civ-image` does not extend
+    /// the heading mixin, so this is its own enum.
+    public var size: String
+
     /// Apply rounded corners (thumbnail variant only).
     public var rounded: Bool
 
@@ -66,6 +71,7 @@ public struct CivImage: View {
         crossOrigin: String = "",
         referrerPolicy: String = "",
         variant: String = "content",
+        size: String = "",
         rounded: Bool = false
     ) {
         self.src = src
@@ -82,6 +88,7 @@ public struct CivImage: View {
         self.crossOrigin = crossOrigin
         self.referrerPolicy = referrerPolicy
         self.variant = variant
+        self.size = size
         self.rounded = rounded
     }
 

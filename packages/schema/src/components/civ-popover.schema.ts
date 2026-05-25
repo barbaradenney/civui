@@ -76,7 +76,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'group',
+    // The HOST carries no role — it's a transparent wrapper. The
+    // PANEL (`.civ-popover__panel`) carries the role consumers choose
+    // via the `panelRole` prop (defaults to `dialog`, can be `menu` /
+    // `listbox` / `group` etc. per placement). Native implementers
+    // should apply `panelRole` to whatever surface holds the slotted
+    // panel content, not to the host container.
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
     ariaAttributes: {

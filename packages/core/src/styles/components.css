@@ -6943,6 +6943,11 @@
     animation: civ-skeleton-shimmer 1500ms var(--civ-motion-easing-ease-in-out, ease-in-out) infinite;
   }
 
+  /* not density: skeleton shape ladder is a decorative dimension set
+     (text line ≈ body line-height, heading ≈ h2/h3 line-height, block
+     ≈ thumbnail card, circle ≈ avatar). Each shape is keyed to the
+     thing it stands in for; shrinking them under data-civ-scale would
+     misrepresent the loading state. */
   .civ-skeleton--text {
     height: 1em;
     border-radius: var(--civ-border-radius-sm);

@@ -951,6 +951,103 @@ action completes, then remove.
 
 ---
 
+## Open-state event dispatch must come from the property setter
+
+For any component whose `open` prop is the public observability
+channel — popover, accordion-item, menu, anything else that fires
+`civ-open` / `civ-close` / `civ-toggle` — dispatching from a
+private `_requestOpen()` / `_requestClose()` helper alone is a
+bug. Setting the property externally
+(`popover.open = true`, `<civ-popover .open=${state}>`, or the
+public `openPopover()` / `closePopover()` methods) bypasses
+the helper and silently skips the event.
+
+The fix is the accessor pattern (mirrors `civ-accordion-item`):
+
+```ts
+@property({ type: Boolean, reflect: true })
+get open(): boolean { return this._openState; }
+set open(value: boolean) {
+  const old = this._openState;
+  if (old === value) return;
+  this._openState = value;
+  this.requestUpdate('open', old);
+  // Explicit branches so the schema-parity event parser recognizes
+  // both dispatch sites. A ternary on the event name is invisible
+  // to the parser and shows up as "event declared in schema but
+  // never dispatched".
+  if (value) dispatch(this, 'civ-open');
+  else dispatch(this, 'civ-close');
+}
+private _openState = false;
+```
+
+The `_requestOpen` / `_requestClose` helpers then just set
+`this.open = ...` and the setter handles dispatching for every
+path (user click, programmatic property set, public method,
+lit-html two-way binding). The `if (old === value) return` guard
+prevents idempotent sets from re-firing.
+
+**Caught by:** runtime — a controlled-component test like
+`el.open = true; expect(opened).toHaveBeenCalledOnce();` exposes
+the bug immediately. The popover suite (`civ-popover.test.ts`)
+has the canonical pair of regression tests.
+
+---
+
+## Schema `a11y.role` must match the Lit host's actual role
+
+The schema's `a11y.role` field is the contract documented to
+other-platform implementers (iOS / Android / Drupal). When the
+schema declares one role but the Lit source sets a different one
+via `this.setAttribute('role', '...')`, native teams reading the
+schema apply the wrong role.
+
+The 2026-05-25 audit found three real cases of this drift:
+
+```ts
+// civ-spinner.schema.ts (BEFORE)
+a11y: { role: 'status', ... }     // wrong — source sets role='img'
+
+// civ-popover.schema.ts (BEFORE)
+a11y: { role: 'group', ... }      // wrong — host has no role,
+                                  // panel carries the role
+
+// civ-tab-nav-item.schema.ts (BEFORE)
+a11y: { requiredIndicator: 'none', errorAnnouncement: 'none' }
+                                  // missing — source sets role='listitem'
+```
+
+Two rules:
+
+1. **If source sets a role via `this.setAttribute('role', ...)`,
+   the schema MUST declare it.** Add `role: '<value>'` to the
+   `a11y` block with a one-line comment explaining the host
+   role's purpose.
+
+2. **If the schema declares a role, the source MUST actually
+   set it on the host.** Either via `setAttribute` in
+   `connectedCallback`, or via an inherent role on a rendered
+   native element. A schema role that doesn't correspond to a
+   host-level role is misleading.
+
+Light-DOM template roles (`<div role="region">...` inside
+`render()`) are on the rendered CHILD, not the host. If the role
+you want is on a rendered child element, fine — but document
+that in the `a11y` block's comment so contractors know not to
+look on the host.
+
+**Caught by:** `pnpm lint:schema-a11y-role` — scans every
+`COVERED_COMPONENTS` entry, extracts `this.setAttribute('role',
+...)` calls from the Lit source, and fails when schema vs.
+source disagree. Wired into `pnpm validate:lints` and the
+drift-lints CI gate. Deliberately narrow — only catches the two
+high-signal cases (mismatch + source-sets-but-schema-omits).
+Template-level roles are not validated; the light-DOM model
+makes that ambiguous.
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

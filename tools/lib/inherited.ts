@@ -23,13 +23,27 @@ export const INHERITED_FORM_PROPS: ReadonlySet<string> = new Set([
   'readonly',
   'touched',
   'disableAnalytics',
-  // Provided by LegendHeadingMixin (packages/core/src/base/legend-heading-mixin.ts).
-  // Filtered here so components that mix in the heading props don't fail
-  // schema parity for "missing from source" — the props are real, just
-  // declared once in the mixin instead of N times across consumers.
+]);
+
+/**
+ * Props provided by `LegendHeadingMixin`
+ * (packages/core/src/base/legend-heading-mixin.ts). Filtered ONLY for
+ * components that actually compose the mixin in their `extends` /
+ * `mixin(...)` chain. A bare `size` prop on a non-heading component
+ * (e.g. `civ-image.size`, `civ-spinner.size`, `civ-image-preview.size`)
+ * is a real component-specific prop and should be diffed normally.
+ *
+ * The schema-parity parser uses `LEGEND_HEADING_MIXIN_PATTERN` to
+ * detect mixin use in the Lit source; if absent, these props are NOT
+ * treated as inherited.
+ */
+export const LEGEND_HEADING_MIXIN_PROPS: ReadonlySet<string> = new Set([
   'headingLevel',
   'size',
 ]);
+
+/** Regex used by the parity tool to detect LegendHeadingMixin composition. */
+export const LEGEND_HEADING_MIXIN_PATTERN = /LegendHeadingMixin\s*\(/;
 
 /** Boolean-form base props that components extending CivBooleanFormElement inherit. */
 export const INHERITED_BOOLEAN_PROPS: ReadonlySet<string> = new Set(['checked', 'description']);

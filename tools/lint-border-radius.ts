@@ -158,7 +158,6 @@ const ALLOWLIST: string[] = [
 
   // 10. Tabs (interactive)
   'civ-tabs__tab',
-  'civ-tab-nav__link',
   'civ-side-nav__link',
   'civ-on-this-page__link',
   'civ-breadcrumb__link',

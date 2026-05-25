@@ -74,6 +74,49 @@ describe('civ-popover', () => {
     expect(closed).toHaveBeenCalledOnce();
   });
 
+  it('fires civ-open / civ-close when `open` is set programmatically', async () => {
+    // Controlled-component pattern: a parent flips `popover.open`
+    // directly (or via lit-html `.open=${state}` two-way binding)
+    // and listens for the event to mirror state. The previous
+    // implementation only dispatched from the user-input paths
+    // (_requestOpen / _requestClose), so programmatic flips were
+    // silent. Setter-based dispatch fixes that — every transition
+    // through the `open` accessor fires the event synchronously.
+    const el = (await fixture(template)) as any;
+    await elementUpdated(el);
+    await waitMicrotask();
+    const opened = vi.fn();
+    const closed = vi.fn();
+    el.addEventListener('civ-open', opened);
+    el.addEventListener('civ-close', closed);
+
+    el.open = true;
+    expect(opened).toHaveBeenCalledOnce();
+    expect(closed).not.toHaveBeenCalled();
+
+    el.open = false;
+    expect(closed).toHaveBeenCalledOnce();
+
+    // Idempotent set (same value) does NOT re-dispatch.
+    el.open = false;
+    expect(closed).toHaveBeenCalledOnce();
+  });
+
+  it('fires civ-open / civ-close from openPopover() / closePopover()', async () => {
+    const el = (await fixture(template)) as any;
+    await elementUpdated(el);
+    await waitMicrotask();
+    const opened = vi.fn();
+    const closed = vi.fn();
+    el.addEventListener('civ-open', opened);
+    el.addEventListener('civ-close', closed);
+
+    el.openPopover();
+    expect(opened).toHaveBeenCalledOnce();
+    el.closePopover();
+    expect(closed).toHaveBeenCalledOnce();
+  });
+
   it('closes on Escape and returns focus to the trigger', async () => {
     const el = (await fixture(template)) as any;
     el.open = true;

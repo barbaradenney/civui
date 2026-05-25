@@ -211,6 +211,8 @@ export const COVERED_COMPONENTS: ComponentSpec[] = [
 import {
   INHERITED_FORM_PROPS,
   INHERITED_BOOLEAN_PROPS,
+  LEGEND_HEADING_MIXIN_PROPS,
+  LEGEND_HEADING_MIXIN_PATTERN,
   INHERITED_FORM_EVENTS,
   BASE_DISPATCHED_EVENTS,
 } from './lib/inherited.js';
@@ -245,6 +247,11 @@ export function extractBraceBlock(src: string, openIndex: number): { body: strin
 
 export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitProp[] {
   const props: LitProp[] = [];
+  // Only filter `headingLevel` / `size` for components that actually
+  // compose LegendHeadingMixin. A bare `size` prop on a non-heading
+  // component (civ-image, civ-spinner) is component-specific and
+  // should be diffed normally.
+  const usesLegendHeading = LEGEND_HEADING_MIXIN_PATTERN.test(src);
   // The previous regex used `[^}]*` for the @property options, which broke
   // on any nested brace (multi-line objects, converter literals, default-
   // value object initializers). Walk the source, find each `@property(`
@@ -273,7 +280,10 @@ export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitPro
     if (!declMatch) continue;
     const name = declMatch[1];
     const dflt = declMatch[3]?.trim();
-    const skip = INHERITED_FORM_PROPS.has(name) || (isBoolean && INHERITED_BOOLEAN_PROPS.has(name));
+    const skip =
+      INHERITED_FORM_PROPS.has(name) ||
+      (isBoolean && INHERITED_BOOLEAN_PROPS.has(name)) ||
+      (usesLegendHeading && LEGEND_HEADING_MIXIN_PROPS.has(name));
     if (skip) continue;
     const typeMatch = block.body.match(/type:\s*(\w+)/);
     const attrMatch = block.body.match(/attribute:\s*['"]([^'"]+)['"]/);
@@ -883,7 +893,7 @@ async function loadSchema(name: string): Promise<any | null> {
   return mod.default ?? mod;
 }
 
-function schemaPropsFrom(schema: any, isBoolean: boolean): SchemaProp[] {
+function schemaPropsFrom(schema: any, isBoolean: boolean, usesLegendHeading: boolean): SchemaProp[] {
   const props: SchemaProp[] = [];
   for (const [propName, def] of Object.entries(schema.props ?? {}) as [string, any][]) {
     // Match what parseLitProps skips so the diff is symmetric. Schemas
@@ -891,7 +901,8 @@ function schemaPropsFrom(schema: any, isBoolean: boolean): SchemaProp[] {
     // parity check only compares component-specific surface.
     const skip =
       INHERITED_FORM_PROPS.has(propName) ||
-      (isBoolean && INHERITED_BOOLEAN_PROPS.has(propName));
+      (isBoolean && INHERITED_BOOLEAN_PROPS.has(propName)) ||
+      (usesLegendHeading && LEGEND_HEADING_MIXIN_PROPS.has(propName));
     if (skip) continue;
     props.push({
       name: propName,
@@ -1266,12 +1277,14 @@ async function buildReport(strict: boolean, explain: boolean): Promise<DriftRepo
       continue;
     }
     const schema = await loadSchema(spec.name);
-    const schemaProps = schemaPropsFrom(schema, !!spec.isBoolean);
+    const sourceText = readFileSync(sourcePath, 'utf-8');
+    const usesLegendHeading = LEGEND_HEADING_MIXIN_PATTERN.test(sourceText);
+    const schemaProps = schemaPropsFrom(schema, !!spec.isBoolean, usesLegendHeading);
     const schemaEvents = schemaEventsFrom(schema);
     const schemaMethods: string[] = Object.keys((schema as any).methods ?? {});
     const litProps = parseLitProps(sourcePath, !!spec.isBoolean);
     const litEvents = parseLitEvents(sourcePath);
-    const litMethods = parsePublicMethods(readFileSync(sourcePath, 'utf-8'));
+    const litMethods = parsePublicMethods(sourceText);
     const propResult = diffProps(schemaProps, litProps);
     const eventResult = diffEvents(schemaEvents, litEvents);
 

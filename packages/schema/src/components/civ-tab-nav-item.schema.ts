@@ -25,6 +25,12 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
+    // Host carries `role="listitem"` so the parent `civ-tab-nav`'s
+    // `<ul role="list">` reads as a list to assistive tech. Set in
+    // `connectedCallback` rather than via render so the role survives
+    // the parent's `<ul>` markup (a Lit-managed parent re-render
+    // can't reach into the host element's attributes).
+    role: 'listitem',
     requiredIndicator: 'none',
     errorAnnouncement: 'none',
   },

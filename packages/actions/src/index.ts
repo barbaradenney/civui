@@ -3,6 +3,8 @@ import './button/civ-button.js';
 import './action-button/civ-action-button.js';
 import './filter-chip/civ-filter-chip.js';
 import './filter-chip-group/civ-filter-chip-group.js';
+import './action-chip/civ-action-chip.js';
+import './input-chip/civ-input-chip.js';
 import './link/civ-link.js';
 import './link-card/civ-link-card.js';
 import './skip-link/civ-skip-link.js';
@@ -24,6 +26,12 @@ export type { FilterChipEmphasis } from './filter-chip/index.js';
 // Filter Chip Group
 export { CivFilterChipGroup } from './filter-chip-group/index.js';
 export type { FilterChipGroupMode } from './filter-chip-group/index.js';
+
+// Action Chip
+export { CivActionChip } from './action-chip/index.js';
+
+// Input Chip
+export { CivInputChip } from './input-chip/index.js';
 
 // Link
 export { CivLink } from './link/index.js';

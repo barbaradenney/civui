@@ -6,11 +6,11 @@ import type { CivFilterChip } from './civ-filter-chip.js';
 afterEach(cleanupFixtures);
 
 const action = (el: Element) =>
-  el.querySelector<HTMLButtonElement>('.civ-filter-chip__action')!;
+  el.querySelector<HTMLButtonElement>('.civ-chip__action')!;
 const removeBtn = (el: Element) =>
-  el.querySelector<HTMLButtonElement>('.civ-filter-chip__remove');
+  el.querySelector<HTMLButtonElement>('.civ-chip__remove');
 const wrapper = (el: Element) =>
-  el.querySelector<HTMLElement>('.civ-filter-chip')!;
+  el.querySelector<HTMLElement>('.civ-chip.civ-chip--filter')!;
 
 describe('civ-filter-chip', () => {
   it('renders label text in the action button', async () => {
@@ -36,9 +36,9 @@ describe('civ-filter-chip', () => {
 
   it('does not nest interactive elements', async () => {
     const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable></civ-filter-chip>');
-    const action = el.querySelector('.civ-filter-chip__action')!;
+    const action = el.querySelector('.civ-chip__action')!;
     // The action button must not contain the remove button.
-    expect(action.querySelector('.civ-filter-chip__remove')).toBeNull();
+    expect(action.querySelector('.civ-chip__remove')).toBeNull();
   });
 
   describe('toggle (default) ARIA mode', () => {
@@ -107,12 +107,12 @@ describe('civ-filter-chip', () => {
 
   it('renders a check icon when selected', async () => {
     const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" selected></civ-filter-chip>');
-    expect(el.querySelector('.civ-filter-chip__check')).not.toBeNull();
+    expect(el.querySelector('.civ-chip__check')).not.toBeNull();
   });
 
   it('does not render a check icon when unselected', async () => {
     const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-    expect(el.querySelector('.civ-filter-chip__check')).toBeNull();
+    expect(el.querySelector('.civ-chip__check')).toBeNull();
   });
 
   it('does not toggle when disabled', async () => {
@@ -195,13 +195,13 @@ describe('civ-filter-chip', () => {
   describe('chip-style', () => {
     it('defaults to secondary style on the wrapper', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-      expect(wrapper(el).className).toContain('civ-filter-chip--style-secondary');
-      expect(wrapper(el).className).not.toContain('civ-filter-chip--style-primary');
+      expect(wrapper(el).className).toContain('civ-chip--style-secondary');
+      expect(wrapper(el).className).not.toContain('civ-chip--style-primary');
     });
 
     it('applies primary style class on the wrapper', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" emphasis="primary"></civ-filter-chip>');
-      expect(wrapper(el).className).toContain('civ-filter-chip--style-primary');
+      expect(wrapper(el).className).toContain('civ-chip--style-primary');
     });
 
     it('keeps style class when toggled selected', async () => {
@@ -209,69 +209,69 @@ describe('civ-filter-chip', () => {
       action(el).click();
       await elementUpdated(el);
 
-      expect(wrapper(el).className).toContain('civ-filter-chip--style-primary');
-      expect(wrapper(el).className).toContain('civ-filter-chip--selected');
+      expect(wrapper(el).className).toContain('civ-chip--style-primary');
+      expect(wrapper(el).className).toContain('civ-chip--selected');
     });
   });
 
   describe('spacing', () => {
     it('defaults to default spacing (no --sm class on wrapper)', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-      expect(wrapper(el).className).not.toContain('civ-filter-chip--sm');
+      expect(wrapper(el).className).not.toContain('civ-chip--sm');
     });
 
-    it('applies civ-filter-chip--sm to wrapper when spacing="sm"', async () => {
+    it('applies civ-chip--sm to wrapper when spacing="sm"', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" spacing="sm"></civ-filter-chip>');
-      expect(wrapper(el).className).toContain('civ-filter-chip--sm');
+      expect(wrapper(el).className).toContain('civ-chip--sm');
     });
   });
 
   describe('icon-start', () => {
     it('renders no leading icon by default', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
+      expect(el.querySelector('.civ-chip__icon')).toBeNull();
     });
 
     it('renders leading icon when icon-start is set and chip is unselected', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="person"></civ-filter-chip>');
-      const icon = el.querySelector('.civ-filter-chip__icon');
+      const icon = el.querySelector('.civ-chip__icon');
       expect(icon).not.toBeNull();
       expect(icon?.getAttribute('name')).toBe('person');
     });
 
     it('replaces leading icon with check when selected', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="person" selected></civ-filter-chip>');
-      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
-      expect(el.querySelector('.civ-filter-chip__check')).not.toBeNull();
+      expect(el.querySelector('.civ-chip__icon')).toBeNull();
+      expect(el.querySelector('.civ-chip__check')).not.toBeNull();
     });
 
     it('toggles between leading icon and check on click', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" icon-start="person"></civ-filter-chip>');
-      expect(el.querySelector('.civ-filter-chip__icon')).not.toBeNull();
+      expect(el.querySelector('.civ-chip__icon')).not.toBeNull();
 
       action(el).click();
       await elementUpdated(el);
-      expect(el.querySelector('.civ-filter-chip__icon')).toBeNull();
-      expect(el.querySelector('.civ-filter-chip__check')).not.toBeNull();
+      expect(el.querySelector('.civ-chip__icon')).toBeNull();
+      expect(el.querySelector('.civ-chip__check')).not.toBeNull();
     });
   });
 
   describe('icon-end', () => {
     it('renders no trailing icon by default', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-      expect(el.querySelector('.civ-filter-chip__icon--end')).toBeNull();
+      expect(el.querySelector('.civ-chip__icon--end')).toBeNull();
     });
 
     it('renders trailing icon when icon-end is set', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" icon-end="chevron-down"></civ-filter-chip>');
-      const icon = el.querySelector('.civ-filter-chip__icon--end');
+      const icon = el.querySelector('.civ-chip__icon--end');
       expect(icon).not.toBeNull();
       expect(icon?.getAttribute('name')).toBe('chevron-down');
     });
 
     it('keeps icon-end when chip is selected (unlike icon-start)', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" icon-end="chevron-down" selected></civ-filter-chip>');
-      expect(el.querySelector('.civ-filter-chip__icon--end')).not.toBeNull();
+      expect(el.querySelector('.civ-chip__icon--end')).not.toBeNull();
     });
   });
 

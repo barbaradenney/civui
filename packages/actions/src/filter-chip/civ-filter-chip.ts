@@ -81,13 +81,18 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _wrapperClasses(): string {
+    // The shared `civ-chip` base + `civ-chip--filter` modifier picks
+    // up the chrome rules every chip shares with civ-action-chip and
+    // civ-input-chip; the filter-specific state classes
+    // (`--selected`, `--style-{emphasis}`) compose on top.
     return [
-      'civ-filter-chip',
-      `civ-filter-chip--style-${this.emphasis}`,
-      this.selected ? 'civ-filter-chip--selected' : '',
-      this.spacing === 'sm' ? 'civ-filter-chip--sm' : '',
-      this.disabled ? 'civ-filter-chip--disabled' : '',
-      this.removable ? 'civ-filter-chip--removable' : '',
+      'civ-chip',
+      'civ-chip--filter',
+      `civ-chip--style-${this.emphasis}`,
+      this.selected ? 'civ-chip--selected' : '',
+      this.spacing === 'sm' ? 'civ-chip--sm' : '',
+      this.disabled ? 'civ-chip--disabled' : '',
+      this.removable ? 'civ-chip--removable' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -102,25 +107,25 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
       <span class="${this._wrapperClasses}" role="presentation">
         <button
           type="button"
-          class="civ-filter-chip__action"
+          class="civ-chip__action"
           role="${ifDefined(isRadio ? 'radio' : undefined)}"
           aria-checked="${ifDefined(isRadio ? stateValue : undefined)}"
           aria-pressed="${ifDefined(isRadio ? undefined : stateValue)}"
           ?disabled="${this.disabled}"
           @click="${this._onToggle}"
         >${this.selected
-          ? html`<civ-icon name="check" class="civ-filter-chip__check" aria-hidden="true"></civ-icon>`
+          ? html`<civ-icon name="check" class="civ-chip__check" aria-hidden="true"></civ-icon>`
           : this.iconStart
-            ? html`<civ-icon name="${this.iconStart}" class="civ-filter-chip__icon" aria-hidden="true"></civ-icon>`
-            : nothing}<span class="civ-filter-chip__label">${this._text}</span>${showCount
-          ? html`<civ-count class="civ-filter-chip__count" count="${this.count}" emphasis="tertiary"></civ-count>`
+            ? html`<civ-icon name="${this.iconStart}" class="civ-chip__icon" aria-hidden="true"></civ-icon>`
+            : nothing}<span class="civ-chip__label">${this._text}</span>${showCount
+          ? html`<civ-count class="civ-chip__count" count="${this.count}" emphasis="tertiary"></civ-count>`
           : nothing}${this.iconEnd
-          ? html`<civ-icon name="${this.iconEnd}" class="civ-filter-chip__icon civ-filter-chip__icon--end" aria-hidden="true"></civ-icon>`
+          ? html`<civ-icon name="${this.iconEnd}" class="civ-chip__icon civ-chip__icon--end" aria-hidden="true"></civ-icon>`
           : nothing}</button>${this.removable
         ? renderCloseButton({
             label: interpolate(t('filterChipRemoveLabel'), { label: this._text }),
             onClick: this._onRemove,
-            extraClass: 'civ-filter-chip__remove',
+            extraClass: 'civ-chip__remove',
             disabled: this.disabled,
           })
         : nothing}

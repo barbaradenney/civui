@@ -1,7 +1,7 @@
 {
   "name": "@civui/actions",
   "version": "0.1.0",
-  "description": "CivUI action affordances — Button, ActionButton, FilterChip, Link, LinkCard, SkipLink, ConfirmButton, ToggleButton",
+  "description": "CivUI action affordances — Button, ActionButton, FilterChip, ActionChip, InputChip, Link, LinkCard, SkipLink, ConfirmButton, ToggleButton",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -12,6 +12,8 @@
     "./action-button": "./dist/action-button/index.js",
     "./filter-chip": "./dist/filter-chip/index.js",
     "./filter-chip-group": "./dist/filter-chip-group/index.js",
+    "./action-chip": "./dist/action-chip/index.js",
+    "./input-chip": "./dist/input-chip/index.js",
     "./link": "./dist/link/index.js",
     "./link-card": "./dist/link-card/index.js",
     "./skip-link": "./dist/skip-link/index.js",

@@ -46,6 +46,9 @@ export interface CivLocaleStrings {
   // Filter chip
   filterChipRemoveLabel: string; // "Remove {label} filter"
 
+  // Input chip (user-entered token)
+  inputChipRemoveLabel: string; // "Remove {label}"
+
   // Close button
   closeLabel: string;
 
@@ -808,6 +811,8 @@ const defaultStrings: CivLocaleStrings = {
   externalLinkNewTab: '(opens in new tab)',
 
   filterChipRemoveLabel: 'Remove {label} filter',
+
+  inputChipRemoveLabel: 'Remove {label}',
 
   closeLabel: 'Close',
 

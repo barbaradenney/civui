@@ -41,7 +41,7 @@ const schema: ComponentSchema = {
     },
     slim: {
       type: 'boolean',
-      description: 'Compact single-line layout (no heading, smaller padding). Use for inline / inside-form messages',
+      description: '**Deprecated** — use `spacing="sm"` instead. Compact single-line layout (no heading, smaller padding). Both attributes currently produce the same `.civ-alert--sm` chrome but `slim` fires a one-time dev-mode console warning so consumers can migrate. The boolean will be removed in a future release.',
       default: false,
     },
     spacing: {

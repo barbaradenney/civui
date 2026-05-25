@@ -64,11 +64,11 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child content)
  * @prop {boolean} dismissible - Shows close button
- * @prop {boolean} slim - Compact single-line variant (no heading)
+ * @prop {boolean} slim - **Deprecated** — use `spacing="sm"` instead. Compact single-line variant (no heading). Fires a one-time dev warning.
  * @prop {boolean} collapsible - Wrap heading + body in a `<details>` disclosure; requires `heading`
  * @prop {boolean} open - When `collapsible`, controls / reflects the expanded state
  * @prop {boolean} fullWidth - Render as a site-wide banner (role="region", content centered to `--civ-site-max-width`)
- * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies slim layout)
+ * @prop {string} spacing - Padding size: 'default' or 'sm' for compact layouts
  *
  * @slot - Body content. Used when `label` is unset. Accepts text or
  *   rich markup including composed CivUI components.
@@ -85,6 +85,14 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
   @property({ type: String }) label = '';
   @property({ type: Boolean }) dismissible = false;
+  /**
+   * @deprecated Use `spacing="sm"` instead. The `slim` boolean
+   * predates the system-wide density convention
+   * (`.claude/rules/density-convention.md`); both attributes
+   * currently produce the same `.civ-alert--sm` chrome but `slim`
+   * fires a one-time dev-mode console warning so consumers can
+   * migrate. The boolean will be removed in a future release.
+   */
   @property({ type: Boolean }) slim = false;
   @property({ type: Boolean, reflect: true }) collapsible = false;
   @property({ type: Boolean, reflect: true }) open = false;
@@ -116,6 +124,15 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
    */
 
   override render() {
+    if (this.slim) {
+      devWarn(
+        'civ-alert',
+        '`slim` is deprecated — use `spacing="sm"` instead. The boolean ' +
+        'currently still produces the compact layout but will be ' +
+        'removed in a future release.',
+        'civ-alert:slim-deprecated',
+      );
+    }
     const collapsibleActive = this.collapsible && !!this.heading && !this.slim;
     if (this.collapsible && !this.heading && !this.slim) {
       devWarn(

@@ -16,7 +16,7 @@ const groupHtml = (mode = 'multi', selected: string[] = []) => `
 `;
 
 const actions = (el: Element) =>
-  el.querySelectorAll<HTMLButtonElement>('civ-filter-chip .civ-filter-chip__action');
+  el.querySelectorAll<HTMLButtonElement>('civ-filter-chip .civ-chip__action');
 
 const settle = () => new Promise((r) => queueMicrotask(() => r(null)));
 
@@ -174,8 +174,8 @@ describe('civ-filter-chip-group', () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml());
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
 
-      chips[0].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
-      chips[2].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[0].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
+      chips[2].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
       await elementUpdated(el);
 
       expect(chips[0].selected).toBe(true);
@@ -189,9 +189,9 @@ describe('civ-filter-chip-group', () => {
       el.addEventListener('civ-change', handler);
 
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
-      chips[0].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[0].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
       await elementUpdated(el);
-      chips[2].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[2].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
       await elementUpdated(el);
 
       expect(handler).toHaveBeenCalledTimes(2);
@@ -211,7 +211,7 @@ describe('civ-filter-chip-group', () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('single', ['health']));
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
 
-      chips[1].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[1].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
       await elementUpdated(el);
 
       expect(chips[0].selected).toBe(false);
@@ -225,7 +225,7 @@ describe('civ-filter-chip-group', () => {
       el.addEventListener('civ-change', handler);
 
       const chips = el.querySelectorAll<CivFilterChip>('civ-filter-chip');
-      chips[1].querySelector<HTMLButtonElement>('.civ-filter-chip__action')!.click();
+      chips[1].querySelector<HTMLButtonElement>('.civ-chip__action')!.click();
       await elementUpdated(el);
 
       const detail = handler.mock.calls[0][0].detail;

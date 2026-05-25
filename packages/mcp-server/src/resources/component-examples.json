@@ -124,6 +124,56 @@
       "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     }
   ],
+  "civ-action-chip": [
+    {
+      "story": "ActionVsFilter",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem; max-width: 32rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 7rem;\">Action chips:</span>\n        <civ-action-chip label=\"Today\"></civ-action-chip>\n        <civ-action-chip label=\"Last 7 days\"></civ-action-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 7rem;\">Filter chips:</span>\n        <civ-filter-chip label=\"Healthcare\" selected></civ-filter-chip>\n        <civ-filter-chip label=\"Education\"></civ-filter-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Actions/Action Chip",
+      "html": "<civ-action-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      spacing=\"${args.spacing || 'default'}\"\n      icon-start=\"${args.iconStart || ''}\"\n      icon-end=\"${args.iconEnd || ''}\"\n      .count=\"${args.count ?? null}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-action-chip>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "QuickFilters",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-chip label=\"Today\" value=\"today\"></civ-action-chip>\n      <civ-action-chip label=\"Last 7 days\" value=\"last-7\"></civ-action-chip>\n      <civ-action-chip label=\"Last 30 days\" value=\"last-30\"></civ-action-chip>\n      <civ-action-chip label=\"Last 90 days\" value=\"last-90\"></civ-action-chip>\n      <civ-action-chip label=\"Custom range…\" value=\"custom\"></civ-action-chip>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-action-chip label=\"Today\"></civ-action-chip>\n        <civ-action-chip label=\"This week\"></civ-action-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-action-chip label=\"Today\" spacing=\"sm\"></civ-action-chip>\n        <civ-action-chip label=\"This week\" spacing=\"sm\"></civ-action-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "States",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-chip label=\"Default\"></civ-action-chip>\n      <civ-action-chip label=\"Disabled\" disabled></civ-action-chip>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "SuggestionChips",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem; max-width: 32rem;\">\n      <p style=\"margin: 0;\">Try one of these:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-action-chip label=\"Show me unread messages\" value=\"unread\" icon-start=\"email\"></civ-action-chip>\n        <civ-action-chip label=\"Schedule a meeting\" value=\"schedule\" icon-start=\"event\"></civ-action-chip>\n        <civ-action-chip label=\"Find a contact\" value=\"contact\" icon-start=\"search\"></civ-action-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "WithCount",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-chip label=\"Show unread\" .count=\"${4}\"></civ-action-chip>\n      <civ-action-chip label=\"Archive read\" .count=\"${127}\"></civ-action-chip>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    },
+    {
+      "story": "WithIcons",
+      "category": "Actions/Action Chip",
+      "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-chip label=\"Add filter\" icon-start=\"add\"></civ-action-chip>\n      <civ-action-chip label=\"Sort\" icon-end=\"arrow-down\"></civ-action-chip>\n      <civ-action-chip label=\"Refresh\" icon-start=\"refresh\"></civ-action-chip>\n    </div>",
+      "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
+    }
+  ],
   "civ-address": [
     {
       "story": "AllStates",
@@ -3061,6 +3111,50 @@
       "category": "Forms/Compound/Income",
       "html": "<civ-income\n      legend=\"Monthly rent payment\"\n      name=\"rent\"\n      amount-error=\"Enter an amount greater than $0\"\n      frequency-error=\"Pick a frequency\"\n    ></civ-income>",
       "source": "packages/compound/src/income/civ-income.stories.ts"
+    }
+  ],
+  "civ-input-chip": [
+    {
+      "story": "AppliedFilterReadout",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 36rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Active filters:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"Category: Healthcare\" value=\"cat-healthcare\"></civ-input-chip>\n        <civ-input-chip label=\"State: California\" value=\"state-CA\"></civ-input-chip>\n        <civ-input-chip label=\"Updated: Last 30 days\" value=\"last-30\"></civ-input-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "Default",
+      "category": "Actions/Input Chip",
+      "html": "<civ-input-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-input-chip>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "InputVsFilter",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem; max-width: 32rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 7rem;\">Input chips:</span>\n        <civ-input-chip label=\"typescript\"></civ-input-chip>\n        <civ-input-chip label=\"accessibility\"></civ-input-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 7rem;\">Filter chips:</span>\n        <civ-filter-chip label=\"Healthcare\" selected></civ-filter-chip>\n        <civ-filter-chip label=\"Education\"></civ-filter-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "RecipientList",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">To</label>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border: 1px solid var(--civ-color-border); border-radius: 0.25rem;\">\n        <civ-input-chip label=\"alice@example.com\" value=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" value=\"bob@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"carol@example.com\" value=\"carol@example.com\"></civ-input-chip>\n        <span style=\"color: var(--civ-color-base-dark); font-size: 0.875rem;\">Add more…</span>\n      </div>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "Spacing",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-input-chip label=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\"></civ-input-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-input-chip label=\"alice@example.com\" spacing=\"sm\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" spacing=\"sm\"></civ-input-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "States",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n      <civ-input-chip label=\"Default\"></civ-input-chip>\n      <civ-input-chip label=\"Disabled\" disabled></civ-input-chip>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
+    },
+    {
+      "story": "TagInput",
+      "category": "Actions/Input Chip",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">Tags</label>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"typescript\" value=\"typescript\"></civ-input-chip>\n        <civ-input-chip label=\"accessibility\" value=\"accessibility\"></civ-input-chip>\n        <civ-input-chip label=\"government\" value=\"government\"></civ-input-chip>\n        <civ-input-chip label=\"forms\" value=\"forms\"></civ-input-chip>\n      </div>\n    </div>",
+      "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
     }
   ],
   "civ-input-group": [

@@ -2700,8 +2700,8 @@
      single-key sort doesn't need a "1" badge). */
   .civ-data-grid__sort-position {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-rounded-full;
-    min-width: 1.25rem;
-    height: 1.25rem;
+    min-width: var(--civ-spacing-4);
+    height: var(--civ-spacing-4);
     padding: 0 var(--civ-spacing-1);
     background-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
@@ -5321,15 +5321,40 @@
     transform: translate(-50%, -50%);
   }
 
-  /* ── Filter Chip ──────────────────────────────────────────── */
+  /* ── Chip family (filter, action, input) ──────────────────── */
+  /*
+   * Three sibling components share one BEM root: civ-filter-chip
+   * (toggleable selection), civ-action-chip (fire-and-forget rounded
+   * button), and civ-input-chip (user-entered token with a remove
+   * handle). All three render `.civ-chip` for the outer chrome
+   * (radius, border, color, hover, disabled) and use a `--filter` /
+   * `--action` / `--input` modifier to differentiate. Element
+   * sub-classes (`__action`, `__label`, `__icon`, `__count`,
+   * `__remove`, `__check`) are shared where the same DOM construct
+   * appears in more than one chip; `__check` is filter-only because
+   * the selected indicator is unique to a toggle chip.
+   *
+   * Layout per chip kind:
+   *   civ-filter-chip — non-interactive `<span>` wrapper containing
+   *     an inner `__action` button (plus optional `__remove`). The
+   *     wrapper carries the border + `overflow: hidden` so the radius
+   *     trims the two buttons cleanly; padding lives on `__action`.
+   *   civ-action-chip — the chip IS a `<button>`. No wrapper; padding
+   *     lives on the button itself (`button.civ-chip--action`).
+   *   civ-input-chip — non-interactive `<span>` wrapper containing
+   *     a `__label` span and a `__remove` button. Wrapper carries
+   *     the chrome; padding lives on `__label`.
+   */
 
-  civ-filter-chip {
+  civ-filter-chip,
+  civ-action-chip,
+  civ-input-chip {
     display: inline-block;
     vertical-align: middle;
   }
 
-  /* Outer wrapper — owns the chip border/background. Non-interactive. */
-  .civ-filter-chip {
+  /* Shared chip base — radius, border, color, hover, disabled. */
+  .civ-chip {
     @apply civ-inline-flex civ-items-stretch civ-text-base civ-font-normal civ-rounded-full;
     background-color: var(--civ-color-surface);
     color: var(--civ-color-base-darkest);
@@ -5341,120 +5366,165 @@
       color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
-  /* Inner toggle button — inherits styling from the wrapper, no border of its own. */
-  .civ-filter-chip__action {
+  /* Inner toggle / action button (filter-chip body). Padding lives
+     here so the wrapper's overflow:hidden + radius can trim the
+     button's bottom-left corner against the remove divider. */
+  .civ-chip__action {
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1;
     background: transparent;
     color: inherit;
     border: 0;
     cursor: pointer;
     font: inherit;
-    /* not density: WCAG 2.5.5 tap target floor (24px minimum). 28px
-       at default. Spacing-6 (30px default, 23px dense) would drop
-       below 24px under [data-civ-scale="dense"], so the floor stays
-       hardcoded. Page-level scale doesn't apply to this dimension. */
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
+       28px default keeps a small visual buffer above the floor; the
+       --sm variant below sits exactly on the floor. Must not shrink
+       under [data-civ-scale="dense"]. */
     min-height: 1.75rem;
   }
 
-  /* Move the focus ring to the outer wrapper because `.civ-filter-chip`
-     has `overflow: hidden` (rounded corners over a tinted bg) which
-     clips the inner button's outline + box-shadow. Suppress the inner
-     button's own ring so we don't paint anything that gets clipped. */
-  .civ-filter-chip:has(.civ-filter-chip__action:focus) {
+  /* civ-action-chip — the chip element is itself a <button>; padding
+     and tap-target floor go on the button directly. */
+  button.civ-chip.civ-chip--action {
+    @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1;
+    cursor: pointer;
+    font: inherit;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
+    min-height: 1.75rem;
+  }
+
+  /* civ-input-chip — label span is the padding host (the chip itself
+     is non-interactive; only the remove button is). */
+  .civ-chip--input .civ-chip__label {
+    @apply civ-inline-flex civ-items-center civ-px-3 civ-py-1;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
+    min-height: 1.75rem;
+  }
+
+  /* Filter-chip focus-ring trick: the wrapper has overflow:hidden
+     (so the radius trims the inner buttons), which would clip the
+     inner button's outline + box-shadow. Move the ring to the
+     wrapper via :has(); suppress the inner button's own ring so
+     nothing paints behind the clipped edge. */
+  .civ-chip--filter:has(.civ-chip__action:focus) {
     outline: var(--civ-focus-outline-width) solid var(--civ-focus-shadow-color);
     outline-offset: 0;
     box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
   }
-  .civ-filter-chip .civ-filter-chip__action:focus {
+  .civ-chip--filter .civ-chip__action:focus {
     outline: none;
     box-shadow: none;
   }
 
-  /* Remove (X) button focus — can't reuse the chip-wrapper outline trick
-     above (which highlights the whole chip) because that would erase the
-     distinction between "Tab landed on the chip body" and "Tab landed on
-     the X to remove this filter". Drop the chip's overflow:hidden when
-     the remove button is focused so its natural focus ring renders
-     normally. The chip's content doesn't actually overflow the rounded
-     corners on its own — overflow:hidden was a defensive default — so
-     toggling it off momentarily for focus is visually safe. */
-  .civ-filter-chip:has(.civ-filter-chip__remove:focus) {
+  /* Remove (X) button focus — can't reuse the chip-wrapper outline
+     trick above (which highlights the whole chip) because that
+     would erase the distinction between "Tab landed on the chip
+     body" and "Tab landed on the × to remove this filter". Drop
+     the chip's overflow:hidden when the remove button is focused so
+     its natural focus ring renders normally. Applies to filter and
+     input chips — both render a remove inside the wrapper. */
+  .civ-chip--filter:has(.civ-chip__remove:focus),
+  .civ-chip--input:has(.civ-chip__remove:focus) {
     overflow: visible;
   }
 
-  .civ-filter-chip__action:disabled {
+  /* civ-action-chip is a real button — native focus ring (from civ.css
+     global rule) renders correctly with no overflow trick needed. */
+
+  .civ-chip__action:disabled,
+  button.civ-chip.civ-chip--action:disabled {
     cursor: not-allowed;
   }
 
-  /* Compact size: shrink padding while keeping a 24px-tall touch target.
-     not density: WCAG 2.5.5 tap target floor (24px). Spacing tokens
-     would drop below 24px under [data-civ-scale="dense"]; hardcoded. */
-  .civ-filter-chip--sm .civ-filter-chip__action {
+  /* Compact size: shrink padding while keeping a 24px-tall touch target. */
+  .civ-chip--sm .civ-chip__action,
+  button.civ-chip.civ-chip--sm.civ-chip--action,
+  .civ-chip--input.civ-chip--sm .civ-chip__label {
     @apply civ-px-2 civ-py-0.5 civ-text-sm;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
+       --sm variant sits exactly on the floor — any further shrink
+       would drop below AA. */
     min-height: 1.5rem;
   }
 
+  /* Hover affordance — scoped to chip kinds that ARE interactive at
+     the wrapper level. civ-filter-chip's wrapper is the clickable
+     surface for the toggle, and civ-action-chip IS a button. The
+     civ-input-chip wrapper is non-interactive (only the × is) so it
+     deliberately stays out of this rule — adding a hover background
+     on a non-clickable surface would signal an affordance that
+     doesn't exist. */
   @media (hover: hover) {
-    .civ-filter-chip:hover:not(.civ-filter-chip--disabled) {
+    .civ-chip--filter:hover:not(.civ-chip--disabled),
+    button.civ-chip--action:hover:not(.civ-chip--disabled) {
       background-color: var(--civ-color-surface-hover);
       border-color: var(--civ-color-base-darker);
     }
   }
 
-  .civ-filter-chip--disabled {
+  .civ-chip--disabled {
     @apply civ-opacity-50;
   }
 
-  /* Selected — secondary (default): light primary tint with dark text. */
+  /* Filter-chip selected state — secondary (default): light primary
+     tint with dark text. */
 
-  .civ-filter-chip--style-secondary.civ-filter-chip--selected {
+  .civ-chip--filter.civ-chip--style-secondary.civ-chip--selected {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
     border-color: var(--civ-color-primary-dark);
   }
 
   @media (hover: hover) {
-    .civ-filter-chip--style-secondary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
+    .civ-chip--filter.civ-chip--style-secondary.civ-chip--selected:hover:not(.civ-chip--disabled) {
       background-color: var(--civ-color-primary-lighter);
       border-color: var(--civ-color-primary-darker);
     }
   }
 
-  .civ-filter-chip--style-secondary.civ-filter-chip--selected .civ-filter-chip__check {
+  .civ-chip--filter.civ-chip--style-secondary.civ-chip--selected .civ-chip__check {
     color: var(--civ-color-primary-dark);
   }
 
-  /* Selected — primary: filled primary surface with light text. */
+  /* Filter-chip selected state — primary: filled primary surface with
+     light text. */
 
-  .civ-filter-chip--style-primary.civ-filter-chip--selected {
+  .civ-chip--filter.civ-chip--style-primary.civ-chip--selected {
     background-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
     border-color: var(--civ-color-primary-DEFAULT);
   }
 
   @media (hover: hover) {
-    .civ-filter-chip--style-primary.civ-filter-chip--selected:hover:not(.civ-filter-chip--disabled) {
+    .civ-chip--filter.civ-chip--style-primary.civ-chip--selected:hover:not(.civ-chip--disabled) {
       background-color: var(--civ-color-primary-dark);
       border-color: var(--civ-color-primary-dark);
     }
   }
 
-  .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__check {
+  .civ-chip--filter.civ-chip--style-primary.civ-chip--selected .civ-chip__check {
     color: var(--civ-color-white-DEFAULT);
   }
 
-  .civ-filter-chip__icon {
+  .civ-chip__icon {
     color: inherit;
   }
 
-  /* The chip count uses <civ-count> internally; styling comes from .civ-count.
-     This rule just adds a slight de-emphasis so the label stays primary. */
-  .civ-filter-chip__count {
+  /* The chip count uses <civ-count> internally; styling comes from
+     .civ-count. This rule just adds a slight de-emphasis so the
+     label stays primary. */
+  .civ-chip__count {
     opacity: var(--civ-opacity-secondary);
   }
 
-  /* Remove button — separated from action by an internal divider. */
-  .civ-filter-chip__remove {
+  /* Remove button — shared chrome by civ-filter-chip (when
+     `removable`) and civ-input-chip (always present). The vertical
+     divider line (`border-inline-start`) is filter-chip-specific
+     because it separates two interactive halves (action button +
+     remove); input-chip's preceding `__label` is non-interactive, so
+     a divider there would falsely suggest the label is a separate
+     hit target. */
+  .civ-chip__remove {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-self-stretch;
     background: transparent;
     color: inherit;
@@ -5465,25 +5535,28 @@
     /* Touch target: 24px minimum (WCAG 2.5.8). */
     min-width: 1.75rem;
     padding: 0 0.5rem;
-    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0;
     border-start-end-radius: inherit;
     border-end-end-radius: inherit;
     margin: 0;
   }
 
-  .civ-filter-chip--style-primary.civ-filter-chip--selected .civ-filter-chip__remove {
+  .civ-chip--filter .civ-chip__remove {
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  .civ-chip--filter.civ-chip--style-primary.civ-chip--selected .civ-chip__remove {
     border-inline-start-color: rgba(255, 255, 255, 0.3);
   }
 
   @media (hover: hover) {
-    .civ-filter-chip__remove:hover:not(:disabled) {
+    .civ-chip__remove:hover:not(:disabled) {
       background: var(--civ-color-hover-tint);
       color: inherit;
     }
   }
 
-  .civ-filter-chip__remove:disabled {
+  .civ-chip__remove:disabled {
     cursor: not-allowed;
   }
 
@@ -6722,6 +6795,10 @@
   civ-image[variant="thumbnail"][fit="contain"] .civ-image__img {
     object-fit: contain;
   }
+  /* not density: decorative size ladder. The consumer picks the
+     thumbnail size explicitly via the `size` attribute (32/48/64/
+     96/128) — these are absolute visual dimensions chosen for the
+     placement, not chrome that should track [data-civ-scale]. */
   civ-image[variant="thumbnail"][size="32"] .civ-image__img { width: 32px; height: 32px; }
   civ-image[variant="thumbnail"][size="48"] .civ-image__img { width: 48px; height: 48px; }
   civ-image[variant="thumbnail"][size="64"] .civ-image__img { width: 64px; height: 64px; }

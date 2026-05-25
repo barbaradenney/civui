@@ -133,21 +133,36 @@ interface SeenKey {
 
 /**
  * Parse one top-level CSS rule's body for `background-color: var(--…)`
- * and `color: var(--…)`. Returns the variable name without the
- * surrounding `var(…)` wrapper, or `null` if the rule doesn't set
- * that property or sets it to something other than a single var().
+ * and `color: var(--…)`. Returns the variable name (e.g.
+ * `--civ-color-info-lighter`) without the surrounding `var(…)`
+ * wrapper, or `null` if the rule doesn't set that property or sets it
+ * to something other than a single var().
+ *
+ * Three correctness traps the regex guards against:
+ *
+ *   1. Word-boundary mismatch — `\bcolor\s*:` would also match
+ *      `background-color:` because `\b` fires at the `-` separator
+ *      (hyphen is a non-word char). Use a negative lookbehind
+ *      `(?<![\w-])` so the property name must be preceded by
+ *      whitespace, `;`, `{`, or be at start-of-body — never glued to
+ *      a preceding identifier fragment like `background-`.
+ *
+ *   2. var() fallback syntax — `var(--x, #fff)` and `var(--x,
+ *      var(--y))` are legal CSS. The capture stops at the first `,`
+ *      or `)` so the recipe value is the first identifier only;
+ *      anything more complex is rejected (returns null) rather than
+ *      silently misread.
+ *
+ *   3. Multiple declarations within one rule — last one wins (CSS
+ *      cascade). Iterate all matches and keep the final value.
  */
 export function extractVar(body: string, property: 'background-color' | 'color'): string | null {
-  // Property: value;  — allow whitespace and require a `var(--…)` value.
   const re = new RegExp(
-    String.raw`\b${property}\s*:\s*var\(\s*(--[a-zA-Z0-9-]+(?:-[a-zA-Z]+)?)\s*\)\s*;`,
+    String.raw`(?<![\w-])${property}\s*:\s*var\(\s*(--[a-zA-Z0-9-]+)\s*(?:,[^)]*)?\)\s*;`,
     'g',
   );
   let match: RegExpExecArray | null;
   let last: string | null = null;
-  // If the rule sets the same property multiple times (CSS cascade
-  // within a rule), only the last declaration wins. Iterate all and
-  // keep the final one.
   while ((match = re.exec(body))) {
     last = match[1];
   }
@@ -158,6 +173,24 @@ export function extractVar(body: string, property: 'background-color' | 'color')
  * Match a selector against the recipe shape. Returns the matched
  * component / emphasis / intent triple, or null if the selector
  * isn't a semantic-recipe rule we care about.
+ *
+ * Examples we want to match:
+ *   .civ-badge--style-secondary.civ-badge--info
+ *   .civ-count--style-primary.civ-count--error
+ *   .civ-badge--dot.civ-badge--neutral
+ *   .civ-count--style-tertiary.civ-count--info
+ *   .civ-badge--style-secondary.civ-badge--info:hover     ← state decorator
+ *   .civ-badge--style-primary.civ-badge--info:not(:disabled)
+ *
+ * Examples we DON'T match (so they don't trip the lint):
+ *   .civ-badge--style-secondary               (no intent half)
+ *   .civ-badge                                (base class)
+ *   .civ-badge-anchor                         (different surface)
+ *
+ * Tail decorators (`:pseudo` / `[attr]`) are allowed so a future
+ * state-decorated drift rule like `.civ-badge--style-primary.
+ * civ-badge--info:not(:disabled) { background: WRONG; }` can't
+ * silently bypass the recipe check by appending a pseudo-class.
  */
 export function classifySelector(
   selector: string,
@@ -165,18 +198,8 @@ export function classifySelector(
   // Normalize whitespace.
   const sel = selector.replace(/\s+/g, ' ').trim();
 
-  // Examples we want to match:
-  //   .civ-badge--style-secondary.civ-badge--info
-  //   .civ-count--style-primary.civ-count--error
-  //   .civ-badge--dot.civ-badge--neutral
-  //   .civ-count--style-tertiary.civ-count--info
-  //
-  // Examples we DON'T match (so they don't trip the lint):
-  //   .civ-badge--style-secondary               (no intent half)
-  //   .civ-badge                                (base class)
-  //   .civ-badge-anchor                         (different surface)
   const re =
-    /^\.civ-(badge|count)--(?:style-(secondary|primary|tertiary)|(dot))\.civ-\1--(info|success|warning|error|neutral)$/;
+    /^\.civ-(badge|count)--(?:style-(secondary|primary|tertiary)|(dot))\.civ-\1--(info|success|warning|error|neutral)(?:[:[].*)?$/;
   const m = sel.match(re);
   if (!m) return null;
 
@@ -200,6 +223,12 @@ interface Block {
  * cares about leaf rules. Adapted from lint-border-radius.ts; the
  * shape works because components.css uses balanced braces and no
  * brace-bearing string literals.
+ *
+ * The yielded `body` is sliced from the COMMENT-STRIPPED text
+ * (`stripped`), not the original `css`, so commented-out
+ * declarations inside a rule body don't fool `extractVar`. A note
+ * like `/* old: background-color: var(--civ-color-error-lightest); *​/`
+ * inside a recipe rule would otherwise be read as a live declaration.
  */
 function* parseRules(css: string): Generator<Block> {
   const stripped = css.replace(/\/\*[\s\S]*?\*\//g, (m) =>
@@ -239,7 +268,7 @@ function* parseRules(css: string): Generator<Block> {
         continue;
       }
       if (!frame.isAtRule && frame.selector) {
-        const body = css.slice(frame.selectorStart, i);
+        const body = stripped.slice(frame.selectorStart, i);
         yield { selector: frame.selector, openLine: frame.openLine, body };
       }
       segStart = i + 1;

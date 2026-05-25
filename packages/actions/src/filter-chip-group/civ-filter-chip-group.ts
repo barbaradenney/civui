@@ -136,7 +136,7 @@ export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
 
     const focusIndex = Math.max(0, chips.findIndex((c) => c.selected));
     chips.forEach((chip, i) => {
-      const button = chip.querySelector<HTMLButtonElement>('.civ-filter-chip__action');
+      const button = chip.querySelector<HTMLButtonElement>('.civ-chip__action');
       if (button) button.tabIndex = i === focusIndex ? 0 : -1;
     });
   }
@@ -209,11 +209,11 @@ export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
     if (nextIndex === currentIndex) return;
     event.preventDefault();
 
-    const next = chips[nextIndex].querySelector<HTMLButtonElement>('.civ-filter-chip__action');
+    const next = chips[nextIndex].querySelector<HTMLButtonElement>('.civ-chip__action');
     if (!next) return;
 
     for (const chip of this._chips) {
-      const btn = chip.querySelector<HTMLButtonElement>('.civ-filter-chip__action');
+      const btn = chip.querySelector<HTMLButtonElement>('.civ-chip__action');
       if (btn) btn.tabIndex = btn === next ? 0 : -1;
     }
     next.focus();

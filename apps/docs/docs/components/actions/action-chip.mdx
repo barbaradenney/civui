@@ -1,0 +1,104 @@
+---
+title: Action Chip
+sidebar_position: 7
+sidebar_label: Action Chip
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_action-chip.props.mdx";
+import EventsTable from "./_action-chip.events.mdx";
+
+# Action Chip
+
+`<civ-action-chip>`
+
+Fire-and-forget rounded chip button. Same outlined pill chrome as [`civ-filter-chip`](./filter-chip) but with no toggle state and no check icon — clicking it dispatches `civ-click` and the chip stays unchanged. Use for suggestion chips ("Last 30 days"), quick filters that immediately re-fetch a dataset rather than accumulating a selection, and secondary CTAs that need a less prominent shape than [`civ-button`](./button).
+
+For toggleable on/off selection (with a check icon when on) use [`civ-filter-chip`](./filter-chip). For user-entered tokens with a remove handle use [`civ-input-chip`](./input-chip). For static categorization labels use [`civ-tag`](../layout/tag). For text-only "Show more / Hide" disclosure toggles use the `civ-text-btn--chip` text-button class.
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-action-chip--default" />
+
+### States
+
+<StoryEmbed id="actions-action-chip--states" />
+
+### Quick filters
+
+<StoryEmbed id="actions-action-chip--quick-filters" />
+
+### Suggestion chips
+
+<StoryEmbed id="actions-action-chip--suggestion-chips" />
+
+### With icons
+
+<StoryEmbed id="actions-action-chip--with-icons" />
+
+### With count
+
+<StoryEmbed id="actions-action-chip--with-count" />
+
+### Spacing
+
+<StoryEmbed id="actions-action-chip--spacing" />
+
+### Action chip vs Filter chip
+
+<StoryEmbed id="actions-action-chip--action-vs-filter" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-action-chip--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Accessibility
+
+- The chip IS a real `<button type="button">` — no wrapper, no nested interactives. The native focus ring renders correctly with no `:has()` workaround.
+- No `aria-pressed` / `aria-checked` / `role` attributes are added, because action chips have no state to convey. This is the defining ARIA difference from `civ-filter-chip`.
+- `disabled` propagates to the underlying `<button>` so the browser stops dispatching `click` natively.
+- Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.
+
+## Patterns
+
+### Quick-filter row
+
+Wire `civ-click` to your data-fetch action; the chip stays visually unchanged (no `selected` state to toggle).
+
+```html
+<civ-action-chip label="Today" value="today"></civ-action-chip>
+<civ-action-chip label="Last 7 days" value="last-7"></civ-action-chip>
+<civ-action-chip label="Last 30 days" value="last-30"></civ-action-chip>
+
+<script>
+  document.addEventListener('civ-click', (e) => {
+    const { value } = e.detail;
+    refetchData({ range: value });
+  });
+</script>
+```
+
+### Suggestion chips in a chat composer
+
+Pre-fill an input or fire a search:
+
+```html
+<p>Try one of these:</p>
+<civ-action-chip label="Show me unread messages" value="unread"></civ-action-chip>
+<civ-action-chip label="Schedule a meeting" value="schedule"></civ-action-chip>
+```
+
+## Anti-patterns
+
+- **Don't use an action chip when you need a toggle.** If clicking should change the chip's appearance (selected vs unselected), use `civ-filter-chip`.
+- **Don't use an action chip for a primary CTA.** Use `civ-button` (or `civ-button` with `variant="tertiary"`) for "Submit", "Save", etc.
+- **Don't use an action chip for user-entered content.** Use `civ-input-chip` for tokens the user typed; action chips represent fire-and-forget actions.
+- **Don't use an action chip as a disclosure toggle.** Use a `<button class="civ-text-btn civ-text-btn--chip">` for "Show more / Hide" — that's a different shape with no border.

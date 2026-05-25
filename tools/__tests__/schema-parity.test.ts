@@ -383,7 +383,7 @@ slots:
     title: Default
 `;
     const names = parseDrupalPropNamesFromYaml(yaml).sort();
-    expect(names).toEqual(['label', 'max_count', 'hide_middle']);
+    expect(names).toEqual(['hide_middle', 'label', 'max_count']);
   });
 
   it('does not bleed into the slots block when it shares ancestor indentation', () => {

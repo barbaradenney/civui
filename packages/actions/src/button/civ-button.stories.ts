@@ -219,6 +219,60 @@ export const FormActionsMobile: Story = {
   `,
 };
 
+export const FormActionsLongLabels: Story = {
+  name: 'Form Actions (long labels — auto-stack in narrow containers)',
+  parameters: {
+    docs: {
+      description: {
+        story: `Government button labels can be long ("Save this draft and
+continue to the next page", "Go back to the previous step"). When
+side-by-side, one button wraps to two lines while the sibling stays
+single-line, and the heights mismatch.
+
+\`.civ-button-row\` uses a container query so when its own width
+drops below ~30rem (narrow modals, drawers, side panels, narrow
+chapter columns), every button stretches to full width and wraps
+onto its own row. The viewport-driven mobile stack still applies
+on phones; this catches the narrow-container case on every viewport.
+
+Opt out with \`civ-button-row--no-stack\` if you have a design that
+needs side-by-side buttons even in narrow contexts.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <div>
+        <p class="civ-mb-2 civ-text-sm civ-font-semibold">In a wide container (1000px)</p>
+        <div style="max-width: 1000px;">
+          <div class="civ-button-row">
+            <civ-button label="Save this draft and continue"></civ-button>
+            <civ-button emphasis="tertiary" label="Go back to the previous step"></civ-button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="civ-mb-2 civ-text-sm civ-font-semibold">In a narrow container (380px) — auto-stacks</p>
+        <div style="max-width: 380px;">
+          <div class="civ-button-row">
+            <civ-button label="Save this draft and continue"></civ-button>
+            <civ-button emphasis="tertiary" label="Go back to the previous step"></civ-button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="civ-mb-2 civ-text-sm civ-font-semibold">Narrow container + <code>--no-stack</code> — stays side-by-side, equal share</p>
+        <div style="max-width: 380px;">
+          <div class="civ-button-row civ-button-row--no-stack">
+            <civ-button label="Save this draft and continue"></civ-button>
+            <civ-button emphasis="tertiary" label="Go back to the previous step"></civ-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
 export const ClaimActions: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">

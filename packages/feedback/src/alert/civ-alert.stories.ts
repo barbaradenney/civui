@@ -232,10 +232,11 @@ export const GovernmentFormValidation: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <civ-alert intent="error" heading="There is a problem with your application">
-        <ul class="civ-mt-2 civ-mb-0 civ-ps-5">
-          <li><a href="#name" style="color: inherit;">Enter your full name</a></li>
-          <li><a href="#email" style="color: inherit;">Enter a valid email address</a></li>
-          <li><a href="#ssn" style="color: inherit;">Enter a valid Social Security number</a></li>
+        <p class="civ-m-0 civ-mb-2">Fix the following before continuing:</p>
+        <ul>
+          <li><a href="#name">Enter your full name</a></li>
+          <li><a href="#email">Enter a valid email address</a></li>
+          <li><a href="#ssn">Enter a valid Social Security number</a></li>
         </ul>
       </civ-alert>
 

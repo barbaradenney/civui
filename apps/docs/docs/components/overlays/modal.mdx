@@ -34,6 +34,12 @@ A general-purpose modal dialog. Centered overlay on desktop, bottom sheet on mob
 
 <StoryEmbed id="overlays-modal--address-verification" minHeight={450} />
 
+### Long footer button labels — auto-stack
+
+The modal footer uses a container query so when the modal is narrower than ~30rem, footer buttons stretch to full width and stack on their own rows. Catches the long-government-label case ("Save this draft and continue", "Go back to the previous step") where one button would otherwise wrap to two lines next to a single-line sibling and the heights would mismatch.
+
+<StoryEmbed id="overlays-modal--long-footer-labels" minHeight={400} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/overlays-modal--default)
 
 ## Props

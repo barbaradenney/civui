@@ -36,6 +36,12 @@ The parent component controls the `open` state. The action sheet fires `civ-clos
 
 <StoryEmbed id="overlays-action-sheet--with-focus-trap" minHeight={300} />
 
+### Long footer button labels — auto-stack
+
+Action sheets are narrow by design. The `.civ-button-row` utility used inside the sheet uses a container query so when the sheet is narrower than ~30rem, every button stretches to full width and stacks. Heights stay matched and long government-form labels read cleanly.
+
+<StoryEmbed id="overlays-action-sheet--long-footer-labels" minHeight={400} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/overlays-action-sheet--default)
 
 ## Props

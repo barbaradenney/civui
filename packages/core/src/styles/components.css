@@ -2060,6 +2060,20 @@
      button picks up the .civ-btn full-width-on-mobile rule above;
      becomes a row with gap above 480px. The primary button comes
      first in source order on every viewport.
+
+     Beyond the mobile-viewport stack, .civ-button-row ALSO stacks
+     when its wrapper is narrow due to layout context (modal,
+     drawer, side panel, narrow chapter column) — driven by a
+     container query so the trigger is the wrapper's own width,
+     not the viewport. This prevents the "one button wraps to two
+     lines, the other stays one line, heights mismatch" footgun
+     that government forms hit when button text is long (e.g.
+     "Save this draft and continue to the next page").
+
+     Opt out of the container-query stacking with
+     .civ-button-row--no-stack (the mobile-viewport stack still
+     applies; tap-target full-width on phones is non-negotiable).
+
      - Use civ-button-group instead for connected/flush toolbars
        (role="toolbar" semantics, no gap between buttons).
      - Use plain civ-flex + civ-gap-2 for row-action clusters in list
@@ -2067,10 +2081,28 @@
        government-patterns.md row-action rule). */
   .civ-button-row {
     @apply civ-flex civ-flex-col civ-gap-3;
+    container-type: inline-size;
   }
   @media (min-width: 481px) {
     .civ-button-row {
       @apply civ-flex-row civ-items-center;
+      flex-wrap: wrap;
+    }
+  }
+  /* Container-query stack: when the row itself is narrower than
+     the desktop threshold (~30rem matches the 481px mobile
+     viewport breakpoint), force each child to flex-basis: 100%.
+     Combined with `flex-wrap: wrap` (set above), this wraps each
+     button onto its own row at full width — same visual effect
+     as `flex-direction: column` but driven by container width
+     rather than viewport width. Catches narrow modals, drawers,
+     and side columns. The container-query rule targets the row's
+     children because a container query can only react to an
+     ancestor's size; the row IS the container, so descendants
+     are the queryable target. */
+  @container (max-width: 30rem) {
+    .civ-button-row:not(.civ-button-row--no-stack) > * {
+      flex-basis: 100%;
     }
   }
 
@@ -2122,6 +2154,18 @@
 
   .civ-modal__footer {
     @apply civ-flex civ-gap-4 civ-justify-end;
+    flex-wrap: wrap;
+    container-type: inline-size;
+  }
+  /* When the modal itself is narrow (small modal on desktop, OR
+     any modal at mobile widths), stack the footer buttons full-
+     width so long labels don't put one button on two lines next
+     to a single-line sibling. Same pattern as `.civ-button-row` —
+     see its rule for the design rationale. */
+  @container (max-width: 30rem) {
+    .civ-modal__footer > * {
+      flex-basis: 100%;
+    }
   }
 
   /* Density: pure shrink for placements like dense admin quick-action
@@ -2247,6 +2291,16 @@
   .civ-drawer__footer {
     @apply civ-flex civ-gap-4 civ-justify-end civ-p-4 civ-border-t;
     background-color: var(--civ-drawer-bg);
+    flex-wrap: wrap;
+    container-type: inline-size;
+  }
+  /* Stack drawer footer buttons full-width when the drawer is
+     narrow. See `.civ-modal__footer` / `.civ-button-row` for the
+     same rule and rationale. */
+  @container (max-width: 30rem) {
+    .civ-drawer__footer > * {
+      flex-basis: 100%;
+    }
   }
 
   .civ-drawer__footer--sticky {
@@ -3768,6 +3822,19 @@
     @apply civ-font-bold civ-mt-0 civ-mb-1;
   }
 
+  /* Restore list markers inside alert body — Tailwind's preflight
+     strips them globally. Government form alerts commonly list
+     validation errors as a bulleted summary ("There is a problem
+     with your application → fix these fields…"), so authored
+     <ul> / <ol> need to render with disc / decimal markers.
+     Scoped to the body so the alert chrome stays unaffected. */
+  .civ-alert__body ul,
+  .civ-alert__body ol {
+    list-style: revert;
+    padding-inline-start: 1.5em;
+    margin: var(--civ-spacing-1) 0;
+  }
+
   /* ── Alert: Prefix slot (above heading) ─────────────────────
      Sits above the heading. Renders as a flex container so a
      badge + supplementary text combination lays out inline.
@@ -4695,6 +4762,16 @@
   }
   .civ-notice--default .civ-notice__icon {
     font-size: var(--civ-typography-fontSize-4xl);
+    /* Optical centering with single-line body text. The 4xl icon
+       (~36px) sits in a `line-height: 1` box, while the lg body
+       (~18px @ line-height ~1.5) sits in a ~27px line-box. Under
+       `align-items: start`, the icon's vertical center lands ~4-5px
+       below the text's vertical center. This negative offset shifts
+       the icon up so it reads as centered on single-line notices;
+       on multi-line notices the small shift is imperceptible against
+       the wrapped text block. Sm doesn't need this — its 24px icon
+       and 16px text already share visual centers. */
+    margin-block-start: calc(var(--civ-spacing-1) * -1);
   }
   .civ-notice--default .civ-notice__header,
   .civ-notice--default .civ-notice__body {

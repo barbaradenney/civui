@@ -189,3 +189,50 @@ export const NoCloseAffordance: Story = {
     </div>
   `,
 };
+
+export const LongFooterLabels: Story = {
+  name: 'Long footer button labels — auto-stack',
+  parameters: {
+    docs: {
+      description: {
+        story: `Drawers are typically narrow. Long government-form labels
+("Save this draft and continue", "Go back to the previous step") next
+to a single-word "Cancel" wrap the long button to two lines while the
+short button stays one line, and heights mismatch.
+
+The drawer footer uses a container query: when the drawer is narrower
+than ~30rem, every footer button stretches to full width and stacks
+on its own row. Heights stay matched and long labels read cleanly.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="drawer-demo">
+      <civ-button
+        label="Show long-label demo"
+        @click=${(e: Event) => open((e.target as HTMLElement).closest('.drawer-demo')!)}
+      ></civ-button>
+      <civ-drawer
+        heading="Edit your contact information"
+        align="end"
+        @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+      >
+        <p class="civ-text-body">
+          Update the address and phone number we use to send notices about
+          your application.
+        </p>
+        <div data-drawer-footer>
+          <civ-button
+            emphasis="secondary"
+            label="Discard my changes"
+            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+          ></civ-button>
+          <civ-button
+            label="Save and return to the form"
+            @click=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
+          ></civ-button>
+        </div>
+      </civ-drawer>
+    </div>
+  `,
+};

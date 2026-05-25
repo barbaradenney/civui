@@ -12,7 +12,7 @@ import SwiftUI
 /// Usage:
 /// ```swift
 /// CivCount(count: 24)
-/// CivCount(count: 3, variant: "error", countStyle: "primary")
+/// CivCount(count: 3, variant: "error", emphasis: "primary")
 /// ```
 public struct CivCount: View {
     // MARK: - Properties
@@ -24,10 +24,10 @@ public struct CivCount: View {
     public var max: Int
 
     /// Semantic color variant (e.g., "neutral", "error", "success").
-    public var variant: String
+    public var intent: String
 
     /// Emphasis style: "primary" (filled pill) or "secondary" (text only).
-    public var countStyle: String
+    public var emphasis: String
 
     /// Spacing variant.
     public var spacing: String
@@ -47,16 +47,16 @@ public struct CivCount: View {
     public init(
         count: Int? = nil,
         max: Int = 99,
-        variant: String = "neutral",
-        countStyle: String = "secondary",
+        intent: String = "neutral",
+        emphasis: String = "secondary",
         spacing: String = "default",
         overlay: Bool = false,
         live: String = "off"
     ) {
         self.count = count
         self.max = max
-        self.variant = variant
-        self.countStyle = countStyle
+        self.intent = intent
+        self.emphasis = emphasis
         self.spacing = spacing
         self.overlay = overlay
         self.live = live
@@ -82,7 +82,7 @@ struct CivCount_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 8) {
             CivCount(count: 24)
-            CivCount(count: 3, variant: "error", countStyle: "primary")
+            CivCount(count: 3, variant: "error", emphasis: "primary")
             CivCount(count: 150, variant: "info", overlay: true, live: "polite")
         }.padding()
     }

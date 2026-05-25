@@ -109,7 +109,7 @@ export const WithChevron: Story = {
 export const ExpandedByDefault: Story = {
   name: 'Expanded by default',
   render: () => html`
-    <civ-read-more expanded>
+    <civ-read-more open>
       <p>
         Today is the last day of open enrollment.
       </p>

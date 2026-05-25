@@ -114,8 +114,9 @@ Group components (radio-group, checkbox-group, segmented-control, yes-no, memora
   - `{ values: string[] }` — multi-value (checkbox-group)
   - `{ checked: boolean, value: string }` — boolean controls (checkbox, toggle)
   - `{ files: File[] }` — file-upload
-  - `{ value: string, label: string }` — combobox civ-change
+  - `{ value: string }` — combobox civ-change (the `<civ-country>` wrapper extends this to `{ value, label }`)
   - `{ value: string, month: string, day: string, year: string }` — memorable-date
+  - `{ value: object }` — compound components (address, name, direct-deposit, relationship, etc.) emit their structured value as an object, not a string
 
 ### Rendering Order
 Every form control renders its own chrome in this order: label/legend → hint → error → control → supplementary info.

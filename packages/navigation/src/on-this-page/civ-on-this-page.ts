@@ -176,7 +176,7 @@ export class CivOnThisPage extends LightDomSlotMixin(CivBaseElement) {
     const firstVisible = headingsInOrder.find((h) => this._visibleIds.has(h.id));
     if (!firstVisible) return; // keep the previous active item
     for (const [id, item] of this._itemsById.entries()) {
-      item.active = id === firstVisible.id;
+      item.current = id === firstVisible.id;
     }
   }
 

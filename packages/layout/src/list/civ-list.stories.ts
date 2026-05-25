@@ -88,13 +88,13 @@ export const HeadingWithStartAndEnd: Story = {
     <civ-list dividers>
       <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
         <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact" heading="Contact information" description="Phone and email needed">
-        <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item heading="Service history">
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
   `,
@@ -107,19 +107,19 @@ export const RichHeadingSlot: Story = {
       <civ-list-item href="#/personal">
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Personal information</h2>
         <p data-list-item-description class="civ-text-sm civ-m-0">Name, date of birth, SSN</p>
-        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact">
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Contact information</h2>
         <p data-list-item-description class="civ-text-sm civ-m-0">
           Phone, email, and <a href="#/address">mailing address</a>
         </p>
-        <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         <h2 data-list-item-heading class="civ-font-bold civ-text-lg civ-m-0">Service history</h2>
         <p data-list-item-description class="civ-text-sm civ-m-0">Complete previous sections first</p>
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary"></civ-badge>
       </civ-list-item>
     </civ-list>
   `,
@@ -218,13 +218,13 @@ export const DensityScale: Story = {
           <civ-list dividers>
             <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
               <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
-              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item heading="Service history">
-              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+              <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
             </civ-list-item>
           </civ-list>
         </div>
@@ -235,13 +235,13 @@ export const DensityScale: Story = {
         <civ-list dividers>
           <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
             <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-            <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+            <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
           </civ-list-item>
           <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
-            <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+            <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
           </civ-list-item>
           <civ-list-item heading="Service history">
-            <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+            <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
           </civ-list-item>
         </civ-list>
       </div>
@@ -252,13 +252,13 @@ export const DensityScale: Story = {
           <civ-list dividers>
             <civ-list-item href="#/1" heading="Personal information" description="Name, date of birth, SSN">
               <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item href="#/2" heading="Contact information" description="Phone and email">
-              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item heading="Service history">
-              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+              <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
             </civ-list-item>
           </civ-list>
         </div>
@@ -301,7 +301,7 @@ export const NestedTaskList: Story = {
         <civ-list-item heading="Prepare">
           <civ-list dividers>
             <civ-list-item href="#/eligibility" heading="Check your eligibility" description="Answer a few questions">
-              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
           </civ-list>
         </civ-list-item>
@@ -309,16 +309,16 @@ export const NestedTaskList: Story = {
         <civ-list-item heading="Fill out your application">
           <civ-list dividers>
             <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
-              <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item href="#/contact" heading="Contact information" description="Phone, email, address">
-              <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+              <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
             </civ-list-item>
             <civ-list-item heading="Service history" description="Branch, dates, discharge">
-              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+              <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
             </civ-list-item>
             <civ-list-item heading="Supporting documents">
-              <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+              <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
             </civ-list-item>
           </civ-list>
         </civ-list-item>
@@ -326,7 +326,7 @@ export const NestedTaskList: Story = {
         <civ-list-item heading="Review and submit">
           <civ-list>
             <civ-list-item heading="Review your application" description="Complete all sections first">
-              <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
+              <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary"></civ-badge>
             </civ-list-item>
           </civ-list>
         </civ-list-item>
@@ -344,15 +344,15 @@ export const WithTrailingBadges: Story = {
       <civ-list-item href="#/personal">
         <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
         Personal information
-        <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item href="#/contact">
         Contact information
-        <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
       </civ-list-item>
       <civ-list-item>
         Service history
-        <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+        <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
       </civ-list-item>
     </civ-list>
   `,
@@ -364,15 +364,15 @@ export const WithActionButtons: Story = {
     <civ-list dividers>
       <civ-list-item heading="tax-return.pdf" description="1.2 MB">
         <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
       <civ-list-item heading="invalid-file.exe" error="This file type is not accepted">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
       <civ-list-item heading="uploading.pdf" description="Uploading...">
         <civ-icon data-list-item-start name="loading"></civ-icon>
-        <civ-action-button data-list-item-end label="Cancel" variant="tertiary"></civ-action-button>
+        <civ-action-button data-list-item-end label="Cancel" emphasis="tertiary"></civ-action-button>
       </civ-list-item>
     </civ-list>
   `,
@@ -387,13 +387,13 @@ export const WithErrors: Story = {
       <civ-list-item heading="budget.xlsx" error="File type not accepted. Upload a PDF, JPG, or PNG.">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
         <span data-list-item-end style="display: flex; gap: 4px;">
-          <civ-action-button label="Retry" variant="tertiary"></civ-action-button>
-          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+          <civ-action-button label="Retry" emphasis="tertiary"></civ-action-button>
+          <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
         </span>
       </civ-list-item>
       <civ-list-item heading="photo.bmp" error="File exceeds 10 MB limit.">
         <civ-icon data-list-item-start name="error" class="civ-text-error"></civ-icon>
-        <civ-action-button data-list-item-end label="Remove" variant="tertiary" danger></civ-action-button>
+        <civ-action-button data-list-item-end label="Remove" emphasis="tertiary" danger></civ-action-button>
       </civ-list-item>
     </civ-list>
   `,
@@ -409,16 +409,16 @@ export const GovernmentTaskList: Story = {
       <civ-list dividers>
         <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, SSN">
           <civ-icon data-list-item-start name="check-circle" class="civ-text-success"></civ-icon>
-          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item href="#/contact" heading="Contact information" description="Phone and email needed">
-          <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item heading="Service history">
-          <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary"></civ-badge>
+          <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary"></civ-badge>
         </civ-list-item>
         <civ-list-item heading="Review and submit" description="Complete all sections first">
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary"></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary"></civ-badge>
         </civ-list-item>
       </civ-list>
     </div>

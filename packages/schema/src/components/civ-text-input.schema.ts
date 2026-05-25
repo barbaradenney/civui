@@ -108,29 +108,29 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'reveal-password',
     },
-    leadingIcon: {
+    iconStart: {
       type: 'string',
       description: 'Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set',
       default: '',
-      attribute: 'leading-icon',
+      attribute: 'icon-start',
     },
-    leadingIconLabel: {
+    iconStartLabel: {
       type: 'string',
       description: 'Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden)',
       default: '',
-      attribute: 'leading-icon-label',
+      attribute: 'icon-start-label',
     },
-    trailingIcon: {
+    iconEnd: {
       type: 'string',
       description: 'Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing',
       default: '',
-      attribute: 'trailing-icon',
+      attribute: 'icon-end',
     },
-    trailingIconLabel: {
+    iconEndLabel: {
       type: 'string',
       description: 'Accessible label for the trailing icon. When omitted, icon is decorative',
       default: '',
-      attribute: 'trailing-icon-label',
+      attribute: 'icon-end-label',
     },
     decimals: {
       type: 'number',

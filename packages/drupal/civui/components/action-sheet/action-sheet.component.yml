@@ -25,7 +25,7 @@ props:
       type: boolean
       default: false
       description: 'Whether to trap focus within the sheet'
-    no_click_outside:
+    no_click_outside_close:
       title: No click outside
       type: boolean
       default: false

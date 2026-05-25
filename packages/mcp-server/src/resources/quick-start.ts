@@ -194,15 +194,15 @@ generate_signature_block(schema, { type: "typed", legalText: "I certify..." })
 <civ-list dividers>
   <civ-list-item href="#/step1">
     <span class="civ-block civ-font-bold">Step 1</span>
-    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/step2">
     <span class="civ-block civ-font-bold">Step 2</span>
-    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Step 3</span>
-    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 \`\`\`

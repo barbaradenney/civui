@@ -1,0 +1,9 @@
+<civ-toggle-button
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if pressed_label %}pressed-label="{{ pressed_label }}"{% endif %}
+  {% if pressed %}pressed{% endif %}
+  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if icon_start %}icon-start="{{ icon_start }}"{% endif %}
+>
+  {% block default %}{{ default }}{% endblock %}
+</civ-toggle-button>

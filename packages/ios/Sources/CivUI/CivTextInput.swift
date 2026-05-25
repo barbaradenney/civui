@@ -204,16 +204,16 @@ public struct CivTextInput: View {
     public var revealPassword: Bool
 
     /// Leading icon name.
-    public var leadingIcon: String
+    public var iconStart: String
 
     /// Accessible label for the leading icon.
-    public var leadingIconLabel: String
+    public var iconStartLabel: String
 
     /// Trailing icon name.
-    public var trailingIcon: String
+    public var iconEnd: String
 
     /// Accessible label for the trailing icon.
-    public var trailingIconLabel: String
+    public var iconEndLabel: String
 
     /// Currency mask only: decimal places (0 = whole-dollar mode).
     public var decimals: Int
@@ -272,10 +272,10 @@ public struct CivTextInput: View {
         suffix: String = "",
         clearable: Bool = false,
         revealPassword: Bool = false,
-        leadingIcon: String = "",
-        leadingIconLabel: String = "",
-        trailingIcon: String = "",
-        trailingIconLabel: String = "",
+        iconStart: String = "",
+        iconStartLabel: String = "",
+        iconEnd: String = "",
+        iconEndLabel: String = "",
         maskMode: String = "blur",
         validateType: String = "",
         decimals: Int = 2,
@@ -314,10 +314,10 @@ public struct CivTextInput: View {
         self.suffix = suffix
         self.clearable = clearable
         self.revealPassword = revealPassword
-        self.leadingIcon = leadingIcon
-        self.leadingIconLabel = leadingIconLabel
-        self.trailingIcon = trailingIcon
-        self.trailingIconLabel = trailingIconLabel
+        self.iconStart = iconStart
+        self.iconStartLabel = iconStartLabel
+        self.iconEnd = iconEnd
+        self.iconEndLabel = iconEndLabel
         self.maskMode = maskMode
         self.validateType = validateType
         self.decimals = decimals

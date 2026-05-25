@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    emphasis: {
       type: 'enum',
       description: 'Visual emphasis. Same scale as civ-button but defaults to `tertiary` (text-only) for inline contexts',
       default: 'tertiary',

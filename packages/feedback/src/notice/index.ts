@@ -2,6 +2,6 @@ export { CivNotice } from './civ-notice.js';
 export type {
   NoticeIntent,
   NoticeSpacing,
-  NoticeStyle,
+  NoticeEmphasis,
   NoticeHeadingLevel,
 } from './civ-notice.js';

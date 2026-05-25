@@ -143,6 +143,14 @@ summary:focus,
   --civ-shadow-overlay: 0 -4px 20px rgba(0, 0, 0, 0.15);
   --civ-shadow-sticky-boundary: rgba(0, 0, 0, 0.15);
   --civ-backdrop-color: rgba(0, 0, 0, 0.5);
+  /* Hover tints — translucent black overlays applied to interactive
+     elements with transparent backgrounds (text buttons, filter-chip
+     remove handles). Subtle = quieter, used on lightweight text
+     surfaces; default = stronger, used on element edges adjacent to
+     filled chrome. Both intentionally stay rgba literals so they
+     read correctly over arbitrary backgrounds. */
+  --civ-color-hover-tint-subtle: rgba(0, 0, 0, 0.05);
+  --civ-color-hover-tint: rgba(0, 0, 0, 0.08);
 }
 
 /* Reduced motion: disable all transitions and animations.

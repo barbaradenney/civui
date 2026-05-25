@@ -19,14 +19,14 @@ import type { SlotConfig } from '@civui/core';
  * ```html
  * <civ-input-group>
  *   <civ-text-input label="Search" name="q"></civ-text-input>
- *   <civ-action-button label="Search" variant="primary"></civ-action-button>
+ *   <civ-action-button label="Search" emphasis="primary"></civ-action-button>
  * </civ-input-group>
  * ```
  *
  * @example Button on left
  * ```html
  * <civ-input-group>
- *   <civ-action-button label="$" variant="tertiary"></civ-action-button>
+ *   <civ-action-button label="$" emphasis="tertiary"></civ-action-button>
  *   <civ-text-input label="Amount" name="amount"></civ-text-input>
  * </civ-input-group>
  * ```

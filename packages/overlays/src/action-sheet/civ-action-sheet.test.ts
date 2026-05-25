@@ -17,12 +17,12 @@ describe('civ-action-sheet', () => {
     expect(sheet).not.toBeNull();
   });
 
-  it('fires civ-action-sheet-close on Escape', async () => {
+  it('fires civ-close on Escape', async () => {
     const el = await fixture('<civ-action-sheet open><p>Content</p></civ-action-sheet>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-action-sheet-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(handler).toHaveBeenCalledOnce();
@@ -33,7 +33,7 @@ describe('civ-action-sheet', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-action-sheet-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(handler).not.toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('civ-action-sheet', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-action-sheet-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const backdrop = el.querySelector('.civ-action-sheet-backdrop') as HTMLElement;
     backdrop.click();

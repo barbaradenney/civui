@@ -6,5 +6,5 @@
 | `current` | `number` | `0` | Current step index (0-based). Clamped to 0..total-1 at render |
 | `total` | `number` | `0` | Total number of steps. The component renders nothing when total ≤ 1 |
 | `step-title` | `string` | `''` | Title of the current step, rendered after the counter |
-| `size` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Visual size. `primary` adds dividers + large heading for standalone page-header use; `secondary` is the default mid-page size; `tertiary` is compact for use alongside other progress indicators |
+| `emphasis` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Visual emphasis level (renamed from `size`; the prop never controlled pixel size). `primary` adds dividers + large heading for standalone page-header use; `secondary` is the default mid-page emphasis; `tertiary` is compact for use alongside other progress indicators |
 | `heading-level` | `number` | `2` | Semantic heading level (1–6) applied to the step title via role="heading" + aria-level |

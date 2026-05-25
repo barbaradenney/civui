@@ -339,7 +339,7 @@ export class CivRepeater extends CivBaseElement {
           ></div>
           <div class="civ-mt-4">
             <civ-button
-              variant="secondary"
+              emphasis="secondary"
               label="${t('repeaterCancelButton')}"
               @click="${this._cancelFormSteps}"
             ></civ-button>
@@ -348,7 +348,7 @@ export class CivRepeater extends CivBaseElement {
 
         ${showList && canAdd ? html`
           <civ-button
-            variant="secondary"
+            emphasis="secondary"
             icon-start="plus"
             label="${interpolate(t(this._rowCount === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             ?disabled="${this.disabled}"
@@ -398,7 +398,7 @@ export class CivRepeater extends CivBaseElement {
         ${canAdd && this.addHref ? html`
           <civ-button
             href="${sanitizeHref(this.addHref)}"
-            variant="secondary"
+            emphasis="secondary"
             icon-start="plus"
             label="${interpolate(t(this.rows.length === 0 ? 'repeaterAddFirstButton' : 'repeaterAddButton'), { item: this.itemLabel })}"
             class="civ-mt-3"
@@ -442,14 +442,14 @@ export class CivRepeater extends CivBaseElement {
           <span class="civ-list-item__actions">
             ${editHref ? html`
               <civ-action-button
-                variant="tertiary"
+                emphasis="tertiary"
                 href="${editHref}"
                 label="${t('repeaterEditButton')}"
                 aria-label="${interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"
               ></civ-action-button>
             ` : nothing}
             <civ-action-button
-              variant="tertiary"
+              emphasis="tertiary"
               danger
               label="${interpolate(t('repeaterRemoveLabel'), { item: this.itemLabel })}"
               aria-label="${interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"

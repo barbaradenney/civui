@@ -123,7 +123,7 @@ describe('civ-on-this-page-item', () => {
     expect(el.querySelector('civ-on-this-page-item')!.getAttribute('role')).toBe('listitem');
   });
 
-  it('reflects active to aria-current="location" on the rendered link', async () => {
+  it('reflects current to aria-current="location" on the rendered link', async () => {
     const el = await fixture<CivOnThisPage>(
       `<civ-on-this-page>
         <civ-on-this-page-item href="#a" label="A"></civ-on-this-page-item>
@@ -132,7 +132,7 @@ describe('civ-on-this-page-item', () => {
     const item = el.querySelector('civ-on-this-page-item') as CivOnThisPageItem;
     const a = item.querySelector('a')!;
     expect(a.hasAttribute('aria-current')).toBe(false);
-    item.active = true;
+    item.current = true;
     await elementUpdated(item);
     expect(a.getAttribute('aria-current')).toBe('location');
     expect(a.className).toContain('civ-on-this-page__link--active');

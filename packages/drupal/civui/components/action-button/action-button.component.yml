@@ -11,11 +11,11 @@ props:
       title: Label
       type: string
       description: 'Button label text'
-    variant:
+    emphasis:
       title: Variant
       type: string
       enum: ['primary', 'secondary', 'tertiary']
-      description: 'Visual style variant'
+      description: 'Visual style emphasis'
     danger:
       title: Danger
       type: boolean
@@ -58,7 +58,7 @@ props:
       type: string
       enum: ['default', 'sm']
       default: 'default'
-      description: 'Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` in dense surfaces like data-grid cell editors or compact input-groups'
+      description: 'Density emphasis. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` in dense surfaces like data-grid cell editors or compact input-groups'
     current:
       title: Current
       type: boolean

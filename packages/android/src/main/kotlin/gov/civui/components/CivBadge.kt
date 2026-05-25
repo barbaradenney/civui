@@ -1,5 +1,5 @@
 // CivUI — CivBadge for Jetpack Compose
-// Status badge with count, dot, and variant support.
+// Status badge with count, dot, and intent support.
 
 package gov.civui.components
 
@@ -13,8 +13,8 @@ fun CivBadge(
     count: Int? = null,
     max: Int = 99,
     dot: Boolean = false,
-    variant: String = "neutral",
-    badgeStyle: String = "default",
+    intent: String = "neutral",
+    emphasis: String = "default",
     spacing: String = "default",
     overlay: Boolean = false,
     withIcon: Boolean = false,

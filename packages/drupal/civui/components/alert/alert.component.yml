@@ -7,7 +7,7 @@ description: 'Alert banner for informational, warning, error, or success message
 props:
   type: object
   properties:
-    variant:
+    intent:
       title: Variant
       type: string
       enum: ['info', 'warning', 'error', 'success']
@@ -29,15 +29,15 @@ props:
       title: Slim
       type: boolean
       default: false
-      description: 'Compact variant without heading'
+      description: 'Compact intent without heading'
     heading_level:
       title: Heading level
       type: integer
       enum: [2, 3, 4, 5, 6]
       default: 4
       description: 'HTML heading level for the alert heading'
-    alert_style:
-      title: Alert style
+    emphasis:
+      title: Emphasis
       type: string
       enum: ['primary', 'secondary', 'tertiary']
       default: 'secondary'

@@ -68,7 +68,7 @@ describe('civ-count', () => {
     });
 
     it('applies primary style class', async () => {
-      const el = await fixture<CivCount>('<civ-count count="5" count-style="primary"></civ-count>');
+      const el = await fixture<CivCount>('<civ-count count="5" emphasis="primary"></civ-count>');
       expect(el.querySelector('.civ-count')!.className).toContain('civ-count--style-primary');
     });
   });
@@ -81,7 +81,7 @@ describe('civ-count', () => {
 
     it('applies semantic variant classes', async () => {
       for (const variant of ['info', 'warning', 'error', 'success', 'neutral'] as const) {
-        const el = await fixture<CivCount>(`<civ-count count="5" variant="${variant}"></civ-count>`);
+        const el = await fixture<CivCount>(`<civ-count count="5" intent="${variant}"></civ-count>`);
         expect(el.querySelector('.civ-count')!.className).toContain(`civ-count--${variant}`);
       }
     });

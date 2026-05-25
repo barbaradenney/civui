@@ -7,7 +7,7 @@ import { CivBaseElement, LightDomTextMixin, isSafeHref } from '@civui/core';
  *
  * Individual item inside a `<civ-menu>`. Renders as a `<button>` by default,
  * or as an `<a>` when `href` is set. The parent `<civ-menu>` listens for
- * clicks at the panel level and dispatches `civ-menu-select`, so consumers
+ * clicks at the panel level and dispatches `civ-select`, so consumers
  * do not need to wire per-item handlers.
  *
  * **Label.** Set the visible text via the `label` attribute. The item also
@@ -25,7 +25,7 @@ import { CivBaseElement, LightDomTextMixin, isSafeHref } from '@civui/core';
  * @prop {boolean} disabled - When true, the item is non-interactive and skipped during keyboard navigation.
  * @prop {boolean} destructive - Apply destructive (red) styling for delete-style actions.
  * @prop {string} href - When set, the item renders as an `<a>` link instead of a `<button>`.
- * @prop {string} value - Stable identifier surfaced in the parent menu's `civ-menu-select` event detail.
+ * @prop {string} value - Stable identifier surfaced in the parent menu's `civ-select` event detail.
  * @prop {string} icon - Optional leading icon name (resolved via the global icon library).
  *
  * @example

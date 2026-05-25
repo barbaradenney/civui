@@ -90,7 +90,7 @@ public struct CivRaceEthnicity: View {
 
     /// Tile rendering variant forwarded to both inner groups.
     /// `auto` picks `card` for ≤4 options and `list` for 5+.
-    public var variant: String
+    public var layout: String
 
     // MARK: - Internal State
 
@@ -134,7 +134,7 @@ public struct CivRaceEthnicity: View {
         isPii: Bool = false,
         ethnicityLegend: String = "Ethnicity",
         raceLegend: String = "Race",
-        variant: String = "auto"
+        layout: String = "auto"
     ) {
         self.legend = legend
         self._value = value
@@ -154,7 +154,7 @@ public struct CivRaceEthnicity: View {
         self.isPii = isPii
         self.ethnicityLegend = ethnicityLegend
         self.raceLegend = raceLegend
-        self.variant = variant
+        self.layout = layout
     }
 
     // MARK: - Body

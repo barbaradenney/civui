@@ -18,18 +18,18 @@ const schema: ComponentSchema = {
       description: 'Display cap. Counts above this render as `${max}+`',
       default: 99,
     },
-    variant: {
+    intent: {
       type: 'enum',
       description: 'Semantic tone',
       default: 'neutral',
       values: ['info', 'success', 'warning', 'error', 'neutral'],
     },
-    countStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual treatment. `primary` = solid fill; `secondary` (default) = subtle background; `tertiary` = outlined',
       default: 'secondary',
       values: ['primary', 'secondary', 'tertiary'],
-      attribute: 'count-style',
+      attribute: 'emphasis',
     },
     spacing: {
       type: 'enum',

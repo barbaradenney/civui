@@ -75,7 +75,7 @@ export const RichPanelContent: Story = {
       <civ-tab-panel value="summary">
         <h3 class="civ-mt-0">Application VA-21P-527</h3>
         <p>Pension claim filed on May 5, 2026. Currently under review.</p>
-        <civ-button variant="primary">Continue application</civ-button>
+        <civ-button emphasis="primary">Continue application</civ-button>
       </civ-tab-panel>
       <civ-tab-panel value="documents">
         <ul>

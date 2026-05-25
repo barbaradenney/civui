@@ -19,7 +19,7 @@ export const Default: Story = {
     <div style="${railStyle}">
       <civ-on-this-page label="On this page">
         <civ-on-this-page-item href="#installation" label="Installation"></civ-on-this-page-item>
-        <civ-on-this-page-item href="#usage" label="Usage" active></civ-on-this-page-item>
+        <civ-on-this-page-item href="#usage" label="Usage" current></civ-on-this-page-item>
         <civ-on-this-page-item href="#props" label="Props"></civ-on-this-page-item>
         <civ-on-this-page-item href="#events" label="Events"></civ-on-this-page-item>
         <civ-on-this-page-item href="#accessibility" label="Accessibility"></civ-on-this-page-item>
@@ -65,7 +65,7 @@ export const ManualMode: Story = {
     <div style="${railStyle}">
       <civ-on-this-page label="Sections">
         <civ-on-this-page-item href="#overview" label="Overview"></civ-on-this-page-item>
-        <civ-on-this-page-item href="#examples" label="Code examples" active></civ-on-this-page-item>
+        <civ-on-this-page-item href="#examples" label="Code examples" current></civ-on-this-page-item>
         <civ-on-this-page-item href="#related" label="Related components"></civ-on-this-page-item>
       </civ-on-this-page>
     </div>
@@ -82,7 +82,7 @@ export const NoHeadingLabel: Story = {
     <div style="${railStyle}">
       <civ-on-this-page label="">
         <civ-on-this-page-item href="#a" label="Step 1"></civ-on-this-page-item>
-        <civ-on-this-page-item href="#b" label="Step 2" active></civ-on-this-page-item>
+        <civ-on-this-page-item href="#b" label="Step 2" current></civ-on-this-page-item>
         <civ-on-this-page-item href="#c" label="Step 3"></civ-on-this-page-item>
       </civ-on-this-page>
     </div>

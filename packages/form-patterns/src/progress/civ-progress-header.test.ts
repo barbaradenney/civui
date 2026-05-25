@@ -59,23 +59,23 @@ describe('civ-progress-header', () => {
     expect(title!.getAttribute('aria-level')).toBe('3');
   });
 
-  it('renders primary size', async () => {
+  it('renders primary emphasis', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Test" size="primary"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test" emphasis="primary"></civ-progress-header>'
     );
     expect(el.querySelector('.civ-progress-header--primary')).not.toBeNull();
   });
 
-  it('renders secondary size by default', async () => {
+  it('renders secondary emphasis by default', async () => {
     const el = await fixture<CivProgressHeader>(
       '<civ-progress-header current="0" total="3" step-title="Test"></civ-progress-header>'
     );
     expect(el.querySelector('.civ-progress-header--secondary')).not.toBeNull();
   });
 
-  it('renders tertiary size', async () => {
+  it('renders tertiary emphasis', async () => {
     const el = await fixture<CivProgressHeader>(
-      '<civ-progress-header current="0" total="3" step-title="Test" size="tertiary"></civ-progress-header>'
+      '<civ-progress-header current="0" total="3" step-title="Test" emphasis="tertiary"></civ-progress-header>'
     );
     expect(el.querySelector('.civ-progress-header--tertiary')).not.toBeNull();
   });

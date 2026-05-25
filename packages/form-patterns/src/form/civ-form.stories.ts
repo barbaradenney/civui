@@ -95,7 +95,7 @@ export const PersistDraft: Story = {
       <civ-textarea label="Additional comments" name="comments"></civ-textarea>
       <div class="civ-mt-4 civ-flex civ-gap-2">
         <civ-button type="submit">Submit</civ-button>
-        <civ-button type="reset" variant="secondary">Clear saved draft</civ-button>
+        <civ-button type="reset" emphasis="secondary">Clear saved draft</civ-button>
       </div>
     </civ-form>
   `,
@@ -318,7 +318,7 @@ export const SetServerErrors: Story = {
         <civ-button type="submit">Submit (will fail)</civ-button>
         <civ-button
           type="button"
-          variant="secondary"
+          emphasis="secondary"
           @click="${() => {
             const f = document.querySelector('#server-error-form') as HTMLElement & {
               clearErrors: () => void;

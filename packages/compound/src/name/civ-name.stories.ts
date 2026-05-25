@@ -15,8 +15,8 @@ const meta: Meta = {
     error: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
-    showMiddle: { control: 'boolean' },
-    showSuffix: { control: 'boolean' },
+    hideMiddle: { control: 'boolean' },
+    hideSuffix: { control: 'boolean' },
   },
 };
 export default meta;
@@ -120,7 +120,7 @@ export const WithoutMiddle: Story = {
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
-    el.showMiddle = false;
+    el.hideMiddle = false;
   },
 };
 
@@ -130,7 +130,7 @@ export const WithoutSuffix: Story = {
   `,
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('civ-name') as any;
-    el.showSuffix = false;
+    el.hideSuffix = false;
   },
 };
 

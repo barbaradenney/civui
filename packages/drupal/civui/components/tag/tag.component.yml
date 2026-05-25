@@ -11,10 +11,10 @@ props:
       title: Label
       type: string
       description: 'Tag text'
-    variant:
+    color:
       title: Variant
       type: string
-      description: 'Color variant'
+      description: 'Color color'
     tag_style:
       title: Tag style
       type: string
@@ -22,7 +22,7 @@ props:
     spacing:
       title: Spacing
       type: string
-      description: 'Spacing variant'
+      description: 'Spacing color'
     icon_start:
       title: Icon start
       type: string

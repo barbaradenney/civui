@@ -12,7 +12,7 @@ import SwiftUI
 /// at all times; a "Read more" button reveals additional content.
 public struct CivReadMore: View {
     /// Whether the rest region is currently visible.
-    @Binding public var expanded: Bool
+    @Binding public var open: Bool
 
     /// Override the "Read more" trigger text.
     public var moreLabel: String
@@ -34,14 +34,14 @@ public struct CivReadMore: View {
     /// of floating over a gradient at the bottom of the text.
     public var isNoFadeTrigger: Bool
 
-    /// Called when the expanded state changes.
+    /// Called when the open state changes.
     public var onToggle: ((Bool) -> Void)?
 
     /// Called for analytics tracking.
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
     public init(
-        expanded: Binding<Bool> = .constant(false),
+        open: Binding<Bool> = .constant(false),
         moreLabel: String = "",
         lessLabel: String = "",
         icon: String = "",
@@ -51,7 +51,7 @@ public struct CivReadMore: View {
         onToggle: ((Bool) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
-        self._expanded = expanded
+        self._expanded = open
         self.moreLabel = moreLabel
         self.lessLabel = lessLabel
         self.icon = icon

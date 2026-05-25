@@ -154,7 +154,7 @@ Not every form needs every layer. A simple contact form might just use `civ-form
 </civ-form>
 ```
 
-`civ-relationship` renders the name fields by default (`show-name` is `true`). The MultiStepForm story above uses the same pattern. To suppress the inner name compound (for example, in a repeater where the previous step already collected the name) bind the property in lit-html as `.showName=${false}`; the HTML boolean attribute can only set it true.
+`civ-relationship` renders the name fields by default. The MultiStepForm story above uses the same pattern. To suppress the inner name compound (for example, in a repeater where the previous step already collected the name) set the `hide-name` attribute.
 
 ### Trauma-informed form
 

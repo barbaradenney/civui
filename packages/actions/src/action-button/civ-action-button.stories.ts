@@ -9,7 +9,7 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     label: { control: 'text' },
-    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary'] },
+    emphasis: { control: 'select', options: ['primary', 'secondary', 'tertiary'] },
     spacing: { control: 'select', options: ['default', 'sm'] },
     pressed: { control: 'boolean' },
     disabled: { control: 'boolean' },
@@ -29,9 +29,9 @@ export const Default: Story = {
 export const AllVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-2 civ-items-center">
-      <civ-action-button label="Primary" variant="primary"></civ-action-button>
-      <civ-action-button label="Secondary" variant="secondary"></civ-action-button>
-      <civ-action-button label="Tertiary" variant="tertiary"></civ-action-button>
+      <civ-action-button label="Primary" emphasis="primary"></civ-action-button>
+      <civ-action-button label="Secondary" emphasis="secondary"></civ-action-button>
+      <civ-action-button label="Tertiary" emphasis="tertiary"></civ-action-button>
     </div>
   `,
 };
@@ -51,17 +51,17 @@ export const Spacing: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="default"</p>
         <div class="civ-flex civ-gap-2 civ-items-center">
-          <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
-          <civ-action-button label="Save" variant="primary"></civ-action-button>
-          <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+          <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
+          <civ-action-button label="Save" emphasis="primary"></civ-action-button>
+          <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-bold">spacing="sm"</p>
         <div class="civ-flex civ-gap-2 civ-items-center">
-          <civ-action-button label="Edit" variant="tertiary" spacing="sm"></civ-action-button>
-          <civ-action-button label="Save" variant="primary" spacing="sm"></civ-action-button>
-          <civ-action-button label="Remove" variant="tertiary" danger spacing="sm"></civ-action-button>
+          <civ-action-button label="Edit" emphasis="tertiary" spacing="sm"></civ-action-button>
+          <civ-action-button label="Save" emphasis="primary" spacing="sm"></civ-action-button>
+          <civ-action-button label="Remove" emphasis="tertiary" danger spacing="sm"></civ-action-button>
         </div>
       </div>
     </div>
@@ -112,21 +112,21 @@ export const ButtonGroupVertical: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-6 civ-items-start">
       <civ-button-group orientation="vertical">
-        <civ-action-button label="Option 1" variant="primary"></civ-action-button>
-        <civ-action-button label="Option 2" variant="primary" pressed></civ-action-button>
-        <civ-action-button label="Option 3" variant="primary"></civ-action-button>
+        <civ-action-button label="Option 1" emphasis="primary"></civ-action-button>
+        <civ-action-button label="Option 2" emphasis="primary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" emphasis="primary"></civ-action-button>
       </civ-button-group>
 
       <civ-button-group orientation="vertical">
-        <civ-action-button label="Option 1" variant="secondary"></civ-action-button>
-        <civ-action-button label="Option 2" variant="secondary" pressed></civ-action-button>
-        <civ-action-button label="Option 3" variant="secondary"></civ-action-button>
+        <civ-action-button label="Option 1" emphasis="secondary"></civ-action-button>
+        <civ-action-button label="Option 2" emphasis="secondary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" emphasis="secondary"></civ-action-button>
       </civ-button-group>
 
       <civ-button-group orientation="vertical">
-        <civ-action-button label="Option 1" variant="tertiary"></civ-action-button>
-        <civ-action-button label="Option 2" variant="tertiary" pressed></civ-action-button>
-        <civ-action-button label="Option 3" variant="tertiary"></civ-action-button>
+        <civ-action-button label="Option 1" emphasis="tertiary"></civ-action-button>
+        <civ-action-button label="Option 2" emphasis="tertiary" pressed></civ-action-button>
+        <civ-action-button label="Option 3" emphasis="tertiary"></civ-action-button>
       </civ-button-group>
     </div>
   `,
@@ -135,9 +135,9 @@ export const ButtonGroupVertical: Story = {
 export const DangerVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-2 civ-items-center">
-      <civ-action-button label="Delete" variant="primary" danger></civ-action-button>
-      <civ-action-button label="Remove" variant="secondary" danger></civ-action-button>
-      <civ-action-button label="Cancel" variant="tertiary" danger></civ-action-button>
+      <civ-action-button label="Delete" emphasis="primary" danger></civ-action-button>
+      <civ-action-button label="Remove" emphasis="secondary" danger></civ-action-button>
+      <civ-action-button label="Cancel" emphasis="tertiary" danger></civ-action-button>
     </div>
   `,
 };
@@ -145,8 +145,8 @@ export const DangerVariants: Story = {
 export const DangerButtonGroup: Story = {
   render: () => html`
     <civ-button-group>
-      <civ-action-button label="Keep" variant="tertiary"></civ-action-button>
-      <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+      <civ-action-button label="Keep" emphasis="tertiary"></civ-action-button>
+      <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
     </civ-button-group>
   `,
 };
@@ -165,15 +165,15 @@ export const AsLink: Story = {
         <div class="civ-list-item">
           <span class="civ-list-item__content civ-font-medium">Alex Chen</span>
           <span class="civ-list-item__actions">
-            <civ-action-button href="/dependents/1/edit" variant="tertiary" label="Edit"></civ-action-button>
-            <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+            <civ-action-button href="/dependents/1/edit" emphasis="tertiary" label="Edit"></civ-action-button>
+            <civ-action-button emphasis="tertiary" danger label="Remove"></civ-action-button>
           </span>
         </div>
         <div class="civ-list-item">
           <span class="civ-list-item__content civ-font-medium">Jordan Lee</span>
           <span class="civ-list-item__actions">
-            <civ-action-button href="/dependents/2/edit" variant="tertiary" label="Edit"></civ-action-button>
-            <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+            <civ-action-button href="/dependents/2/edit" emphasis="tertiary" label="Edit"></civ-action-button>
+            <civ-action-button emphasis="tertiary" danger label="Remove"></civ-action-button>
           </span>
         </div>
       </div>

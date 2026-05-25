@@ -49,8 +49,8 @@ import '@civui/actions/action-button';
  * @example
  * ```html
  * <civ-bulk-actions count="3" item-name="application">
- *   <civ-action-button variant="secondary" icon-start="archive" label="Archive"></civ-action-button>
- *   <civ-action-button variant="secondary" icon-start="delete" danger label="Delete"></civ-action-button>
+ *   <civ-action-button emphasis="secondary" icon-start="archive" label="Archive"></civ-action-button>
+ *   <civ-action-button emphasis="secondary" icon-start="delete" danger label="Delete"></civ-action-button>
  * </civ-bulk-actions>
  * ```
  */
@@ -95,7 +95,7 @@ export class CivBulkActions extends LightDomSlotMixin(CivBaseElement) {
           : html`
               <civ-action-button
                 class="civ-bulk-actions__clear"
-                variant="tertiary"
+                emphasis="tertiary"
                 label="${this.clearLabel || t('bulkActionsClearLabel')}"
                 @click="${this._onClear}"
               ></civ-action-button>

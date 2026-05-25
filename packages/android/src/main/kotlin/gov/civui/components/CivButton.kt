@@ -1,5 +1,5 @@
 // CivUI — CivButton for Jetpack Compose
-// Accessible button with variant styles. Renders as link when href is set.
+// Accessible button with emphasis styles. Renders as link when href is set.
 // Mirrors the web `civ-button` component (Section 508 compliant)
 
 package gov.civui.components
@@ -44,13 +44,13 @@ import gov.civui.tokens.CivTokens
  * ```kotlin
  * CivButton(
  *     label = "Submit application",
- *     variant = "primary",
+ *     emphasis = "primary",
  *     onClick = { /* handle click */ },
  * )
  *
  * CivButton(
  *     label = "Learn more",
- *     variant = "tertiary",
+ *     emphasis = "tertiary",
  *     href = "https://www.usa.gov",
  * )
  * ```
@@ -59,7 +59,7 @@ import gov.civui.tokens.CivTokens
 fun CivButton(
     label: String,
     modifier: Modifier = Modifier,
-    variant: String = "primary",
+    emphasis: String = "primary",
     danger: Boolean = false,
     type: String = "button",
     disabled: Boolean = false,
@@ -99,7 +99,7 @@ fun CivButton(
         // tap at the UI layer; this is belt-and-suspenders for any
         // path that calls handleClick programmatically.
         if (!loading) {
-            onAnalytics?.invoke("click", mapOf("label" to label, "variant" to variant))
+            onAnalytics?.invoke("click", mapOf("label" to label, "emphasis" to emphasis))
             onClick?.invoke()
         }
     }
@@ -132,7 +132,7 @@ fun CivButton(
     }
 
     // Button mode
-    when (variant) {
+    when (emphasis) {
         "secondary" -> {
             OutlinedButton(
                 onClick = handleClick,
@@ -220,33 +220,33 @@ private fun CivButtonPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
         CivButton(
             label = "Submit application",
-            variant = "primary",
+            emphasis = "primary",
         )
 
         CivButton(
             label = "Save draft",
-            variant = "secondary",
+            emphasis = "secondary",
         )
 
         CivButton(
             label = "Cancel",
-            variant = "tertiary",
+            emphasis = "tertiary",
         )
 
         CivButton(
             label = "Delete record",
-            variant = "danger",
+            emphasis = "danger",
         )
 
         CivButton(
             label = "Disabled button",
-            variant = "primary",
+            emphasis = "primary",
             disabled = true,
         )
 
         CivButton(
             label = "Visit USA.gov",
-            variant = "tertiary",
+            emphasis = "tertiary",
             href = "https://www.usa.gov",
         )
     }

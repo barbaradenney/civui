@@ -70,15 +70,15 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 ### Status text
 
 ```html
-<civ-badge label="Approved" variant="success"></civ-badge>
-<civ-badge label="Pending" variant="warning"></civ-badge>
-<civ-badge label="Denied" variant="error"></civ-badge>
+<civ-badge label="Approved" intent="success"></civ-badge>
+<civ-badge label="Pending" intent="warning"></civ-badge>
+<civ-badge label="Denied" intent="error"></civ-badge>
 ```
 
 ### Dot
 
 ```html
-<civ-badge dot label="Unread messages" variant="error"></civ-badge>
+<civ-badge dot label="Unread messages" intent="error"></civ-badge>
 <!-- label becomes aria-label, no visible text -->
 ```
 
@@ -95,7 +95,7 @@ Wrap a target (icon, button) with `civ-badge-anchor` to anchor the badge:
 ```html
 <button class="civ-badge-anchor">
   <civ-icon name="mail" size="lg"></civ-icon>
-  <civ-badge overlay dot label="New mail" variant="error"></civ-badge>
+  <civ-badge overlay dot label="New mail" intent="error"></civ-badge>
 </button>
 ```
 

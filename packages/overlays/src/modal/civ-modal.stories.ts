@@ -25,10 +25,10 @@ export const Default: Story = {
     return html`
       <div class="modal-demo">
         <civ-button label="Open modal" @click="${toggle}"></civ-button>
-        <civ-modal heading="Example Modal" @civ-modal-close="${close}">
+        <civ-modal heading="Example Modal" @civ-close="${close}">
           <p class="civ-text-body">This is a general-purpose modal dialog. On mobile it renders as a bottom sheet.</p>
           <div data-modal-footer>
-            <civ-button variant="secondary" label="Cancel" @click="${close}"></civ-button>
+            <civ-button emphasis="secondary" label="Cancel" @click="${close}"></civ-button>
             <civ-button label="Confirm" @click="${close}"></civ-button>
           </div>
         </civ-modal>
@@ -51,10 +51,10 @@ export const RequiredDecision: Story = {
     return html`
       <div class="modal-demo">
         <civ-button label="Open required decision" @click="${toggle}"></civ-button>
-        <civ-modal heading="Confirm deletion" no-close-button no-backdrop-close @civ-modal-close="${close}">
+        <civ-modal heading="Confirm deletion" no-close-button no-backdrop-close @civ-close="${close}">
           <p class="civ-text-body">Are you sure you want to delete this application? This cannot be undone.</p>
           <div data-modal-footer>
-            <civ-button variant="secondary" label="Cancel" @click="${close}"></civ-button>
+            <civ-button emphasis="secondary" label="Cancel" @click="${close}"></civ-button>
             <civ-button danger label="Delete" @click="${close}"></civ-button>
           </div>
         </civ-modal>
@@ -91,7 +91,7 @@ export const AddressVerification: Story = {
             </div>
           </div>
           <div data-modal-footer>
-            <civ-button variant="secondary" label="Keep my address" @click="${close}"></civ-button>
+            <civ-button emphasis="secondary" label="Keep my address" @click="${close}"></civ-button>
             <civ-button label="Use suggested address" @click="${close}"></civ-button>
           </div>
         </civ-modal>

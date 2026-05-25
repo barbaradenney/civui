@@ -66,12 +66,12 @@ export const Step1_Hub: Story = {
         <civ-list-item href="#/personal" data-prefilled>
           <span class="civ-block civ-font-bold">Personal information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-          <civ-badge data-list-item-end label="Needs review" variant="warning" badge-style="primary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Needs review" intent="warning" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item data-prefilled>
           <span class="civ-block civ-font-bold">Contact information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -80,17 +80,17 @@ export const Step1_Hub: Story = {
         <civ-list-item>
           <span class="civ-block civ-font-bold">Service history</span>
           <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Disabilities</span>
           <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Supporting documents</span>
           <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -98,7 +98,7 @@ export const Step1_Hub: Story = {
       <civ-list dividers>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Review your application</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
     </div>
@@ -122,7 +122,7 @@ export const Step2a_LockedChapter: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Personal information</h2>
 
-      <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+      <civ-alert intent="info" emphasis="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
 
       <civ-summary id="locked-chapter"></civ-summary>
 
@@ -167,7 +167,7 @@ export const Step2b_PrefillWithMoreSteps: Story = {
 
       <h2 class="civ-heading-xl civ-mt-3 civ-mb-4">Contact information</h2>
 
-      <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+      <civ-alert intent="info" emphasis="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
 
       <civ-summary id="prefill-chapter"></civ-summary>
 
@@ -286,12 +286,12 @@ export const Step5_HubAfterComplete: Story = {
         <civ-list-item href="#/personal">
           <span class="civ-block civ-font-bold">Personal information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
-          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item href="#/contact">
           <span class="civ-block civ-font-bold">Contact information</span>
           <span class="civ-block civ-text-sm civ-text-muted">Phone, email, and mailing address</span>
-          <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -300,17 +300,17 @@ export const Step5_HubAfterComplete: Story = {
         <civ-list-item href="#/service">
           <span class="civ-block civ-font-bold">Service history</span>
           <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
-          <civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Disabilities</span>
           <span class="civ-block civ-text-sm civ-text-muted">Conditions you are claiming</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Supporting documents</span>
           <span class="civ-block civ-text-sm civ-text-muted">DD214 and medical records</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
@@ -318,7 +318,7 @@ export const Step5_HubAfterComplete: Story = {
       <civ-list dividers>
         <civ-list-item>
           <span class="civ-block civ-font-bold">Review your application</span>
-          <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+          <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
     </div>

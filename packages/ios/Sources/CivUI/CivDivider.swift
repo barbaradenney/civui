@@ -5,12 +5,12 @@ import SwiftUI
 
 public struct CivDivider: View {
     public var spacing: String
-    public var variant: String
+    public var emphasis: String
     @Environment(\.colorScheme) private var colorScheme
 
     public init(spacing: String = "default", variant: String = "default") {
         self.spacing = spacing
-        self.variant = variant
+        self.emphasis = emphasis
     }
 
     private var verticalPadding: CGFloat {

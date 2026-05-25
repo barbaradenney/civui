@@ -44,7 +44,7 @@ export const ListVariant: Story = {
       legend="Race and ethnicity"
       size="lg"
       name="demographics"
-      variant="list"
+      layout="list"
       required
     ></civ-race-ethnicity>
   `,

@@ -30,7 +30,7 @@ public struct CivActionSheet<Content: View>: View {
     public var isTrapFocus: Bool
 
     /// Whether to prevent closing by tapping outside.
-    public var noClickOutside: Bool
+    public var noClickOutsideClose: Bool
 
     /// Called when the sheet is closed (parallels `civ-close` event).
     public var onClose: (() -> Void)?
@@ -49,7 +49,7 @@ public struct CivActionSheet<Content: View>: View {
         maxHeight: String = "50vh",
         label: String = "",
         isTrapFocus: Bool = false,
-        noClickOutside: Bool = false,
+        noClickOutsideClose: Bool = false,
         onClose: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
@@ -57,7 +57,7 @@ public struct CivActionSheet<Content: View>: View {
         self.maxHeight = maxHeight
         self.label = label
         self.isTrapFocus = isTrapFocus
-        self.noClickOutside = noClickOutside
+        self.noClickOutsideClose = noClickOutsideClose
         self.onClose = onClose
         self.content = content()
     }

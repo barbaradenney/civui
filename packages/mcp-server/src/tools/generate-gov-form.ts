@@ -283,7 +283,7 @@ ${fieldHtml}
 
   <!-- Prefill review (hidden by default, shown by runtime JS when prefill data exists) -->
   <div data-prefill-review hidden data-chapter-fields="${fieldNames.join(',')}">
-    <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
+    <civ-alert intent="info" emphasis="secondary" heading="We've prefilled some of your information" label="We pulled this information from your account. If any of this is wrong, you can correct it here."></civ-alert>
     <civ-summary data-prefill-summary></civ-summary>
     <p class="civ-mt-4" data-prefill-hint>If this information is accurate, press continue.</p>
     <div class="civ-mt-4">
@@ -497,7 +497,7 @@ function generatePrefillPage(form: ReturnType<typeof getFormDefinition> & {}): {
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-alert variant="info" alert-style="secondary" heading="We've prefilled some of your information" label="We pulled this from your account. Confirm or edit anything that needs to change before continuing."></civ-alert>
+  <civ-alert intent="info" emphasis="secondary" heading="We've prefilled some of your information" label="We pulled this from your account. Confirm or edit anything that needs to change before continuing."></civ-alert>
 
   <civ-summary data-prefill-combined-summary class="civ-mt-4"></civ-summary>
 
@@ -518,7 +518,7 @@ function generateConfirmationPage(form: ReturnType<typeof getFormDefinition> & {
     <span data-subheading>VA Form ${escapeHtml(form.formNumber)}</span>
   </civ-page-header>
 
-  <civ-alert variant="success" heading="We've received your application">
+  <civ-alert intent="success" heading="We've received your application">
     Confirmation text goes here.
   </civ-alert>
 
@@ -548,8 +548,8 @@ function generateTaskListHub(form: ReturnType<typeof getFormDefinition> & {}, ch
       // user makes progress.
       const startIcon = '<civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>';
       const tag = isActive
-        ? '<civ-badge data-list-item-end label="Not started" variant="info" badge-style="secondary" with-icon></civ-badge>'
-        : '<civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>';
+        ? '<civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary" with-icon></civ-badge>'
+        : '<civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>';
       return `      <civ-list-item data-chapter-id="${slugify(ch.id)}"${href}${activeAttr}>
         ${startIcon}
         <span data-list-item-heading>${escapeHtml(ch.heading)}</span>
@@ -583,7 +583,7 @@ ${chapterRows}
       <civ-icon data-list-item-start name="chevron-right" label="" class="civ-text-primary"></civ-icon>
       <span data-list-item-heading>Review your application</span>
       <span data-list-item-description class="civ-text-sm">Complete all sections before reviewing</span>
-      <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+      <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
     </civ-list-item>
   </civ-list>
 </div>`;

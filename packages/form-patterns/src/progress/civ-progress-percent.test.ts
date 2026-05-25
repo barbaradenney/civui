@@ -20,11 +20,8 @@ describe('civ-progress-percent', () => {
     expect(el.textContent).toContain('75%');
   });
 
-  it('hides percentage when show-percent is false', async () => {
-    const el = await fixture<CivProgressPercent>('<civ-progress-percent value="75" show-percent="false"></civ-progress-percent>');
-    // show-percent defaults to true, setting to false should hide it
-    // Note: boolean attributes — presence = true, so we need to test the property
-    el.showPercent = false;
+  it('hides percentage when hide-percent attribute is set', async () => {
+    const el = await fixture<CivProgressPercent>('<civ-progress-percent value="75" hide-percent></civ-progress-percent>');
     await elementUpdated(el);
     expect(el.querySelector('.civ-font-bold')).toBeNull();
   });

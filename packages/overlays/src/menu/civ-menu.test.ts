@@ -69,7 +69,7 @@ describe('civ-menu', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-menu-close', handler);
+    el.addEventListener('civ-close', handler);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await elementUpdated(el);
 
@@ -77,15 +77,15 @@ describe('civ-menu', () => {
     expect(el.open).toBe(false);
   });
 
-  it('fires civ-menu-open and civ-menu-close', async () => {
+  it('fires civ-open and civ-close', async () => {
     const el = await fixture(menuTemplate);
     await elementUpdated(el);
     await new Promise((r) => queueMicrotask(() => r(undefined)));
 
     const opened = vi.fn();
     const closed = vi.fn();
-    el.addEventListener('civ-menu-open', opened);
-    el.addEventListener('civ-menu-close', closed);
+    el.addEventListener('civ-open', opened);
+    el.addEventListener('civ-close', closed);
 
     const trigger = el.querySelector('[data-testid="trigger"]') as HTMLElement;
     trigger.click();
@@ -94,13 +94,13 @@ describe('civ-menu', () => {
     expect(closed).toHaveBeenCalledOnce();
   });
 
-  it('fires civ-menu-select with value + index on item click', async () => {
+  it('fires civ-select with value + index on item click', async () => {
     const el = await fixture(menuTemplate) as any;
     el.open = true;
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-menu-select', handler);
+    el.addEventListener('civ-select', handler);
 
     const editItem = el.querySelector('civ-menu-item[value="edit"]') as HTMLElement;
     editItem.click();
@@ -123,7 +123,7 @@ describe('civ-menu', () => {
     expect(el.open).toBe(false);
   });
 
-  it('does not fire civ-menu-select for disabled items', async () => {
+  it('does not fire civ-select for disabled items', async () => {
     const el = await fixture(`
       <civ-menu label="m">
         <button data-civ-menu-trigger type="button">Open</button>
@@ -135,7 +135,7 @@ describe('civ-menu', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-menu-select', handler);
+    el.addEventListener('civ-select', handler);
 
     const disabled = el.querySelector('civ-menu-item[value="b"]') as HTMLElement;
     disabled.click();

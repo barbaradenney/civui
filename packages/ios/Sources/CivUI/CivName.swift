@@ -68,10 +68,10 @@ public struct CivName: View {
     public var isReadonly: Bool
 
     /// Whether to show the middle name field.
-    public var showMiddle: Bool
+    public var hideMiddle: Bool
 
     /// Whether to show the suffix field.
-    public var showSuffix: Bool
+    public var hideSuffix: Bool
 
     /// Called on value change (parallels `civ-change` event).
     public var onChange: ((NameValue) -> Void)?
@@ -113,8 +113,8 @@ public struct CivName: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isReadonly: Bool = false,
-        showMiddle: Bool = true,
-        showSuffix: Bool = true,
+        hideMiddle: Bool = true,
+        hideSuffix: Bool = true,
         onChange: ((NameValue) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil,
         formState: CivFormState? = nil,
@@ -133,8 +133,8 @@ public struct CivName: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
-        self.showMiddle = showMiddle
-        self.showSuffix = showSuffix
+        self.hideMiddle = hideMiddle
+        self.hideSuffix = hideSuffix
         self.onChange = onChange
         self.onAnalytics = onAnalytics
         self.formState = formState
@@ -184,7 +184,7 @@ public struct CivName: View {
             )
 
             // 5. Middle name (optional)
-            if showMiddle {
+            if hideMiddle {
                 nameField(
                     label: "Middle name",
                     text: Binding(get: { value.middle }, set: { value.middle = $0 }),
@@ -204,7 +204,7 @@ public struct CivName: View {
             )
 
             // 7. Suffix (optional)
-            if showSuffix {
+            if hideSuffix {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._0_5) {
                     Text("Suffix")
                         .font(.system(size: CivTokens.Typography.FontSize.base,
@@ -400,8 +400,8 @@ struct CivName_Previews: PreviewProvider {
                     CivName(
                         legend: "Without middle or suffix",
                         value: .constant(NameValue()),
-                        showMiddle: false,
-                        showSuffix: false
+                        hideMiddle: false,
+                        hideSuffix: false
                     )
 
                     CivName(

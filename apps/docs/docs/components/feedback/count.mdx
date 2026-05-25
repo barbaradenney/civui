@@ -69,8 +69,8 @@ Bare colored text that inherits its parent's color. Sits inside chips, list item
 Filled rounded pill. For standalone counters or notification badges.
 
 ```html
-<civ-count count="5" variant="info" count-style="primary"></civ-count>
-<civ-count count="150" max="99" variant="error" count-style="primary"></civ-count>
+<civ-count count="5" intent="info" emphasis="primary"></civ-count>
+<civ-count count="150" max="99" intent="error" emphasis="primary"></civ-count>
 ```
 
 ### Overlay
@@ -80,7 +80,7 @@ Absolute-positioned over a relative parent. Pair with [`civ-badge-anchor`](./bad
 ```html
 <button class="civ-badge-anchor">
   <civ-icon name="mail" size="lg"></civ-icon>
-  <civ-count overlay count="3" variant="error" count-style="primary" live="polite"></civ-count>
+  <civ-count overlay count="3" intent="error" emphasis="primary" live="polite"></civ-count>
 </button>
 ```
 

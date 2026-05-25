@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    emphasis: {
       type: 'enum',
       description: 'Visual emphasis. `primary` = solid filled (main page action); `secondary` = bordered; `tertiary` = text-only',
       default: 'primary',

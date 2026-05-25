@@ -27,6 +27,28 @@ props:
       title: Size
       type: string
       description: 'Preview size variant'
+    webp_src:
+      title: Webp src
+      type: string
+      description: 'URL to a WebP alternate. Forwarded to the inner `civ-image`, which wraps the `<img>` in a `<picture>` and lets the browser pick the smaller format'
+    avif_src:
+      title: Avif src
+      type: string
+      description: 'URL to an AVIF alternate. Forwarded to the inner `civ-image` for format negotiation. AVIF beats WebP on compression but has narrower browser support, so it falls through to WebP then `src`'
+    width:
+      title: Width
+      type: integer
+      description: 'Intrinsic width in px, forwarded to the inner `civ-image`. Combined with `height` (or `ratio`) reserves layout space before the bytes load so the caption does not jump (CLS prevention)'
+    height:
+      title: Height
+      type: integer
+      description: 'Intrinsic height in px, forwarded to the inner `civ-image`. Combined with `width` reserves layout space before the image loads'
+    ratio:
+      title: Ratio
+      type: string
+      enum: ['1:1', '4:3', '16:9', '21:9', '3:2', 'auto']
+      default: 'auto'
+      description: 'Aspect ratio forwarded to the inner `civ-image`. `auto` (default) defers to `width`/`height` when both are set, otherwise uses the natural image ratio once loaded'
 
 libraryOverrides:
   dependencies:

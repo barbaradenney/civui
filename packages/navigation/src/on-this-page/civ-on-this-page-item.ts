@@ -19,7 +19,7 @@ import { CivBaseElement, LightDomTextMixin, sanitizeHref } from '@civui/core';
  *   child text if not provided.
  * @prop {string} href - Fragment URL (e.g. `#installation`). The
  *   parent reads this to locate the corresponding heading element.
- * @prop {boolean} active - Set by the parent when this item's
+ * @prop {boolean} current - Set by the parent when this item's
  *   target heading is the closest one currently in the viewport.
  *   Reflects to `aria-current="location"` and a visual indicator.
  *
@@ -29,7 +29,7 @@ import { CivBaseElement, LightDomTextMixin, sanitizeHref } from '@civui/core';
 export class CivOnThisPageItem extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) href = '';
-  @property({ type: Boolean, reflect: true }) active = false;
+  @property({ type: Boolean, reflect: true }) current = false;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -65,9 +65,9 @@ export class CivOnThisPageItem extends LightDomTextMixin(CivBaseElement) {
   override render() {
     return html`
       <a
-        class="civ-on-this-page__link ${this.active ? 'civ-on-this-page__link--active' : ''}"
+        class="civ-on-this-page__link ${this.current ? 'civ-on-this-page__link--active' : ''}"
         href="${sanitizeHref(this.href)}"
-        aria-current="${this.active ? 'location' : nothing}"
+        aria-current="${this.current ? 'location' : nothing}"
         @click="${this._onClick}"
       >${this._text}</a>
     `;

@@ -33,16 +33,16 @@ const schema: ComponentSchema = {
       attribute: 'trap-focus',
       webOnly: true,
     },
-    noClickOutside: {
+    noClickOutsideClose: {
       type: 'boolean',
       description: 'Disable click-outside-to-close. Force users to the explicit dismiss affordance',
       default: false,
-      attribute: 'no-click-outside',
+      attribute: 'no-click-outside-close',
     },
   },
 
   events: {
-    'civ-action-sheet-close': {
+    'civ-close': {
       description: 'Fires when the sheet closes (via swipe-down, backdrop tap, Escape, or programmatic close)',
       detail: {},
     },

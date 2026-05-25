@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    expanded: {
+    open: {
       type: 'boolean',
       description: 'Whether the rest region is currently visible',
       default: false,
@@ -55,9 +55,9 @@ const schema: ComponentSchema = {
 
   events: {
     'civ-toggle': {
-      description: 'Fires when the expanded state changes',
+      description: 'Fires when the open state changes',
       detail: {
-        expanded: { type: 'boolean', description: 'Whether the rest region is now visible' },
+        open: { type: 'boolean', description: 'Whether the rest region is now visible' },
       },
     },
     'civ-analytics': {
@@ -65,7 +65,7 @@ const schema: ComponentSchema = {
       detail: {
         componentName: { type: 'string', description: 'Tag name of the dispatcher' },
         action: { type: 'string', description: 'The user action (`change`)' },
-        details: { type: 'object', description: '{ expanded: boolean }. The resulting state' },
+        details: { type: 'object', description: '{ open: boolean }. The resulting state' },
       },
     },
   },

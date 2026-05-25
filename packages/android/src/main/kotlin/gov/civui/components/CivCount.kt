@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 fun CivCount(
     count: Int? = null,
     max: Int = 99,
-    variant: String = "neutral",
-    countStyle: String = "secondary",
+    intent: String = "neutral",
+    emphasis: String = "secondary",
     spacing: String = "default",
     overlay: Boolean = false,
     live: String = "off",

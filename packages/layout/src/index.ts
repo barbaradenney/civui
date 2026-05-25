@@ -42,7 +42,7 @@ export { CivPageHeader } from './page-header/index.js';
 
 // Tag
 export { CivTag } from './tag/index.js';
-export type { TagVariant, TagStyle } from './tag/index.js';
+export type { TagColor, TagStyle } from './tag/index.js';
 
 // Button Group
 export { CivButtonGroup } from './button-group/index.js';

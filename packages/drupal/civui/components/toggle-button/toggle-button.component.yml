@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Toggle Button
+status: stable
+group: CivUI Actions
+description: 'Text button with two persistent labels and an aria-pressed state (Show / Hide, Mute / Unmute).'
+
+props:
+  type: object
+  properties:
+    label:
+      title: Label
+      type: string
+      description: 'Unpressed label ("Show", "Mute", "Expand").'
+    pressed_label:
+      title: Pressed label
+      type: string
+      description: 'Pressed label ("Hide", "Unmute", "Collapse").'
+    pressed:
+      title: Pressed
+      type: boolean
+      default: false
+      description: 'Reflected boolean state. Two-way bindable.'
+    variant:
+      title: Variant
+      type: string
+      enum: ['chip', 'inline']
+      default: 'chip'
+      description: 'Picks the text-btn modifier. chip = prominent gray pill; inline = transparent text-link style.'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Optional leading icon name from the CivUI icon library.'
+
+slots:
+  default:
+    title: Default
+    description: 'Child content (alternative to label prop).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

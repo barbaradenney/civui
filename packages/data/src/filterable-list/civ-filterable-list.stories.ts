@@ -74,7 +74,7 @@ export const Glossary: Story = {
   render: () => html`
     <civ-filterable-list label="Glossary of terms" no-results-message="No terms match your search. Try a different keyword or letter.">
       <div data-filterable-list-filters style="display: grid; gap: 0.75rem;">
-        <civ-text-input label="Search terms" data-filterable-list-search type="search" clearable leading-icon="search" placeholder="Search by keyword"></civ-text-input>
+        <civ-text-input label="Search terms" data-filterable-list-search type="search" clearable icon-start="search" placeholder="Search by keyword"></civ-text-input>
         <civ-filter-chip-group name="letter" mode="single" label="Filter by letter">
           <civ-filter-chip label="All" value="" selected spacing="sm"></civ-filter-chip>
           ${LETTERS.map(l => html`
@@ -111,7 +111,7 @@ export const OrganizationDirectory: Story = {
   render: () => html`
     <civ-filterable-list label="Government organizations">
       <div data-filterable-list-filters style="display: grid; gap: 0.75rem;">
-        <civ-text-input label="Search organizations" data-filterable-list-search type="search" clearable leading-icon="search" placeholder="Search by name"></civ-text-input>
+        <civ-text-input label="Search organizations" data-filterable-list-search type="search" clearable icon-start="search" placeholder="Search by name"></civ-text-input>
         <civ-filter-chip-group name="type" mode="multi" label="Filter by type">
           <civ-filter-chip label="Department" value="department"></civ-filter-chip>
           <civ-filter-chip label="Agency" value="agency"></civ-filter-chip>
@@ -163,7 +163,7 @@ export const MedicationLookup: Story = {
   render: () => html`
     <civ-filterable-list label="Find a medication" no-results-message="No medications match. Try a different spelling or brand name.">
       <div data-filterable-list-filters>
-        <civ-text-input label="Search medications" hint="Search by drug name, brand name, or condition" data-filterable-list-search type="search" clearable leading-icon="search" placeholder="Type a medication name"></civ-text-input>
+        <civ-text-input label="Search medications" hint="Search by drug name, brand name, or condition" data-filterable-list-search type="search" clearable icon-start="search" placeholder="Type a medication name"></civ-text-input>
       </div>
       <civ-list dividers>
         <civ-list-item data-filter="Acetaminophen Tylenol pain fever headache" heading="Acetaminophen"
@@ -210,7 +210,7 @@ export const PeopleDirectory: Story = {
   render: () => html`
     <civ-filterable-list label="Staff directory">
       <div data-filterable-list-filters style="display: grid; gap: 0.75rem;">
-        <civ-text-input label="Search staff" data-filterable-list-search type="search" clearable leading-icon="search" placeholder="Search by name or role"></civ-text-input>
+        <civ-text-input label="Search staff" data-filterable-list-search type="search" clearable icon-start="search" placeholder="Search by name or role"></civ-text-input>
         <civ-filter-chip-group name="dept" mode="single" label="Filter by department">
           <civ-filter-chip label="All" value="" selected></civ-filter-chip>
           <civ-filter-chip label="Engineering" value="engineering"></civ-filter-chip>
@@ -248,7 +248,7 @@ export const SearchOnly: Story = {
   render: () => html`
     <civ-filterable-list label="FAQ">
       <div data-filterable-list-filters>
-        <civ-text-input label="Search frequently asked questions" data-filterable-list-search type="search" clearable leading-icon="search" placeholder="Type a keyword"></civ-text-input>
+        <civ-text-input label="Search frequently asked questions" data-filterable-list-search type="search" clearable icon-start="search" placeholder="Type a keyword"></civ-text-input>
       </div>
       <civ-list dividers>
         <civ-list-item data-filter="How do I apply for benefits" heading="How do I apply for benefits?" description="You can apply online, by mail, or in person at your local regional office."></civ-list-item>

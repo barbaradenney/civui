@@ -100,11 +100,11 @@ Padding and per-variant rail color stay identical across both
 weights — swapping `callout-style` doesn't reflow surrounding layout.
 
 ```html
-<civ-callout variant="info">
+<civ-callout intent="info">
   <p>5px rail — the established treatment.</p>
 </civ-callout>
 
-<civ-callout variant="info" callout-style="secondary">
+<civ-callout intent="info" emphasis="secondary">
   <p>3px rail — quieter affordance for nested or stacked placements.</p>
 </civ-callout>
 ```
@@ -145,12 +145,12 @@ accepts the same children via the same Light-DOM mixin pattern.
 </civ-callout>
 
 <!-- Semantic variant -->
-<civ-callout variant="warning">
+<civ-callout intent="warning">
   <p>Your session will expire in 15 minutes. Save your progress.</p>
 </civ-callout>
 
 <!-- Rich content -->
-<civ-callout variant="info">
+<civ-callout intent="info">
   <p>To finish this section, have ready:</p>
   <ul>
     <li>Your Social Security number</li>
@@ -159,7 +159,7 @@ accepts the same children via the same Light-DOM mixin pattern.
 </civ-callout>
 
 <!-- As a labelled landmark -->
-<civ-callout variant="warning" role="region" aria-labelledby="notice-heading">
+<civ-callout intent="warning" role="region" aria-labelledby="notice-heading">
   <p id="notice-heading" class="civ-font-bold">Important notice</p>
   <p>This region is announced as a landmark to assistive tech.</p>
 </civ-callout>

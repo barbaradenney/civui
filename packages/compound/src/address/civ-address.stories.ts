@@ -15,7 +15,7 @@ const meta: Meta = {
     error: { control: 'text' },
     required: { control: 'boolean' },
     disabled: { control: 'boolean' },
-    showStreet2: { control: 'boolean' },
+    hideStreet2: { control: 'boolean' },
     showStreet3: { control: 'boolean' },
     showCountry: { control: 'boolean' },
   },

@@ -78,7 +78,7 @@ describe('normalizeType', () => {
 
 describe('camelToSnake', () => {
   it('converts camelCase to snake_case', () => {
-    expect(camelToSnake('showMiddle')).toBe('show_middle');
+    expect(camelToSnake('hideMiddle')).toBe('hide_middle');
     expect(camelToSnake('headingLevel')).toBe('heading_level');
   });
 
@@ -373,7 +373,7 @@ props:
   properties:
     label:
       type: string
-    show_middle:
+    hide_middle:
       type: boolean
       default: false
     max_count:
@@ -383,7 +383,7 @@ slots:
     title: Default
 `;
     const names = parseDrupalPropNamesFromYaml(yaml).sort();
-    expect(names).toEqual(['label', 'max_count', 'show_middle']);
+    expect(names).toEqual(['hide_middle', 'label', 'max_count']);
   });
 
   it('does not bleed into the slots block when it shares ancestor indentation', () => {

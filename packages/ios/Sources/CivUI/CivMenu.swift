@@ -17,13 +17,13 @@ public struct CivMenu: View {
     /// align
     public var align: String
 
-    /// Called on `civ-menu-open`.
+    /// Called on `civ-open`.
     public var onMenuOpen: (() -> Void)?
 
-    /// Called on `civ-menu-close`.
+    /// Called on `civ-close`.
     public var onMenuClose: (() -> Void)?
 
-    /// Called on `civ-menu-select`.
+    /// Called on `civ-select`.
     public var onMenuSelect: (() -> Void)?
 
     /// Called for analytics tracking (parallels civ-analytics).

@@ -28,10 +28,10 @@ public struct CivBadge: View {
     public var dot: Bool
 
     /// Color variant (e.g., "neutral", "error", "success").
-    public var variant: String
+    public var intent: String
 
     /// Badge style (e.g., "default", "outline").
-    public var badgeStyle: String
+    public var emphasis: String
 
     /// Spacing variant.
     public var spacing: String
@@ -59,8 +59,8 @@ public struct CivBadge: View {
         count: Int? = nil,
         max: Int = 99,
         dot: Bool = false,
-        variant: String = "neutral",
-        badgeStyle: String = "default",
+        intent: String = "neutral",
+        emphasis: String = "default",
         spacing: String = "default",
         overlay: Bool = false,
         withIcon: Bool = false,
@@ -71,8 +71,8 @@ public struct CivBadge: View {
         self.count = count
         self.max = max
         self.dot = dot
-        self.variant = variant
-        self.badgeStyle = badgeStyle
+        self.intent = intent
+        self.emphasis = emphasis
         self.spacing = spacing
         self.overlay = overlay
         self.withIcon = withIcon

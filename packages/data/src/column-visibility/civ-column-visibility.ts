@@ -137,13 +137,13 @@ export class CivColumnVisibility extends CivBaseElement {
         trigger-haspopup="true"
         label="${t('columnVisibilityPanelLabel')}"
         no-tab-close
-        @civ-popover-open="${this._onPopoverOpen}"
-        @civ-popover-close="${this._onPopoverClose}"
+        @civ-open="${this._onPopoverOpen}"
+        @civ-close="${this._onPopoverClose}"
       >
         <civ-action-button
           data-civ-popover-trigger
           class="civ-column-visibility__trigger"
-          variant="tertiary"
+          emphasis="tertiary"
           icon-start="view-column"
           icon-end="chevron-down"
           label="${labelText}"

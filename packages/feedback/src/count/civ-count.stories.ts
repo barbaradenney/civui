@@ -14,7 +14,7 @@ const meta: Meta = {
       control: 'select',
       options: ['info', 'warning', 'error', 'success', 'neutral'],
     },
-    countStyle: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary'],
       name: 'count-style',
@@ -46,7 +46,7 @@ export const Default: Story = {
   args: {
     count: 24,
     variant: 'neutral',
-    countStyle: 'secondary',
+    emphasis: 'secondary',
     spacing: 'default',
     overlay: false,
   },
@@ -54,8 +54,8 @@ export const Default: Story = {
     <civ-count
       count="${args.count}"
       max="${args.max ?? 99}"
-      variant="${args.variant}"
-      count-style="${args.countStyle || 'secondary'}"
+      intent="${args.variant}"
+      emphasis="${args.emphasis || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       live="${args.live || 'off'}"
       ?overlay="${args.overlay}"
@@ -78,17 +78,17 @@ export const Styles: Story = {
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Secondary (default — text only)</p>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
           <span>Inbox <civ-count count="12"></civ-count></span>
-          <span>Errors <civ-count count="3" variant="error"></civ-count></span>
-          <span>Approved <civ-count count="42" variant="success"></civ-count></span>
+          <span>Errors <civ-count count="3" intent="error"></civ-count></span>
+          <span>Approved <civ-count count="42" intent="success"></civ-count></span>
         </div>
       </div>
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Primary (filled pill)</p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-          <civ-count count="5" variant="info" count-style="primary"></civ-count>
-          <civ-count count="3" variant="error" count-style="primary"></civ-count>
-          <civ-count count="42" variant="success" count-style="primary"></civ-count>
-          <civ-count count="150" max="99" variant="error" count-style="primary"></civ-count>
+          <civ-count count="5" intent="info" emphasis="primary"></civ-count>
+          <civ-count count="3" intent="error" emphasis="primary"></civ-count>
+          <civ-count count="42" intent="success" emphasis="primary"></civ-count>
+          <civ-count count="150" max="99" intent="error" emphasis="primary"></civ-count>
         </div>
       </div>
     </div>
@@ -106,19 +106,19 @@ export const Spacing: Story = {
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
         <div style="display: flex; gap: 1rem; align-items: center;">
-          <span>Inbox <civ-count count="12" variant="info"></civ-count></span>
-          <span>Errors <civ-count count="3" variant="error"></civ-count></span>
-          <civ-count count="12" count-style="primary" variant="info"></civ-count>
-          <civ-count count="42" count-style="primary" variant="error"></civ-count>
+          <span>Inbox <civ-count count="12" intent="info"></civ-count></span>
+          <span>Errors <civ-count count="3" intent="error"></civ-count></span>
+          <civ-count count="12" emphasis="primary" intent="info"></civ-count>
+          <civ-count count="42" emphasis="primary" intent="error"></civ-count>
         </div>
       </div>
       <div>
         <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
         <div style="display: flex; gap: 1rem; align-items: center;">
-          <span>Inbox <civ-count count="12" variant="info" spacing="sm"></civ-count></span>
-          <span>Errors <civ-count count="3" variant="error" spacing="sm"></civ-count></span>
-          <civ-count count="12" count-style="primary" variant="info" spacing="sm"></civ-count>
-          <civ-count count="42" count-style="primary" variant="error" spacing="sm"></civ-count>
+          <span>Inbox <civ-count count="12" intent="info" spacing="sm"></civ-count></span>
+          <span>Errors <civ-count count="3" intent="error" spacing="sm"></civ-count></span>
+          <civ-count count="12" emphasis="primary" intent="info" spacing="sm"></civ-count>
+          <civ-count count="42" emphasis="primary" intent="error" spacing="sm"></civ-count>
         </div>
       </div>
     </div>
@@ -128,10 +128,10 @@ export const Spacing: Story = {
 export const Overflow: Story = {
   render: () => html`
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <civ-count count="9" max="9" count-style="primary" variant="error"></civ-count>
-      <civ-count count="99" count-style="primary" variant="error"></civ-count>
-      <civ-count count="150" count-style="primary" variant="error"></civ-count>
-      <civ-count count="9999" max="999" count-style="primary" variant="error"></civ-count>
+      <civ-count count="9" max="9" emphasis="primary" intent="error"></civ-count>
+      <civ-count count="99" emphasis="primary" intent="error"></civ-count>
+      <civ-count count="150" emphasis="primary" intent="error"></civ-count>
+      <civ-count count="9999" max="999" emphasis="primary" intent="error"></civ-count>
     </div>
   `,
 };
@@ -149,7 +149,7 @@ export const NotificationOverlay: Story = {
     <div style="display: flex; gap: 1.5rem; align-items: center;">
       <span class="civ-badge-anchor">
         <civ-icon name="mail" size="2xl"></civ-icon>
-        <civ-count overlay count="3" variant="error" count-style="primary"></civ-count>
+        <civ-count overlay count="3" intent="error" emphasis="primary"></civ-count>
       </span>
     </div>
   `,

@@ -163,14 +163,14 @@ export const AppointmentWithSelection: Story = {
     <div style="max-width: 480px;">
       <p style="margin: 0 0 0.5rem; font-weight: 700;">Monday, May 5</p>
       <civ-filter-chip-group mode="single" label="Available times for May 5">
-        <civ-filter-chip label="9:00 AM" value="0900" spacing="sm" chip-style="primary"></civ-filter-chip>
-        <civ-filter-chip label="9:30 AM" value="0930" spacing="sm" chip-style="primary"></civ-filter-chip>
-        <civ-filter-chip label="10:00 AM" value="1000" spacing="sm" chip-style="primary" disabled></civ-filter-chip>
-        <civ-filter-chip label="10:30 AM" value="1030" spacing="sm" chip-style="primary" selected></civ-filter-chip>
-        <civ-filter-chip label="11:00 AM" value="1100" spacing="sm" chip-style="primary"></civ-filter-chip>
-        <civ-filter-chip label="1:00 PM" value="1300" spacing="sm" chip-style="primary"></civ-filter-chip>
-        <civ-filter-chip label="1:30 PM" value="1330" spacing="sm" chip-style="primary" disabled></civ-filter-chip>
-        <civ-filter-chip label="2:00 PM" value="1400" spacing="sm" chip-style="primary"></civ-filter-chip>
+        <civ-filter-chip label="9:00 AM" value="0900" spacing="sm" emphasis="primary"></civ-filter-chip>
+        <civ-filter-chip label="9:30 AM" value="0930" spacing="sm" emphasis="primary"></civ-filter-chip>
+        <civ-filter-chip label="10:00 AM" value="1000" spacing="sm" emphasis="primary" disabled></civ-filter-chip>
+        <civ-filter-chip label="10:30 AM" value="1030" spacing="sm" emphasis="primary" selected></civ-filter-chip>
+        <civ-filter-chip label="11:00 AM" value="1100" spacing="sm" emphasis="primary"></civ-filter-chip>
+        <civ-filter-chip label="1:00 PM" value="1300" spacing="sm" emphasis="primary"></civ-filter-chip>
+        <civ-filter-chip label="1:30 PM" value="1330" spacing="sm" emphasis="primary" disabled></civ-filter-chip>
+        <civ-filter-chip label="2:00 PM" value="1400" spacing="sm" emphasis="primary"></civ-filter-chip>
       </civ-filter-chip-group>
     </div>
   `,
@@ -180,9 +180,9 @@ export const PrimaryStyleGroup: Story = {
   name: 'Primary-style chips',
   render: () => html`
     <civ-filter-chip-group mode="multi" label="Filter by category">
-      <civ-filter-chip label="Healthcare" value="health" chip-style="primary" selected></civ-filter-chip>
-      <civ-filter-chip label="Education" value="education" chip-style="primary"></civ-filter-chip>
-      <civ-filter-chip label="Housing" value="housing" chip-style="primary" selected></civ-filter-chip>
+      <civ-filter-chip label="Healthcare" value="health" emphasis="primary" selected></civ-filter-chip>
+      <civ-filter-chip label="Education" value="education" emphasis="primary"></civ-filter-chip>
+      <civ-filter-chip label="Housing" value="housing" emphasis="primary" selected></civ-filter-chip>
     </civ-filter-chip-group>
   `,
 };

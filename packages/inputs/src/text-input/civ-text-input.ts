@@ -85,24 +85,24 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
    * Ignored when `prefix` (or the currency mask) is set — the prefix box
    * occupies the leading edge.
    */
-  @property({ type: String, attribute: 'leading-icon' }) leadingIcon = '';
+  @property({ type: String, attribute: 'icon-start' }) iconStart = '';
 
   /**
    * Accessible label for the leading icon. When set, the icon announces
    * to screen readers as an `img` with this label. When omitted (default),
    * the icon is hidden from assistive tech (decorative).
    */
-  @property({ type: String, attribute: 'leading-icon-label' }) leadingIconLabel = '';
+  @property({ type: String, attribute: 'icon-start-label' }) iconStartLabel = '';
 
   /**
    * Decorative icon rendered inside the input on the trailing edge.
    * Ignored when `suffix` is set, or when `clearable` shows the clear
    * button (i.e. there is a non-empty value).
    */
-  @property({ type: String, attribute: 'trailing-icon' }) trailingIcon = '';
+  @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
 
   /** Accessible label for the trailing icon. See `leading-icon-label`. */
-  @property({ type: String, attribute: 'trailing-icon-label' }) trailingIconLabel = '';
+  @property({ type: String, attribute: 'icon-end-label' }) iconEndLabel = '';
 
   /**
    * Custom mask pattern string. Slot syntax:
@@ -379,8 +379,8 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
     // Inline icons defer to prefix/suffix and the clear button on the
     // same edge. The password reveal toggle is no longer inset, so it
     // doesn't suppress the trailing icon.
-    const showLeadingIcon = !!this.leadingIcon && !hasPrefix;
-    const showTrailingIcon = !!this.trailingIcon && !hasSuffix && !needsClearButton;
+    const showLeadingIcon = !!this.iconStart && !hasPrefix;
+    const showTrailingIcon = !!this.iconEnd && !hasSuffix && !needsClearButton;
     // Only the clear button stays inset on the trailing edge. When
     // present (and no suffix addon owns that edge) the input needs
     // trailing padding so user-entered text doesn't slide under the
@@ -641,11 +641,11 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
         ? html`<span class="civ-input-suffix" aria-hidden="true">${this.suffix}</span>`
         : nothing}${showLeadingIcon
         ? html`<span class="civ-input-icon civ-input-icon--leading"
-            ><civ-icon name="${this.leadingIcon}" label="${this.leadingIconLabel || nothing}"></civ-icon
+            ><civ-icon name="${this.iconStart}" label="${this.iconStartLabel || nothing}"></civ-icon
           ></span>`
         : nothing}${showTrailingIcon
         ? html`<span class="civ-input-icon civ-input-icon--trailing"
-            ><civ-icon name="${this.trailingIcon}" label="${this.trailingIconLabel || nothing}"></civ-icon
+            ><civ-icon name="${this.iconEnd}" label="${this.iconEndLabel || nothing}"></civ-icon
           ></span>`
         : nothing}</div>`;
   }

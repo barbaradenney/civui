@@ -132,7 +132,7 @@ export class CivPagination extends CivBaseElement {
           <li>
             <civ-action-button
               class="civ-pagination__prev"
-              variant="tertiary"
+              emphasis="tertiary"
               icon-start="chevron-left"
               label="${t('paginationPreviousLabel')}"
               ?disabled="${current === 1}"
@@ -145,7 +145,7 @@ export class CivPagination extends CivBaseElement {
           <li>
             <civ-action-button
               class="civ-pagination__next"
-              variant="tertiary"
+              emphasis="tertiary"
               icon-end="chevron-right"
               label="${t('paginationNextLabel')}"
               ?disabled="${current === totalPages}"
@@ -171,7 +171,7 @@ export class CivPagination extends CivBaseElement {
       <li>
         <civ-action-button
           class="civ-pagination__page"
-          variant="${isCurrent ? 'primary' : 'tertiary'}"
+          emphasis="${isCurrent ? 'primary' : 'tertiary'}"
           label="${String(p)}"
           aria-label="${isCurrent ? currentLabel : pageLabel}"
           ?current="${isCurrent}"

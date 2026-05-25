@@ -19,7 +19,7 @@ props:
       title: Value
       type: string
       description: 'JSON-encoded address value'
-    show_street2:
+    hide_street2:
       title: Show street 2
       type: boolean
       default: false

@@ -25,9 +25,9 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'step-title',
     },
-    size: {
+    emphasis: {
       type: 'enum',
-      description: 'Visual size. `primary` adds dividers + large heading for standalone page-header use; `secondary` is the default mid-page size; `tertiary` is compact for use alongside other progress indicators',
+      description: 'Visual emphasis level (renamed from `size`; the prop never controlled pixel size). `primary` adds dividers + large heading for standalone page-header use; `secondary` is the default mid-page emphasis; `tertiary` is compact for use alongside other progress indicators',
       default: 'secondary',
       values: ['primary', 'secondary', 'tertiary'],
     },

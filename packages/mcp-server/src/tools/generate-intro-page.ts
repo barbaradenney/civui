@@ -24,8 +24,8 @@ export function generateIntroPage(form: GovFormDefinition): IntroPageResult {
   <p class="civ-mb-6">Use this form to apply for VA benefits. If you're signed in, we can prefill some of your information to save you time.</p>
 
   <div class="civ-button-row">
-    <civ-button label="Sign in and start" variant="primary" href="#" data-start-signed-in></civ-button>
-    <civ-button label="Start without signing in" variant="tertiary" href="#" data-start-guest></civ-button>
+    <civ-button label="Sign in and start" emphasis="primary" href="#" data-start-signed-in></civ-button>
+    <civ-button label="Start without signing in" emphasis="tertiary" href="#" data-start-guest></civ-button>
   </div>
 </div>`;
 

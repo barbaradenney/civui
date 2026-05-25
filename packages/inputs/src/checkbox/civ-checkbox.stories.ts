@@ -212,7 +212,7 @@ Only takes effect with \`tile\` (the default) and vertical orientation.
     },
   },
   render: () => html`
-    <civ-checkbox-group legend="Race" hint="Select one or more" name="race" variant="list">
+    <civ-checkbox-group legend="Race" hint="Select one or more" name="race" layout="list">
       <civ-checkbox label="American Indian or Alaska Native" value="aian"></civ-checkbox>
       <civ-checkbox label="Asian" value="asian"></civ-checkbox>
       <civ-checkbox label="Black or African American" value="black"></civ-checkbox>

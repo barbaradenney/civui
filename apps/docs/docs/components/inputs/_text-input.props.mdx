@@ -21,10 +21,10 @@
 | `suffix` | `string` | `''` | Inline suffix label rendered to the right of the input (e.g. ".com"). Mutually exclusive with trailingIcon and the clear button |
 | `clearable` | `boolean` | `false` | When true and the value is non-empty, renders a clear button on the trailing edge |
 | `reveal-password` | `boolean` | `false` | When true and type="password", renders a Show / Hide toggle in the helper row below the input that flips the rendered input type between "password" and "text". The host's `type` prop stays `password` so the field's semantic identity does not change. Suppressed for non-password types. Coexists with `clearable` — clear stays inset, reveal sits below |
-| `leading-icon` | `string` | `''` | Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set |
-| `leading-icon-label` | `string` | `''` | Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden) |
-| `trailing-icon` | `string` | `''` | Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing |
-| `trailing-icon-label` | `string` | `''` | Accessible label for the trailing icon. When omitted, icon is decorative |
+| `icon-start` | `string` | `''` | Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set |
+| `icon-start-label` | `string` | `''` | Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden) |
+| `icon-end` | `string` | `''` | Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing |
+| `icon-end-label` | `string` | `''` | Accessible label for the trailing icon. When omitted, icon is decorative |
 | `decimals` | `number` | `2` | Currency-mask only: decimal places to keep ("1,234.56" with 2, "1,234" with 0). `0` is whole-dollar mode for tax-style fields (W-4 line 4c, VA benefits) |
 | `min` | `number` | — | Currency-mask only: minimum allowed amount. Out-of-range values surface an inline error on blur |
 | `max` | `number` | — | Currency-mask only: maximum allowed amount. Out-of-range values surface an inline error on blur |

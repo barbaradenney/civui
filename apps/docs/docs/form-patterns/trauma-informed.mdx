@@ -161,17 +161,13 @@ When using `<civ-repeater mode="form-steps">` for sensitive content (e.g., addin
     <civ-name legend="Their name" name="name" required></civ-name>
   </div>
   <div data-step-label="Relationship">
-    <!--
-      In Lit templates, hide the redundant name with the `.showName` property
-      binding: `.showName=${false}`. The boolean `show-name` attribute can
-      only enable (the default) — there's no HTML way to flip it off.
-    -->
     <civ-relationship
       legend="Your relationship"
       preset="survivor"
       deceased-assumed
       name="rel"
       required
+      hide-name
     ></civ-relationship>
   </div>
 </civ-repeater>

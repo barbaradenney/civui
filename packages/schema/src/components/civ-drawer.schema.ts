@@ -15,7 +15,7 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
-    position: {
+    align: {
       type: 'enum',
       description: 'Which viewport edge the drawer slides in from. `start` = left in LTR, right in RTL; `end` = right in LTR, left in RTL. Uses logical properties so layouts mirror automatically.',
       default: 'start',
@@ -76,7 +76,7 @@ const schema: ComponentSchema = {
   },
 
   events: {
-    'civ-drawer-close': {
+    'civ-close': {
       description: 'Fires when the drawer closes (via close button, backdrop, Escape, or programmatic close)',
       detail: {},
     },

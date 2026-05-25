@@ -80,8 +80,8 @@ fun CivName(
     required: Boolean = false,
     disabled: Boolean = false,
     readonly: Boolean = false,
-    showMiddle: Boolean = true,
-    showSuffix: Boolean = true,
+    hideMiddle: Boolean = true,
+    hideSuffix: Boolean = true,
     onChange: ((NameValue) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     name: String = "",
@@ -159,7 +159,7 @@ fun CivName(
         )
 
         // 5. Middle name (optional)
-        if (showMiddle) {
+        if (hideMiddle) {
             NameTextField(
                 label = "Middle name",
                 value = value.middle,
@@ -195,7 +195,7 @@ fun CivName(
         )
 
         // 7. Suffix (optional)
-        if (showSuffix) {
+        if (hideSuffix) {
             var expanded by remember { mutableStateOf(false) }
 
             Column(modifier = Modifier.padding(bottom = CivTokens.Spacing._2)) {
@@ -348,8 +348,8 @@ private fun CivNamePreview() {
             legend = "Without middle or suffix",
             value = NameValue(),
             onValueChange = {},
-            showMiddle = false,
-            showSuffix = false,
+            hideMiddle = false,
+            hideSuffix = false,
         )
 
         CivName(

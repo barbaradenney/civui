@@ -1,0 +1,9 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `decimals` | `number` | `2` | Decimal places to keep. `2` (default) for standard cents formatting ("1,234.56"). `0` for whole-dollar mode ("1,234") — used on tax-style fields where cents are not collected |
+| `min` | `number` | — | Minimum allowed amount. Out-of-range values surface an inline error on blur. Undefined (default) means no floor |
+| `max` | `number` | — | Maximum allowed amount. Out-of-range values surface an inline error on blur. Undefined (default) means no ceiling |
+| `allow-negative` | `boolean` | `false` | Accept negative amounts. Defaults to false (the `currency` validator rejects values below zero). Set true for refund / adjustment / expense-report fields where a debit makes sense |

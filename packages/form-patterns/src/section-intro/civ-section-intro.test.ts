@@ -46,7 +46,7 @@ describe('civ-section-intro', () => {
     await elementUpdated(el);
     const callout = el.querySelector('civ-callout');
     expect(callout).not.toBeNull();
-    expect(callout!.getAttribute('variant')).toBe('warning');
+    expect(callout!.getAttribute('intent')).toBe('warning');
   });
 
   it('maps info and neutral tones to the default callout variant', async () => {
@@ -58,8 +58,8 @@ describe('civ-section-intro', () => {
       const callout = el.querySelector('civ-callout')!;
       // useDefault: true on civ-callout suppresses the initial-value
       // reflection — the attribute is absent so the base CSS rule applies.
-      expect(callout.getAttribute('variant')).toBeNull();
-      expect((callout as HTMLElement & { variant: string }).variant).toBe('default');
+      expect(callout.getAttribute('intent')).toBeNull();
+      expect((callout as HTMLElement & { intent: string }).intent).toBe('default');
     }
   });
 

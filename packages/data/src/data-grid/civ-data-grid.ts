@@ -1306,11 +1306,11 @@ export class CivDataGrid extends CivBaseElement {
       <td class="civ-data-grid__td civ-data-grid__td--actions">
         <civ-menu
           label="${label}"
-          @civ-menu-select="${(e: Event) => this._onActionSelect(e, row)}"
+          @civ-select="${(e: Event) => this._onActionSelect(e, row)}"
         >
           <civ-action-button
             data-civ-menu-trigger
-            variant="tertiary"
+            emphasis="tertiary"
             icon-start="more-vert"
             icon-only
             label="${label}"

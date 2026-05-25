@@ -12,12 +12,12 @@ import SwiftUI
 public struct CivCallout: View {
     /// Accent border color: "default" (primary), "info", "warning",
     /// "error", or "success".
-    public var variant: String
+    public var intent: String
 
     public init(
-        variant: String = "default"
+        intent: String = "default"
     ) {
-        self.variant = variant
+        self.intent = intent
     }
 
     public var body: some View {

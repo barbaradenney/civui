@@ -42,7 +42,7 @@ describe('civ-read-more', () => {
         <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
-    expect(el.expanded).toBe(false);
+    expect(el.open).toBe(false);
     const rest = el.querySelector('.civ-read-more__rest') as HTMLElement;
     expect(rest.hasAttribute('hidden')).toBe(true);
   });
@@ -58,7 +58,7 @@ describe('civ-read-more', () => {
     button.click();
     await elementUpdated(el);
 
-    expect(el.expanded).toBe(true);
+    expect(el.open).toBe(true);
     const rest = el.querySelector('.civ-read-more__rest') as HTMLElement;
     expect(rest.hasAttribute('hidden')).toBe(false);
   });
@@ -109,7 +109,7 @@ describe('civ-read-more', () => {
     const button = el.querySelector('button')!;
     expect(button.textContent).toContain('Read more');
 
-    el.expanded = true;
+    el.open = true;
     await elementUpdated(el);
     expect(button.textContent).toContain('Read less');
   });
@@ -127,7 +127,7 @@ describe('civ-read-more', () => {
     expect(button.textContent).toContain('Read more…');
     expect(button.textContent).not.toContain('Read more...');
 
-    el.expanded = true;
+    el.open = true;
     await elementUpdated(el);
     expect(button.textContent).not.toContain('…');
   });
@@ -141,7 +141,7 @@ describe('civ-read-more', () => {
     const button = el.querySelector('button')!;
     expect(button.textContent).toContain('Show details');
 
-    el.expanded = true;
+    el.open = true;
     await elementUpdated(el);
     expect(button.textContent).toContain('Hide details');
   });
@@ -159,7 +159,7 @@ describe('civ-read-more', () => {
     expect(icon!.getAttribute('name')).toBe('chevron-down');
   });
 
-  it('dispatches civ-toggle with { expanded } on user toggle', async () => {
+  it('dispatches civ-toggle with { open } on user toggle', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more><p>Teaser</p></civ-read-more>
     `);
@@ -171,7 +171,7 @@ describe('civ-read-more', () => {
 
     expect(handler).toHaveBeenCalledTimes(1);
     const event = handler.mock.calls[0][0] as CustomEvent;
-    expect(event.detail.expanded).toBe(true);
+    expect(event.detail.open).toBe(true);
   });
 
   it('civ-toggle does NOT bubble or compose (does not pollute form listeners)', async () => {
@@ -188,26 +188,26 @@ describe('civ-read-more', () => {
     document.body.removeEventListener('civ-toggle', outerHandler as EventListener);
   });
 
-  it('renders with expanded=true from the attribute', async () => {
+  it('renders with open=true from the attribute', async () => {
     const el = await fixture<CivReadMore>(`
-      <civ-read-more expanded>
+      <civ-read-more open>
         <p>Teaser</p>
         <div data-rest><p>Rest</p></div>
       </civ-read-more>
     `);
-    expect(el.expanded).toBe(true);
+    expect(el.open).toBe(true);
     const rest = el.querySelector('.civ-read-more__rest') as HTMLElement;
     expect(rest.hasAttribute('hidden')).toBe(false);
     expect(el.querySelector('button')!.getAttribute('aria-expanded')).toBe('true');
   });
 
-  it('reflects the expanded property back to the host attribute', async () => {
+  it('reflects the open property back to the host attribute', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more><p>Teaser</p></civ-read-more>
     `);
-    el.expanded = true;
+    el.open = true;
     await elementUpdated(el);
-    expect(el.hasAttribute('expanded')).toBe(true);
+    expect(el.hasAttribute('open')).toBe(true);
   });
 
   it('applies the shared toggle-button sm size class', async () => {
@@ -232,9 +232,9 @@ describe('civ-read-more', () => {
     expect(trigger.classList.contains('civ-text-btn--chip')).toBe(true);
   });
 
-  it('chevron icon matches the expanded-state rotation selector', async () => {
+  it('chevron icon matches the open-state rotation selector', async () => {
     // Locks the CSS contract: the rule
-    // `civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down']`
+    // `civ-read-more[open] > .civ-read-more__trigger > civ-icon[name='chevron-down']`
     // depends on (1) the host carrying the `expanded` attribute via
     // reflection, (2) the trigger being a direct child of the host,
     // and (3) the icon being a direct child of the trigger with the
@@ -244,11 +244,11 @@ describe('civ-read-more', () => {
     // the structural wrapper, so there's no nested element to carry
     // a `.civ-read-more` class.)
     const el = await fixture<CivReadMore>(`
-      <civ-read-more icon="chevron-down" expanded><p>Teaser</p></civ-read-more>
+      <civ-read-more icon="chevron-down" open><p>Teaser</p></civ-read-more>
     `);
     const icon = el.querySelector('civ-icon')!;
     expect(icon.matches(
-      'civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name="chevron-down"]'
+      'civ-read-more[open] > .civ-read-more__trigger > civ-icon[name="chevron-down"]'
     )).toBe(true);
   });
 
@@ -326,7 +326,7 @@ describe('civ-read-more', () => {
 
     it('reflects no-fade-trigger to the host attribute when set', async () => {
       // The CSS selector that drives the fade is
-      // `civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger])`
+      // `civ-read-more:not([open]):not([inline]):not([no-fade-trigger])`
       // — that's a host-attribute selector, so the property MUST
       // reflect or the CSS won't pick up the opt-out.
       const el = await fixture<CivReadMore>(`

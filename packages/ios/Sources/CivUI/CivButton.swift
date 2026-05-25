@@ -30,7 +30,7 @@ public struct CivButton: View {
     public let label: String
 
     /// Visual variant (primary, secondary, tertiary, danger).
-    public var variant: ButtonVariant
+    public var emphasis: ButtonVariant
 
     /// Whether the button is disabled.
     public var isDisabled: Bool
@@ -74,7 +74,7 @@ public struct CivButton: View {
 
     public init(
         label: String,
-        variant: ButtonVariant = .primary,
+        emphasis: ButtonVariant = .primary,
         isDisabled: Bool = false,
         iconStart: String = "",
         iconEnd: String = "",
@@ -88,7 +88,7 @@ public struct CivButton: View {
         loadingLabel: String = "Loading…"
     ) {
         self.label = label
-        self.variant = variant
+        self.emphasis = emphasis
         self.isDisabled = isDisabled
         self.iconStart = iconStart
         self.iconEnd = iconEnd

@@ -21,11 +21,6 @@ export function getRow(el: Element, index: number): Element | null {
   return getRows(el).item(index);
 }
 
-/** The rows container — the element that holds all row cards. */
-export function getRowsContainer(el: Element): Element | null {
-  return el.querySelector('[data-civ-repeater-rows]');
-}
-
 /** The Add button (real `<civ-button href>` in route mode, or `<civ-button>` in inline/form-steps). */
 export function getAddButton(el: Element): Element | null {
   return el.querySelector(':scope > fieldset > civ-button');
@@ -42,16 +37,6 @@ export function getRowRemoveButton(el: Element, index: number): Element | null {
  */
 export function getRowEditLink(el: Element, index: number): Element | null {
   return getRow(el, index)?.querySelector('civ-action-button[href]') ?? null;
-}
-
-/** The summary text element inside a row (visible content area). */
-export function getRowSummary(el: Element, index: number): Element | null {
-  return getRow(el, index)?.querySelector('.civ-list-item__content') ?? null;
-}
-
-/** The row heading (`<h2>`/`<h3>` etc.) inside a row. */
-export function getRowHeading(el: Element, index: number): Element | null {
-  return getRow(el, index)?.querySelector('.civ-repeater-row-heading') ?? null;
 }
 
 /** Number of rows currently rendered. */

@@ -312,10 +312,6 @@
     @apply civ-py-2 civ-px-6 civ-text-sm;
   }
 
-  .civ-list--sm [data-civ-list-item-heading-slot] > *,
-  .civ-list--sm .civ-list-item-heading-prop {
-  }
-
   .civ-list--sm [data-civ-list-item-description-slot] > * {
     @apply civ-text-xs;
   }
@@ -686,49 +682,12 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Shared close/clear/dismiss button — used across inputs, modals, alerts,
-     chips. The button is square (1.5em × 1.5em) so `rounded-full` paints
-     the hover background as a perfect circle, which reads cleanly when
-     the button overlays an input or sits adjacent to other elements. */
-  .civ-close-btn {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.5em;
-    height: 1.5em;
-    padding: 0;
-    font-size: inherit;
-  }
-  /* @media (hover: hover) gates :hover styling to devices with a primary
-     pointer that can hover (mouse, trackpad, stylus). On touch devices
-     :hover fires on tap and sticks until another tap elsewhere, leaving
-     a "phantom hover" state on whichever button was last touched. */
-  @media (hover: hover) {
-    .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-close-btn:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-
   /* Escape-hatch slot for consumer-provided trailing action buttons (copy,
      paste, generate, scan, etc.). The slot container is flush with the
-     input — no border, no padding — and consumers apply `.civ-input-action`
-     to the button itself for chrome that matches `.civ-close-btn`. */
+     input — no border, no padding. */
   .civ-input-action-slot {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     flex-shrink: 0;
-  }
-
-  .civ-input-action {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.75em;
-    height: 1.75em;
-    padding: 0;
-    font-size: inherit;
   }
 
   /* ── Input helper row ─────────────────────────────────────────
@@ -812,7 +771,7 @@
     white-space: nowrap;
   }
   @media (hover: hover) {
-    .civ-text-btn--inline:hover { background: rgba(0, 0, 0, 0.05); }
+    .civ-text-btn--inline:hover { background: var(--civ-color-hover-tint-subtle); }
   }
 
   /* Transient success state — flip to green with a leading check
@@ -835,19 +794,6 @@
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
   }
-  @media (hover: hover) {
-    .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-input-action:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-  .civ-input-action:disabled {
-    @apply civ-cursor-not-allowed;
-    opacity: var(--civ-opacity-disabled);
-  }
-
   /* WCAG 2.5.8 — minimum target size 44×44 CSS pixels for pointer
      inputs. Desktop keeps the compact em-sized chrome (cursor precision
      makes 24–28px targets fine); mobile bumps every input-inset action
@@ -857,7 +803,6 @@
      already meets 44×44 site-wide via the shared block further down,
      so it isn't repeated here. */
   @media (max-width: 480px) {
-    .civ-input-action,
     .civ-datepicker-today-btn,
     .civ-file-cancel-btn,
     .civ-file-retry-btn {
@@ -2122,10 +2067,6 @@
     @apply civ-flex civ-items-center civ-justify-between civ-mb-4;
   }
 
-  .civ-modal__close {
-    @apply civ-ms-4 civ-flex-shrink-0;
-  }
-
   .civ-modal__body {
     @apply civ-mb-4;
   }
@@ -2223,6 +2164,12 @@
     z-index: 1;
   }
 
+  /* Shared close-button positioning for header-aligned overlay dismiss.
+     The `.civ-modal__close` / `.civ-drawer__close` classes themselves
+     stay on the rendered elements (tests + consumer styling target them
+     by name) — this rule applies the inline-end margin + flex-shrink to
+     both via a single selector list. */
+  .civ-modal__close,
   .civ-drawer__close {
     @apply civ-ms-4 civ-flex-shrink-0;
   }
@@ -3574,9 +3521,6 @@
     @apply civ-p-4;
   }
 
-  .civ-alert__body {
-  }
-
   /* ── Alert: Border colors per variant ──────────────────────── */
 
   .civ-alert--info { border-color: var(--civ-color-info-dark); }
@@ -3698,7 +3642,7 @@
     @apply civ-flex-1;
     height: 8px;
     background-color: var(--civ-color-base-lighter);
-    transition: background-color var(--civ-motion-duration-fast, 150ms) var(--civ-motion-easing-ease-out, ease);
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-progress-segment--completed {
@@ -4403,14 +4347,14 @@
      attribute selector overrides for [callout-style='secondary'].
      `civ-support-resources` (which composes civ-callout but doesn't
      set callout-style) is unaffected and keeps the 5px rail. */
-  civ-callout[callout-style='secondary'] {
+  civ-callout[emphasis='secondary'] {
     border-inline-start-width: 3px;
   }
 
-  civ-callout[variant='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
-  civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
-  civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
-  civ-callout[variant='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+  civ-callout[intent='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
+  civ-callout[intent='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
+  civ-callout[intent='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
+  civ-callout[intent='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
 
   /* Restore list markers inside callout body — Tailwind's preflight
      strips them globally and a callout is one of the few places where
@@ -4819,9 +4763,6 @@
   .civ-section-intro__heading {
     @apply civ-font-bold civ-mb-1;
     font-size: var(--civ-typography-fontSize-lg);
-  }
-
-  .civ-section-intro__body {
   }
 
   .civ-section-intro__body ul,
@@ -5296,7 +5237,7 @@
 
   @media (hover: hover) {
     .civ-filter-chip__remove:hover:not(:disabled) {
-      background: rgba(0, 0, 0, 0.08);
+      background: var(--civ-color-hover-tint);
       color: inherit;
     }
   }
@@ -6133,15 +6074,15 @@
     display: block;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
     content: '';
     position: absolute;
     inset-inline: 0;
@@ -6155,7 +6096,7 @@
     pointer-events: none;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -6172,7 +6113,7 @@
    * `width: fit-content` + `margin-inline: auto` centers the block
    * without forcing it to span the full row.
    */
-  civ-read-more[expanded]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more[open]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     display: flex;
     width: fit-content;
     margin-inline: auto;
@@ -6191,7 +6132,7 @@
   .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
-  civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
+  civ-read-more[open] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transform: rotate(180deg);
   }
 
@@ -6573,7 +6514,7 @@
   .civ-spinner__svg {
     width: 100%;
     height: 100%;
-    animation: civ-spin var(--civ-motion-duration-slower, 750ms) var(--civ-motion-easing-linear, linear) infinite;
+    animation: civ-spin var(--civ-motion-duration-slower, 500ms) var(--civ-motion-easing-linear, linear) infinite;
   }
 
   .civ-spinner__track {

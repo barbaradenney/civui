@@ -24,35 +24,35 @@ describe('civ-callout', () => {
   it('keeps the default variant off the host attribute (useDefault behavior)', async () => {
     const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
     await elementUpdated(el);
-    expect(el.variant).toBe('default');
+    expect(el.intent).toBe('default');
     // useDefault: true suppresses initial-value reflection so the base
     // `civ-callout { ... }` CSS rule applies without an attribute selector.
-    expect(el.getAttribute('variant')).toBeNull();
+    expect(el.getAttribute('intent')).toBeNull();
   });
 
   it('reflects each semantic variant to the host attribute', async () => {
     for (const variant of ['info', 'warning', 'error', 'success'] as const) {
       const el = await fixture<CivCallout>(
-        `<civ-callout variant="${variant}"><p>x</p></civ-callout>`,
+        `<civ-callout intent="${variant}"><p>x</p></civ-callout>`,
       );
       await elementUpdated(el);
-      expect(el.getAttribute('variant')).toBe(variant);
-      expect(el.variant).toBe(variant);
+      expect(el.getAttribute('intent')).toBe(variant);
+      expect(el.intent).toBe(variant);
     }
   });
 
   it('restores the default when the variant attribute is removed', async () => {
     const el = await fixture<CivCallout>(
-      '<civ-callout variant="warning"><p>x</p></civ-callout>',
+      '<civ-callout intent="warning"><p>x</p></civ-callout>',
     );
     await elementUpdated(el);
-    expect(el.variant).toBe('warning');
+    expect(el.intent).toBe('warning');
 
-    el.removeAttribute('variant');
+    el.removeAttribute('intent');
     await elementUpdated(el);
     // With useDefault: true, removeAttribute restores the documented default
     // rather than leaving the property as null.
-    expect(el.variant).toBe('default');
+    expect(el.intent).toBe('default');
   });
 
   it('does not replace children when variant changes', async () => {
@@ -61,7 +61,7 @@ describe('civ-callout', () => {
     );
     await elementUpdated(el);
     const original = el.querySelector('#body');
-    el.variant = 'warning';
+    el.intent = 'warning';
     await elementUpdated(el);
     const after = el.querySelector('#body');
     expect(after).toBe(original);
@@ -70,7 +70,7 @@ describe('civ-callout', () => {
 
   it('renders rich slotted content (list inside)', async () => {
     const el = await fixture(`
-      <civ-callout variant="info">
+      <civ-callout intent="info">
         <p>Have ready:</p>
         <ul>
           <li>ID</li>
@@ -101,12 +101,12 @@ describe('civ-callout', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
     await elementUpdated(el);
-    el.variant = 'critical' as CivCallout['variant'];
+    el.intent = 'critical' as CivCallout['intent'];
     await elementUpdated(el);
     expect(warn).toHaveBeenCalled();
     const message = warn.mock.calls[0]?.[0] as string;
     expect(message).toContain('civ-callout');
-    expect(message).toContain('variant');
+    expect(message).toContain('intent');
     expect(message).toContain('critical');
     warn.mockRestore();
   });
@@ -115,44 +115,44 @@ describe('civ-callout', () => {
   // suppressed from the host attribute (useDefault: true) so the
   // base `civ-callout { ... }` 5px rule keeps rendering today's
   // markup unchanged.
-  describe('calloutStyle', () => {
+  describe('emphasis', () => {
     it('keeps the default primary value off the host attribute (useDefault behavior)', async () => {
       const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
       await elementUpdated(el);
-      expect(el.calloutStyle).toBe('primary');
-      expect(el.getAttribute('callout-style')).toBeNull();
+      expect(el.emphasis).toBe('primary');
+      expect(el.getAttribute('emphasis')).toBeNull();
     });
 
     it('reflects the secondary value to the host attribute', async () => {
       const el = await fixture<CivCallout>(
-        '<civ-callout callout-style="secondary"><p>x</p></civ-callout>',
+        '<civ-callout emphasis="secondary"><p>x</p></civ-callout>',
       );
       await elementUpdated(el);
-      expect(el.calloutStyle).toBe('secondary');
-      expect(el.getAttribute('callout-style')).toBe('secondary');
+      expect(el.emphasis).toBe('secondary');
+      expect(el.getAttribute('emphasis')).toBe('secondary');
     });
 
     it('combines with variant — both attributes round-trip independently', async () => {
       const el = await fixture<CivCallout>(
-        '<civ-callout variant="warning" callout-style="secondary"><p>x</p></civ-callout>',
+        '<civ-callout intent="warning" emphasis="secondary"><p>x</p></civ-callout>',
       );
       await elementUpdated(el);
-      expect(el.variant).toBe('warning');
-      expect(el.calloutStyle).toBe('secondary');
-      expect(el.getAttribute('variant')).toBe('warning');
-      expect(el.getAttribute('callout-style')).toBe('secondary');
+      expect(el.intent).toBe('warning');
+      expect(el.emphasis).toBe('secondary');
+      expect(el.getAttribute('intent')).toBe('warning');
+      expect(el.getAttribute('emphasis')).toBe('secondary');
     });
 
     it('warns when an unknown calloutStyle is set', async () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
       await elementUpdated(el);
-      el.calloutStyle = 'tertiary' as CivCallout['calloutStyle'];
+      el.emphasis = 'tertiary' as CivCallout['emphasis'];
       await elementUpdated(el);
       expect(warn).toHaveBeenCalled();
       const message = warn.mock.calls[0]?.[0] as string;
       expect(message).toContain('civ-callout');
-      expect(message).toContain('calloutStyle');
+      expect(message).toContain('emphasis');
       expect(message).toContain('tertiary');
       warn.mockRestore();
     });
@@ -165,7 +165,7 @@ describe('civ-callout', () => {
   describe('composition', () => {
     it('hosts a civ-notice child', async () => {
       const el = await fixture(`
-        <civ-callout variant="warning">
+        <civ-callout intent="warning">
           <civ-notice intent="warning" body="Composed body"></civ-notice>
         </civ-callout>
       `);
@@ -177,8 +177,8 @@ describe('civ-callout', () => {
 
     it('hosts a civ-badge child', async () => {
       const el = await fixture(`
-        <civ-callout variant="info">
-          <civ-badge label="In review" variant="info" with-icon></civ-badge>
+        <civ-callout intent="info">
+          <civ-badge label="In review" intent="info" with-icon></civ-badge>
         </civ-callout>
       `);
       await elementUpdated(el);
@@ -189,8 +189,8 @@ describe('civ-callout', () => {
 
     it('hosts multiple notice + badge children alongside prose', async () => {
       const el = await fixture(`
-        <civ-callout variant="error">
-          <civ-badge label="Action required" variant="error" badge-style="primary" with-icon></civ-badge>
+        <civ-callout intent="error">
+          <civ-badge label="Action required" intent="error" emphasis="primary" with-icon></civ-badge>
           <p>Your identity verification expired on January 15, 2026.</p>
           <civ-notice intent="error" spacing="sm" body="You have 30 days to re-verify."></civ-notice>
         </civ-callout>

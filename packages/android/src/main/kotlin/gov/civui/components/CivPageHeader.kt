@@ -41,6 +41,15 @@ import gov.civui.tokens.CivTokens
  * )
  * ```
  */
+/**
+ * Page header with optional tag, eyebrow, heading, and subheading.
+ *
+ * @param rhythm Bottom margin to the content below: "default" (24dp) or "sm" (12dp).
+ *   Named `rhythm` to match the web schema; controls margin between the header and the
+ *   next sibling, not internal padding.
+ * @param spacing Deprecated alias for `rhythm`. Kept for backward compat; will be removed
+ *   in a future release. Setting this on web emits a dev-mode console warning.
+ */
 @Composable
 fun CivPageHeader(
     heading: String,
@@ -50,6 +59,7 @@ fun CivPageHeader(
     tag: String = "",
     tagVariant: String = "gray",
     tagStyle: String = "secondary",
+    rhythm: String = "default",
     spacing: String = "default",
     iconStart: String = "",
     iconEnd: String = "",

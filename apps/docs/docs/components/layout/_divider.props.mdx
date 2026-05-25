@@ -3,5 +3,6 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `spacing` | `'default'` \| `'sm'` | `'default'` | Vertical margin around the line |
+| `rhythm` | `'default'` \| `'sm'` | `'default'` | Vertical margin (top + bottom) around the divider line. `default` = 16px; `sm` = 8px. Named `rhythm` (not `spacing`) because the value controls margin between the divider and its siblings, not internal padding. Per density-convention.md "Three things `spacing=sm` MUST NOT mean." |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | **Deprecated** — use `rhythm` instead. Same allowed values, same effect. Will be removed in a future release; setting it to a non-default value emits a one-time dev-mode console warning. |
 | `emphasis` | `'default'` \| `'primary'` | `'default'` | Visual emphasis. `default` is the standard subtle line; `primary` is slightly heavier for major section breaks |

@@ -9,9 +9,15 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    rhythm: {
+      type: 'enum',
+      description: 'Bottom margin to the content below the header. `default` = 24px; `sm` = 12px. Named `rhythm` (not `spacing`) because the value controls margin between the header and the next sibling, not internal padding. Per density-convention.md "Three things `spacing=sm` MUST NOT mean."',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     spacing: {
       type: 'enum',
-      description: 'Bottom margin to the content below',
+      description: '**Deprecated** — use `rhythm` instead. Same allowed values, same effect. Will be removed in a future release; setting it to a non-default value emits a one-time dev-mode console warning.',
       default: 'default',
       values: ['default', 'sm'],
     },

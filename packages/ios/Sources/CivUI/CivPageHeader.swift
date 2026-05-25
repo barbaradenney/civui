@@ -42,7 +42,14 @@ public struct CivPageHeader: View {
     /// Tag style (primary = dark bg, secondary = light bg).
     public var tagStyle: String
 
-    /// Spacing variant.
+    /// Bottom margin to the content below. `default` (24pt) or `sm` (12pt).
+    /// Named `rhythm` to match the web schema; controls margin between
+    /// the header and the next sibling, not internal padding.
+    public var rhythm: String
+
+    /// Deprecated alias for `rhythm`. Kept for backward compat with
+    /// consumers on the old API; will be removed in a future release.
+    /// Setting this on web emits a dev-mode console warning.
     public var spacing: String
 
     /// Icon name rendered before the heading text.
@@ -64,6 +71,7 @@ public struct CivPageHeader: View {
         tag: String = "",
         tagVariant: CivTagVariant = .gray,
         tagStyle: String = "secondary",
+        rhythm: String = "default",
         spacing: String = "default",
         iconStart: String = "",
         iconEnd: String = ""
@@ -74,6 +82,7 @@ public struct CivPageHeader: View {
         self.tag = tag
         self.tagVariant = tagVariant
         self.tagStyle = tagStyle
+        self.rhythm = rhythm
         self.spacing = spacing
         self.iconStart = iconStart
         self.iconEnd = iconEnd

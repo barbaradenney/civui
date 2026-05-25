@@ -15,6 +15,12 @@ props:
       title: Variant
       type: string
       description: 'Visual style emphasis'
+    rhythm:
+      title: Rhythm
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Vertical margin (top + bottom) around the divider line. `default` = 16px; `sm` = 8px. Named `rhythm` (not `spacing`) because the value controls margin between the divider and its siblings, not internal padding. Per density-convention.md ...'
 
 libraryOverrides:
   dependencies:

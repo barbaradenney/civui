@@ -98,7 +98,7 @@ render() {
 
 The audit found these existing semantics conflated under one prop. Do not introduce new instances:
 
-1. **"Smaller surrounding margin"** — `civ-page-header.spacing="sm"` and `civ-divider.spacing="sm"` change `margin-bottom` / vertical margin around the component but don't touch the component's own padding. This is a layout-rhythm prop, not density. Rename in a follow-up to `margin="sm"` or `rhythm="sm"`, or move the rhythm control to the surrounding container.
+1. **"Smaller surrounding margin"** — controls margin between the component and a sibling, not internal padding. This is a layout-rhythm prop, not density. **Use `rhythm="sm"` instead** (see `civ-page-header.rhythm` and `civ-divider.rhythm`, which both expose this knob and keep `spacing` only as a backward-compat alias that emits a one-time dev-mode warning). If a new component needs to expose "smaller surrounding margin," the prop name is `rhythm`, not `spacing` or `margin` — the rename happened in 2026-05-25 (Tier 5 of the density-convention rollout) so the family stays consistent.
 2. **"Larger render mode"** — `civ-file-upload.variant="full"` is the inverse direction. Don't fold opposite-direction modifiers into `spacing`; they belong on `variant`.
 3. **"Different layout entirely"** — when a `--sm` variant changes the host display, hides chrome, or restructures the DOM, it's Contract B and should be reserved for data-grid editor use.
 

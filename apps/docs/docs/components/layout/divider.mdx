@@ -57,17 +57,23 @@ A horizontal rule for visually separating content sections. Renders as an `<hr>`
 
 ## Usage
 
-### Default spacing
+### Default rhythm
 
 ```html
 <civ-divider></civ-divider>
 ```
 
-### Small spacing
+### Small rhythm
+
+`rhythm="sm"` halves the margin around the line (8px instead of 16px on each side). Use between tightly-grouped sections.
 
 ```html
-<civ-divider spacing="sm"></civ-divider>
+<civ-divider rhythm="sm"></civ-divider>
 ```
+
+:::note Deprecated `spacing` prop
+`spacing` is still accepted as a backward-compatible alias for `rhythm` but emits a one-time dev-mode console warning. The rename clarifies that this prop controls margin around the divider, not internal padding. Migrate to `rhythm`; the `spacing` alias will be removed in a future release.
+:::
 
 ## Drupal SDC
 

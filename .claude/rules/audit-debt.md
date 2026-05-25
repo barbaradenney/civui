@@ -211,12 +211,12 @@ These components likely should expose `spacing="sm"` but don't. Each needs a des
 | ~~`civ-action-sheet`~~ | Skipped | Almost no internal chrome to compress; content is consumer-authored. Mobile bottom-sheet pattern is the more significant variant. Add when a real placement asks. |
 | ~~`civ-radio-group` / `civ-checkbox-group`~~ | Cleared (no fix needed) | Investigation 2026-05-25: the `civ-gap-N` Tailwind utility maps to `var(--civ-spacing-N)` in `tailwind.config.ts`, and those tokens ARE overridden under `[data-civ-scale="dense"]` (e.g. `--civ-spacing-3: 15px` → `11px`). Group container gaps already scale with the page-level scale system automatically — the original audit finding was a false alarm. No per-component `spacing` prop needed unless a consumer wants a group denser than its surrounding page scale, which hasn't appeared. |
 
-### Tier 5 — `spacing` prop conflated semantics (architectural fix)
+### Tier 5 — `spacing` prop conflated semantics (cleared 2026-05-25)
 
-| Item | Action | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| `civ-page-header.spacing="sm"` controls **`margin-bottom`** of the surrounding container, not the component's own padding | Rename to `margin="sm"` or `rhythm="sm"`, or move the rhythm control to the parent | Same prop name, different semantic from every other use. Confusing. |
-| `civ-divider.spacing="sm"` controls **vertical margin** around the divider, not its own dimensions | Same as above | Same problem. |
+| ~~`civ-page-header.spacing="sm"` controls `margin-bottom` of the surrounding container, not the component's own padding~~ | ✅ Renamed to `rhythm` | `rhythm` prop is now canonical; `spacing` retained as a backward-compat alias that emits a one-time dev-mode warning when set to a non-default value. Same `civ-page-header--sm` modifier class; no CSS migration needed by consumers. Schedule removal of `spacing` in the next major release. |
+| ~~`civ-divider.spacing="sm"` controls vertical margin around the divider, not its own dimensions~~ | ✅ Renamed to `rhythm` | Same deprecation pattern (mirrors PR #167 / `civ-read-more.size` → `spacing`). Internal CivUI consumers (stories, MCP examples, healthcare patterns) migrated to `rhythm` in the same PR. Pre-existing iOS bug fixed incidentally — `CivDivider.swift` referenced `variant` instead of the declared `emphasis` property; renamed to use `emphasis` consistently. |
 
 ### Lint proposal (deferred)
 
@@ -224,7 +224,13 @@ Once Tiers 1–3 are mostly cleared, add `lint:hardcoded-spacing` to the drift-l
 
 ### Process
 
-Tiers 1, 2, 3 can each ship as independent PRs against this convention. No tier blocks another. Tier 4 each needs design discussion before code. Tier 5 likely needs a release-note prop deprecation.
+Tiers 1, 2, 3, 4, and 5 are cleared (each shipped as independent PRs against this convention). What remains is the optional `lint:hardcoded-spacing` proposed below, plus future component additions that should follow the convention from the start.
+
+**Release-note checklist** for the next major release that removes the deprecation aliases:
+- `civ-read-more.size` (deprecated PR #167, alias for `spacing`)
+- `civ-page-header.spacing` (deprecated 2026-05-25, alias for `rhythm`)
+- `civ-divider.spacing` (deprecated 2026-05-25, alias for `rhythm`)
+- All three currently emit one-time dev-mode console warnings; consumers have a migration runway.
 
 **Convention bypass requires sign-off:** if a future component needs a density modifier that doesn't fit Contract A or Contract B, document the new contract in `density-convention.md` in the same PR.
 

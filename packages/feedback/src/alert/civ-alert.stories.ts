@@ -351,7 +351,7 @@ on landing pages, dashboards, and "what's left" reminders.`,
   },
   render: () => html`
     <div style="max-width: 640px;">
-      <civ-alert intent="info" heading="Your benefits enrollment">
+      <civ-alert intent="info" emphasis="tertiary" heading="Your benefits enrollment">
         <ul class="civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2">
           <li class="civ-flex civ-items-center civ-gap-3">
             <civ-badge label="Complete" intent="success" with-icon></civ-badge>

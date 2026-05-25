@@ -1,0 +1,113 @@
+---
+title: Input Chip
+sidebar_position: 8
+sidebar_label: Input Chip
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import PropsTable from "./_input-chip.props.mdx";
+import EventsTable from "./_input-chip.events.mdx";
+
+# Input Chip
+
+`<civ-input-chip>`
+
+Display chip representing **user-entered content** with an always-present remove handle. Use for recipient lists on email composers, tags on a post, applied-filter readouts, typed keywords in a search bar. The chip itself is not interactive; the trailing `×` button is the only affordance — clicking it dispatches `civ-remove`.
+
+Distinct from [`civ-filter-chip`](./filter-chip) because the chip represents data the user has already put in, not a toggleable option from a known list. Distinct from [`civ-action-chip`](./action-chip) because the chip is display-only — the only action is "undo my input."
+
+For toggleable on/off selection use [`civ-filter-chip`](./filter-chip). For fire-and-forget action chips use [`civ-action-chip`](./action-chip). For static categorization labels use [`civ-tag`](../layout/tag).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-input-chip--default" />
+
+### States
+
+<StoryEmbed id="actions-input-chip--states" />
+
+### Recipient list
+
+<StoryEmbed id="actions-input-chip--recipient-list" />
+
+### Tag input
+
+<StoryEmbed id="actions-input-chip--tag-input" />
+
+### Applied-filter readout
+
+<StoryEmbed id="actions-input-chip--applied-filter-readout" />
+
+### Spacing
+
+<StoryEmbed id="actions-input-chip--spacing" />
+
+### Input chip vs Filter chip
+
+<StoryEmbed id="actions-input-chip--input-vs-filter" />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-input-chip--default)
+
+## Props
+
+<PropsTable />
+
+## Events
+
+<EventsTable />
+
+## Accessibility
+
+- The chip renders a non-interactive `<span role="presentation">` wrapper containing the label text plus a real `<button>` for the remove handle. The label itself is not focusable — only the × is.
+- The remove button carries `aria-label="Remove {label}"` so screen readers describe what's being removed without depending on the visible glyph.
+- The native focus ring on the × button is restored via a `:has()` rule that drops the wrapper's `overflow: hidden` when the remove button is focused.
+- Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.
+
+## Patterns
+
+### Recipient list on an email composer
+
+The user types an address; you create a chip; the × revokes it from the list:
+
+```html
+<label>To</label>
+<div class="recipient-bar">
+  <civ-input-chip label="alice@example.com" value="alice@example.com"></civ-input-chip>
+  <civ-input-chip label="bob@example.com" value="bob@example.com"></civ-input-chip>
+  <input type="email" placeholder="Add recipient…" />
+</div>
+
+<script>
+  document.querySelector('.recipient-bar').addEventListener('civ-remove', (e) => {
+    const { value } = e.detail;
+    recipients.delete(value);
+    rerender();
+  });
+</script>
+```
+
+### Tag input on a post
+
+```html
+<civ-input-chip label="typescript"></civ-input-chip>
+<civ-input-chip label="accessibility"></civ-input-chip>
+<civ-input-chip label="forms"></civ-input-chip>
+```
+
+### Applied-filter readout
+
+A read-only summary of which filters are currently active. The × removes the filter and re-fetches results. For interactive on/off toggles in a filter row, use `civ-filter-chip` with `removable` instead.
+
+```html
+<p>Active filters:</p>
+<civ-input-chip label="Category: Healthcare" value="cat-healthcare"></civ-input-chip>
+<civ-input-chip label="State: California" value="state-CA"></civ-input-chip>
+```
+
+## Anti-patterns
+
+- **Don't use an input chip for selection from a known list of options.** Use `civ-filter-chip` — it carries `aria-pressed` / `aria-checked` and a selected visual state.
+- **Don't use an input chip without a remove handle.** That's `civ-tag` — a static, non-interactive label.
+- **Don't use an input chip when the chip itself should be clickable.** Input chips are display-only; the × is the only affordance. If the chip should drill into a detail view, wrap a `civ-tag` in a `civ-link` or use `civ-link-card`.

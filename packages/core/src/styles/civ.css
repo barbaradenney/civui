@@ -89,7 +89,7 @@ body {
 
 /* Global focus indicator — every interactive element gets the same
    ring on :focus by default. Components with bespoke focus needs
-   (.civ-input, .civ-check-tile, .civ-filter-chip wrapper, etc.)
+   (.civ-input, .civ-check-tile, .civ-chip--filter wrapper, etc.)
    override with more specific selectors and win on cascade.
    Triggers on :focus (not :focus-visible) so the ring shows on mouse
    clicks too — matches GOV.UK Design System behavior.

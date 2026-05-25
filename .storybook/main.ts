@@ -141,6 +141,8 @@ const config: StorybookConfig = {
       '@civui/actions/action-button': resolve(root, 'packages/actions/src/action-button/index.ts'),
       '@civui/actions/filter-chip': resolve(root, 'packages/actions/src/filter-chip/index.ts'),
       '@civui/actions/filter-chip-group': resolve(root, 'packages/actions/src/filter-chip-group/index.ts'),
+      '@civui/actions/action-chip': resolve(root, 'packages/actions/src/action-chip/index.ts'),
+      '@civui/actions/input-chip': resolve(root, 'packages/actions/src/input-chip/index.ts'),
       '@civui/actions/link': resolve(root, 'packages/actions/src/link/index.ts'),
       '@civui/actions/link-card': resolve(root, 'packages/actions/src/link-card/index.ts'),
       '@civui/actions/skip-link': resolve(root, 'packages/actions/src/skip-link/index.ts'),

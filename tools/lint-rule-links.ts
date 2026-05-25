@@ -86,6 +86,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/density-convention.md',
     anchor: 'naming-standard',
   },
+  'density-convention': {
+    path: '.claude/rules/density-convention.md',
+    anchor: 'page-level-scale-guarantees-what-consumers-expect',
+  },
   'semantic-color-recipe': {
     path: '.claude/rules/design-rules.md',
     anchor: 'semantic-intent-vs-categorical-color-components',

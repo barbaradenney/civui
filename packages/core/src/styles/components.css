@@ -157,7 +157,7 @@
      :not() exclusion. Tile-mode checkboxes (radio tile cards) also
      manage their own spacing. */
   civ-checkbox:not(civ-checkbox-group *):not([tile]) {
-    margin-bottom: 1rem;
+    margin-bottom: var(--civ-spacing-4);
   }
 
   /* ── Shared form primitives ─────────────────────────────────── */
@@ -1506,6 +1506,11 @@
 
   /* Reserve space for the chevron on the input. */
   [data-civ-combobox] > input {
+    /* not density: chrome offset — leaves a fixed gutter for the
+       chevron affordance. Matches the gutter on
+       `.civ-input-with-trailing-icon`. The icon itself is em-relative
+       so it scales with the input's font; the gutter is a placement
+       chrome offset, not a density step. */
     padding-inline-end: 2.25rem;
   }
 
@@ -4286,8 +4291,7 @@
     display: block;
   }
   .civ-on-this-page__heading {
-    @apply civ-m-0 civ-font-bold;
-    margin-bottom: 0.5rem;
+    @apply civ-m-0 civ-font-bold civ-mb-2;
   }
   .civ-on-this-page__list {
     @apply civ-flex civ-flex-col civ-list-none civ-p-0 civ-m-0;

@@ -218,13 +218,19 @@ These components likely should expose `spacing="sm"` but don't. Each needs a des
 | ~~`civ-page-header.spacing="sm"` controls `margin-bottom` of the surrounding container, not the component's own padding~~ | ✅ Renamed to `rhythm` | `rhythm` prop is now canonical; `spacing` retained as a backward-compat alias that emits a one-time dev-mode warning when set to a non-default value. Same `civ-page-header--sm` modifier class; no CSS migration needed by consumers. Schedule removal of `spacing` in the next major release. |
 | ~~`civ-divider.spacing="sm"` controls vertical margin around the divider, not its own dimensions~~ | ✅ Renamed to `rhythm` | Same deprecation pattern (mirrors PR #167 / `civ-read-more.size` → `spacing`). Internal CivUI consumers (stories, MCP examples, healthcare patterns) migrated to `rhythm` in the same PR. Pre-existing iOS bug fixed incidentally — `CivDivider.swift` referenced `variant` instead of the declared `emphasis` property; renamed to use `emphasis` consistently. |
 
-### Lint proposal (deferred)
+### `lint:hardcoded-spacing` (shipped 2026-05-25)
 
-Once Tiers 1–3 are mostly cleared, add `lint:hardcoded-spacing` to the drift-lints CI gate. It scans `components.css` for `padding`/`margin`/`gap`/`font-size`/`width`/`height` declarations with hardcoded `rem` / `px` values and flags any class not on a curated decorative-exception allowlist (tap-target floors, thumbnail dimensions, spinner sizes, decorative cursive font, etc.). Premature today — too many intentional decorative hardcodes — but the right end state.
+The proposed lint is now live. `tools/lint-hardcoded-spacing.ts` scans `components.css` for every `padding`/`margin`/`gap`/`font-size`/`line-height`/`width`/`height` declaration that uses a `rem` or `px` literal and flags any that aren't:
+- Inside a class on the curated `ALLOWLIST_CLASSES` (tap-target floors, decorative ladders, viewport-anchored overlays, field-width utility ladder, etc.), OR
+- Preceded by a `/* not density: <reason> */` comment on the same stanza.
+
+Wired into `pnpm validate:lints` (line 70 of `package.json`) so it runs in the drift-lints CI gate. 22-test helper suite in `tools/__tests__/lint-hardcoded-spacing.test.ts` covers declaration parsing, class-allowlist decision, and annotation detection. `em` / `%` / `vh` / `vw` / `dvh` / `dvw` units pass (font- and viewport-relative — they're either scale-aware via the parent's `font-size` or intentionally viewport-anchored).
+
+To extend the allowlist or migrate a violation, see the docstring at the top of the lint file — it lays out the four valid responses (use a token, allowlist the class, add a `/* not density */` annotation, or migrate to a token).
 
 ### Process
 
-Tiers 1, 2, 3, 4, and 5 are cleared (each shipped as independent PRs against this convention). What remains is the optional `lint:hardcoded-spacing` proposed below, plus future component additions that should follow the convention from the start.
+All five tiers + the lint shipped (each as an independent PR). What remains is future component additions that should follow the convention from the start.
 
 **Release-note checklist** for the next major release that removes the deprecation aliases:
 - `civ-read-more.size` (deprecated PR #167, alias for `spacing`)

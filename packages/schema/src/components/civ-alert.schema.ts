@@ -13,7 +13,7 @@ const schema: ComponentSchema = {
       type: 'enum',
       description: 'Semantic tone. Drives icon and color palette',
       default: 'info',
-      values: ['info', 'success', 'warning', 'error'],
+      values: ['info', 'success', 'warning', 'error', 'neutral'],
     },
     emphasis: {
       type: 'enum',

@@ -11,7 +11,7 @@ const meta: Meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'warning', 'error', 'success'],
+      options: ['info', 'warning', 'error', 'success', 'neutral'],
     },
     emphasis: {
       control: 'select',
@@ -87,6 +87,28 @@ export const Success: Story = {
   `,
 };
 
+export const Neutral: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `Use \`intent="neutral"\` for non-status announcements that
+shouldn't carry a semantic color — new feature notices, "heads up"
+context, or housekeeping reminders that aren't informational, warning,
+error, or success. Renders with the base-darker palette so the alert
+reads as content emphasis rather than a status signal. The CSS
+literal \`civ-alert--neutral\` is referenced here so Tailwind's
+content scanner emits the class.`,
+      },
+    },
+  },
+  render: () => html`
+    <civ-alert intent="neutral" heading="New: Save and continue later">
+      You can now save your application at any step and return to it
+      later from your account dashboard. Drafts are kept for 60 days.
+    </civ-alert>
+  `,
+};
+
 // ── All Variants ──────────────────────────────────────────────
 
 export const AllVariants: Story = {
@@ -103,6 +125,9 @@ export const AllVariants: Story = {
       </civ-alert>
       <civ-alert intent="success" heading="Success">
         Your form has been submitted.
+      </civ-alert>
+      <civ-alert intent="neutral" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
       </civ-alert>
     </div>
   `,
@@ -125,6 +150,9 @@ export const PrimaryStyle: Story = {
       <civ-alert intent="success" emphasis="primary" heading="Success">
         Your form has been submitted.
       </civ-alert>
+      <civ-alert intent="neutral" emphasis="primary" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
+      </civ-alert>
     </div>
   `,
 };
@@ -143,6 +171,9 @@ export const TertiaryStyle: Story = {
       </civ-alert>
       <civ-alert intent="success" emphasis="tertiary" heading="Success">
         Your form has been submitted.
+      </civ-alert>
+      <civ-alert intent="neutral" emphasis="tertiary" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
       </civ-alert>
     </div>
   `,
@@ -311,26 +342,27 @@ export const ComposedWithBadge: Story = {
   parameters: {
     docs: {
       description: {
-        story: `Use a status badge inside an alert to surface the current
-state at a glance, paired with descriptive copy below. The badge sits
-on its own line above the body text so it reads as a label for the
-explanation that follows. The alert's heading carries the question
-("What's the status?"); the badge answers it.`,
+        story: `A status badge sits above the heading via the
+\`data-civ-alert-prefix\` slot, so the visual reading order is
+*current state → title → explanation*. Mark the badge with the
+\`data-civ-alert-prefix\` attribute to route it into the prefix slot.`,
       },
     },
   },
   render: () => html`
     <div style="max-width: 560px;">
       <civ-alert intent="info" heading="Application status">
-        <div class="civ-flex civ-flex-col civ-gap-2">
-          <div>
-            <civ-badge label="In review" intent="info" emphasis="primary" with-icon></civ-badge>
-          </div>
-          <p class="civ-m-0">
-            A reviewer was assigned to your application on January 18, 2026.
-            You'll receive a written notice once a decision is made — usually within 7 business days.
-          </p>
-        </div>
+        <civ-badge
+          data-civ-alert-prefix
+          label="In review"
+          intent="info"
+          emphasis="primary"
+          with-icon
+        ></civ-badge>
+        <p class="civ-m-0">
+          A reviewer was assigned to your application on January 18, 2026.
+          You'll receive a written notice once a decision is made — usually within 7 business days.
+        </p>
       </civ-alert>
     </div>
   `,
@@ -380,21 +412,25 @@ export const ComposedRichBody: Story = {
   parameters: {
     docs: {
       description: {
-        story: `Real placements mix multiple primitives in one alert body.
-This example pairs a leading status badge (the answer), a paragraph
-of context (the explanation), and a trailing \`civ-notice\` (the
-emphasis the user must not miss). All three live as siblings inside
-the alert; the alert provides the surrounding chrome and live region.`,
+        story: `Real placements mix multiple primitives in one alert. The
+status badge uses the \`data-civ-alert-prefix\` slot so it sits above
+the heading as a category cue; the body content combines a paragraph
+of context and a trailing \`civ-notice\` for the emphasis the user
+must not miss.`,
       },
     },
   },
   render: () => html`
     <div style="max-width: 640px;">
       <civ-alert intent="error" heading="Action required" dismissible>
+        <civ-badge
+          data-civ-alert-prefix
+          label="Verification expired"
+          intent="error"
+          emphasis="primary"
+          with-icon
+        ></civ-badge>
         <div class="civ-flex civ-flex-col civ-gap-3">
-          <div>
-            <civ-badge label="Verification expired" intent="error" emphasis="primary" with-icon></civ-badge>
-          </div>
           <p class="civ-m-0">
             Your identity verification with Login.gov expired on January 15, 2026.
             Until you re-verify, you cannot submit new claims or view sensitive documents.

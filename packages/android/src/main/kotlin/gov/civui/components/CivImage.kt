@@ -25,6 +25,7 @@ fun CivImage(
     crossOrigin: String = "",
     referrerPolicy: String = "",
     variant: String = "content",
+    size: String = "",
     rounded: Boolean = false,
     modifier: Modifier = Modifier,
 ) {

@@ -25,6 +25,11 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
+    // Host carries `role="listitem"` so the parent `civ-breadcrumb`'s
+    // `<ol role="list">` reads as a list to assistive tech. Set in
+    // `connectedCallback` rather than via render so the role survives
+    // the parent's `<ol>` markup.
+    role: 'listitem',
     requiredIndicator: 'none',
     errorAnnouncement: 'none',
   },

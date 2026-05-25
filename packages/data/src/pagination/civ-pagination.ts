@@ -30,6 +30,7 @@ import '@civui/actions/action-button';
  * @prop {number} siblingCount - Page numbers shown on each side of current. Defaults to 1.
  * @prop {string} label - Accessible name for the nav landmark. Defaults to i18n 'Pagination'.
  * @prop {string} itemName - Singular noun used in status text (e.g. "row", "application"). Defaults to "item".
+ * @prop {string} itemNamePlural - Plural form when `itemName + 's'` is wrong (e.g. "people" for "person", "entries" for "entry"). Defaults to `itemName + 's'`.
  *
  * @fires civ-page-change - { page, pageSize, offset } — user navigated to a page or changed page size
  *
@@ -52,6 +53,7 @@ export class CivPagination extends CivBaseElement {
   @property({ type: Number, attribute: 'sibling-count' }) siblingCount = 1;
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'item-name' }) itemName = 'item';
+  @property({ type: String, attribute: 'item-name-plural' }) itemNamePlural = '';
 
   override createRenderRoot() {
     return this;
@@ -91,7 +93,9 @@ export class CivPagination extends CivBaseElement {
     const current = this.currentPage;
     const pages = this._buildPageList(current, totalPages, this.siblingCount);
     const { start, end } = this.currentRange;
-    const plural = this.totalItems === 1 ? this.itemName : `${this.itemName}s`;
+    const plural = this.totalItems === 1
+      ? this.itemName
+      : (this.itemNamePlural || `${this.itemName}s`);
     const rangeText = this._interpolate(t('paginationRangeLabel'), {
       start: String(start),
       end: String(end),

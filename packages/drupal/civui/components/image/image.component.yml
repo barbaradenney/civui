@@ -81,6 +81,12 @@ props:
       type: boolean
       default: false
       description: 'Render the thumbnail as a circle (border-radius: 50%) for avatar use. Ignored for the content variant'
+    size:
+      title: Size
+      type: string
+      enum: ['32', '48', '64', '96', '128']
+      default: '64'
+      description: 'Thumbnail edge length in px on a Primer-style stepped scale. Thumbnail variant only'
 
 libraryOverrides:
   dependencies:

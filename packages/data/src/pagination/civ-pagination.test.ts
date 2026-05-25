@@ -44,6 +44,29 @@ describe('civ-pagination', () => {
     expect(status.textContent).toContain('100');
   });
 
+  it('pluralizes itemName with a trailing "s" by default', async () => {
+    const el = await fixture('<civ-pagination total-items="100" page-size="25" page="1" item-name="result"></civ-pagination>');
+    const status = el.querySelector('.civ-pagination__status') as HTMLElement;
+    expect(status.textContent).toContain('results');
+  });
+
+  it('uses itemNamePlural when set (override for non-"+s" plurals)', async () => {
+    // The default "name + s" rule fails for "person → people",
+    // "entry → entries", "child → children", etc. The override
+    // matches what civ-bulk-actions already provides.
+    const el = await fixture('<civ-pagination total-items="42" page-size="10" page="1" item-name="person" item-name-plural="people"></civ-pagination>');
+    const status = el.querySelector('.civ-pagination__status') as HTMLElement;
+    expect(status.textContent).toContain('people');
+    expect(status.textContent).not.toContain('persons');
+  });
+
+  it('uses singular itemName when totalItems is 1, regardless of itemNamePlural', async () => {
+    const el = await fixture('<civ-pagination total-items="1" page-size="10" page="1" item-name="person" item-name-plural="people"></civ-pagination>');
+    const status = el.querySelector('.civ-pagination__status') as HTMLElement;
+    expect(status.textContent).toContain('person');
+    expect(status.textContent).not.toContain('people');
+  });
+
   it('disables Previous on the first page', async () => {
     const el = await fixture('<civ-pagination total-items="100" page-size="25" page="1"></civ-pagination>');
     const prev = el.querySelector('.civ-pagination__prev') as HTMLElement;

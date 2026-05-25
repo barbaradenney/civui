@@ -2836,6 +2836,52 @@ describe('civ-data-grid — multi-column sort', () => {
     const next = (el as any)._computeNextSortKeys('static', true);
     expect(next).toEqual([{ key: 'name', direction: 'asc' }]); // unchanged
   });
+
+  it('dev-warns once when sortBy is written directly in multiSort mode', async () => {
+    // In multi-sort mode, sortBy/sortDirection are derived from
+    // sortKeys[0]. A consumer who writes to them directly will see
+    // their write reverted on the next render cycle (existing
+    // behavior). The warning surfaces that — without it, the
+    // chevron just "disappears" with no signal that the wrong API
+    // is being used.
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await mountGrid();
+    el.multiSort = true;
+    el.sortKeys = [{ key: 'name', direction: 'asc' }];
+    await elementUpdated(el);
+    warn.mockClear();
+
+    // Direct write — should warn.
+    el.sortBy = 'email';
+    await elementUpdated(el);
+    const warnings = warn.mock.calls.map((c) => c.join(' '));
+    expect(warnings.some((w) => /multiSort/i.test(w) && /sortBy/.test(w))).toBe(true);
+
+    // Second direct write — dedup, no second warning.
+    warn.mockClear();
+    el.sortDirection = 'desc';
+    await elementUpdated(el);
+    expect(warn.mock.calls.length).toBe(0);
+
+    warn.mockRestore();
+  });
+
+  it('does NOT warn when sortBy is written outside multiSort mode', async () => {
+    // The warning is specifically about the multiSort contract.
+    // Single-sort consumers using sortBy/sortDirection directly is
+    // the supported API.
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await mountGrid(); // multiSort defaults to false
+    warn.mockClear();
+
+    el.sortBy = 'email';
+    el.sortDirection = 'asc';
+    await elementUpdated(el);
+
+    const warnings = warn.mock.calls.map((c) => c.join(' '));
+    expect(warnings.some((w) => /multiSort/i.test(w))).toBe(false);
+    warn.mockRestore();
+  });
 });
 
 describe('civ-data-grid — density (spacing)', () => {

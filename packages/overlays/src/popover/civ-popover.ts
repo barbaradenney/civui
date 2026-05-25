@@ -56,7 +56,32 @@ import type { SlotConfig } from '@civui/core';
  */
 @customElement('civ-popover')
 export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
-  @property({ type: Boolean, reflect: true }) open = false;
+  /**
+   * Whether the popover panel is currently visible.
+   *
+   * Implemented as an accessor pair so EVERY transition — user click,
+   * programmatic `popover.open = true`, the public `openPopover()` /
+   * `closePopover()` methods, lit-html `.open=${flag}` two-way binding
+   * — dispatches `civ-open` / `civ-close` synchronously. The previous
+   * shape only dispatched from the private `_requestOpen` /
+   * `_requestClose` helpers (the user-input paths), which broke
+   * controlled patterns where a parent component flips `open`
+   * programmatically and listens for the event to update its own state.
+   */
+  @property({ type: Boolean, reflect: true })
+  get open(): boolean { return this._openState; }
+  set open(value: boolean) {
+    const old = this._openState;
+    if (old === value) return;
+    this._openState = value;
+    this.requestUpdate('open', old);
+    // Explicit branches (rather than a ternary on the event name) so the
+    // schema-parity Lit-event parser recognizes both dispatch sites.
+    if (value) dispatch(this, 'civ-open');
+    else dispatch(this, 'civ-close');
+  }
+  private _openState = false;
+
   @property({ type: String }) label = '';
   @property({ type: String }) align: 'start' | 'end' = 'end';
   @property({ type: String, attribute: 'panel-role' }) panelRole = 'dialog';
@@ -292,16 +317,20 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
+  /**
+   * Internal helpers for user-initiated transitions. The actual
+   * `civ-open` / `civ-close` event dispatch lives in the `open`
+   * setter (above) so programmatic property assignment dispatches
+   * the same events these helpers used to fire eagerly.
+   */
   private _requestOpen(): void {
     if (this.open) return;
     this.open = true;
-    dispatch(this, 'civ-open');
   }
 
   private _requestClose(returnFocus = false): void {
     if (!this.open) return;
     this.open = false;
-    dispatch(this, 'civ-close');
     if (returnFocus) {
       const trigger = this._getTrigger();
       trigger?.focus?.();

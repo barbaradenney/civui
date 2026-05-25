@@ -49,6 +49,12 @@ const schema: ComponentSchema = {
       default: 'item',
       attribute: 'item-name',
     },
+    itemNamePlural: {
+      type: 'string',
+      description: 'Plural form when `itemName + "s"` is wrong (e.g. "people" for "person", "entries" for "entry"). Empty (default) falls back to `${itemName}s`.',
+      default: '',
+      attribute: 'item-name-plural',
+    },
   },
 
   events: {

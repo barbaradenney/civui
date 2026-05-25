@@ -78,7 +78,7 @@ export class CivInputChip extends LightDomTextMixin(CivBaseElement) {
       : t('closeLabel');
 
     return html`
-      <span class="${this._wrapperClasses}" role="presentation">
+      <span class="${this._wrapperClasses}">
         <span class="civ-chip__label">${this._text}</span>${renderCloseButton({
           label: removeLabel,
           onClick: this._onRemove,

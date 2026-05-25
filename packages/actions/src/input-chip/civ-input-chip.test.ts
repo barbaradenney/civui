@@ -23,9 +23,15 @@ describe('civ-input-chip', () => {
     expect(label(el).textContent).toBe('#typescript');
   });
 
-  it('marks the wrapper role="presentation" so AT does not see the unused span as a control', async () => {
+  it('renders the wrapper as a plain <span> with no ARIA role override', async () => {
+    // The wrapper is a vanilla <span> with no implicit role for AT to
+    // see, so explicitly setting role="presentation" is a no-op — the
+    // span isn't there. Previously this test locked in
+    // role="presentation" as if it were load-bearing; the attribute was
+    // removed in the 2026-05-25 audit. Keep the test as a regression
+    // guard so the no-op doesn't grow back.
     const el = await fixture<CivInputChip>('<civ-input-chip label="bob@example.com"></civ-input-chip>');
-    expect(wrapper(el).getAttribute('role')).toBe('presentation');
+    expect(wrapper(el).hasAttribute('role')).toBe(false);
   });
 
   it('always renders a remove handle (input chip\'s defining trait)', async () => {

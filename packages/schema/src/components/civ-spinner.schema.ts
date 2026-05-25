@@ -43,7 +43,12 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'status',
+    // The host carries `role="img"` + `aria-label="${label}"` when
+    // visible, suppressed entirely under `decorative` or an
+    // `aria-busy` ancestor. The "Loading" announcement uses the
+    // shared aria-live region, not the host itself, so the host
+    // doesn't need `role="status"` semantics.
+    role: 'img',
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },

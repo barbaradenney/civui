@@ -113,6 +113,25 @@ export class CivColumnVisibility extends CivBaseElement {
     });
   }
 
+  /**
+   * Controlled-relationship plumbing with the inner civ-popover:
+   *
+   * - `civ-column-visibility` is the source of truth for `open`.
+   * - The inner civ-popover receives `?open="${this.open}"` (one-way
+   *   binding) and dispatches `civ-open` / `civ-close` when the
+   *   user interacts with the trigger / clicks outside / presses
+   *   Escape. We mirror those events back into our own `open` so
+   *   the outer state stays in sync.
+   * - The `if (!this.open) this.open = true` guard prevents a
+   *   ping-pong loop: when the consumer sets our `open` directly,
+   *   we forward to the popover, which dispatches its event, which
+   *   we'd otherwise re-handle. The guard makes the handler a no-op
+   *   when our state already matches the popover's.
+   * - We re-dispatch `civ-column-visibility-open` / `-close` from
+   *   our own render (via `?open`) plus optional internal events,
+   *   but NOT the popover's raw `civ-open` — that's an
+   *   implementation detail consumers shouldn't subscribe to.
+   */
   private _onPopoverOpen = (e: Event): void => {
     e.stopPropagation();
     if (!this.open) this.open = true;

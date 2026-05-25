@@ -895,6 +895,16 @@ export class CivDataGrid extends CivBaseElement {
       const primary = this.sortKeys?.[0];
       const nextSortBy = primary?.key ?? '';
       const nextSortDirection: GridSortDirection = primary?.direction ?? 'none';
+      // Detect a consumer write that contradicts the derived state and
+      // emit a one-time dev warning before silently reverting. Without
+      // this, "set grid.sortBy='x' and the chevron disappears" looks
+      // like the component is broken.
+      if (
+        (changed.has('sortBy') && this.sortBy !== nextSortBy) ||
+        (changed.has('sortDirection') && this.sortDirection !== nextSortDirection)
+      ) {
+        this._maybeWarnSortByWriteInMultiSort();
+      }
       if (this.sortBy !== nextSortBy) this.sortBy = nextSortBy;
       if (this.sortDirection !== nextSortDirection) this.sortDirection = nextSortDirection;
     }
@@ -986,6 +996,16 @@ export class CivDataGrid extends CivBaseElement {
     devWarn(
       'civ-data-grid',
       `groupBy="${this.groupBy}" doesn't match any column.key, and no row's cells contains that key — every row will land under the empty "(no value)" group. Double-check the key.`,
+    );
+  }
+
+  private _warnedSortByWriteInMultiSort = false;
+  private _maybeWarnSortByWriteInMultiSort(): void {
+    if (this._warnedSortByWriteInMultiSort) return;
+    this._warnedSortByWriteInMultiSort = true;
+    devWarn(
+      'civ-data-grid',
+      'In `multiSort` mode, `sortBy` and `sortDirection` are derived from `sortKeys[0]` — writes to them are silently overridden on the next render. Manage `sortKeys` instead and read `sortBy` / `sortDirection` for backward-compat display.',
     );
   }
 

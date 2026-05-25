@@ -10,3 +10,4 @@
 | `sibling-count` | `number` | `1` | Page-number buttons rendered on each side of the current page before truncation kicks in. Higher values show more pages at once |
 | `label` | `string` | `''` | Accessible name for the `<nav>` landmark. Falls back to the i18n "Pagination" string when omitted |
 | `item-name` | `string` | `'item'` | Singular noun used in status text (e.g. "row", "application"). Surface-level. Meaningful labels improve clarity for assistive tech |
+| `item-name-plural` | `string` | `''` | Plural form when `itemName + "s"` is wrong (e.g. "people" for "person", "entries" for "entry"). Empty (default) falls back to `${itemName}s`. |

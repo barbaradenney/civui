@@ -52,6 +52,11 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
+    // Host carries `role="listitem"` so the parent `civ-side-nav`'s
+    // `<ul role="list">` reads as a list to assistive tech. Set in
+    // `connectedCallback` rather than via render so the role survives
+    // the parent's `<ul>` markup.
+    role: 'listitem',
     requiredIndicator: 'none',
     errorAnnouncement: 'none',
   },

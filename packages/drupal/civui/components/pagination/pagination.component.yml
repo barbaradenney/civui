@@ -37,6 +37,10 @@ props:
       type: string
       default: 'item'
       description: 'Singular noun used in status text (e.g. "row", "application"). Surface-level. Meaningful labels improve clarity for assistive tech'
+    item_name_plural:
+      title: Item name plural
+      type: string
+      description: 'Plural form when `itemName + "s"` is wrong (e.g. "people" for "person", "entries" for "entry"). Empty (default) falls back to `${itemName}s`.'
 
 libraryOverrides:
   dependencies:

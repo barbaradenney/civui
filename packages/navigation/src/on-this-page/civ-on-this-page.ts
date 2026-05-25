@@ -140,6 +140,18 @@ export class CivOnThisPage extends LightDomSlotMixin(CivBaseElement) {
     }
     if (headingsToWatch.length === 0) return;
 
+    // Seed the highlight before the first IntersectionObserver callback
+    // fires. Without this, the rail renders with no `current` item until
+    // the user scrolls — which is wrong both for the at-top initial
+    // state (the user is reading the first section) and for the case
+    // where the user lands on a fragment URL (the linked section is
+    // already in view, but it stays unhighlighted until they nudge the
+    // scroll position). The observer's first batch will reconcile this
+    // with whatever is actually visible.
+    if (items.length > 0 && !items.some((i) => i.current)) {
+      items[0].current = true;
+    }
+
     // jsdom and very old browsers don't implement IntersectionObserver —
     // skip observer setup; the rail still renders, just without
     // scroll-position tracking.

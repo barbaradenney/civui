@@ -152,7 +152,11 @@ For responsive grids, use inline styles for the template:
 </div>
 ```
 
-`civ-button-row` stacks the cluster on mobile so each button picks up the full-width-on-mobile rule from `.civ-btn`; the `civ-justify-end` modifier keeps the row right-aligned above 480px. For toolbar/flush clusters (text formatting, view toggles) use `<civ-button-group>` instead; for row-action clusters inside list items (Edit / Remove on a summary card), keep `civ-flex civ-gap-2`. Those intentionally stay row-laid-out on mobile so destructive labels don't grow to consume the screen.
+`civ-button-row` stacks the cluster on mobile so each button picks up the full-width-on-mobile rule from `.civ-btn`; the `civ-justify-end` modifier keeps the row right-aligned above 480px. It ALSO stacks via a container query when the row's own width drops below ~30rem — catches narrow modals, drawers, side panels, and narrow chapter columns where long government-form labels would otherwise wrap unevenly next to a single-word button. Opt out of the container-query stack with `civ-button-row--no-stack` if a design genuinely needs side-by-side buttons in a narrow context.
+
+<StoryEmbed id="actions-button--form-actions-long-labels" />
+
+For toolbar/flush clusters (text formatting, view toggles) use `<civ-button-group>` instead; for row-action clusters inside list items (Edit / Remove on a summary card), keep `civ-flex civ-gap-2`. Those intentionally stay row-laid-out on mobile so destructive labels don't grow to consume the screen.
 
 ### List item
 

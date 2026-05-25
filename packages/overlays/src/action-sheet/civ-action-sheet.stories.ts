@@ -109,3 +109,56 @@ export const WithFocusTrap: Story = {
     `;
   },
 };
+
+export const LongFooterLabels: Story = {
+  name: 'Long footer button labels — auto-stack',
+  parameters: {
+    docs: {
+      description: {
+        story: `Action sheets are narrow by design, especially on mobile.
+Long government-form button labels can wrap unevenly when placed
+side-by-side. The \`.civ-button-row\` utility used inside the sheet
+uses a container query to stretch each button to full width and
+stack them when the sheet itself is narrow. This keeps tap targets
+big and heights matched even when labels are long.`,
+      },
+    },
+  },
+  render: () => {
+    const toggle = (e: Event) => {
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = !sheet.open;
+    };
+    const close = (e: Event) => {
+      const demo = (e.target as HTMLElement).closest('.action-sheet-demo')!;
+      const sheet = demo.querySelector('civ-action-sheet') as any;
+      sheet.open = false;
+    };
+    return html`
+      <div class="action-sheet-demo" style="position: relative;">
+        <civ-button label="Show long-label demo" @click="${toggle}"></civ-button>
+        <civ-action-sheet label="Confirm submission" trap-focus @civ-close="${close}">
+          <div class="civ-p-4">
+            <p class="civ-heading-sm civ-mb-4">Submit your application?</p>
+            <p class="civ-mb-4">
+              Once submitted, you cannot edit your answers. You'll receive a
+              confirmation email within 24 hours.
+            </p>
+            <div class="civ-button-row">
+              <civ-button
+                emphasis="secondary"
+                label="Go back to review my answers"
+                @click="${close}"
+              ></civ-button>
+              <civ-button
+                label="Submit my application now"
+                @click="${close}"
+              ></civ-button>
+            </div>
+          </div>
+        </civ-action-sheet>
+      </div>
+    `;
+  },
+};

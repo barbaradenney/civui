@@ -136,3 +136,54 @@ export const AddressVerification: Story = {
     `;
   },
 };
+
+export const LongFooterLabels: Story = {
+  name: 'Long footer button labels — auto-stack',
+  parameters: {
+    docs: {
+      description: {
+        story: `Government button labels are often long — "Save this draft
+and continue to the next page", "Yes, I confirm this is correct", "Go
+back to the previous step". Side-by-side, one button wraps to two
+lines while the sibling stays single-line and the heights mismatch.
+
+The modal footer uses a container query: when the modal itself is
+narrower than ~30rem, every footer button stretches to full width
+and stacks. This catches narrow modals at any viewport, not just
+on phones.`,
+      },
+    },
+  },
+  render: () => {
+    const toggle = (e: Event) => {
+      const demo = (e.target as HTMLElement).closest('.modal-demo')!;
+      const modal = demo.querySelector('civ-modal') as any;
+      modal.open = !modal.open;
+    };
+    const close = (e: Event) => {
+      ((e.target as HTMLElement).closest('.modal-demo')!.querySelector('civ-modal') as any).open = false;
+    };
+    return html`
+      <div class="modal-demo">
+        <civ-button label="Show long-label demo" @click="${toggle}"></civ-button>
+        <civ-modal heading="Save your application?" @civ-close="${close}">
+          <p class="civ-text-body">
+            We can save your progress so you can finish later. Your draft will
+            be kept for 60 days.
+          </p>
+          <div data-modal-footer>
+            <civ-button
+              emphasis="secondary"
+              label="Go back to the previous step"
+              @click="${close}"
+            ></civ-button>
+            <civ-button
+              label="Save this draft and continue"
+              @click="${close}"
+            ></civ-button>
+          </div>
+        </civ-modal>
+      </div>
+    `;
+  },
+};

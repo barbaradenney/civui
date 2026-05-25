@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Action Chip
+status: stable
+group: CivUI Actions
+description: 'See @civui/schema civ-action-chip for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Padding density. `default` for standalone; `sm` for dense rows'
+    icon_start:
+      title: Icon start
+      type: string
+      description: 'Leading icon name (rendered before the label)'
+    icon_end:
+      title: Icon end
+      type: string
+      description: 'Trailing icon name (rendered after the label and count)'
+    count:
+      title: Count
+      type: integer
+      description: 'Optional count rendered as " (N)" after the label. `null` hides it'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

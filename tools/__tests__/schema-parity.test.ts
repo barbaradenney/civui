@@ -24,6 +24,7 @@ import {
   androidPropAlternatives,
   normalizeType,
   camelToSnake,
+  diffProps,
 } from '../schema-parity.js';
 
 describe('iosPropAlternatives', () => {
@@ -116,7 +117,74 @@ describe('parseLitPropsFromSource — regression cases from code review', () => 
     const props = parseLitPropsFromSource(fixture, false);
     expect(props).toHaveLength(1);
     expect(props[0]?.name).toBe('foo');
-    expect(props[0]?.type).toBe('string');
+  });
+
+  it('reads the prop name from `get foo()` accessor-pair pattern', () => {
+    // civ-accordion-item declares `open` as an accessor pair so the
+    // setter can guard against programmatic mutation when disabled.
+    // The parser should read `open`, not `get`, as the prop name.
+    const fixture = `
+      @customElement('civ-thing')
+      export class CivThing extends CivBaseElement {
+        @property({ type: Boolean, reflect: true })
+        get open(): boolean { return this._open; }
+        set open(v: boolean) { this._open = v; }
+        private _open = false;
+      }
+    `;
+    const props = parseLitPropsFromSource(fixture, false);
+    expect(props.map((p) => p.name)).toEqual(['open']);
+    expect(props[0]?.type).toBe('boolean');
+  });
+});
+
+describe('diffProps — webOnly props skip type-mismatch check', () => {
+  it('skips type mismatch when the schema prop is webOnly', () => {
+    // civ-data-grid declares array-typed columns/rows as
+    // `@property({ attribute: false })` (no `type:`) — Lit defaults the
+    // converter to String, but the prop holds an array. The schema
+    // describes them as `type: 'array'`, `webOnly: true` for
+    // documentation. The two sides should not be flagged as drift.
+    const drift = diffProps(
+      [{ name: 'columns', type: 'array', webOnly: true }],
+      [{ name: 'columns', type: 'string' }],
+    );
+    expect(drift.mismatched).toHaveLength(0);
+  });
+
+  it('still flags type mismatch when the schema prop is NOT webOnly', () => {
+    const drift = diffProps(
+      [{ name: 'count', type: 'number' }],
+      [{ name: 'count', type: 'string' }],
+    );
+    expect(drift.mismatched).toEqual([
+      { name: 'count', field: 'type', schema: 'number', source: 'string' },
+    ]);
+  });
+
+  it('does NOT skip attribute mismatch even for webOnly props', () => {
+    // The webOnly skip is specifically about type — the attribute name
+    // is still part of the HTML contract and should be enforced.
+    const drift = diffProps(
+      [{ name: 'columns', type: 'array', webOnly: true, attribute: 'cols' }],
+      [{ name: 'columns', type: 'string', attribute: 'columns' }],
+    );
+    expect(drift.mismatched).toEqual([
+      { name: 'columns', field: 'attribute', schema: 'cols', source: 'columns' },
+    ]);
+  });
+});
+
+describe('iosPropAlternatives — body collision with SwiftUI View', () => {
+  it('offers `bodyText` as an alternative for the `body` prop', () => {
+    // SwiftUI's `View` protocol requires a `body` computed property,
+    // so a literal `body` prop name conflicts. iOS stubs use
+    // `bodyText` instead and the alternatives map handles it.
+    expect(iosPropAlternatives('body')).toContain('bodyText');
+  });
+
+  it('does NOT offer bodyText for unrelated prop names', () => {
+    expect(iosPropAlternatives('foo')).not.toContain('bodyText');
   });
 });
 

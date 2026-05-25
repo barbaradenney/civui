@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Input Chip
+status: stable
+group: CivUI Actions
+description: 'See @civui/schema civ-input-chip for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Padding density. `default` for standalone; `sm` for dense rows'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

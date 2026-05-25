@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivCallout(
     intent: String = "default",
+    emphasis: String = "primary",
+    spacing: String = "default",
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {

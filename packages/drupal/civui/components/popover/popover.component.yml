@@ -1,0 +1,49 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Popover
+status: stable
+group: CivUI Overlays
+description: 'See @civui/schema civ-popover for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Controlled open state. When omitted the popover manages its own state. Reflects to the host attribute'
+    align:
+      title: Align
+      type: string
+      enum: ['start', 'end']
+      default: 'end'
+      description: 'Horizontal alignment of the panel relative to the trigger. `end` (default) anchors the panel''s end edge to the trigger''s end; `start` anchors to the start. Auto-flips when the chosen edge would clip the viewport'
+    panel_role:
+      title: Panel role
+      type: string
+      default: 'dialog'
+      description: 'ARIA role applied to the panel. Defaults to `dialog`. Set to `menu`, `group`, `listbox`, etc. to match the panel''s semantics. Used by `civ-menu` (menu), `civ-column-visibility` (group), and `civ-button-group` overflow (menu)'
+    trigger_haspopup:
+      title: Trigger haspopup
+      type: string
+      default: 'true'
+      description: 'Value for `aria-haspopup` on the trigger. Defaults to `true`. Set to `menu` for a single-select menu, `dialog` / `listbox` to match the panel role'
+    no_tab_close:
+      title: No tab close
+      type: boolean
+      default: false
+      description: 'Disable closing on Tab. Default false (Tab closes. Matches the menu pattern). Set true when the panel contains naturally-tabbable items (checkboxes, form controls) so the user can Tab between them without dismissing'
+    no_click_outside_close:
+      title: No click outside close
+      type: boolean
+      default: false
+      description: 'Disable click-outside close. Default false. Set true when the panel anchors a long-lived disclosure that should only close via explicit affordance'
+    no_escape_close:
+      title: No escape close
+      type: boolean
+      default: false
+      description: 'Disable Escape close. Default false. Rare. Usually only when Escape is bound to a panel-internal action'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

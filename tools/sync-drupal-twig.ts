@@ -104,6 +104,11 @@ const COMPONENTS = [
   'civ-menu', 'civ-menu-item',
   'civ-pagination', 'civ-data-grid', 'civ-toolbar',
   'civ-bulk-actions', 'civ-column-visibility',
+  // Chip family + display/overlay primitives + tab-nav.
+  'civ-action-chip', 'civ-input-chip',
+  'civ-callout', 'civ-image', 'civ-popover',
+  'civ-skeleton', 'civ-spinner',
+  'civ-tab-nav', 'civ-tab-nav-item',
 ];
 
 function camelToKebab(name: string): string {

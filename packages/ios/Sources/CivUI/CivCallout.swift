@@ -14,10 +14,22 @@ public struct CivCallout: View {
     /// "error", or "success".
     public var intent: String
 
+    /// Visual emphasis. `primary` (default) for a stronger background
+    /// tint; `secondary` for a quieter ground-rail-only treatment.
+    public var emphasis: String
+
+    /// Padding density. `default` (standalone surface) or `sm` (inline /
+    /// dense contexts like data-grid empty states).
+    public var spacing: String
+
     public init(
-        intent: String = "default"
+        intent: String = "default",
+        emphasis: String = "primary",
+        spacing: String = "default"
     ) {
         self.intent = intent
+        self.emphasis = emphasis
+        self.spacing = spacing
     }
 
     public var body: some View {

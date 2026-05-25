@@ -145,6 +145,18 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-toolbar', drupal: 'toolbar' },
   { schema: 'civ-bulk-actions', drupal: 'bulk-actions' },
   { schema: 'civ-column-visibility', drupal: 'column-visibility' },
+  // Chip family — shipped (not deferred per the original audit-debt entry).
+  { schema: 'civ-action-chip', drupal: 'action-chip' },
+  { schema: 'civ-input-chip', drupal: 'input-chip' },
+  // Display + overlay primitives — Lit implementations exist; SDCs new.
+  { schema: 'civ-callout', drupal: 'callout' },
+  { schema: 'civ-image', drupal: 'image' },
+  { schema: 'civ-popover', drupal: 'popover' },
+  { schema: 'civ-skeleton', drupal: 'skeleton' },
+  { schema: 'civ-spinner', drupal: 'spinner' },
+  // Tab-nav cluster (distinct from civ-tabs — link-nav variant).
+  { schema: 'civ-tab-nav', drupal: 'tab-nav' },
+  { schema: 'civ-tab-nav-item', drupal: 'tab-nav-item' },
 ];
 
 import { INHERITED_FORM_PROPS } from './lib/inherited.js';

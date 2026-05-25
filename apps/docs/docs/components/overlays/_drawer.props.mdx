@@ -4,7 +4,7 @@
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `open` | `boolean` | `false` | Whether the drawer is currently visible. Reflects to the host attribute |
-| `position` | `'start'` \| `'end'` | `'start'` | Which viewport edge the drawer slides in from. `start` = left in LTR, right in RTL; `end` = right in LTR, left in RTL. Uses logical properties so layouts mirror automatically. |
+| `align` | `'start'` \| `'end'` | `'start'` | Which viewport edge the drawer slides in from. `start` = left in LTR, right in RTL; `end` = right in LTR, left in RTL. Uses logical properties so layouts mirror automatically. |
 | `width` | `string` | `'min(320px, 90vw)'` | Drawer width as a CSS length (e.g. `320px`, `min(360px, 90vw)`). Mobile (≤480px) caps to the viewport width regardless of this value so content never overflows offscreen. |
 | `heading` | `string` | `''` | Visible heading rendered inside the drawer header |
 | `heading-level` | `number` | `2` | Semantic heading level (2–6) for the drawer heading. Web-only. Native platforms expose headings via `accessibilityAddTraits(.isHeader)` / Compose semantics |

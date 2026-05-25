@@ -66,14 +66,14 @@ describe('civ-drawer', () => {
 describe('civ-drawer position', () => {
   it('defaults to start position', async () => {
     const el = await fixture('<civ-drawer heading="Test"><p>Content</p></civ-drawer>') as any;
-    expect(el.position).toBe('start');
+    expect(el.align).toBe('start');
     const dialog = el.querySelector('dialog')!;
     expect(dialog.classList.contains('civ-drawer--start')).toBe(true);
     expect(dialog.classList.contains('civ-drawer--end')).toBe(false);
   });
 
   it('renders end-position class when position="end"', async () => {
-    const el = await fixture('<civ-drawer position="end" heading="Test"><p>Content</p></civ-drawer>');
+    const el = await fixture('<civ-drawer align="end" heading="Test"><p>Content</p></civ-drawer>');
     await elementUpdated(el);
     const dialog = el.querySelector('dialog')!;
     expect(dialog.classList.contains('civ-drawer--end')).toBe(true);
@@ -81,8 +81,8 @@ describe('civ-drawer position', () => {
   });
 
   it('reflects position attribute to the host', async () => {
-    const el = await fixture('<civ-drawer position="end"></civ-drawer>') as any;
-    expect(el.getAttribute('position')).toBe('end');
+    const el = await fixture('<civ-drawer align="end"></civ-drawer>') as any;
+    expect(el.getAttribute('align')).toBe('end');
   });
 
   it('switches class when position changes at runtime', async () => {
@@ -90,7 +90,7 @@ describe('civ-drawer position', () => {
     await elementUpdated(el);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--start')).toBe(true);
 
-    el.position = 'end';
+    el.align = 'end';
     await elementUpdated(el);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--end')).toBe(true);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--start')).toBe(false);

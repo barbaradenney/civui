@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    expanded: {
+    open: {
       type: 'boolean',
       description: 'Whether the rest region is currently visible',
       default: false,

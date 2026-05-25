@@ -87,7 +87,7 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 
 ```html
 <!-- Slide-in main navigation (mobile) -->
-<civ-drawer ?open="${this.navOpen}" position="start" label="Main menu"
+<civ-drawer ?open="${this.navOpen}" align="start" label="Main menu"
   @civ-close="${() => this.navOpen = false}">
   <nav aria-label="Main">
     <civ-link href="/">Home</civ-link>
@@ -97,7 +97,7 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 </civ-drawer>
 
 <!-- Filter panel with sticky footer action buttons -->
-<civ-drawer ?open="${this.filtersOpen}" position="end" heading="Filter results" width="380px"
+<civ-drawer ?open="${this.filtersOpen}" align="end" heading="Filter results" width="380px"
   @civ-close="${() => this.filtersOpen = false}">
   <!-- Long list of filter checkboxes scrolls between sticky header and footer -->
   <civ-checkbox label="Category A"></civ-checkbox>
@@ -110,7 +110,7 @@ A side-anchored full-viewport-height dialog that slides in from the leading (`st
 </civ-drawer>
 
 <!-- Reading-mode drawer — header scrolls away with content -->
-<civ-drawer ?open="${this.articleOpen}" position="end" heading="Article" width="400px"
+<civ-drawer ?open="${this.articleOpen}" align="end" heading="Article" width="400px"
   no-sticky-header no-sticky-footer>
   <p>Long-form content…</p>
   <div data-drawer-footer>

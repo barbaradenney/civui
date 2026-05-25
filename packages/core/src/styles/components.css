@@ -6074,15 +6074,15 @@
     display: block;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
     content: '';
     position: absolute;
     inset-inline: 0;
@@ -6096,7 +6096,7 @@
     pointer-events: none;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -6113,7 +6113,7 @@
    * `width: fit-content` + `margin-inline: auto` centers the block
    * without forcing it to span the full row.
    */
-  civ-read-more[expanded]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more[open]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     display: flex;
     width: fit-content;
     margin-inline: auto;
@@ -6132,7 +6132,7 @@
   .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
-  civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
+  civ-read-more[open] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transform: rotate(180deg);
   }
 

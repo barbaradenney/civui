@@ -451,7 +451,7 @@ export const MasterDetailDrawer: Story = {
       <div>
         <p class="civ-mb-3">Click any row to view its detail.</p>
         <civ-data-grid class="story-detail" caption="Applications"></civ-data-grid>
-        <civ-drawer class="story-detail" position="end" heading="Application details">
+        <civ-drawer class="story-detail" align="end" heading="Application details">
           <dl id="story-detail-fields" style="margin: 0;"></dl>
         </civ-drawer>
       </div>

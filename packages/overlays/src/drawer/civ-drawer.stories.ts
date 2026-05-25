@@ -30,7 +30,7 @@ export const Default: Story = {
       ></civ-button>
       <civ-drawer
         heading="Filter results"
-        position="start"
+        align="start"
         @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <p class="civ-text-body">Narrow your results by category. Slides in from the leading edge of the viewport.</p>
@@ -50,7 +50,7 @@ export const StickyFooter: Story = {
       ></civ-button>
       <civ-drawer
         heading="Filter results"
-        position="end"
+        align="end"
         width="380px"
         @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
@@ -85,7 +85,7 @@ export const NonStickyHeaderAndFooter: Story = {
       ></civ-button>
       <civ-drawer
         heading="Article preview"
-        position="end"
+        align="end"
         width="400px"
         no-sticky-header
         no-sticky-footer
@@ -117,7 +117,7 @@ export const EndAnchored: Story = {
       ></civ-button>
       <civ-drawer
         heading="Display settings"
-        position="end"
+        align="end"
         width="360px"
         @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
@@ -141,7 +141,7 @@ export const MainMenu: Story = {
       ></civ-button>
       <civ-drawer
         label="Main menu"
-        position="start"
+        align="start"
         @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >
         <nav aria-label="Main">
@@ -168,7 +168,7 @@ export const NoCloseAffordance: Story = {
       ></civ-button>
       <civ-drawer
         heading="Edit profile"
-        position="end"
+        align="end"
         no-close-button
         @civ-close=${(e: Event) => close((e.target as HTMLElement).closest('.drawer-demo')!)}
       >

@@ -30,7 +30,7 @@ import type { SlotConfig } from '@civui/core';
  * @element civ-drawer
  *
  * @prop {boolean} open - Controls visibility
- * @prop {'start' | 'end'} position - Edge the drawer slides in from (default 'start')
+ * @prop {'start' | 'end'} align - Edge the drawer slides in from (default 'start')
  * @prop {string} width - CSS width (default 'min(320px, 90vw)')
  * @prop {string} heading - Drawer heading text
  * @prop {number} headingLevel - Heading level 2-6 (default 2)
@@ -45,7 +45,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @example Slide-in main navigation (mobile)
  * ```html
- * <civ-drawer ?open=${this._navOpen} position="start" label="Main menu"
+ * <civ-drawer ?open=${this._navOpen} align="start" label="Main menu"
  *             @civ-close=${() => this._navOpen = false}>
  *   <nav aria-label="Main">
  *     <civ-link href="/">Home</civ-link>
@@ -56,7 +56,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @example End-anchored settings panel
  * ```html
- * <civ-drawer ?open=${this._open} position="end" heading="Display settings" width="360px">
+ * <civ-drawer ?open=${this._open} align="end" heading="Display settings" width="360px">
  *   <civ-toggle label="Dark mode"></civ-toggle>
  * </civ-drawer>
  * ```
@@ -64,7 +64,7 @@ import type { SlotConfig } from '@civui/core';
 @customElement('civ-drawer')
 export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
-  @property({ type: String, reflect: true }) position: 'start' | 'end' = 'start';
+  @property({ type: String, reflect: true }) align: 'start' | 'end' = 'start';
   @property({ type: String }) width = 'min(320px, 90vw)';
   @property({ type: String }) heading = '';
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: 2 | 3 | 4 | 5 | 6 = 2;
@@ -109,7 +109,7 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <dialog
-        class="civ-drawer civ-drawer--${this.position}"
+        class="civ-drawer civ-drawer--${this.align}"
         style="--civ-drawer-width: ${this.width};"
         aria-labelledby="${this.heading ? this._headingId : nothing}"
         aria-label="${!this.heading && this.label ? this.label : nothing}"

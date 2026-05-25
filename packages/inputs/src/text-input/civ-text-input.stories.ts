@@ -173,7 +173,7 @@ export const InputTypes: Story = {
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-text-input label="Text" name="text" type="text"></civ-text-input>
       <civ-text-input label="Password" name="password" type="password"></civ-text-input>
-      <civ-text-input label="Search" name="search" type="search" leading-icon="search"></civ-text-input>
+      <civ-text-input label="Search" name="search" type="search" icon-start="search"></civ-text-input>
       <civ-text-input label="Number" name="number" type="number"></civ-text-input>
     </div>
   `,
@@ -209,21 +209,21 @@ export const CharacterCounterShortLimit: Story = {
 export const LeadingIcon: Story = {
   name: 'Inline: Leading icon',
   render: () => html`
-    <civ-text-input label="Search" name="search" type="search" leading-icon="search" placeholder="Find a benefit"></civ-text-input>
+    <civ-text-input label="Search" name="search" type="search" icon-start="search" placeholder="Find a benefit"></civ-text-input>
   `,
 };
 
 export const TrailingIcon: Story = {
   name: 'Inline: Trailing icon',
   render: () => html`
-    <civ-text-input label="Username" name="username" hint="3-20 characters, letters and numbers only" trailing-icon="info" trailing-icon-label="More info"></civ-text-input>
+    <civ-text-input label="Username" name="username" hint="3-20 characters, letters and numbers only" icon-end="info" icon-end-label="More info"></civ-text-input>
   `,
 };
 
 export const LeadingAndTrailingIcons: Story = {
   name: 'Inline: Leading + trailing icons',
   render: () => html`
-    <civ-text-input label="Search filings" name="filing-search" type="search" leading-icon="search" trailing-icon="info" trailing-icon-label="Search tips"></civ-text-input>
+    <civ-text-input label="Search filings" name="filing-search" type="search" icon-start="search" icon-end="info" icon-end-label="Search tips"></civ-text-input>
   `,
 };
 
@@ -234,7 +234,7 @@ export const Clearable: Story = {
       label="Search filings"
       name="filing-search"
       type="search"
-      leading-icon="search"
+      icon-start="search"
       value="VA disability"
       clearable
     ></civ-text-input>

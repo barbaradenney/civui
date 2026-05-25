@@ -12,7 +12,7 @@ import SwiftUI
 ///
 /// Usage:
 /// ```swift
-/// CivDrawer(open: $isOpen, position: "start", label: "Main menu") {
+/// CivDrawer(open: $isOpen, align: "start", label: "Main menu") {
 ///     NavigationLinks()
 /// }
 /// ```
@@ -24,7 +24,7 @@ public struct CivDrawer<Content: View>: View {
 
     /// Which viewport edge the drawer slides in from. `start` (leading)
     /// or `end` (trailing). Logical — auto-mirrors in RTL.
-    public var position: String
+    public var align: String
 
     /// Drawer width as a CSS length string. Native platforms convert
     /// to a CGFloat in the implementation pass; the prop is carried
@@ -66,7 +66,7 @@ public struct CivDrawer<Content: View>: View {
 
     public init(
         open: Bool = false,
-        position: String = "start",
+        align: String = "start",
         width: String = "min(320px, 90vw)",
         heading: String = "",
         label: String = "",
@@ -79,7 +79,7 @@ public struct CivDrawer<Content: View>: View {
         @ViewBuilder content: () -> Content
     ) {
         self.open = open
-        self.position = position
+        self.align = position
         self.width = width
         self.heading = heading
         self.label = label
@@ -104,7 +104,7 @@ public struct CivDrawer<Content: View>: View {
 #if DEBUG
 struct CivDrawer_Previews: PreviewProvider {
     static var previews: some View {
-        CivDrawer(open: true, position: "start", heading: "Filters") {
+        CivDrawer(open: true, align: "start", heading: "Filters") {
             Text("Drawer content")
         }
     }

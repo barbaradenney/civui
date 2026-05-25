@@ -112,20 +112,20 @@ props:
       type: boolean
       default: false
       description: 'When true and the value is non-empty, renders a clear button on the trailing edge'
-    leading_icon:
-      title: Leading icon
+    icon_start:
+      title: Icon start
       type: string
       description: 'Icon rendered inside the input on the leading edge. Any civ-icon name. Ignored when prefix is set'
-    leading_icon_label:
-      title: Leading icon label
+    icon_start_label:
+      title: Icon start label
       type: string
       description: 'Accessible label for the leading icon. When omitted, icon is decorative (aria-hidden)'
-    trailing_icon:
-      title: Trailing icon
+    icon_end:
+      title: Icon end
       type: string
       description: 'Icon rendered inside the input on the trailing edge. Ignored when suffix is set or the clear button is showing'
-    trailing_icon_label:
-      title: Trailing icon label
+    icon_end_label:
+      title: Icon end label
       type: string
       description: 'Accessible label for the trailing icon. When omitted, icon is decorative'
     decimals:

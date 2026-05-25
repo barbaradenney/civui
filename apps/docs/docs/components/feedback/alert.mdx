@@ -74,6 +74,62 @@ An accessible alert component for informational, warning, error, or success mess
 
 <StoryEmbed id="feedback-alert--compact" />
 
+### Collapsible (accordion) alert
+
+Set `collapsible` with a `heading` to wrap the body in a native `<details>`/`<summary>` disclosure. The heading becomes the toggle.
+
+<StoryEmbed id="feedback-alert--collapsible" />
+
+### Collapsible — initially open
+
+<StoryEmbed id="feedback-alert--collapsible-open" />
+
+### Collapsible + dismissible
+
+Chevron toggle and close button coexist on the heading row. The dismiss click stops propagation so it doesn't also toggle the disclosure.
+
+<StoryEmbed id="feedback-alert--collapsible-dismissible" />
+
+### Full-width site banner
+
+Set `full-width` for persistent site-wide notices. ARIA role switches from `alert`/`status` (live region) to `region` (landmark), `aria-label` is auto-derived from the heading, and the inner content centers to `--civ-site-max-width` so the banner spans the viewport edge-to-edge while text stays readable. Place as the first child of `<body>` or your outermost site wrapper.
+
+<StoryEmbed id="feedback-alert--full-width-banner" />
+
+### Full-width site banner — dismissible
+
+<StoryEmbed id="feedback-alert--full-width-banner-dismissible" />
+
+### Composed with civ-notice
+
+`civ-alert` accepts rich children when `label` is unset. Compose a `civ-notice` inside the alert body to pair the banner chrome (background, ARIA live region, dismiss) with icon-prefixed emphasis text.
+
+<StoryEmbed id="feedback-alert--composed-with-notice" />
+
+### Composed with multiple civ-notice rows
+
+Stack several `civ-notice` rows inside one alert body when listing layered consequences. Each row carries its own icon + bold emphasis so the points read independently.
+
+<StoryEmbed id="feedback-alert--composed-with-multiple-notices" />
+
+### Composed with civ-badge — status summary
+
+A status badge inside the alert surfaces the current state at a glance. The badge sits on its own line above the body text so it reads as a label for the explanation that follows.
+
+<StoryEmbed id="feedback-alert--composed-with-badge" />
+
+### Composed with multiple civ-badge — multi-step status
+
+A short list of badges inside the alert body labels each sub-item with the variant that matches its real state. Colorblind users get the meaning from the icon + label, not just color.
+
+<StoryEmbed id="feedback-alert--composed-with-badge-list" />
+
+### Composed rich body — badge + notice + descriptive copy
+
+Real placements mix multiple primitives in one alert body: a leading status badge (the answer), a paragraph of context (the explanation), and a trailing `civ-notice` (the emphasis the user must not miss).
+
+<StoryEmbed id="feedback-alert--composed-rich-body" />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/feedback-alert--default)
 
 ## Props

@@ -125,6 +125,85 @@ not built today.
 
 ---
 
+## Semantic-intent vs categorical-color components
+
+**Rule.** Two distinct families of "this component carries a color"
+exist in the design system, and the colour vocabulary differs by
+intent. Don't conflate them.
+
+- **Semantic-intent** — `civ-badge`, `civ-count`, `civ-alert`, and
+  `civ-notice`. The colour communicates status: *info*, *success*,
+  *warning*, *error*, *neutral*. The prop is named `intent`.
+- **Categorical** — `civ-tag` and `civ-card`. The colour groups
+  visually but carries no status meaning: *blue*, *red*, *green*,
+  *teal*, *yellow*, *orange*, *purple*, *gray*. The prop is named
+  `color`.
+
+**Why it matters.** Semantic components need to render the same
+intent with the same visual weight across components — an *error*
+should not be paler in a count pill than in a badge pill — so the
+two semantic components share one CSS recipe. Categorical
+components, by contrast, are tuned for aesthetic grouping, so they
+use pre-composed `tag-{color}-bg/text` tokens that swap as a pair
+between light and dark mode rather than deriving per-shade.
+
+**The semantic recipe (badge, count):**
+
+| Emphasis | bg | text |
+|---|---|---|
+| secondary | `<intent>-lighter` (base-lightest for neutral) | `<intent>-darkest` for success/warning; `<intent>-dark` for info/error; `base-darker` for neutral |
+| primary | `<intent>-dark` (`error-DEFAULT` for error; `base-darker` for neutral) | `white-DEFAULT` |
+| dot (badge) | same shade as primary bg | — |
+| tertiary (count) | transparent | `<intent>-dark` (neutral inherits parent color) |
+
+success and warning use `-darkest` for text because `*-dark` for
+those families is too muted to hit AA on the `-lighter` bg.
+
+Error's primary bg uses `error-DEFAULT` (saturated brand red), not
+`error-dark` (muted burgundy), so the "this is bad" cue stays
+loud. This is the only documented exception to the uniform
+`{intent}-dark` primary rule.
+
+**The categorical recipe (tag, card):**
+
+Secondary variants reuse the same semantic-family shades as the
+overlapping intents (so `red` secondary on a card is the same
+visual as `error` secondary on a badge), but primary variants use
+`tag-{color}-bg/text` pre-composed pairs — those tokens encode
+both the light- and dark-mode rendering as a single colour-keyed
+pair. Don't substitute `{family}-dark + white` for
+`tag-{color}-bg/text` on a card/tag primary: the categorical
+components rely on the paired tokens to swap correctly between
+modes.
+
+**Two anti-patterns:**
+
+1. A new "card" or "tile" component that hand-rolls an intent
+   palette using its own shade selections. Should reuse the
+   semantic recipe (extend `civ-badge` / `civ-count` if it carries
+   intent, or `civ-tag` / `civ-card` if it carries a category).
+2. Tag-family `primary` variants that drop into `{family}-dark + white`
+   instead of `tag-{color}-bg/text`. Breaks the light/dark swap
+   contract.
+
+**Caught by:** `pnpm lint:semantic-color-recipe` — parses every
+`.civ-{badge,count}--style-{emphasis}.civ-{badge,count}--{intent}`
+(and `.civ-{badge,count}--dot.civ-{badge,count}--{intent}`) rule in
+`components.css` and asserts the `background-color` + `color`
+declarations match the recipe above. Drift fails CI. The recipe
+itself lives at the top of `tools/lint-semantic-color-recipe.ts`;
+edits to it require a deliberate change that shows up in code
+review.
+
+The lint does NOT cover `civ-tag` / `civ-card` primary variants
+yet — categorical-color components don't have a single recipe to
+enforce (the `tag-{color}-bg/text` token is the contract, but
+allowing arbitrary categorical colour names means the lint can't
+mechanically check "did you use the right one"). The categorical
+rules are documented above and enforced by code review.
+
+---
+
 ## Process
 
 Run `pnpm validate:lints` after editing styles or composing

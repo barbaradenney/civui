@@ -82,6 +82,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/design-rules.md',
     anchor: 'only-interactive-elements-get-rounded-corners',
   },
+  'semantic-color-recipe': {
+    path: '.claude/rules/design-rules.md',
+    anchor: 'semantic-intent-vs-categorical-color-components',
+  },
 };
 
 /**

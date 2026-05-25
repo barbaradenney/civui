@@ -533,7 +533,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
             <span class="civ-text-sm">(${formatFileSize(file.size)})</span>
           </span>
           ${file.status === 'uploading' ? html`
-            <div class="civ-progress-track civ-progress-track--compact civ-mt-1">
+            <div class="civ-progress-track civ-progress-track--sm civ-mt-1">
               <div class="civ-progress-fill" style="width: ${file.progress}%" role="progressbar" aria-valuenow="${file.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="${interpolate(t('fileUploadProgressAriaLabel'), { name: file.name })}"></div>
             </div>
           ` : nothing}

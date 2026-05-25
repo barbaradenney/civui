@@ -129,7 +129,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
       'civ-alert',
       `civ-alert--${this.intent}`,
       `civ-alert--style-${this.emphasis}`,
-      (this.slim || this.spacing === 'sm') ? 'civ-alert--slim' : '',
+      (this.slim || this.spacing === 'sm') ? 'civ-alert--sm' : '',
       this.fullWidth ? 'civ-alert--full-width' : '',
       collapsibleActive ? 'civ-alert--collapsible' : '',
     ]

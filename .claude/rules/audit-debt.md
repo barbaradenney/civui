@@ -147,6 +147,20 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Table primitive follow-ups
+
+- **Surfaced:** Table primitive landing, 2026-05-24. Branch `claude/table-component-P3Xz3`.
+- **What landed:** CSS classes only — `.civ-table` + `.civ-table--bordered` + `.civ-table--striped` + `.civ-table--sm` (density modifier, follows the system-wide `--sm` convention) + `.civ-table__num` (cell helper) + `.civ-table-wrap` (scroll container). Lives in `packages/core/src/styles/components.css` next to `.civ-data-grid`. Storybook stories in `packages/core/src/foundations/table.stories.ts`. Docs page at `apps/docs/docs/components/data/table.mdx`. No `civ-table` custom element, no schema entry, no Drupal SDC, no native parity stub.
+- **Why no custom element:** `<thead>` / `<tbody>` / `<tr>` are foster-parented by the HTML parser when placed inside an unknown element — a slot-based component would silently break authored markup. The platform-blessed path for a thin styled-table primitive is a CSS class on a real `<table>`. Bootstrap, Tailwind UI, USWDS, GOV.UK Design System all follow the same pattern for the same reason.
+- **Explicitly out of v1 scope** (confirmed with user before implementation):
+  1. **Sortable headers, row selection, pagination, inline editing, row actions, sticky headers, column resize, mobile-stacked layout.** Every interactive table feature is `civ-data-grid`'s job. The split keeps `.civ-table` honest as a styling primitive — there's no growth path from CSS classes into JS-driven behavior.
+  2. **Custom element wrapping a real `<table>`** (a `civ-table` element that nests a real `<table>` child for styling/caption pass-through). Rejected because the double-element pattern is awkward and the contract surface a custom element provides (schema, native parity) isn't worth it for what's fundamentally a CSS class.
+  3. **Mobile-stacked layout.** Wide tables that overflow narrow viewports use the `.civ-table-wrap` horizontal-scroll container (WCAG SC 1.4.10 Reflow exemption pattern). Stacking rows into label/value blocks on mobile is what `civ-data-grid` does — if you need that, you need data-grid.
+- **No native + Drupal stubs to defer.** Unlike most components, there's nothing for the iOS / Android / Drupal SDC implementations to mirror — `.civ-table` is just a styling treatment. The Drupal docs page shows the Twig template pattern (write the same `<table class="civ-table">` markup in Twig); iOS / Android consumers use the platform's native `Table` / `LazyColumn { Row {} }` primitives.
+- **What to watch for in future audits:** If consumers start hand-rolling `.civ-table-{feature}` modifier classes for sortable, selectable, etc., that's a signal they should be using `civ-data-grid` instead — push back rather than growing the primitive.
+
+---
+
 ## Density convention rollout
 
 - **Surfaced:** Cross-component density audit, 2026-05-25. Branch `claude/density-convention-D3nz1`.
@@ -157,9 +171,9 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 | Item | Action | Notes |
 |---|---|---|
-| `.civ-table--compact` → `.civ-table--sm` | Rename CSS class + update docs + update story | Just landed in `claude/table-component-P3Xz3`. Cheaper to rename before any consumers depend on it than after. |
-| `.civ-progress-track--compact` → `.civ-progress-track--sm` | Rename CSS class | No public API surface — internal to file-upload and progress-track. |
-| `.civ-alert--slim` → `.civ-alert--sm` | Rename CSS class | Component already aliases `slim` boolean to `spacing="sm"`, so the rename only touches the CSS-class output. |
+| ~~`.civ-table--compact` → `.civ-table--sm`~~ | **Done** in `claude/table-component-P3Xz3` — table primitive shipped with `--sm` directly. | The density audit's "this still says `--compact`" reading was from a mid-stream version of the table branch; the landed code uses `--sm`. |
+| ~~`.civ-progress-track--compact` → `.civ-progress-track--sm`~~ | **Done** in `claude/table-component-P3Xz3`. | No public API surface — internal to file-upload and progress-track. |
+| ~~`.civ-alert--slim` → `.civ-alert--sm`~~ | **Done** in `claude/table-component-P3Xz3`. | Component already aliases `slim` boolean to `spacing="sm"`, so the rename only touched the CSS-class output. |
 
 ### Tier 2 — prop renames with deprecation window
 
@@ -167,7 +181,7 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 |---|---|---|
 | `civ-alert.slim` boolean → `civ-alert.spacing="sm"` | Deprecate the boolean, keep producing same CSS class until removal | The alias already exists; just need the deprecation warning + a release window. |
 | `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | Add `spacing` prop, deprecate `size` over one release | `size` is the only outlier in the read-more component — semantically it's density, not hierarchy. |
-| `civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"` | Two-prop migration | `variant` then only carries layout mode, `spacing` only carries density. The current single-prop conflation prevents a "full layout + compact spacing" combination. |
+| ~~`civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"`~~ | **Superseded** by the variant rename in `claude/file-upload-error-border-IOQWO` (PR #158). | `variant` enum was renamed: `compact` → `inline`, `full` → `large` — values now describe **layout**, not density. File-upload has no `spacing` prop today (file pickers don't typically appear in density-sensitive surfaces); add one if a real placement needs it. |
 
 ### Tier 3 — hardcoded-value cleanup (responds to `[data-civ-scale]` automatically once fixed)
 

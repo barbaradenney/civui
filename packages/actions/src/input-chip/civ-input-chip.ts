@@ -68,10 +68,19 @@ export class CivInputChip extends LightDomTextMixin(CivBaseElement) {
   }
 
   override render() {
+    // When the chip has no label and no slotted text, fall back to
+    // the generic "Close" label rather than rendering "Remove "
+    // (with a trailing space and no target name) — screen readers
+    // would otherwise announce just "Remove, button" with no
+    // identifier for what's being removed.
+    const removeLabel = this._text
+      ? interpolate(t('inputChipRemoveLabel'), { label: this._text })
+      : t('closeLabel');
+
     return html`
       <span class="${this._wrapperClasses}" role="presentation">
         <span class="civ-chip__label">${this._text}</span>${renderCloseButton({
-          label: interpolate(t('inputChipRemoveLabel'), { label: this._text }),
+          label: removeLabel,
           onClick: this._onRemove,
           extraClass: 'civ-chip__remove',
           disabled: this.disabled,

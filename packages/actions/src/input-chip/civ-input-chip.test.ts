@@ -73,6 +73,15 @@ describe('civ-input-chip', () => {
     expect(removeBtn(el).getAttribute('aria-label')).toBe('Remove bob@example.com');
   });
 
+  it('remove button falls back to a generic "Close" aria-label when the chip has no label or children', async () => {
+    // Defensive guard against the empty-_text case: without this
+    // fallback the aria-label would render as `'Remove '` (trailing
+    // space) and screen readers would announce just "Remove, button"
+    // with no identifier for what is being removed.
+    const el = await fixture<CivInputChip>('<civ-input-chip></civ-input-chip>');
+    expect(removeBtn(el).getAttribute('aria-label')).toBe('Close');
+  });
+
   it('disabled attribute reflects to the host', async () => {
     const el = await fixture<CivInputChip>('<civ-input-chip label="X"></civ-input-chip>');
     el.disabled = true;

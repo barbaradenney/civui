@@ -77,6 +77,32 @@ describe('classifySelector', () => {
     expect(classifySelector('.civ-badge--style-secondary.civ-badge--blue')).toBeNull();
     expect(classifySelector('.civ-count--style-primary.civ-count--critical')).toBeNull();
   });
+
+  it('still matches when a pseudo-class or attribute decorator is appended', () => {
+    // A drift rule decorated with `:not(:disabled)` would silently
+    // bypass the lint if the regex were anchored with no tail clause.
+    // The lint MUST recognize the recipe-shape prefix and check the
+    // decorated rule too.
+    expect(classifySelector('.civ-badge--style-primary.civ-badge--info:hover')).toEqual({
+      component: 'badge',
+      emphasis: 'primary',
+      intent: 'info',
+    });
+    expect(
+      classifySelector('.civ-badge--style-primary.civ-badge--error:not(:disabled)'),
+    ).toEqual({
+      component: 'badge',
+      emphasis: 'primary',
+      intent: 'error',
+    });
+    expect(
+      classifySelector('.civ-count--style-secondary.civ-count--neutral[aria-disabled="true"]'),
+    ).toEqual({
+      component: 'count',
+      emphasis: 'secondary',
+      intent: 'neutral',
+    });
+  });
 });
 
 describe('extractVar', () => {
@@ -91,6 +117,26 @@ describe('extractVar', () => {
 
   it('returns null when the property is absent', () => {
     expect(extractVar('background-color: red;', 'color')).toBeNull();
+  });
+
+  it('does NOT match `color` inside `background-color` (property-name anchor)', () => {
+    // Regression guard: a naive `\bcolor\s*:` regex also matches the
+    // substring `color:` inside `background-color:` because `\b`
+    // fires at the `-` separator (hyphen is a non-word char). The
+    // negative-lookbehind anchor `(?<![\w-])` rejects that.
+    expect(extractVar('background-color: var(--bg);', 'color')).toBeNull();
+    expect(extractVar('  background-color: var(--bg);', 'color')).toBeNull();
+    // But a real `color:` declaration on the same body still resolves.
+    expect(extractVar('background-color: var(--bg); color: var(--text);', 'color')).toBe('--text');
+  });
+
+  it('handles var() with a fallback value', () => {
+    // var(--x, #fff) is legal CSS; the lint should extract the first
+    // identifier and not bail with `<missing or non-var>`.
+    expect(extractVar('background-color: var(--civ-color-info-lighter, #cfe8ff);', 'background-color'))
+      .toBe('--civ-color-info-lighter');
+    expect(extractVar('color: var(--civ-color-info-dark, currentColor);', 'color'))
+      .toBe('--civ-color-info-dark');
   });
 
   it('returns null when the value is not a single var()', () => {

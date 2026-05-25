@@ -5275,8 +5275,16 @@
     min-height: 1.5rem;
   }
 
+  /* Hover affordance — scoped to chip kinds that ARE interactive at
+     the wrapper level. civ-filter-chip's wrapper is the clickable
+     surface for the toggle, and civ-action-chip IS a button. The
+     civ-input-chip wrapper is non-interactive (only the × is) so it
+     deliberately stays out of this rule — adding a hover background
+     on a non-clickable surface would signal an affordance that
+     doesn't exist. */
   @media (hover: hover) {
-    .civ-chip:hover:not(.civ-chip--disabled) {
+    .civ-chip--filter:hover:not(.civ-chip--disabled),
+    button.civ-chip--action:hover:not(.civ-chip--disabled) {
       background-color: var(--civ-color-surface-hover);
       border-color: var(--civ-color-base-darker);
     }
@@ -5337,9 +5345,13 @@
     opacity: var(--civ-opacity-secondary);
   }
 
-  /* Remove button — separated from action by an internal divider.
-     Shared by civ-filter-chip (when `removable`) and civ-input-chip
-     (always present). */
+  /* Remove button — shared chrome by civ-filter-chip (when
+     `removable`) and civ-input-chip (always present). The vertical
+     divider line (`border-inline-start`) is filter-chip-specific
+     because it separates two interactive halves (action button +
+     remove); input-chip's preceding `__label` is non-interactive, so
+     a divider there would falsely suggest the label is a separate
+     hit target. */
   .civ-chip__remove {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-self-stretch;
     background: transparent;
@@ -5351,11 +5363,14 @@
     /* Touch target: 24px minimum (WCAG 2.5.8). */
     min-width: 1.75rem;
     padding: 0 0.5rem;
-    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0;
     border-start-end-radius: inherit;
     border-end-end-radius: inherit;
     margin: 0;
+  }
+
+  .civ-chip--filter .civ-chip__remove {
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
   }
 
   .civ-chip--filter.civ-chip--style-primary.civ-chip--selected .civ-chip__remove {
@@ -5363,13 +5378,13 @@
   }
 
   @media (hover: hover) {
-    .civ-filter-chip__remove:hover:not(:disabled) {
+    .civ-chip__remove:hover:not(:disabled) {
       background: var(--civ-color-hover-tint);
       color: inherit;
     }
   }
 
-  .civ-filter-chip__remove:disabled {
+  .civ-chip__remove:disabled {
     cursor: not-allowed;
   }
 

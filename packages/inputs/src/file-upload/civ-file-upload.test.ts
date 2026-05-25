@@ -195,7 +195,7 @@ describe('civ-file-upload', () => {
       el._addFiles([file]);
       await elementUpdated(el);
 
-      expect(el.error).toBe('big.pdf supera el tamaño máximo de 1.0 KB');
+      expect(el._validationError).toBe('big.pdf supera el tamaño máximo de 1.0 KB');
     });
 
     it('uses custom files-list-label', async () => {
@@ -282,7 +282,7 @@ describe('file type validation', () => {
     await elementUpdated(el);
 
     expect(comp._files.length).toBe(0);
-    expect(comp.error).toContain('photo.jpg');
+    expect(comp._validationError).toContain('photo.jpg');
   });
 
   it('accepts files matching .pdf extension', async () => {
@@ -318,7 +318,7 @@ describe('file type validation', () => {
     await elementUpdated(el);
 
     expect(comp._files.length).toBe(0);
-    expect(comp.error).toContain('doc.pdf');
+    expect(comp._validationError).toContain('doc.pdf');
   });
 
   it('adds files that pass both accept and maxSize validation', async () => {
@@ -342,7 +342,7 @@ describe('file type validation', () => {
     await elementUpdated(el);
 
     expect(comp._files.length).toBe(0);
-    expect(comp.error).toContain('big.pdf');
+    expect(comp._validationError).toContain('big.pdf');
   });
 });
 
@@ -394,7 +394,7 @@ describe('aria-required', () => {
     await el.updateComplete;
 
     expect(el.files.length).toBe(2);
-    expect(el.error).toContain('2');
+    expect(el._validationError).toContain('2');
   });
 
   it('resets files on formResetCallback', async () => {
@@ -543,7 +543,7 @@ describe('civ-file-upload duplicate detection', () => {
     await el.updateComplete;
 
     expect(el.files.length).toBe(1);
-    expect(el.error).toContain('already in the list');
+    expect(el._validationError).toContain('already in the list');
   });
 
   it('does NOT reject a same-named file with a different size', async () => {
@@ -586,8 +586,8 @@ describe('civ-file-upload duplicate detection', () => {
     await el.updateComplete;
 
     expect(el.files.length).toBe(1);
-    expect(el.error).toContain('already in the list');
-    expect(el.error).toContain('exceeds the maximum size');
+    expect(el._validationError).toContain('already in the list');
+    expect(el._validationError).toContain('exceeds the maximum size');
   });
 });
 
@@ -679,7 +679,7 @@ describe('civ-file-upload initialFiles (draft restore)', () => {
     await el.updateComplete;
 
     expect(el.files.length).toBe(1);
-    expect(el.error).toContain('already in the list');
+    expect(el._validationError).toContain('already in the list');
   });
 
   it('fires civ-file-removed with isInitial=true and the server id when an initial file is removed', async () => {
@@ -1297,6 +1297,94 @@ describe('civ-file-upload status icons are aria-hidden', () => {
 
     const icon = el.querySelector('civ-icon[name="error"]')!;
     expect(icon.getAttribute('aria-hidden')).toBe('true');
+  });
+});
+
+describe('civ-file-upload validation error lifecycle', () => {
+  it('clears stale validation error when the user opens the picker again', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" max-size="10"></civ-file-upload>') as any;
+
+    // First attempt: oversized file → validation error
+    el._addFiles([new File(['x'.repeat(100)], 'big.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    expect(el._validationError).toContain('big.pdf');
+    expect(el._validationError).toContain('exceeds');
+
+    // User opens picker again (clicks dropzone) → validation error is dropped
+    // so they get a fresh state for their next selection
+    el._onDropzoneClick();
+    await elementUpdated(el);
+    expect(el._validationError).toBe('');
+  });
+
+  it('preserves consumer-set `error` prop across picker opens', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" error="Server says no"></civ-file-upload>') as any;
+    expect(el.error).toBe('Server says no');
+
+    // User opens picker — consumer error is theirs to manage, must not be cleared
+    el._onDropzoneClick();
+    await elementUpdated(el);
+    expect(el.error).toBe('Server says no');
+  });
+
+  it('validation error takes precedence over consumer error when both are set', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" error="Server says no" max-size="10"></civ-file-upload>') as any;
+
+    // Both errors present: consumer's "Server says no" + new validation error
+    el._addFiles([new File(['x'.repeat(100)], 'big.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    // Validation message (most recent action) is shown
+    const errorEl = el.querySelector('[role="alert"]');
+    expect(errorEl).not.toBeNull();
+    expect(errorEl!.textContent).toContain('big.pdf');
+    expect(errorEl!.textContent).not.toContain('Server says no');
+  });
+
+  it('opening the picker after validation falls back to the consumer error', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" error="Server says no" max-size="10"></civ-file-upload>') as any;
+
+    el._addFiles([new File(['x'.repeat(100)], 'big.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    // Validation error is the displayed one
+    expect(el.querySelector('[role="alert"]')!.textContent).toContain('big.pdf');
+
+    // User opens picker → validation error cleared, consumer error re-emerges
+    el._onDropzoneClick();
+    await elementUpdated(el);
+    const errorEl = el.querySelector('[role="alert"]');
+    expect(errorEl!.textContent).toContain('Server says no');
+  });
+
+  it('removing the last file clears validation error but preserves consumer error', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" error="Server says no" max-size="10"></civ-file-upload>') as any;
+    // Add a valid file first
+    el._addFiles([new File(['x'], 'small.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    // Then trigger validation error on a second attempt
+    el._addFiles([new File(['x'.repeat(100)], 'big.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    expect(el._validationError).toContain('big.pdf');
+
+    // Remove the only valid file → list empty → validation error clears,
+    // consumer error remains
+    el.removeFile(0);
+    await elementUpdated(el);
+    expect(el._validationError).toBe('');
+    expect(el.error).toBe('Server says no');
+  });
+
+  it('formResetCallback clears both validation and consumer errors', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" error="Server says no" max-size="10"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'.repeat(100)], 'big.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    expect(el._validationError).toContain('big.pdf');
+    expect(el.error).toBe('Server says no');
+
+    el.formResetCallback();
+    await elementUpdated(el);
+    expect(el._validationError).toBe('');
+    expect(el.error).toBe('');
   });
 });
 

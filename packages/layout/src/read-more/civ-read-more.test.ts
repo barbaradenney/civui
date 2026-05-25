@@ -210,12 +210,33 @@ describe('civ-read-more', () => {
     expect(el.hasAttribute('open')).toBe(true);
   });
 
-  it('applies the shared toggle-button sm size class', async () => {
+  it('applies the shared toggle-button sm class when spacing="sm"', async () => {
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more spacing="sm"><p>Teaser</p></civ-read-more>
+    `);
+    const trigger = el.querySelector('.civ-read-more__trigger')!;
+    expect(trigger.classList.contains('civ-text-btn--sm')).toBe(true);
+  });
+
+  it('also applies the sm class when the deprecated `size="sm"` is used', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more size="sm"><p>Teaser</p></civ-read-more>
     `);
     const trigger = el.querySelector('.civ-read-more__trigger')!;
     expect(trigger.classList.contains('civ-text-btn--sm')).toBe(true);
+  });
+
+  it('emits a dev-mode deprecation warning when `size="sm"` is set', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { resetDevWarnDedupe } = await import('@civui/core');
+    resetDevWarnDedupe();
+    await fixture<CivReadMore>(`<civ-read-more size="sm"><p>Teaser</p></civ-read-more>`);
+    expect(warn).toHaveBeenCalled();
+    const message = warn.mock.calls[0]?.[0] as string;
+    expect(message).toContain('civ-read-more');
+    expect(message).toContain('size');
+    expect(message).toContain('spacing="sm"');
+    warn.mockRestore();
   });
 
   it('composes the shared civ-text-btn chip palette on the trigger', async () => {

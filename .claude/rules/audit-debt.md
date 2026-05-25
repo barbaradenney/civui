@@ -182,19 +182,19 @@ A new `pnpm lint:density-modifier-names` (wired into `pnpm validate:lints` and t
 | Item | Action | Notes |
 |---|---|---|
 | ~~`civ-alert.slim` boolean → `civ-alert.spacing="sm"`~~ | ✅ Deprecation warning landed in `claude/table-component-P3Xz3` (2026-05-25) | `slim` is now `@deprecated` in JSDoc and emits a `devWarn` when used. Removal scheduled for a subsequent major. Stories migrated to `spacing="sm"`. |
-| `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | Add `spacing` prop, deprecate `size` over one release | `size` is the only outlier in the read-more component — semantically it's density, not hierarchy. |
+| ~~`civ-read-more.size="sm"` → `civ-read-more.spacing="sm"`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Added `spacing` prop (parallels `size`'s values). `size` is now `@deprecated` in JSDoc and emits a `devWarn` when set to `'sm'`. Schema, iOS / Android stubs, and Drupal SDC updated to expose `spacing`. Story migrated. Test covers both code paths producing `civ-text-btn--sm`. |
 | ~~`civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"`~~ | **Superseded** by the variant rename in `claude/file-upload-error-border-IOQWO` (PR #158). | `variant` enum was renamed: `compact` → `inline`, `full` → `large` — values now describe **layout**, not density. File-upload has no `spacing` prop today (file pickers don't typically appear in density-sensitive surfaces); add one if a real placement needs it. |
 
 ### Tier 3 — hardcoded-value cleanup (responds to `[data-civ-scale]` automatically once fixed)
 
 | Item | Action | Notes |
 |---|---|---|
-| `civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary) | Replace with `var(--civ-spacing-4)` or `civ-p-4` | **Biggest scale-system bypass** — accordions inside `[data-civ-scale="dense"]` admin surfaces stay full-size while everything around them shrinks. Most visible win. |
-| `civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon) | Replace with `var(--civ-typography-fontSize-2xl)` / `fontSize-lg` | Notice icons don't scale with the page today. |
-| `civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm) | Move to `var(--civ-spacing-*)` equivalents | Style-secondary / style-primary variants. |
-| `civ-filter-chip` — `min-height: 1.75rem` (default), `1.5rem` (`--sm`) | Move to `var(--civ-spacing-6)` / `--civ-spacing-5` | Pill height doesn't track scale today. |
-| `civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;` | **Keep hardcoded** — WCAG 2.5.5 tap-target floor | Add `/* not density: WCAG 2.5.5 tap target floor */` comment to suppress future audit confusion. |
-| Spinner sizes, signature-preview height, file-preview thumbnails | **Keep hardcoded** | Decorative dimensions. Add `/* not density: decorative dimension */` comments. |
+| ~~`civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary)~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Migrated to `var(--civ-spacing-3)` (15px, -1px shift from `1rem`/16px — chose spacing-3 over the audit-suggested spacing-4 because CivUI's 5px-based spacing scale makes spacing-3=15px the closest visual match to 1rem). Primary variant's `padding: 1rem 1.25rem` → `spacing-3 spacing-4`. Now scales with `[data-civ-scale]`. |
+| ~~`civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon)~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Migrated to `var(--civ-typography-fontSize-4xl)` (default, 2.25rem = 36px — exact tokens for 2.5rem don't exist; this is the closest at -4px) and `fontSize-2xl` (sm, 1.5rem — exact match). Both now scale with the page. |
+| ~~`civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm)~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Default → `var(--civ-spacing-4)` (20px exact). Sm → `var(--civ-spacing-3)` (15px, -1px shift from 1rem/16px). Both style-primary and style-secondary variants migrated. |
+| ~~`civ-filter-chip` — `min-height: 1.75rem` (default), `1.5rem` (`--sm`)~~ | ✅ Kept hardcoded (2026-05-25) | **Departure from audit recommendation.** The audit suggested `var(--civ-spacing-6)` / `--civ-spacing-5`, but spacing-6 at `[data-civ-scale="dense"]` resolves to 23px — below the WCAG 2.5.5 24px tap-target floor. Treating this as a WCAG floor (same as `civ-action-btn`); added `/* not density: WCAG 2.5.5 tap target floor */` comment so future audits don't re-flag. |
+| ~~`civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Added `/* not density: WCAG 2.5.5 tap target floor */` comments on both default + `--sm`. |
+| ~~Spinner sizes, signature-preview height, file-preview thumbnails~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Added `/* not density: decorative dimension */` comments on spinner ladder and signature-preview height. (File-preview thumbnails don't have a hardcoded dimension in `components.css` — the audit's reference was an over-generalization.) |
 
 ### Tier 4 — coverage gaps (need design decision before implementing)
 

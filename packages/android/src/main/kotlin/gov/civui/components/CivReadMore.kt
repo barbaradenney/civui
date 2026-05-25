@@ -22,7 +22,9 @@ fun CivReadMore(
     moreLabel: String = "",
     lessLabel: String = "",
     icon: String = "",
+    /** @deprecated Use `spacing` instead. */
     size: String = "default",
+    spacing: String = "default",
     inline: Boolean = false,
     noFadeTrigger: Boolean = false,
     modifier: Modifier = Modifier,

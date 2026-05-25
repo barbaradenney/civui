@@ -127,7 +127,7 @@ export const ExpandedByDefault: Story = {
 export const SmallSize: Story = {
   name: 'Small size',
   render: () => html`
-    <civ-read-more size="sm">
+    <civ-read-more spacing="sm">
       <p class="civ-text-sm">
         Your application has been received and is in review.
       </p>

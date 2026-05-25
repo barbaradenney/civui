@@ -34,7 +34,13 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'enum',
-      description: 'Trigger text size',
+      description: '**Deprecated** — use `spacing="sm"` instead. Trigger text size. Emits a dev-mode warning when set. Will be removed in a future major.',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
+    spacing: {
+      type: 'enum',
+      description: 'Trigger padding density. `sm` applies the system-wide `--sm` density modifier for compact placements.',
       default: 'default',
       values: ['default', 'sm'],
     },

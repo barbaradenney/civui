@@ -38,6 +38,12 @@ props:
       type: boolean
       default: false
       description: 'Opt out of the default block-mode fade-and-overlay treatment. By default (collapsed, block mode), the teaser fades into `--civ-read-more-bg` at the bottom and the trigger sits centered over the fade so the affordance reads as part of the...'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Trigger padding density. `sm` applies the system-wide `--sm` density modifier for compact placements.'
 
 slots:
   teaser:

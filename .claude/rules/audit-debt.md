@@ -9,7 +9,7 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 ## Native platform implementation pass (iOS + Android)
 
 - **Surfaced:** Overlays + Compound audits, 2026-05-11. Scope corrected 2026-05-12. Allowlist mechanised 2026-05-19.
-- **Scale:** 20 iOS components currently return `EmptyView()`. Android stubs follow the same pattern (no real Compose body).
+- **Scale:** 56 iOS components currently return `EmptyView()` (up from 20 after the 2026-05-25 batch landed Drupal + native parity stubs for the navigation, secondary navigation, admin data-grid, accordion, timeline, process-list, metric-tile, itemized-total, and notice clusters). Android stubs follow the same pattern (no real Compose body).
 - **Source of truth:** The canonical list lives in [`tools/ios-stub-allowlist.ts`](../../tools/ios-stub-allowlist.ts). The `pnpm lint:ios-stub-allowlist` CI gate enforces it both ways — a new stub without an entry fails the build, and an entry whose body is no longer EmptyView is flagged stale. Editing the allowlist requires a deliberate human PR.
 - **State:** Each component declares the schema's prop surface (so `schema-parity` is satisfied), but renders no actual native UI. Android equivalents render only `Column { ... }` placeholders.
 - **Why deferred:** This is a real native-implementation pass, not a quick port. SwiftUI/Compose work without device verification is risky — modal/sheet presentation in particular has platform-specific quirks (focus trap, dismiss gestures, scrim, keyboard insets) that LLMs cannot test blind. The schema-driven prop surface keeps the parity contract stable; UI implementation should be scheduled as dedicated work with someone who can run the simulators.

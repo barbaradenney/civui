@@ -240,16 +240,19 @@ Why schemas matter:
 - Drift between schema and Lit is enforced by `pnpm parity:schema`, which exits 1 on mismatch.
 - Schemas serve the contract role directly; no code-generation step is required (the previous `@civui/codegen` package was removed when this approach replaced it).
 
-**Coverage status (62 components, every cross-platform component covered):**
+**Coverage status (105 components, every cross-platform component covered):**
 - Form controls: `civ-text-input`, `civ-textarea`, `civ-select`, `civ-combobox`, `civ-date-picker`, `civ-date-range-picker`, `civ-memorable-date`, `civ-file-upload`, `civ-yes-no`, `civ-toggle`
 - Choice groups: `civ-checkbox`, `civ-checkbox-group`, `civ-radio-group`, `civ-segmented-control`
 - Compound + orchestration: `civ-address`, `civ-name`, `civ-direct-deposit`, `civ-signature`, `civ-race-ethnicity`, `civ-partnership-history`, `civ-relationship`, `civ-service-history`, `civ-repeater`, `civ-form-step`, `civ-conditional`, `civ-summary`, `civ-data-field`, `civ-section-intro`
-- Progress + feedback: `civ-progress-steps`, `civ-progress-percent`, `civ-progress-header`, `civ-support-resources`, `civ-alert`, `civ-badge`, `civ-count`
-- Overlays: `civ-modal`, `civ-action-sheet`
-- Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-page-header`, `civ-icon`
+- Progress + feedback: `civ-progress-steps`, `civ-progress-percent`, `civ-progress-header`, `civ-support-resources`, `civ-alert`, `civ-notice`, `civ-badge`, `civ-count`
+- Display-only feedback: `civ-timeline` + `civ-timeline-item`, `civ-process-list` + `civ-process-list-item`
+- Overlays: `civ-modal`, `civ-action-sheet`, `civ-menu` + `civ-menu-item`
+- Layout + UI: `civ-filterable-list`, `civ-card`, `civ-divider`, `civ-tag`, `civ-list`, `civ-list-item`, `civ-page-header`, `civ-icon`, `civ-accordion` + `civ-accordion-item`
+- Data: `civ-metric-tile` + `civ-metric-group`, `civ-itemized-total` + `civ-itemized-item`, `civ-pagination`, `civ-data-grid`, `civ-toolbar`, `civ-bulk-actions`, `civ-column-visibility`
 - Actions: `civ-button`, `civ-link`, `civ-link-card`, `civ-skip-link`, `civ-action-button`, `civ-button-group`, `civ-filter-chip`, `civ-filter-chip-group`
-- Navigation: (none registered yet — schemas exist for `civ-nav`, `civ-breadcrumb`, `civ-tabs`, `civ-tab-nav`, `civ-side-nav`, `civ-on-this-page`, `civ-back-to-top` and their item sub-components, but native + Drupal stubs are deferred per `.claude/rules/audit-debt.md`)
-- Display-only feedback: (none registered yet — schemas exist for `civ-timeline` + `civ-timeline-item` and `civ-process-list` + `civ-process-list-item`, but native + Drupal stubs are deferred per `.claude/rules/audit-debt.md`)
+- Navigation: `civ-breadcrumb` + `civ-breadcrumb-item`, `civ-nav` + `civ-nav-item`, `civ-tabs` + `civ-tab` + `civ-tab-panel`, `civ-side-nav` + `civ-side-nav-item`, `civ-on-this-page` + `civ-on-this-page-item`, `civ-back-to-top`
+
+Stubs-only platforms (native UI not yet implemented but the prop surface is enforced): see `tools/ios-stub-allowlist.ts` (56 entries) and `.claude/rules/audit-debt.md` → "Native platform implementation pass" for the device-verification follow-up.
 
 Five CI gates protect the contract (`.github/workflows/parity.yml`):
 - **`schema-parity`** runs `pnpm parity:schema --platforms` — fails on Lit ↔ schema ↔ iOS ↔ Android ↔ Drupal SDC drift.

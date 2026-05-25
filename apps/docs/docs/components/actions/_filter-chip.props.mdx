@@ -6,7 +6,7 @@
 | `selected` | `boolean` | `false` | Active state. Reflects to the host attribute. In `radio` variant this is managed by the parent group |
 | `emphasis` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background |
 | `variant` | `'toggle'` \| `'radio'` | `'toggle'` | Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity) |
-| `spacing` | `'default'` \| `'sm'` | `'default'` | Padding density. `default` for standalone; `sm` for dense filter strips |
+| `spacing` | `'default'` \| `'sm'` \| `'lg'` | `'default'` | Padding density. `default` (24px, WCAG 2.5.8 AA target) is the common case for standalone filter rows. `sm` also clamps to the 24px floor for ultra-dense filter strips. `lg` (44px, WCAG 2.5.5 AAA Enhanced target) is for AAA-conscious surfaces or fingertip-heavy mobile placements |
 | `icon-start` | `string` | `''` | Leading icon name (e.g. category emoji-replacement) |
 | `icon-end` | `string` | `''` | Trailing icon name |
 | `count` | `number` | — | Optional count badge appended after the label (e.g. `Open jobs (12)`). `null` hides the badge |

@@ -30,9 +30,9 @@ const schema: ComponentSchema = {
     },
     spacing: {
       type: 'enum',
-      description: 'Padding density. `default` for standalone; `sm` for dense filter strips',
+      description: 'Padding density. `default` (24px, WCAG 2.5.8 AA target) is the common case for standalone filter rows. `sm` also clamps to the 24px floor for ultra-dense filter strips. `lg` (44px, WCAG 2.5.5 AAA Enhanced target) is for AAA-conscious surfaces or fingertip-heavy mobile placements',
       default: 'default',
-      values: ['default', 'sm'],
+      values: ['default', 'sm', 'lg'],
     },
     iconStart: {
       type: 'string',

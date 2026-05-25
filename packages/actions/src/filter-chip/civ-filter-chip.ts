@@ -63,8 +63,8 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
   /** ARIA mode: 'toggle' (aria-pressed) or 'radio' (aria-checked). Set automatically by civ-filter-chip-group in single mode. */
   @property({ type: String }) variant: FilterChipVariant = 'toggle';
 
-  /** Padding size: 'default' or 'sm' for compact layouts. */
-  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+  /** Padding size. `default` (AA target 24px), `sm` (also clamps to 24px floor for dense rows), or `lg` (44px — WCAG 2.5.5 AAA Enhanced target). */
+  @property({ type: String }) spacing: 'default' | 'sm' | 'lg' = 'default';
 
   /** Icon name to render before the label when not selected. */
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
@@ -90,6 +90,7 @@ export class CivFilterChip extends LightDomTextMixin(CivBaseElement) {
       `civ-chip--style-${this.emphasis}`,
       this.selected ? 'civ-chip--selected' : '',
       this.spacing === 'sm' ? 'civ-chip--sm' : '',
+      this.spacing === 'lg' ? 'civ-chip--lg' : '',
       this.disabled ? 'civ-chip--disabled' : '',
     ]
       .filter(Boolean)

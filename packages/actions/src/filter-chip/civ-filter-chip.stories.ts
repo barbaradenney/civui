@@ -123,26 +123,35 @@ export const Spacing: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Default and compact (`sm`) padding for dense filter rows.',
+        story:
+          'Three sizes. `default` and `sm` both hit the WCAG 2.5.8 AA minimum target (24px). `lg` hits the WCAG 2.5.5 AAA Enhanced target (44px) for AAA-conscious surfaces or fingertip-heavy mobile placements.',
       },
     },
   },
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
       <div>
-        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default (24px, AA)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
           <civ-filter-chip label="Healthcare" value="healthcare" selected></civ-filter-chip>
           <civ-filter-chip label="Education" value="education"></civ-filter-chip>
           <civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm, 24px floor)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
           <civ-filter-chip label="Healthcare" value="healthcare" spacing="sm" selected></civ-filter-chip>
           <civ-filter-chip label="Education" value="education" spacing="sm"></civ-filter-chip>
           <civ-filter-chip label="Housing" value="housing" spacing="sm"></civ-filter-chip>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Large (lg, 44px AAA)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+          <civ-filter-chip label="Healthcare" value="healthcare" spacing="lg" selected></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" spacing="lg"></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" spacing="lg"></civ-filter-chip>
         </div>
       </div>
     </div>

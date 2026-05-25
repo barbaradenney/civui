@@ -157,14 +157,21 @@ describe('civ-filter-chip', () => {
   });
 
   describe('spacing', () => {
-    it('defaults to default spacing (no --sm class on wrapper)', async () => {
+    it('defaults to default spacing (no --sm or --lg class on wrapper)', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
       expect(wrapper(el).className).not.toContain('civ-chip--sm');
+      expect(wrapper(el).className).not.toContain('civ-chip--lg');
     });
 
     it('applies civ-chip--sm to wrapper when spacing="sm"', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" spacing="sm"></civ-filter-chip>');
       expect(wrapper(el).className).toContain('civ-chip--sm');
+    });
+
+    it('applies civ-chip--lg to wrapper when spacing="lg" (WCAG 2.5.5 AAA target)', async () => {
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" spacing="lg"></civ-filter-chip>');
+      expect(wrapper(el).className).toContain('civ-chip--lg');
+      expect(wrapper(el).className).not.toContain('civ-chip--sm');
     });
   });
 

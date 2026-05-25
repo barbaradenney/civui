@@ -34,7 +34,7 @@ import '@civui/feedback/count';
  * @prop {string} label - Chip text (preferred over child text)
  * @prop {string} value - Identifier passed in event detail (consumer correlates clicks)
  * @prop {boolean} disabled - Disabled state
- * @prop {string} spacing - Padding size: 'default' or 'sm'
+ * @prop {string} spacing - Padding size. `default` (AA target 24px), `sm` (also clamps to 24px floor), or `lg` (44px — WCAG 2.5.5 AAA Enhanced target)
  * @prop {string} iconStart - Icon name to render before the label
  * @prop {string} iconEnd - Icon name to render after the label
  * @prop {number | null} count - Optional count rendered as " (N)" after the label
@@ -49,7 +49,7 @@ export class CivActionChip extends LightDomTextMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   /** Padding size: 'default' or 'sm' for compact layouts. */
-  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+  @property({ type: String }) spacing: 'default' | 'sm' | 'lg' = 'default';
 
   /** Icon name to render before the label. */
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
@@ -69,6 +69,7 @@ export class CivActionChip extends LightDomTextMixin(CivBaseElement) {
       'civ-chip',
       'civ-chip--action',
       this.spacing === 'sm' ? 'civ-chip--sm' : '',
+      this.spacing === 'lg' ? 'civ-chip--lg' : '',
       this.disabled ? 'civ-chip--disabled' : '',
     ]
       .filter(Boolean)

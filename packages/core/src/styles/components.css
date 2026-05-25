@@ -5635,6 +5635,24 @@
     min-height: max(var(--civ-spacing-5), 1.5rem);
   }
 
+  /* Large size: WCAG 2.5.5 (AAA) Enhanced target — `min-height` AND
+     `min-width` both clamp to 44px. Use on surfaces where AAA
+     compliance is required, on mobile-heavy chip rows, or wherever a
+     more confident tap target is preferred. `--civ-spacing-10` is
+     50px at default scale and 37.5px at dense; the 2.75rem floor
+     guarantees the AAA target even when the scale shrinks. */
+  .civ-chip--lg .civ-chip__action,
+  button.civ-chip.civ-chip--lg.civ-chip--action,
+  .civ-chip--input.civ-chip--lg .civ-chip__label {
+    @apply civ-px-4 civ-py-2 civ-text-base;
+    /* not density: WCAG 2.5.5 AAA tap-target floor (44×44). The
+       max() guarantees the floor even when scale-dense shrinks the
+       spacing token below 44px; the min-width literal is the same
+       floor applied to narrow chips ("Yes", "10:00 AM"). */
+    min-height: max(var(--civ-spacing-10), 2.75rem);
+    min-width: 2.75rem;
+  }
+
   /* Hover affordance — scoped to chip kinds that ARE interactive at
      the wrapper level. civ-filter-chip's wrapper is the clickable
      surface for the toggle, and civ-action-chip IS a button. The

@@ -124,6 +124,17 @@ export const COVERED_COMPONENTS: ComponentSpec[] = [
   { name: 'civ-action-sheet',      source: 'packages/overlays/src/action-sheet/civ-action-sheet.ts',                                  ios: 'packages/ios/Sources/CivUI/CivActionSheet.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivActionSheet.kt',   drupal: 'packages/drupal/civui/components/action-sheet/action-sheet.component.yml' },
   { name: 'civ-drawer',            source: 'packages/overlays/src/drawer/civ-drawer.ts',                                              ios: 'packages/ios/Sources/CivUI/CivDrawer.swift',        android: 'packages/android/src/main/kotlin/gov/civui/components/CivDrawer.kt',        drupal: 'packages/drupal/civui/components/drawer/drawer.component.yml' },
   { name: 'civ-alert',             source: 'packages/feedback/src/alert/civ-alert.ts',                                                ios: 'packages/ios/Sources/CivUI/CivAlert.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivAlert.kt',         drupal: 'packages/drupal/civui/components/alert/alert.component.yml' },
+  { name: 'civ-notice',            source: 'packages/feedback/src/notice/civ-notice.ts',                                              ios: 'packages/ios/Sources/CivUI/CivNotice.swift',        android: 'packages/android/src/main/kotlin/gov/civui/components/CivNotice.kt',        drupal: 'packages/drupal/civui/components/notice/notice.component.yml' },
+  { name: 'civ-timeline',          source: 'packages/feedback/src/timeline/civ-timeline.ts',                                          ios: 'packages/ios/Sources/CivUI/CivTimeline.swift',      android: 'packages/android/src/main/kotlin/gov/civui/components/CivTimeline.kt',      drupal: 'packages/drupal/civui/components/timeline/timeline.component.yml' },
+  { name: 'civ-timeline-item',     source: 'packages/feedback/src/timeline/civ-timeline-item.ts',                                     ios: 'packages/ios/Sources/CivUI/CivTimelineItem.swift',  android: 'packages/android/src/main/kotlin/gov/civui/components/CivTimelineItem.kt',  drupal: 'packages/drupal/civui/components/timeline-item/timeline-item.component.yml' },
+  { name: 'civ-process-list',      source: 'packages/feedback/src/process-list/civ-process-list.ts',                                  ios: 'packages/ios/Sources/CivUI/CivProcessList.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivProcessList.kt',   drupal: 'packages/drupal/civui/components/process-list/process-list.component.yml' },
+  { name: 'civ-process-list-item', source: 'packages/feedback/src/process-list/civ-process-list-item.ts',                             ios: 'packages/ios/Sources/CivUI/CivProcessListItem.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivProcessListItem.kt', drupal: 'packages/drupal/civui/components/process-list-item/process-list-item.component.yml' },
+  { name: 'civ-accordion',         source: 'packages/layout/src/accordion/civ-accordion.ts',                                          ios: 'packages/ios/Sources/CivUI/CivAccordion.swift',     android: 'packages/android/src/main/kotlin/gov/civui/components/CivAccordion.kt',     drupal: 'packages/drupal/civui/components/accordion/accordion.component.yml' },
+  { name: 'civ-accordion-item',    source: 'packages/layout/src/accordion/civ-accordion-item.ts',                                     ios: 'packages/ios/Sources/CivUI/CivAccordionItem.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivAccordionItem.kt', drupal: 'packages/drupal/civui/components/accordion-item/accordion-item.component.yml' },
+  { name: 'civ-metric-tile',       source: 'packages/data/src/metric-tile/civ-metric-tile.ts',                                        ios: 'packages/ios/Sources/CivUI/CivMetricTile.swift',    android: 'packages/android/src/main/kotlin/gov/civui/components/CivMetricTile.kt',    drupal: 'packages/drupal/civui/components/metric-tile/metric-tile.component.yml' },
+  { name: 'civ-metric-group',      source: 'packages/data/src/metric-group/civ-metric-group.ts',                                      ios: 'packages/ios/Sources/CivUI/CivMetricGroup.swift',   android: 'packages/android/src/main/kotlin/gov/civui/components/CivMetricGroup.kt',   drupal: 'packages/drupal/civui/components/metric-group/metric-group.component.yml' },
+  { name: 'civ-itemized-total',    source: 'packages/data/src/itemized-total/civ-itemized-total.ts',                                  ios: 'packages/ios/Sources/CivUI/CivItemizedTotal.swift', android: 'packages/android/src/main/kotlin/gov/civui/components/CivItemizedTotal.kt', drupal: 'packages/drupal/civui/components/itemized-total/itemized-total.component.yml' },
+  { name: 'civ-itemized-item',     source: 'packages/data/src/itemized-total/civ-itemized-item.ts',                                   ios: 'packages/ios/Sources/CivUI/CivItemizedItem.swift',  android: 'packages/android/src/main/kotlin/gov/civui/components/CivItemizedItem.kt',  drupal: 'packages/drupal/civui/components/itemized-item/itemized-item.component.yml' },
   { name: 'civ-badge',             source: 'packages/feedback/src/badge/civ-badge.ts',                                                ios: 'packages/ios/Sources/CivUI/CivBadge.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivBadge.kt',         drupal: 'packages/drupal/civui/components/badge/badge.component.yml' },
   { name: 'civ-count',             source: 'packages/feedback/src/count/civ-count.ts',                                                ios: 'packages/ios/Sources/CivUI/CivCount.swift',         android: 'packages/android/src/main/kotlin/gov/civui/components/CivCount.kt',         drupal: 'packages/drupal/civui/components/count/count.component.yml' },
   { name: 'civ-card',              source: 'packages/layout/src/card/civ-card.ts',                                                    ios: 'packages/ios/Sources/CivUI/CivCard.swift',          android: 'packages/android/src/main/kotlin/gov/civui/components/CivCard.kt',          drupal: 'packages/drupal/civui/components/card/card.component.yml' },
@@ -225,7 +236,10 @@ export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitPro
     after++; // skip `)`
     // Skip whitespace and modifiers (`public`, `private`, `protected`,
     // `override`, `readonly`, `static`, `accessor`, plus decorators).
-    const declRegex = /\s*(?:(?:public|private|protected|override|readonly|static|accessor|declare)\s+|@\w+\s*)*(\w+)([?!])?(?:\s*:\s*[^=;\n{]+)?(?:\s*=\s*([^;\n]+))?/y;
+    // Also skip `get` / `set` keywords so the accessor-pattern
+    // `@property({ ... }) get foo(): T { … }` reads `foo` as the prop
+    // name, not `get`.
+    const declRegex = /\s*(?:(?:public|private|protected|override|readonly|static|accessor|declare|get|set)\s+|@\w+\s*)*(\w+)([?!])?(?:\s*:\s*[^=;\n{]+)?(?:\s*=\s*([^;\n]+))?/y;
     declRegex.lastIndex = after;
     const declMatch = declRegex.exec(src);
     if (!declMatch) continue;
@@ -455,9 +469,12 @@ export function iosPropAlternatives(name: string): string[] {
   const alternatives = [name, `is${name[0].toUpperCase()}${name.slice(1)}`];
   // iOS also commonly maps `type` → `inputType` and `name` → `formName`,
   // since `type` shadows Swift's metatype keyword and `name` collides
-  // with View's accessibility name.
+  // with View's accessibility name. `body` collides with SwiftUI's
+  // required `View.body` computed property, so it's renamed to
+  // `bodyText` on iOS stubs.
   if (name === 'type') alternatives.push('inputType');
   if (name === 'name') alternatives.push('formName');
+  if (name === 'body') alternatives.push('bodyText');
   if (HTML_ATTR_TO_NATIVE_CAMEL[name]) alternatives.push(HTML_ATTR_TO_NATIVE_CAMEL[name]);
   return alternatives;
 }

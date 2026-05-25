@@ -4,4 +4,5 @@
 | Event | Detail | Description |
 |-------|--------|-------------|
 | `civ-toggle` | `{ open: boolean }` | Fires when the open/closed state changes. Non-bubbling and non-composed (mirrors `civ-disclosure`) so accordion items inside a `<civ-form>` do not leak into form-level listeners. |
+| `civ-accordion-item-toggle` | `{ open: boolean }` | Bubbling internal coordination event used by the parent `<civ-accordion>` for single-open mode. **Not part of the public consumer API** — subscribe to `civ-toggle` instead. Native implementations may omit this event when they coordinate single-open via a different mechanism. |
 | `civ-analytics` | `{ componentName: string, action: string, details: object }` | Analytics tracking event on toggle |

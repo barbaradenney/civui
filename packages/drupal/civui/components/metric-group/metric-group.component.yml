@@ -1,0 +1,18 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Metric Group
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-metric-group for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    columns:
+      title: Columns
+      type: integer
+      default: 4
+      description: 'Maximum number of columns on desktop (≥768px). Accepts 2–6; values outside the range are clamped. Default is 4.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

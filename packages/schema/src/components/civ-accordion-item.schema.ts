@@ -41,6 +41,12 @@ const schema: ComponentSchema = {
         open: { type: 'boolean', description: 'Whether the panel is now open' },
       },
     },
+    'civ-accordion-item-toggle': {
+      description: 'Bubbling internal coordination event used by the parent `<civ-accordion>` for single-open mode. **Not part of the public consumer API** — subscribe to `civ-toggle` instead. Native implementations may omit this event when they coordinate single-open via a different mechanism.',
+      detail: {
+        open: { type: 'boolean', description: 'Whether the panel is now open' },
+      },
+    },
     'civ-analytics': {
       description: 'Analytics tracking event on toggle',
       detail: {

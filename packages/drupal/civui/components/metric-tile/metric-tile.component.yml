@@ -1,0 +1,39 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Metric Tile
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-metric-tile for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    unit:
+      title: Unit
+      type: string
+      description: 'Optional unit string appended after the value (e.g. `ms`, `applications`)'
+    icon:
+      title: Icon
+      type: string
+      description: 'Optional icon name from the CivUI icon library, rendered before the label'
+    description:
+      title: Description
+      type: string
+      description: 'Optional secondary text below the delta — extra context (e.g. "vs. last 30 days")'
+    delta:
+      title: Delta
+      type: string
+      description: 'Optional delta string (e.g. "+12%", "-3.2%", "+248")'
+    trend:
+      title: Trend
+      type: string
+      enum: ['up', 'down', 'flat']
+      description: 'Arrow direction next to the delta. `up` renders an upward arrow, `down` a downward arrow, `flat` a horizontal minus. Empty omits the arrow.'
+    intent:
+      title: Intent
+      type: string
+      enum: ['positive', 'negative', 'neutral']
+      description: 'Color treatment for the delta. `positive` is green, `negative` is red, `neutral` is base color. Independent of `trend` because "up" can be good (active users) or bad (errors).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

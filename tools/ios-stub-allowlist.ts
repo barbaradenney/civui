@@ -26,6 +26,8 @@
  * `lint:ios-stub-allowlist` CI gate will fail with instructions.
  */
 export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
+  'CivAccordion.swift',
+  'CivAccordionItem.swift',
   'CivActionSheet.swift',
   'CivBadge.swift',
   'CivBreadcrumb.swift',
@@ -43,14 +45,21 @@ export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivImagePreview.swift',
   'CivIncome.swift',
   'CivInputGroup.swift',
+  'CivItemizedItem.swift',
+  'CivItemizedTotal.swift',
   'CivMenu.swift',
   'CivMenuItem.swift',
+  'CivMetricGroup.swift',
+  'CivMetricTile.swift',
   'CivModal.swift',
   'CivNav.swift',
   'CivNavItem.swift',
+  'CivNotice.swift',
   'CivNumber.swift',
   'CivPartnershipHistory.swift',
   'CivPopover.swift',
+  'CivProcessList.swift',
+  'CivProcessListItem.swift',
   'CivReadMore.swift',
   'CivRelationship.swift',
   'CivServiceHistory.swift',
@@ -60,5 +69,7 @@ export const IOS_STUB_ALLOWLIST: ReadonlySet<string> = new Set([
   'CivTabPanel.swift',
   'CivTabs.swift',
   'CivTimePicker.swift',
+  'CivTimeline.swift',
+  'CivTimelineItem.swift',
   'CivToggleButton.swift',
 ]);

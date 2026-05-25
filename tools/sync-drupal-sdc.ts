@@ -108,6 +108,21 @@ const COMPONENTS: ComponentMapping[] = [
   // Layout primitives whose Drupal SDCs need to track the schema.
   { schema: 'civ-image-preview', drupal: 'image-preview' },
   { schema: 'civ-input-group', drupal: 'input-group' },
+  // Feedback emphasis primitives — see audit-debt.md ("Notice follow-ups").
+  { schema: 'civ-notice', drupal: 'notice' },
+  // Display-only feedback — see audit-debt.md ("Timeline follow-ups", "Process list follow-ups").
+  { schema: 'civ-timeline', drupal: 'timeline' },
+  { schema: 'civ-timeline-item', drupal: 'timeline-item' },
+  { schema: 'civ-process-list', drupal: 'process-list' },
+  { schema: 'civ-process-list-item', drupal: 'process-list-item' },
+  // Layout — see audit-debt.md ("Accordion follow-ups").
+  { schema: 'civ-accordion', drupal: 'accordion' },
+  { schema: 'civ-accordion-item', drupal: 'accordion-item' },
+  // Data display — see audit-debt.md ("Metric tile follow-ups", "Itemized total follow-ups").
+  { schema: 'civ-metric-tile', drupal: 'metric-tile' },
+  { schema: 'civ-metric-group', drupal: 'metric-group' },
+  { schema: 'civ-itemized-total', drupal: 'itemized-total' },
+  { schema: 'civ-itemized-item', drupal: 'itemized-item' },
 ];
 
 import { INHERITED_FORM_PROPS } from './lib/inherited.js';

@@ -82,6 +82,16 @@ const COMPONENTS = [
   'civ-ssn', 'civ-ein', 'civ-phone', 'civ-email', 'civ-zip',
   'civ-currency', 'civ-routing-number', 'civ-va-file-number', 'civ-country',
   'civ-time-picker',
+  // Feedback emphasis primitive — see audit-debt.md ("Notice follow-ups").
+  'civ-notice',
+  // Display-only feedback — see audit-debt.md ("Timeline follow-ups", "Process list follow-ups").
+  'civ-timeline', 'civ-timeline-item',
+  'civ-process-list', 'civ-process-list-item',
+  // Layout — see audit-debt.md ("Accordion follow-ups").
+  'civ-accordion', 'civ-accordion-item',
+  // Data display — see audit-debt.md ("Metric tile / Itemized total follow-ups").
+  'civ-metric-tile', 'civ-metric-group',
+  'civ-itemized-total', 'civ-itemized-item',
 ];
 
 function camelToKebab(name: string): string {

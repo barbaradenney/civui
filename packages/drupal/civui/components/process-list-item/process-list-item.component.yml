@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Process List Item
+status: stable
+group: CivUI Feedback
+description: 'See @civui/schema civ-process-list-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Step title rendered prominently above the body content.'
+    state:
+      title: State
+      type: string
+      enum: ['default', 'complete']
+      default: 'default'
+      description: 'Visual state. `default` shows the auto-incremented step number in a primary-tinted marker. `complete` swaps to a check icon in a success-tinted marker — use when the step has been finished.'
+    icon:
+      title: Icon
+      type: string
+      description: 'Optional icon name from the CivUI icon library. When set, replaces the auto-number or check icon in the marker — use for steps with a more specific affordance (e.g. `lock` for authentication, `mail` for verification).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

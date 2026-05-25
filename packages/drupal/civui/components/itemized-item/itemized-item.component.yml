@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Itemized Item
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-itemized-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    amount:
+      title: Amount
+      type: integer
+      description: 'The line-item value. Formatted by the parent `<civ-itemized-total>` using its `currency` and `locale`. Negative values render with a locale-correct minus.'
+    value_label:
+      title: Value label
+      type: string
+      description: 'Override for non-numeric rows (`Pending`, `Free`, `—`). When set, this string is rendered verbatim and the row is excluded from the parent''s auto-sum.'
+    note:
+      title: Note
+      type: string
+      description: 'Optional secondary text rendered below the label (e.g. `Annual / 12`).'
+    intent:
+      title: Intent
+      type: string
+      enum: ['positive', 'negative', 'neutral']
+      description: 'Color treatment for the amount. `positive` (green), `negative` (red), `neutral` (default). Independent of the sign of `amount` so credits can render neutrally unless the consumer explicitly opts in to a tint.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

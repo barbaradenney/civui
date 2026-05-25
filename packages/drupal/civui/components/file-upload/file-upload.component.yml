@@ -61,9 +61,9 @@ props:
     variant:
       title: Variant
       type: string
-      enum: ['default', 'compact', 'full']
+      enum: ['default', 'inline', 'large']
       default: 'default'
-      description: 'Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target'
+      description: 'Visual layout of the file picker (not density — there is no density knob on file-upload today). `default` = standard medium dropzone with drag-and-drop. `inline` = pseudo-input + browse-button row, matching the layout of native `<input type="file">` for placement in dense forms (no drag-and-drop). `large` = taller drag target for landing pages or document-heavy workflows where upload is the primary page action. Previously named values `compact` and `full` were renamed to `inline` and `large` to disambiguate from the system-wide `spacing="sm"` density convention used by every other CivUI component'
     initial_files:
       title: Initial files
       type: array

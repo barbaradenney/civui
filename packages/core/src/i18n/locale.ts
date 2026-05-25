@@ -120,6 +120,7 @@ export interface CivLocaleStrings {
   fileUploadShowAll: string; // "Show all {count} files"
   fileUploadDragText: string;
   fileUploadNoFileChosen: string;
+  fileUploadFilesChosen: string; // "{count} files chosen" — compact + multiple trigger summary
   fileUploadBrowseText: string;
   fileUploadAcceptedLabel: string;
   fileUploadMaxSizeLabel: string;
@@ -139,6 +140,13 @@ export interface CivLocaleStrings {
   fileUploadCancelAriaLabel: string; // "Cancel upload for {name}"
   fileUploadRetryText: string; // "Retry"
   fileUploadRetryAriaLabel: string; // "Retry upload for {name}"
+  fileUploadLockedText: string; // "Password required to unlock {name}"
+  fileUploadPasswordLabel: string; // "Password to unlock {name}"
+  fileUploadPasswordEmpty: string; // "Enter a password to unlock {name}"
+  fileUploadUnlockText: string; // "Unlock"
+  fileUploadUnlockAriaLabel: string; // "Unlock {name}"
+  fileUploadUnlockAnnounce: string; // "Unlocking {name}"
+  fileUploadIncorrectPassword: string; // "Incorrect password. Try again."
   fileUploadProgressAriaLabel: string; // "Upload progress for {name}"
   fileUploadUploading: string; // "Uploading {name}, {progress} percent complete"
   fileUploadSuccess: string; // "{name} uploaded successfully"
@@ -854,6 +862,7 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadShowAll: 'Show all {count} files',
   fileUploadDragText: 'Drag files here or',
   fileUploadNoFileChosen: 'No file chosen',
+  fileUploadFilesChosen: '{count} files chosen',
   fileUploadBrowseText: 'Choose from folder',
   fileUploadAcceptedLabel: 'Accepted: ',
   fileUploadMaxSizeLabel: 'Max size: ',
@@ -873,6 +882,13 @@ const defaultStrings: CivLocaleStrings = {
   fileUploadCancelAriaLabel: 'Cancel upload for {name}',
   fileUploadRetryText: 'Retry',
   fileUploadRetryAriaLabel: 'Retry upload for {name}',
+  fileUploadLockedText: 'Password required to unlock {name}',
+  fileUploadPasswordLabel: 'Password to unlock {name}',
+  fileUploadPasswordEmpty: 'Enter a password to unlock {name}',
+  fileUploadUnlockText: 'Unlock',
+  fileUploadUnlockAriaLabel: 'Unlock {name}',
+  fileUploadUnlockAnnounce: 'Unlocking {name}',
+  fileUploadIncorrectPassword: 'Incorrect password. Try again.',
   fileUploadProgressAriaLabel: 'Upload progress for {name}',
   fileUploadUploading: 'Uploading {name}, {progress} percent complete',
   fileUploadSuccess: '{name} uploaded successfully',

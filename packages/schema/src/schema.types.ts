@@ -108,7 +108,7 @@ export interface MethodDef {
 // ---------------------------------------------------------------------------
 
 export interface EventDetailField {
-  type: 'string' | 'boolean' | 'number' | 'string[]' | 'File[]' | 'object';
+  type: 'string' | 'boolean' | 'number' | 'string[]' | 'File' | 'File[]' | 'object';
   description?: string;
 }
 

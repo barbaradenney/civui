@@ -130,9 +130,10 @@ describe('civ-file-upload', () => {
     el._addFiles([new File(['a'], 'alpha.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
     // Force the file into an error state so retry is meaningful.
+    const fileRef = el._files[0].file;
     el._files[0].status = 'error';
     el._files[0].error = 'Network failure';
-    el._progressMilestones.set('alpha.pdf', 50);
+    el._progressMilestones.set(fileRef, 50);
     await elementUpdated(el);
 
     el._retryUpload(0);
@@ -140,24 +141,25 @@ describe('civ-file-upload', () => {
 
     const liveRegion = document.querySelector('[aria-live]');
     expect(liveRegion!.textContent).toContain('Retrying upload of alpha.pdf');
-    expect(el._progressMilestones.has('alpha.pdf')).toBe(false);
+    expect(el._progressMilestones.has(fileRef)).toBe(false);
   });
 
   it('throttles progress announcements to 25/50/75/100 milestones', async () => {
     const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+    const bigFile = new File(['x'], 'big.zip', { type: 'application/zip' });
 
-    el._announceProgress('big.zip', 10);
-    el._announceProgress('big.zip', 24);
-    expect(el._progressMilestones.get('big.zip')).toBeUndefined();
+    el._announceProgress(bigFile, 'big.zip', 10);
+    el._announceProgress(bigFile, 'big.zip', 24);
+    expect(el._progressMilestones.get(bigFile)).toBeUndefined();
 
-    el._announceProgress('big.zip', 30);
-    expect(el._progressMilestones.get('big.zip')).toBe(25);
+    el._announceProgress(bigFile, 'big.zip', 30);
+    expect(el._progressMilestones.get(bigFile)).toBe(25);
 
-    el._announceProgress('big.zip', 60);
-    expect(el._progressMilestones.get('big.zip')).toBe(50);
+    el._announceProgress(bigFile, 'big.zip', 60);
+    expect(el._progressMilestones.get(bigFile)).toBe(50);
 
-    el._announceProgress('big.zip', 100);
-    expect(el._progressMilestones.get('big.zip')).toBe(100);
+    el._announceProgress(bigFile, 'big.zip', 100);
+    expect(el._progressMilestones.get(bigFile)).toBe(100);
   });
 
   describe('i18n overrides', () => {
@@ -804,6 +806,508 @@ describe('civ-file-upload upload status API', () => {
   it('getAbortController returns undefined for an out-of-range index', async () => {
     const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
     expect(el.getAbortController(99)).toBeUndefined();
+  });
+});
+
+describe('civ-file-upload password-protected files', () => {
+  it('renders an inline password input + Unlock button when status is locked', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'medical-record.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const unlockBlock = el.querySelector('[data-file-unlock]');
+    expect(unlockBlock).not.toBeNull();
+    const passwordInput = unlockBlock!.querySelector('civ-text-input');
+    expect(passwordInput).not.toBeNull();
+    expect(passwordInput!.getAttribute('type')).toBe('password');
+    expect(passwordInput!.getAttribute('autocomplete')).toBe('off');
+    expect(passwordInput!.hasAttribute('reveal-password')).toBe(true);
+  });
+
+  it('renders a lock icon (not error icon) for locked files', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const fileItem = el.querySelector('.civ-file-item')!;
+    expect(fileItem.querySelector('civ-icon[name="lock"]')).not.toBeNull();
+    expect(fileItem.querySelector('civ-icon[name="error"]')).toBeNull();
+  });
+
+  it('fires civ-file-unlock with the password and transitions to uploading', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'protected.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    // Simulate the user typing a password
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'hunter2' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    // Click Unlock
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(1);
+    expect(events[0].detail.index).toBe(0);
+    expect(events[0].detail.name).toBe('protected.pdf');
+    expect(events[0].detail.password).toBe('hunter2');
+    expect(events[0].detail.file).toBeInstanceOf(File);
+
+    // File moves to uploading so the user gets immediate feedback
+    expect(el._files[0].status).toBe('uploading');
+  });
+
+  it('does not fire civ-file-unlock when the password is empty', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(0);
+    expect(el._files[0].status).toBe('locked');
+  });
+
+  it('re-prompts with the incorrect-password error when the consumer reports a failure', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    // Consumer flow: user submitted, decrypt failed, consumer re-locks with error
+    el.setFileStatus(0, 'locked', { error: 'Incorrect password. Try again.' });
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    expect(passwordInput.getAttribute('error')).toBe('Incorrect password. Try again.');
+  });
+
+  it('does not retain the password after unlock dispatch', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    const file = new File(['x'], 'a.pdf', { type: 'application/pdf' });
+    el._addFiles([file]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'sensitive-dob-password' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    expect(el._passwordEntries.get(el._files[0].file)).toBe('sensitive-dob-password');
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    // Password buffer cleared so it doesn't linger in component memory
+    expect(el._passwordEntries.get(el._files[0].file)).toBeUndefined();
+  });
+
+  it('clears the password buffer when the file is removed mid-unlock', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const fileRef = el._files[0].file;
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'patient-dob' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+    expect(el._passwordEntries.get(fileRef)).toBe('patient-dob');
+
+    el.removeFile(0);
+    await elementUpdated(el);
+    expect(el._passwordEntries.get(fileRef)).toBeUndefined();
+  });
+
+  it('hides the unlock affordance when the file is readonly', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs" readonly></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    // The unlock block still renders (it's inside __content, not __actions),
+    // but the disabled state cascades from the host
+    const unlockBlock = el.querySelector('[data-file-unlock]');
+    expect(unlockBlock).not.toBeNull();
+  });
+
+  it('announces "Unlocking {name}" when unlock fires', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'med.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const announceSpy = vi.spyOn(el, 'announce');
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'pw' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(announceSpy).toHaveBeenCalledWith(expect.stringContaining('med.pdf'));
+  });
+
+  it('Enter in the password field submits the unlock', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'pw' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    passwordInput.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true,
+    }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(1);
+    expect(events[0].detail.password).toBe('pw');
+  });
+
+  it('contextualizes the password input label with the file name', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'patient-record.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    expect(passwordInput.getAttribute('label')).toBe('Password to unlock patient-record.pdf');
+    // Hint dropped — label carries the context, no double-information
+    expect(passwordInput.hasAttribute('hint')).toBe(false);
+  });
+
+  it('announces "Enter a password" + focuses the input when Unlock is clicked with no password', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const announceSpy = vi.spyOn(el, 'announce');
+    const events: CustomEvent[] = [];
+    el.addEventListener('civ-file-unlock', (e: CustomEvent) => events.push(e));
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(events).toHaveLength(0);
+    expect(announceSpy).toHaveBeenCalledWith(expect.stringContaining('Enter a password'));
+    expect(announceSpy).toHaveBeenCalledWith(expect.stringContaining('a.pdf'));
+  });
+
+  it('moves focus to the row\'s Cancel button after unlock', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    passwordInput.dispatchEvent(new CustomEvent('civ-input', {
+      detail: { value: 'pw' },
+      bubbles: true,
+    }));
+    await elementUpdated(el);
+
+    const unlockBtn = el.querySelector('[data-file-unlock] civ-action-button')!;
+    unlockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    // Settle: parent updateComplete, then child civ-action-button's render,
+    // then the queued focus call inside _afterUpdate's async fn.
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 0));
+    await new Promise((r) => setTimeout(r, 0));
+
+    const actions = el.querySelector('.civ-file-item__actions')!;
+    const focusTarget = actions.querySelector('civ-action-button button');
+    expect(focusTarget).not.toBeNull();
+    // Document active element should be inside the actions cluster
+    expect(actions.contains(document.activeElement)).toBe(true);
+  });
+});
+
+describe('civ-file-upload setFileStatus error-clearing', () => {
+  it('clears stale file.error when transitioning without opts.error', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'error', { error: 'Server returned 503' });
+    await elementUpdated(el);
+    expect(el._files[0].error).toBe('Server returned 503');
+
+    // Server now says "actually that file is encrypted" — transition without
+    // opts.error must clear the stale 503 message
+    el.setFileStatus(0, 'locked');
+    await elementUpdated(el);
+    expect(el._files[0].error).toBeUndefined();
+
+    // Password input renders with no error
+    const passwordInput = el.querySelector('[data-file-unlock] civ-text-input')!;
+    expect(passwordInput.getAttribute('error')).toBe('');
+  });
+
+  it('preserves file.error when opts.error is passed explicitly', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.setFileStatus(0, 'locked', { error: 'Incorrect password. Try again.' });
+    await elementUpdated(el);
+    expect(el._files[0].error).toBe('Incorrect password. Try again.');
+  });
+
+  it('uses immutable file-row updates (array element identity changes)', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const before = el._files[0];
+    el.setFileStatus(0, 'uploading', { progress: 50 });
+    await elementUpdated(el);
+    const after = el._files[0];
+    expect(after).not.toBe(before);
+    expect(after.file).toBe(before.file);
+    expect(after.status).toBe('uploading');
+    expect(after.progress).toBe(50);
+  });
+});
+
+describe('civ-file-upload dragenter/dragleave depth tracking', () => {
+  // jsdom has no DragEvent constructor — exercise handlers directly with
+  // shape-compatible event mocks. The depth-tracking logic is the unit
+  // under test, not DOM event dispatch.
+  const mockDragEvent = (relatedTarget: EventTarget | null = document.body) => ({
+    preventDefault: () => {},
+    relatedTarget,
+  } as DragEvent);
+
+  it('keeps the dropzone highlighted when the cursor moves between child spans', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+
+    // User enters the dropzone (parent) → depth 1, dragging=true
+    el._onDragEnter(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragging).toBe(true);
+
+    // Cursor moves to a child span: enter fires on child (depth 2),
+    // leave fires on parent (depth 1). Still inside → highlight stays.
+    el._onDragEnter(mockDragEvent());
+    el._onDragLeave(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragging).toBe(true);
+    expect(el._dragDepth).toBe(1);
+  });
+
+  it('drops the highlight only when the depth counter returns to zero', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+
+    el._onDragEnter(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragging).toBe(true);
+
+    el._onDragLeave(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragging).toBe(false);
+    expect(el._dragDepth).toBe(0);
+  });
+
+  it('resets depth + highlight when the cursor exits the document (relatedTarget=null)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+
+    el._onDragEnter(mockDragEvent());
+    el._onDragEnter(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragDepth).toBe(2);
+
+    el._onDragLeave(mockDragEvent(null));
+    await elementUpdated(el);
+    expect(el._dragging).toBe(false);
+    expect(el._dragDepth).toBe(0);
+  });
+
+  it('resets depth on drop', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+
+    el._onDragEnter(mockDragEvent());
+    el._onDragEnter(mockDragEvent());
+    await elementUpdated(el);
+    expect(el._dragDepth).toBe(2);
+
+    // Drop resets depth even though we got 2 enters
+    el._onDrop({ preventDefault: () => {}, dataTransfer: { files: [] } } as unknown as DragEvent);
+    await elementUpdated(el);
+    expect(el._dragDepth).toBe(0);
+    expect(el._dragging).toBe(false);
+  });
+});
+
+describe('civ-file-upload inline variant', () => {
+  it('inline + single: trigger shows the filename, no list rendered', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'report.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).toContain('report.pdf');
+    // No list — the trigger alone shows the chosen file
+    expect(el.querySelector('ul.civ-list-none')).toBeNull();
+    expect(el.querySelector('.civ-file-item')).toBeNull();
+  });
+
+  it('inline + multiple + N>1: trigger shows the count summary, list renders for per-file remove', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" multiple name="doc"></civ-file-upload>') as any;
+    el._addFiles([
+      new File(['a'], 'a.pdf', { type: 'application/pdf' }),
+      new File(['b'], 'b.pdf', { type: 'application/pdf' }),
+      new File(['c'], 'c.pdf', { type: 'application/pdf' }),
+    ]);
+    await elementUpdated(el);
+
+    // Trigger shows "3 files chosen", not the comma-joined names
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).toBe('3 files chosen');
+
+    // File list IS rendered so the user can remove individual files
+    expect(el.querySelector('ul.civ-list-none')).not.toBeNull();
+    expect(el.querySelectorAll('.civ-file-item')).toHaveLength(3);
+    expect(el.querySelectorAll('[data-file-remove]')).toHaveLength(3);
+  });
+
+  it('inline + multiple + 1: trigger shows the filename (matches single-file UX)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" multiple name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'only.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).toBe('only.pdf');
+    // List still renders so the user can still remove the single file
+    expect(el.querySelectorAll('.civ-file-item')).toHaveLength(1);
+  });
+
+  it('inline button has an accessible name from this.label', async () => {
+    const el = await fixture('<civ-file-upload label="Upload your tax return" variant="inline" name="tax"></civ-file-upload>') as any;
+    const button = el.querySelector('button')!;
+    expect(button.getAttribute('aria-label')).toBe('Upload your tax return');
+  });
+
+  it('inline variant exposes aria-required and aria-invalid on the button', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc" required error="Required field"></civ-file-upload>') as any;
+    const button = el.querySelector('button')!;
+    expect(button.getAttribute('aria-required')).toBe('true');
+    expect(button.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('inline variant uses BEM modifier classes instead of inline border-radius styles', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
+    const input = el.querySelector('.civ-input')!;
+    const action = el.querySelector('.civ-action-btn')!;
+    expect(input.classList.contains('civ-input--joined-end')).toBe(true);
+    expect(action.classList.contains('civ-action-btn--joined-start')).toBe(true);
+    // No inline styles — modifier classes carry the border / radius overrides
+    expect(input.getAttribute('style')).toBeNull();
+    expect(action.getAttribute('style')).toBeNull();
+  });
+});
+
+describe('civ-file-upload large variant', () => {
+  it('applies the .civ-dropzone--large modifier class for the taller drag target', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="large" name="doc"></civ-file-upload>') as any;
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLElement;
+    expect(dropzone.classList.contains('civ-dropzone--large')).toBe(true);
+    // Sanity: the old class name should NOT appear post-rename
+    expect(dropzone.classList.contains('civ-dropzone--full')).toBe(false);
+  });
+});
+
+describe('civ-file-upload status icons are aria-hidden', () => {
+  it('hides the success icon from assistive tech (filename + announce convey the state)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'success');
+    await elementUpdated(el);
+
+    const icon = el.querySelector('civ-icon[name="check-circle"]')!;
+    expect(icon.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('hides the error icon from assistive tech', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'a.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+    el.setFileStatus(0, 'error', { error: 'Server timeout' });
+    await elementUpdated(el);
+
+    const icon = el.querySelector('civ-icon[name="error"]')!;
+    expect(icon.getAttribute('aria-hidden')).toBe('true');
+  });
+});
+
+describe('civ-file-upload hidden input', () => {
+  it('does not carry the required attribute (would be unfocusable on submit)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" name="doc" required></civ-file-upload>') as any;
+    const hidden = el.querySelector('input[type="file"]') as HTMLInputElement;
+    expect(hidden.hasAttribute('required')).toBe(false);
+    // aria-required still surfaces on the dropzone for AT messaging
+    const dropzone = el.querySelector('.civ-dropzone')!;
+    expect(dropzone.getAttribute('aria-required')).toBe('true');
   });
 });
 

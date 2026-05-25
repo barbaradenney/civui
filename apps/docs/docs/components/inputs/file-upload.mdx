@@ -7,6 +7,7 @@ sidebar_label: File Upload
 import StoryEmbed from "@site/src/components/StoryEmbed";
 import PropsTable from "./_file-upload.props.mdx";
 import EventsTable from "./_file-upload.events.mdx";
+import MethodsTable from "./_file-upload.methods.mdx";
 
 # File Upload
 
@@ -58,13 +59,21 @@ File input with drag-and-drop, file list preview, size and type validation, uplo
 
 <StoryEmbed id="forms-inputs-file-upload--image-preview" />
 
-### Compact Variant
+### Inline Variant
 
-<StoryEmbed id="forms-inputs-file-upload--compact-variant" />
+`variant="inline"` renders a pseudo-input + browse-button row matching the layout of native `<input type="file">`. Use in dense forms where the dropzone would take too much vertical space. No drag-and-drop.
 
-### Full Variant
+:::note Renamed in v0.x
+This variant was previously named `variant="compact"`. The value was renamed to **disambiguate from the system-wide `spacing="sm"` density convention** used by every other CivUI component. File-upload's `variant` controls **layout** (dropzone shape / drag-target size), not chrome density.
+:::
 
-<StoryEmbed id="forms-inputs-file-upload--full-variant" />
+<StoryEmbed id="forms-inputs-file-upload--inline-variant" />
+
+### Large Variant
+
+`variant="large"` renders a taller drag target (`min-height: 250px`) for landing pages or document-heavy workflows where upload is the primary action. Previously named `variant="full"`.
+
+<StoryEmbed id="forms-inputs-file-upload--large-variant" />
 
 ### All Variants
 
@@ -73,6 +82,33 @@ File input with drag-and-drop, file list preview, size and type validation, uplo
 ### Upload Simulation
 
 <StoryEmbed id="forms-inputs-file-upload--upload-simulation" />
+
+### Password-Protected Files
+
+Medical records (Kaiser, Mayo, VA Healthcare) and legal documents are commonly distributed as encrypted PDFs where the password is the recipient's date of birth or similar. Rather than rejecting the file or asking the user to strip the password externally, mark the file `locked` and the component renders an inline password input with show/hide reveal. On unlock the component fires `civ-file-unlock` with `{ index, name, file, password }`; the consumer's upload pipeline owns decryption (server-side via qpdf/pdftk, or client-side via pdf.js).
+
+```ts
+fileUpload.addEventListener('civ-change', async (e) => {
+  // ... upload each file, server detects encryption ...
+  if (serverResponse.status === 'password-required') {
+    fileUpload.setFileStatus(index, 'locked');
+  }
+});
+
+fileUpload.addEventListener('civ-file-unlock', async (e) => {
+  const { index, file, password } = e.detail;
+  const result = await retryUploadWithPassword(file, password);
+  if (result.ok) {
+    fileUpload.setFileStatus(index, 'success');
+  } else {
+    fileUpload.setFileStatus(index, 'locked', { error: 'Incorrect password. Try again.' });
+  }
+});
+```
+
+The password is cleared from the component's internal buffer immediately after dispatch — consumers must not log it, persist it, or send it over a non-HTTPS channel. The `<civ-text-input>` rendered for the password uses `type="password"`, `autocomplete="off"`, and `reveal-password` to support entering an unfamiliar DOB blind without errors.
+
+<StoryEmbed id="forms-inputs-file-upload--password-protected-files" />
 
 ### Government Document Submission
 
@@ -95,7 +131,16 @@ Files matching by name + size + lastModified are rejected on add with a `{name} 
 
 Hydrate the list from a previous session by setting `el.initialFiles = [{ id, name, size, type?, url? }]`. Initial files render as already-uploaded; when `url` is set, the filename becomes a download link. Removing fires `civ-file-removed` with `{ isInitial: true, id }` so the consumer can issue server-side deletes. Form submission emits `${name}.kept-initial-ids` so the server can diff originally-issued IDs against what remains.
 
+Two getters surface the draft-restore state for consumers that want to query it directly (in addition to listening for `civ-file-removed`):
+
+- `el.keptInitialFileIds` — IDs of initial files still present in the list
+- `el.removedInitialFileIds` — IDs of initial files removed since hydration
+
 <StoryEmbed id="forms-inputs-file-upload--initial-files" />
+
+### Reading the current files
+
+Use `el.files` (returns `File[]`) to read the current selection programmatically. `el.value` is a comma-joined name string for display only — it does **not** carry file contents, so `JSON.stringify(form.values)` on a `civ-file-upload` field yields `"a.pdf, b.pdf"` rather than the file data. For form submission, the component manages its own `FormData` via `valueMode: 'file'` so the underlying `<civ-form>` does the right thing automatically; reach for `el.files` only when you need direct access from outside a form context.
 
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/forms-inputs-file-upload--default)
 
@@ -109,9 +154,11 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 ### Variant Descriptions
 
+`variant` controls **layout**, not density. For density / chrome-size adjustments matching the rest of the system, every other input uses `spacing="sm"`; file-upload doesn't currently expose a density knob (file pickers don't typically appear in data-grid cells or other density-sensitive surfaces).
+
 - **`default`**: Medium dropzone with icon, text, and browse button
-- **`compact`**: Inline text field showing file names with a browse button (no drag zone)
-- **`full`**: Large dropzone filling available space
+- **`inline`**: Pseudo-input + browse button row (no dropzone, no drag-and-drop). Matches the layout of native `<input type="file">`. *Previously named `compact`.*
+- **`large`**: Taller drag target (`min-height: 250px`) for landing pages and document-heavy workflows. *Previously named `full`.*
 
 ### Customization Labels
 
@@ -143,6 +190,10 @@ const controller = upload.getAbortController(0);
 ## Events
 
 <EventsTable />
+
+## Methods
+
+<MethodsTable />
 
 ## Adding confirmation to Remove
 
@@ -203,12 +254,12 @@ backend in the same confirm handler.
   show-preview
 ></civ-file-upload>
 
-<!-- Compact variant -->
+<!-- Inline variant (no dropzone) -->
 <civ-file-upload
   label="Profile photo"
   name="photo"
   accept="image/*"
-  variant="compact"
+  variant="inline"
   max-size="5242880"
 ></civ-file-upload>
 ```

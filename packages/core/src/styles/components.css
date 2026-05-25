@@ -225,6 +225,30 @@
     @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
   }
 
+  /* Inline unlock affordance for password-protected files (encrypted PDFs,
+     password-protected ZIPs). Rendered inside __content beneath the file
+     name when status is 'locked'. Constrained width so the password input
+     doesn't stretch the full row on wide layouts. */
+  .civ-file-item__unlock {
+    max-width: 22rem;
+  }
+
+  /* Joined-edge modifiers for compact inline triggers (e.g. the compact
+     file-upload variant pairs an .civ-input span with a .civ-action-btn
+     to form a single visual control). Replaces hand-rolled inline styles
+     so consumers can compose the same pattern without redefining the
+     border / radius overrides each time. */
+  .civ-input--joined-end {
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .civ-action-btn--joined-start {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
   /* `civ-list-item { display: block }` lives in the host-display
      defaults section above. Without it, borders don't paint on the
@@ -1318,7 +1342,10 @@
     color: var(--civ-color-base-light);
   }
 
-  /* Mobile: collapse dropzone to compact browse button (no drag on touch) */
+  /* Mobile: collapse dropzone to inline browse button (no drag on touch).
+     This is a viewport-driven layout change, not the same axis as the
+     `variant="inline"` opt-in — both end up rendering the same compact
+     pseudo-input + browse pill, so the CSS overrides converge here. */
   @media (max-width: 480px) {
     .civ-dropzone {
       @apply civ-py-3 civ-px-4 civ-text-start civ-border civ-border-solid;
@@ -1326,13 +1353,16 @@
     .civ-dropzone > span:first-child {
       display: none;
     }
-    .civ-dropzone--full {
+    .civ-dropzone--large {
       min-height: auto;
       @apply civ-py-3;
     }
   }
 
-  .civ-dropzone--full {
+  /* Larger drag target — pairs with `variant="large"`. Previously named
+     `.civ-dropzone--full`; renamed in lockstep with the schema enum
+     rename to keep CSS class names aligned with the public API. */
+  .civ-dropzone--large {
     @apply civ-py-20;
     min-height: 250px;
   }
@@ -1836,7 +1866,8 @@
   }
 
   .civ-dropzone[aria-invalid="true"] {
-    @apply civ-border-error;
+    @apply civ-border-error civ-border-s-4;
+    border-inline-start-style: solid;
   }
 
   .civ-dropzone:disabled {

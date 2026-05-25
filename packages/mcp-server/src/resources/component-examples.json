@@ -2175,7 +2175,7 @@
     {
       "story": "AllVariants",
       "category": "Forms/Inputs/File Upload",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Compact -- inline in dense forms</h3>\n        <civ-file-upload label=\"Attachment\" name=\"attachment\" variant=\"compact\" accept=\".pdf\"></civ-file-upload>\n      </div>\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Default -- standard forms</h3>\n        <civ-file-upload label=\"Supporting document\" name=\"doc\" accept=\".pdf,.jpg\"></civ-file-upload>\n      </div>\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Full -- document-heavy workflows</h3>\n        <civ-file-upload label=\"Case file upload\" name=\"case-files\" variant=\"full\" multiple show-preview accept=\".pdf,.jpg,.png\"></civ-file-upload>\n      </div>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Inline -- pseudo-input + browse button (no dropzone)</h3>\n        <civ-file-upload label=\"Attachment\" name=\"attachment\" variant=\"inline\" accept=\".pdf\"></civ-file-upload>\n      </div>\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Default -- standard dropzone</h3>\n        <civ-file-upload label=\"Supporting document\" name=\"doc\" accept=\".pdf,.jpg\"></civ-file-upload>\n      </div>\n      <div>\n        <h3 class=\"civ-text-sm civ-font-bold civ-m-0 civ-mb-2\">Large -- taller drag target for document-heavy workflows</h3>\n        <civ-file-upload label=\"Case file upload\" name=\"case-files\" variant=\"large\" multiple show-preview accept=\".pdf,.jpg,.png\"></civ-file-upload>\n      </div>\n    </div>",
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {
@@ -2190,12 +2190,6 @@
       "name": "Capture: front camera (selfie)",
       "category": "Forms/Inputs/File Upload",
       "html": "<civ-file-upload label=\"Identity verification photo\" hint=\"Take a photo of your face for identity verification\" name=\"selfie\"\n        accept=\"image/*\"\n        capture=\"user\"></civ-file-upload>",
-      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
-    },
-    {
-      "story": "CompactVariant",
-      "category": "Forms/Inputs/File Upload",
-      "html": "<civ-file-upload label=\"Resume\" hint=\"PDF or Word document, max 5 MB\" name=\"resume\"\n        variant=\"compact\"\n        accept=\".pdf,.doc,.docx\"></civ-file-upload>",
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {
@@ -2225,12 +2219,6 @@
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {
-      "story": "FullVariant",
-      "category": "Forms/Inputs/File Upload",
-      "html": "<civ-file-upload label=\"Upload case documents\" hint=\"Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files.\" name=\"case-docs\"\n        variant=\"full\"\n        multiple\n        accept=\".pdf,.jpg,.png,.tiff\"\n        max-files=\"10\"\n        show-preview></civ-file-upload>",
-      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
-    },
-    {
       "story": "GovernmentDocumentSubmission",
       "name": "Usage: Document Submission",
       "category": "Forms/Inputs/File Upload",
@@ -2251,9 +2239,30 @@
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {
+      "story": "InlineVariant",
+      "name": "Inline variant (no dropzone)",
+      "category": "Forms/Inputs/File Upload",
+      "html": "<civ-file-upload label=\"Resume\" hint=\"PDF or Word document, max 5 MB\" name=\"resume\"\n        variant=\"inline\"\n        accept=\".pdf,.doc,.docx\"></civ-file-upload>",
+      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
+    },
+    {
+      "story": "LargeVariant",
+      "name": "Large variant (taller drag target)",
+      "category": "Forms/Inputs/File Upload",
+      "html": "<civ-file-upload label=\"Upload case documents\" hint=\"Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files.\" name=\"case-docs\"\n        variant=\"large\"\n        multiple\n        accept=\".pdf,.jpg,.png,.tiff\"\n        max-files=\"10\"\n        show-preview></civ-file-upload>",
+      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
+    },
+    {
       "story": "MultipleFiles",
       "category": "Forms/Inputs/File Upload",
       "html": "<civ-file-upload label=\"Supporting documents\" hint=\"You can upload up to 5 files. Accepted formats: PDF, Word.\" name=\"documents\"\n        multiple\n        max-files=\"5\"\n        accept=\".pdf,.doc,.docx\"></civ-file-upload>",
+      "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
+    },
+    {
+      "story": "PasswordProtectedFiles",
+      "name": "Password-protected files (medical records)",
+      "category": "Forms/Inputs/File Upload",
+      "html": "<civ-file-upload\n        label=\"Upload medical records\"\n        hint=\"Encrypted PDFs from your provider are supported. You'll be prompted for the password after upload.\"\n        name=\"medical\"\n        accept=\".pdf\"\n        multiple\n        max-files=\"5\"\n        @civ-change=\"${onUpload}\"\n        @civ-file-unlock=\"${onUnlock}\"\n      ></civ-file-upload>\n      <p class=\"civ-mt-4 civ-text-sm\">\n        Demo password: <code>dob-1985</code>\n      </p>",
       "source": "packages/inputs/src/file-upload/civ-file-upload.stories.ts"
     },
     {

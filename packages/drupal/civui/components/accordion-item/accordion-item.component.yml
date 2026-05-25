@@ -1,0 +1,18 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Accordion Item
+status: stable
+group: CivUI Layout
+description: 'See @civui/schema civ-accordion-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Whether the panel is currently expanded'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

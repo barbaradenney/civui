@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Accordion
+status: stable
+group: CivUI Layout
+description: 'See @civui/schema civ-accordion for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    single:
+      title: Single
+      type: boolean
+      default: false
+      description: 'When true, opening one item collapses any other open siblings. Default behavior (omitted) allows multiple items open at once. The single-open invariant is enforced on first paint AND when this prop transitions from false to true at runtime.'
+    variant:
+      title: Variant
+      type: string
+      enum: ['primary', 'secondary', 'tertiary', 'flush']
+      default: 'tertiary'
+      description: 'Visual variant. `tertiary` (default) is a bordered group with transparent triggers and inter-item dividers — list-like, quiet. `secondary` uses the same per-item style as tertiary (transparent trigger, gray hover, indented content) but e...'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

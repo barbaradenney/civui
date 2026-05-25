@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Menu Item
+status: stable
+group: CivUI Overlays
+description: 'See @civui/schema civ-menu-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    destructive:
+      title: Destructive
+      type: boolean
+      default: false
+      description: 'Apply destructive (red) styling for delete-style actions. Use for items whose effect cannot be easily undone'
+    href:
+      title: Href
+      type: string
+      description: 'When set, the item renders as an `<a>` link instead of a `<button>`. The href is sanitized. Unsafe schemes (`javascript:`, `data:` text payloads) are replaced with `#`'
+    icon:
+      title: Icon
+      type: string
+      description: 'Optional leading icon name. Resolved against the global icon library (see `@civui/core` icon registry).'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

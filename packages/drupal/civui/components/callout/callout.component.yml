@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Callout
+status: stable
+group: CivUI Layout
+description: 'See @civui/schema civ-callout for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    intent:
+      title: Intent
+      type: string
+      enum: ['default', 'info', 'warning', 'error', 'success']
+      default: 'default'
+      description: 'Accent border color. `default` is a neutral gray for callouts with no semantic urgency; `info`, `warning`, `error`, and `success` map to their semantic palette counterparts'
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'primary'
+      description: 'Visual weight. `primary` (default) keeps the 5px accent rail — the established callout treatment. `secondary` drops the rail to 3px for a subtler affordance that doesn''t compete with body content when stacked next to primary surfaces. Pa...'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Inner padding density. `default` keeps the established 12px / 16px padding; `sm` shrinks to 8px / 12px for placements inside dense surfaces (data-grid empty state, compact reference tables, sidebar notes). Pure shrink per Contract A — ac...'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

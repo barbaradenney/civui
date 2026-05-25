@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Timeline Item
+status: stable
+group: CivUI Feedback
+description: 'See @civui/schema civ-timeline-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    timestamp:
+      title: Timestamp
+      type: string
+      description: 'ISO 8601 timestamp string. Required for the `<time datetime>` wrapper to be valid.'
+    timestamp_format:
+      title: Timestamp format
+      type: string
+      enum: ['relative', 'absolute', 'both']
+      default: 'both'
+      description: 'Visual timestamp format. `relative` shows "3 hours ago"; `absolute` shows the locale-formatted date/time; `both` shows the absolute label with the relative phrase in parentheses (default).'
+    actor:
+      title: Actor
+      type: string
+      description: 'Person, system, department, version, or other label associated with the entry (e.g. "J. Martinez (Reviewer)", "System", "v2.4.1"). Optional.'
+    action:
+      title: Action
+      type: string
+      description: 'Short action label (e.g. "Application submitted", "Approved", "Documentation requested").'
+    intent:
+      title: Intent
+      type: string
+      enum: ['success', 'info', 'warning', 'error', 'neutral']
+      default: 'neutral'
+      description: 'Semantic color for the rail dot. Drives the dot background and the default icon inside it.'
+    icon:
+      title: Icon
+      type: string
+      description: 'Override icon name. When unset, the intent''s semantic icon is used (success → check, info → info, warning → warning, error → error, neutral → no icon). Empty string explicitly suppresses the icon and shows a plain colored dot.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

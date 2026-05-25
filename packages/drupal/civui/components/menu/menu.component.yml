@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Menu
+status: stable
+group: CivUI Overlays
+description: 'See @civui/schema civ-menu for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Controlled open state. When omitted the menu manages its own state. Reflects to the host attribute'
+    align:
+      title: Align
+      type: string
+      enum: ['start', 'end']
+      default: 'end'
+      description: 'Horizontal alignment of the panel relative to the trigger. `end` (default) right-aligns; `start` left-aligns. Auto-flips with RTL via logical properties'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

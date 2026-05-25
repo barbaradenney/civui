@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Nav Item
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-nav-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    href:
+      title: Href
+      type: string
+      description: 'Destination URL'
+    current:
+      title: Current
+      type: boolean
+      default: false
+      description: 'Mark as the active page. Sets `aria-current="page"` and applies the active visual style (underline + primary color)'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

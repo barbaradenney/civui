@@ -1,0 +1,47 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Notice
+status: stable
+group: CivUI Feedback
+description: 'Icon-prefixed emphasis text for highlighting a specific passage inside longer content — legal, safety, or financial consequences a reader could miss in flowing prose.'
+
+props:
+  type: object
+  properties:
+    intent:
+      title: Intent
+      type: string
+      enum: ['info', 'warning', 'error', 'success', 'neutral']
+      default: 'info'
+      description: 'Severity / color treatment. Drives the default icon and the icon''s color. `info` is the default; `neutral` is a gray variant for emphasis without status meaning.'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: '`default` renders the GOV.UK-presence version (large icon + bold lg text); `sm` is the inline-compact variant for body-prose placements where the affordance shouldn''t dominate the surrounding reading flow.'
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'primary'
+      description: 'Visual weight. `primary` (default) uses the heavier filled-icon variants (`info-fill` / `warning-fill` / `error-fill` / `check-circle-fill`) for full emphasis — the established notice treatment. `secondary` uses the lighter outlined glyp...'
+    icon:
+      title: Icon
+      type: string
+      description: 'Override the default icon for this intent. Any icon name from the CivUI icon library works — use it when the notice is communicating something beyond the five built-in semantic intents (e.g. `calendar`, `mail`, `document`, `lock`, `phone...'
+    header:
+      title: Header
+      type: string
+      description: 'Optional bold heading rendered above the body. Rendered as `<p role="heading" aria-level="N">` so the heading is announced to screen readers without forcing a specific `<h*>` level into the page outline.'
+    body:
+      title: Body
+      type: string
+      description: 'Body text rendered below the header. For rich body content with inline links, use `civ-callout` instead — `civ-notice` owns its HTML so the surface stays consistent.'
+    sr_prefix:
+      title: Sr prefix
+      type: string
+      description: 'Optional visually-hidden screen-reader prefix (e.g. `Warning:`). Empty by default — teams opt in per placement when the severity needs to be announced verbally before the header text.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

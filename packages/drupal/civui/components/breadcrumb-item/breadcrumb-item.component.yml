@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Breadcrumb Item
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-breadcrumb-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    href:
+      title: Href
+      type: string
+      description: 'Destination URL. Omit on the last item, or set `current`, to render as a non-link `<span aria-current="page">`'
+    current:
+      title: Current
+      type: boolean
+      default: false
+      description: 'Mark as the current page. Forces non-link rendering with `aria-current="page"` regardless of `href`'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,40 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Itemized Total
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-itemized-total for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      type: string
+      description: 'Optional heading rendered above the rows'
+    total_label:
+      title: Total label
+      type: string
+      default: 'Total'
+      description: 'Label for the total row. Defaults to `Total`.'
+    total_amount:
+      title: Total amount
+      type: integer
+      description: 'Override for the total. When omitted, the component sums every child `amount` (skipping rows with a `value-label`). Pass this when the total comes from the server to avoid client-side float drift.'
+    currency:
+      title: Currency
+      type: string
+      default: 'USD'
+      description: 'ISO 4217 currency code passed to `Intl.NumberFormat` (e.g. `USD`, `EUR`).'
+    locale:
+      title: Locale
+      type: string
+      description: 'BCP 47 locale for `Intl.NumberFormat`. Defaults to the browser locale.'
+    total_intent:
+      title: Total intent
+      type: string
+      enum: ['positive', 'negative', 'neutral']
+      description: 'Color treatment for the total row only. `positive` (green), `negative` (red), `neutral` (default). Independent of any per-row `intent`.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

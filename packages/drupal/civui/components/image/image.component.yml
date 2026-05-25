@@ -1,0 +1,87 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Image
+status: stable
+group: CivUI Layout
+description: 'See @civui/schema civ-image for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    src:
+      title: Src
+      type: string
+      description: 'Image source URL. Required. Acts as the universal fallback — used directly in `<img>` when no alternates are set, or as the `<picture>` fallback when `webpSrc` / `avifSrc` are set'
+    webp_src:
+      title: Webp src
+      type: string
+      description: 'URL to a WebP alternate. When set (alone or alongside `avifSrc`), the component wraps the `<img>` in a `<picture>` with a `<source type="image/webp">` child. Browser picks the smallest format it supports. Consumers produce these files at...'
+    avif_src:
+      title: Avif src
+      type: string
+      description: 'URL to an AVIF alternate. AVIF beats WebP on compression but has narrower browser support, so it''s listed first inside `<picture>` and falls through to WebP (if set) then `src`. Consumers produce these files at build time or via a CDN'
+    alt:
+      title: Alt
+      type: string
+      description: 'Alt text. Required per Section 508 / WCAG 1.1.1. For purely decorative images, pass `alt=""` (empty string) — that''s the WAI-documented opt-out, never omit the attribute. Filenames are deliberately never used as a fallback (.gov uploads ...'
+    width:
+      title: Width
+      type: integer
+      description: 'Intrinsic width in px. Combined with `height` to compute aspect-ratio when `ratio` is `auto` — set both to reserve layout space before the bytes load'
+    height:
+      title: Height
+      type: integer
+      description: 'Intrinsic height in px. Combined with `width` for aspect-ratio when `ratio` is `auto`'
+    ratio:
+      title: Ratio
+      type: string
+      enum: ['1:1', '4:3', '16:9', '21:9', '3:2', 'auto']
+      default: 'auto'
+      description: 'Aspect ratio. `auto` (default) defers to `width`/`height` if both are set, otherwise the browser uses the image''s natural ratio once loaded (with a CLS cost). Explicit values are the Scottish-GOV aspect-box vocabulary plus 3:2'
+    fit:
+      title: Fit
+      type: string
+      enum: ['cover', 'contain']
+      default: 'cover'
+      description: 'CSS `object-fit`. `cover` (default) fills the box and crops; `contain` fits inside the box without cropping'
+    loading:
+      title: Loading
+      type: string
+      enum: ['lazy', 'eager']
+      default: 'lazy'
+      description: 'Native HTML `loading` attribute. `lazy` (default) defers off-screen images until the user scrolls near them; `eager` loads immediately. Use `eager` for above-the-fold hero images'
+    decoding:
+      title: Decoding
+      type: string
+      enum: ['async', 'sync', 'auto']
+      default: 'async'
+      description: 'Native HTML `decoding` hint. `async` (default) never blocks render. `sync` blocks paint so the image and surrounding text appear together — use for above-the-fold LCP images. `auto` defers to the browser heuristic'
+    fetch_priority:
+      title: Fetch priority
+      type: string
+      enum: ['auto', 'high', 'low']
+      default: 'auto'
+      description: 'Native HTML `fetchpriority` hint. `high` for the LCP image, `low` for below-the-fold imagery, `auto` (default) defers to the browser. Omitted from the rendered `<img>` when `auto`'
+    crossorigin:
+      title: Cross origin
+      type: string
+      enum: ['anonymous', 'use-credentials']
+      description: 'Native HTML `crossorigin` attribute — enables CORS for the image fetch, required for SRI / canvas pixel-reading. Default `''''` (omitted, no CORS)'
+    referrerpolicy:
+      title: Referrer policy
+      type: string
+      description: 'Native HTML `referrerpolicy` attribute. Passed through verbatim. Empty (default) omits the attribute'
+    variant:
+      title: Variant
+      type: string
+      enum: ['content', 'thumbnail']
+      default: 'content'
+      description: '`content` (default) is a fluid, ratio-reserved image for body imagery. `thumbnail` is a fixed-pixel-size image on the Primer stepped scale for inline avatars / list-row thumbs. The `size` and `rounded` props only apply to the thumbnail v...'
+    rounded:
+      title: Rounded
+      type: boolean
+      default: false
+      description: 'Render the thumbnail as a circle (border-radius: 50%) for avatar use. Ignored for the content variant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

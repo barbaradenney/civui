@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Tab Nav Item
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-tab-nav-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    href:
+      title: Href
+      type: string
+      description: 'Destination URL'
+    current:
+      title: Current
+      type: boolean
+      default: false
+      description: 'Mark as the active page. Sets `aria-current="page"` and applies the selected-tab visual style (primary color + bottom-border indicator)'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

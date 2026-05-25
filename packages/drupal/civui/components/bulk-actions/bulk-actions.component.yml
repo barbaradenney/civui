@@ -1,0 +1,36 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Bulk Actions
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-bulk-actions for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    count:
+      title: Count
+      type: integer
+      default: 0
+      description: 'How many items are currently selected. When `0`, the bar is hidden (display:none) but stays in the DOM so default-slot action buttons survive selection toggling'
+    item_name:
+      title: Item name
+      type: string
+      default: 'item'
+      description: 'Singular noun used in the status text ("row", "application", "user"). The bar pluralizes by appending "s". Pass an already-plural fallback in `itemNamePlural` if your word doesn''t pluralize that way'
+    item_name_plural:
+      title: Item name plural
+      type: string
+      description: 'Override for the pluralized noun when simple "+s" pluralization is wrong ("entries", "people", "children"). Defaults to `itemName + "s"` when omitted'
+    clear_label:
+      title: Clear label
+      type: string
+      description: 'Override the Clear button text. Defaults to the i18n "Clear" string. Use to localize or to be more specific ("Clear selection", "Deselect all")'
+    hide_clear:
+      title: Hide clear
+      type: boolean
+      default: false
+      description: 'Suppress the trailing Clear button. Use when consumer-supplied actions inherently clear selection (e.g., "Approve all selected" then resets), so a separate Clear affordance would be redundant'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

@@ -1,0 +1,28 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Skeleton
+status: stable
+group: CivUI Feedback
+description: 'See @civui/schema civ-skeleton for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    shape:
+      title: Shape
+      type: string
+      enum: ['text', 'heading', 'block', 'circle']
+      default: 'text'
+      description: 'Shape. `text` (default) is one or more 1em-high text lines; `heading` is a taller text block for h1–h3 placeholders; `block` is a rectangular media / card body; `circle` is an avatar / icon round'
+    width:
+      title: Width
+      type: string
+      description: 'CSS length for the skeleton width (e.g. `100%`, `12rem`, `80px`). Defaults to `100%` for text / heading / block and `2.5rem` for circle'
+    lines:
+      title: Lines
+      type: integer
+      default: 1
+      description: 'Number of text lines to render. Only meaningful for the `text` variant. When > 1, the last line renders at 70% width to mimic a paragraph''s natural ragged-right edge'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

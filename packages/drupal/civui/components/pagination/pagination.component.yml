@@ -1,0 +1,43 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Pagination
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-pagination for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    total_items:
+      title: Total items
+      type: integer
+      default: 0
+      description: 'Total item count across all pages. Drives the totalPages computation. When 0, the component renders an empty-state message'
+    page_size:
+      title: Page size
+      type: integer
+      default: 25
+      description: 'Items per page. Determines how the totalItems split into pages and the status range'
+    page:
+      title: Page
+      type: integer
+      default: 1
+      description: '1-based current page. Clamped to `[1, totalPages]`. The consumer is expected to update this prop in response to `civ-page-change`'
+    page_size_options:
+      title: Page size options
+      type: string
+      default: '10,25,50,100'
+      description: 'Comma-separated list of page-size choices offered in the selector. Invalid or non-positive values are dropped'
+    sibling_count:
+      title: Sibling count
+      type: integer
+      default: 1
+      description: 'Page-number buttons rendered on each side of the current page before truncation kicks in. Higher values show more pages at once'
+    item_name:
+      title: Item name
+      type: string
+      default: 'item'
+      description: 'Singular noun used in status text (e.g. "row", "application"). Surface-level. Meaningful labels improve clarity for assistive tech'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

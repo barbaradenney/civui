@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Back To Top
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-back-to-top for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    threshold:
+      title: Threshold
+      type: integer
+      default: 400
+      description: 'Pixels scrolled before the button appears'
+    hidden:
+      title: Hidden
+      type: boolean
+      default: true
+      description: 'Whether the button is hidden. Controlled by the component''s internal `IntersectionObserver` — flips to `false` when the user scrolls past `threshold`. Reflected so the global `[hidden]` HTML rule applies `display: none`'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

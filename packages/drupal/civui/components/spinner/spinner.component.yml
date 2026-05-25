@@ -1,0 +1,28 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Spinner
+status: stable
+group: CivUI Feedback
+description: 'See @civui/schema civ-spinner for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    delay:
+      title: Delay
+      type: integer
+      default: 200
+      description: 'Milliseconds to wait before rendering anything. Fast responses (sub-200ms) never paint a spinner at all, avoiding the flash-then-disappear flicker'
+    min_duration:
+      title: Min duration
+      type: integer
+      default: 400
+      description: 'Minimum on-screen time once the spinner has appeared. Once visible, the spinner stays for at least this long so the user perceives a state change rather than a flicker. Consumers awaiting `waitForMinDuration()` honor this before unmounting'
+    decorative:
+      title: Decorative
+      type: boolean
+      default: false
+      description: 'Suppress all AT semantics — no `role`, no `aria-label`, no announcement. Use when nesting the spinner inside a parent that already signals busy state (e.g. `<civ-button loading>` which sets `aria-busy="true"` and announces `loadingLabel`...'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

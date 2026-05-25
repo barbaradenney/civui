@@ -198,12 +198,22 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String }) capture: FileUploadCapture = '';
 
   /**
-   * Upload zone variant:
-   * - `default` — medium dropzone with icon and text
-   * - `compact` — inline text field with browse button (no drag zone)
-   * - `full` — large dropzone filling available space
+   * Upload zone visual layout:
+   * - `default` — medium dropzone with drag-and-drop and inline browse pill
+   * - `inline` — compact pseudo-input + browse button row (no dropzone,
+   *   no drag-and-drop). Matches the layout of native `<input type="file">`
+   *   for placement in dense forms. The previous value name `compact` was
+   *   renamed in v0.x to disambiguate from the system-wide `spacing="sm"`
+   *   density convention used by every other CivUI component
+   * - `large` — taller drag target with `min-height: 250px`, for landing
+   *   pages or document-heavy workflows where the upload is the primary
+   *   action on the page. Previously named `full`
+   *
+   * These three values describe **layout**, not density. There is no
+   * density / chrome-size knob on file-upload today (a future `spacing`
+   * prop would be additive).
    */
-  @property({ type: String }) variant: 'default' | 'compact' | 'full' = 'default';
+  @property({ type: String }) variant: 'default' | 'inline' | 'large' = 'default';
   @property({ type: Number, attribute: 'max-size' }) maxSize = 0;
   @property({ type: Number, attribute: 'max-files' }) maxFiles = 0;
 
@@ -352,11 +362,12 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   }
 
   /**
-   * Render the visible file-picker trigger — either the compact "Browse" pill
-   * or the full dropzone with drag/drop affordances.
+   * Render the visible file-picker trigger — either the inline browse pill
+   * (variant=inline) or the dropzone with drag-and-drop affordances
+   * (variant=default | large).
    */
   private _renderTrigger() {
-    if (this.variant === 'compact') {
+    if (this.variant === 'inline') {
       // Compact trigger summary matches native <input type="file"> behavior:
       //   - empty           → "No file chosen"
       //   - single file     → "filename.ext"
@@ -390,7 +401,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     return html`
       <button
         type="button"
-        class="civ-dropzone ${this.variant === 'full' ? 'civ-dropzone--full' : ''}"
+        class="civ-dropzone ${this.variant === 'large' ? 'civ-dropzone--large' : ''}"
         @dragenter="${this._boundDragEnter}"
         @dragover="${this._boundDragOver}"
         @dragleave="${this._boundDragLeave}"
@@ -447,15 +458,15 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
    * action buttons) plus the "show all" expander when there are more than
    * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty.
    *
-   * Compact + single: skipped — the inline trigger already shows the file
+   * Inline + single: skipped — the inline trigger already shows the file
    * name; a single-row list below would just duplicate it.
    *
-   * Compact + multiple: the list renders. The trigger collapses to a
+   * Inline + multiple: the list renders. The trigger collapses to a
    * "{N} files chosen" summary so the two surfaces aren't redundant, and
    * the list is the only way for the user to remove individual files.
    */
   private _renderFileList() {
-    if (this.variant === 'compact' && !this.multiple) return nothing;
+    if (this.variant === 'inline' && !this.multiple) return nothing;
     if (this._files.length === 0) return nothing;
     const visible = this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT);
     return html`

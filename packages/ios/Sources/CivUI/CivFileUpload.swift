@@ -89,7 +89,10 @@ public struct CivFileUpload: View {
     /// Camera capture mode (e.g., "user", "environment").
     public var capture: String
 
-    /// Upload variant (e.g., "default", "dropzone").
+    /// Visual layout variant. One of: "default" (standard dropzone),
+    /// "inline" (pseudo-input + browse-button row, no drag-and-drop),
+    /// "large" (taller drag target). Not density — see system-wide
+    /// `spacing` for chrome-size adjustments on inputs that expose it.
     public var variant: String
 
     /// Custom text for the drag-and-drop area.

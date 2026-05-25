@@ -1198,9 +1198,9 @@ describe('civ-file-upload dragenter/dragleave depth tracking', () => {
   });
 });
 
-describe('civ-file-upload compact variant', () => {
-  it('compact + single: trigger shows the filename, no list rendered', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" variant="compact" name="doc"></civ-file-upload>') as any;
+describe('civ-file-upload inline variant', () => {
+  it('inline + single: trigger shows the filename, no list rendered', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
     el._addFiles([new File(['x'], 'report.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
 
@@ -1211,8 +1211,8 @@ describe('civ-file-upload compact variant', () => {
     expect(el.querySelector('.civ-file-item')).toBeNull();
   });
 
-  it('compact + multiple + N>1: trigger shows the count summary, list renders for per-file remove', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" variant="compact" multiple name="doc"></civ-file-upload>') as any;
+  it('inline + multiple + N>1: trigger shows the count summary, list renders for per-file remove', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" multiple name="doc"></civ-file-upload>') as any;
     el._addFiles([
       new File(['a'], 'a.pdf', { type: 'application/pdf' }),
       new File(['b'], 'b.pdf', { type: 'application/pdf' }),
@@ -1230,8 +1230,8 @@ describe('civ-file-upload compact variant', () => {
     expect(el.querySelectorAll('[data-file-remove]')).toHaveLength(3);
   });
 
-  it('compact + multiple + 1: trigger shows the filename (matches single-file UX)', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" variant="compact" multiple name="doc"></civ-file-upload>') as any;
+  it('inline + multiple + 1: trigger shows the filename (matches single-file UX)', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" multiple name="doc"></civ-file-upload>') as any;
     el._addFiles([new File(['x'], 'only.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
 
@@ -1241,21 +1241,21 @@ describe('civ-file-upload compact variant', () => {
     expect(el.querySelectorAll('.civ-file-item')).toHaveLength(1);
   });
 
-  it('compact button has an accessible name from this.label', async () => {
-    const el = await fixture('<civ-file-upload label="Upload your tax return" variant="compact" name="tax"></civ-file-upload>') as any;
+  it('inline button has an accessible name from this.label', async () => {
+    const el = await fixture('<civ-file-upload label="Upload your tax return" variant="inline" name="tax"></civ-file-upload>') as any;
     const button = el.querySelector('button')!;
     expect(button.getAttribute('aria-label')).toBe('Upload your tax return');
   });
 
-  it('compact variant exposes aria-required and aria-invalid on the button', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" variant="compact" name="doc" required error="Required field"></civ-file-upload>') as any;
+  it('inline variant exposes aria-required and aria-invalid on the button', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc" required error="Required field"></civ-file-upload>') as any;
     const button = el.querySelector('button')!;
     expect(button.getAttribute('aria-required')).toBe('true');
     expect(button.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('compact variant uses BEM modifier classes instead of inline border-radius styles', async () => {
-    const el = await fixture('<civ-file-upload label="Upload" variant="compact" name="doc"></civ-file-upload>') as any;
+  it('inline variant uses BEM modifier classes instead of inline border-radius styles', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
     const input = el.querySelector('.civ-input')!;
     const action = el.querySelector('.civ-action-btn')!;
     expect(input.classList.contains('civ-input--joined-end')).toBe(true);
@@ -1263,6 +1263,16 @@ describe('civ-file-upload compact variant', () => {
     // No inline styles — modifier classes carry the border / radius overrides
     expect(input.getAttribute('style')).toBeNull();
     expect(action.getAttribute('style')).toBeNull();
+  });
+});
+
+describe('civ-file-upload large variant', () => {
+  it('applies the .civ-dropzone--large modifier class for the taller drag target', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="large" name="doc"></civ-file-upload>') as any;
+    const dropzone = el.querySelector('.civ-dropzone') as HTMLElement;
+    expect(dropzone.classList.contains('civ-dropzone--large')).toBe(true);
+    // Sanity: the old class name should NOT appear post-rename
+    expect(dropzone.classList.contains('civ-dropzone--full')).toBe(false);
   });
 });
 

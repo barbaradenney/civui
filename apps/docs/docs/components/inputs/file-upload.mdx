@@ -59,13 +59,21 @@ File input with drag-and-drop, file list preview, size and type validation, uplo
 
 <StoryEmbed id="forms-inputs-file-upload--image-preview" />
 
-### Compact Variant
+### Inline Variant
 
-<StoryEmbed id="forms-inputs-file-upload--compact-variant" />
+`variant="inline"` renders a pseudo-input + browse-button row matching the layout of native `<input type="file">`. Use in dense forms where the dropzone would take too much vertical space. No drag-and-drop.
 
-### Full Variant
+:::note Renamed in v0.x
+This variant was previously named `variant="compact"`. The value was renamed to **disambiguate from the system-wide `spacing="sm"` density convention** used by every other CivUI component. File-upload's `variant` controls **layout** (dropzone shape / drag-target size), not chrome density.
+:::
 
-<StoryEmbed id="forms-inputs-file-upload--full-variant" />
+<StoryEmbed id="forms-inputs-file-upload--inline-variant" />
+
+### Large Variant
+
+`variant="large"` renders a taller drag target (`min-height: 250px`) for landing pages or document-heavy workflows where upload is the primary action. Previously named `variant="full"`.
+
+<StoryEmbed id="forms-inputs-file-upload--large-variant" />
 
 ### All Variants
 
@@ -146,9 +154,11 @@ All form components share these props: `label`, `name`, `value`, `hint`, `error`
 
 ### Variant Descriptions
 
+`variant` controls **layout**, not density. For density / chrome-size adjustments matching the rest of the system, every other input uses `spacing="sm"`; file-upload doesn't currently expose a density knob (file pickers don't typically appear in data-grid cells or other density-sensitive surfaces).
+
 - **`default`**: Medium dropzone with icon, text, and browse button
-- **`compact`**: Inline text field showing file names with a browse button (no drag zone)
-- **`full`**: Large dropzone filling available space
+- **`inline`**: Pseudo-input + browse button row (no dropzone, no drag-and-drop). Matches the layout of native `<input type="file">`. *Previously named `compact`.*
+- **`large`**: Taller drag target (`min-height: 250px`) for landing pages and document-heavy workflows. *Previously named `full`.*
 
 ### Customization Labels
 
@@ -244,12 +254,12 @@ backend in the same confirm handler.
   show-preview
 ></civ-file-upload>
 
-<!-- Compact variant -->
+<!-- Inline variant (no dropzone) -->
 <civ-file-upload
   label="Profile photo"
   name="photo"
   accept="image/*"
-  variant="compact"
+  variant="inline"
   max-size="5242880"
 ></civ-file-upload>
 ```

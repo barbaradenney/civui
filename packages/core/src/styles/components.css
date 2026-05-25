@@ -1397,7 +1397,10 @@
     color: var(--civ-color-base-light);
   }
 
-  /* Mobile: collapse dropzone to compact browse button (no drag on touch) */
+  /* Mobile: collapse dropzone to inline browse button (no drag on touch).
+     This is a viewport-driven layout change, not the same axis as the
+     `variant="inline"` opt-in — both end up rendering the same compact
+     pseudo-input + browse pill, so the CSS overrides converge here. */
   @media (max-width: 480px) {
     .civ-dropzone {
       @apply civ-py-3 civ-px-4 civ-text-start civ-border civ-border-solid;
@@ -1405,13 +1408,16 @@
     .civ-dropzone > span:first-child {
       display: none;
     }
-    .civ-dropzone--full {
+    .civ-dropzone--large {
       min-height: auto;
       @apply civ-py-3;
     }
   }
 
-  .civ-dropzone--full {
+  /* Larger drag target — pairs with `variant="large"`. Previously named
+     `.civ-dropzone--full`; renamed in lockstep with the schema enum
+     rename to keep CSS class names aligned with the public API. */
+  .civ-dropzone--large {
     @apply civ-py-20;
     min-height: 250px;
   }

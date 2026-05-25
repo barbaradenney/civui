@@ -5222,7 +5222,10 @@
   /* Secondary — tinted background pill with semantic text.
      Tokens follow the shared semantic-intent recipe documented above
      `.civ-badge--style-secondary`; the two components stay in lockstep
-     and `pnpm lint:semantic-color-recipe` enforces it. */
+     and `pnpm lint:semantic-color-recipe` enforces it. Pill chrome
+     (min-width + line-height) reads from spacing tokens so the badge
+     tracks the page-level `[data-civ-scale]` instead of staying
+     full-size inside dense surfaces. */
   .civ-count--style-secondary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
     min-width: var(--civ-spacing-4);
@@ -5376,11 +5379,12 @@
     border: 0;
     cursor: pointer;
     font: inherit;
-    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
-       28px default keeps a small visual buffer above the floor; the
-       --sm variant below sits exactly on the floor. Must not shrink
-       under [data-civ-scale="dense"]. */
-    min-height: 1.75rem;
+    /* Token-driven chrome scaling so the chip responds to
+       `[data-civ-scale]`, with `1.5rem` (24px) as the WCAG SC 2.5.8
+       Target Size (Minimum) floor — guarantees the touch target stays
+       ≥ 24px even under `data-civ-scale="dense"` where `--civ-spacing-6`
+       resolves smaller (30px × 0.75 = 22.5px). */
+    min-height: max(var(--civ-spacing-6), 1.5rem);
   }
 
   /* civ-action-chip — the chip element is itself a <button>; padding
@@ -5389,16 +5393,17 @@
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1;
     cursor: pointer;
     font: inherit;
-    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
-    min-height: 1.75rem;
+    /* Token-driven chrome scaling with `1.5rem` (24px) as the WCAG
+       SC 2.5.8 floor — see `.civ-chip__action` above. */
+    min-height: max(var(--civ-spacing-6), 1.5rem);
   }
 
   /* civ-input-chip — label span is the padding host (the chip itself
      is non-interactive; only the remove button is). */
   .civ-chip--input .civ-chip__label {
     @apply civ-inline-flex civ-items-center civ-px-3 civ-py-1;
-    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
-    min-height: 1.75rem;
+    /* Token-driven chrome scaling with WCAG SC 2.5.8 floor. */
+    min-height: max(var(--civ-spacing-6), 1.5rem);
   }
 
   /* Filter-chip focus-ring trick: the wrapper has overflow:hidden
@@ -5436,15 +5441,15 @@
     cursor: not-allowed;
   }
 
-  /* Compact size: shrink padding while keeping a 24px-tall touch target. */
+  /* Compact size: shrink padding while keeping a 24px-tall touch target.
+     `max(..., 1.5rem)` clamps the WCAG SC 2.5.8 floor — under
+     `data-civ-scale="dense"` `--civ-spacing-5` would shrink below 24px
+     (25 × 0.75 = 18.75px), so the floor takes over. */
   .civ-chip--sm .civ-chip__action,
   button.civ-chip.civ-chip--sm.civ-chip--action,
   .civ-chip--input.civ-chip--sm .civ-chip__label {
     @apply civ-px-2 civ-py-0.5 civ-text-sm;
-    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
-       --sm variant sits exactly on the floor — any further shrink
-       would drop below AA. */
-    min-height: 1.5rem;
+    min-height: max(var(--civ-spacing-5), 1.5rem);
   }
 
   /* Hover affordance — scoped to chip kinds that ARE interactive at

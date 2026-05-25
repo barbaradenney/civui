@@ -45,7 +45,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-summary>` | Display | `data`, `editLabel` | `civ-edit: { section }` |
 | `<civ-data-field>` | Display | `label`, `value` | — |
 | `<civ-button>` | UI | `label`, `variant`, `danger`, `disabled`, `type` | `civ-analytics` |
-| `<civ-action-button>` | UI | `label`, `variant`, `danger`, `disabled`, `pressed`, `type` | `civ-analytics` |
+| `<civ-action-button>` | UI | `label`, `variant`, `danger`, `disabled`, `pressed`, `spacing` (`default`/`sm`), `type` | `civ-analytics` |
 | `<civ-link>` | UI | `label`, `href`, `variant`, `danger`, `disabled` | `civ-analytics` |
 | `<civ-link-card>` | UI | `href`, `heading`, `description`, `variant`, `spacing` | `civ-analytics` |
 | `<civ-card>` | UI | `heading`, `spacing` | — |
@@ -1339,6 +1339,19 @@ Drupal stories are co-located next to web component source as `*.drupal.stories.
 |----------|-----------|-----|
 | Scheduling / appointment selection | `civ-date-picker` | Calendar browsing, min/max range |
 | Known past date (birthday, issue date) | `civ-memorable-date` | Three-field entry, no calendar needed |
+
+### button vs action-button
+
+| Scenario | Component | Why |
+|----------|-----------|-----|
+| Primary form CTA (Submit, Continue, Save) | `civ-button` | Full-height button chrome, full-width on mobile |
+| Secondary form action (Cancel, Back) | `civ-button` (`variant="secondary"` / `"tertiary"`) | Same chrome family, lower visual weight |
+| Polymorphic "looks like a button, navigates like a link" | `civ-button[href]` | Renders an `<a>` with `.civ-btn--link` underline cue |
+| Toolbar button / row action / inline form chrome | `civ-action-button` | Compact button (≈40 px default, 32 px with `spacing="sm"`); the canonical small-button affordance |
+| Two-state toggle (Show ↔ Hide, mute, pin) | `civ-toggle-button` | `aria-pressed` semantics, persistent two-label state |
+| Fire-and-forget receipt (Copy → Copied ✓) | `civ-confirm-button` | Transient success state, owns its timing |
+
+`civ-button` deliberately does NOT expose a `spacing` prop — when you need a smaller button, reach for `civ-action-button` instead. Keeping the two APIs separate avoids bifurcating the main button surface, and `civ-action-button` is already used inside `civ-data-grid` row-action menus, dense toolbars, and `civ-input-group` adjacent-button placements.
 
 ### badge vs count vs tag vs filter chip
 

@@ -418,6 +418,48 @@ export const CompactDensityComparison: Story = {
   },
 };
 
+/**
+ * Three-step row-density ladder on the grid itself. Shrinks the
+ * header + body cell padding (Contract A — pure shrink, no chrome
+ * dropped). The `xs` floor lands at the WCAG SC 2.5.8 Target Size
+ * (Minimum) threshold for touch surfaces; do not shrink further.
+ *
+ * Distinct from `spacing="sm"` on contained inputs (badges, cell
+ * editors): that controls the rendered control's own height, while
+ * this controls the table's cell padding. They compose — set both
+ * for the tightest read.
+ */
+export const RowDensityLadder: Story = {
+  name: 'Row density ladder (default / sm / xs)',
+  render: () => {
+    setTimeout(() => {
+      (['default', 'sm', 'xs'] as const).forEach((step) => {
+        const grid = document.querySelector(`civ-data-grid.story-density-row-${step}`) as any;
+        if (!grid) return;
+        grid.columns = defaultColumns;
+        grid.rows = toRows(SAMPLE_DATA.slice(0, 5));
+        grid.spacing = step;
+      });
+    }, 0);
+    return html`
+      <div class="civ-flex civ-flex-col civ-gap-6">
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">spacing="default" — px-3 py-2 (12 / 8px)</p>
+          <civ-data-grid class="story-density-row-default" caption="Applications (default rows)"></civ-data-grid>
+        </div>
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">spacing="sm" — px-2 py-1 (8 / 4px)</p>
+          <civ-data-grid class="story-density-row-sm" caption="Applications (compact rows)"></civ-data-grid>
+        </div>
+        <div>
+          <p class="civ-m-0 civ-mb-2 civ-font-semibold">spacing="xs" — px-2 py-0.5 (8 / 2px) — ultra-dense</p>
+          <civ-data-grid class="story-density-row-xs" caption="Applications (ultra-dense rows)"></civ-data-grid>
+        </div>
+      </div>
+    `;
+  },
+};
+
 export const MasterDetailDrawer: Story = {
   name: 'Master-Detail (row → civ-drawer)',
   render: () => {

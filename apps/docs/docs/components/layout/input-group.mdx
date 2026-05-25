@@ -78,6 +78,17 @@ Buttons on both sides for increment/decrement controls.
 </civ-input-group>
 ```
 
+### Compact (dense surfaces)
+
+`civ-input-group` is a pass-through layout container with no chrome of its own — no `spacing` prop. For a compact group, set `spacing="sm"` on **each child** (both the input and the button). The group's per-child border-radius math handles either density correctly.
+
+```html
+<civ-input-group>
+  <civ-text-input label="Search" name="search" spacing="sm"></civ-text-input>
+  <civ-action-button label="Search" emphasis="primary" spacing="sm"></civ-action-button>
+</civ-input-group>
+```
+
 ## When to use
 
 - **Search bars:** input paired with a search or filter button

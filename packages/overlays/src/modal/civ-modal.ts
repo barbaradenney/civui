@@ -32,6 +32,7 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} noCloseButton - Hide the X close button
  * @prop {boolean} noBackdropClose - Disable closing via backdrop click
  * @prop {boolean} noEscapeClose - Disable closing via Escape key
+ * @prop {string} spacing - `default` (24px padding) or `sm` (16px padding + 12px header/body/footer rhythm) for quick-action admin dialogs
  *
  * @fires civ-close - When the user tries to close the modal
  */
@@ -44,6 +45,7 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, attribute: 'no-close-button' }) noCloseButton = false;
   @property({ type: Boolean, attribute: 'no-backdrop-close' }) noBackdropClose = false;
   @property({ type: Boolean, attribute: 'no-escape-close' }) noEscapeClose = false;
+  @property({ type: String, reflect: true }) spacing: 'default' | 'sm' = 'default';
 
   private _previouslyFocused: Element | null = null;
   private _priorBodyOverflow = '';

@@ -670,7 +670,7 @@ Visual separator between content sections.
 
 \`\`\`html
 <civ-divider></civ-divider>
-<civ-divider spacing="sm"></civ-divider>
+<civ-divider rhythm="sm"></civ-divider>
 \`\`\`
 
 ---

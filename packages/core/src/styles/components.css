@@ -157,7 +157,7 @@
      :not() exclusion. Tile-mode checkboxes (radio tile cards) also
      manage their own spacing. */
   civ-checkbox:not(civ-checkbox-group *):not([tile]) {
-    margin-bottom: 1rem;
+    margin-bottom: var(--civ-spacing-4);
   }
 
   /* ── Shared form primitives ─────────────────────────────────── */
@@ -1506,6 +1506,11 @@
 
   /* Reserve space for the chevron on the input. */
   [data-civ-combobox] > input {
+    /* not density: chrome offset — leaves a fixed gutter for the
+       chevron affordance. Matches the gutter on
+       `.civ-input-with-trailing-icon`. The icon itself is em-relative
+       so it scales with the input's font; the gutter is a placement
+       chrome offset, not a density step. */
     padding-inline-end: 2.25rem;
   }
 
@@ -2117,6 +2122,23 @@
 
   .civ-modal__footer {
     @apply civ-flex civ-gap-4 civ-justify-end;
+  }
+
+  /* Density: pure shrink for placements like dense admin quick-action
+     dialogs. Per density-convention.md Contract A — padding only, no
+     chrome dropped, no layout change. Targets the host's spacing
+     attribute (reflect: true) and cascades to dialog + chrome. */
+  civ-modal[spacing='sm'] dialog.civ-modal {
+    @apply civ-p-4;
+  }
+  civ-modal[spacing='sm'] .civ-modal__header {
+    @apply civ-mb-3;
+  }
+  civ-modal[spacing='sm'] .civ-modal__body {
+    @apply civ-mb-3;
+  }
+  civ-modal[spacing='sm'] .civ-modal__footer {
+    @apply civ-gap-3;
   }
 
   /* Modal uses dialog's native positioning — margin-top: auto anchors to bottom */
@@ -2743,6 +2765,24 @@
   }
   .civ-data-grid__td--select { text-align: center; }
   .civ-data-grid__td--actions { text-align: end; }
+
+  /* Density ladder. Per density-convention.md Contract A — padding
+     only; selection / actions / sort-button chrome unchanged. The
+     ladder is one step per modifier:
+       default → px-3 py-2 (12 / 8px)
+       --sm    → px-2 py-1 (8 / 4px)
+       --xs    → px-2 py-0.5 (8 / 2px) — ultra-dense admin grids
+     The xs row floor is ~24px (font-size-sm leading + 2px×2), at the
+     WCAG SC 2.5.8 Target Size (Minimum) threshold; do not shrink
+     further without verifying tap targets on touch surfaces. */
+  .civ-data-grid--sm .civ-data-grid__th,
+  .civ-data-grid--sm .civ-data-grid__td {
+    @apply civ-px-2 civ-py-1;
+  }
+  .civ-data-grid--xs .civ-data-grid__th,
+  .civ-data-grid--xs .civ-data-grid__td {
+    @apply civ-px-2 civ-py-0.5;
+  }
 
   .civ-data-grid--striped .civ-data-grid__tbody .civ-data-grid__tr:nth-child(odd) {
     background-color: var(--civ-color-base-lightest);
@@ -4251,8 +4291,7 @@
     display: block;
   }
   .civ-on-this-page__heading {
-    @apply civ-m-0 civ-font-bold;
-    margin-bottom: 0.5rem;
+    @apply civ-m-0 civ-font-bold civ-mb-2;
   }
   .civ-on-this-page__list {
     @apply civ-flex civ-flex-col civ-list-none civ-p-0 civ-m-0;
@@ -4562,6 +4601,13 @@
      set callout-style) is unaffected and keeps the 5px rail. */
   civ-callout[emphasis='secondary'] {
     border-inline-start-width: 3px;
+  }
+
+  /* Density: pure shrink for placements inside dense surfaces
+     (data-grid empty state, sidebar notes). Per density-convention.md
+     Contract A — padding only, no chrome dropped, no layout change. */
+  civ-callout[spacing='sm'] {
+    padding: var(--civ-spacing-2) var(--civ-spacing-3);
   }
 
   civ-callout[intent='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }

@@ -19,7 +19,12 @@ props:
       title: Icon end
       type: string
       description: 'Trailing icon name'
-
+    rhythm:
+      title: Rhythm
+      type: string
+      enum: ['default', 'sm']
+      default: 'default'
+      description: 'Bottom margin to the content below the header. `default` = 24px; `sm` = 12px. Named `rhythm` (not `spacing`) because the value controls margin between the header and the next sibling, not internal padding. Per density-convention.md "Thre...'
 
 slots:
   tag:

@@ -45,6 +45,14 @@ const schema: ComponentSchema = {
       default: false,
       attribute: 'no-escape-close',
     },
+    spacing: {
+      type: 'enum',
+      description: 'Inner padding density. `default` keeps the established 24px chrome with 16px header/body/footer rhythm. `sm` shrinks to 16px chrome + 12px rhythm for dense admin quick-action dialogs. Pure shrink per Contract A — no chrome dropped. Web-only: native platforms have their own density mechanisms (iOS size classes, Compose dynamic type) and modal presentation styles vary by OS.',
+      default: 'default',
+      values: ['default', 'sm'],
+      reflect: true,
+      webOnly: true,
+    },
   },
 
   events: {

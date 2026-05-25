@@ -177,7 +177,7 @@ export const Compact: Story = {
       </div>
       <div>
         <p class="civ-font-semibold civ-mb-2">Compact (sm)</p>
-        <civ-page-header spacing="sm">
+        <civ-page-header rhythm="sm">
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">Apply for disability compensation</h1>
           <span data-subheading>VA Form 21-526EZ</span>

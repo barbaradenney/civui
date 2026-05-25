@@ -94,6 +94,7 @@ export type {
  * @prop {Object} filters - Active filter values keyed by column.key (controlled). Update in response to `civ-filter-change`. See the doc page "Column filtering" section.
  * @prop {boolean} stickyFooter - Pin the aggregator footer to the bottom of the scrolling container.
  * @prop {boolean} showGroupSubtotals - When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group (default `true`).
+ * @prop {string} spacing - Row density ladder. `default` (12/8px cells) → `sm` (8/4px cells) → `xs` (4/2px cells) for ultra-dense admin grids. Per density-convention.md Contract A.
  *
  * @fires civ-sort - { column, direction, sortKeys } — user clicked a sortable column header. `column` + `direction` describe the just-toggled column (for backward-compat consumers); `sortKeys` is the full target stack (always present, single-element when `multiSort` is off).
  * @fires civ-selection-change - { selectedRowIds } — selection changed via checkbox
@@ -165,6 +166,7 @@ export class CivDataGrid extends CivBaseElement {
   @property({ type: Boolean, attribute: 'keyboard-nav' }) keyboardNav = false;
   @property({ attribute: false }) filters: GridFilters = {};
   @property({ type: Boolean, attribute: 'sticky-footer' }) stickyFooter = false;
+  @property({ type: String }) spacing: 'default' | 'sm' | 'xs' = 'default';
   @property({ type: Boolean, attribute: 'show-group-subtotals' }) showGroupSubtotals = true;
 
   /**
@@ -206,6 +208,8 @@ export class CivDataGrid extends CivBaseElement {
       this.bordered ? 'civ-data-grid--bordered' : '',
       this.keyboardNav ? 'civ-data-grid--keyboard-nav' : '',
       this.stickyFooter && this._hasAnyAggregate() ? 'civ-data-grid--sticky-footer' : '',
+      this.spacing === 'sm' ? 'civ-data-grid--sm' : '',
+      this.spacing === 'xs' ? 'civ-data-grid--xs' : '',
     ].filter(Boolean).join(' ');
 
     return html`

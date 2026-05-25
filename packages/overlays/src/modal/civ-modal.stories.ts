@@ -37,6 +37,43 @@ export const Default: Story = {
   },
 };
 
+export const Compact: Story = {
+  name: 'Compact (spacing="sm")',
+  parameters: {
+    docs: {
+      description: {
+        story: `\`spacing="sm"\` shrinks the dialog chrome to 16px padding
+with 12px header/body/footer rhythm (from 24px / 16px) for dense
+admin quick-action dialogs. Per density-convention.md Contract A:
+pure shrink, no chrome dropped, no layout change. Web-only —
+native platforms have their own density mechanisms.`,
+      },
+    },
+  },
+  render: () => {
+    const toggle = (e: Event) => {
+      const demo = (e.target as HTMLElement).closest('.modal-demo')!;
+      const modal = demo.querySelector('civ-modal') as any;
+      modal.open = !modal.open;
+    };
+    const close = (e: Event) => {
+      ((e.target as HTMLElement).closest('.modal-demo')!.querySelector('civ-modal') as any).open = false;
+    };
+    return html`
+      <div class="modal-demo">
+        <civ-button label="Open compact modal" @click="${toggle}"></civ-button>
+        <civ-modal heading="Reassign row" spacing="sm" @civ-close="${close}">
+          <p class="civ-text-body civ-m-0">Move 3 selected rows to a different owner.</p>
+          <div data-modal-footer>
+            <civ-button emphasis="secondary" label="Cancel" @click="${close}"></civ-button>
+            <civ-button label="Reassign" @click="${close}"></civ-button>
+          </div>
+        </civ-modal>
+      </div>
+    `;
+  },
+};
+
 export const RequiredDecision: Story = {
   name: 'Required Decision (No Close)',
   render: () => {

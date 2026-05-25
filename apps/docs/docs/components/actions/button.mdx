@@ -68,6 +68,10 @@ Set `loading` while an async action is in flight. The button swaps its leading i
 
 <StoryEmbed id="actions-button--density-scale" />
 
+:::tip Small / compact buttons
+`civ-button` doesn't expose a `spacing="sm"` prop. For toolbars, table row actions, dense admin chrome, or anywhere you want a smaller button, use [`<civ-action-button>`](./action-button) — it's the canonical compact-button affordance with `spacing="default" | "sm"`. Keeping the two APIs separate avoids bifurcating the main button surface, and `civ-action-button` is already used inside `civ-data-grid` row-action menus and other compact placements.
+:::
+
 ### Form Actions
 
 <StoryEmbed id="actions-button--form-actions" />

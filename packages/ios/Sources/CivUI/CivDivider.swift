@@ -4,22 +4,33 @@
 import SwiftUI
 
 public struct CivDivider: View {
+    /// Vertical margin (top + bottom) around the divider line.
+    /// `default` (16pt) or `sm` (8pt). Named `rhythm` to match
+    /// the web schema; the prop controls margin around the
+    /// divider, not internal padding.
+    public var rhythm: String
+    /// Deprecated alias for `rhythm`. Kept for backward compat
+    /// with consumers on the old API; will be removed in a
+    /// future release. Setting this on web emits a dev-mode
+    /// console warning.
     public var spacing: String
     public var emphasis: String
     @Environment(\.colorScheme) private var colorScheme
 
-    public init(spacing: String = "default", variant: String = "default") {
+    public init(rhythm: String = "default", spacing: String = "default", emphasis: String = "default") {
+        self.rhythm = rhythm
         self.spacing = spacing
         self.emphasis = emphasis
     }
 
     private var verticalPadding: CGFloat {
-        spacing == "sm" ? CivTokens.Spacing._2 : CivTokens.Spacing._4
+        let value = rhythm != "default" ? rhythm : spacing
+        return value == "sm" ? CivTokens.Spacing._2 : CivTokens.Spacing._4
     }
 
     private var dividerColor: Color {
         let isDark = colorScheme == .dark
-        if variant == "primary" {
+        if emphasis == "primary" {
             return isDark ? CivTokens.DarkColors.Base.light : CivTokens.Colors.Base.light
         }
         return isDark ? CivTokens.DarkColors.Base.lighter : CivTokens.Colors.Base.lighter
@@ -28,7 +39,7 @@ public struct CivDivider: View {
     public var body: some View {
         Rectangle()
             .fill(dividerColor)
-            .frame(height: variant == "primary" ? 2 : 1)
+            .frame(height: emphasis == "primary" ? 2 : 1)
             .padding(.vertical, verticalPadding)
     }
 }
@@ -40,9 +51,9 @@ struct CivDivider_Previews: PreviewProvider {
             Text("Above")
             CivDivider()
             Text("Below")
-            CivDivider(variant: "primary")
+            CivDivider(emphasis: "primary")
             Text("Primary")
-            CivDivider(spacing: "sm")
+            CivDivider(rhythm: "sm")
             Text("Tight")
         }.padding()
     }

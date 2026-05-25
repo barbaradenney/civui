@@ -14,9 +14,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import gov.civui.tokens.CivTokens
 
+/**
+ * Horizontal divider line.
+ *
+ * @param rhythm Vertical margin (top + bottom) around the line: "default" (16dp) or "sm" (8dp).
+ *   Named `rhythm` to match the web schema; controls margin around the divider, not internal padding.
+ * @param spacing Deprecated alias for `rhythm`. Kept for backward compat; will be removed in a future release.
+ *   Setting this on web emits a dev-mode console warning.
+ * @param emphasis Visual style: "default" (1dp, light) or "primary" (2dp, darker).
+ */
 @Composable
 fun CivDivider(
     modifier: Modifier = Modifier,
+    rhythm: String = "default",
     spacing: String = "default",
     emphasis: String = "default",
 ) {
@@ -27,7 +37,8 @@ fun CivDivider(
         if (isDark) CivTokens.DarkColors.Base.lighter else CivTokens.Colors.Base.lighter
     }
     val thickness = if (emphasis == "primary") 2.dp else 1.dp
-    val pad = if (spacing == "sm") CivTokens.Spacing._2 else CivTokens.Spacing._4
+    val effectiveRhythm = if (rhythm != "default") rhythm else spacing
+    val pad = if (effectiveRhythm == "sm") CivTokens.Spacing._2 else CivTokens.Spacing._4
 
     Divider(
         color = color,
@@ -45,7 +56,7 @@ private fun CivDividerPreview() {
         Text("Below")
         CivDivider(emphasis = "primary")
         Text("Primary")
-        CivDivider(spacing = "sm")
+        CivDivider(rhythm = "sm")
         Text("Tight")
     }
 }

@@ -33,7 +33,7 @@ export const Small: Story = {
   name: 'Small Spacing',
   render: () => html`
     <p>Tighter spacing</p>
-    <civ-divider spacing="sm"></civ-divider>
+    <civ-divider rhythm="sm"></civ-divider>
     <p>Between items</p>
   `,
 };
@@ -64,13 +64,13 @@ export const AllVariants: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Small spacing</p>
         <p>Content above</p>
-        <civ-divider spacing="sm"></civ-divider>
+        <civ-divider rhythm="sm"></civ-divider>
         <p>Content below</p>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Primary + Small spacing</p>
         <p>Content above</p>
-        <civ-divider emphasis="primary" spacing="sm"></civ-divider>
+        <civ-divider emphasis="primary" rhythm="sm"></civ-divider>
         <p>Content below</p>
       </div>
     </div>
@@ -132,11 +132,11 @@ export const FormSections: Story = {
       <h3>Personal information</h3>
       <p>Name: John Doe</p>
       <p>Date of birth: January 1, 1985</p>
-      <civ-divider spacing="sm"></civ-divider>
+      <civ-divider rhythm="sm"></civ-divider>
       <h3>Contact information</h3>
       <p>Email: john.doe@example.com</p>
       <p>Phone: (555) 123-4567</p>
-      <civ-divider spacing="sm"></civ-divider>
+      <civ-divider rhythm="sm"></civ-divider>
       <h3>Mailing address</h3>
       <p>123 Main Street</p>
       <p>Springfield, VA 22150</p>

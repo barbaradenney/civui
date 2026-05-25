@@ -57,6 +57,10 @@ A structured page heading with slot areas for tag, eyebrow, heading, and subhead
 
 <StoryEmbed id="layout-page-header--compact" />
 
+:::note Deprecated `spacing` prop
+`spacing` is still accepted as a backward-compatible alias for `rhythm` but emits a one-time dev-mode console warning. The rename clarifies that this prop controls margin between the header and the content below it, not internal padding. Migrate to `rhythm`; the `spacing` alias will be removed in a future release.
+:::
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/layout-page-header--default)
 
 ## Slots

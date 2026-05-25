@@ -196,33 +196,47 @@ A new `pnpm lint:density-modifier-names` (wired into `pnpm validate:lints` and t
 | ~~`civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;`~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Added `/* not density: WCAG 2.5.5 tap target floor */` comments on both default + `--sm`. |
 | ~~Spinner sizes, signature-preview height, file-preview thumbnails~~ | ✅ Done in `claude/table-component-P3Xz3` (2026-05-25) | Added `/* not density: decorative dimension */` comments on spinner ladder and signature-preview height. (File-preview thumbnails don't have a hardcoded dimension in `components.css` — the audit's reference was an over-generalization.) |
 
-### Tier 4 — coverage gaps (need design decision before implementing)
+### Tier 4 — coverage gaps (most cleared 2026-05-25)
 
 These components likely should expose `spacing="sm"` but don't. Each needs a design call on whether the placement justifies the opt-in:
 
-| Component | Justification | Decision needed |
+| Component | Status | Notes |
 |---|---|---|
-| `civ-data-grid` | Admin tables routinely need 3 row densities. Its `.civ-table` sibling has `--sm`; asymmetric API. | 2-step (`default \| sm`) or 3-step (`default \| sm \| xs`) ladder? |
-| `civ-modal` / `civ-drawer` / `civ-action-sheet` | Dense admin "quick action" overlays don't need full-size chrome. | Add `spacing="sm"` to all three. |
-| `civ-callout` | Inline emphasis inside dense surfaces (data-grid empty state, sidebar notes). | Add `spacing="sm"`. |
-| `civ-btn` | Toolbars + table action menus want smaller buttons. Today consumers route through `civ-action-button` for that. | Add `spacing="sm"` to `civ-btn` OR document `civ-action-button` as the canonical small-button affordance. |
-| `civ-input-group` | When `civ-input--sm` is used the group's border-radius / icon padding stay default and read mismatched. | Cascade `spacing` to the group's chrome. |
-| `civ-radio-group` / `civ-checkbox-group` | Leaf radio/checkbox supports `spacing="sm"`; group container's gap doesn't track. | Cascade `spacing` to children, or document `data-civ-scale` as the answer. |
+| ~~`civ-data-grid`~~ | ✅ Done | 3-step ladder (`default | sm | xs`). `--sm` matches `.civ-table--sm`; `--xs` shrinks to `px-2 py-0.5` for ultra-dense admin grids (at the WCAG SC 2.5.8 24px target-size floor; documented in CSS to not shrink further). Contract A — pure cell-padding shrink, no chrome dropped. |
+| ~~`civ-modal`~~ | ✅ Done | `spacing="default" | "sm"`. Cascades to `dialog.civ-modal` padding + header/body/footer rhythm. Schema prop marked `webOnly: true` — native platforms have their own density mechanisms (iOS size classes, Compose dynamic type) and modal presentation styles vary by OS. |
+| ~~`civ-callout`~~ | ✅ Done | `spacing="default" | "sm"`. Pure rail-friendly padding shrink (`spacing-3/4` → `spacing-2/3`). Strong placement evidence — already used in data-grid empty state. |
+| ~~`civ-btn`~~ | ✅ Documented (no API change) | `civ-action-button` is the canonical small-button affordance — added a `:::tip` block to the `civ-button` docs page and a "button vs action-button" selection table to the AI guide. Not bifurcating the main button API; consumers reach for action-button for toolbars, row actions, dense forms. |
+| ~~`civ-input-group`~~ | ✅ Documented (no API change) | Pure pass-through container with no chrome of its own — adding a `spacing` prop that reaches into children to mutate state is leaky encapsulation. Documented the "set `spacing="sm"` on each child" pattern in the input-group docs page; the group's per-child border-radius math handles either density correctly. |
+| ~~`civ-drawer`~~ | Skipped | Secondary-content panel, not density-sensitive. Inherits `[data-civ-scale]` fine. No story evidence consumers want a compact drawer. Add when a real placement asks for it. |
+| ~~`civ-action-sheet`~~ | Skipped | Almost no internal chrome to compress; content is consumer-authored. Mobile bottom-sheet pattern is the more significant variant. Add when a real placement asks. |
+| ~~`civ-radio-group` / `civ-checkbox-group`~~ | Cleared (no fix needed) | Investigation 2026-05-25: the `civ-gap-N` Tailwind utility maps to `var(--civ-spacing-N)` in `tailwind.config.ts`, and those tokens ARE overridden under `[data-civ-scale="dense"]` (e.g. `--civ-spacing-3: 15px` → `11px`). Group container gaps already scale with the page-level scale system automatically — the original audit finding was a false alarm. No per-component `spacing` prop needed unless a consumer wants a group denser than its surrounding page scale, which hasn't appeared. |
 
-### Tier 5 — `spacing` prop conflated semantics (architectural fix)
+### Tier 5 — `spacing` prop conflated semantics (cleared 2026-05-25)
 
-| Item | Action | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| `civ-page-header.spacing="sm"` controls **`margin-bottom`** of the surrounding container, not the component's own padding | Rename to `margin="sm"` or `rhythm="sm"`, or move the rhythm control to the parent | Same prop name, different semantic from every other use. Confusing. |
-| `civ-divider.spacing="sm"` controls **vertical margin** around the divider, not its own dimensions | Same as above | Same problem. |
+| ~~`civ-page-header.spacing="sm"` controls `margin-bottom` of the surrounding container, not the component's own padding~~ | ✅ Renamed to `rhythm` | `rhythm` prop is now canonical; `spacing` retained as a backward-compat alias that emits a one-time dev-mode warning when set to a non-default value. Same `civ-page-header--sm` modifier class; no CSS migration needed by consumers. Schedule removal of `spacing` in the next major release. |
+| ~~`civ-divider.spacing="sm"` controls vertical margin around the divider, not its own dimensions~~ | ✅ Renamed to `rhythm` | Same deprecation pattern (mirrors PR #167 / `civ-read-more.size` → `spacing`). Internal CivUI consumers (stories, MCP examples, healthcare patterns) migrated to `rhythm` in the same PR. Pre-existing iOS bug fixed incidentally — `CivDivider.swift` referenced `variant` instead of the declared `emphasis` property; renamed to use `emphasis` consistently. |
 
-### Lint proposal (deferred)
+### `lint:hardcoded-spacing` (shipped 2026-05-25)
 
-Once Tiers 1–3 are mostly cleared, add `lint:hardcoded-spacing` to the drift-lints CI gate. It scans `components.css` for `padding`/`margin`/`gap`/`font-size`/`width`/`height` declarations with hardcoded `rem` / `px` values and flags any class not on a curated decorative-exception allowlist (tap-target floors, thumbnail dimensions, spinner sizes, decorative cursive font, etc.). Premature today — too many intentional decorative hardcodes — but the right end state.
+The proposed lint is now live. `tools/lint-hardcoded-spacing.ts` scans `components.css` for every `padding`/`margin`/`gap`/`font-size`/`line-height`/`width`/`height` declaration that uses a `rem` or `px` literal and flags any that aren't:
+- Inside a class on the curated `ALLOWLIST_CLASSES` (tap-target floors, decorative ladders, viewport-anchored overlays, field-width utility ladder, etc.), OR
+- Preceded by a `/* not density: <reason> */` comment on the same stanza.
+
+Wired into `pnpm validate:lints` (line 70 of `package.json`) so it runs in the drift-lints CI gate. 22-test helper suite in `tools/__tests__/lint-hardcoded-spacing.test.ts` covers declaration parsing, class-allowlist decision, and annotation detection. `em` / `%` / `vh` / `vw` / `dvh` / `dvw` units pass (font- and viewport-relative — they're either scale-aware via the parent's `font-size` or intentionally viewport-anchored).
+
+To extend the allowlist or migrate a violation, see the docstring at the top of the lint file — it lays out the four valid responses (use a token, allowlist the class, add a `/* not density */` annotation, or migrate to a token).
 
 ### Process
 
-Tiers 1, 2, 3 can each ship as independent PRs against this convention. No tier blocks another. Tier 4 each needs design discussion before code. Tier 5 likely needs a release-note prop deprecation.
+All five tiers + the lint shipped (each as an independent PR). What remains is future component additions that should follow the convention from the start.
+
+**Release-note checklist** for the next major release that removes the deprecation aliases:
+- `civ-read-more.size` (deprecated PR #167, alias for `spacing`)
+- `civ-page-header.spacing` (deprecated 2026-05-25, alias for `rhythm`)
+- `civ-divider.spacing` (deprecated 2026-05-25, alias for `rhythm`)
+- All three currently emit one-time dev-mode console warnings; consumers have a migration runway.
 
 **Convention bypass requires sign-off:** if a future component needs a density modifier that doesn't fit Contract A or Contract B, document the new contract in `density-convention.md` in the same PR.
 

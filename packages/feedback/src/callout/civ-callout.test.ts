@@ -158,6 +158,39 @@ describe('civ-callout', () => {
     });
   });
 
+  // Spacing — per density-convention.md Contract A (pure shrink).
+  describe('spacing', () => {
+    it('keeps the default value off the host attribute (useDefault behavior)', async () => {
+      const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
+      await elementUpdated(el);
+      expect(el.spacing).toBe('default');
+      expect(el.getAttribute('spacing')).toBeNull();
+    });
+
+    it('reflects the sm value to the host attribute', async () => {
+      const el = await fixture<CivCallout>(
+        '<civ-callout spacing="sm"><p>x</p></civ-callout>',
+      );
+      await elementUpdated(el);
+      expect(el.spacing).toBe('sm');
+      expect(el.getAttribute('spacing')).toBe('sm');
+    });
+
+    it('warns when an unknown spacing is set', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const el = await fixture<CivCallout>('<civ-callout><p>x</p></civ-callout>');
+      await elementUpdated(el);
+      el.spacing = 'xs' as CivCallout['spacing'];
+      await elementUpdated(el);
+      expect(warn).toHaveBeenCalled();
+      const message = warn.mock.calls[0]?.[0] as string;
+      expect(message).toContain('civ-callout');
+      expect(message).toContain('spacing');
+      expect(message).toContain('xs');
+      warn.mockRestore();
+    });
+  });
+
   // Composition tests. Callout's detached-renderRoot pattern means
   // children live directly as light-DOM descendants of the host — no
   // capture, no relocation. Custom elements work the same as plain

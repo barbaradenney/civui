@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `spacing` | `'default'` \| `'sm'` | `'default'` | Bottom margin to the content below |
+| `rhythm` | `'default'` \| `'sm'` | `'default'` | Bottom margin to the content below the header. `default` = 24px; `sm` = 12px. Named `rhythm` (not `spacing`) because the value controls margin between the header and the next sibling, not internal padding. Per density-convention.md "Three things `spacing=sm` MUST NOT mean." |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | **Deprecated** — use `rhythm` instead. Same allowed values, same effect. Will be removed in a future release; setting it to a non-default value emits a one-time dev-mode console warning. |
 | `icon-start` | `string` | `''` | Leading icon name (e.g. category icon) |
 | `icon-end` | `string` | `''` | Trailing icon name |

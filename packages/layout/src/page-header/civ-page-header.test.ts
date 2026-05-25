@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-page-header.js';
 
 afterEach(cleanupFixtures);
@@ -89,14 +89,70 @@ describe('civ-page-header', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
-  it('applies sm spacing class', async () => {
+  it('applies sm rhythm class', async () => {
     const el = await fixture(`
-      <civ-page-header spacing="sm">
+      <civ-page-header rhythm="sm">
         <h1 data-heading>Title</h1>
       </civ-page-header>
     `);
     const header = el.querySelector('.civ-page-header');
     expect(header!.className).toContain('civ-page-header--sm');
+  });
+
+  // Deprecated alias — same effect as `rhythm`, plus a one-time
+  // dev-mode warning. Migration runway for consumers on old API.
+  describe('deprecated `spacing` alias', () => {
+    it('still produces the sm modifier class', async () => {
+      const el = await fixture(`
+        <civ-page-header spacing="sm">
+          <h1 data-heading>Title</h1>
+        </civ-page-header>
+      `);
+      const header = el.querySelector('.civ-page-header');
+      expect(header!.className).toContain('civ-page-header--sm');
+    });
+
+    it('emits a one-time devWarn when set to non-default', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      await fixture(`
+        <civ-page-header spacing="sm">
+          <h1 data-heading>Title</h1>
+        </civ-page-header>
+      `);
+      const message = warn.mock.calls.map((c) => String(c[0])).join('\n');
+      expect(message).toContain('civ-page-header');
+      expect(message).toContain('spacing');
+      expect(message).toContain('rhythm');
+      warn.mockRestore();
+    });
+
+    it('does not warn when set to default value', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      await fixture(`
+        <civ-page-header spacing="default">
+          <h1 data-heading>Title</h1>
+        </civ-page-header>
+      `);
+      const calls = warn.mock.calls.filter((c) =>
+        String(c[0]).includes('civ-page-header') && String(c[0]).includes('spacing')
+      );
+      expect(calls.length).toBe(0);
+      warn.mockRestore();
+    });
+
+    it('rhythm wins when both are set to sm (idempotent merge)', async () => {
+      const el = await fixture(`
+        <civ-page-header rhythm="sm" spacing="sm">
+          <h1 data-heading>Title</h1>
+        </civ-page-header>
+      `);
+      const header = el.querySelector('.civ-page-header');
+      expect(header!.className).toContain('civ-page-header--sm');
+    });
   });
 
   it('renders all slots in correct order (tag → eyebrow → heading → subheading)', async () => {

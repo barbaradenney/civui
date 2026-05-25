@@ -9,3 +9,4 @@
 | `no-close-button` | `boolean` | `false` | Suppress the built-in close (×) button. Use when the consumer renders its own dismiss affordance |
 | `no-backdrop-close` | `boolean` | `false` | Disable click-outside-to-close. Useful when the modal contains required-action affordances |
 | `no-escape-close` | `boolean` | `false` | Disable Escape-key close. Pair with noBackdropClose to force users to the explicit affordance |
+| `spacing` | `'default'` \| `'sm'` | `'default'` | Inner padding density. `default` keeps the established 24px chrome with 16px header/body/footer rhythm. `sm` shrinks to 16px chrome + 12px rhythm for dense admin quick-action dialogs. Pure shrink per Contract A — no chrome dropped. Web-only: native platforms have their own density mechanisms (iOS size classes, Compose dynamic type) and modal presentation styles vary by OS. |

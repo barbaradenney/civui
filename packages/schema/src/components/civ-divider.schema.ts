@@ -9,9 +9,15 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    rhythm: {
+      type: 'enum',
+      description: 'Vertical margin (top + bottom) around the divider line. `default` = 16px; `sm` = 8px. Named `rhythm` (not `spacing`) because the value controls margin between the divider and its siblings, not internal padding. Per density-convention.md "Three things `spacing=sm` MUST NOT mean."',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
     spacing: {
       type: 'enum',
-      description: 'Vertical margin around the line',
+      description: '**Deprecated** — use `rhythm` instead. Same allowed values, same effect. Will be removed in a future release; setting it to a non-default value emits a one-time dev-mode console warning.',
       default: 'default',
       values: ['default', 'sm'],
     },

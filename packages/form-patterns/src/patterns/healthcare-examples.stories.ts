@@ -212,7 +212,7 @@ export const AppointmentConfirmation: Story = {
         <civ-data-field label="Location" value="VA Medical Center, Building 2, Room 214"></civ-data-field>
         <civ-data-field label="Reason for visit" value="Annual physical exam"></civ-data-field>
         <civ-data-field label="Confirmation number" value="APT-2026-05-0847"></civ-data-field>
-        <civ-divider spacing="sm"></civ-divider>
+        <civ-divider rhythm="sm"></civ-divider>
         <div style="display: flex; gap: 1rem;">
           <civ-link label="Reschedule appointment" href="#reschedule"></civ-link>
           <civ-link label="Cancel appointment" href="#cancel"></civ-link>
@@ -461,7 +461,7 @@ export const ReferralStatusTracker: Story = {
           <civ-data-field label="Reason" value="Elevated blood pressure, chest discomfort"></civ-data-field>
         </div>
 
-        <civ-divider spacing="sm"></civ-divider>
+        <civ-divider rhythm="sm"></civ-divider>
         <p style="margin: 0.5rem 0; font-weight: 700;">Authorization steps</p>
 
         <civ-list dividers>

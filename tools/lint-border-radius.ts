@@ -195,6 +195,13 @@ const ALLOWLIST: string[] = [
   'civ-accordion__inner--tertiary',
   'civ-accordion-item', // for `.civ-accordion__inner--secondary > civ-accordion-item`
   'civ-accordion-item__content', // open-state visual extension of the trigger
+
+  // 15. Collapsible alerts — the whole surface acts as a disclosure
+  // toggle (heading IS the activatable summary), so the alert reads
+  // as activatable chrome per the design rule. Full-width banners
+  // stay edge-to-edge via the `:not(.civ-alert--full-width)` filter
+  // in the CSS rule.
+  'civ-alert--collapsible',
 ];
 
 interface Block {

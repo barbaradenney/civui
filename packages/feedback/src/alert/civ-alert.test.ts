@@ -90,6 +90,31 @@ describe('civ-alert', () => {
     expect(alert.getAttribute('role')).toBe('status');
   });
 
+  // prefix-slot tests
+  it('routes data-civ-alert-prefix children into the prefix slot, above the heading', async () => {
+    const el = await fixture(`
+      <civ-alert heading="Application status">
+        <civ-badge data-civ-alert-prefix label="In review"></civ-badge>
+        <p>Body text.</p>
+      </civ-alert>
+    `);
+    const prefix = el.querySelector('.civ-alert__prefix')!;
+    expect(prefix).not.toBeNull();
+    expect(prefix.querySelector('civ-badge')).not.toBeNull();
+    // Heading sits after the prefix slot in source order.
+    const heading = el.querySelector('.civ-alert__heading')!;
+    const order = prefix.compareDocumentPosition(heading);
+    // DOCUMENT_POSITION_FOLLOWING = heading is after prefix.
+    expect(order & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('leaves the prefix wrapper empty when no children are routed to it', async () => {
+    const el = await fixture('<civ-alert heading="Standalone">Body.</civ-alert>');
+    const prefix = el.querySelector('.civ-alert__prefix')!;
+    expect(prefix).not.toBeNull();
+    expect(prefix.children.length).toBe(0);
+  });
+
   // heading tests
   it('renders heading with role="heading" when provided', async () => {
     const el = await fixture('<civ-alert heading="Important">Body text.</civ-alert>');

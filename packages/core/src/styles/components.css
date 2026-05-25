@@ -3768,6 +3768,15 @@
     @apply civ-font-bold civ-mt-0 civ-mb-1;
   }
 
+  /* ── Alert: Prefix slot (above heading) ─────────────────────
+     Sits above the heading. Renders as a flex container so a
+     badge + supplementary text combination lays out inline.
+     :empty hides the wrapper when no children are projected so
+     the heading sits flush with the top of the content area. */
+  .civ-alert__prefix:not(:empty) {
+    @apply civ-flex civ-items-center civ-gap-2 civ-mb-2;
+  }
+
   /* ── Alert: Content area ────────────────────────────────────── */
 
   .civ-alert__content {
@@ -3827,6 +3836,10 @@
      surface.
 
      Per-mode classes here only add the parts that don't generalize:
+     - rounded corners (the alert as a whole becomes an interactive
+       disclosure surface — per the design rule, rounded corners
+       signal *activatable*; full-width banners stay edge-to-edge
+       and are filtered out via :not());
      - flex-fill the disclosure inside the alert's flex row so the
        dismiss button stays right-anchored;
      - layout the alert summary's heading row (flex + gap + cross-axis
@@ -3834,6 +3847,9 @@
      - extra top margin on the body when expanded, and indent the
        body so the panel aligns under the heading text rather than
        jumping back to the summary's left edge. */
+  .civ-alert--collapsible:not(.civ-alert--full-width) {
+    border-radius: var(--civ-border-radius-DEFAULT);
+  }
   .civ-alert--collapsible .civ-alert__details {
     @apply civ-flex-1 civ-min-w-0;
   }

@@ -72,6 +72,9 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  *
  * @slot - Body content. Used when `label` is unset. Accepts text or
  *   rich markup including composed CivUI components.
+ * @slot data-civ-alert-prefix - Renders above the heading. Use for a
+ *   status badge or other small chrome that describes the heading.
+ *   Mark children with the `data-civ-alert-prefix` attribute.
  *
  * @fires civ-dismiss - When close button is clicked
  * @fires civ-toggle - When collapsible state changes, detail: { open }
@@ -104,7 +107,10 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   private readonly _headingId = this.generateId('heading');
 
   override _getSlotConfig(): SlotConfig {
-    return { default: '[data-civ-alert-body-slot]' };
+    return {
+      'data-civ-alert-prefix': '[data-civ-alert-prefix-slot]',
+      default: '[data-civ-alert-body-slot]',
+    };
   }
 
   /**
@@ -184,6 +190,13 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
         : html`<div data-civ-alert-body-slot></div>`
     }</div>`;
 
+    // Prefix slot — rendered above the heading. Used for status
+    // badges or other small chrome that describes the heading rather
+    // than the body. Always rendered (slot mixin only relocates when
+    // the slot has captured children, so the empty wrapper is a no-op
+    // when unused).
+    const prefixTpl = html`<div class="civ-alert__prefix" data-civ-alert-prefix-slot></div>`;
+
     const dismissTpl = this.dismissible
       ? renderCloseButton({
           label: t('alertDismissLabel'),
@@ -201,28 +214,32 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
     //  - Default: heading + body stacked, dismiss button to the right.
     const inner = collapsibleActive
       ? html`
-          ${renderDisclosure({
-            open: this.open,
-            onToggle: this._onToggle,
-            // `collapsibleActive` requires `heading` so the heading
-            // is guaranteed non-empty here — re-rendered via the
-            // shared helper so the type narrows to TemplateResult
-            // without a cast on the shared `headingTpl` union.
-            summaryContent: renderHeading({
-              level,
-              text: this.heading,
-              id: this._headingId,
-              className: 'civ-alert__heading',
-            }),
-            panelContent: bodyTpl,
-            rootClass: 'civ-alert__details',
-            summaryClass: 'civ-alert__summary',
-            panelClass: 'civ-alert__panel',
-          })}
+          <div class="civ-flex-1 civ-min-w-0">
+            ${prefixTpl}
+            ${renderDisclosure({
+              open: this.open,
+              onToggle: this._onToggle,
+              // `collapsibleActive` requires `heading` so the heading
+              // is guaranteed non-empty here — re-rendered via the
+              // shared helper so the type narrows to TemplateResult
+              // without a cast on the shared `headingTpl` union.
+              summaryContent: renderHeading({
+                level,
+                text: this.heading,
+                id: this._headingId,
+                className: 'civ-alert__heading',
+              }),
+              panelContent: bodyTpl,
+              rootClass: 'civ-alert__details',
+              summaryClass: 'civ-alert__summary',
+              panelClass: 'civ-alert__panel',
+            })}
+          </div>
           ${dismissTpl}
         `
       : html`
           <div>
+            ${prefixTpl}
             ${headingTpl}
             ${bodyTpl}
           </div>

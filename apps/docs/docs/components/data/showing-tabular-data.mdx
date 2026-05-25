@@ -1,0 +1,185 @@
+---
+title: Showing tabular data
+sidebar_position: 0
+sidebar_label: Showing tabular data
+---
+
+# Showing tabular data
+
+> **Start here before reaching for `<table>` or `<civ-data-grid>`.** Most "tables" on .gov sites are actually one of seven other patterns dressed up as tabular data. This page walks the decision.
+
+## Why the question matters
+
+Teams default to tables because spreadsheets feel like the universal data layout. On the web they usually shouldn't be. Three problems:
+
+1. **Mobile reflow.** Tables don't reflow at 320px (the WCAG 2.1 SC 1.4.10 floor). The user gets horizontal scroll, which is awkward to discover and slow to navigate on a phone.
+2. **Screen-reader semantics are unforgiving.** A correct `<table>` is great — `scope`, `caption`, `<th>` all wire up the right announcements. A subtly wrong `<table>` (missing `<caption>`, `scope="col"` swapped with `scope="row"`, header rows without `<th>`) is worse than no table at all because assistive tech announces it as tabular but reads cells in the wrong relationship.
+3. **Reading level.** Plain-language guidance for .gov audiences expects a 6th–8th grade reading level. Tables are dense by design; they ask the user to read a row header, scan to a column header, and triangulate the cell — three steps for what's often a one-fact answer.
+
+The honest test: **can a screen-reader user understand this data by reading top-to-bottom, without navigating a 2-axis grid?** If yes, it's not actually tabular. Use one of the patterns below.
+
+## Decision tree
+
+Read top to bottom; stop at the first match.
+
+| What are you showing? | Use | CivUI primitive |
+|---|---|---|
+| One entity's properties (a profile, an application summary, a claim) | **Description list** — paired label + value rows, stacked top to bottom | [`<civ-data-field>`](../form/data-field) inside a container, or `<civ-list>` + `<civ-list-item>` |
+| The user's form entries before submit | **Summary** — auto-renders from form fields | [`<civ-summary>`](../form/summary) |
+| A list of similar things the user owns / created (documents, dependents, medications, addresses) | **List of cards** with content + action affordances | [`<civ-list>` + `<civ-list-item>`](../layout/list) with `__content` + `__actions` slots |
+| Numeric line items adding to a total (fees, payments, charges) | **Ledger** | [`<civ-itemized-total>`](./itemized-total) + `<civ-itemized-item>` |
+| Dated events in order (audit log, version history, claim updates) | **Timeline** | [`<civ-timeline>`](../feedback/timeline) + `<civ-timeline-item>` |
+| Sequenced steps (process preview, "here's what happens next") | **Process list** | [`<civ-process-list>`](../feedback/process-list) + `<civ-process-list-item>` |
+| A small set of values displayed prominently (KPIs, dashboard metrics) | **Metric tiles** | [`<civ-metric-tile>`](./metric-tile) + `<civ-metric-group>` |
+| Filterable list of records the user browses | **Filterable list** (stacks on mobile, supports search/filter) | [`<civ-filterable-list>`](./filterable-list) |
+| Genuinely tabular data the user needs to sort / select / paginate | **Data grid** (real `<table>` inside, mobile-stacks per WCAG SC 1.4.10) | [`<civ-data-grid>`](./data-grid) |
+| Static reference data (state codes, fee schedules, eligibility matrices) where **comparing rows is the user's actual task** | **Styled `<table>`** with horizontal-scroll wrapper for narrow viewports | [`.civ-table`](./table) + `.civ-table-wrap` |
+
+If you walked the whole list and nothing fit, the data is probably genuinely tabular — use `<civ-data-grid>` or `.civ-table` per the last two rows.
+
+## Pattern examples
+
+### One entity's properties → description list
+
+Don't:
+
+```html
+<!-- ✗ a 2-column table for one user's profile -->
+<table>
+  <tr><th>Name</th><td>Maria Chen</td></tr>
+  <tr><th>Date of birth</th><td>January 15, 1990</td></tr>
+  <tr><th>Email</th><td>maria@example.gov</td></tr>
+</table>
+```
+
+Do:
+
+```html
+<!-- ✓ stacked label/value pairs, reads naturally top-to-bottom -->
+<civ-list>
+  <civ-list-item>
+    <civ-data-field label="Name" value="Maria Chen"></civ-data-field>
+  </civ-list-item>
+  <civ-list-item>
+    <civ-data-field label="Date of birth" value="January 15, 1990"></civ-data-field>
+  </civ-list-item>
+  <civ-list-item>
+    <civ-data-field label="Email" value="maria@example.gov"></civ-data-field>
+  </civ-list-item>
+</civ-list>
+```
+
+Or for a form-review screen, the entire pattern is one component: `<civ-summary>`.
+
+### List of similar things → list of items with row actions
+
+Don't:
+
+```html
+<!-- ✗ a table where each row's primary purpose is the Remove button -->
+<table>
+  <thead><tr><th>Document</th><th>Size</th><th>Uploaded</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td>DD-214.pdf</td><td>2.4 MB</td><td>May 12</td><td><button>Remove</button></td></tr>
+    …
+  </tbody>
+</table>
+```
+
+Do:
+
+```html
+<!-- ✓ each row is a self-contained card with content + actions -->
+<civ-list>
+  <civ-list-item>
+    <div class="civ-list-item__content">
+      <strong>DD-214.pdf</strong>
+      <div>2.4 MB · Uploaded May 12</div>
+    </div>
+    <div class="civ-list-item__actions">
+      <civ-button label="Remove document" variant="tertiary" danger></civ-button>
+    </div>
+  </civ-list-item>
+  …
+</civ-list>
+```
+
+The action cluster auto-right-aligns on desktop and stacks below the content on mobile. The destructive label stays specific ("Remove document", not "Remove") so the action's target stays clear.
+
+### Genuine tabular comparison → `civ-data-grid` (not `.civ-table`)
+
+Use `civ-data-grid` when:
+- The user actually compares rows (cell-vs-cell across rows)
+- Sort / select / paginate are part of the task
+- Mobile users need to read individual rows in detail (data-grid stacks each row into a labeled block on narrow viewports)
+
+```html
+<civ-data-grid
+  caption="Applications by status"
+  .columns=${[
+    { id: 'id', header: 'Application ID' },
+    { id: 'name', header: 'Applicant' },
+    { id: 'status', header: 'Status' },
+    { id: 'submitted', header: 'Submitted' },
+  ]}
+  .rows=${rows}
+  sortable
+></civ-data-grid>
+```
+
+### Static reference data → `.civ-table`
+
+Reserve the CSS class for content that's:
+- Authored in MDX / Twig / CMS (no JS data source)
+- Actually tabular (the user reads rows in relation to each other)
+- Read-only
+
+Examples that genuinely warrant `.civ-table`: state-code lookup tables, benefit-amount schedules by household size, fee tables, eligibility matrices where the user's task is "find my row, scan the columns."
+
+```html
+<table class="civ-table civ-table--striped">
+  <caption>Benefit amounts by household size</caption>
+  <thead>
+    <tr>
+      <th scope="col">Household size</th>
+      <th scope="col" class="civ-table__num">Monthly amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">1</th><td class="civ-table__num">$1,200</td></tr>
+    <tr><th scope="row">2</th><td class="civ-table__num">$1,580</td></tr>
+    …
+  </tbody>
+</table>
+```
+
+For tables wider than the viewport, wrap in `<div class="civ-table-wrap" role="region" tabindex="0" aria-labelledby="caption-id">` — the WCAG SC 1.4.10 Reflow exemption pattern for genuinely tabular data that can't restructure.
+
+## What NOT to do: `<div>`-emulated tables
+
+Don't:
+
+```html
+<!-- ✗ fakes table semantics with divs and CSS Grid -->
+<div class="my-grid">
+  <div class="my-row">
+    <div class="my-cell">Header 1</div>
+    <div class="my-cell">Header 2</div>
+  </div>
+  <div class="my-row">
+    <div class="my-cell">Value 1</div>
+    <div class="my-cell">Value 2</div>
+  </div>
+</div>
+```
+
+Even if you add `role="table"` / `role="row"` / `role="cell"` to reintroduce the screen-reader semantics, you've now reimplemented `<table>` worse: the role attributes don't propagate the same way native table semantics do (`<th scope>` has no ARIA equivalent that works as cleanly), the keyboard navigation patterns are missing, and you still have the original mobile-overflow problem the move was supposed to fix.
+
+If you find yourself reaching for a div-table, **one of the patterns above is the right answer**. The CivUI components ship the screen-reader semantics correctly so you don't have to author them.
+
+## See also
+
+- [`.civ-table`](./table) — when a static styled `<table>` IS the answer
+- [`<civ-data-grid>`](./data-grid) — the interactive table component
+- [WCAG 2.1 SC 1.4.10 Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html) — the 320px reflow requirement that motivates most of this guidance
+- [VA Design System: When not to use tables](https://design.va.gov/) — the upstream guidance this page operationalizes

@@ -250,6 +250,17 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   @state() private _dragging = false;
   @state() private _showAllFiles = false;
 
+  /**
+   * Component-owned validation error message (file too large, wrong type,
+   * duplicate, etc.). Kept separate from `this.error` so the picker can
+   * clear OUR error on the user's next interaction without trampling the
+   * consumer's externally-set error prop (server-side validation, form-
+   * pattern orchestration). Display logic: validation error takes
+   * precedence over consumer error when both are set, on the principle
+   * that the validation message is tied to the user's most recent action.
+   */
+  @state() private _validationError = '';
+
   private static readonly _FILE_LIST_LIMIT = 20;
 
   /** IDs of initial files the user has removed since hydration. */
@@ -334,6 +345,16 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     return controller;
   }
 
+  /**
+   * Effective error message — validation error (component-owned) takes
+   * precedence over consumer-set `error` prop. Used for rendering, ARIA
+   * attributes, and aria-describedby plumbing so every surface stays in
+   * sync.
+   */
+  private get _displayedError(): string {
+    return this._validationError || this.error;
+  }
+
   override render() {
     const inner = html`
         ${this.readonly ? nothing : this._renderTrigger()}
@@ -354,7 +375,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           hintId: this._hintId,
           hint: this.hint,
           errorId: this._errorId,
-          error: this.error,
+          error: this._displayedError,
         })}
         ${inner}
       </div>
@@ -389,10 +410,10 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           @click="${this._onDropzoneClick}"
           aria-label="${this.label}"
           aria-required="${this.required || nothing}"
-          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-invalid="${this._displayedError ? 'true' : nothing}"
           ?disabled="${this.disabled}"
         >
-          <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this.error ? 'true' : nothing}">
+          <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this._displayedError ? 'true' : nothing}">
             ${triggerText}
           </span>
           <span class="civ-action-btn civ-action-btn--tertiary civ-action-btn--joined-start civ-shrink-0 civ-rounded-e">${this.browseText || t('fileUploadBrowseText')}</span>
@@ -409,7 +430,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         @click="${this._onDropzoneClick}"
         aria-label="${this.label}"
         aria-required="${this.required || nothing}"
-        aria-invalid="${this.error ? 'true' : nothing}"
+        aria-invalid="${this._displayedError ? 'true' : nothing}"
         ?disabled="${this.disabled}"
         aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
         data-dragging="${this._dragging ? '' : nothing}"
@@ -583,7 +604,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   protected override get _ariaDescribedBy(): string {
     const ids: string[] = [];
     if (this.hint) ids.push(this._hintId);
-    if (this.error) ids.push(this._errorId);
+    if (this._displayedError) ids.push(this._errorId);
     return ids.join(' ');
   }
 
@@ -680,6 +701,11 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
 
   private _onDropzoneClick(): void {
     if (this.disabled || this.readonly) return;
+    // Each picker interaction is a fresh attempt — drop any stale
+    // validation error from the user's previous (rejected) selection.
+    // Consumer-set `this.error` is untouched, so server-side and
+    // form-pattern errors persist as the consumer expects.
+    this._validationError = '';
     const input = this.querySelector(`#${this._inputId}`) as HTMLInputElement;
     input?.click();
   }
@@ -919,14 +945,15 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     }
 
     if (errors.length > 0) {
-      this.error = errors.join('. ');
-      // Base class updated() announces errors assertively — no manual announce needed
+      this._validationError = errors.join('. ');
+      // The rendered error element carries role="alert", so the change
+      // is announced assertively by AT — no manual announce() needed.
     }
 
     if (validated.length === 0) return;
 
-    // Clear error only if no validation errors occurred
-    if (errors.length === 0) this.error = '';
+    // Clear validation error only if no validation errors occurred
+    if (errors.length === 0) this._validationError = '';
 
     if (this.multiple) {
       this._files = [...this._files, ...validated];
@@ -990,7 +1017,10 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
       this._removedInitialIds.add(removed.id);
     }
     this._files = this._files.filter((_, i) => i !== index);
-    if (this._files.length === 0) this.error = '';
+    // Removing the last file clears any pending validation error from
+    // the previous add attempt. Consumer-set `this.error` is left
+    // untouched — they own it.
+    if (this._files.length === 0) this._validationError = '';
     if (this._files.length <= CivFileUpload._FILE_LIST_LIMIT) {
       this._showAllFiles = false;
     }
@@ -1083,6 +1113,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     this._hydratedFromInitial = false;
     this.value = '';
     this.error = '';
+    this._validationError = '';
     // Restore initial files so a draft-edit form snaps back to its
     // saved state on reset, matching native form-reset semantics.
     this._maybeHydrateInitialFiles();

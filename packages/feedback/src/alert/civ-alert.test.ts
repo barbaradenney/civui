@@ -156,19 +156,6 @@ describe('civ-alert', () => {
     expect(alert.className).toContain('civ-alert--sm');
   });
 
-  it('emits a dev-mode deprecation warning when `slim` is set', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const { resetDevWarnDedupe } = await import('@civui/core');
-    resetDevWarnDedupe();
-    await fixture('<civ-alert slim>Body.</civ-alert>');
-    expect(warn).toHaveBeenCalled();
-    const message = warn.mock.calls[0]?.[0] as string;
-    expect(message).toContain('civ-alert');
-    expect(message).toContain('slim');
-    expect(message).toContain('spacing="sm"');
-    warn.mockRestore();
-  });
-
   it('shows dismiss button when dismissible is true', async () => {
     const el = await fixture('<civ-alert dismissible>Dismissible alert.</civ-alert>');
 

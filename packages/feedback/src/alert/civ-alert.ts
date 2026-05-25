@@ -28,7 +28,7 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  *
  * An accessible alert component for informational, warning, error, or
  * success messages. Supports a heading, dismissible close button, and
- * compact layout via `spacing="sm"`.
+ * slim (compact) variant.
  *
  * **Body content:** set via the `label` prop for plain text, or by
  * placing children inside the host for rich content (paragraphs,
@@ -64,11 +64,11 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child content)
  * @prop {boolean} dismissible - Shows close button
- * @prop {boolean} slim - **Deprecated.** Use `spacing="sm"` instead. Compact single-line variant (no heading). Emits a dev-mode warning when set.
+ * @prop {boolean} slim - Compact single-line variant (no heading)
  * @prop {boolean} collapsible - Wrap heading + body in a `<details>` disclosure; requires `heading`
  * @prop {boolean} open - When `collapsible`, controls / reflects the expanded state
  * @prop {boolean} fullWidth - Render as a site-wide banner (role="region", content centered to `--civ-site-max-width`)
- * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies compact single-line layout)
+ * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies slim layout)
  *
  * @slot - Body content. Used when `label` is unset. Accepts text or
  *   rich markup including composed CivUI components.
@@ -85,13 +85,12 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
   @property({ type: String }) label = '';
   @property({ type: Boolean }) dismissible = false;
-  /** @deprecated Use `spacing="sm"` instead. Will be removed in a future major. */
   @property({ type: Boolean }) slim = false;
   @property({ type: Boolean, reflect: true }) collapsible = false;
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: Boolean, reflect: true, attribute: 'full-width' }) fullWidth = false;
 
-  /** Padding size: 'default' or 'sm' for compact single-line layouts. */
+  /** Padding size: 'default' or 'sm' for compact layouts (applies slim styling). */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   private readonly _headingId = this.generateId('heading');
@@ -123,13 +122,6 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
         'civ-alert',
         '`collapsible` requires `heading` — the heading IS the toggle. Falling back to non-collapsible render.',
         'civ-alert:collapsible-no-heading',
-      );
-    }
-    if (this.slim) {
-      devWarn(
-        'civ-alert',
-        '`slim` is deprecated. Use `spacing="sm"` for the same render. The boolean will be removed in a subsequent major.',
-        'civ-alert:slim-deprecated',
       );
     }
 

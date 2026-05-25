@@ -1,0 +1,385 @@
+#!/usr/bin/env tsx
+/**
+ * lint-semantic-color-recipe — enforce the shared bg/text recipe for
+ * semantic-intent components (civ-badge, civ-count).
+ *
+ * Background
+ * ----------
+ * `civ-badge` and `civ-count` both render the five semantic intents
+ * `info / success / warning / error / neutral` at three emphases
+ * (`secondary`, `primary`, and a dot/tertiary variant per component).
+ * The colour treatment is the same for the same intent across both
+ * components — the visual cue for "this is an error" should not be
+ * paler in a count pill than in a badge pill. Historically `civ-count`
+ * picked `error-lightest` for its error-secondary while `civ-badge`
+ * picked `error-lighter`; the inconsistency went unnoticed for months
+ * because no test or CI gate compared the two CSS rule blocks.
+ *
+ * What it does
+ * ------------
+ * Parses `packages/core/src/styles/components.css`, finds every rule
+ * whose selector matches the expected `.civ-{comp}--style-{emphasis}.
+ * civ-{comp}--{intent}` (or `.civ-{comp}--dot.civ-{comp}--{intent}` /
+ * `.civ-{comp}--style-tertiary.civ-{comp}--{intent}`) shape, extracts
+ * the `background-color` and `color` declarations, and verifies they
+ * match RECIPE below.
+ *
+ * RECIPE is keyed by emphasis × intent and stores the expected CSS
+ * variable name (e.g. `--civ-color-error-lighter`). Drift fails CI.
+ *
+ * Each documented exception is encoded inline (today: error-primary
+ * and error-dot intentionally use `error-DEFAULT` for the saturated
+ * brand red, while every other intent uses `*-dark`). Adding a new
+ * exception requires editing RECIPE in this file — the change is
+ * deliberate and shows up in code review.
+ */
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { printRuleLink } from './lint-rule-links.js';
+
+const REPO_ROOT = path.resolve(import.meta.dirname, '..');
+const COMPONENTS_CSS = path.join(
+  REPO_ROOT,
+  'packages/core/src/styles/components.css',
+);
+
+type Intent = 'info' | 'success' | 'warning' | 'error' | 'neutral';
+type Emphasis = 'secondary' | 'primary' | 'dot' | 'tertiary';
+type Component = 'badge' | 'count';
+
+interface Expectation {
+  /** Expected background-color CSS variable name (or `null` if the rule
+   *  is text-only — e.g. tertiary). */
+  bg: string | null;
+  /** Expected color (text) CSS variable name (or `null` if the rule
+   *  is bg-only — e.g. dot). */
+  text: string | null;
+}
+
+/**
+ * The single source of truth for the semantic-intent recipe.
+ *
+ * Secondary  — bg: `<intent>-lighter` (base-lightest for neutral);
+ *              text: darkest available shade that hits AA on the bg
+ *              (info/error: `-dark`; success/warning: `-darkest`;
+ *              neutral: `base-darker`).
+ *
+ * Primary    — bg: `<intent>-dark` (error: `error-DEFAULT` for brand
+ *              saturation; neutral: `base-darker`);
+ *              text: `white-DEFAULT`.
+ *
+ * Dot        — (badge only) bg: same shade as primary.
+ *
+ * Tertiary   — (count only) text: `<intent>-dark`; neutral inherits
+ *              parent color so it has no rule at all.
+ */
+export const RECIPE: Record<Emphasis, Partial<Record<Intent, Expectation>>> = {
+  secondary: {
+    info:    { bg: '--civ-color-info-lighter',    text: '--civ-color-info-dark' },
+    success: { bg: '--civ-color-success-lighter', text: '--civ-color-success-darkest' },
+    warning: { bg: '--civ-color-warning-lighter', text: '--civ-color-warning-darkest' },
+    error:   { bg: '--civ-color-error-lighter',   text: '--civ-color-error-dark' },
+    neutral: { bg: '--civ-color-base-lightest',   text: '--civ-color-base-darker' },
+  },
+  primary: {
+    info:    { bg: '--civ-color-info-dark',     text: '--civ-color-white-DEFAULT' },
+    success: { bg: '--civ-color-success-dark',  text: '--civ-color-white-DEFAULT' },
+    warning: { bg: '--civ-color-warning-dark',  text: '--civ-color-white-DEFAULT' },
+    error:   { bg: '--civ-color-error-DEFAULT', text: '--civ-color-white-DEFAULT' },
+    neutral: { bg: '--civ-color-base-darker',   text: '--civ-color-white-DEFAULT' },
+  },
+  dot: {
+    info:    { bg: '--civ-color-info-dark',     text: null },
+    success: { bg: '--civ-color-success-dark',  text: null },
+    warning: { bg: '--civ-color-warning-dark',  text: null },
+    error:   { bg: '--civ-color-error-DEFAULT', text: null },
+    neutral: { bg: '--civ-color-base-darker',   text: null },
+  },
+  tertiary: {
+    info:    { bg: null, text: '--civ-color-info-dark' },
+    success: { bg: null, text: '--civ-color-success-dark' },
+    warning: { bg: null, text: '--civ-color-warning-dark' },
+    error:   { bg: null, text: '--civ-color-error-dark' },
+    // neutral: no rule — count tertiary neutral keeps `color: inherit`
+    // so it blends with the host text. Encoded as an omission here.
+  },
+};
+
+/** Which emphasis variants each component supports. */
+const SUPPORTED: Record<Component, ReadonlySet<Emphasis>> = {
+  badge: new Set<Emphasis>(['secondary', 'primary', 'dot']),
+  count: new Set<Emphasis>(['secondary', 'primary', 'tertiary']),
+};
+
+const INTENTS: readonly Intent[] = ['info', 'success', 'warning', 'error', 'neutral'];
+const COMPONENTS: readonly Component[] = ['badge', 'count'];
+
+interface Finding {
+  file: string;
+  line: number;
+  selector: string;
+  detail: string;
+}
+
+interface SeenKey {
+  component: Component;
+  emphasis: Emphasis;
+  intent: Intent;
+  line: number;
+  selector: string;
+  actualBg: string | null;
+  actualText: string | null;
+}
+
+/**
+ * Parse one top-level CSS rule's body for `background-color: var(--…)`
+ * and `color: var(--…)`. Returns the variable name without the
+ * surrounding `var(…)` wrapper, or `null` if the rule doesn't set
+ * that property or sets it to something other than a single var().
+ */
+export function extractVar(body: string, property: 'background-color' | 'color'): string | null {
+  // Property: value;  — allow whitespace and require a `var(--…)` value.
+  const re = new RegExp(
+    String.raw`\b${property}\s*:\s*var\(\s*(--[a-zA-Z0-9-]+(?:-[a-zA-Z]+)?)\s*\)\s*;`,
+    'g',
+  );
+  let match: RegExpExecArray | null;
+  let last: string | null = null;
+  // If the rule sets the same property multiple times (CSS cascade
+  // within a rule), only the last declaration wins. Iterate all and
+  // keep the final one.
+  while ((match = re.exec(body))) {
+    last = match[1];
+  }
+  return last;
+}
+
+/**
+ * Match a selector against the recipe shape. Returns the matched
+ * component / emphasis / intent triple, or null if the selector
+ * isn't a semantic-recipe rule we care about.
+ */
+export function classifySelector(
+  selector: string,
+): { component: Component; emphasis: Emphasis; intent: Intent } | null {
+  // Normalize whitespace.
+  const sel = selector.replace(/\s+/g, ' ').trim();
+
+  // Examples we want to match:
+  //   .civ-badge--style-secondary.civ-badge--info
+  //   .civ-count--style-primary.civ-count--error
+  //   .civ-badge--dot.civ-badge--neutral
+  //   .civ-count--style-tertiary.civ-count--info
+  //
+  // Examples we DON'T match (so they don't trip the lint):
+  //   .civ-badge--style-secondary               (no intent half)
+  //   .civ-badge                                (base class)
+  //   .civ-badge-anchor                         (different surface)
+  const re =
+    /^\.civ-(badge|count)--(?:style-(secondary|primary|tertiary)|(dot))\.civ-\1--(info|success|warning|error|neutral)$/;
+  const m = sel.match(re);
+  if (!m) return null;
+
+  const component = m[1] as Component;
+  const emphasis = (m[2] ?? m[3]) as Emphasis;
+  const intent = m[4] as Intent;
+
+  if (!SUPPORTED[component].has(emphasis)) return null;
+  return { component, emphasis, intent };
+}
+
+interface Block {
+  selector: string;
+  openLine: number;
+  body: string;
+}
+
+/**
+ * Tokenize the CSS into top-level rule blocks. Skips block comments
+ * and `@media` / `@layer` / `@supports` wrappers — the lint only
+ * cares about leaf rules. Adapted from lint-border-radius.ts; the
+ * shape works because components.css uses balanced braces and no
+ * brace-bearing string literals.
+ */
+function* parseRules(css: string): Generator<Block> {
+  const stripped = css.replace(/\/\*[\s\S]*?\*\//g, (m) =>
+    m.replace(/[^\n]/g, ' '),
+  );
+  const len = stripped.length;
+  let i = 0;
+  type Frame = { selectorStart: number; openLine: number; isAtRule: boolean; selector: string };
+  const stack: Frame[] = [];
+  let segStart = 0;
+
+  function lineOf(offset: number): number {
+    let n = 1;
+    for (let j = 0; j < offset && j < len; j++) if (stripped[j] === '\n') n++;
+    return n;
+  }
+
+  while (i < len) {
+    const ch = stripped[i];
+    if (ch === '{') {
+      const rawSelector = stripped.slice(segStart, i).trim();
+      const isAtRule = rawSelector.startsWith('@');
+      stack.push({
+        selectorStart: i + 1,
+        openLine: lineOf(i),
+        isAtRule,
+        selector: rawSelector,
+      });
+      segStart = i + 1;
+      i++;
+      continue;
+    }
+    if (ch === '}') {
+      const frame = stack.pop();
+      if (!frame) {
+        i++;
+        continue;
+      }
+      if (!frame.isAtRule && frame.selector) {
+        const body = css.slice(frame.selectorStart, i);
+        yield { selector: frame.selector, openLine: frame.openLine, body };
+      }
+      segStart = i + 1;
+      i++;
+      continue;
+    }
+    if (ch === ';') {
+      segStart = i + 1;
+      i++;
+      continue;
+    }
+    i++;
+  }
+}
+
+async function main(): Promise<void> {
+  let css: string;
+  try {
+    css = await fs.readFile(COMPONENTS_CSS, 'utf8');
+  } catch {
+    throw new Error(`components.css not found at ${COMPONENTS_CSS}`);
+  }
+
+  const findings: Finding[] = [];
+  const seen: SeenKey[] = [];
+
+  for (const block of parseRules(css)) {
+    const classified = classifySelector(block.selector);
+    if (!classified) continue;
+    const { component, emphasis, intent } = classified;
+    const expected = RECIPE[emphasis][intent];
+    if (!expected) {
+      // The rule exists but we have no expectation for this combo
+      // (e.g. a future intent we haven't catalogued). Flag it as a
+      // recipe-vocabulary mismatch so the lint and the recipe stay
+      // in lockstep.
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: block.openLine,
+        selector: block.selector,
+        detail:
+          `No RECIPE entry for ${emphasis}.${intent}. Add an expectation ` +
+          `to RECIPE in tools/lint-semantic-color-recipe.ts or remove ` +
+          `the rule.`,
+      });
+      continue;
+    }
+
+    const actualBg = extractVar(block.body, 'background-color');
+    const actualText = extractVar(block.body, 'color');
+    seen.push({
+      component,
+      emphasis,
+      intent,
+      line: block.openLine,
+      selector: block.selector,
+      actualBg,
+      actualText,
+    });
+
+    if (expected.bg !== null && actualBg !== expected.bg) {
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: block.openLine,
+        selector: block.selector,
+        detail:
+          `bg expected var(${expected.bg}), got ` +
+          (actualBg ? `var(${actualBg})` : '<missing or non-var>'),
+      });
+    }
+    if (expected.text !== null && actualText !== expected.text) {
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: block.openLine,
+        selector: block.selector,
+        detail:
+          `text expected var(${expected.text}), got ` +
+          (actualText ? `var(${actualText})` : '<missing or non-var>'),
+      });
+    }
+  }
+
+  // Cross-check: every recipe entry must have a corresponding rule on
+  // disk. Catches the inverse drift — someone deleted a CSS rule and
+  // forgot to update the recipe (or shipped a new component variant
+  // without filling in all five intents).
+  for (const component of COMPONENTS) {
+    for (const emphasis of SUPPORTED[component]) {
+      for (const intent of INTENTS) {
+        const expected = RECIPE[emphasis][intent];
+        if (!expected) continue; // intentionally absent (e.g. count tertiary neutral)
+        const hit = seen.find(
+          (s) => s.component === component && s.emphasis === emphasis && s.intent === intent,
+        );
+        if (!hit) {
+          findings.push({
+            file: COMPONENTS_CSS,
+            line: 0,
+            selector: `.civ-${component}--${emphasis === 'dot' ? 'dot' : `style-${emphasis}`}.civ-${component}--${intent}`,
+            detail:
+              `No rule found for this selector. Either add the CSS rule ` +
+              `or remove the RECIPE entry in ` +
+              `tools/lint-semantic-color-recipe.ts.`,
+          });
+        }
+      }
+    }
+  }
+
+  if (findings.length === 0) {
+    console.log(
+      `✓ civ-badge + civ-count semantic-intent rules in components.css ` +
+      `match the shared recipe across all ${COMPONENTS.length} components × ` +
+      `${INTENTS.length} intents.`,
+    );
+    return;
+  }
+
+  console.error(
+    `✗ ${findings.length} semantic-color recipe violation(s):\n`,
+  );
+  for (const f of findings) {
+    const rel = path.relative(REPO_ROOT, f.file);
+    const loc = f.line > 0 ? `${rel}:${f.line}` : rel;
+    console.error(`  ${loc}`);
+    console.error(`    selector: ${f.selector}`);
+    console.error(`    ${f.detail}`);
+    console.error('');
+  }
+  console.error(
+    'The recipe lives in RECIPE at the top of\n' +
+    'tools/lint-semantic-color-recipe.ts. If the change is deliberate\n' +
+    '(e.g. design team altered the secondary text shade), update both\n' +
+    'the CSS and the RECIPE map in the same commit.',
+  );
+  printRuleLink('semantic-color-recipe');
+  process.exit(1);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

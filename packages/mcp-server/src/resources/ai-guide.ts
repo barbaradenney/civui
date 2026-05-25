@@ -57,7 +57,7 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-form-step>\` | Form | \`persist\`, \`sensitive\`, \`show-pause\`, \`continue-label\`, \`complete-label\`, \`pause-label\`, \`nav-disabled\`, \`validate\` | \`civ-step-complete\`, \`civ-step-pause\` |
 | \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
-| \`<civ-alert>\` | Feedback | \`intent\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`spacing\` (default/sm), \`emphasis\` | \`civ-dismiss\` |
+| \`<civ-alert>\` | Feedback | \`intent\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`spacing\` (default/sm), \`emphasis\` | \`civ-dismiss\` |
 | \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-close\` |
 | \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside-close\` | \`civ-close\` |
 | \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`hide-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
@@ -705,11 +705,11 @@ Conditionally shows children based on another field's value. Not form-participat
 
 Accessible alert for informational, warning, error, or success messages.
 
-**Props:** \`intent\` (info/warning/error/success), \`heading\`, \`label\` (body text), \`dismissible\`, \`spacing\` (default/sm — \`sm\` is the compact single-line layout), \`emphasis\` (primary/secondary/tertiary), \`heading-level\` (2-6). The legacy \`slim\` boolean is deprecated; use \`spacing="sm"\`.
+**Props:** \`intent\` (info/warning/error/success), \`heading\`, \`label\` (body text), \`dismissible\`, \`slim\` (compact single-line, also hides the heading and disables collapsible), \`spacing\` (default/sm — \`sm\` shrinks padding only, keeps heading visible), \`emphasis\` (primary/secondary/tertiary), \`heading-level\` (2-6).
 
 \`\`\`html
 <civ-alert intent="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
-<civ-alert intent="info" label="Processing takes up to 3 business days." spacing="sm"></civ-alert>
+<civ-alert intent="info" label="Processing takes up to 3 business days." slim></civ-alert>
 \`\`\`
 
 ---

@@ -1,0 +1,13 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Toolbar
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-toolbar for the canonical contract.'
+
+props:
+  type: object
+  properties:
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

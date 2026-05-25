@@ -92,6 +92,18 @@ const COMPONENTS = [
   // Data display — see audit-debt.md ("Metric tile / Itemized total follow-ups").
   'civ-metric-tile', 'civ-metric-group',
   'civ-itemized-total', 'civ-itemized-item',
+  // Navigation — see audit-debt.md ("Navigation components follow-ups").
+  'civ-breadcrumb', 'civ-breadcrumb-item',
+  'civ-nav', 'civ-nav-item',
+  'civ-tabs', 'civ-tab', 'civ-tab-panel',
+  // Secondary navigation — see audit-debt.md ("Secondary navigation follow-ups").
+  'civ-side-nav', 'civ-side-nav-item',
+  'civ-on-this-page', 'civ-on-this-page-item',
+  'civ-back-to-top',
+  // Admin data-grid — see audit-debt.md ("Admin data-grid follow-ups").
+  'civ-menu', 'civ-menu-item',
+  'civ-pagination', 'civ-data-grid', 'civ-toolbar',
+  'civ-bulk-actions', 'civ-column-visibility',
 ];
 
 function camelToKebab(name: string): string {

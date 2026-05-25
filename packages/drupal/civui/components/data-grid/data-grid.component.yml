@@ -1,0 +1,102 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Data Grid
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-data-grid for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    caption:
+      title: Caption
+      type: string
+      description: 'Accessible name for the table, rendered as `<caption>`. Strongly recommended. The caption serves as the table''s accessible name for screen readers'
+    caption_hidden:
+      title: Caption hidden
+      type: boolean
+      default: false
+      description: 'Visually hide the caption while keeping it in the accessibility tree. Use when an external heading already names the table'
+    sort_by:
+      title: Sort by
+      type: string
+      description: 'Column key currently being sorted by. Empty string when no column is sorted. The consumer is expected to update this in response to `civ-sort`. When `multiSort` is on, this mirrors the PRIMARY (first) sort key in `sortKeys` for backward-...'
+    sort_direction:
+      title: Sort direction
+      type: string
+      enum: ['asc', 'desc', 'none']
+      default: 'none'
+      description: 'Current sort direction. `none` clears the sort indicator. When `multiSort` is on, mirrors `sortKeys[0].direction` (or `none` when the stack is empty)'
+    multi_sort:
+      title: Multi sort
+      type: boolean
+      default: false
+      description: 'Opt into multi-column sort. When enabled, Shift-click a sortable header to add it to the sort stack (or cycle / remove it); plain click replaces the stack with a single key. Position badges (1, 2, 3…) render next to the chevron when the ...'
+    responsive:
+      title: Responsive
+      type: string
+      enum: ['stacked', 'scroll']
+      default: 'stacked'
+      description: 'Mobile responsive behavior. `stacked` (default) collapses each row to a vertical label/value block on ≤480px (USWDS stacked pattern). `scroll` wraps the table in a horizontally-scrollable region; rows stay tabular'
+    sticky_header:
+      title: Sticky header
+      type: boolean
+      default: false
+      description: 'Stick the header row to the top while the table body scrolls vertically. Requires the table to be inside a scrollable container with a constrained height'
+    selectable:
+      title: Selectable
+      type: string
+      enum: ['none', 'single', 'multiple']
+      default: 'none'
+      description: 'Row-selection mode. `multiple` shows a checkbox column with a select-all header; `single` shows radio inputs; `none` (default) hides selection UI'
+    loading:
+      title: Loading
+      type: boolean
+      default: false
+      description: 'Show a loading state in place of rows. Announced via `aria-live="polite"`'
+    error_message:
+      title: Error message
+      type: string
+      description: 'When set, render an error state with this message instead of rows. Announced via `role="alert"`'
+    empty_message:
+      title: Empty message
+      type: string
+      description: 'Override the default "No data to display" message shown when `rows` is empty'
+    striped:
+      title: Striped
+      type: boolean
+      default: false
+      description: 'Apply zebra striping to body rows for visual row separation'
+    bordered:
+      title: Bordered
+      type: boolean
+      default: false
+      description: 'Apply borders between cells (in addition to the default row-bottom borders)'
+    interactive:
+      title: Interactive
+      type: boolean
+      default: false
+      description: 'When true, clicking a row body fires `civ-row-activate`. Use to wire a master-detail drawer or navigate-to-record flow. Clicks that originate inside the selection checkbox cell, the row-actions cell, or any inner `<a>`/`<button>`/`<input...'
+    group_by:
+      title: Group by
+      type: string
+      description: 'When set to a column key, rows are grouped by `row.cells[groupBy]` and each group gets a collapsible header row spanning all columns. Groups appear in the order their first member appears in `rows`. Pre-sort to control group order. Pass ...'
+    sticky_footer:
+      title: Sticky footer
+      type: boolean
+      default: false
+      description: 'Pin the aggregator footer to the bottom of the scrolling container. Only takes effect when at least one column has `aggregate` set; otherwise no footer renders'
+    show_group_subtotals:
+      title: Show group subtotals
+      type: boolean
+      default: true
+      description: 'When `groupBy` is set and any column has an `aggregate`, render a subtotal row at the bottom of each expanded group. Default `true`. Disable when you want a grand-total footer but not per-group subtotals'
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'sm', 'xs']
+      default: 'default'
+      description: 'Row density ladder. `default` keeps the established 12px / 8px header + body cell padding. `sm` shrinks to 8px / 4px for compact admin grids. `xs` shrinks further to 8px / 2px for ultra-dense reference tables — at the WCAG SC 2.5.8 Targe...'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

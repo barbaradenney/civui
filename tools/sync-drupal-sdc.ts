@@ -123,6 +123,28 @@ const COMPONENTS: ComponentMapping[] = [
   { schema: 'civ-metric-group', drupal: 'metric-group' },
   { schema: 'civ-itemized-total', drupal: 'itemized-total' },
   { schema: 'civ-itemized-item', drupal: 'itemized-item' },
+  // Navigation — see audit-debt.md ("Navigation components follow-ups").
+  { schema: 'civ-breadcrumb', drupal: 'breadcrumb' },
+  { schema: 'civ-breadcrumb-item', drupal: 'breadcrumb-item' },
+  { schema: 'civ-nav', drupal: 'nav' },
+  { schema: 'civ-nav-item', drupal: 'nav-item' },
+  { schema: 'civ-tabs', drupal: 'tabs' },
+  { schema: 'civ-tab', drupal: 'tab' },
+  { schema: 'civ-tab-panel', drupal: 'tab-panel' },
+  // Secondary navigation — see audit-debt.md ("Secondary navigation follow-ups").
+  { schema: 'civ-side-nav', drupal: 'side-nav' },
+  { schema: 'civ-side-nav-item', drupal: 'side-nav-item' },
+  { schema: 'civ-on-this-page', drupal: 'on-this-page' },
+  { schema: 'civ-on-this-page-item', drupal: 'on-this-page-item' },
+  { schema: 'civ-back-to-top', drupal: 'back-to-top' },
+  // Admin data-grid — see audit-debt.md ("Admin data-grid follow-ups").
+  { schema: 'civ-menu', drupal: 'menu' },
+  { schema: 'civ-menu-item', drupal: 'menu-item' },
+  { schema: 'civ-pagination', drupal: 'pagination' },
+  { schema: 'civ-data-grid', drupal: 'data-grid' },
+  { schema: 'civ-toolbar', drupal: 'toolbar' },
+  { schema: 'civ-bulk-actions', drupal: 'bulk-actions' },
+  { schema: 'civ-column-visibility', drupal: 'column-visibility' },
 ];
 
 import { INHERITED_FORM_PROPS } from './lib/inherited.js';

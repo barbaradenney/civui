@@ -1,0 +1,29 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Column Visibility
+status: stable
+group: CivUI Data
+description: 'See @civui/schema civ-column-visibility for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    min_visible:
+      title: Min visible
+      type: integer
+      default: 1
+      description: 'Minimum number of columns that must stay visible. Prevents the user from hiding everything by unchecking the last checkbox. The component refuses the toggle and re-renders to restore the checked state. Default `1`'
+    align:
+      title: Align
+      type: string
+      enum: ['start', 'end']
+      default: 'end'
+      description: 'Horizontal alignment of the popover panel relative to the trigger. `end` (default) right-aligns; `start` left-aligns'
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Controlled open state. Reflects as the host `open` attribute. Setting it programmatically opens / closes the panel; the component also toggles it internally on trigger click and Escape key'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

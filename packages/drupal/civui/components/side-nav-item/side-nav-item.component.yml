@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Side Nav Item
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-side-nav-item for the canonical contract.'
+
+props:
+  type: object
+  properties:
+    href:
+      title: Href
+      type: string
+      description: 'Destination URL. Ignored when the item has nested children — parents are disclosure-only.'
+    current:
+      title: Current
+      type: boolean
+      default: false
+      description: 'Mark as the active page. Sets `aria-current="page"` on leaf rows and applies the active visual style (leading-edge accent rail). Also drives auto-expand of ancestor parents on first paint.'
+    open:
+      title: Open
+      type: boolean
+      default: false
+      description: 'Whether the disclosure panel is expanded. Only meaningful on parents with nested children. Auto-set to `true` on first paint if any descendant has `current` and `open` was not explicitly authored.'
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

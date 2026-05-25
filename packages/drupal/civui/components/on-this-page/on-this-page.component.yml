@@ -1,0 +1,13 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: On This Page
+status: stable
+group: CivUI Navigation
+description: 'See @civui/schema civ-on-this-page for the canonical contract.'
+
+props:
+  type: object
+  properties:
+
+libraryOverrides:
+  dependencies:
+    - civui/civui

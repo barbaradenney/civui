@@ -334,34 +334,34 @@
 
   /* ── Memorable Date ───────────────────────────────────────── */
 
-  .civ-memorable-date-fields {
+  .civ-memorable-date__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-memorable-date-month {
+  .civ-memorable-date__month {
     width: 10rem;
   }
 
-  .civ-memorable-date-day {
+  .civ-memorable-date__day {
     width: 5rem;
   }
 
-  .civ-memorable-date-year {
+  .civ-memorable-date__year {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-memorable-date-fields {
+    .civ-memorable-date__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-memorable-date-month {
+    .civ-memorable-date__month {
       width: 100%;
     }
 
-    .civ-memorable-date-day,
-    .civ-memorable-date-year {
+    .civ-memorable-date__day,
+    .civ-memorable-date__year {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
   }
@@ -385,33 +385,33 @@
      instead of the red from `civ-border-error`. Using the side-specific
      property eliminates the ambiguity and the inline-start always
      reads as error. */
-  :is(.civ-memorable-date-month, .civ-memorable-date-day, .civ-memorable-date-year)[data-civ-error="true"] .civ-input {
+  :is(.civ-memorable-date__month, .civ-memorable-date__day, .civ-memorable-date__year)[data-civ-error="true"] .civ-input {
     border-inline-start-width: 4px;
     border-inline-start-style: solid;
     border-inline-start-color: var(--civ-color-error-DEFAULT);
   }
 
-  .civ-income-fields {
+  .civ-income__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-income-amount {
+  .civ-income__amount {
     width: 12rem;
   }
 
-  .civ-income-frequency {
+  .civ-income__frequency {
     flex: 1;
     min-width: 14rem;
   }
 
   @media (max-width: 480px) {
-    .civ-income-fields {
+    .civ-income__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-income-amount,
-    .civ-income-frequency {
+    .civ-income__amount,
+    .civ-income__frequency {
       width: 100%;
     }
   }
@@ -423,13 +423,13 @@
      `<civ-select>` and `<civ-segmented-control>`. Aligning by the
      bottom (the previous behavior) pulled the shorter AM/PM column
      down and visibly broke the label row. */
-  .civ-time-picker-fields {
+  .civ-time-picker__fields {
     @apply civ-flex civ-flex-wrap civ-items-start;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-time-picker-hour,
-  .civ-time-picker-minute {
+  .civ-time-picker__hour,
+  .civ-time-picker__minute {
     width: 5.5rem;
   }
 
@@ -439,16 +439,16 @@
    * hour width (5.5rem) and the combo input (default) — enough room
    * for a leading "12:" and trailing padding.
    */
-  .civ-time-picker-time-input {
+  .civ-time-picker__time-input {
     width: 7rem;
   }
 
-  .civ-time-picker-period {
+  .civ-time-picker__period {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-time-picker-fields {
+    .civ-time-picker__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
@@ -461,13 +461,13 @@
      * tap targets work better full-width than squeezed into a third
      * of the screen.
      */
-    .civ-time-picker-hour,
-    .civ-time-picker-minute {
+    .civ-time-picker__hour,
+    .civ-time-picker__minute {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
 
-    .civ-time-picker-time-input,
-    .civ-time-picker-period {
+    .civ-time-picker__time-input,
+    .civ-time-picker__period {
       width: 100%;
     }
 
@@ -5535,7 +5535,7 @@
      lets consumers keep the lowercase `item-label` they already use
      for the Add button and announcements. */
 
-  .civ-repeater-row-heading {
+  .civ-repeater__row-heading {
     @apply civ-text-lg civ-font-bold civ-m-0 civ-mb-3;
     text-transform: capitalize;
   }
@@ -5544,12 +5544,12 @@
      `max` has been reached. Same visual weight as `civ-hint--group` —
      small, gray, subordinate — so it reads as guidance not as an error. */
 
-  .civ-repeater-max-hint {
+  .civ-repeater__max-hint {
     @apply civ-text-sm civ-m-0;
     color: var(--civ-color-base-dark);
   }
 
-  .civ-repeater-empty-state {
+  .civ-repeater__empty-state {
     @apply civ-text-sm civ-m-0 civ-mb-3 civ-italic;
     color: var(--civ-color-base-dark);
   }

@@ -149,7 +149,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-time-picker-fields'],
+      controlClasses: ['civ-time-picker__fields'],
     },
     ios: {
       // SwiftUI DatePicker with displayedComponents: [.hourAndMinute]

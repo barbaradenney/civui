@@ -37,9 +37,9 @@ describe('buildRowHeading', () => {
     expect(h.id).toBe('row-abc-5-heading');
   });
 
-  it('attaches the civ-repeater-row-heading class', () => {
+  it('attaches the civ-repeater__row-heading class', () => {
     const h = buildRowHeading({ legendLevel: 2, idPrefix: 'r', index: 0, itemLabel: 'item' });
-    expect(h.classList.contains('civ-repeater-row-heading')).toBe(true);
+    expect(h.classList.contains('civ-repeater__row-heading')).toBe(true);
   });
 
   it('sets the localized text to "{itemLabel} {index+1}"', () => {
@@ -227,7 +227,7 @@ describe('appendFormStepsSummaryCard', () => {
     });
     const row = container.querySelector('[data-civ-repeater-row]')!;
     expect(row.getAttribute('aria-labelledby')).toBe('row-xyz-4-heading');
-    const heading = row.querySelector('.civ-repeater-row-heading')!;
+    const heading = row.querySelector('.civ-repeater__row-heading')!;
     expect(heading.id).toBe('row-xyz-4-heading');
   });
 });

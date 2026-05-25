@@ -59,11 +59,17 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
 
   /**
    * Whether this item renders as a disclosure parent (has nested
-   * side-nav-item children) vs. a leaf link. Computed in
+   * side-nav-item children) vs. a leaf link. Computed ONCE in
    * `connectedCallback` from the authored DOM — children are still
    * at the item's top level there, before the LightDomSlotMixin
-   * moves them into the inner `<ul>`. We re-check on every render
-   * by looking for any descendant `civ-side-nav-item`.
+   * `_captureChildren` step removes them.
+   *
+   * Items that gain children *after* `connectedCallback` will stay in
+   * leaf mode. The LightDomSlotMixin capture is a one-shot snapshot
+   * (see common-traps.md "LightDomSlotMixin composition with dynamic
+   * Lit children"), so re-checking on every render wouldn't help —
+   * the children we'd be checking for are already gone from the host
+   * by then.
    */
   @state() private _hasChildren = false;
 

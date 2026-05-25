@@ -18,6 +18,7 @@ fun CivPagination(
     siblingCount: Int = 1,
     label: String = "",
     itemName: String = "",
+    itemNamePlural: String = "",
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {

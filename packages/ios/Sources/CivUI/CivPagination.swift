@@ -28,6 +28,10 @@ public struct CivPagination: View {
     /// Singular item label (e.g. `result`).
     public var itemName: String
 
+    /// Plural form for non-`+s` plurals (e.g. `people` for `person`).
+    /// Empty falls back to `itemName + "s"`.
+    public var itemNamePlural: String
+
     public init(
         totalItems: Int = 0,
         pageSize: Int = 10,
@@ -35,7 +39,8 @@ public struct CivPagination: View {
         pageSizeOptions: String = "",
         siblingCount: Int = 1,
         label: String = "",
-        itemName: String = ""
+        itemName: String = "",
+        itemNamePlural: String = ""
     ) {
         self.totalItems = totalItems
         self.pageSize = pageSize
@@ -44,6 +49,7 @@ public struct CivPagination: View {
         self.siblingCount = siblingCount
         self.label = label
         self.itemName = itemName
+        self.itemNamePlural = itemNamePlural
     }
 
     public var body: some View {

@@ -2692,6 +2692,9 @@
   .civ-data-grid__th--align-center { text-align: center; }
   .civ-data-grid__th--align-end,
   .civ-data-grid__th--align-numeric { text-align: end; }
+  /* not density: fixed-column gutters sized to the 24×24 WCAG tap-target
+     floor for the checkbox / row-action button they hold. Shrinking
+     under data-civ-scale would clip the affordance. */
   .civ-data-grid__th--select { width: 2.5rem; text-align: center; }
   .civ-data-grid__th--actions { width: 3rem; text-align: end; }
 
@@ -2833,6 +2836,8 @@
   }
 
   /* Expandable rows — leading chevron column + detail row directly below. */
+  /* not density: chevron-column gutter sized to the tap-target floor of
+     the toggle button it holds. */
   .civ-data-grid__th--expand,
   .civ-data-grid__td--expand {
     width: 2.5rem;
@@ -2840,6 +2845,8 @@
     padding-inline: var(--civ-spacing-1);
   }
 
+  /* not density: chevron-toggle box held above the WCAG 2.5.5 24×24px
+     floor (1.75rem = 28px). */
   .civ-data-grid__expand-toggle {
     @apply civ-inline-flex civ-items-center civ-justify-center
            civ-bg-transparent civ-border-0 civ-rounded civ-cursor-pointer;

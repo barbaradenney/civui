@@ -21,7 +21,7 @@ const schema: ComponentSchema = {
     },
     hidden: {
       type: 'boolean',
-      description: 'Whether the button is hidden. Controlled by the component\'s internal `IntersectionObserver` — flips to `false` when the user scrolls past `threshold`. Reflected so the global `[hidden]` HTML rule applies `display: none`',
+      description: '**Internal state — treat as read-only.** Controlled by the component\'s `IntersectionObserver` (flips to `false` when the user scrolls past `threshold`, `true` when they scroll back up). Reflected so the global `[hidden]` HTML rule applies `display: none`. Consumers should NOT set this prop directly — writes are overwritten on the next scroll. Native implementers should expose visibility as derived state from their own scroll listener rather than as a writable input.',
       default: true,
       reflect: true,
     },

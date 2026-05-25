@@ -39,8 +39,8 @@ import type { SlotConfig } from '@civui/core';
  * @prop {string} moreLabel - Override the "Read more" trigger text
  * @prop {string} lessLabel - Override the "Read less" trigger text
  * @prop {string} icon - Optional icon name shown before the label; empty = no icon
- * @prop {string} size - **Deprecated.** Use `spacing="sm"` instead. Trigger size: 'default' or 'sm'. Emits a dev-mode warning when used.
- * @prop {string} spacing - Trigger padding density: 'default' or 'sm' (`sm` applies the system-wide `--sm` density modifier)
+ * @prop {string} spacing - Trigger padding density: 'default' or 'sm'
+ * @prop {string} size - **Deprecated** — use `spacing` instead. Same values; produces the same `civ-text-btn--sm` CSS class. Removed in a future release.
  * @prop {boolean} inline - Render teaser, rest, and trigger inline
  * @prop {boolean} noFadeTrigger - Opt out of the default block-mode fade overlay: the trigger sits below the teaser as a plain button instead of floating over a gradient at the bottom of the text
  *
@@ -69,13 +69,19 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) icon = '';
 
   /**
-   * @deprecated Use `spacing="sm"` instead. Will be removed in a future major.
-   * Trigger size: 'default' or 'sm'.
+   * Trigger padding density: 'default' or 'sm'. Matches the
+   * design-system `spacing` convention used by `civ-alert`,
+   * `civ-card`, `civ-list-item`, and the data-grid input controls.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+
+  /**
+   * @deprecated Use `spacing` instead. Same allowed values, same
+   * effect — both produce the `civ-text-btn--sm` CSS class when set
+   * to `'sm'`. The `size` prop will be removed in a future release;
+   * setting it emits a one-time dev-mode console warning.
    */
   @property({ type: String }) size: 'default' | 'sm' = 'default';
-
-  /** Trigger padding density: 'default' or 'sm'. */
-  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /**
    * Inline mode. The teaser, rest region, and trigger all render
@@ -117,17 +123,17 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
-    const moreText = this.moreLabel || t('readMoreButton');
-    const lessText = this.lessLabel || t('readLessButton');
-    const buttonText = this.open ? lessText : moreText;
-    if (this.size === 'sm') {
+    if (this.size !== 'default') {
       devWarn(
         'civ-read-more',
-        '`size="sm"` is deprecated. Use `spacing="sm"` for the same render. The `size` prop will be removed in a subsequent major.',
+        '`size` is deprecated and will be removed in a future release. Use `spacing` instead — same allowed values, same effect.',
         'civ-read-more:size-deprecated',
       );
     }
-    const sizeClass = (this.size === 'sm' || this.spacing === 'sm') ? 'civ-text-btn--sm' : '';
+    const moreText = this.moreLabel || t('readMoreButton');
+    const lessText = this.lessLabel || t('readLessButton');
+    const buttonText = this.open ? lessText : moreText;
+    const sizeClass = (this.spacing === 'sm' || this.size === 'sm') ? 'civ-text-btn--sm' : '';
     // Inline mode still uses the shared `civ-text-btn civ-text-btn--chip`
     // palette so the affordance reads as a button (filled background,
     // rounded, semibold) rather than as an underlined link. The

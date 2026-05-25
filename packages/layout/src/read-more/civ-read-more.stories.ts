@@ -28,7 +28,7 @@ disclosure when there is no useful teaser to show.
     moreLabel: { control: 'text' },
     lessLabel: { control: 'text' },
     icon: { control: 'text' },
-    size: { control: 'select', options: ['default', 'sm'] },
+    spacing: { control: 'select', options: ['default', 'sm'] },
     inline: { control: 'boolean' },
     noFadeTrigger: { control: 'boolean' },
   },

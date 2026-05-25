@@ -22,9 +22,18 @@ fun CivReadMore(
     moreLabel: String = "",
     lessLabel: String = "",
     icon: String = "",
-    /** @deprecated Use `spacing` instead. */
-    size: String = "default",
+    /**
+     * Trigger padding density: "default" or "sm". Matches the
+     * design-system `spacing` convention used by `CivAlert`, `CivCard`,
+     * `CivListItem`, and the data-grid input controls.
+     */
     spacing: String = "default",
+    /**
+     * Trigger size: "default" or "sm". **Deprecated** — use `spacing`
+     * instead. Same allowed values, same effect. Will be removed in a
+     * future release.
+     */
+    size: String = "default",
     inline: Boolean = false,
     noFadeTrigger: Boolean = false,
     modifier: Modifier = Modifier,

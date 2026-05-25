@@ -43,7 +43,7 @@ props:
       type: string
       enum: ['default', 'sm']
       default: 'default'
-      description: 'Trigger padding density. `sm` applies the system-wide `--sm` density modifier for compact placements.'
+      description: 'Trigger padding density. Matches the design-system `spacing` convention shared by `civ-alert`, `civ-card`, `civ-list-item`, and the data-grid input controls.'
 
 slots:
   teaser:

@@ -110,9 +110,9 @@ export const WithTotal: Story = {
   `,
 };
 
-export const Compact: Story = {
+export const Sm: Story = {
   render: () => html`
-    <table class="civ-table civ-table--compact civ-table--striped">
+    <table class="civ-table civ-table--sm civ-table--striped">
       <caption>State abbreviations</caption>
       <thead>
         <tr>
@@ -134,7 +134,7 @@ export const Compact: Story = {
 };
 
 export const DensityComparison: Story = {
-  name: 'Density comparison (default vs compact, scale variants)',
+  name: 'Density comparison (default vs sm, scale variants)',
   render: () => {
     const sampleTable = (modifierClass: string, caption: string) => html`
       <table class="civ-table ${modifierClass}">
@@ -186,14 +186,15 @@ export const DensityComparison: Story = {
         <div>
           <h3 class="civ-m-0 civ-mb-2">2. Per-table modifier — only padding</h3>
           <p class="civ-m-0 civ-mb-3">
-            <code>.civ-table--compact</code> ratchets the cell padding one
+            <code>.civ-table--sm</code> ratchets the cell padding one
             step tighter (<code>spacing-1 / spacing-2</code> instead of
             <code>spacing-2 / spacing-3</code>). Font-size is untouched —
-            this is the "this specific table is dense" opt-in.
+            this is the "this specific table is dense" opt-in. Matches the
+            system-wide <code>--sm</code> density-modifier convention.
           </p>
           <div class="civ-grid civ-gap-4" style="grid-template-columns: 1fr 1fr;">
             ${sampleTable('', 'default padding')}
-            ${sampleTable('civ-table--compact', '.civ-table--compact')}
+            ${sampleTable('civ-table--sm', '.civ-table--sm')}
           </div>
         </div>
 
@@ -209,13 +210,13 @@ export const DensityComparison: Story = {
               ${sampleTable('', 'spacious + default')}
             </div>
             <div data-civ-scale="spacious">
-              ${sampleTable('civ-table--compact', 'spacious + --compact')}
+              ${sampleTable('civ-table--sm', 'spacious + --sm')}
             </div>
             <div data-civ-scale="dense">
               ${sampleTable('', 'dense + default')}
             </div>
             <div data-civ-scale="dense">
-              ${sampleTable('civ-table--compact', 'dense + --compact')}
+              ${sampleTable('civ-table--sm', 'dense + --sm')}
             </div>
           </div>
         </div>

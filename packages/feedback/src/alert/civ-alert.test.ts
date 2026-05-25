@@ -142,11 +142,18 @@ describe('civ-alert', () => {
     expect(alert.hasAttribute('aria-labelledby')).toBe(false);
   });
 
-  it('applies slim class when slim is true', async () => {
+  it('applies sm modifier class when slim is true', async () => {
     const el = await fixture('<civ-alert slim>Compact message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
-    expect(alert.className).toContain('civ-alert--slim');
+    expect(alert.className).toContain('civ-alert--sm');
+  });
+
+  it('applies sm modifier class when spacing="sm"', async () => {
+    const el = await fixture('<civ-alert spacing="sm">Compact message.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.className).toContain('civ-alert--sm');
   });
 
   it('shows dismiss button when dismissible is true', async () => {

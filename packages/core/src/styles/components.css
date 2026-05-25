@@ -1394,7 +1394,7 @@
 
   /* File items use the .civ-file-item layout */
 
-  .civ-progress-track--compact {
+  .civ-progress-track--sm {
     height: 4px;
   }
 
@@ -3335,17 +3335,18 @@
     background-color: var(--civ-color-base-lightest);
   }
 
-  /* Modifier: compact — denser cell padding for reference tables
-     with many short rows (currency amounts, ID codes). */
-  :where(.civ-table--compact) th,
-  :where(.civ-table--compact) td {
+  /* Modifier: sm — denser cell padding for reference tables
+     with many short rows (currency amounts, ID codes). Follows
+     the system-wide density convention (`--sm` opt-in). */
+  :where(.civ-table--sm) th,
+  :where(.civ-table--sm) td {
     padding: var(--civ-spacing-1) var(--civ-spacing-2);
   }
-  /* Preserve the tfoot first-row breathing room when --compact is
+  /* Preserve the tfoot first-row breathing room when --sm is
      applied — the shorthand `padding` above would otherwise reset
      padding-top to spacing-1, collapsing the totals into the body. */
-  :where(.civ-table--compact) tfoot tr:first-child th,
-  :where(.civ-table--compact) tfoot tr:first-child td {
+  :where(.civ-table--sm) tfoot tr:first-child th,
+  :where(.civ-table--sm) tfoot tr:first-child td {
     padding-top: var(--civ-spacing-2);
   }
 
@@ -3715,7 +3716,7 @@
     @apply civ-mb-4 civ-border-2;
   }
 
-  .civ-alert--slim .civ-alert__content {
+  .civ-alert--sm .civ-alert__content {
     @apply civ-py-2 civ-px-4;
   }
 

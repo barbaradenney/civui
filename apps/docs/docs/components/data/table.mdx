@@ -103,14 +103,14 @@ Use a real `<tfoot>` for summary / total rows — it gets a top border, semi-bol
 </table>
 ```
 
-### Compact density
+### Sm density modifier
 
-For reference tables with many short rows (state codes, ID lookups, abbreviation glossaries).
+For reference tables with many short rows (state codes, ID lookups, abbreviation glossaries). Uses the system-wide `--sm` density modifier convention.
 
-<StoryEmbed id="foundations-table--compact" />
+<StoryEmbed id="foundations-table--sm" />
 
 ```html
-<table class="civ-table civ-table--compact civ-table--striped">
+<table class="civ-table civ-table--sm civ-table--striped">
   <!-- ... -->
 </table>
 ```
@@ -120,13 +120,13 @@ For reference tables with many short rows (state codes, ID lookups, abbreviation
 CivUI exposes **two complementary density mechanisms** and the table responds to both:
 
 1. **Page-level scale (CSS).** `[data-civ-scale="dense|spacious"]` on a parent redefines the `--civ-spacing-*` and `--civ-typography-fontSize-*` tokens. The table picks it up automatically — padding shrinks/grows AND the header text scales with the surrounding type.
-2. **Per-table modifier.** `.civ-table--compact` ratchets the cell padding one step tighter (`spacing-1`/`spacing-2` instead of `spacing-2`/`spacing-3`). Font-size is untouched — this is the "make THIS table denser regardless of the page scale" opt-in.
+2. **Per-table modifier.** `.civ-table--sm` ratchets the cell padding one step tighter (`spacing-1`/`spacing-2` instead of `spacing-2`/`spacing-3`). Font-size is untouched — this is the "make THIS table denser regardless of the page scale" opt-in.
 
 The two compose orthogonally. The story below renders the matrix — scale only, modifier only, both together — with the same sample data so the visual delta is immediate.
 
 <StoryEmbed id="foundations-table--density-comparison" minHeight={1000} />
 
-| Wrapping scale | No modifier | `.civ-table--compact` |
+| Wrapping scale | No modifier | `.civ-table--sm` |
 |---|---|---|
 | default | `spacing-2`/`spacing-3` padding, `sm`/base font | `spacing-1`/`spacing-2` padding, `sm`/base font |
 | `[data-civ-scale="dense"]` | dense `spacing-2`/`spacing-3` (~8/11px), dense font | dense `spacing-1`/`spacing-2` (~4/8px), dense font |
@@ -179,7 +179,7 @@ If your table fits the viewport at the design's minimum width (320px), don't wra
 | `.civ-table` | `<table>` | Base styling: full width, border-collapse, default cell padding, header underline, row dividers |
 | `.civ-table--bordered` | `<table>` | Adds vertical borders between cells |
 | `.civ-table--striped` | `<table>` | Zebra striping on `<tbody>` rows |
-| `.civ-table--compact` | `<table>` | Reduces cell padding for dense reference tables |
+| `.civ-table--sm` | `<table>` | Reduces cell padding for dense reference tables (system-wide density modifier convention) |
 | `.civ-table__num` | `<td>` / `<th>` | Right-align + tabular figures — for currency, quantities, percentages |
 | `.civ-table-wrap` | `<div>` wrapping the table | Horizontal-scroll container for tables that overflow narrow viewports |
 

@@ -34,7 +34,13 @@ const schema: ComponentSchema = {
     },
     size: {
       type: 'enum',
-      description: 'Trigger text size',
+      description: '**Deprecated** — use `spacing="sm"` instead. Trigger text size. Both `size` and `spacing` currently produce the same `--sm` chrome but `size` fires a one-time dev-mode console warning so consumers can migrate. The prop will be removed in a future release.',
+      default: 'default',
+      values: ['default', 'sm'],
+    },
+    spacing: {
+      type: 'enum',
+      description: 'Trigger density. `default` for standalone; `sm` for compact placements. Same shape as every other CivUI density prop per `.claude/rules/density-convention.md`.',
       default: 'default',
       values: ['default', 'sm'],
     },

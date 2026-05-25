@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, generateId, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, devWarn, generateId, t } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -39,7 +39,8 @@ import type { SlotConfig } from '@civui/core';
  * @prop {string} moreLabel - Override the "Read more" trigger text
  * @prop {string} lessLabel - Override the "Read less" trigger text
  * @prop {string} icon - Optional icon name shown before the label; empty = no icon
- * @prop {string} size - Trigger size: 'default' or 'sm'
+ * @prop {string} size - **Deprecated** — use `spacing="sm"` instead. Trigger size: 'default' or 'sm'. Fires a one-time dev warning when set.
+ * @prop {string} spacing - Trigger density: 'default' or 'sm'. Standard density prop per `.claude/rules/density-convention.md`.
  * @prop {boolean} inline - Render teaser, rest, and trigger inline
  * @prop {boolean} noFadeTrigger - Opt out of the default block-mode fade overlay: the trigger sits below the teaser as a plain button instead of floating over a gradient at the bottom of the text
  *
@@ -67,8 +68,24 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
    */
   @property({ type: String }) icon = '';
 
-  /** Trigger size: 'default' or 'sm'. */
+  /**
+   * @deprecated Use `spacing="sm"` instead. The `size` prop predates
+   * the system-wide density convention
+   * (`.claude/rules/density-convention.md`) and is semantically a
+   * density knob, not a typography-hierarchy knob like
+   * `civ-label.size` / `civ-page-header.size`. Both `size` and
+   * `spacing` currently produce the same `--sm` chrome but `size`
+   * fires a one-time dev-mode console warning so consumers can
+   * migrate. Will be removed in a future release.
+   */
   @property({ type: String }) size: 'default' | 'sm' = 'default';
+
+  /**
+   * Trigger density: 'default' or 'sm' for compact placements. Same
+   * shape as every other CivUI density prop — see
+   * `.claude/rules/density-convention.md`.
+   */
+  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   /**
    * Inline mode. The teaser, rest region, and trigger all render
@@ -110,10 +127,20 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    if (this.size === 'sm') {
+      devWarn(
+        'civ-read-more',
+        '`size="sm"` is deprecated — use `spacing="sm"` instead. The ' +
+        'prop currently still produces the compact trigger but will be ' +
+        'removed in a future release.',
+        'civ-read-more:size-deprecated',
+      );
+    }
     const moreText = this.moreLabel || t('readMoreButton');
     const lessText = this.lessLabel || t('readLessButton');
     const buttonText = this.open ? lessText : moreText;
-    const sizeClass = this.size === 'sm' ? 'civ-text-btn--sm' : '';
+    const isCompact = this.spacing === 'sm' || this.size === 'sm';
+    const sizeClass = isCompact ? 'civ-text-btn--sm' : '';
     // Inline mode still uses the shared `civ-text-btn civ-text-btn--chip`
     // palette so the affordance reads as a button (filled background,
     // rounded, semibold) rather than as an underlined link. The

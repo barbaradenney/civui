@@ -159,11 +159,11 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ### Tier 2 — prop renames with deprecation window
 
-| Item | Action | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| `civ-alert.slim` boolean → `civ-alert.spacing="sm"` | Deprecate the boolean, keep producing same CSS class until removal | The alias already exists; just need the deprecation warning + a release window. |
-| `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | Add `spacing` prop, deprecate `size` over one release | `size` is the only outlier in the read-more component — semantically it's density, not hierarchy. |
-| `civ-file-upload.variant="compact"` → split into `variant="default \| full"` + `spacing="default \| sm"` | Two-prop migration | `variant` then only carries layout mode, `spacing` only carries density. The current single-prop conflation prevents a "full layout + compact spacing" combination. |
+| `civ-alert.slim` boolean → `civ-alert.spacing="sm"` | ✅ Done (slice 7.2) | `slim` still works but fires a one-time `devWarn` when used. JSDoc + schema description both mark `@deprecated`. Removal is a future release. |
+| `civ-read-more.size="sm"` → `civ-read-more.spacing="sm"` | ✅ Done (slice 7.2) | Added `spacing` prop; both `size` and `spacing` produce the same `--sm` class; `size` fires a one-time `devWarn`. Native (iOS / Android) + Drupal SDC stubs updated for parity. JSDoc + schema description both mark `@deprecated`. Removal is a future release. |
+| `civ-file-upload.variant="compact"` → split into `variant="default \| inline \| large"` + (future) `spacing` | ✅ Renamed in `9f45dd9` (variant values disambiguated from density vocabulary) | The `variant` enum was renamed `compact` → `inline` and `full` → `large` so the prop only carries layout mode. The "full layout + compact spacing" combination would require adding a `spacing` prop to civ-file-upload \(Tier 4 coverage gap\); flag it there if a real placement appears. |
 
 ### Tier 3 — hardcoded-value cleanup (responds to `[data-civ-scale]` automatically once fixed)
 

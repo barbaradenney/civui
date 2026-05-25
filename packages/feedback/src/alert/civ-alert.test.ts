@@ -159,6 +159,37 @@ describe('civ-alert', () => {
     expect(alert.className).toContain('civ-alert--sm');
   });
 
+  describe('slim deprecation', () => {
+    it('fires a one-time dev warning when the deprecated `slim` boolean is used', async () => {
+      // Reset the devWarn session-global dedupe so this test runs
+      // even if an earlier test already triggered the warning.
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await fixture('<civ-alert slim>Compact message.</civ-alert>');
+
+      expect(warn).toHaveBeenCalled();
+      const message = warn.mock.calls[0][0];
+      expect(message).toContain('civ-alert');
+      expect(message).toContain('slim');
+      expect(message).toContain('spacing="sm"');
+
+      warn.mockRestore();
+    });
+
+    it('does NOT warn when `spacing="sm"` is used instead', async () => {
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await fixture('<civ-alert spacing="sm">Compact message.</civ-alert>');
+
+      expect(warn).not.toHaveBeenCalled();
+      warn.mockRestore();
+    });
+  });
+
   it('shows dismiss button when dismissible is true', async () => {
     const el = await fixture('<civ-alert dismissible>Dismissible alert.</civ-alert>');
 

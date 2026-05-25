@@ -210,12 +210,49 @@ describe('civ-read-more', () => {
     expect(el.hasAttribute('open')).toBe(true);
   });
 
-  it('applies the shared toggle-button sm size class', async () => {
+  it('applies the shared toggle-button sm size class via `spacing="sm"`', async () => {
+    const el = await fixture<CivReadMore>(`
+      <civ-read-more spacing="sm"><p>Teaser</p></civ-read-more>
+    `);
+    const trigger = el.querySelector('.civ-read-more__trigger')!;
+    expect(trigger.classList.contains('civ-text-btn--sm')).toBe(true);
+  });
+
+  it('also applies the sm size class via the deprecated `size="sm"` alias', async () => {
     const el = await fixture<CivReadMore>(`
       <civ-read-more size="sm"><p>Teaser</p></civ-read-more>
     `);
     const trigger = el.querySelector('.civ-read-more__trigger')!;
     expect(trigger.classList.contains('civ-text-btn--sm')).toBe(true);
+  });
+
+  describe('size deprecation', () => {
+    it('fires a one-time dev warning when the deprecated `size="sm"` prop is used', async () => {
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await fixture<CivReadMore>('<civ-read-more size="sm"><p>Teaser</p></civ-read-more>');
+
+      expect(warn).toHaveBeenCalled();
+      const message = warn.mock.calls[0][0];
+      expect(message).toContain('civ-read-more');
+      expect(message).toContain('size');
+      expect(message).toContain('spacing="sm"');
+
+      warn.mockRestore();
+    });
+
+    it('does NOT warn when `spacing="sm"` is used instead', async () => {
+      const { resetDevWarnDedupe } = await import('@civui/core');
+      resetDevWarnDedupe();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await fixture<CivReadMore>('<civ-read-more spacing="sm"><p>Teaser</p></civ-read-more>');
+
+      expect(warn).not.toHaveBeenCalled();
+      warn.mockRestore();
+    });
   });
 
   it('composes the shared civ-text-btn chip palette on the trigger', async () => {

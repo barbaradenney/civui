@@ -127,9 +127,9 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
       }
 
       const fieldErrors: Array<[string, string]> = [
-        ['.civ-memorable-date-month select', this.monthError],
-        ['.civ-memorable-date-day input',    this.dayError],
-        ['.civ-memorable-date-year input',   this.yearError],
+        ['.civ-memorable-date__month select', this.monthError],
+        ['.civ-memorable-date__day input',    this.dayError],
+        ['.civ-memorable-date__year input',   this.yearError],
       ];
       for (const [selector, flag] of fieldErrors) {
         const target = this.querySelector(selector);
@@ -208,8 +208,8 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
 
     const fields = html`
-      <div class="civ-memorable-date-fields" data-civ-memorable-date>
-          <div class="civ-memorable-date-month" data-civ-error="${this.monthError ? 'true' : nothing}">
+      <div class="civ-memorable-date__fields" data-civ-memorable-date>
+          <div class="civ-memorable-date__month" data-civ-error="${this.monthError ? 'true' : nothing}">
             <civ-select
               label="${monthLabel}"
               name="${this.name ? `${this.name}-month` : 'month'}"
@@ -223,7 +223,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               disable-analytics
             ></civ-select>
           </div>
-          <div class="civ-memorable-date-day" data-civ-error="${this.dayError ? 'true' : nothing}">
+          <div class="civ-memorable-date__day" data-civ-error="${this.dayError ? 'true' : nothing}">
             <civ-text-input
               label="${dayLabel}"
               name="${this.name ? `${this.name}-day` : 'day'}"
@@ -241,7 +241,7 @@ export class CivMemorableDate extends LegendHeadingMixin(CivFormElement) {
               disable-analytics
             ></civ-text-input>
           </div>
-          <div class="civ-memorable-date-year" data-civ-error="${this.yearError ? 'true' : nothing}">
+          <div class="civ-memorable-date__year" data-civ-error="${this.yearError ? 'true' : nothing}">
             <civ-text-input
               label="${yearLabel}"
               name="${this.name ? `${this.name}-year` : 'year'}"

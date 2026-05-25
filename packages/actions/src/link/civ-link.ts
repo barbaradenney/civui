@@ -140,12 +140,9 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _classes(): string {
-    const variantClass = this.danger
-      ? `civ-link--${this.variant}-danger`
-      : `civ-link--${this.variant}`;
-
     return [
-      variantClass,
+      `civ-link--${this.variant}`,
+      this.danger ? 'civ-link--danger' : '',
       this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
     ]
       .filter(Boolean)

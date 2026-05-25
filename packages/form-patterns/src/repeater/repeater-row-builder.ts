@@ -40,7 +40,7 @@ export function buildRowHeading(opts: {
   const level = rowHeadingLevel(opts.legendLevel);
   const heading = document.createElement(`h${level}`);
   heading.id = `${opts.idPrefix}-${opts.index}-heading`;
-  heading.classList.add('civ-repeater-row-heading');
+  heading.classList.add('civ-repeater__row-heading');
   heading.textContent = rowHeadingText(opts.itemLabel, opts.index);
   return heading;
 }

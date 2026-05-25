@@ -329,7 +329,7 @@ export class CivRepeater extends CivBaseElement {
         ></div>
 
         ${showList && this._rowCount === 0 && this.emptyStateText ? html`
-          <p class="civ-repeater-empty-state">${this.emptyStateText}</p>
+          <p class="civ-repeater__empty-state">${this.emptyStateText}</p>
         ` : nothing}
 
         ${this._formStepsActive ? html`
@@ -358,7 +358,7 @@ export class CivRepeater extends CivBaseElement {
         ` : nothing}
 
         ${showList && !canAdd && this.max > 0 ? html`
-          <p class="civ-repeater-max-hint civ-mt-3" role="status">
+          <p class="civ-repeater__max-hint civ-mt-3" role="status">
             ${interpolate(t('repeaterMaxReached'), { max: String(this.max), item: this.itemLabel })}
           </p>
         ` : nothing}
@@ -392,7 +392,7 @@ export class CivRepeater extends CivBaseElement {
         </div>
 
         ${this.rows.length === 0 && this.emptyStateText ? html`
-          <p class="civ-repeater-empty-state">${this.emptyStateText}</p>
+          <p class="civ-repeater__empty-state">${this.emptyStateText}</p>
         ` : nothing}
 
         ${canAdd && this.addHref ? html`
@@ -406,7 +406,7 @@ export class CivRepeater extends CivBaseElement {
         ` : nothing}
 
         ${!canAdd && this.max > 0 ? html`
-          <p class="civ-repeater-max-hint civ-mt-3" role="status">
+          <p class="civ-repeater__max-hint civ-mt-3" role="status">
             ${interpolate(t('repeaterMaxReached'), { max: String(this.max), item: this.itemLabel })}
           </p>
         ` : nothing}
@@ -470,7 +470,7 @@ export class CivRepeater extends CivBaseElement {
    * level / text logic.
    */
   private _renderRowHeadingTemplate(headingId: string, text: string) {
-    const cls = 'civ-repeater-row-heading';
+    const cls = 'civ-repeater__row-heading';
     switch (rowHeadingLevel(this.headingLevel)) {
       case 1: return html`<h1 id="${headingId}" class="${cls}">${text}</h1>`;
       case 2: return html`<h2 id="${headingId}" class="${cls}">${text}</h2>`;
@@ -819,7 +819,7 @@ export class CivRepeater extends CivBaseElement {
     rows.forEach((row, i) => {
       row.setAttribute('data-civ-repeater-row', String(i));
 
-      const heading = row.querySelector('.civ-repeater-row-heading');
+      const heading = row.querySelector('.civ-repeater__row-heading');
       if (heading) heading.textContent = rowHeadingText(this.itemLabel, i);
 
       // Inline mode — reindex direct children's [name] attributes

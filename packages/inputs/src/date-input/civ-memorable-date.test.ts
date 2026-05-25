@@ -70,7 +70,7 @@ describe('civ-memorable-date rendering', () => {
 
     const container = el.querySelector('[data-civ-memorable-date]');
     expect(container).not.toBeNull();
-    expect(container!.classList.contains('civ-memorable-date-fields')).toBe(true);
+    expect(container!.classList.contains('civ-memorable-date__fields')).toBe(true);
   });
 });
 
@@ -394,9 +394,9 @@ describe('civ-memorable-date per-field errors', () => {
       '<civ-memorable-date legend="DOB" day-error="out-of-range"></civ-memorable-date>',
     );
     await elementUpdated(el);
-    const day = el.querySelector('.civ-memorable-date-day')!;
-    const month = el.querySelector('.civ-memorable-date-month')!;
-    const year = el.querySelector('.civ-memorable-date-year')!;
+    const day = el.querySelector('.civ-memorable-date__day')!;
+    const month = el.querySelector('.civ-memorable-date__month')!;
+    const year = el.querySelector('.civ-memorable-date__year')!;
     expect(day.getAttribute('data-civ-error')).toBe('true');
     expect(month.hasAttribute('data-civ-error')).toBe(false);
     expect(year.hasAttribute('data-civ-error')).toBe(false);
@@ -407,9 +407,9 @@ describe('civ-memorable-date per-field errors', () => {
       '<civ-memorable-date legend="DOB" month-error="missing" year-error="invalid"></civ-memorable-date>',
     );
     await elementUpdated(el);
-    expect(el.querySelector('.civ-memorable-date-month')!.getAttribute('data-civ-error')).toBe('true');
-    expect(el.querySelector('.civ-memorable-date-day')!.hasAttribute('data-civ-error')).toBe(false);
-    expect(el.querySelector('.civ-memorable-date-year')!.getAttribute('data-civ-error')).toBe('true');
+    expect(el.querySelector('.civ-memorable-date__month')!.getAttribute('data-civ-error')).toBe('true');
+    expect(el.querySelector('.civ-memorable-date__day')!.hasAttribute('data-civ-error')).toBe(false);
+    expect(el.querySelector('.civ-memorable-date__year')!.getAttribute('data-civ-error')).toBe('true');
   });
 
   it('propagates aria-invalid to the native select / inputs matching the flagged fields', async () => {
@@ -418,9 +418,9 @@ describe('civ-memorable-date per-field errors', () => {
     );
     // _propagateAriaToChildren defers via requestAnimationFrame; wait one frame.
     await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-    const monthNative = el.querySelector('.civ-memorable-date-month select') as HTMLSelectElement;
-    const dayNative   = el.querySelector('.civ-memorable-date-day input') as HTMLInputElement;
-    const yearNative  = el.querySelector('.civ-memorable-date-year input') as HTMLInputElement;
+    const monthNative = el.querySelector('.civ-memorable-date__month select') as HTMLSelectElement;
+    const dayNative   = el.querySelector('.civ-memorable-date__day input') as HTMLInputElement;
+    const yearNative  = el.querySelector('.civ-memorable-date__year input') as HTMLInputElement;
     expect(monthNative.getAttribute('aria-invalid')).toBe('true');
     expect(dayNative.getAttribute('aria-invalid')).toBe('true');
     expect(yearNative.getAttribute('aria-invalid')).toBe('true');
@@ -436,7 +436,7 @@ describe('civ-memorable-date per-field errors', () => {
     // flag through as the inner control's error, so no error span
     // should exist inside any sub-field wrapper.
     const subFieldErrorSpans = el.querySelectorAll(
-      '.civ-memorable-date-month .civ-error-text, .civ-memorable-date-day .civ-error-text, .civ-memorable-date-year .civ-error-text',
+      '.civ-memorable-date__month .civ-error-text, .civ-memorable-date__day .civ-error-text, .civ-memorable-date__year .civ-error-text',
     );
     expect(subFieldErrorSpans.length).toBe(0);
     // Group-level error still appears (outside the sub-field wrappers).

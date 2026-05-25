@@ -48,6 +48,14 @@ public struct CivActionButton: View {
     /// Whether the button is disabled.
     public var isDisabled: Bool
 
+    /// Async-in-flight state. Mirrors the web `loading` prop — VoiceOver
+    /// announces the loading label and the button surfaces a busy state.
+    public var isLoading: Bool
+
+    /// Accessible name spoken while `isLoading` is true (e.g. "Applying…").
+    /// Mirrors the web `loadingLabel` prop.
+    public var loadingLabel: String
+
     /// Toggle pressed state (for toolbar toggles).
     public var isPressed: Bool
 
@@ -92,6 +100,8 @@ public struct CivActionButton: View {
         spacing: ActionButtonSpacing = .default,
         isDanger: Bool = false,
         isDisabled: Bool = false,
+        isLoading: Bool = false,
+        loadingLabel: String = "",
         isPressed: Bool = false,
         isCurrent: Bool = false,
         onClick: (() -> Void)? = nil,
@@ -107,6 +117,8 @@ public struct CivActionButton: View {
         self.spacing = spacing
         self.isDanger = isDanger
         self.isDisabled = isDisabled
+        self.isLoading = isLoading
+        self.loadingLabel = loadingLabel
         self.isPressed = isPressed
         self.isCurrent = isCurrent
         self.onClick = onClick

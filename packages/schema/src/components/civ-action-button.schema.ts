@@ -27,6 +27,18 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    loading: {
+      type: 'boolean',
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (apply filter, refresh data, archive selected). Link-mode (`href` set) ignores `loading` because navigation isn\'t a state we wait on',
+      default: false,
+      reflect: true,
+    },
+    loadingLabel: {
+      type: 'string',
+      description: 'Accessible name applied as `aria-label` while `loading` is true, and announced once via `@civui/core`\'s shared `announce()` queue on the loading transition. Empty default falls back to the locale\'s `buttonLoadingLabel` ("Loading…" in English). Pass an action-specific present-participle verb ("Applying…", "Archiving…")',
+      default: '',
+      attribute: 'loading-label',
+    },
     pressed: {
       type: 'boolean',
       description: 'Tri-state pressed/active indicator. `true` = active (e.g. favorited); `false` = inactive but toggle-aware (sets aria-pressed="false"); omitted = no toggle semantics',

@@ -1,8 +1,9 @@
 // Schema: packages/schema/src/components/civ-text-button.schema.ts
 
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, LoadingMixin, dispatch } from '@civui/core';
+import '@civui/feedback/spinner';
 
 export type TextButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type TextButtonSpacing = 'default' | 'sm';
@@ -40,6 +41,8 @@ export type TextButtonSpacing = 'default' | 'sm';
  * @prop {string} iconEnd - Trailing icon name.
  * @prop {string} type - HTML button type (`button` / `submit` / `reset`). Default `button`.
  * @prop {boolean} disabled - Standard disabled state.
+ * @prop {boolean} loading - When true, swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network).
+ * @prop {string} loadingLabel - Accessible label announced once on the loading transition (default "Loading…"). Pass an action-specific present-participle verb ("Generating…", "Scanning…").
  *
  * @fires civ-click - On activation. detail: {}
  *
@@ -51,7 +54,7 @@ export type TextButtonSpacing = 'default' | 'sm';
  * ```
  */
 @customElement('civ-text-button')
-export class CivTextButton extends CivBaseElement {
+export class CivTextButton extends LoadingMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) emphasis: TextButtonEmphasis = 'secondary';
   @property({ type: String }) spacing: TextButtonSpacing = 'default';
@@ -59,6 +62,12 @@ export class CivTextButton extends CivBaseElement {
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
   @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
   @property({ type: Boolean, reflect: true }) disabled = false;
+  // `loading` and `loadingLabel` are inherited from `LoadingMixin`.
+
+  /** Effective disabled state — `loading` implies disabled. */
+  private get _effectiveDisabled(): boolean {
+    return this.disabled || this.isLoading;
+  }
 
   private get _classes(): string {
     const emphasisClass =
@@ -71,19 +80,29 @@ export class CivTextButton extends CivBaseElement {
   }
 
   private _onClick(): void {
-    if (this.disabled) return;
+    if (this._effectiveDisabled) return;
     dispatch(this, 'civ-click', {});
     this.sendAnalytics('change');
   }
 
   override render() {
+    // Loading swaps the leading icon for a decorative spinner so the
+    // overall footprint stays stable across the state transition.
+    // `xs` matches the text-button's smaller chrome.
+    const leadingSlot = this.isLoading
+      ? this.renderLoadingSpinner('xs')
+      : this.iconStart
+        ? html`<civ-icon name="${this.iconStart}" aria-hidden="true"></civ-icon>`
+        : null;
     return html`
       <button
         type="${this.type}"
         class="${this._classes}"
-        ?disabled="${this.disabled}"
+        ?disabled="${this._effectiveDisabled}"
+        aria-busy="${this.isLoading ? 'true' : nothing}"
+        aria-label="${this.isLoading ? this.effectiveLoadingLabel : nothing}"
         @click="${this._onClick}"
-      >${this.iconStart ? html`<civ-icon name="${this.iconStart}" aria-hidden="true"></civ-icon>` : null}${this.label}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : null}</button>
+      >${leadingSlot}${this.label}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}" aria-hidden="true"></civ-icon>` : null}</button>
     `;
   }
 }

@@ -110,6 +110,13 @@
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
+      "story": "Loading",
+      "name": "Loading state",
+      "category": "Actions/Action Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-button label=\"Apply\" emphasis=\"primary\" loading loading-label=\"Applying…\"></civ-action-button>\n      <civ-action-button label=\"Refresh\" emphasis=\"secondary\" icon-start=\"refresh\" loading loading-label=\"Refreshing…\"></civ-action-button>\n      <civ-action-button label=\"Archive\" emphasis=\"tertiary\" loading loading-label=\"Archiving 12 rows…\"></civ-action-button>\n    </div>",
+      "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
+    },
+    {
       "story": "Pressed",
       "name": "Toggle (Pressed)",
       "category": "Actions/Action Button",
@@ -6187,6 +6194,13 @@
       "name": "Inside an input helper row",
       "category": "Actions/Text Button",
       "html": "<div style=\"max-width: 24rem;\">\n      <label class=\"civ-label\" for=\"text-btn-helper-demo\">Search</label>\n      <div class=\"civ-input-icon-wrap\"><input id=\"text-btn-helper-demo\" class=\"civ-input\" placeholder=\"Type to search…\" /></div>\n      <div class=\"civ-input-helper-row\">\n        <civ-text-button label=\"Clear\" emphasis=\"tertiary\"></civ-text-button>\n        <civ-text-button label=\"Recent searches\" emphasis=\"tertiary\"></civ-text-button>\n      </div>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
+      "story": "Loading",
+      "name": "Loading state",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;\">\n      <civ-text-button label=\"Generate\" emphasis=\"primary\" loading loading-label=\"Generating…\"></civ-text-button>\n      <civ-text-button label=\"Scan\" emphasis=\"secondary\" icon-start=\"refresh\" loading loading-label=\"Scanning…\"></civ-text-button>\n      <civ-text-button label=\"Refresh\" emphasis=\"tertiary\" loading loading-label=\"Refreshing…\"></civ-text-button>\n    </div>",
       "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
     },
     {

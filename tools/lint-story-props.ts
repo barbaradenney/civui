@@ -145,6 +145,13 @@ async function buildComponentMap(): Promise<Map<string, ComponentMeta>> {
       attrs.add('heading-level');
       attrs.add('size');
     }
+    // LoadingMixin adds the loading + loading-label props (used by every
+    // button-shaped component: civ-button, civ-action-button,
+    // civ-text-button — and any future button that wraps it).
+    if (/\bLoadingMixin\b/.test(src)) {
+      attrs.add('loading');
+      attrs.add('loading-label');
+    }
     // PresetInputWrapper forwards every civ-text-input prop to its inner
     // child — preset wrappers can accept any text-input attribute. The
     // simplest correct behavior is to also seed the text-input attrs.

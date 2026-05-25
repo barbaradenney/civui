@@ -143,6 +143,9 @@ const INHERITED_PROPS_BY_BASE: Record<string, string[]> = {
   LegendHeadingMixin: [
     'headingLevel', 'size',
   ],
+  LoadingMixin: [
+    'loading', 'loadingLabel',
+  ],
 };
 
 function seedInheritedProps(classBody: string, classDeclaration: string): Set<string> {

@@ -20,9 +20,9 @@ props:
     spacing:
       title: Spacing
       type: string
-      enum: ['default', 'sm']
+      enum: ['default', 'sm', 'lg']
       default: 'default'
-      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts'
+      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts; lg hits the WCAG 2.5.5 AAA Enhanced target (44px) for AAA-conscious or fingertip-heavy surfaces.'
     icon_start:
       title: Icon start
       type: string
@@ -37,6 +37,15 @@ props:
       enum: ['button', 'submit', 'reset']
       default: 'button'
       description: 'HTML button type'
+    loading:
+      title: Loading
+      type: boolean
+      default: false
+      description: 'Async-in-flight state. Swaps the leading icon for a civ-spinner (xs size), disables the button, and sets aria-busy.'
+    loading_label:
+      title: Loading label
+      type: string
+      description: 'Accessible name applied as aria-label while loading is true. Falls back to the locale buttonLoadingLabel ("Loading…").'
 
 slots:
   default:

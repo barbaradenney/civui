@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomTextMixin, announce, devWarn, sanitizeHref, t } from '@civui/core';
+import { CivBaseElement, LightDomTextMixin, LoadingMixin, devWarn, sanitizeHref, t } from '@civui/core';
 import '@civui/feedback/spinner';
 
 export type ButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
@@ -46,30 +46,15 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  * @fires civ-analytics - Analytics tracking event on click
  */
 @customElement('civ-button')
-export class CivButton extends LightDomTextMixin(CivBaseElement) {
+export class CivButton extends LoadingMixin(LightDomTextMixin(CivBaseElement)) {
   @property({ type: String }) label = '';
   @property({ type: String }) emphasis: ButtonEmphasis = 'primary';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
-  /**
-   * Async-in-flight state. The button stays the same physical size, but
-   * the leading-icon area swaps for a `civ-spinner`, the host disables
-   * itself, and `aria-busy="true"` is announced to screen readers. Use
-   * `loading-label` to set an action-specific verb ("Saving…").
-   *
-   * Link-mode buttons (`href` set) do not get a spinner — navigation
-   * isn't a state we wait on. `loading` is silently ignored there.
-   */
-  @property({ type: Boolean, reflect: true }) loading = false;
-  /**
-   * Accessible label announced once when `loading` flips on, via
-   * `@civui/core`'s shared announce() queue. Defaults to the locale's
-   * `buttonLoadingLabel`. When the button is loading, the host also
-   * gains `aria-label="${loadingLabel}"` so the accessible name swaps
-   * from "Save" to "Saving…" while loading — so AT users re-tabbing
-   * to the button hear the loading state, not the original label.
-   */
-  @property({ type: String, attribute: 'loading-label' }) loadingLabel = '';
+  // `loading` and `loadingLabel` are inherited from `LoadingMixin`.
+  // Link-mode buttons (`href` set) suppress loading because navigation
+  // isn't a state we wait on — see the `isLoading` getter override
+  // below.
   @property({ type: String }) type: ButtonType = 'button';
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: String, attribute: 'icon-end' }) iconEnd = '';
@@ -90,13 +75,6 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   private _warnedNoAccessibleName = false;
   /** Tracks whether the loading-on-link-mode dev warning has fired. */
   private _warnedLoadingOnLink = false;
-  /** Last seen `loading` value, for change detection in updated(). */
-  private _wasLoading = false;
-
-  /** Resolved loading label — explicit `loadingLabel` or the locale default. */
-  private get _effectiveLoadingLabel(): string {
-    return this.loadingLabel || t('buttonLoadingLabel');
-  }
 
   private get _text(): string {
     return this.label || this._initialText;
@@ -107,17 +85,17 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   /**
-   * `loading` only applies to actual buttons; link-mode navigation
-   * isn't a state we wait on, so loading is silently ignored when
-   * `href` is set.
+   * Override of `LoadingMixin#isLoading` — link-mode navigation isn't a
+   * state we wait on, so the spinner / aria-busy / announcement are all
+   * suppressed when `href` is set.
    */
-  private get _isLoading(): boolean {
+  override get isLoading(): boolean {
     return this.loading && !this._isLink;
   }
 
   /** Effective disabled state — `loading` implies disabled. */
   private get _effectiveDisabled(): boolean {
-    return this.disabled || this._isLoading;
+    return this.disabled || this.isLoading;
   }
 
   private get _classes(): string {
@@ -168,8 +146,8 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
     // the disabled+aria-busy state change is the brief visual cue,
     // and the spinner only appears if the wait is long enough to
     // matter.
-    const leadingSlot = this._isLoading
-      ? html`<civ-spinner size="sm" decorative></civ-spinner>`
+    const leadingSlot = this.isLoading
+      ? this.renderLoadingSpinner('sm')
       : this.iconStart
         ? html`<civ-icon name="${this.iconStart}"></civ-icon>`
         : '';
@@ -212,8 +190,8 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
         type="${this.type}"
         class="${this._classes}"
         ?disabled="${this._effectiveDisabled}"
-        aria-busy="${this._isLoading ? 'true' : nothing}"
-        aria-label="${this._isLoading ? this._effectiveLoadingLabel : nothing}"
+        aria-busy="${this.isLoading ? 'true' : nothing}"
+        aria-label="${this.isLoading ? this.effectiveLoadingLabel : nothing}"
         @click="${this._onClick}"
       >${inner}</button>
     `;
@@ -224,22 +202,12 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   /**
-   * Announce the loading label exactly once on the transition into
-   * loading state. The inner spinner is decorative (no role=status),
-   * so this is the only AT signal beyond the host's aria-busy.
-   * Routes through @civui/core's shared announce() queue so multiple
-   * loading transitions on a page don't stack.
+   * Dev-warn when `loading` is set on a link-mode button. The
+   * announce() lifecycle for the loading transition itself lives in
+   * `LoadingMixin#updated`.
    */
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('loading') || changed.has('loadingLabel')) {
-      const nowLoading = this._isLoading;
-      if (nowLoading && !this._wasLoading) {
-        announce(this._effectiveLoadingLabel, 'polite');
-      }
-      this._wasLoading = nowLoading;
-    }
-    // Dev-warn if the consumer set loading on a link-mode button.
     if (this.loading && this._isLink && !this._warnedLoadingOnLink) {
       devWarn(
         'civ-button',

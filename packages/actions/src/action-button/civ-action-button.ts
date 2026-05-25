@@ -1,7 +1,8 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { CivBaseElement, devWarn, sanitizeHref, t } from '@civui/core';
+import { CivBaseElement, LoadingMixin, devWarn, sanitizeHref, t } from '@civui/core';
+import '@civui/feedback/spinner';
 
 export type ActionButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type ActionButtonSpacing = 'default' | 'sm';
@@ -35,6 +36,8 @@ export type ActionButtonSpacing = 'default' | 'sm';
  * @prop {ActionButtonSpacing} spacing - Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` (compact form controls in data-grid cell editors, dense toolbars).
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
+ * @prop {boolean} loading - When true, swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (apply filter, refresh data, archive selected). Link-mode (`href` set) ignores `loading`.
+ * @prop {string} loadingLabel - Accessible label announced once on the loading transition (default "Loading…"). Pass an action-specific present-participle verb ("Applying…", "Archiving…").
  * @prop {boolean} pressed - Toggle pressed state (for toolbar toggles)
  * @prop {string} iconStart - Leading icon name
  * @prop {string} iconEnd - Trailing icon name
@@ -55,12 +58,15 @@ export type ActionButtonSpacing = 'default' | 'sm';
  * ```
  */
 @customElement('civ-action-button')
-export class CivActionButton extends CivBaseElement {
+export class CivActionButton extends LoadingMixin(CivBaseElement) {
   @property({ type: String }) label = '';
   @property({ type: String }) emphasis: ActionButtonEmphasis = 'tertiary';
   @property({ type: String }) spacing: ActionButtonSpacing = 'default';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  // `loading` and `loadingLabel` are inherited from `LoadingMixin`.
+  // Link-mode (`href` set) suppresses loading via the `isLoading`
+  // override below — navigation isn't a state we wait on.
   @property({ type: Boolean, reflect: true }) pressed: boolean | undefined = undefined;
   /**
    * Marks this button as the current item in a navigation set (e.g.
@@ -95,9 +101,25 @@ export class CivActionButton extends CivBaseElement {
 
   /** Tracks whether the icon-only-without-label dev warning has fired for this instance. */
   private _warnedNoAccessibleName = false;
+  /** Tracks whether the loading-on-link-mode dev warning has fired. */
+  private _warnedLoadingOnLink = false;
 
   private get _isLink(): boolean {
     return Boolean(this.href);
+  }
+
+  /**
+   * Override of `LoadingMixin#isLoading` — link-mode navigation isn't a
+   * state we wait on, so the spinner / aria-busy / announcement are all
+   * suppressed when `href` is set.
+   */
+  override get isLoading(): boolean {
+    return this.loading && !this._isLink;
+  }
+
+  /** Effective disabled state — `loading` implies disabled. */
+  private get _effectiveDisabled(): boolean {
+    return this.disabled || this.isLoading;
   }
 
   private get _classes(): string {
@@ -110,7 +132,7 @@ export class CivActionButton extends CivBaseElement {
       this._isLink ? 'civ-action-btn--link' : '',
       this.iconOnly ? 'civ-action-btn--icon-only' : '',
       this.spacing === 'sm' ? 'civ-action-btn--sm' : '',
-      this.disabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
+      this._effectiveDisabled ? 'civ-opacity-50 civ-cursor-not-allowed' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -139,7 +161,14 @@ export class CivActionButton extends CivBaseElement {
     const visibleLabel = this.iconOnly
       ? html`<span class="civ-sr-only">${this.label}</span>`
       : this.label;
-    const inner = html`${this.iconStart ? html`<civ-icon name="${this.iconStart}"></civ-icon>` : ''}${visibleLabel}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
+    // Loading swaps the leading icon for a decorative spinner so the
+    // overall footprint stays stable across the state transition.
+    const leadingSlot = this.isLoading
+      ? this.renderLoadingSpinner('sm')
+      : this.iconStart
+        ? html`<civ-icon name="${this.iconStart}"></civ-icon>`
+        : '';
+    const inner = html`${leadingSlot}${visibleLabel}${this.iconEnd ? html`<civ-icon name="${this.iconEnd}"></civ-icon>` : ''}`;
 
     if (this._isLink) {
       if (this.disabled) {
@@ -174,14 +203,24 @@ export class CivActionButton extends CivBaseElement {
       ? (this.pressed ? 'true' : 'false')
       : undefined;
 
+    // While loading, the host's aria-label swaps to the loading
+    // label so AT users re-tabbing to the button hear the busy
+    // verb ("Applying…") instead of the original label. The
+    // consumer's `aria-label` override (if any) is honored when not
+    // loading.
+    const effectiveAriaLabel = this.isLoading
+      ? this.effectiveLoadingLabel
+      : this.ariaLabel ?? null;
+
     return html`
       <button
         type="${this.type}"
         class="${this._classes}"
-        ?disabled="${this.disabled}"
+        ?disabled="${this._effectiveDisabled}"
         aria-pressed="${ifDefined(ariaPressed)}"
         aria-current="${this.current ? 'page' : nothing}"
-        aria-label="${this.ariaLabel ?? nothing}"
+        aria-busy="${this.isLoading ? 'true' : nothing}"
+        aria-label="${effectiveAriaLabel ?? nothing}"
         @click="${this._onClick}"
       >${inner}</button>
     `;
@@ -189,6 +228,22 @@ export class CivActionButton extends CivBaseElement {
 
   private _onClick(): void {
     this.sendAnalytics('click');
+  }
+
+  /**
+   * Dev-warn when `loading` is set on a link-mode button. The
+   * announce() lifecycle for the loading transition itself lives in
+   * `LoadingMixin#updated`.
+   */
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (this.loading && this._isLink && !this._warnedLoadingOnLink) {
+      devWarn(
+        'civ-action-button',
+        '`loading` is ignored on link-mode buttons (`href` set) — navigation is not a state we wait on. The button will render as a normal link.',
+      );
+      this._warnedLoadingOnLink = true;
+    }
   }
 }
 

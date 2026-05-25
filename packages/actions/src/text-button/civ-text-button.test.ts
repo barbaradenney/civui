@@ -66,4 +66,55 @@ describe('civ-text-button', () => {
     const el = await fixture('<civ-text-button label="Save" type="submit"></civ-text-button>');
     expect((el.querySelector('button') as HTMLButtonElement).type).toBe('submit');
   });
+
+  describe('loading state', () => {
+    it('renders a civ-spinner in place of the leading icon when loading', async () => {
+      const el = await fixture('<civ-text-button loading icon-start="chevron-down" label="Generate"></civ-text-button>');
+      expect(el.querySelector('civ-spinner')).not.toBeNull();
+      expect(el.querySelector('civ-icon[name="chevron-down"]')).toBeNull();
+    });
+
+    it('renders the spinner at size="xs" to match the text-button scale', async () => {
+      const el = await fixture('<civ-text-button loading label="Generate"></civ-text-button>');
+      const spinner = el.querySelector('civ-spinner') as HTMLElement;
+      expect(spinner.getAttribute('size')).toBe('xs');
+      expect(spinner.hasAttribute('decorative')).toBe(true);
+    });
+
+    it('disables the inner button while loading', async () => {
+      const el = await fixture('<civ-text-button loading label="Generate"></civ-text-button>');
+      expect((el.querySelector('button') as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('sets aria-busy on the button while loading', async () => {
+      const el = await fixture('<civ-text-button loading label="Generate"></civ-text-button>');
+      expect(el.querySelector('button')!.getAttribute('aria-busy')).toBe('true');
+    });
+
+    it('swaps the accessible name to loadingLabel while loading', async () => {
+      const el = await fixture(
+        '<civ-text-button loading loading-label="Generating…" label="Generate"></civ-text-button>',
+      );
+      expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Generating…');
+    });
+
+    it('does not fire civ-click while loading', async () => {
+      const el = await fixture('<civ-text-button loading label="Generate"></civ-text-button>');
+      const handler = vi.fn();
+      el.addEventListener('civ-click', handler);
+      el.querySelector('button')!.click();
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('removes aria-busy and aria-label when loading flips back to false', async () => {
+      const el = await fixture(
+        '<civ-text-button loading loading-label="Generating…" label="Generate"></civ-text-button>',
+      ) as any;
+      expect(el.querySelector('button')!.getAttribute('aria-busy')).toBe('true');
+      el.loading = false;
+      await elementUpdated(el);
+      expect(el.querySelector('button')!.hasAttribute('aria-busy')).toBe(false);
+      expect(el.querySelector('button')!.hasAttribute('aria-label')).toBe(false);
+    });
+  });
 });

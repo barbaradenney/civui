@@ -45,6 +45,27 @@ export const LEGEND_HEADING_MIXIN_PROPS: ReadonlySet<string> = new Set([
 /** Regex used by the parity tool to detect LegendHeadingMixin composition. */
 export const LEGEND_HEADING_MIXIN_PATTERN = /LegendHeadingMixin\s*\(/;
 
+/**
+ * Props provided by `LoadingMixin`
+ * (packages/core/src/base/loading-mixin.ts). Filtered ONLY for
+ * components that actually compose the mixin in their `extends` /
+ * `mixin(...)` chain (every button-shaped component: civ-button,
+ * civ-action-button, civ-text-button). A bare `loading` prop on a
+ * non-button component would be a real component-specific prop and
+ * should be diffed normally.
+ *
+ * The schema-parity parser uses `LOADING_MIXIN_PATTERN` to detect
+ * mixin use in the Lit source; if absent, these props are NOT treated
+ * as inherited.
+ */
+export const LOADING_MIXIN_PROPS: ReadonlySet<string> = new Set([
+  'loading',
+  'loadingLabel',
+]);
+
+/** Regex used by the parity tool to detect LoadingMixin composition. */
+export const LOADING_MIXIN_PATTERN = /LoadingMixin\s*\(/;
+
 /** Boolean-form base props that components extending CivBooleanFormElement inherit. */
 export const INHERITED_BOOLEAN_PROPS: ReadonlySet<string> = new Set(['checked', 'description']);
 

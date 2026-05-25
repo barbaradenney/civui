@@ -3768,6 +3768,19 @@
     @apply civ-font-bold civ-mt-0 civ-mb-1;
   }
 
+  /* Restore list markers inside alert body — Tailwind's preflight
+     strips them globally. Government form alerts commonly list
+     validation errors as a bulleted summary ("There is a problem
+     with your application → fix these fields…"), so authored
+     <ul> / <ol> need to render with disc / decimal markers.
+     Scoped to the body so the alert chrome stays unaffected. */
+  .civ-alert__body ul,
+  .civ-alert__body ol {
+    list-style: revert;
+    padding-inline-start: 1.5em;
+    margin: var(--civ-spacing-1) 0;
+  }
+
   /* ── Alert: Prefix slot (above heading) ─────────────────────
      Sits above the heading. Renders as a flex container so a
      badge + supplementary text combination lays out inline.

@@ -1,0 +1,204 @@
+---
+title: Inputs
+sidebar_position: 0
+sidebar_label: Overview
+---
+
+import StoryEmbed from '@site/src/components/StoryEmbed';
+
+# Inputs
+
+The Inputs category covers every form control the user types into, picks from, or toggles. CivUI inputs are **self-contained** — each control renders its own label / hint / error chrome from props passed directly on the element. There is no separate "form-field wrapper" component; pass `label="…"` (or `legend="…"` on groups) right on the control.
+
+Government forms have a wide vocabulary of input shapes. The right one is usually obvious from the *answer type*, not from the visual idiom:
+
+## Pick the right one
+
+### By answer type
+
+| What the user is entering | Use |
+|---|---|
+| Free-form short text (name, email, address line) | [`<civ-text-input>`](./text-input) |
+| Free-form long text (description, notes) | [`<civ-textarea>`](./textarea) |
+| Numeric value with formatting / steppers | [`<civ-number>`](./number) |
+| Currency amount | [`<civ-currency>`](./number#currency-preset) |
+| One option from a known list — short ≤7 items | [`<civ-radio-group>`](./radio) or [`<civ-segmented-control>`](./segmented-control) |
+| One option from a known list — long > 7 items, native picker OK | [`<civ-select>`](./select) |
+| One option from a known list — long > 7 items, typeahead needed | [`<civ-combobox>`](./combobox) |
+| Many options from a known list | [`<civ-checkbox-group>`](./checkbox) |
+| A single boolean ("I agree", "Subscribe to updates") | [`<civ-checkbox>`](./checkbox) (form field) or [`<civ-toggle>`](./toggle) (immediate-effect setting) |
+| Yes / No question (one binary radio pair) | [`<civ-yes-no>`](./yes-no) |
+| A specific past date the user remembers (birthday, document date) | [`<civ-memorable-date>`](./date) |
+| A future date for scheduling / appointments | [`<civ-date-picker>`](./date) |
+| A date range (filter, report window, leave period) | [`<civ-date-range-picker>`](./date) |
+| A time of day | [`<civ-time-picker>`](./time) |
+| A phone number | [`<civ-phone>`](./contact) |
+| An email address | [`<civ-email>`](./contact) |
+| A US Social Security number | [`<civ-ssn>`](./pii) |
+| An Employer Identification Number | [`<civ-ein>`](./pii) |
+| A ZIP code (5 or 9) | [`<civ-zip>`](./text-input#zip-preset) |
+| A US bank routing number | [`<civ-routing-number>`](./pii) |
+| A country picker | [`<civ-country>`](./combobox#country-preset) |
+| One or more files | [`<civ-file-upload>`](./file-upload) |
+
+### Single-boolean choice: checkbox vs toggle vs yes-no
+
+| Need | Use |
+|---|---|
+| Required form field ("I agree to terms") — answer is submitted with the form | [`<civ-checkbox>`](./checkbox) |
+| Immediate-effect setting ("Notifications on/off") — change takes effect right away | [`<civ-toggle>`](./toggle) |
+| Yes/no question that's part of an answer set | [`<civ-yes-no>`](./yes-no) |
+
+### Single-from-list: radio vs segmented vs select vs combobox
+
+| Need | Use |
+|---|---|
+| 2–4 options, visual choice matters (e.g. layout density), each option short | [`<civ-segmented-control>`](./segmented-control) |
+| 2–7 options, free-form text labels, vertical list reads more naturally | [`<civ-radio-group>`](./radio) |
+| 7–30 options, native OS picker is acceptable | [`<civ-select>`](./select) |
+| 30+ options OR typeahead needed (countries, agencies, ICD codes) | [`<civ-combobox>`](./combobox) |
+
+### Date pickers: memorable-date vs date-picker
+
+| Need | Use |
+|---|---|
+| Past date the user already knows (birthday, document issue date, service start date) | [`<civ-memorable-date>`](./date) — three text fields, no calendar |
+| Future date for scheduling (appointment, deadline, eligibility window) | [`<civ-date-picker>`](./date) — visual calendar |
+| Date range | [`<civ-date-range-picker>`](./date) |
+
+## All input components
+
+`<civ-text-input>` — the workhorse single-line text input, plus its preset wrappers (`civ-ssn`, `civ-ein`, `civ-zip`, `civ-phone`, `civ-email`, `civ-currency`, `civ-routing-number`, `civ-va-file-number`).
+
+<StoryEmbed id="forms-inputs-text-input--default" />
+
+[Open Text Input →](./text-input) · [PII presets →](./pii) · [Contact presets →](./contact)
+
+---
+
+`<civ-textarea>` — multi-line free-form text.
+
+<StoryEmbed id="forms-inputs-textarea--default" />
+
+[Open Textarea →](./textarea)
+
+---
+
+`<civ-select>` — native `<select>` wrapped to render the CivUI label / hint / error chrome and to participate in the form system.
+
+<StoryEmbed id="forms-inputs-select--default" />
+
+[Open Select →](./select)
+
+---
+
+`<civ-combobox>` — typeahead-filtered listbox. Use when the option count is too large for `civ-select` to scroll comfortably, or when free-text lookup is expected.
+
+<StoryEmbed id="forms-inputs-combobox--default" />
+
+[Open Combobox →](./combobox)
+
+---
+
+`<civ-number>` — numeric input with formatting, steppers, and `currency` preset.
+
+<StoryEmbed id="forms-inputs-number--default" />
+
+[Open Number →](./number)
+
+---
+
+`<civ-checkbox>` + `<civ-checkbox-group>` — single boolean checkbox and grouped multi-select.
+
+<StoryEmbed id="forms-inputs-checkbox--default" />
+
+[Open Checkbox →](./checkbox)
+
+---
+
+`<civ-radio-group>` — single-select with vertical radio list and roving keyboard nav.
+
+<StoryEmbed id="forms-inputs-radio--default" />
+
+[Open Radio →](./radio)
+
+---
+
+`<civ-segmented-control>` — single-select rendered as a connected horizontal toggle (2–4 short options).
+
+<StoryEmbed id="forms-inputs-segmented-control--default" />
+
+[Open Segmented Control →](./segmented-control)
+
+---
+
+`<civ-toggle>` — switch control for immediate-effect boolean settings.
+
+<StoryEmbed id="forms-inputs-toggle--default" />
+
+[Open Toggle →](./toggle)
+
+---
+
+`<civ-yes-no>` — pre-baked Yes / No radio pair.
+
+<StoryEmbed id="forms-inputs-yes-no--default" />
+
+[Open Yes / No →](./yes-no)
+
+---
+
+`<civ-memorable-date>` / `<civ-date-picker>` / `<civ-date-range-picker>` — three date-input shapes for different recall patterns.
+
+<StoryEmbed id="forms-inputs-memorable-date--default" />
+
+[Open Date →](./date)
+
+---
+
+`<civ-time-picker>` — time-of-day picker.
+
+<StoryEmbed id="forms-inputs-time-picker--default" />
+
+[Open Time →](./time)
+
+---
+
+`<civ-file-upload>` — single or multi-file dropzone with thumbnail / progress / error states.
+
+<StoryEmbed id="forms-inputs-file-upload--default" />
+
+[Open File Upload →](./file-upload)
+
+## Self-contained controls — no wrappers
+
+Every input renders its own label / hint / error chrome. Pass `label` (or `legend` on groups) **directly on the control**:
+
+```html
+<!-- ✓ good -->
+<civ-text-input label="Email address" name="email" type="email" required></civ-text-input>
+<civ-radio-group legend="Preferred contact method" name="contact" required>
+  <civ-radio value="email" label="Email"></civ-radio>
+  <civ-radio value="phone" label="Phone"></civ-radio>
+</civ-radio-group>
+```
+
+`<civ-fieldset>` is **only** for multi-field grouping (several unrelated controls under one section heading — e.g. an address with street/city/state inside). Do not wrap a single input or a group component in it. The `fieldset-wrappers` and `lint:double-labels` CI gates enforce this.
+
+## Adjacent categories
+
+- [Compound](../compound/address) — pre-built multi-field arrangements (address, name, direct-deposit, signature, relationship, service-history). Compose multiple inputs into a single domain-specific control.
+- [Layout → input-group](../layout/input-group) — flush horizontal connection for prefix / suffix / button affixes (e.g. URL + ".gov" suffix, search field + Search button).
+- [Patterns → validation-and-errors](../../form-patterns/validation-and-errors) — error summary + per-field touched-state patterns.
+
+## Anti-patterns
+
+| ✗ Don't | ✓ Do instead |
+|---|---|
+| Use `placeholder` as the only label | Set `label="…"` on every input (Section 508 requires a visible label) |
+| Wrap a `<civ-radio-group>` in `<civ-fieldset legend="…">` | Pass `legend="…"` directly on the group — it renders its own `<fieldset>` |
+| Use a generic `<input type="text">` for a phone / SSN / EIN | Use the preset wrapper (`<civ-phone>`, `<civ-ssn>`, `<civ-ein>`) for built-in mask + validate + inputmode |
+| Use `<civ-toggle>` for a form-submission field ("I agree") | Use `<civ-checkbox>` — toggles are for immediate-effect settings |
+| Use `<civ-select>` for a 50-item picker | Use `<civ-combobox>` — typeahead is the standard for long lists |
+| Use `<civ-date-picker>` for a date of birth | Use `<civ-memorable-date>` — three text fields read faster than a calendar |
+| Set `placeholder="January 15 1990"` to suggest the format | Set `hint="For example: January 15 1990"` — placeholders disappear on type |

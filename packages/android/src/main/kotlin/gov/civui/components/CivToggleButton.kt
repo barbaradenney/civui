@@ -8,7 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-/** Visual variant for the text-button family. */
+/** Visual emphasis level for the text-button family. */
+enum class ToggleButtonEmphasis { PRIMARY, SECONDARY, TERTIARY }
+
+/**
+ * Visual variant for the text-button family.
+ *
+ * @deprecated Use [ToggleButtonEmphasis] instead. Kept for schema parity
+ *   with the web component's backward-compat alias.
+ */
 enum class ToggleButtonVariant { CHIP, INLINE }
 
 /**
@@ -26,7 +34,8 @@ fun CivToggleButton(
     label: String = "",
     pressedLabel: String = "",
     pressed: Boolean = false,
-    variant: ToggleButtonVariant = ToggleButtonVariant.CHIP,
+    emphasis: ToggleButtonEmphasis = ToggleButtonEmphasis.SECONDARY,
+    variant: ToggleButtonVariant? = null,
     iconStart: String = "",
     disabled: Boolean = false,
     modifier: Modifier = Modifier,

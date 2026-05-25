@@ -8,6 +8,7 @@ import './input-chip/civ-input-chip.js';
 import './link/civ-link.js';
 import './link-card/civ-link-card.js';
 import './skip-link/civ-skip-link.js';
+import './text-button/civ-text-button.js';
 import './confirm-button/civ-confirm-button.js';
 import './toggle-button/civ-toggle-button.js';
 
@@ -44,10 +45,14 @@ export type { LinkCardVariant } from './link-card/index.js';
 // Skip Link
 export { CivSkipLink } from './skip-link/index.js';
 
+// Text Button
+export { CivTextButton } from './text-button/index.js';
+export type { TextButtonEmphasis, TextButtonSpacing } from './text-button/index.js';
+
 // Confirm Button
 export { CivConfirmButton } from './confirm-button/index.js';
-export type { ConfirmButtonVariant } from './confirm-button/index.js';
+export type { ConfirmButtonEmphasis, ConfirmButtonVariant } from './confirm-button/index.js';
 
 // Toggle Button
 export { CivToggleButton } from './toggle-button/index.js';
-export type { ToggleButtonVariant } from './toggle-button/index.js';
+export type { ToggleButtonEmphasis, ToggleButtonVariant } from './toggle-button/index.js';

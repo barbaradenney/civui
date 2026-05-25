@@ -77,10 +77,28 @@ describe('civ-confirm-button', () => {
     vi.useRealTimers();
   });
 
-  it('honors the variant prop on the rendered button class', async () => {
-    const chip = await fixture('<civ-confirm-button label="Copy"></civ-confirm-button>');
-    expect(chip.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
-    const inline = await fixture('<civ-confirm-button label="Copy" variant="inline"></civ-confirm-button>');
-    expect(inline.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
+  it('defaults to secondary emphasis (civ-text-btn--chip class)', async () => {
+    const el = await fixture('<civ-confirm-button label="Copy"></civ-confirm-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
+  });
+
+  it('renders primary emphasis class when emphasis="primary"', async () => {
+    const el = await fixture('<civ-confirm-button label="Generate" emphasis="primary"></civ-confirm-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--primary')).toBe(true);
+  });
+
+  it('renders tertiary emphasis as the inline alias class', async () => {
+    const el = await fixture('<civ-confirm-button label="Copy" emphasis="tertiary"></civ-confirm-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
+  });
+
+  it('backward-compat: variant="chip" maps to civ-text-btn--chip', async () => {
+    const el = await fixture('<civ-confirm-button label="Copy" variant="chip"></civ-confirm-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--chip')).toBe(true);
+  });
+
+  it('backward-compat: variant="inline" maps to civ-text-btn--inline', async () => {
+    const el = await fixture('<civ-confirm-button label="Copy" variant="inline"></civ-confirm-button>');
+    expect(el.querySelector('button')!.classList.contains('civ-text-btn--inline')).toBe(true);
   });
 });

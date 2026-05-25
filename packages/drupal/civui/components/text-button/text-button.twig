@@ -1,10 +1,10 @@
-<civ-toggle-button
+<civ-text-button
   {% if label %}label="{{ label }}"{% endif %}
-  {% if pressed_label %}pressed-label="{{ pressed_label }}"{% endif %}
-  {% if pressed %}pressed{% endif %}
   {% if emphasis %}emphasis="{{ emphasis }}"{% endif %}
-  {% if variant %}variant="{{ variant }}"{% endif %}
+  {% if spacing %}spacing="{{ spacing }}"{% endif %}
   {% if icon_start %}icon-start="{{ icon_start }}"{% endif %}
+  {% if icon_end %}icon-end="{{ icon_end }}"{% endif %}
+  {% if type %}type="{{ type }}"{% endif %}
 >
   {% block default %}{{ default }}{% endblock %}
-</civ-toggle-button>
+</civ-text-button>

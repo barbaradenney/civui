@@ -2,8 +2,10 @@
 
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, dispatch, t } from '@civui/core';
+import { CivBaseElement, devWarn, dispatch, t } from '@civui/core';
 
+export type ConfirmButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
+/** @deprecated Use `ConfirmButtonEmphasis` ("secondary" | "tertiary") instead. */
 export type ConfirmButtonVariant = 'chip' | 'inline';
 
 /**
@@ -36,7 +38,8 @@ export type ConfirmButtonVariant = 'chip' | 'inline';
  * @prop {string} label - The resting label ("Copy")
  * @prop {string} successLabel - The transient receipt label after activation. Defaults to the localized "Done".
  * @prop {number} successMs - How long the success state stays visible. Default 1500 ms. Re-clicks during the window restart the timer.
- * @prop {ConfirmButtonVariant} variant - Picks the text-btn modifier. `chip` (default) is the prominent pill; `inline` is the transparent text-link style.
+ * @prop {ConfirmButtonEmphasis} emphasis - Visual emphasis. `secondary` (default) is the gray pill — the common case. `primary` is the filled brand pill for a louder inline CTA. `tertiary` is the transparent text-link style.
+ * @prop {ConfirmButtonVariant} variant - **Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Will emit a one-time dev warning when set.
  * @prop {boolean} disabled - Standard disabled state.
  *
  * @fires civ-confirm - On activation, BEFORE entering the success window. Consumer does the actual work in the listener (clipboard write, share, etc.). detail: {}
@@ -55,10 +58,17 @@ export class CivConfirmButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'success-label' }) successLabel = '';
   @property({ type: Number, attribute: 'success-ms' }) successMs = 1500;
-  @property({ type: String }) variant: ConfirmButtonVariant = 'chip';
+  @property({ type: String }) emphasis: ConfirmButtonEmphasis = 'secondary';
+  /**
+   * @deprecated Use `emphasis` instead. `variant="chip"` ≡ `emphasis="secondary"`;
+   * `variant="inline"` ≡ `emphasis="tertiary"`. Setting this prop emits a one-time
+   * dev warning and overrides `emphasis` (so existing markup keeps working).
+   */
+  @property({ type: String }) variant: ConfirmButtonVariant | '' = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   @state() private _success = false;
+  private _warnedVariant = false;
 
   private _successTimer?: ReturnType<typeof setTimeout>;
 
@@ -97,8 +107,24 @@ export class CivConfirmButton extends CivBaseElement {
   }
 
   override render() {
-    const variantClass = this.variant === 'inline' ? 'civ-text-btn--inline' : 'civ-text-btn--chip';
-    const classes = ['civ-text-btn', variantClass, this._success ? 'is-success' : ''].filter(Boolean).join(' ');
+    // Backward-compat: when `variant` is set, derive `emphasis` from it and
+    // emit a one-time dev warning to nudge consumers toward the new prop.
+    let effectiveEmphasis: ConfirmButtonEmphasis = this.emphasis;
+    if (this.variant) {
+      if (!this._warnedVariant) {
+        devWarn(
+          'civ-confirm-button',
+          'The `variant` prop is deprecated. Use `emphasis="secondary"` (was `variant="chip"`) or `emphasis="tertiary"` (was `variant="inline"`).',
+        );
+        this._warnedVariant = true;
+      }
+      effectiveEmphasis = this.variant === 'inline' ? 'tertiary' : 'secondary';
+    }
+    const emphasisClass =
+      effectiveEmphasis === 'primary' ? 'civ-text-btn--primary' :
+      effectiveEmphasis === 'tertiary' ? 'civ-text-btn--inline' :
+      'civ-text-btn--chip';
+    const classes = ['civ-text-btn', emphasisClass, this._success ? 'is-success' : ''].filter(Boolean).join(' ');
     const resting = this.label;
     const success = this.successLabel || t('confirmButtonSuccess') || 'Done';
     return html`

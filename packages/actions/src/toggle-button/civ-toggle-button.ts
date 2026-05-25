@@ -2,8 +2,10 @@
 
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, dispatch } from '@civui/core';
+import { CivBaseElement, devWarn, dispatch } from '@civui/core';
 
+export type ToggleButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
+/** @deprecated Use `ToggleButtonEmphasis` ("secondary" | "tertiary") instead. */
 export type ToggleButtonVariant = 'chip' | 'inline';
 
 /**
@@ -35,7 +37,8 @@ export type ToggleButtonVariant = 'chip' | 'inline';
  * @prop {string} label - Unpressed label ("Show")
  * @prop {string} pressedLabel - Pressed label ("Hide"). Required — the swap label gives the toggle its meaning.
  * @prop {boolean} pressed - Reflected boolean state. Two-way bindable.
- * @prop {ToggleButtonVariant} variant - Picks the text-btn modifier. `chip` (default) is the prominent gray pill — the common case (helper rows, standalone toggles, password reveal). `inline` is the transparent text-link style for surfaces where the toggle should read as quiet.
+ * @prop {ToggleButtonEmphasis} emphasis - Visual emphasis. `secondary` (default) is the gray pill — the common case (helper rows, standalone toggles, password reveal). `primary` is the filled brand pill. `tertiary` is the transparent text-link style for surfaces where the toggle should read as quiet.
+ * @prop {ToggleButtonVariant} variant - **Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Will emit a one-time dev warning when set.
  * @prop {string} iconStart - Optional leading icon name (e.g. `chevron-down` for an accordion expand-all toggle, `visibility` for a password reveal). Rendered with `aria-hidden="true"` so the label remains the accessible name.
  * @prop {boolean} disabled - Standard disabled state.
  *
@@ -59,9 +62,17 @@ export class CivToggleButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'pressed-label' }) pressedLabel = '';
   @property({ type: Boolean, reflect: true }) pressed = false;
-  @property({ type: String }) variant: ToggleButtonVariant = 'chip';
+  @property({ type: String }) emphasis: ToggleButtonEmphasis = 'secondary';
+  /**
+   * @deprecated Use `emphasis` instead. `variant="chip"` ≡ `emphasis="secondary"`;
+   * `variant="inline"` ≡ `emphasis="tertiary"`. Setting this prop emits a one-time
+   * dev warning and overrides `emphasis` (so existing markup keeps working).
+   */
+  @property({ type: String }) variant: ToggleButtonVariant | '' = '';
   @property({ type: String, attribute: 'icon-start' }) iconStart = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
+
+  private _warnedVariant = false;
 
   private _onClick(): void {
     if (this.disabled) return;
@@ -71,8 +82,24 @@ export class CivToggleButton extends CivBaseElement {
   }
 
   override render() {
-    const variantClass = this.variant === 'chip' ? 'civ-text-btn--chip' : 'civ-text-btn--inline';
-    const classes = `civ-text-btn ${variantClass}`;
+    // Backward-compat: when `variant` is set, derive `emphasis` from it and
+    // emit a one-time dev warning to nudge consumers toward the new prop.
+    let effectiveEmphasis: ToggleButtonEmphasis = this.emphasis;
+    if (this.variant) {
+      if (!this._warnedVariant) {
+        devWarn(
+          'civ-toggle-button',
+          'The `variant` prop is deprecated. Use `emphasis="secondary"` (was `variant="chip"`) or `emphasis="tertiary"` (was `variant="inline"`).',
+        );
+        this._warnedVariant = true;
+      }
+      effectiveEmphasis = this.variant === 'inline' ? 'tertiary' : 'secondary';
+    }
+    const emphasisClass =
+      effectiveEmphasis === 'primary' ? 'civ-text-btn--primary' :
+      effectiveEmphasis === 'tertiary' ? 'civ-text-btn--inline' :
+      'civ-text-btn--chip';
+    const classes = `civ-text-btn ${emphasisClass}`;
     const visibleLabel = this.pressed ? this.pressedLabel : this.label;
     return html`
       <button

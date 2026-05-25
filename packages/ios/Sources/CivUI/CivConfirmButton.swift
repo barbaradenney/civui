@@ -9,7 +9,14 @@
 
 import SwiftUI
 
+/// Visual emphasis level for the text-button family.
+public enum ConfirmButtonEmphasis: String, CaseIterable {
+    case primary, secondary, tertiary
+}
+
 /// Text-button variant determines the visual treatment.
+/// - Note: Deprecated; use `ConfirmButtonEmphasis` instead. Kept for
+///   schema parity with the web component's backward-compat alias.
 public enum ConfirmButtonVariant: String, CaseIterable {
     case chip, inline
 }
@@ -30,8 +37,13 @@ public struct CivConfirmButton: View {
     /// Milliseconds the success label remains visible.
     public var successMs: Int
 
-    /// Visual variant (chip = prominent pill, inline = text-link style).
-    public var variant: ConfirmButtonVariant
+    /// Visual emphasis (primary = filled brand, secondary = gray pill, tertiary = transparent text-link).
+    public var emphasis: ConfirmButtonEmphasis
+
+    /// Deprecated visual variant — kept for backward compatibility.
+    /// Use `emphasis` instead. `variant="chip"` ≡ `emphasis="secondary"`;
+    /// `variant="inline"` ≡ `emphasis="tertiary"`.
+    public var variant: ConfirmButtonVariant?
 
     /// Whether the button is disabled.
     public var isDisabled: Bool
@@ -46,7 +58,8 @@ public struct CivConfirmButton: View {
         label: String = "",
         successLabel: String = "",
         successMs: Int = 1500,
-        variant: ConfirmButtonVariant = .chip,
+        emphasis: ConfirmButtonEmphasis = .secondary,
+        variant: ConfirmButtonVariant? = nil,
         isDisabled: Bool = false,
         onConfirm: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
@@ -54,6 +67,7 @@ public struct CivConfirmButton: View {
         self.label = label
         self.successLabel = successLabel
         self.successMs = successMs
+        self.emphasis = emphasis
         self.variant = variant
         self.isDisabled = isDisabled
         self.onConfirm = onConfirm

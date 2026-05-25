@@ -146,6 +146,7 @@ const config: StorybookConfig = {
       '@civui/actions/link': resolve(root, 'packages/actions/src/link/index.ts'),
       '@civui/actions/link-card': resolve(root, 'packages/actions/src/link-card/index.ts'),
       '@civui/actions/skip-link': resolve(root, 'packages/actions/src/skip-link/index.ts'),
+      '@civui/actions/text-button': resolve(root, 'packages/actions/src/text-button/index.ts'),
       '@civui/actions/confirm-button': resolve(root, 'packages/actions/src/confirm-button/index.ts'),
       '@civui/actions/toggle-button': resolve(root, 'packages/actions/src/toggle-button/index.ts'),
       '@civui/actions': resolve(root, 'packages/actions/src/index.ts'),

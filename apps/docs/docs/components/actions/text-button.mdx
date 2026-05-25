@@ -1,0 +1,100 @@
+---
+title: Text Button
+sidebar_position: 10
+sidebar_label: Text Button
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+import TextButtonProps from "./_text-button.props.mdx";
+import TextButtonEvents from "./_text-button.events.mdx";
+
+# Text Button
+
+<!-- contract-link:start -->
+
+> **Contract reference:** [`civ-text-button`](pathname:///civui/storybook/?path=/docs/contract-civ-text-button--docs). Auto-generated structured contract for cross-platform implementation.
+
+<!-- contract-link:end -->
+
+`<civ-text-button>`
+
+The small button primitive — a thin element wrapping the shared `.civ-text-btn` chrome that `civ-disclosure`, `civ-read-more`, `civ-confirm-button`, and `civ-toggle-button` all compose. Reach for `civ-text-button` when you need a click affordance with the text-btn visual idiom but none of the state-machine behaviors of the confirm / toggle siblings.
+
+For heavier page-level CTAs use [`civ-button`](./button); for toolbar / row actions use [`civ-action-button`](./action-button).
+
+## Examples
+
+### Default
+
+<StoryEmbed id="actions-text-button--default" minHeight={100} />
+
+### Emphasis levels
+
+<StoryEmbed id="actions-text-button--emphasis" minHeight={120} />
+
+### Spacing
+
+<StoryEmbed id="actions-text-button--spacing" minHeight={140} />
+
+### With icons
+
+<StoryEmbed id="actions-text-button--with-icons" minHeight={120} />
+
+### Inside an input helper row
+
+<StoryEmbed id="actions-text-button--inside-helper-row" minHeight={180} />
+
+### Disabled
+
+<StoryEmbed id="actions-text-button--disabled" minHeight={100} />
+
+[Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-text-button--default)
+
+## Props
+
+<TextButtonProps />
+
+## Events
+
+<TextButtonEvents />
+
+## When to use vs. not
+
+| Need | Use |
+|---|---|
+| Plain click affordance with text-btn chrome | `<civ-text-button>` |
+| Fire-and-forget action with a "✓ Copied" receipt | [`<civ-confirm-button>`](./confirm-button) |
+| Two-state toggle with `aria-pressed` | [`<civ-toggle-button>`](./toggle-button) |
+| Heavy page-level form CTA (Submit, Continue) | [`<civ-button>`](./button) |
+| Toolbar / row action (Edit, Delete) | [`<civ-action-button>`](./action-button) |
+| Native disclosure (open / closed `<details>` section) | `<civ-disclosure>` |
+| Read-more expansion of prose | `<civ-read-more>` |
+
+## The text-button family
+
+`<civ-text-button>` and its siblings all render the same `.civ-text-btn` chrome with three emphasis levels — they differ only in the behavior they layer on top.
+
+| Component | What it adds on top of text-button chrome |
+|---|---|
+| `<civ-text-button>` | Plain click (`civ-click` event). |
+| `<civ-confirm-button>` | Success-receipt state machine: click → success label + ✓ for `successMs` → revert. Wires `aria-live="polite"` during the success window. |
+| `<civ-toggle-button>` | Two-state press toggle: click flips `pressed` and swaps the label. Wires `aria-pressed="true \| false"`. |
+| `<civ-disclosure>` | Native `<details>` element with custom-styled `<summary>`. Browser owns the open/closed machinery. |
+| `<civ-read-more>` | Prose-truncation expand/collapse for body text. |
+
+The shared `emphasis` prop (`primary` / `secondary` / `tertiary`) means visual treatments stay consistent across the family. Pick the component by **behavior**; pick the emphasis by **visual weight**.
+
+## Emphasis levels
+
+| Level | Treatment | Typical use |
+|---|---|---|
+| `primary` | Filled brand color, white text | A rare loud inline CTA (e.g. "Generate" alongside a read-only field). Not a substitute for `civ-button` — that's the page-level CTA contract. |
+| `secondary` (default) | Gray pill, neutral text | The common case — state-toggling, helper-row affordances. |
+| `tertiary` | Transparent, primary-dark text | Quiet shortcuts inside dense surfaces (date-picker "Today", time-picker "Now"). |
+
+## Accessibility
+
+- Renders a real `<button>` so the global focus ring in `civ.css` applies automatically. No additional focus styling needed.
+- `icon-start` and `icon-end` are rendered with `aria-hidden="true"` — the `label` text is the accessible name.
+- Disabled buttons set `disabled` on the inner `<button>` and ignore clicks (no `civ-click` event).
+- The `type="button"` default prevents accidental form submission when the button is placed inside a `<form>`.

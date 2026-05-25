@@ -7,8 +7,6 @@ afterEach(cleanupFixtures);
 
 const action = (el: Element) =>
   el.querySelector<HTMLButtonElement>('.civ-chip__action')!;
-const removeBtn = (el: Element) =>
-  el.querySelector<HTMLButtonElement>('.civ-chip__remove');
 const wrapper = (el: Element) =>
   el.querySelector<HTMLElement>('.civ-chip.civ-chip--filter')!;
 
@@ -29,16 +27,15 @@ describe('civ-filter-chip', () => {
     expect(action(el).getAttribute('type')).toBe('button');
   });
 
-  it('marks the wrapper role="presentation" so AT does not see a button-in-button', async () => {
-    const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable></civ-filter-chip>');
+  it('marks the wrapper role="presentation" so the wrapper chrome does not surface as a presentational landmark', async () => {
+    const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
     expect(wrapper(el).getAttribute('role')).toBe('presentation');
   });
 
-  it('does not nest interactive elements', async () => {
-    const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable></civ-filter-chip>');
-    const action = el.querySelector('.civ-chip__action')!;
-    // The action button must not contain the remove button.
-    expect(action.querySelector('.civ-chip__remove')).toBeNull();
+  it('does not render a remove affordance', async () => {
+    // For removable user-entered tokens, use `civ-input-chip` instead.
+    const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
+    expect(el.querySelector('.civ-chip__remove')).toBeNull();
   });
 
   describe('toggle (default) ARIA mode', () => {
@@ -127,69 +124,14 @@ describe('civ-filter-chip', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it('reflects selected, removable, disabled attributes', async () => {
+  it('reflects selected and disabled attributes', async () => {
     const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
     el.selected = true;
-    el.removable = true;
     el.disabled = true;
     await elementUpdated(el);
 
     expect(el.hasAttribute('selected')).toBe(true);
-    expect(el.hasAttribute('removable')).toBe(true);
     expect(el.hasAttribute('disabled')).toBe(true);
-  });
-
-  describe('removable mode', () => {
-    it('renders remove affordance only when removable', async () => {
-      const off = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
-      expect(removeBtn(off)).toBeNull();
-
-      const on = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable></civ-filter-chip>');
-      expect(removeBtn(on)).not.toBeNull();
-    });
-
-    it('renders the remove affordance as a real <button>', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable></civ-filter-chip>');
-      expect(removeBtn(el)?.tagName).toBe('BUTTON');
-      expect(removeBtn(el)?.getAttribute('type')).toBe('button');
-    });
-
-    it('fires civ-remove when × is clicked, without toggling', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" value="health" removable selected></civ-filter-chip>');
-      const removeHandler = vi.fn();
-      const changeHandler = vi.fn();
-      el.addEventListener('civ-remove', removeHandler);
-      el.addEventListener('civ-change', changeHandler);
-
-      removeBtn(el)!.click();
-      await elementUpdated(el);
-
-      expect(removeHandler).toHaveBeenCalledTimes(1);
-      expect(removeHandler.mock.calls[0][0].detail).toEqual({ value: 'health' });
-      expect(changeHandler).not.toHaveBeenCalled();
-      expect(el.selected).toBe(true);
-    });
-
-    it('remove button has accessible label', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Healthcare" removable></civ-filter-chip>');
-      expect(removeBtn(el)?.getAttribute('aria-label')).toBe('Remove Healthcare filter');
-    });
-
-    it('disables the remove button when chip is disabled', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable disabled></civ-filter-chip>');
-      expect(removeBtn(el)?.disabled).toBe(true);
-    });
-
-    it('does not fire civ-remove when disabled', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" removable disabled></civ-filter-chip>');
-      const handler = vi.fn();
-      el.addEventListener('civ-remove', handler);
-
-      removeBtn(el)!.click();
-      await elementUpdated(el);
-
-      expect(handler).not.toHaveBeenCalled();
-    });
   });
 
   describe('chip-style', () => {

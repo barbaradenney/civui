@@ -12,7 +12,6 @@ const meta: Meta = {
     label: { control: 'text' },
     value: { control: 'text' },
     selected: { control: 'boolean' },
-    removable: { control: 'boolean' },
     disabled: { control: 'boolean' },
     chipStyle: {
       control: 'select',
@@ -28,7 +27,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'An interactive, button-like control for filter selection. Click to toggle `selected`; in `removable` mode, click the trailing `×` to dismiss. Use horizontal rows of chips for filter sets in search results, list views, or faceted browse. Not for status (use `civ-badge`) or static categorization labels (use `civ-tag`).',
+          'An interactive, button-like control for filter selection. Click to toggle `selected`. Use horizontal rows of chips for filter sets in search results, list views, or faceted browse. For removable user-entered tokens use `civ-input-chip`. Not for status (use `civ-badge`) or static categorization labels (use `civ-tag`).',
       },
     },
   },
@@ -42,7 +41,6 @@ export const Default: Story = {
     label: 'Healthcare',
     value: 'healthcare',
     selected: false,
-    removable: false,
     disabled: false,
     chipStyle: 'secondary',
     spacing: 'default',
@@ -54,7 +52,6 @@ export const Default: Story = {
       emphasis="${args.emphasis || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       ?selected="${args.selected}"
-      ?removable="${args.removable}"
       ?disabled="${args.disabled}"
     ></civ-filter-chip>
   `,
@@ -87,27 +84,6 @@ export const FilterRow: Story = {
       <civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
       <civ-filter-chip label="Disability" value="disability" selected></civ-filter-chip>
       <civ-filter-chip label="Employment" value="employment"></civ-filter-chip>
-    </div>
-  `,
-};
-
-export const Removable: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Removable chips show currently-applied filters. The `×` fires `civ-remove` (without toggling); the chip body still fires `civ-change`.',
-      },
-    },
-  },
-  render: () => html`
-    <div style="display: grid; gap: 0.5rem;">
-      <p style="margin: 0; font-weight: 600;">Applied filters:</p>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <civ-filter-chip label="Healthcare" value="healthcare" selected removable></civ-filter-chip>
-        <civ-filter-chip label="Disability" value="disability" selected removable></civ-filter-chip>
-        <civ-filter-chip label="VA Form 21-526EZ" value="form-21-526ez" selected removable></civ-filter-chip>
-      </div>
     </div>
   `,
 };

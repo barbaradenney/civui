@@ -5606,14 +5606,12 @@
     box-shadow: none;
   }
 
-  /* Remove (X) button focus — can't reuse the chip-wrapper outline
-     trick above (which highlights the whole chip) because that
-     would erase the distinction between "Tab landed on the chip
-     body" and "Tab landed on the × to remove this filter". Drop
-     the chip's overflow:hidden when the remove button is focused so
-     its natural focus ring renders normally. Applies to filter and
-     input chips — both render a remove inside the wrapper. */
-  .civ-chip--filter:has(.civ-chip__remove:focus),
+  /* Remove (X) button focus — drop the chip wrapper's overflow:hidden
+     when the remove button is focused so its natural focus ring
+     renders normally instead of being clipped by the rounded corners.
+     Only civ-input-chip renders a remove inside the wrapper today;
+     civ-filter-chip is toggle-only (use civ-input-chip for removable
+     user-entered tokens). */
   .civ-chip--input:has(.civ-chip__remove:focus) {
     overflow: visible;
   }
@@ -5707,13 +5705,10 @@
     opacity: var(--civ-opacity-secondary);
   }
 
-  /* Remove button — shared chrome by civ-filter-chip (when
-     `removable`) and civ-input-chip (always present). The vertical
-     divider line (`border-inline-start`) is filter-chip-specific
-     because it separates two interactive halves (action button +
-     remove); input-chip's preceding `__label` is non-interactive, so
-     a divider there would falsely suggest the label is a separate
-     hit target. */
+  /* Remove button — chrome for civ-input-chip's always-present × handle.
+     (Removed from civ-filter-chip in the chip-family responsibility
+     split: filter-chip is toggle-only; user-entered tokens that need a
+     × use civ-input-chip.) */
   .civ-chip__remove {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-self-stretch;
     background: transparent;
@@ -5729,14 +5724,6 @@
     border-start-end-radius: inherit;
     border-end-end-radius: inherit;
     margin: 0;
-  }
-
-  .civ-chip--filter .civ-chip__remove {
-    border-inline-start: 1px solid rgba(0, 0, 0, 0.15);
-  }
-
-  .civ-chip--filter.civ-chip--style-primary.civ-chip--selected .civ-chip__remove {
-    border-inline-start-color: rgba(255, 255, 255, 0.3);
   }
 
   @media (hover: hover) {

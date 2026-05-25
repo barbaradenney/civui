@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Filter Chip
 status: stable
 group: CivUI Controls
-description: 'Selectable filter chip with optional remove button.'
+description: 'Toggleable filter chip. For removable user-entered tokens, use civ-input-chip instead.'
 
 props:
   type: object
@@ -20,11 +20,6 @@ props:
       type: boolean
       default: false
       description: 'Whether the chip is selected'
-    removable:
-      title: Removable
-      type: boolean
-      default: false
-      description: 'Show a remove button'
     disabled:
       title: Disabled
       type: boolean
@@ -54,7 +49,7 @@ props:
     icon_end:
       title: Icon end
       type: string
-      description: 'Trailing icon name (note: `removable` overrides this with a × icon)'
+      description: 'Trailing icon name'
     count:
       title: Count
       type: integer

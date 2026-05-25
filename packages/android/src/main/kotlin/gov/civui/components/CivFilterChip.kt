@@ -1,5 +1,6 @@
 // CivUI — CivFilterChip for Jetpack Compose
-// Filter chip with selection, removal, and icon support.
+// Toggleable filter chip with selection and icon support.
+// For removable user-entered tokens, use CivInputChip instead.
 
 package gov.civui.components
 
@@ -12,7 +13,6 @@ fun CivFilterChip(
     label: String = "",
     value: String = "",
     selected: Boolean = false,
-    removable: Boolean = false,
     disabled: Boolean = false,
     emphasis: String = "default",
     variant: String = "checkbox",
@@ -21,7 +21,6 @@ fun CivFilterChip(
     iconEnd: String = "",
     count: Int? = null,
     onChange: ((Boolean) -> Unit)? = null,
-    onRemove: (() -> Unit)? = null,
     onAnalytics: ((String, Map<String, Any>?) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {

@@ -2406,7 +2406,7 @@
     {
       "story": "Default",
       "category": "Actions/Filter Chip",
-      "html": "<civ-filter-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      emphasis=\"${args.emphasis || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?selected=\"${args.selected}\"\n      ?removable=\"${args.removable}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-filter-chip>",
+      "html": "<civ-filter-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      emphasis=\"${args.emphasis || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?selected=\"${args.selected}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-filter-chip>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
@@ -2427,12 +2427,6 @@
       "category": "Feedback/Count",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-filter-chip label=\"Healthcare\" value=\"health\" count=\"24\"></civ-filter-chip>\n      <civ-filter-chip label=\"Education\" value=\"education\" count=\"12\" selected></civ-filter-chip>\n      <civ-filter-chip label=\"Housing\" value=\"housing\" count=\"8\"></civ-filter-chip>\n    </div>",
       "source": "packages/feedback/src/count/civ-count.stories.ts"
-    },
-    {
-      "story": "Removable",
-      "category": "Actions/Filter Chip",
-      "html": "<div style=\"display: grid; gap: 0.5rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Applied filters:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n        <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"Disability\" value=\"disability\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"VA Form 21-526EZ\" value=\"form-21-526ez\" selected removable></civ-filter-chip>\n      </div>\n    </div>",
-      "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
       "story": "SnapAndFade",

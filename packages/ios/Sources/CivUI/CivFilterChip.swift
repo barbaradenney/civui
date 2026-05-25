@@ -24,9 +24,6 @@ public struct CivFilterChip: View {
     /// Whether the chip is selected.
     public var selected: Bool
 
-    /// Whether the chip can be removed.
-    public var removable: Bool
-
     /// Whether the chip is disabled.
     public var isDisabled: Bool
 
@@ -51,9 +48,6 @@ public struct CivFilterChip: View {
     /// Called when selection state changes (parallels `civ-change` event).
     public var onChange: ((Bool, String) -> Void)?
 
-    /// Called when the chip is removed.
-    public var onRemove: (() -> Void)?
-
     /// Called for analytics tracking (parallels `civ-analytics` event).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
@@ -67,7 +61,6 @@ public struct CivFilterChip: View {
         label: String = "",
         value: String = "",
         selected: Bool = false,
-        removable: Bool = false,
         isDisabled: Bool = false,
         emphasis: String = "default",
         variant: String = "checkbox",
@@ -76,13 +69,11 @@ public struct CivFilterChip: View {
         iconEnd: String = "",
         count: Int? = nil,
         onChange: ((Bool, String) -> Void)? = nil,
-        onRemove: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
         self.value = value
         self.selected = selected
-        self.removable = removable
         self.isDisabled = isDisabled
         self.emphasis = emphasis
         self.variant = variant
@@ -91,7 +82,6 @@ public struct CivFilterChip: View {
         self.iconEnd = iconEnd
         self.count = count
         self.onChange = onChange
-        self.onRemove = onRemove
         self.onAnalytics = onAnalytics
     }
 
@@ -116,7 +106,7 @@ struct CivFilterChip_Previews: PreviewProvider {
         HStack(spacing: 8) {
             CivFilterChip(label: "Active", value: "active", selected: true)
             CivFilterChip(label: "Pending", value: "pending")
-            CivFilterChip(label: "Closed", value: "closed", removable: true)
+            CivFilterChip(label: "Closed", value: "closed")
         }.padding()
     }
 }

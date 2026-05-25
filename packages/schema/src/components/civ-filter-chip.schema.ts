@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-filter-chip',
-  description: 'Compact selection chip for filter / tag / category UI. Two roles via `chip-role`: `toggle` (single-button toggle) or `select` (member of a multi-select group via `civ-filter-chip-group`). Supports an optional removal affordance (×) and an optional count badge.',
+  description: 'Compact selection chip for filter / tag / category UI. Two roles via `variant`: `toggle` (single-button toggle) or `radio` (member of a single-select group via `civ-filter-chip-group`). Supports an optional count badge. For removable user-entered tokens (recipient lists, applied-filter readouts) use `civ-input-chip` instead — its always-present × is the canonical removable-chip affordance.',
   category: 'ui',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -11,13 +11,7 @@ const schema: ComponentSchema = {
   props: {
     selected: {
       type: 'boolean',
-      description: 'Active state. Reflects to the host attribute. In `select` role this is managed by the parent group',
-      default: false,
-      reflect: true,
-    },
-    removable: {
-      type: 'boolean',
-      description: 'Render a trailing × button. Fires `civ-remove` when clicked',
+      description: 'Active state. Reflects to the host attribute. In `radio` variant this is managed by the parent group',
       default: false,
       reflect: true,
     },
@@ -48,7 +42,7 @@ const schema: ComponentSchema = {
     },
     iconEnd: {
       type: 'string',
-      description: 'Trailing icon name (note: `removable` overrides this with a × icon)',
+      description: 'Trailing icon name',
       default: '',
       attribute: 'icon-end',
     },
@@ -64,12 +58,6 @@ const schema: ComponentSchema = {
       detail: {
         value: { type: 'string', description: 'The chip\'s `value` attribute' },
         selected: { type: 'boolean', description: 'New selected state' },
-      },
-    },
-    'civ-remove': {
-      description: 'Fires when the user clicks the × button (only when `removable` is set)',
-      detail: {
-        value: { type: 'string', description: 'The chip\'s `value` attribute' },
       },
     },
   },
@@ -89,7 +77,6 @@ const schema: ComponentSchema = {
         { type: 'label', condition: 'iconStart', bindings: { text: 'iconStart' } },
         { type: 'label', bindings: { text: 'label' } },
         { type: 'label', condition: 'count', bindings: { text: 'count' } },
-        { type: 'button', condition: 'removable', bindings: { action: 'remove' } },
       ],
     },
   ],

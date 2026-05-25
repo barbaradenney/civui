@@ -167,14 +167,14 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ### Tier 3 — hardcoded-value cleanup (responds to `[data-civ-scale]` automatically once fixed)
 
-| Item | Action | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| `civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary) | Replace with `var(--civ-spacing-4)` or `civ-p-4` | **Biggest scale-system bypass** — accordions inside `[data-civ-scale="dense"]` admin surfaces stay full-size while everything around them shrinks. Most visible win. |
-| `civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon) | Replace with `var(--civ-typography-fontSize-2xl)` / `fontSize-lg` | Notice icons don't scale with the page today. |
-| `civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm) | Move to `var(--civ-spacing-*)` equivalents | Style-secondary / style-primary variants. |
-| `civ-filter-chip` — `min-height: 1.75rem` (default), `1.5rem` (`--sm`) | Move to `var(--civ-spacing-6)` / `--civ-spacing-5` | Pill height doesn't track scale today. |
-| `civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;` | **Keep hardcoded** — WCAG 2.5.5 tap-target floor | Add `/* not density: WCAG 2.5.5 tap target floor */` comment to suppress future audit confusion. |
-| Spinner sizes, signature-preview height, file-preview thumbnails | **Keep hardcoded** | Decorative dimensions. Add `/* not density: decorative dimension */` comments. |
+| `civ-accordion-item` triggers — `padding: 1rem` in four places (tertiary, flush, secondary, primary) | ✅ Done (slice 7.3) | Replaced with `var(--civ-spacing-4)` (20px default, 30px spacious, 15px dense). Primary's non-square `1rem 1.25rem` collapsed to a single `var(--civ-spacing-4)` since both axes resolve to a tokenised dimension. Slight default-scale increase from 16→20px vertical, but the accordion chrome now scales with the page. |
+| `civ-notice` — `font-size: 2.5rem` (default icon), `1.5rem` (sm icon) | ✅ Done (slice 7.3) | Replaced with `var(--civ-typography-fontSize-4xl)` (2.25rem — closest match, 0.25rem shrink) and `var(--civ-typography-fontSize-2xl)` (1.5rem exact). Icons now track the typography scale variants. |
+| `civ-count` — repeated `min-width: 1.25rem; line-height: 1.25rem;` (default) and `1rem` (sm) | ✅ Done (slice 7.3) | Replaced with `var(--civ-spacing-4)` (20px exact) / `var(--civ-spacing-3)` (15px, 1px shrink at default scale). Both style-secondary and style-primary variants updated, plus the data-grid sort-position pill that shares the same dimension. |
+| `civ-chip` (formerly `civ-filter-chip`) — `min-height: 1.75rem` (default), `1.5rem` (`--sm`) | ✅ Done — annotated as WCAG floor (slice 7.3) | **Reclassified during audit:** these values are actually serving as the WCAG 2.5.8 minimum target size floor (24×24 CSS px). `var(--civ-spacing-6)` (30px default, 23px dense) would drop the `--sm` variant below the AA floor under `[data-civ-scale="dense"]`. Treated like `civ-action-btn` — annotated with `/* not density: WCAG 2.5.8 minimum target size */` comments instead of migrated. |
+| `civ-action-btn` — `min-width: 2.5rem / 2rem; min-height: 2.5rem / 2rem;` | ✅ Done — annotated (slice 7.3) | Added `/* not density: WCAG 2.5.5 tap target floor */` comments on both the default-size and `--sm` rules. |
+| Spinner sizes, signature-preview height, file-preview thumbnails | ✅ Done — annotated (slice 7.3) | Added `/* not density: decorative dimension */` comments on `.civ-spinner--{sm,md,lg}` ladder, `civ-image[variant="thumbnail"]` size ladder (32/48/64/96/128), and the `4.5rem` signature-preview height. The signature-preview comment specifically notes that scaling the container without scaling the cursive font would clip descenders, so the lockstep is intentional. |
 
 ### Tier 4 — coverage gaps (need design decision before implementing)
 

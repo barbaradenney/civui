@@ -2282,6 +2282,9 @@
            civ-border civ-cursor-pointer
            civ-transition-colors civ-whitespace-nowrap;
     padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    /* not density: WCAG 2.5.5 tap target floor (44×44 CSS px on touch;
+       40px here is the relaxed AA floor most design systems use, and
+       the value must not shrink under [data-civ-scale="dense"]). */
     min-width: 2.5rem;
     min-height: 2.5rem;
   }
@@ -2297,6 +2300,10 @@
      the input height instead of towering over it. */
   .civ-action-btn--sm {
     padding: var(--civ-spacing-1) var(--civ-spacing-2);
+    /* not density: WCAG 2.5.5 tap target floor (32px is the AA-relaxed
+       floor for compact controls — Material, USWDS, Bootstrap all use
+       32px for "sm" buttons). Must not shrink under
+       [data-civ-scale="dense"]. */
     min-width: 2rem;
     min-height: 2rem;
     font-size: var(--civ-typography-fontSize-sm);
@@ -2698,8 +2705,8 @@
      single-key sort doesn't need a "1" badge). */
   .civ-data-grid__sort-position {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-rounded-full;
-    min-width: 1.25rem;
-    height: 1.25rem;
+    min-width: var(--civ-spacing-4);
+    height: var(--civ-spacing-4);
     padding: 0 var(--civ-spacing-1);
     background-color: var(--civ-color-primary-DEFAULT);
     color: var(--civ-color-white-DEFAULT);
@@ -4473,7 +4480,7 @@
     @apply civ-py-2;
   }
   .civ-notice--default .civ-notice__icon {
-    font-size: 2.5rem;
+    font-size: var(--civ-typography-fontSize-4xl);
   }
   .civ-notice--default .civ-notice__header,
   .civ-notice--default .civ-notice__body {
@@ -4484,7 +4491,7 @@
     @apply civ-py-1;
   }
   .civ-notice--sm .civ-notice__icon {
-    font-size: 1.5rem;
+    font-size: var(--civ-typography-fontSize-2xl);
   }
   .civ-notice--sm .civ-notice__header,
   .civ-notice--sm .civ-notice__body {
@@ -5069,14 +5076,14 @@
      and `pnpm lint:semantic-color-recipe` enforces it. */
   .civ-count--style-secondary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
-    min-width: 1.25rem;
-    line-height: 1.25rem;
+    min-width: var(--civ-spacing-4);
+    line-height: var(--civ-spacing-4);
     text-align: center;
   }
 
   .civ-count--style-secondary.civ-count--sm {
-    min-width: 1rem;
-    line-height: 1rem;
+    min-width: var(--civ-spacing-3);
+    line-height: var(--civ-spacing-3);
     @apply civ-px-1;
   }
 
@@ -5119,14 +5126,14 @@
 
   .civ-count--style-primary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
-    min-width: 1.25rem;
+    min-width: var(--civ-spacing-4);
     text-align: center;
-    line-height: 1.25rem;
+    line-height: var(--civ-spacing-4);
   }
 
   .civ-count--style-primary.civ-count--sm {
-    min-width: 1rem;
-    line-height: 1rem;
+    min-width: var(--civ-spacing-3);
+    line-height: var(--civ-spacing-3);
     @apply civ-px-1;
   }
 
@@ -5220,7 +5227,10 @@
     border: 0;
     cursor: pointer;
     font: inherit;
-    /* Touch target: ensure ≥ 24px tall in default size; --sm is enforced below. */
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
+       28px default keeps a small visual buffer above the floor; the
+       --sm variant below sits exactly on the floor. Must not shrink
+       under [data-civ-scale="dense"]. */
     min-height: 1.75rem;
   }
 
@@ -5230,6 +5240,7 @@
     @apply civ-inline-flex civ-items-center civ-gap-1 civ-px-3 civ-py-1;
     cursor: pointer;
     font: inherit;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
     min-height: 1.75rem;
   }
 
@@ -5237,6 +5248,7 @@
      is non-interactive; only the remove button is). */
   .civ-chip--input .civ-chip__label {
     @apply civ-inline-flex civ-items-center civ-px-3 civ-py-1;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). */
     min-height: 1.75rem;
   }
 
@@ -5280,6 +5292,9 @@
   button.civ-chip.civ-chip--sm.civ-chip--action,
   .civ-chip--input.civ-chip--sm .civ-chip__label {
     @apply civ-px-2 civ-py-0.5 civ-text-sm;
+    /* not density: WCAG 2.5.8 minimum target size (24×24 CSS px). The
+       --sm variant sits exactly on the floor — any further shrink
+       would drop below AA. */
     min-height: 1.5rem;
   }
 
@@ -5978,7 +5993,7 @@
    * the row blends into the container until hover.
    */
   .civ-accordion__inner--tertiary .civ-accordion-item__trigger {
-    padding: 1rem;
+    padding: var(--civ-spacing-4);
     background-color: transparent;
     color: inherit;
   }
@@ -6009,7 +6024,7 @@
     border-bottom: none;
   }
   .civ-accordion__inner--flush .civ-accordion-item__trigger {
-    padding: 1rem;
+    padding: var(--civ-spacing-4);
     background-color: transparent;
     color: inherit;
   }
@@ -6048,7 +6063,7 @@
     border-radius: var(--civ-border-radius-DEFAULT);
   }
   .civ-accordion__inner--secondary .civ-accordion-item__trigger {
-    padding: 1rem;
+    padding: var(--civ-spacing-4);
     background-color: transparent;
     color: inherit;
   }
@@ -6075,7 +6090,7 @@
   .civ-accordion__inner--primary .civ-accordion-item__trigger {
     background-color: var(--civ-color-primary-lightest);
     color: var(--civ-color-primary-dark);
-    padding: 1rem 1.25rem;
+    padding: var(--civ-spacing-4);
     font-weight: 700;
     border-radius: var(--civ-border-radius-DEFAULT);
   }
@@ -6533,11 +6548,14 @@
     border-bottom: 1px solid var(--civ-color-border);
     padding: var(--civ-spacing-2) var(--civ-spacing-1) var(--civ-spacing-1);
     margin: var(--civ-spacing-4) 0 var(--civ-spacing-1);
-    /* Hard-set height (not min-height) so the box never grows. Sized for
-       the cursive font's full ascender + descender extent (`f`, `g`, `j`,
-       `p`, `y` all have descenders that drop below the baseline). 4.5rem
-       ≈ 1.5 × font-size, generous enough for the noisiest glyphs without
-       clipping. */
+    /* not density: decorative dimension. Hard-set height (not
+       min-height) so the box never grows — sized for the cursive
+       font's full ascender + descender extent (`f`, `g`, `j`, `p`,
+       `y` all have descenders that drop below the baseline). 4.5rem
+       ≈ 1.5 × font-size, generous enough for the noisiest glyphs
+       without clipping. Must NOT track [data-civ-scale] — the
+       cursive font-size is also hardcoded below, so scaling the
+       container without scaling the font would clip the descenders. */
     height: 4.5rem;
     /* Single line: clip if the name overflows rather than wrapping —
        wrapping would re-introduce a layout shift, which is the whole
@@ -6628,6 +6646,10 @@
   civ-image[variant="thumbnail"][fit="contain"] .civ-image__img {
     object-fit: contain;
   }
+  /* not density: decorative size ladder. The consumer picks the
+     thumbnail size explicitly via the `size` attribute (32/48/64/
+     96/128) — these are absolute visual dimensions chosen for the
+     placement, not chrome that should track [data-civ-scale]. */
   civ-image[variant="thumbnail"][size="32"] .civ-image__img { width: 32px; height: 32px; }
   civ-image[variant="thumbnail"][size="48"] .civ-image__img { width: 48px; height: 48px; }
   civ-image[variant="thumbnail"][size="64"] .civ-image__img { width: 64px; height: 64px; }
@@ -6667,6 +6689,10 @@
     vertical-align: middle;
   }
 
+  /* not density: decorative size ladder. The consumer chooses the
+     spinner size via the `size` prop ("sm" / "md" / "lg") — these
+     are absolute visual dimensions, not chrome that should track
+     [data-civ-scale]. */
   .civ-spinner--sm { width: 1rem; height: 1rem; }
   .civ-spinner--md { width: 1.5rem; height: 1.5rem; }
   .civ-spinner--lg { width: 2rem; height: 2rem; }

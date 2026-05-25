@@ -1,0 +1,146 @@
+---
+title: Feedback
+sidebar_position: 0
+sidebar_label: Overview
+---
+
+import StoryEmbed from '@site/src/components/StoryEmbed';
+
+# Feedback
+
+The Feedback category covers every component that **tells the user something happened, is happening, or matters** — without interrupting the form they're filling out. These split into three sub-families:
+
+- **Banners and notices** that emphasize a piece of content (alert, notice, callout)
+- **Status pills** that label a state (badge, count)
+- **Loading and time indicators** (spinner, skeleton, timeline, process-list)
+
+Most feedback decisions come down to *intent strength* and *whether the user can dismiss it*.
+
+## Pick the right one
+
+### Banners and notices
+
+| Need | Use |
+|---|---|
+| Dismissable notification with a heading + body, screen-reader `role="alert"`, optional collapsible body | [`<civ-alert>`](./alert) |
+| Emphasis text inside flowing content with an icon prefix, no dismiss (GOV.UK warning-text pattern) | [`<civ-notice>`](./notice) |
+| Bordered emphasis box with optional title — for related supporting content (definition, side note, footnote-style call-out) | [`<civ-callout>`](./callout) |
+
+### Status pills
+
+| Need | Use |
+|---|---|
+| Status label with semantic intent (info / success / warning / error / neutral) — "Approved", "Pending", "Rejected" | [`<civ-badge>`](./badge) |
+| Numeric counter chip — "3 unread", "127 results" | [`<civ-count>`](./count) |
+
+### Loading indicators
+
+| Need | Use |
+|---|---|
+| In-progress activity, indeterminate duration ("Loading…", "Saving…") | [`<civ-spinner>`](./spinner) |
+| Layout placeholder while content streams in (cards, list rows, table rows) | [`<civ-skeleton>`](./skeleton) |
+
+### Time-ordered displays
+
+| Need | Use |
+|---|---|
+| Dated event list (audit log, version history, claim history) | [`<civ-timeline>`](./timeline) + `<civ-timeline-item>` |
+| Numbered preview of upcoming steps (application process, document checklist) | [`<civ-process-list>`](./process-list) + `<civ-process-list-item>` |
+
+## All feedback components
+
+### Banners and notices
+
+`<civ-alert>` — semantic notification with `role="alert"`, optional dismiss, optional collapsible body. The loudest feedback surface; use for actionable problems and confirmations the user must acknowledge.
+
+<StoryEmbed id="feedback-alert--default" />
+
+[Open civ-alert →](./alert)
+
+---
+
+`<civ-notice>` — emphasis text with leading icon, no background, no dismiss. Use inside flowing content for "make sure you read this" prose. Five intents: `info` / `warning` / `error` / `success` / `neutral`.
+
+<StoryEmbed id="feedback-notice--default" />
+
+[Open civ-notice →](./notice)
+
+---
+
+`<civ-callout>` — bordered emphasis box with optional title. For supporting content adjacent to body text (definitions, side notes, footnote-style call-outs). Lighter than alert, heavier than notice.
+
+<StoryEmbed id="feedback-callout--default" />
+
+[Open civ-callout →](./callout)
+
+### Status pills
+
+`<civ-badge>` — semantic-intent status pill. Three style emphasis levels (`primary` / `secondary` / `dot`) crossed with five intents.
+
+<StoryEmbed id="feedback-badge--default" />
+
+[Open civ-badge →](./badge)
+
+---
+
+`<civ-count>` — numeric counter chip ("3", "127", "5+"). Same emphasis system as `civ-badge`; the two share the semantic-color recipe.
+
+<StoryEmbed id="feedback-count--default" />
+
+[Open civ-count →](./count)
+
+### Loading indicators
+
+`<civ-spinner>` — inline loading spinner with a size ladder (`xs` / `sm` / `md` / `lg`).
+
+<StoryEmbed id="feedback-spinner--default" />
+
+[Open civ-spinner →](./spinner)
+
+---
+
+`<civ-skeleton>` — layout placeholder block with subtle shimmer. Use to reserve space while content streams in so the layout doesn't jump.
+
+<StoryEmbed id="feedback-skeleton--default" />
+
+[Open civ-skeleton →](./skeleton)
+
+### Time-ordered displays
+
+`<civ-timeline>` + `<civ-timeline-item>` — dated event list rendered as `<ol>` with rail-and-dot chrome. Use for audit logs, version histories, status timelines.
+
+<StoryEmbed id="feedback-timeline--claim-history" />
+
+[Open civ-timeline →](./timeline)
+
+---
+
+`<civ-process-list>` + `<civ-process-list-item>` — numbered vertical preview of upcoming steps. Display-only (not an active progress indicator — for "you are here", use `civ-progress-steps`).
+
+<StoryEmbed id="feedback-process-list--benefit-application" />
+
+[Open civ-process-list →](./process-list)
+
+## Semantic-intent vs categorical color
+
+Banners, notices, badges, and counts all use **semantic-intent** color (`info` / `success` / `warning` / `error` / `neutral`) where the color communicates state. They share one CSS recipe — `error` reads the same red across all four components.
+
+This is distinct from **categorical** color used by `civ-tag` and `civ-card` (`blue` / `red` / `green` / `teal` / `yellow` / `orange` / `purple` / `gray`), which groups visually without status meaning. Don't mix vocabularies — if the color *means* "this failed", use a semantic-intent component; if it just groups, use a categorical one.
+
+See [design-rules.md](https://github.com/barbaradenney/civui/blob/main/.claude/rules/design-rules.md) for the full recipe.
+
+## Adjacent categories
+
+- [Form patterns → validation-and-errors](../../form-patterns/validation-and-errors) — error summary, per-field touched-state, server-side error rendering.
+- [Layout → tag](../layout/tag) and [layout → card](../layout/card) — the categorical-color siblings of badge / callout.
+
+## Anti-patterns
+
+| ✗ Don't | ✓ Do instead |
+|---|---|
+| Render an `<aside class="my-warning">` with a yellow border | Use `<civ-notice>` (or `<civ-alert intent="warning">` if dismissable) |
+| Use `<civ-callout>` for a "this is dangerous" warning | Use `<civ-alert>` or `<civ-notice intent="error">` — callout has no semantic-intent vocabulary |
+| Use `<civ-tag color="red">` for an error state | Use `<civ-badge intent="error">` — tag is categorical color (means nothing), badge is semantic (means "this is bad") |
+| Hand-roll a `<span class="my-counter">42</span>` chip | Use `<civ-count value="42">` — same chrome as `civ-badge` so dashboards stay consistent |
+| Show a spinner forever with no fallback | Render `<civ-spinner>` AND keep a "Cancel" or "Retry after 30s" affordance — never trap the user |
+| Stack timeline + process-list on the same page to mean "we already did X, next we'll do Y" | Pick one — timeline is past, process-list is preview. Mixing them confuses tense. |

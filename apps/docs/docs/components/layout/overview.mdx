@@ -1,0 +1,196 @@
+---
+title: Layout
+sidebar_position: 0
+sidebar_label: Overview
+---
+
+import StoryEmbed from '@site/src/components/StoryEmbed';
+
+# Layout
+
+The Layout category is the **structural toolkit** — components that group, contain, separate, expand/collapse, or visually classify content. They're the layer between raw HTML and the form-specific components above (inputs, compounds, feedback).
+
+The core design rule for this category: **compose before you hand-roll**. Most "I need a small panel with a border" instincts have an existing primitive already.
+
+## Pick the right one
+
+### "I need a container with chrome"
+
+| Need | Use |
+|---|---|
+| Flat bordered card for grouping related content | [`<civ-card>`](./card) |
+| Container with a left accent rail (for "supporting content adjacent to body text") | [`<civ-callout>`](../feedback/callout) |
+| Numeric key figure / KPI tile | [`<civ-metric-tile>`](../data/metric-tile) (in Data) |
+| Clickable card that navigates | [`<civ-link-card>`](../actions/link-card) (in Actions) |
+| Multi-row ledger with totals | [`<civ-itemized-total>`](../data/itemized-total) (in Data) |
+
+### "I need to show / hide content"
+
+| Need | Use |
+|---|---|
+| Native open/closed toggle for one section (single trigger) | [`<civ-disclosure>`](./disclosure) |
+| Coordinated open/closed group with optional single-open behavior | [`<civ-accordion>`](./accordion) + `<civ-accordion-item>` |
+| Truncate a paragraph of prose with a "Show more" toggle | [`<civ-read-more>`](./read-more) |
+| Conditional reveal driven by another form field's value | [`<civ-conditional>`](../form/conditional) (in Form patterns) |
+
+### "I need to group / arrange controls"
+
+| Need | Use |
+|---|---|
+| Several unrelated form controls under one section heading | `<civ-fieldset>` (in Inputs) |
+| Multiple inputs flush-connected horizontally (prefix / suffix / search-with-button) | [`<civ-input-group>`](./input-group) |
+| Connected toolbar of buttons (`role="toolbar"`, flush borders, no gap) | [`<civ-button-group>`](./button-group) |
+| Primary + secondary form-flow CTAs that stack on mobile | `<div class="civ-button-row">` (utility class) |
+
+### "I need to label / classify"
+
+| Need | Use |
+|---|---|
+| Categorical label pill (no status meaning) — "Healthcare", "Education", "Veteran" | [`<civ-tag>`](./tag) |
+| Status pill with semantic intent — "Approved", "Pending", "Error" | [`<civ-badge>`](../feedback/badge) (in Feedback) |
+| Numeric counter chip | [`<civ-count>`](../feedback/count) (in Feedback) |
+
+### "I need a list / image / heading"
+
+| Need | Use |
+|---|---|
+| Unordered or ordered list with consistent rendering | [`<civ-list>`](./list) + `<civ-list-item>` |
+| Page heading with optional eyebrow / subtitle / actions | [`<civ-page-header>`](./page-header) |
+| Horizontal separator between content blocks | [`<civ-divider>`](./divider) |
+| Image with `alt` enforcement and optional caption | [`<civ-image>`](./image) |
+| Larger image with click-to-zoom preview | [`<civ-image-preview>`](./image-preview) |
+
+## All layout components
+
+### Containers
+
+`<civ-card>` — flat bordered container for grouping related content. Square corners (only interactive elements get rounded corners). Header / body / footer slots.
+
+<StoryEmbed id="layout-card--default" />
+
+[Open civ-card →](./card)
+
+---
+
+`<civ-divider>` — semantic horizontal separator between content blocks. Three emphasis levels; optional `rhythm` for surrounding spacing.
+
+<StoryEmbed id="layout-divider--default" />
+
+[Open civ-divider →](./divider)
+
+---
+
+`<civ-page-header>` — page-level heading with optional eyebrow text, subtitle, and right-aligned action slot.
+
+<StoryEmbed id="layout-page-header--default" />
+
+[Open civ-page-header →](./page-header)
+
+### Disclosure
+
+`<civ-disclosure>` — native `<details>` with custom-styled `<summary>` trigger. Browser owns the open/closed machinery; CivUI provides the chrome.
+
+<StoryEmbed id="layout-disclosure--default" />
+
+[Open civ-disclosure →](./disclosure)
+
+---
+
+`<civ-accordion>` + `<civ-accordion-item>` — coordinated group of expandable rows. Supports `single`-open coordination via the parent. Items can carry a `heading-level` 1–6 for screen-reader rotor navigation.
+
+<StoryEmbed id="layout-accordion--default" />
+
+[Open civ-accordion →](./accordion)
+
+---
+
+`<civ-read-more>` — prose truncation with a "Show more / Hide" toggle. The trigger composes `.civ-text-btn`; the body is the prose that gets clipped.
+
+<StoryEmbed id="layout-read-more--default" />
+
+[Open civ-read-more →](./read-more)
+
+### Grouping
+
+`<civ-input-group>` — flush-connected horizontal arrangement for input + prefix + suffix + button affixes ("URL + .gov suffix", "search field + Search button").
+
+<StoryEmbed id="layout-input-group--default" />
+
+[Open civ-input-group →](./input-group)
+
+---
+
+`<civ-button-group>` — connected toolbar of buttons with `role="toolbar"`, flush borders, no gap. For toolbars (text formatting, view toggles). Not for primary form CTAs — that's `<div class="civ-button-row">`.
+
+<StoryEmbed id="layout-button-group--default" />
+
+[Open civ-button-group →](./button-group)
+
+### Labels
+
+`<civ-tag>` — categorical label pill. Eight color options grouping visually without status meaning. For status pills with intent, use `<civ-badge>` instead.
+
+<StoryEmbed id="layout-tag--default" />
+
+[Open civ-tag →](./tag)
+
+### Lists
+
+`<civ-list>` + `<civ-list-item>` — semantic list wrapper with consistent rendering. Picks up the row-action layout (Edit / Remove right-aligned, stacking on mobile) when an `.civ-list-item__actions` element is present inside a list item.
+
+<StoryEmbed id="layout-list--default" />
+
+[Open civ-list →](./list)
+
+### Images
+
+`<civ-image>` — image with required `alt`, optional caption, `rounded` opt-in for the thumbnail variant.
+
+<StoryEmbed id="layout-image--default" />
+
+[Open civ-image →](./image)
+
+---
+
+`<civ-image-preview>` — larger image with a click-to-zoom modal preview.
+
+<StoryEmbed id="layout-image-preview--default" />
+
+[Open civ-image-preview →](./image-preview)
+
+## Compose before hand-rolling
+
+The most common drift smell across this category is a new `<aside>` or `<div>` with bordered / padded / backgrounded chrome that re-implements one of these primitives. Before writing parallel chrome, check:
+
+1. Is it a flat container? → `civ-card`
+2. Does it need a left accent rail? → `civ-callout`
+3. Is it a single KPI / number? → `civ-metric-tile`
+4. Is it clickable + navigates? → `civ-link-card`
+5. Is it a status banner the user can dismiss? → `civ-alert`
+6. Is it emphasis text inside flowing content? → `civ-notice`
+
+See [`.claude/rules/design-rules.md`](https://github.com/barbaradenney/civui/blob/main/.claude/rules/design-rules.md) for the full decision tree.
+
+## Only interactive elements get rounded corners
+
+`border-radius` is a **signal**: it means "you can click / type / pick this." Buttons, inputs, links, controls, overlay panels, and pills/badges carry rounded corners. Static layout chrome — cards, callouts, metric tiles, image thumbnails — stays flat.
+
+The `lint:border-radius` CI gate enforces this; adding a new rounded class requires a deliberate allowlist entry.
+
+## Adjacent categories
+
+- [Feedback](../feedback/overview) — semantic-intent siblings of the layout components (`badge` to `tag`, `callout` to `card`, `alert` to a bordered `<div>`).
+- [Data → metric-tile / itemized-total](../data/metric-tile) — display-only data surfaces built by composing `civ-card`.
+- [Form patterns](../../form-patterns/overview) — layout components inside form orchestration flows (`conditional` reveals, `repeater` for multi-instance, `summary` for review screens).
+
+## Anti-patterns
+
+| ✗ Don't | ✓ Do instead |
+|---|---|
+| Render `<div class="my-card">` with hand-rolled border / padding | Use `<civ-card>` (or `<civ-callout>` if you want the left accent rail) |
+| Add `border-radius` to a `civ-card` | Cards are flat by design — rounded corners are reserved for interactive elements |
+| Use `civ-flex civ-gap-3` for a primary + secondary CTA cluster | Use `<div class="civ-button-row">` so each button hits full-width on mobile |
+| Use `civ-button-group` for primary + secondary form CTAs | Button group is for connected/flush toolbars (text formatting, view toggles); the form-CTA case is `civ-button-row` |
+| Use `<civ-tag color="red">` for an error state | Use `<civ-badge intent="error">` — tag is categorical (means nothing), badge is semantic |
+| Wrap `<details>` in your own custom summary chrome | Use `<civ-disclosure>` or `<civ-accordion-item>` — they compose the shared `.civ-text-btn` trigger |
+| Hand-roll a "Show more" toggle for long prose | Use `<civ-read-more>` — it owns the truncation + measurement + state |

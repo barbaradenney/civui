@@ -5075,7 +5075,26 @@
     color: inherit;
   }
 
-  /* Secondary style — light tint background, dark text (default). */
+  /* Semantic intent recipe (shared with civ-count) — keep both components
+     aligned. Drift is caught by `pnpm lint:semantic-color-recipe`.
+       secondary: bg: <intent>-lighter        (base-lightest for neutral)
+                  text: <intent>-darkest      (success/warning need the
+                                               darkest shade to hit AA on
+                                               the lighter bg; info/error/
+                                               neutral are dark enough with
+                                               -dark / base-darker).
+       primary:   bg: <intent>-dark           (error-DEFAULT is the
+                                               documented exception — the
+                                               saturated brand red carries
+                                               more alert-weight than the
+                                               muted error-dark burgundy;
+                                               base-darker for neutral).
+                  text: white-DEFAULT.
+       dot:       bg: same as primary bg.
+       tertiary:  text: <intent>-dark (count only — minimal bare text;
+                                       neutral inherits parent color).
+
+     Secondary — light tint background, dark text (default). */
 
   .civ-badge--style-secondary.civ-badge--info {
     background-color: var(--civ-color-info-lighter);
@@ -5102,7 +5121,9 @@
     color: var(--civ-color-base-darker);
   }
 
-  /* Primary style — filled dark background, light text. */
+  /* Primary — filled dark background, light text. See recipe comment
+     above the secondary block; error uses -DEFAULT (intentionally
+     saturated) instead of -dark. */
 
   .civ-badge--style-primary.civ-badge--info {
     background-color: var(--civ-color-info-dark);
@@ -5192,10 +5213,10 @@
     @apply civ-text-sm;
   }
 
-  /* Secondary (default) — bare colored text, no chrome. Inherits parent color
-     by default, swaps to semantic colors when variant is set. */
-
-  /* Secondary — tinted background pill with semantic text */
+  /* Secondary — tinted background pill with semantic text.
+     Tokens follow the shared semantic-intent recipe documented above
+     `.civ-badge--style-secondary`; the two components stay in lockstep
+     and `pnpm lint:semantic-color-recipe` enforces it. */
   .civ-count--style-secondary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
     min-width: 1.25rem;
@@ -5222,7 +5243,7 @@
     color: var(--civ-color-warning-darkest);
   }
   .civ-count--style-secondary.civ-count--error {
-    background-color: var(--civ-color-error-lightest);
+    background-color: var(--civ-color-error-lighter);
     color: var(--civ-color-error-dark);
   }
   .civ-count--style-secondary.civ-count--neutral {
@@ -5242,7 +5263,9 @@
   .civ-count--style-tertiary.civ-count--error { color: var(--civ-color-error-dark); }
   /* neutral keeps `color: inherit` so it blends with the host text. */
 
-  /* Primary — filled pill for standalone or notification counters. */
+  /* Primary — filled pill for standalone or notification counters.
+     Same intent recipe as civ-badge primary; see comment above
+     `.civ-badge--style-secondary`. */
 
   .civ-count--style-primary {
     @apply civ-px-1.5 civ-py-0 civ-rounded-full;
@@ -5478,6 +5501,16 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Card colors are *categorical* (blue / red / green / teal / yellow /
+     orange / purple / gray), not semantic intent — they exist for visual
+     grouping, not status communication. Secondary variants reuse the
+     same `bg: <family>-lighter; text: <family>-dark/-darkest` recipe
+     as the semantic components (civ-badge, civ-count); see the recipe
+     comment above `.civ-badge--style-secondary`. Primary variants use
+     pre-composed `tag-<color>-bg/text` token pairs so the light/dark
+     palette swap is keyed off the color name rather than derived per
+     shade. (Tag uses the same model — see `.civ-tag--<color>-primary`.) */
+
   /* Card color variants — secondary (light tint) */
   .civ-card--blue { background-color: var(--civ-color-primary-lightest); color: var(--civ-color-primary-dark); border-color: transparent; }
   .civ-card--teal { background-color: var(--civ-color-info-lighter); color: var(--civ-color-info-dark); border-color: transparent; }
@@ -5496,7 +5529,7 @@
   .civ-card--yellow-primary { background-color: var(--civ-color-tag-yellow-bg); color: var(--civ-color-tag-yellow-text); border-color: transparent; }
   .civ-card--orange-primary { background-color: var(--civ-color-tag-orange-bg); color: var(--civ-color-tag-orange-text); border-color: transparent; }
   .civ-card--purple-primary { background-color: var(--civ-color-tag-purple-bg); color: var(--civ-color-tag-purple-text); border-color: transparent; }
-  .civ-card--gray-primary { background-color: var(--civ-color-base-darker); color: var(--civ-color-white-DEFAULT); border-color: transparent; }
+  .civ-card--gray-primary { background-color: var(--civ-color-tag-gray-bg); color: var(--civ-color-tag-gray-text); border-color: transparent; }
 
   .civ-card--sm {
     @apply civ-p-3;

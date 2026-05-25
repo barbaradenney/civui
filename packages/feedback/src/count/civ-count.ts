@@ -3,8 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement } from '@civui/core';
 
-export type CountVariant = 'info' | 'warning' | 'error' | 'success' | 'neutral';
-export type CountStyle = 'primary' | 'secondary' | 'tertiary';
+export type CountIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
+export type CountEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type CountLive = 'off' | 'polite' | 'assertive';
 
 /**
@@ -36,8 +36,8 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  *
  * @prop {number | null} count - Numeric value. Render is skipped when null, undefined, or NaN.
  * @prop {number} max - Overflow threshold; values above render as `{max}+` (default 99)
- * @prop {CountVariant} variant - Semantic color (default 'neutral')
- * @prop {CountStyle} countStyle - Emphasis: 'secondary' (text only, default) or 'primary' (filled pill)
+ * @prop {CountIntent} intent - Semantic color (default 'neutral')
+ * @prop {CountEmphasis} emphasis - Emphasis: 'secondary' (text only, default) or 'primary' (filled pill)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {boolean} overlay - Position absolutely in the top-end corner of a relative parent
  * @prop {CountLive} live - aria-live politeness: 'off' (default), 'polite', or 'assertive'
@@ -45,8 +45,8 @@ export type CountLive = 'off' | 'polite' | 'assertive';
  * @example
  * ```html
  * <civ-count count="24"></civ-count>
- * <civ-count count="3" variant="error" count-style="primary"></civ-count>
- * <civ-count count="150" max="99" variant="info" overlay live="polite"></civ-count>
+ * <civ-count count="3" intent="error" emphasis="primary"></civ-count>
+ * <civ-count count="150" max="99" intent="info" overlay live="polite"></civ-count>
  * ```
  */
 @customElement('civ-count')
@@ -58,10 +58,10 @@ export class CivCount extends CivBaseElement {
   @property({ type: Number }) max = 99;
 
   /** Semantic color variant. */
-  @property({ type: String }) variant: CountVariant = 'neutral';
+  @property({ type: String }) intent: CountIntent = 'neutral';
 
   /** Emphasis: 'primary' (filled pill) or 'secondary' (text only, default). */
-  @property({ type: String, attribute: 'count-style' }) countStyle: CountStyle = 'secondary';
+  @property({ type: String, attribute: 'emphasis' }) emphasis: CountEmphasis = 'secondary';
 
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
@@ -83,8 +83,8 @@ export class CivCount extends CivBaseElement {
 
     const classes = [
       'civ-count',
-      `civ-count--${this.variant}`,
-      `civ-count--style-${this.countStyle}`,
+      `civ-count--${this.intent}`,
+      `civ-count--style-${this.emphasis}`,
     ];
     if (this.spacing === 'sm') classes.push('civ-count--sm');
     if (this.overlay) classes.push('civ-count--overlay');
@@ -97,7 +97,7 @@ export class CivCount extends CivBaseElement {
         class="${classes.join(' ')}"
         role="${ifDefined(role)}"
         aria-live="${ifDefined(ariaLive)}"
-      >${this.countStyle === 'tertiary' ? `(${this._displayCount})` : this._displayCount}</span>
+      >${this.emphasis === 'tertiary' ? `(${this._displayCount})` : this._displayCount}</span>
     `;
   }
 }

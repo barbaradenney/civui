@@ -16,7 +16,7 @@ import {
 
 describe('snakeToKebab', () => {
   it('converts snake_case to kebab-case', () => {
-    expect(snakeToKebab('show_middle')).toBe('show-middle');
+    expect(snakeToKebab('hide_middle')).toBe('hide-middle');
     expect(snakeToKebab('max_count')).toBe('max-count');
   });
 
@@ -32,12 +32,12 @@ describe('htmlAttrFor', () => {
   });
 
   it('uses the schema attribute when the snake key is its underscored form', () => {
-    // schema: showMiddle → attribute: 'show-middle'; SDC stores it as 'show_middle'.
-    expect(htmlAttrFor('show_middle', { showMiddle: 'show-middle' })).toBe('show-middle');
+    // schema: hideMiddle → attribute: 'hide-middle'; SDC stores it as 'hide_middle'.
+    expect(htmlAttrFor('hide_middle', { hideMiddle: 'hide-middle' })).toBe('hide-middle');
   });
 
   it('falls back to snake→kebab conversion when no schema attribute applies', () => {
-    expect(htmlAttrFor('show_middle', {})).toBe('show-middle');
+    expect(htmlAttrFor('hide_middle', {})).toBe('hide-middle');
     expect(htmlAttrFor('label', {})).toBe('label');
   });
 });
@@ -54,9 +54,9 @@ describe('renderTwigLine', () => {
   });
 
   it('uses the resolved attribute name even when it differs from the SDC key', () => {
-    // SDC stores it as `show_middle`, HTML attribute is `show-middle`.
-    const line = renderTwigLine({ key: 'show_middle', type: 'boolean' }, 'show-middle');
-    expect(line).toBe('  {% if show_middle %}show-middle{% endif %}');
+    // SDC stores it as `hide_middle`, HTML attribute is `hide-middle`.
+    const line = renderTwigLine({ key: 'hide_middle', type: 'boolean' }, 'hide-middle');
+    expect(line).toBe('  {% if hide_middle %}hide-middle{% endif %}');
   });
 
   it('JSON-encodes arrays with single-quoted attribute values', () => {

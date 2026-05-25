@@ -66,7 +66,7 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
    * vertical. The auto threshold counts slotted `<civ-checkbox>` children
    * (or `preset` option count when used).
    */
-  @property({ type: String, reflect: true }) variant: 'card' | 'list' | 'auto' = 'auto';
+  @property({ type: String, reflect: true }) layout: 'card' | 'list' | 'auto' = 'auto';
   @property({ type: Boolean, attribute: 'show-select-all' }) showSelectAll = false;
 
   /** Pre-populate checkbox options from a built-in preset data set. */
@@ -195,7 +195,7 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
    * out of the DOM, so querySelector('civ-checkbox') would return 0.
    */
   private _resolveVariant(): 'card' | 'list' {
-    if (this.variant !== 'auto') return this.variant;
+    if (this.layout !== 'auto') return this.layout;
     const presetCount = this.preset
       ? resolvePresetOptions(this.preset, this.presetVariant).length
       : 0;
@@ -249,7 +249,7 @@ export class CivCheckboxGroup extends LegendHeadingMixin(GroupListenerMixin(Ligh
           : nothing}
         ${this.showSelectAll ? html`
           <civ-action-button
-            variant="tertiary"
+            emphasis="tertiary"
             label="${this._allChecked ? t('deselectAll') : t('selectAll')}"
             ?disabled="${this.disabled}"
             @click="${this._onToggleAll}"

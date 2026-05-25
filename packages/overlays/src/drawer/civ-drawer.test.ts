@@ -66,14 +66,14 @@ describe('civ-drawer', () => {
 describe('civ-drawer position', () => {
   it('defaults to start position', async () => {
     const el = await fixture('<civ-drawer heading="Test"><p>Content</p></civ-drawer>') as any;
-    expect(el.position).toBe('start');
+    expect(el.align).toBe('start');
     const dialog = el.querySelector('dialog')!;
     expect(dialog.classList.contains('civ-drawer--start')).toBe(true);
     expect(dialog.classList.contains('civ-drawer--end')).toBe(false);
   });
 
   it('renders end-position class when position="end"', async () => {
-    const el = await fixture('<civ-drawer position="end" heading="Test"><p>Content</p></civ-drawer>');
+    const el = await fixture('<civ-drawer align="end" heading="Test"><p>Content</p></civ-drawer>');
     await elementUpdated(el);
     const dialog = el.querySelector('dialog')!;
     expect(dialog.classList.contains('civ-drawer--end')).toBe(true);
@@ -81,8 +81,8 @@ describe('civ-drawer position', () => {
   });
 
   it('reflects position attribute to the host', async () => {
-    const el = await fixture('<civ-drawer position="end"></civ-drawer>') as any;
-    expect(el.getAttribute('position')).toBe('end');
+    const el = await fixture('<civ-drawer align="end"></civ-drawer>') as any;
+    expect(el.getAttribute('align')).toBe('end');
   });
 
   it('switches class when position changes at runtime', async () => {
@@ -90,7 +90,7 @@ describe('civ-drawer position', () => {
     await elementUpdated(el);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--start')).toBe(true);
 
-    el.position = 'end';
+    el.align = 'end';
     await elementUpdated(el);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--end')).toBe(true);
     expect(el.querySelector('dialog')!.classList.contains('civ-drawer--start')).toBe(false);
@@ -115,12 +115,12 @@ describe('civ-drawer width', () => {
 });
 
 describe('civ-drawer close behavior', () => {
-  it('fires civ-drawer-close on cancel event (Escape)', async () => {
+  it('fires civ-close on cancel event (Escape)', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
@@ -132,7 +132,7 @@ describe('civ-drawer close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     const cancelEvent = new Event('cancel', { cancelable: true });
@@ -142,12 +142,12 @@ describe('civ-drawer close behavior', () => {
     expect(cancelEvent.defaultPrevented).toBe(true);
   });
 
-  it('fires civ-drawer-close on native close event', async () => {
+  it('fires civ-close on native close event', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     dialog.dispatchEvent(new Event('close'));
@@ -159,7 +159,7 @@ describe('civ-drawer close behavior', () => {
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const dialog = el.querySelector('dialog')!;
     const event = new MouseEvent('click', { bubbles: true });
@@ -183,12 +183,12 @@ describe('civ-drawer close button', () => {
     expect(el.querySelector('.civ-drawer__close')).toBeNull();
   });
 
-  it('fires civ-drawer-close when close button clicked', async () => {
+  it('fires civ-close when close button clicked', async () => {
     const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>');
     await elementUpdated(el);
 
     const handler = vi.fn();
-    el.addEventListener('civ-drawer-close', handler as EventListener);
+    el.addEventListener('civ-close', handler as EventListener);
 
     const closeBtn = el.querySelector('.civ-drawer__close') as HTMLElement;
     closeBtn.click();

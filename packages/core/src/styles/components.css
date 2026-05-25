@@ -225,6 +225,30 @@
     @apply civ-flex civ-items-center civ-gap-1 civ-shrink-0;
   }
 
+  /* Inline unlock affordance for password-protected files (encrypted PDFs,
+     password-protected ZIPs). Rendered inside __content beneath the file
+     name when status is 'locked'. Constrained width so the password input
+     doesn't stretch the full row on wide layouts. */
+  .civ-file-item__unlock {
+    max-width: 22rem;
+  }
+
+  /* Joined-edge modifiers for compact inline triggers (e.g. the compact
+     file-upload variant pairs an .civ-input span with a .civ-action-btn
+     to form a single visual control). Replaces hand-rolled inline styles
+     so consumers can compose the same pattern without redefining the
+     border / radius overrides each time. */
+  .civ-input--joined-end {
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .civ-action-btn--joined-start {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
   /* `civ-list-item { display: block }` lives in the host-display
      defaults section above. Without it, borders don't paint on the
@@ -312,10 +336,6 @@
     @apply civ-py-2 civ-px-6 civ-text-sm;
   }
 
-  .civ-list--sm [data-civ-list-item-heading-slot] > *,
-  .civ-list--sm .civ-list-item-heading-prop {
-  }
-
   .civ-list--sm [data-civ-list-item-description-slot] > * {
     @apply civ-text-xs;
   }
@@ -338,34 +358,34 @@
 
   /* ── Memorable Date ───────────────────────────────────────── */
 
-  .civ-memorable-date-fields {
+  .civ-memorable-date__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-memorable-date-month {
+  .civ-memorable-date__month {
     width: 10rem;
   }
 
-  .civ-memorable-date-day {
+  .civ-memorable-date__day {
     width: 5rem;
   }
 
-  .civ-memorable-date-year {
+  .civ-memorable-date__year {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-memorable-date-fields {
+    .civ-memorable-date__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-memorable-date-month {
+    .civ-memorable-date__month {
       width: 100%;
     }
 
-    .civ-memorable-date-day,
-    .civ-memorable-date-year {
+    .civ-memorable-date__day,
+    .civ-memorable-date__year {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
   }
@@ -389,33 +409,33 @@
      instead of the red from `civ-border-error`. Using the side-specific
      property eliminates the ambiguity and the inline-start always
      reads as error. */
-  :is(.civ-memorable-date-month, .civ-memorable-date-day, .civ-memorable-date-year)[data-civ-error="true"] .civ-input {
+  :is(.civ-memorable-date__month, .civ-memorable-date__day, .civ-memorable-date__year)[data-civ-error="true"] .civ-input {
     border-inline-start-width: 4px;
     border-inline-start-style: solid;
     border-inline-start-color: var(--civ-color-error-DEFAULT);
   }
 
-  .civ-income-fields {
+  .civ-income__fields {
     @apply civ-flex civ-flex-wrap civ-items-end;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-income-amount {
+  .civ-income__amount {
     width: 12rem;
   }
 
-  .civ-income-frequency {
+  .civ-income__frequency {
     flex: 1;
     min-width: 14rem;
   }
 
   @media (max-width: 480px) {
-    .civ-income-fields {
+    .civ-income__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
-    .civ-income-amount,
-    .civ-income-frequency {
+    .civ-income__amount,
+    .civ-income__frequency {
       width: 100%;
     }
   }
@@ -427,13 +447,13 @@
      `<civ-select>` and `<civ-segmented-control>`. Aligning by the
      bottom (the previous behavior) pulled the shorter AM/PM column
      down and visibly broke the label row. */
-  .civ-time-picker-fields {
+  .civ-time-picker__fields {
     @apply civ-flex civ-flex-wrap civ-items-start;
     gap: var(--civ-spacing-4, 16px);
   }
 
-  .civ-time-picker-hour,
-  .civ-time-picker-minute {
+  .civ-time-picker__hour,
+  .civ-time-picker__minute {
     width: 5.5rem;
   }
 
@@ -443,16 +463,16 @@
    * hour width (5.5rem) and the combo input (default) — enough room
    * for a leading "12:" and trailing padding.
    */
-  .civ-time-picker-time-input {
+  .civ-time-picker__time-input {
     width: 7rem;
   }
 
-  .civ-time-picker-period {
+  .civ-time-picker__period {
     width: 6rem;
   }
 
   @media (max-width: 480px) {
-    .civ-time-picker-fields {
+    .civ-time-picker__fields {
       row-gap: var(--civ-spacing-1, 4px);
     }
 
@@ -465,13 +485,13 @@
      * tap targets work better full-width than squeezed into a third
      * of the screen.
      */
-    .civ-time-picker-hour,
-    .civ-time-picker-minute {
+    .civ-time-picker__hour,
+    .civ-time-picker__minute {
       width: calc(50% - var(--civ-spacing-2, 10px));
     }
 
-    .civ-time-picker-time-input,
-    .civ-time-picker-period {
+    .civ-time-picker__time-input,
+    .civ-time-picker__period {
       width: 100%;
     }
 
@@ -686,49 +706,12 @@
     color: var(--civ-color-base-dark);
   }
 
-  /* Shared close/clear/dismiss button — used across inputs, modals, alerts,
-     chips. The button is square (1.5em × 1.5em) so `rounded-full` paints
-     the hover background as a perfect circle, which reads cleanly when
-     the button overlays an input or sits adjacent to other elements. */
-  .civ-close-btn {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.5em;
-    height: 1.5em;
-    padding: 0;
-    font-size: inherit;
-  }
-  /* @media (hover: hover) gates :hover styling to devices with a primary
-     pointer that can hover (mouse, trackpad, stylus). On touch devices
-     :hover fires on tap and sticks until another tap elsewhere, leaving
-     a "phantom hover" state on whichever button was last touched. */
-  @media (hover: hover) {
-    .civ-close-btn:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-close-btn:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-
   /* Escape-hatch slot for consumer-provided trailing action buttons (copy,
      paste, generate, scan, etc.). The slot container is flush with the
-     input — no border, no padding — and consumers apply `.civ-input-action`
-     to the button itself for chrome that matches `.civ-close-btn`. */
+     input — no border, no padding. */
   .civ-input-action-slot {
     @apply civ-inline-flex civ-items-center civ-justify-center;
     flex-shrink: 0;
-  }
-
-  .civ-input-action {
-    @apply civ-inline-flex civ-items-center civ-justify-center
-           civ-bg-transparent civ-border-0 civ-cursor-pointer civ-rounded-full;
-    color: var(--civ-color-base-dark);
-    width: 1.75em;
-    height: 1.75em;
-    padding: 0;
-    font-size: inherit;
   }
 
   /* ── Input helper row ─────────────────────────────────────────
@@ -812,7 +795,7 @@
     white-space: nowrap;
   }
   @media (hover: hover) {
-    .civ-text-btn--inline:hover { background: rgba(0, 0, 0, 0.05); }
+    .civ-text-btn--inline:hover { background: var(--civ-color-hover-tint-subtle); }
   }
 
   /* Transient success state — flip to green with a leading check
@@ -835,19 +818,6 @@
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.5 16.586l-4.95-4.95 2.122-2.121L8.5 12.343l8.828-8.828 2.122 2.121z'/%3E%3C/svg%3E") no-repeat center / contain;
   }
-  @media (hover: hover) {
-    .civ-input-action:hover { color: var(--civ-color-base-darkest); background: rgba(0, 0, 0, 0.08); }
-  }
-  .civ-input-action:focus {
-    outline: var(--civ-focus-outline-width) solid var(--civ-focus-outline-color);
-    outline-offset: var(--civ-focus-outline-offset);
-    box-shadow: 0 0 0 var(--civ-focus-outline-offset) var(--civ-focus-shadow-color);
-  }
-  .civ-input-action:disabled {
-    @apply civ-cursor-not-allowed;
-    opacity: var(--civ-opacity-disabled);
-  }
-
   /* WCAG 2.5.8 — minimum target size 44×44 CSS pixels for pointer
      inputs. Desktop keeps the compact em-sized chrome (cursor precision
      makes 24–28px targets fine); mobile bumps every input-inset action
@@ -857,7 +827,6 @@
      already meets 44×44 site-wide via the shared block further down,
      so it isn't repeated here. */
   @media (max-width: 480px) {
-    .civ-input-action,
     .civ-datepicker-today-btn,
     .civ-file-cancel-btn,
     .civ-file-retry-btn {
@@ -1373,7 +1342,10 @@
     color: var(--civ-color-base-light);
   }
 
-  /* Mobile: collapse dropzone to compact browse button (no drag on touch) */
+  /* Mobile: collapse dropzone to inline browse button (no drag on touch).
+     This is a viewport-driven layout change, not the same axis as the
+     `variant="inline"` opt-in — both end up rendering the same compact
+     pseudo-input + browse pill, so the CSS overrides converge here. */
   @media (max-width: 480px) {
     .civ-dropzone {
       @apply civ-py-3 civ-px-4 civ-text-start civ-border civ-border-solid;
@@ -1381,13 +1353,16 @@
     .civ-dropzone > span:first-child {
       display: none;
     }
-    .civ-dropzone--full {
+    .civ-dropzone--large {
       min-height: auto;
       @apply civ-py-3;
     }
   }
 
-  .civ-dropzone--full {
+  /* Larger drag target — pairs with `variant="large"`. Previously named
+     `.civ-dropzone--full`; renamed in lockstep with the schema enum
+     rename to keep CSS class names aligned with the public API. */
+  .civ-dropzone--large {
     @apply civ-py-20;
     min-height: 250px;
   }
@@ -1891,7 +1866,8 @@
   }
 
   .civ-dropzone[aria-invalid="true"] {
-    @apply civ-border-error;
+    @apply civ-border-error civ-border-s-4;
+    border-inline-start-style: solid;
   }
 
   .civ-dropzone:disabled {
@@ -2000,43 +1976,56 @@
   }
 
   /* ── Danger variants ───────────────────────────────────────── */
+  /*
+   * Templates emit `civ-btn--{emphasis}` plus an additional
+   * `civ-btn--danger` class when danger is set. The CSS uses compound
+   * selectors so each (emphasis × danger) combination targets the
+   * right element without duplicating the per-emphasis structure.
+   *
+   * Why not collapse to CSS-var palette swap? The primary palette has
+   * a `darker` shade (used for `.civ-btn--primary:active`) that the
+   * error palette doesn't. A full var-swap would force one or the
+   * other palette to change shape (either add `darker` to error or
+   * shift primary to use `dark + brightness`). Out of scope for this
+   * refactor; revisit when the palettes are aligned.
+   */
 
-  .civ-btn--primary-danger {
+  .civ-btn--primary.civ-btn--danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
   @media (hover: hover) {
-    .civ-btn--primary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--primary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       @apply civ-bg-error-dark civ-border-error-dark;
     }
   }
-  .civ-btn--primary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--primary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-border-error-dark;
     filter: brightness(var(--civ-brightness-active));
   }
 
-  .civ-btn--secondary-danger {
+  .civ-btn--secondary.civ-btn--danger {
     background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
   @media (hover: hover) {
-    .civ-btn--secondary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--secondary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       background-color: var(--civ-color-error-lighter);
     }
   }
-  .civ-btn--secondary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--secondary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     background-color: var(--civ-color-error-light);
   }
 
-  .civ-btn--tertiary-danger {
+  .civ-btn--tertiary.civ-btn--danger {
     @apply civ-bg-transparent civ-text-error civ-border-error;
   }
   @media (hover: hover) {
-    .civ-btn--tertiary-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    .civ-btn--tertiary.civ-btn--danger:hover:not(:disabled):not([aria-disabled="true"]) {
       @apply civ-bg-error civ-text-white;
     }
   }
-  .civ-btn--tertiary-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  .civ-btn--tertiary.civ-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
     @apply civ-bg-error-dark civ-text-white civ-border-error-dark;
   }
 
@@ -2120,10 +2109,6 @@
 
   .civ-modal__header {
     @apply civ-flex civ-items-center civ-justify-between civ-mb-4;
-  }
-
-  .civ-modal__close {
-    @apply civ-ms-4 civ-flex-shrink-0;
   }
 
   .civ-modal__body {
@@ -2223,6 +2208,12 @@
     z-index: 1;
   }
 
+  /* Shared close-button positioning for header-aligned overlay dismiss.
+     The `.civ-modal__close` / `.civ-drawer__close` classes themselves
+     stay on the rendered elements (tests + consumer styling target them
+     by name) — this rule applies the inline-end margin + flex-shrink to
+     both via a single selector list. */
+  .civ-modal__close,
   .civ-drawer__close {
     @apply civ-ms-4 civ-flex-shrink-0;
   }
@@ -2342,33 +2333,35 @@
     @apply civ-bg-primary civ-text-white civ-border-primary;
   }
 
-  /* Action button danger variants */
-  .civ-action-btn--primary-danger {
+  /* Action button danger variants — see comment block above the
+     .civ-btn--*.civ-btn--danger rules for the design rationale on
+     splitting emphasis and danger into separate classes. */
+  .civ-action-btn--primary.civ-action-btn--danger {
     @apply civ-bg-error civ-text-white civ-border-error;
   }
   @media (hover: hover) {
-    .civ-action-btn--primary-danger:hover:not(:disabled) {
+    .civ-action-btn--primary.civ-action-btn--danger:hover:not(:disabled) {
       @apply civ-bg-error-dark civ-border-error-dark;
     }
   }
 
-  .civ-action-btn--secondary-danger {
+  .civ-action-btn--secondary.civ-action-btn--danger {
     background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
     border-color: transparent;
   }
   @media (hover: hover) {
-    .civ-action-btn--secondary-danger:hover:not(:disabled) {
+    .civ-action-btn--secondary.civ-action-btn--danger:hover:not(:disabled) {
       background-color: var(--civ-color-error-lighter);
     }
   }
 
-  .civ-action-btn--tertiary-danger {
+  .civ-action-btn--tertiary.civ-action-btn--danger {
     @apply civ-text-error civ-border-error;
     background-color: var(--civ-color-error-lightest);
   }
   @media (hover: hover) {
-    .civ-action-btn--tertiary-danger:hover:not(:disabled) {
+    .civ-action-btn--tertiary.civ-action-btn--danger:hover:not(:disabled) {
       background-color: var(--civ-color-error-lighter);
     }
   }
@@ -3682,25 +3675,28 @@
   }
 
   /* ── Danger link variants ──────────────────────────────────── */
+  /* Templates emit `civ-link--{variant}` plus an additional
+     `civ-link--danger` class when danger is set; CSS uses compound
+     selectors to target the (variant × danger) intersection. */
 
-  .civ-link--primary-danger {
+  .civ-link--primary.civ-link--danger {
     @apply civ-inline-flex civ-items-center civ-gap-1
            civ-font-sans civ-font-bold civ-cursor-pointer
            civ-text-error civ-underline;
   }
   @media (hover: hover) {
-    .civ-link--primary-danger:hover:not([aria-disabled="true"]) {
+    .civ-link--primary.civ-link--danger:hover:not([aria-disabled="true"]) {
       @apply civ-text-error-dark;
     }
   }
 
-  .civ-link--secondary-danger {
+  .civ-link--secondary.civ-link--danger {
     @apply civ-inline-flex civ-items-center
            civ-font-sans civ-cursor-pointer
            civ-text-error civ-underline;
   }
   @media (hover: hover) {
-    .civ-link--secondary-danger:hover:not([aria-disabled="true"]) {
+    .civ-link--secondary.civ-link--danger:hover:not([aria-disabled="true"]) {
       @apply civ-text-error-dark;
     }
   }
@@ -3730,9 +3726,6 @@
 
   .civ-alert__content {
     @apply civ-p-4;
-  }
-
-  .civ-alert__body {
   }
 
   /* ── Alert: Border colors per variant ──────────────────────── */
@@ -3856,7 +3849,7 @@
     @apply civ-flex-1;
     height: 8px;
     background-color: var(--civ-color-base-lighter);
-    transition: background-color var(--civ-motion-duration-fast, 150ms) var(--civ-motion-easing-ease-out, ease);
+    transition: background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
 
   .civ-progress-segment--completed {
@@ -4561,14 +4554,14 @@
      attribute selector overrides for [callout-style='secondary'].
      `civ-support-resources` (which composes civ-callout but doesn't
      set callout-style) is unaffected and keeps the 5px rail. */
-  civ-callout[callout-style='secondary'] {
+  civ-callout[emphasis='secondary'] {
     border-inline-start-width: 3px;
   }
 
-  civ-callout[variant='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
-  civ-callout[variant='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
-  civ-callout[variant='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
-  civ-callout[variant='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
+  civ-callout[intent='info']    { border-inline-start-color: var(--civ-color-info-DEFAULT); }
+  civ-callout[intent='warning'] { border-inline-start-color: var(--civ-color-warning-DEFAULT); }
+  civ-callout[intent='error']   { border-inline-start-color: var(--civ-color-error-DEFAULT); }
+  civ-callout[intent='success'] { border-inline-start-color: var(--civ-color-success-DEFAULT); }
 
   /* Restore list markers inside callout body — Tailwind's preflight
      strips them globally and a callout is one of the few places where
@@ -4977,9 +4970,6 @@
   .civ-section-intro__heading {
     @apply civ-font-bold civ-mb-1;
     font-size: var(--civ-typography-fontSize-lg);
-  }
-
-  .civ-section-intro__body {
   }
 
   .civ-section-intro__body ul,
@@ -5454,7 +5444,7 @@
 
   @media (hover: hover) {
     .civ-filter-chip__remove:hover:not(:disabled) {
-      background: rgba(0, 0, 0, 0.08);
+      background: var(--civ-color-hover-tint);
       color: inherit;
     }
   }
@@ -5752,7 +5742,7 @@
      lets consumers keep the lowercase `item-label` they already use
      for the Add button and announcements. */
 
-  .civ-repeater-row-heading {
+  .civ-repeater__row-heading {
     @apply civ-text-lg civ-font-bold civ-m-0 civ-mb-3;
     text-transform: capitalize;
   }
@@ -5761,12 +5751,12 @@
      `max` has been reached. Same visual weight as `civ-hint--group` —
      small, gray, subordinate — so it reads as guidance not as an error. */
 
-  .civ-repeater-max-hint {
+  .civ-repeater__max-hint {
     @apply civ-text-sm civ-m-0;
     color: var(--civ-color-base-dark);
   }
 
-  .civ-repeater-empty-state {
+  .civ-repeater__empty-state {
     @apply civ-text-sm civ-m-0 civ-mb-3 civ-italic;
     color: var(--civ-color-base-dark);
   }
@@ -6291,15 +6281,15 @@
     display: block;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser {
     position: relative;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__teaser::after {
     content: '';
     position: absolute;
     inset-inline: 0;
@@ -6313,7 +6303,7 @@
     pointer-events: none;
   }
 
-  civ-read-more:not([expanded]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more:not([open]):not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -6330,7 +6320,7 @@
    * `width: fit-content` + `margin-inline: auto` centers the block
    * without forcing it to span the full row.
    */
-  civ-read-more[expanded]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
+  civ-read-more[open]:not([inline]):not([no-fade-trigger]) .civ-read-more__trigger {
     display: flex;
     width: fit-content;
     margin-inline: auto;
@@ -6349,7 +6339,7 @@
   .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transition: transform var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
   }
-  civ-read-more[expanded] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
+  civ-read-more[open] > .civ-read-more__trigger > civ-icon[name='chevron-down'] {
     transform: rotate(180deg);
   }
 
@@ -6731,7 +6721,7 @@
   .civ-spinner__svg {
     width: 100%;
     height: 100%;
-    animation: civ-spin var(--civ-motion-duration-slower, 750ms) var(--civ-motion-easing-linear, linear) infinite;
+    animation: civ-spin var(--civ-motion-duration-slower, 500ms) var(--civ-motion-easing-linear, linear) infinite;
   }
 
   .civ-spinner__track {

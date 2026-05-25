@@ -11,7 +11,7 @@ afterEach(cleanupFixtures);
 
 describe('civ-badge', () => {
   it('renders label text', async () => {
-    const el = await fixture<CivBadge>('<civ-badge label="Approved" variant="success"></civ-badge>');
+    const el = await fixture<CivBadge>('<civ-badge label="Approved" intent="success"></civ-badge>');
     const badge = el.querySelector('.civ-badge')!;
     expect(badge.textContent).toBe('Approved');
   });
@@ -23,7 +23,7 @@ describe('civ-badge', () => {
 
   it('applies semantic variant classes', async () => {
     for (const variant of ['info', 'warning', 'error', 'success', 'neutral'] as const) {
-      const el = await fixture<CivBadge>(`<civ-badge label="x" variant="${variant}"></civ-badge>`);
+      const el = await fixture<CivBadge>(`<civ-badge label="x" intent="${variant}"></civ-badge>`);
       expect(el.querySelector('.civ-badge')!.className).toContain(`civ-badge--${variant}`);
     }
   });
@@ -39,7 +39,7 @@ describe('civ-badge', () => {
   });
 
   it('renders dot mode with no text content', async () => {
-    const el = await fixture<CivBadge>('<civ-badge dot label="Unread" variant="error"></civ-badge>');
+    const el = await fixture<CivBadge>('<civ-badge dot label="Unread" intent="error"></civ-badge>');
     const badge = el.querySelector('.civ-badge')!;
     expect(badge.className).toContain('civ-badge--dot');
     expect(badge.textContent?.trim()).toBe('');
@@ -67,21 +67,21 @@ describe('civ-badge', () => {
 
   describe('badge-style', () => {
     it('defaults to secondary style', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="x" variant="success"></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="x" intent="success"></civ-badge>');
       const badge = el.querySelector('.civ-badge')!;
       expect(badge.className).toContain('civ-badge--style-secondary');
       expect(badge.className).not.toContain('civ-badge--style-primary');
     });
 
     it('applies primary style class', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="x" variant="error" badge-style="primary"></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="x" intent="error" emphasis="primary"></civ-badge>');
       expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--style-primary');
     });
 
     it('applies primary style for all variants', async () => {
       for (const variant of ['info', 'warning', 'error', 'success', 'neutral'] as const) {
         const el = await fixture<CivBadge>(
-          `<civ-badge label="x" variant="${variant}" badge-style="primary"></civ-badge>`
+          `<civ-badge label="x" intent="${variant}" emphasis="primary"></civ-badge>`
         );
         const badge = el.querySelector('.civ-badge')!;
         expect(badge.className).toContain(`civ-badge--${variant}`);
@@ -109,7 +109,7 @@ describe('civ-badge', () => {
     });
 
     it('adds civ-badge--overlay class when overlay is set', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="New" variant="error" overlay></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="New" intent="error" overlay></civ-badge>');
       expect(el.querySelector('.civ-badge')!.className).toContain('civ-badge--overlay');
     });
 
@@ -119,7 +119,7 @@ describe('civ-badge', () => {
     });
 
     it('combines with dot mode', async () => {
-      const el = await fixture<CivBadge>('<civ-badge dot overlay variant="error" label="Unread"></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge dot overlay intent="error" label="Unread"></civ-badge>');
       const badge = el.querySelector('.civ-badge')!;
       expect(badge.className).toContain('civ-badge--dot');
       expect(badge.className).toContain('civ-badge--overlay');
@@ -128,7 +128,7 @@ describe('civ-badge', () => {
 
   describe('icons', () => {
     it('renders no icon by default', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="x" variant="success"></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="x" intent="success"></civ-badge>');
       expect(el.querySelector('.civ-badge__icon')).toBeNull();
       expect(el.querySelector('.civ-badge__icon--end')).toBeNull();
       expect(el.querySelector('.civ-badge')!.className).not.toContain('civ-badge--with-icon');
@@ -143,7 +143,7 @@ describe('civ-badge', () => {
       ];
       for (const [variant, expectedIcon] of cases) {
         const el = await fixture<CivBadge>(
-          `<civ-badge label="x" variant="${variant}" with-icon></civ-badge>`
+          `<civ-badge label="x" intent="${variant}" with-icon></civ-badge>`
         );
         const icon = el.querySelector('.civ-badge__icon');
         expect(icon, `variant=${variant}`).not.toBeNull();
@@ -152,13 +152,13 @@ describe('civ-badge', () => {
     });
 
     it('renders no auto-icon for the neutral variant', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="Draft" variant="neutral" with-icon></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="Draft" intent="neutral" with-icon></civ-badge>');
       expect(el.querySelector('.civ-badge__icon')).toBeNull();
     });
 
     it('explicit icon-start overrides the with-icon default', async () => {
       const el = await fixture<CivBadge>(
-        '<civ-badge label="x" variant="success" with-icon icon-start="star"></civ-badge>'
+        '<civ-badge label="x" intent="success" with-icon icon-start="star"></civ-badge>'
       );
       const icon = el.querySelector('.civ-badge__icon');
       expect(icon?.getAttribute('name')).toBe('star');
@@ -179,7 +179,7 @@ describe('civ-badge', () => {
 
     it('renders both icon-start and icon-end', async () => {
       const el = await fixture<CivBadge>(
-        '<civ-badge label="Approved" variant="success" with-icon icon-end="chevron-right"></civ-badge>'
+        '<civ-badge label="Approved" intent="success" with-icon icon-end="chevron-right"></civ-badge>'
       );
       const icons = el.querySelectorAll('.civ-badge__icon');
       expect(icons.length).toBe(2);
@@ -188,7 +188,7 @@ describe('civ-badge', () => {
     });
 
     it('adds civ-badge--with-icon class when any icon is present', async () => {
-      const a = await fixture<CivBadge>('<civ-badge label="x" with-icon variant="success"></civ-badge>');
+      const a = await fixture<CivBadge>('<civ-badge label="x" with-icon intent="success"></civ-badge>');
       expect(a.querySelector('.civ-badge')!.className).toContain('civ-badge--with-icon');
 
       const b = await fixture<CivBadge>('<civ-badge label="x" icon-end="chevron-right"></civ-badge>');
@@ -196,12 +196,12 @@ describe('civ-badge', () => {
     });
 
     it('does not render icons in dot mode', async () => {
-      const el = await fixture<CivBadge>('<civ-badge dot label="Unread" variant="error" with-icon></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge dot label="Unread" intent="error" with-icon></civ-badge>');
       expect(el.querySelector('.civ-badge__icon')).toBeNull();
     });
 
     it('marks icons aria-hidden so the label remains the accessible name', async () => {
-      const el = await fixture<CivBadge>('<civ-badge label="Approved" variant="success" with-icon></civ-badge>');
+      const el = await fixture<CivBadge>('<civ-badge label="Approved" intent="success" with-icon></civ-badge>');
       expect(el.querySelector('.civ-badge__icon')!.getAttribute('aria-hidden')).toBe('true');
     });
   });

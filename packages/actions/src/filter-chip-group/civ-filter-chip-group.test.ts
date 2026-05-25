@@ -47,26 +47,26 @@ describe('civ-filter-chip-group', () => {
     });
   });
 
-  describe('chip-role coordination', () => {
-    it('sets chip-role="toggle" on every chip in multi mode', async () => {
+  describe('variant coordination', () => {
+    it('sets variant="toggle" on every chip in multi mode', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
       await settle();
 
       for (const chip of el.querySelectorAll<CivFilterChip>('civ-filter-chip')) {
-        expect(chip.chipRole).toBe('toggle');
+        expect(chip.variant).toBe('toggle');
       }
     });
 
-    it('sets chip-role="radio" on every chip in single mode', async () => {
+    it('sets variant="radio" on every chip in single mode', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('single'));
       await settle();
 
       for (const chip of el.querySelectorAll<CivFilterChip>('civ-filter-chip')) {
-        expect(chip.chipRole).toBe('radio');
+        expect(chip.variant).toBe('radio');
       }
     });
 
-    it('updates chip-role when mode changes after mount', async () => {
+    it('updates variant when mode changes after mount', async () => {
       const el = await fixture<CivFilterChipGroup>(groupHtml('multi'));
       await settle();
       const chips = Array.from(el.querySelectorAll<CivFilterChip>('civ-filter-chip'));
@@ -74,7 +74,7 @@ describe('civ-filter-chip-group', () => {
       el.mode = 'single';
       await elementUpdated(el);
 
-      for (const chip of chips) expect(chip.chipRole).toBe('radio');
+      for (const chip of chips) expect(chip.variant).toBe('radio');
     });
   });
 

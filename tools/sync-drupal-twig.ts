@@ -202,7 +202,7 @@ async function loadSchemaAttributes(componentName: string): Promise<AttrLookup> 
 
 export function htmlAttrFor(snakeKey: string, schemaAttrs: AttrLookup): string {
   // Two ways the snake_case key relates to a camelCase schema prop:
-  //   show_middle ↔ showMiddle (camelToSnake(showMiddle) === show_middle)
+  //   hide_middle ↔ hideMiddle (camelToSnake(hideMiddle) === hide_middle)
   //   validate    ↔ validateType  (schema explicit attribute: 'validate')
   // First check if any schema prop's explicit attribute matches when
   // converted; that wins. Otherwise convert snake → kebab.

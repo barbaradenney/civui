@@ -7,7 +7,7 @@ const meta: Meta = {
   component: 'civ-skeleton',
   tags: ['autodocs'],
   argTypes: {
-    variant: { control: 'select', options: ['text', 'heading', 'block', 'circle'] },
+    shape: { control: 'select', options: ['text', 'heading', 'block', 'circle'] },
     width: { control: 'text' },
     lines: { control: 'number' },
   },
@@ -41,10 +41,10 @@ export const Default: Story = {
 export const Variants: Story = {
   render: () => html`
     <div aria-busy="true" class="civ-flex civ-flex-col civ-gap-4" style="width: 320px;">
-      <civ-skeleton variant="heading" width="60%"></civ-skeleton>
-      <civ-skeleton variant="text"></civ-skeleton>
-      <civ-skeleton variant="block"></civ-skeleton>
-      <civ-skeleton variant="circle"></civ-skeleton>
+      <civ-skeleton shape="heading" width="60%"></civ-skeleton>
+      <civ-skeleton shape="text"></civ-skeleton>
+      <civ-skeleton shape="block"></civ-skeleton>
+      <civ-skeleton shape="circle"></civ-skeleton>
     </div>
   `,
 };
@@ -66,9 +66,9 @@ export const ComposedCard: Story = {
       class="civ-flex civ-flex-col civ-gap-3 civ-p-4 civ-border civ-rounded"
       style="width: 320px;"
     >
-      <civ-skeleton variant="block"></civ-skeleton>
-      <civ-skeleton variant="heading" width="70%"></civ-skeleton>
-      <civ-skeleton variant="text" lines="3"></civ-skeleton>
+      <civ-skeleton shape="block"></civ-skeleton>
+      <civ-skeleton shape="heading" width="70%"></civ-skeleton>
+      <civ-skeleton shape="text" lines="3"></civ-skeleton>
     </div>
   `,
 };
@@ -80,10 +80,10 @@ export const ComposedListRow: Story = {
       ${[1, 2, 3].map(
         () => html`
           <div class="civ-flex civ-gap-3 civ-items-center">
-            <civ-skeleton variant="circle" width="3rem"></civ-skeleton>
+            <civ-skeleton shape="circle" width="3rem"></civ-skeleton>
             <div class="civ-flex civ-flex-col civ-gap-2 civ-flex-1">
-              <civ-skeleton variant="text" width="50%"></civ-skeleton>
-              <civ-skeleton variant="text" width="80%"></civ-skeleton>
+              <civ-skeleton shape="text" width="50%"></civ-skeleton>
+              <civ-skeleton shape="text" width="80%"></civ-skeleton>
             </div>
           </div>
         `,

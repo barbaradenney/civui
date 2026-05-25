@@ -9,18 +9,18 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    intent: {
       type: 'enum',
       description: 'Semantic tone. Drives icon and color palette',
       default: 'info',
       values: ['info', 'success', 'warning', 'error'],
     },
-    alertStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background (default); `tertiary` = transparent with a colored leading border',
       default: 'secondary',
       values: ['primary', 'secondary', 'tertiary'],
-      attribute: 'alert-style',
+      attribute: 'emphasis',
     },
     heading: {
       type: 'string',

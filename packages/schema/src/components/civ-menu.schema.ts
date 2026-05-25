@@ -29,15 +29,15 @@ const schema: ComponentSchema = {
   },
 
   events: {
-    'civ-menu-open': {
+    'civ-open': {
       description: 'Fires when the menu opens (via trigger click, Enter/Space, ArrowDown/ArrowUp, or programmatic open)',
       detail: {},
     },
-    'civ-menu-close': {
+    'civ-close': {
       description: 'Fires when the menu closes (via Escape, Tab, click outside, item activation, or programmatic close)',
       detail: {},
     },
-    'civ-menu-select': {
+    'civ-select': {
       description: 'Fires when a menu item is activated',
       detail: {
         value: { type: 'string', description: 'The activated item\'s `value` prop (omitted if not set)' },

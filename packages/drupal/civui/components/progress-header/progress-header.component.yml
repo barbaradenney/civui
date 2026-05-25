@@ -19,11 +19,11 @@ props:
       title: Step title
       type: string
       description: 'Title of the current step'
-    size:
-      title: Size
+    emphasis:
+      title: Emphasis
       type: string
       default: secondary
-      description: 'Visual size: primary, secondary, tertiary'
+      description: 'Visual emphasis level (renamed from `size`; the prop never controlled pixel size): primary, secondary, tertiary'
     heading_level:
       title: Heading level
       type: integer

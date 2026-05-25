@@ -182,7 +182,7 @@ describe('civ-checkbox-group variant', () => {
 
   it('explicit variant=card stays card even for >4 options', async () => {
     const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" variant="card">
+      <civ-checkbox-group legend="Toppings" layout="card">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
         <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
         <civ-checkbox label="Mushrooms" value="mushrooms"></civ-checkbox>
@@ -196,7 +196,7 @@ describe('civ-checkbox-group variant', () => {
 
   it('applies civ-group-list when variant is list and orientation is vertical', async () => {
     const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" variant="list">
+      <civ-checkbox-group legend="Toppings" layout="list">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
         <civ-checkbox label="Pepperoni" value="pepperoni"></civ-checkbox>
       </civ-checkbox-group>
@@ -208,7 +208,7 @@ describe('civ-checkbox-group variant', () => {
 
   it('does not apply civ-group-list when orientation is horizontal even with variant=list', async () => {
     const el = await fixture(`
-      <civ-checkbox-group legend="Toppings" variant="list" orientation="horizontal">
+      <civ-checkbox-group legend="Toppings" layout="list" orientation="horizontal">
         <civ-checkbox label="Cheese" value="cheese"></civ-checkbox>
       </civ-checkbox-group>
     `);

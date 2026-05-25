@@ -34,9 +34,9 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target',
+      description: 'Visual **layout** of the file picker (not density — there is no density knob on file-upload today). `default` = standard medium dropzone with drag-and-drop. `inline` = pseudo-input + browse-button row, matching the layout of native `<input type="file">` for placement in dense forms (no drag-and-drop). `large` = taller drag target for landing pages or document-heavy workflows where upload is the primary page action. Previously named values `compact` and `full` were renamed to `inline` and `large` to disambiguate from the system-wide `spacing="sm"` density convention used by every other CivUI component',
       default: 'default',
-      values: ['default', 'compact', 'full'],
+      values: ['default', 'inline', 'large'],
     },
     initialFiles: {
       type: 'array',
@@ -129,6 +129,33 @@ const schema: ComponentSchema = {
     },
   },
 
+  methods: {
+    setFileStatus: {
+      description: 'Update a file\'s upload status from the consumer\'s upload pipeline. Drives the per-file UI state machine: `pending` (initial), `uploading` (spinner + progress bar + Cancel), `success` (check icon), `error` (error icon + Retry button + per-file error text from opts.error), `locked` (lock icon + inline password input + Unlock button — fires `civ-file-unlock` on submit). The transition clears `file.error` unless `opts.error` is provided, so transitions from error to a new state don\'t carry stale messages. Out-of-range index is a no-op',
+      params: [
+        { name: 'index', type: 'number', description: 'Zero-based index in the file list' },
+        { name: 'status', type: 'string', description: 'One of: `pending` | `uploading` | `success` | `error` | `locked`' },
+        { name: 'opts', type: 'object', description: 'Optional: `{ progress?: number, error?: string }`. `progress` is 0–100 for the progress bar (uploading only). `error` is per-file error text (typically used with `error` / `locked` states)', optional: true },
+      ],
+      returns: 'void',
+    },
+    getAbortController: {
+      description: 'Lazily create and return an `AbortController` scoped to this file index, for the consumer to wire into their fetch call. Returning the same controller on repeat calls lets you signal cancellation from anywhere. Calling `cancel` from the Cancel button aborts the same controller; this is the integration seam. Returns `undefined` for an out-of-range index',
+      params: [
+        { name: 'index', type: 'number', description: 'Zero-based index in the file list' },
+      ],
+      returns: 'object',
+    },
+    removeFile: {
+      description: 'Remove a file from the list by index. Fires the cancelable `civ-file-upload-before-remove` event first; if the consumer wires confirmation via that hook, they call `preventDefault()` and then re-invoke this with `{ skipConfirm: true }` from their confirm handler',
+      params: [
+        { name: 'index', type: 'number', description: 'Zero-based index in the file list' },
+        { name: 'opts', type: 'object', description: 'Optional: `{ skipConfirm?: boolean }` bypasses the cancelable hook when the consumer already gathered user intent', optional: true },
+      ],
+      returns: 'void',
+    },
+  },
+
   events: {
     'civ-input': {
       description: 'Fires when files are added or removed',
@@ -154,7 +181,16 @@ const schema: ComponentSchema = {
       detail: {
         index: { type: 'number', description: 'Index of the retried file' },
         name: { type: 'string', description: 'Retried file name' },
-        file: { type: 'string', description: 'The File object being retried' },
+        file: { type: 'File', description: 'The File object being retried' },
+      },
+    },
+    'civ-file-unlock': {
+      description: 'Fires when the user submits a password for a password-protected file (e.g. encrypted PDF or ZIP). Triggered when the consumer marks a file as `locked` via `setFileStatus(index, "locked")` and the user enters a password and clicks Unlock. The file status moves to `uploading` immediately; the consumer\'s upload pipeline owns decryption (server-side via qpdf/pdftk, or client-side via pdf.js). Call `setFileStatus(index, "locked", { error: "Incorrect password" })` to re-prompt with the error visible.',
+      detail: {
+        index: { type: 'number', description: 'Index of the locked file' },
+        name: { type: 'string', description: 'Locked file name' },
+        file: { type: 'File', description: 'The File object being unlocked' },
+        password: { type: 'string', description: 'The password the user entered. Treat as sensitive — log redaction, secure transport, do not persist beyond the decryption attempt. The component clears its internal buffer immediately after dispatch.' },
       },
     },
     'civ-file-upload-before-remove': {

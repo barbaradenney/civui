@@ -57,19 +57,19 @@ describe('civ-filter-chip', () => {
 
   describe('radio ARIA mode', () => {
     it('uses role="radio" + aria-checked when chip-role="radio"', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-role="radio"></civ-filter-chip>');
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" variant="radio"></civ-filter-chip>');
       expect(action(el).getAttribute('role')).toBe('radio');
       expect(action(el).getAttribute('aria-checked')).toBe('false');
       expect(action(el).hasAttribute('aria-pressed')).toBe(false);
     });
 
     it('updates aria-checked on selection', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-role="radio" selected></civ-filter-chip>');
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" variant="radio" selected></civ-filter-chip>');
       expect(action(el).getAttribute('aria-checked')).toBe('true');
     });
 
     it('clicking an already-selected radio is a no-op', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-role="radio" selected></civ-filter-chip>');
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" variant="radio" selected></civ-filter-chip>');
       const handler = vi.fn();
       el.addEventListener('civ-change', handler);
 
@@ -200,12 +200,12 @@ describe('civ-filter-chip', () => {
     });
 
     it('applies primary style class on the wrapper', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-style="primary"></civ-filter-chip>');
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" emphasis="primary"></civ-filter-chip>');
       expect(wrapper(el).className).toContain('civ-filter-chip--style-primary');
     });
 
     it('keeps style class when toggled selected', async () => {
-      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" chip-style="primary"></civ-filter-chip>');
+      const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" emphasis="primary"></civ-filter-chip>');
       action(el).click();
       await elementUpdated(el);
 

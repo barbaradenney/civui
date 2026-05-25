@@ -12,8 +12,8 @@ props:
       type: boolean
       default: false
       description: 'Whether the drawer is currently visible. Reflects to the host attribute'
-    position:
-      title: Position
+    align:
+      title: Align
       type: string
       enum: ['start', 'end']
       default: 'start'

@@ -92,6 +92,14 @@ const schema: ComponentSchema = {
         value: { type: 'string', description: 'Selected option value' },
       },
     },
+    'civ-open': {
+      description: 'Fires when the listbox opens',
+      detail: {},
+    },
+    'civ-close': {
+      description: 'Fires when the listbox closes',
+      detail: {},
+    },
   },
 
   a11y: {

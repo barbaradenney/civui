@@ -1,5 +1,5 @@
 // CivUI — CivProgressHeader for Jetpack Compose
-// Compact step counter: "Step X of Y: Title" with configurable size.
+// Compact step counter: "Step X of Y: Title" with configurable emphasis.
 
 package gov.civui.components
 
@@ -17,7 +17,7 @@ import androidx.compose.ui.text.withStyle
 /**
  * Compact step counter header for multi-step forms.
  *
- * Displays "Step X of Y: Title" with configurable size and heading level.
+ * Displays "Step X of Y: Title" with configurable emphasis and heading level.
  * Mirrors the web `civ-progress-header` component.
  */
 @Composable
@@ -25,7 +25,7 @@ fun CivProgressHeader(
     current: Int = 0,
     total: Int = 0,
     stepTitle: String = "",
-    size: String = "secondary",
+    emphasis: String = "secondary",
     headingLevel: Int = 2,
     modifier: Modifier = Modifier,
 ) {

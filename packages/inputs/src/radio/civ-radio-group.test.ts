@@ -462,7 +462,7 @@ describe('civ-radio-group variant', () => {
 
   it('explicit variant=card stays card even for >4 options', async () => {
     const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" variant="card">
+      <civ-radio-group legend="Color" name="color" layout="card">
         <civ-radio label="Red" value="red"></civ-radio>
         <civ-radio label="Blue" value="blue"></civ-radio>
         <civ-radio label="Green" value="green"></civ-radio>
@@ -476,7 +476,7 @@ describe('civ-radio-group variant', () => {
 
   it('applies civ-group-list when variant is list and orientation is vertical', async () => {
     const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" variant="list">
+      <civ-radio-group legend="Color" name="color" layout="list">
         <civ-radio label="Red" value="red"></civ-radio>
         <civ-radio label="Blue" value="blue"></civ-radio>
       </civ-radio-group>
@@ -488,7 +488,7 @@ describe('civ-radio-group variant', () => {
 
   it('does not apply civ-group-list when orientation is horizontal even with variant=list', async () => {
     const el = await fixture(`
-      <civ-radio-group legend="Color" name="color" variant="list" orientation="horizontal">
+      <civ-radio-group legend="Color" name="color" layout="list" orientation="horizontal">
         <civ-radio label="Red" value="red"></civ-radio>
       </civ-radio-group>
     `);

@@ -35,7 +35,7 @@ import type { SlotConfig } from '@civui/core';
  *
  * @element civ-read-more
  *
- * @prop {boolean} expanded - Whether the rest region is visible
+ * @prop {boolean} open - Whether the rest region is visible
  * @prop {string} moreLabel - Override the "Read more" trigger text
  * @prop {string} lessLabel - Override the "Read less" trigger text
  * @prop {string} icon - Optional icon name shown before the label; empty = no icon
@@ -43,7 +43,7 @@ import type { SlotConfig } from '@civui/core';
  * @prop {boolean} inline - Render teaser, rest, and trigger inline
  * @prop {boolean} noFadeTrigger - Opt out of the default block-mode fade overlay: the trigger sits below the teaser as a plain button instead of floating over a gradient at the bottom of the text
  *
- * @fires civ-toggle - When the expanded state changes, detail: { expanded }
+ * @fires civ-toggle - When the open state changes, detail: { open }
  * @fires civ-analytics - Analytics tracking on toggle
  *
  * @slot - Always-visible teaser content (default slot)
@@ -52,7 +52,7 @@ import type { SlotConfig } from '@civui/core';
 @customElement('civ-read-more')
 export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   /** Whether the rest region is currently visible. */
-  @property({ type: Boolean, reflect: true }) expanded = false;
+  @property({ type: Boolean, reflect: true }) open = false;
 
   /** Override the "Read more" trigger text. */
   @property({ type: String, attribute: 'more-label' }) moreLabel = '';
@@ -112,7 +112,7 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     const moreText = this.moreLabel || t('readMoreButton');
     const lessText = this.lessLabel || t('readLessButton');
-    const buttonText = this.expanded ? lessText : moreText;
+    const buttonText = this.open ? lessText : moreText;
     const sizeClass = this.size === 'sm' ? 'civ-text-btn--sm' : '';
     // Inline mode still uses the shared `civ-text-btn civ-text-btn--chip`
     // palette so the affordance reads as a button (filled background,
@@ -131,12 +131,12 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
         class="civ-read-more__rest"
         id="${this._restId}"
         data-civ-read-more-rest
-        ?hidden="${!this.expanded}"
+        ?hidden="${!this.open}"
       ></div>
       <button
         type="button"
         class="${triggerClasses}"
-        aria-expanded="${this.expanded ? 'true' : 'false'}"
+        aria-expanded="${this.open ? 'true' : 'false'}"
         aria-controls="${this._restId}"
         @click="${this._onToggle}"
       >
@@ -156,13 +156,13 @@ export class CivReadMore extends LightDomSlotMixin(CivBaseElement) {
    * directly on the host.
    */
   private _onToggle(): void {
-    this.expanded = !this.expanded;
+    this.open = !this.open;
     this.dispatchEvent(new CustomEvent('civ-toggle', {
-      detail: { expanded: this.expanded },
+      detail: { open: this.open },
       bubbles: false,
       composed: false,
     }));
-    this.sendAnalytics('change', { expanded: this.expanded });
+    this.sendAnalytics('change', { open: this.open });
   }
 }
 

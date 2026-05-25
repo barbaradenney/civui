@@ -76,7 +76,7 @@ export const ConfirmationPage: Story = {
   name: 'Confirmation page — submitted files',
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-alert variant="success" heading="We've received your application">
+      <civ-alert intent="success" heading="We've received your application">
         You submitted your application on May 1, 2026.
       </civ-alert>
 

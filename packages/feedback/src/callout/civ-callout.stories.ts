@@ -24,7 +24,7 @@ type Story = StoryObj;
 export const Default: Story = {
   args: { variant: 'default' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Note</p>
       <p class="civ-m-0">You must complete this section before continuing to the next step.</p>
     </civ-callout>
@@ -34,7 +34,7 @@ export const Default: Story = {
 export const Info: Story = {
   args: { variant: 'info' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Information</p>
       <p class="civ-m-0">Processing times are currently 3–5 business days.</p>
     </civ-callout>
@@ -44,7 +44,7 @@ export const Info: Story = {
 export const Warning: Story = {
   args: { variant: 'warning' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Important</p>
       <p class="civ-m-0">Your session will expire in 15 minutes. Save your progress.</p>
     </civ-callout>
@@ -55,7 +55,7 @@ export const Error: Story = {
   name: 'Error',
   args: { variant: 'error' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Action needed</p>
       <p class="civ-m-0">Your application is missing required documents.</p>
     </civ-callout>
@@ -65,7 +65,7 @@ export const Error: Story = {
 export const Success: Story = {
   args: { variant: 'success' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Complete</p>
       <p class="civ-m-0">Your information has been verified successfully.</p>
     </civ-callout>
@@ -84,19 +84,19 @@ export const AllVariants: Story = {
         <p class="civ-m-0 civ-font-bold civ-mb-1">Default (neutral)</p>
         <p class="civ-m-0">The base accent border is a neutral gray — use when no semantic variant applies.</p>
       </civ-callout>
-      <civ-callout variant="info">
+      <civ-callout intent="info">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Info</p>
         <p class="civ-m-0">Neutral informational message.</p>
       </civ-callout>
-      <civ-callout variant="warning">
+      <civ-callout intent="warning">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Warning</p>
         <p class="civ-m-0">Heads-up; user attention recommended.</p>
       </civ-callout>
-      <civ-callout variant="error">
+      <civ-callout intent="error">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Error</p>
         <p class="civ-m-0">Action required to proceed.</p>
       </civ-callout>
-      <civ-callout variant="success">
+      <civ-callout intent="success">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Success</p>
         <p class="civ-m-0">Action completed.</p>
       </civ-callout>
@@ -108,7 +108,7 @@ export const RichContent: Story = {
   name: 'Rich content (list)',
   args: { variant: 'info' },
   render: (args) => html`
-    <civ-callout variant="${args.variant}">
+    <civ-callout intent="${args.variant}">
       <p class="civ-m-0 civ-font-bold civ-mb-1">Before you start</p>
       <p>To finish this section, have the following ready:</p>
       <ul>
@@ -132,7 +132,7 @@ export const AsLandmark: Story = {
     },
   },
   render: (args) => html`
-    <civ-callout variant="${args.variant}" role="region" aria-labelledby="region-heading">
+    <civ-callout intent="${args.variant}" role="region" aria-labelledby="region-heading">
       <p id="region-heading" class="civ-m-0 civ-font-bold civ-mb-1">Important notice</p>
       <p class="civ-m-0">This region is announced as a landmark to assistive tech.</p>
     </civ-callout>
@@ -155,7 +155,7 @@ introduces a topic and the notice flags the must-not-miss consequence.`,
   },
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-callout variant="info">
+      <civ-callout intent="info">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Before you continue</p>
         <p>
           The next section asks for your bank routing and account numbers
@@ -187,7 +187,7 @@ still names the topic.`,
   },
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-callout variant="warning">
+      <civ-callout intent="warning">
         <p class="civ-m-0 civ-font-bold civ-mb-1">Before you submit</p>
         <p>Review these conditions carefully — they apply to every applicant:</p>
         <div class="civ-flex civ-flex-col civ-gap-2 civ-mt-2">
@@ -227,9 +227,9 @@ explanation that follows.`,
   },
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-callout variant="info">
+      <civ-callout intent="info">
         <div class="civ-mb-2">
-          <civ-badge label="In review" variant="info" badge-style="primary" with-icon></civ-badge>
+          <civ-badge label="In review" intent="info" emphasis="primary" with-icon></civ-badge>
         </div>
         <p class="civ-m-0 civ-font-bold civ-mb-1">Application status</p>
         <p class="civ-m-0">
@@ -256,23 +256,23 @@ users get the meaning from the icon + label, not just the color.`,
   },
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-callout variant="info">
+      <civ-callout intent="info">
         <p class="civ-m-0 civ-font-bold civ-mb-2">Your benefits enrollment</p>
         <ul class="civ-list-none civ-p-0 civ-m-0 civ-flex civ-flex-col civ-gap-2">
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <civ-badge label="Complete" intent="success" with-icon></civ-badge>
             <span>Personal information</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Complete" variant="success" with-icon></civ-badge>
+            <civ-badge label="Complete" intent="success" with-icon></civ-badge>
             <span>Direct deposit setup</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="In progress" variant="info" with-icon></civ-badge>
+            <civ-badge label="In progress" intent="info" with-icon></civ-badge>
             <span>Document upload</span>
           </li>
           <li class="civ-flex civ-items-center civ-gap-3">
-            <civ-badge label="Pending" variant="warning" with-icon></civ-badge>
+            <civ-badge label="Pending" intent="warning" with-icon></civ-badge>
             <span>Identity verification</span>
           </li>
         </ul>
@@ -299,9 +299,9 @@ live region.`,
   },
   render: () => html`
     <div style="max-width: 600px;">
-      <civ-callout variant="error">
+      <civ-callout intent="error">
         <div class="civ-mb-2">
-          <civ-badge label="Verification expired" variant="error" badge-style="primary" with-icon></civ-badge>
+          <civ-badge label="Verification expired" intent="error" emphasis="primary" with-icon></civ-badge>
         </div>
         <p class="civ-m-0 civ-font-bold civ-mb-1">Action required</p>
         <p>
@@ -337,11 +337,11 @@ weights read as the same family.`,
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Side-by-side — primary above, secondary below</p>
         <div class="civ-flex civ-flex-col civ-gap-3">
-          <civ-callout variant="warning">
+          <civ-callout intent="warning">
             <p class="civ-m-0 civ-font-bold civ-mb-1">Primary (5px rail)</p>
             <p class="civ-m-0">Your session will expire in 15 minutes — the rail commands attention.</p>
           </civ-callout>
-          <civ-callout variant="warning" callout-style="secondary">
+          <civ-callout intent="warning" emphasis="secondary">
             <p class="civ-m-0 civ-font-bold civ-mb-1">Secondary (3px rail)</p>
             <p class="civ-m-0">Same variant + same content; thinner rail recedes for a quieter tone.</p>
           </civ-callout>
@@ -351,19 +351,19 @@ weights read as the same family.`,
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">All variants at secondary weight</p>
         <div class="civ-flex civ-flex-col civ-gap-3">
-          <civ-callout callout-style="secondary">
+          <civ-callout emphasis="secondary">
             <p class="civ-m-0">Default — neutral accent, subtle.</p>
           </civ-callout>
-          <civ-callout variant="info" callout-style="secondary">
+          <civ-callout intent="info" emphasis="secondary">
             <p class="civ-m-0">Info — quieter routine guidance.</p>
           </civ-callout>
-          <civ-callout variant="warning" callout-style="secondary">
+          <civ-callout intent="warning" emphasis="secondary">
             <p class="civ-m-0">Warning — softer heads-up.</p>
           </civ-callout>
-          <civ-callout variant="error" callout-style="secondary">
+          <civ-callout intent="error" emphasis="secondary">
             <p class="civ-m-0">Error — toned-down problem callout.</p>
           </civ-callout>
-          <civ-callout variant="success" callout-style="secondary">
+          <civ-callout intent="success" emphasis="secondary">
             <p class="civ-m-0">Success — gentle confirmation.</p>
           </civ-callout>
         </div>

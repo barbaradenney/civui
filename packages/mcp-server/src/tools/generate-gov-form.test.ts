@@ -40,7 +40,7 @@ describe('generateGovForm', async () => {
 
   it('includes confirmation page with success alert', async () => {
     const result = await generateGovForm('21-526EZ');
-    expect(result.pages.confirmation.html).toContain('variant="success"');
+    expect(result.pages.confirmation.html).toContain('intent="success"');
   });
 
   it('includes task list hub', async () => {

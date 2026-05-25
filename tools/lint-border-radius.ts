@@ -87,7 +87,6 @@ const ALLOWLIST: string[] = [
   'civ-data-grid__sort-position', // pill numeric badge
   'civ-input-prefix',
   'civ-input-suffix',
-  'civ-input-action',
   'civ-combobox-chevron',
   'civ-datepicker-cal-btn',
   'civ-segment-btn',

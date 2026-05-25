@@ -15,12 +15,12 @@ props:
       title: Name
       type: string
       description: 'Form field name prefix'
-    show_middle:
+    hide_middle:
       title: Show middle
       type: boolean
       default: false
       description: 'Show middle name field'
-    show_suffix:
+    hide_suffix:
       title: Show suffix
       type: boolean
       default: false

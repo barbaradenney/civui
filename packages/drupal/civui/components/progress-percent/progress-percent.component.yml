@@ -19,7 +19,7 @@ props:
       title: Status
       type: string
       description: 'Status text displayed with the bar'
-    show_percent:
+    hide_percent:
       title: Show percent
       type: boolean
       default: false

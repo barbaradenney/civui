@@ -147,8 +147,6 @@ Use `hide-name` when the name is captured in a separate component:
 ></civ-relationship>
 ```
 
-**Heads up: `show-name="false"` does NOT work.** HTML boolean attributes are truthy whenever present, so `show-name="false"` still reads as `true`. Use `hide-name` (no value) to disable from HTML, or bind the property directly in lit-html: `.showName=${false}`.
-
 ## Drupal SDC
 
 This component is also published as a [Drupal Single Directory Component (SDC)](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components) at `packages/drupal/civui/components/relationship/`. Include it from any Twig template. The SDC emits the underlying `<civ-*>` markup, and CivUI's JavaScript upgrades it on the client:

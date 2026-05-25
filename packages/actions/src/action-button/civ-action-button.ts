@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { CivBaseElement, devWarn, sanitizeHref, t } from '@civui/core';
 
-export type ActionButtonVariant = 'primary' | 'secondary' | 'tertiary';
+export type ActionButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type ActionButtonSpacing = 'default' | 'sm';
 
 /**
@@ -31,7 +31,7 @@ export type ActionButtonSpacing = 'default' | 'sm';
  * @element civ-action-button
  *
  * @prop {string} label - Button text
- * @prop {ActionButtonVariant} variant - Visual variant
+ * @prop {ActionButtonEmphasis} emphasis - Visual emphasis (primary / secondary / tertiary)
  * @prop {ActionButtonSpacing} spacing - Density variant. `sm` shrinks padding, min-height, and font-size so the button sits flush next to `civ-input--sm` (compact form controls in data-grid cell editors, dense toolbars).
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
@@ -50,14 +50,14 @@ export type ActionButtonSpacing = 'default' | 'sm';
  * @example
  * ```html
  * <civ-action-button label="Bold"></civ-action-button>
- * <civ-action-button label="Save" variant="primary"></civ-action-button>
+ * <civ-action-button label="Save" emphasis="primary"></civ-action-button>
  * <civ-action-button label="Edit" href="/dependents/1/edit"></civ-action-button>
  * ```
  */
 @customElement('civ-action-button')
 export class CivActionButton extends CivBaseElement {
   @property({ type: String }) label = '';
-  @property({ type: String }) variant: ActionButtonVariant = 'tertiary';
+  @property({ type: String }) emphasis: ActionButtonEmphasis = 'tertiary';
   @property({ type: String }) spacing: ActionButtonSpacing = 'default';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -101,13 +101,10 @@ export class CivActionButton extends CivBaseElement {
   }
 
   private get _classes(): string {
-    const variantClass = this.danger
-      ? `civ-action-btn--${this.variant}-danger`
-      : `civ-action-btn--${this.variant}`;
-
     return [
       'civ-action-btn',
-      variantClass,
+      `civ-action-btn--${this.emphasis}`,
+      this.danger ? 'civ-action-btn--danger' : '',
       // Link mode adds an underline so the navigation affordance reads
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-action-btn--link' : '',

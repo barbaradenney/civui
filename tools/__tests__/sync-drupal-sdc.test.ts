@@ -26,7 +26,7 @@ describe('drupalKeyFor', () => {
   });
 
   it('falls back to camel→snake when no attribute override is set', () => {
-    expect(drupalKeyFor('showMiddle', { type: 'boolean' })).toBe('show_middle');
+    expect(drupalKeyFor('hideMiddle', { type: 'boolean' })).toBe('hide_middle');
   });
 
   it('leaves all-lowercase names unchanged', () => {

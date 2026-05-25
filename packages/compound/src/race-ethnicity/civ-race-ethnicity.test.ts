@@ -141,12 +141,12 @@ describe('civ-race-ethnicity', () => {
 
   it('forwards variant to inner radio and checkbox groups', async () => {
     const el = await fixture<CivRaceEthnicity>(
-      '<civ-race-ethnicity legend="Demo" name="demo" variant="list"></civ-race-ethnicity>'
+      '<civ-race-ethnicity legend="Demo" name="demo" layout="list"></civ-race-ethnicity>'
     );
     await elementUpdated(el);
 
-    expect(el.querySelector('civ-checkbox-group')?.getAttribute('variant')).toBe('list');
-    expect(el.querySelector('civ-radio-group')?.getAttribute('variant')).toBe('list');
+    expect(el.querySelector('civ-checkbox-group')?.getAttribute('layout')).toBe('list');
+    expect(el.querySelector('civ-radio-group')?.getAttribute('layout')).toBe('list');
   });
 
   describe('event handlers', () => {

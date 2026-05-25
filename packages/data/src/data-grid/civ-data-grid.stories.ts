@@ -26,14 +26,14 @@ const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error' | 'info' | 
 const statusBadge = (value: unknown) => {
   const v = String(value ?? '');
   const variant = STATUS_VARIANT[v] ?? 'neutral';
-  return html`<civ-badge label="${v}" variant="${variant}" spacing="sm" with-icon></civ-badge>`;
+  return html`<civ-badge label="${v}" intent="${variant}" spacing="sm" with-icon></civ-badge>`;
 };
 
 /** Default-spacing badge — used only by the side-by-side density-comparison story. */
 const statusBadgeDefault = (value: unknown) => {
   const v = String(value ?? '');
   const variant = STATUS_VARIANT[v] ?? 'neutral';
-  return html`<civ-badge label="${v}" variant="${variant}" with-icon></civ-badge>`;
+  return html`<civ-badge label="${v}" intent="${variant}" with-icon></civ-badge>`;
 };
 
 const meta: Meta = {
@@ -333,11 +333,11 @@ export const FullAdminLayout: Story = {
       <div style="display: flex; flex-direction: column; gap: 1rem;">
         <civ-toolbar label="Applications toolbar">
           <civ-text-input label="Search" type="search"></civ-text-input>
-          <civ-button data-civ-toolbar-end variant="primary" label="Add application"></civ-button>
+          <civ-button data-civ-toolbar-end emphasis="primary" label="Add application"></civ-button>
         </civ-toolbar>
         <civ-bulk-actions class="story-full" count="0" item-name="application">
-          <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
-          <civ-action-button variant="secondary" danger label="Delete"></civ-action-button>
+          <civ-action-button emphasis="secondary" icon-start="download" label="Export"></civ-action-button>
+          <civ-action-button emphasis="secondary" danger label="Delete"></civ-action-button>
         </civ-bulk-actions>
         <civ-data-grid class="story-full" caption="Applications"></civ-data-grid>
       </div>
@@ -451,7 +451,7 @@ export const MasterDetailDrawer: Story = {
       <div>
         <p class="civ-mb-3">Click any row to view its detail.</p>
         <civ-data-grid class="story-detail" caption="Applications"></civ-data-grid>
-        <civ-drawer class="story-detail" position="end" heading="Application details">
+        <civ-drawer class="story-detail" align="end" heading="Application details">
           <dl id="story-detail-fields" style="margin: 0;"></dl>
         </civ-drawer>
       </div>
@@ -745,9 +745,9 @@ export const ExportToCsv: Story = {
           of printing — the utility is the same.
         </p>
         <div class="civ-flex civ-gap-2">
-          <civ-action-button id="story-export-csv" variant="secondary" icon-start="download" label="Export all (CSV)"></civ-action-button>
-          <civ-action-button id="story-export-json" variant="secondary" icon-start="download" label="Export all (JSON)"></civ-action-button>
-          <civ-action-button id="story-export-selected" variant="secondary" icon-start="download" label="Export selection (CSV)"></civ-action-button>
+          <civ-action-button id="story-export-csv" emphasis="secondary" icon-start="download" label="Export all (CSV)"></civ-action-button>
+          <civ-action-button id="story-export-json" emphasis="secondary" icon-start="download" label="Export all (JSON)"></civ-action-button>
+          <civ-action-button id="story-export-selected" emphasis="secondary" icon-start="download" label="Export selection (CSV)"></civ-action-button>
         </div>
         <civ-data-grid class="story-export" caption="Applications (export demo)"></civ-data-grid>
         <pre id="story-export-out" style="background: var(--civ-color-base-lightest); padding: var(--civ-spacing-3); border-radius: 4px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 0.85em;">Click an export button to preview the output.</pre>

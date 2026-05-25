@@ -9,18 +9,18 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    intent: {
       type: 'enum',
       description: 'Accent border color. `default` is a neutral gray for callouts with no semantic urgency; `info`, `warning`, `error`, and `success` map to their semantic palette counterparts',
       default: 'default',
       values: ['default', 'info', 'warning', 'error', 'success'],
     },
-    calloutStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual weight. `primary` (default) keeps the 5px accent rail — the established callout treatment. `secondary` drops the rail to 3px for a subtler affordance that doesn\'t compete with body content when stacked next to primary surfaces. Padding, variant colors, and content layout stay identical so the two styles read as the same family at different weights.',
       default: 'primary',
       values: ['primary', 'secondary'],
-      attribute: 'callout-style',
+      attribute: 'emphasis',
       reflect: true,
     },
   },

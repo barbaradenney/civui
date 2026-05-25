@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivDrawer(
     open: Boolean = false,
-    position: String = "start",
+    align: String = "start",
     width: String = "min(320px, 90vw)",
     heading: String = "",
     label: String = "",

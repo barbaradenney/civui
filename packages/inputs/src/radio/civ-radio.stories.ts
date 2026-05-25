@@ -186,7 +186,7 @@ Only takes effect with \`tile\` (the default) and vertical orientation.
     },
   },
   render: () => html`
-    <civ-radio-group legend="Ethnicity" name="ethnicity" variant="list">
+    <civ-radio-group legend="Ethnicity" name="ethnicity" layout="list">
       <civ-radio label="Hispanic or Latino" value="hispanic"></civ-radio>
       <civ-radio label="Not Hispanic or Latino" value="not-hispanic"></civ-radio>
       <civ-radio label="Prefer not to answer" value="skip"></civ-radio>

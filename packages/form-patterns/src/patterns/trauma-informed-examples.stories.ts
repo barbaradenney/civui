@@ -116,7 +116,7 @@ export const DeceasedAssumed: Story = {
           name="good"
           preset="survivor"
           deceased-assumed
-          .showName=${false}
+          .hideName=${true}
           value='{"relationship":"spouse","marriageDate":"2015-06-12"}'
         ></civ-relationship>
       </div>
@@ -132,7 +132,7 @@ export const DeceasedAssumed: Story = {
           name="avoid"
           preset="survivor"
           show-deceased
-          .showName=${false}
+          .hideName=${true}
           value='{"relationship":"spouse","marriageDate":"2015-06-12"}'
         ></civ-relationship>
       </div>
@@ -170,7 +170,7 @@ export const RepeaterFormStepsSensitive: Story = {
           legend="Your relationship"
           preset="survivor"
           deceased-assumed
-          .showName=${false}
+          .hideName=${true}
           name="rel"
           required
         ></civ-relationship>

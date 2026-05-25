@@ -16,7 +16,7 @@ describe('civ-tag', () => {
   });
 
   it('applies variant class', async () => {
-    const el = await fixture('<civ-tag label="Healthcare" variant="blue"></civ-tag>');
+    const el = await fixture('<civ-tag label="Healthcare" color="blue"></civ-tag>');
     const span = el.querySelector('.civ-tag--blue');
     expect(span).not.toBeNull();
   });
@@ -30,26 +30,26 @@ describe('civ-tag', () => {
   it('renders all category variants', async () => {
     const variants = ['blue', 'orange', 'purple', 'gray'];
     for (const v of variants) {
-      const el = await fixture(`<civ-tag label="${v}" variant="${v}"></civ-tag>`);
+      const el = await fixture(`<civ-tag label="${v}" color="${v}"></civ-tag>`);
       expect(el.querySelector(`.civ-tag--${v}`)).not.toBeNull();
     }
   });
 
   it('defaults to secondary style', async () => {
-    const el = await fixture('<civ-tag label="Healthcare" variant="blue"></civ-tag>');
+    const el = await fixture('<civ-tag label="Healthcare" color="blue"></civ-tag>');
     expect(el.querySelector('.civ-tag--blue')).not.toBeNull();
     expect(el.querySelector('.civ-tag--blue-primary')).toBeNull();
   });
 
   it('applies primary style class', async () => {
-    const el = await fixture('<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>');
+    const el = await fixture('<civ-tag label="Disability" color="purple" tag-style="primary"></civ-tag>');
     expect(el.querySelector('.civ-tag--purple-primary')).not.toBeNull();
   });
 
   it('renders all variants in primary style', async () => {
     const variants = ['blue', 'orange', 'purple', 'gray'];
     for (const v of variants) {
-      const el = await fixture(`<civ-tag label="${v}" variant="${v}" tag-style="primary"></civ-tag>`);
+      const el = await fixture(`<civ-tag label="${v}" color="${v}" tag-style="primary"></civ-tag>`);
       expect(el.querySelector(`.civ-tag--${v}-primary`)).not.toBeNull();
     }
   });

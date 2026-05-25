@@ -37,7 +37,7 @@ import type { SlotConfig } from '@civui/core';
  * ```html
  * <!-- Simple (string props) -->
  * <civ-list-item heading="Personal info" description="Name, DOB, SSN">
- *   <civ-badge data-list-item-end label="Complete" variant="success"></civ-badge>
+ *   <civ-badge data-list-item-end label="Complete" intent="success"></civ-badge>
  * </civ-list-item>
  *
  * <!-- Rich (slots — any heading level, links in description) -->
@@ -47,7 +47,7 @@ import type { SlotConfig } from '@civui/core';
  *   <p data-list-item-description class="civ-text-sm">
  *     Phone, email, and <a href="#/address">mailing address</a>
  *   </p>
- *   <civ-badge data-list-item-end label="In progress" variant="info"></civ-badge>
+ *   <civ-badge data-list-item-end label="In progress" intent="info"></civ-badge>
  * </civ-list-item>
  * ```
  */

@@ -67,7 +67,7 @@ export class CivSectionIntro extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       <civ-callout
-        variant="${variant}"
+        intent="${variant}"
         role="region"
         aria-labelledby="${this.heading ? this._headingId : nothing}"
         aria-label="${regionLabel ?? nothing}"

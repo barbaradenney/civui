@@ -37,7 +37,7 @@ export const Default: Story = {
   render: (args) => html`
     <civ-button
       label="${args.label}"
-      variant="${args.variant}"
+      emphasis="${args.emphasis}"
       type="${args.type}"
       ?disabled="${args.disabled}"
       ?danger="${args.danger}"
@@ -47,19 +47,19 @@ export const Default: Story = {
 
 export const Primary: Story = {
   render: () => html`
-    <civ-button variant="primary">Submit application</civ-button>
+    <civ-button emphasis="primary">Submit application</civ-button>
   `,
 };
 
 export const Secondary: Story = {
   render: () => html`
-    <civ-button variant="secondary">Save and continue later</civ-button>
+    <civ-button emphasis="secondary">Save and continue later</civ-button>
   `,
 };
 
 export const Tertiary: Story = {
   render: () => html`
-    <civ-button variant="tertiary">Cancel</civ-button>
+    <civ-button emphasis="tertiary">Cancel</civ-button>
   `,
 };
 
@@ -69,25 +69,25 @@ export const AllVariants: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Standard</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary">Primary</civ-button>
-          <civ-button variant="secondary">Secondary</civ-button>
-          <civ-button variant="tertiary">Tertiary</civ-button>
+          <civ-button emphasis="primary">Primary</civ-button>
+          <civ-button emphasis="secondary">Secondary</civ-button>
+          <civ-button emphasis="tertiary">Tertiary</civ-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Danger</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary" danger>Primary</civ-button>
-          <civ-button variant="secondary" danger>Secondary</civ-button>
-          <civ-button variant="tertiary" danger>Tertiary</civ-button>
+          <civ-button emphasis="primary" danger>Primary</civ-button>
+          <civ-button emphasis="secondary" danger>Secondary</civ-button>
+          <civ-button emphasis="tertiary" danger>Tertiary</civ-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Disabled</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary" disabled>Primary</civ-button>
-          <civ-button variant="secondary" disabled>Secondary</civ-button>
-          <civ-button variant="tertiary" disabled>Tertiary</civ-button>
+          <civ-button emphasis="primary" disabled>Primary</civ-button>
+          <civ-button emphasis="secondary" disabled>Secondary</civ-button>
+          <civ-button emphasis="tertiary" disabled>Tertiary</civ-button>
         </div>
       </div>
     </div>
@@ -97,9 +97,9 @@ export const AllVariants: Story = {
 export const Danger: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-      <civ-button variant="primary" danger>Delete account</civ-button>
-      <civ-button variant="secondary" danger>Remove dependent</civ-button>
-      <civ-button variant="tertiary" danger>Cancel claim</civ-button>
+      <civ-button emphasis="primary" danger>Delete account</civ-button>
+      <civ-button emphasis="secondary" danger>Remove dependent</civ-button>
+      <civ-button emphasis="tertiary" danger>Cancel claim</civ-button>
     </div>
   `,
 };
@@ -108,9 +108,9 @@ export const Disabled: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
       <civ-button disabled>Disabled primary</civ-button>
-      <civ-button variant="secondary" disabled>Disabled secondary</civ-button>
-      <civ-button variant="tertiary" disabled>Disabled tertiary</civ-button>
-      <civ-button variant="primary" danger disabled>Disabled danger</civ-button>
+      <civ-button emphasis="secondary" disabled>Disabled secondary</civ-button>
+      <civ-button emphasis="tertiary" disabled>Disabled tertiary</civ-button>
+      <civ-button emphasis="primary" danger disabled>Disabled danger</civ-button>
     </div>
   `,
 };
@@ -119,10 +119,10 @@ export const WithIcons: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
       <civ-button icon-start="download">Download</civ-button>
-      <civ-button icon-end="arrow-right" variant="primary">Continue</civ-button>
-      <civ-button icon-start="edit" variant="secondary">Edit</civ-button>
-      <civ-button icon-start="print" icon-end="external-link" variant="tertiary">Print form</civ-button>
-      <civ-button icon-start="trash" variant="primary" danger>Delete</civ-button>
+      <civ-button icon-end="arrow-right" emphasis="primary">Continue</civ-button>
+      <civ-button icon-start="edit" emphasis="secondary">Edit</civ-button>
+      <civ-button icon-start="print" icon-end="external-link" emphasis="tertiary">Print form</civ-button>
+      <civ-button icon-start="trash" emphasis="primary" danger>Delete</civ-button>
     </div>
   `,
 };
@@ -138,14 +138,14 @@ export const AsLink: Story = {
         history, and screen-reader role all behave as a real link.
       </p>
       <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
-        <civ-button href="/dependents/new" variant="primary">Add dependent</civ-button>
-        <civ-button href="/forms/21-526ez" variant="secondary" icon-start="plus">Start new claim</civ-button>
-        <civ-button href="/help" variant="tertiary">Get help</civ-button>
+        <civ-button href="/dependents/new" emphasis="primary">Add dependent</civ-button>
+        <civ-button href="/forms/21-526ez" emphasis="secondary" icon-start="plus">Start new claim</civ-button>
+        <civ-button href="/help" emphasis="tertiary">Get help</civ-button>
       </div>
       <p class="civ-m-0 civ-text-sm">External links — pair with <code>new-tab</code> for the standard "open in new tab" treatment.</p>
       <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
-        <civ-button href="https://www.va.gov" variant="secondary" new-tab>VA.gov</civ-button>
-        <civ-button href="https://www.benefits.va.gov" variant="tertiary" new-tab icon-end="external-link">Benefits site</civ-button>
+        <civ-button href="https://www.va.gov" emphasis="secondary" new-tab>VA.gov</civ-button>
+        <civ-button href="https://www.benefits.va.gov" emphasis="tertiary" new-tab icon-end="external-link">Benefits site</civ-button>
       </div>
     </div>
   `,
@@ -157,25 +157,25 @@ export const DensityScale: Story = {
       <div data-civ-scale="dense">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary">Submit</civ-button>
-          <civ-button variant="secondary">Save</civ-button>
-          <civ-button variant="tertiary">Cancel</civ-button>
+          <civ-button emphasis="primary">Submit</civ-button>
+          <civ-button emphasis="secondary">Save</civ-button>
+          <civ-button emphasis="tertiary">Cancel</civ-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary">Submit</civ-button>
-          <civ-button variant="secondary">Save</civ-button>
-          <civ-button variant="tertiary">Cancel</civ-button>
+          <civ-button emphasis="primary">Submit</civ-button>
+          <civ-button emphasis="secondary">Save</civ-button>
+          <civ-button emphasis="tertiary">Cancel</civ-button>
         </div>
       </div>
       <div data-civ-scale="spacious">
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
-          <civ-button variant="primary">Submit</civ-button>
-          <civ-button variant="secondary">Save</civ-button>
-          <civ-button variant="tertiary">Cancel</civ-button>
+          <civ-button emphasis="primary">Submit</civ-button>
+          <civ-button emphasis="secondary">Save</civ-button>
+          <civ-button emphasis="tertiary">Cancel</civ-button>
         </div>
       </div>
     </div>
@@ -193,8 +193,8 @@ export const FormActions: Story = {
       <p class="civ-mb-4">Complete your VA benefits application and submit for review.</p>
       <div class="civ-button-row">
         <civ-button type="submit">Submit application</civ-button>
-        <civ-button variant="secondary">Save and continue later</civ-button>
-        <civ-button variant="tertiary">Cancel</civ-button>
+        <civ-button emphasis="secondary">Save and continue later</civ-button>
+        <civ-button emphasis="tertiary">Cancel</civ-button>
       </div>
     </form>
   `,
@@ -214,7 +214,7 @@ export const FormActionsMobile: Story = {
     </p>
     <div class="civ-button-row">
       <civ-button>Save and continue</civ-button>
-      <civ-button variant="tertiary">Back</civ-button>
+      <civ-button emphasis="tertiary">Back</civ-button>
     </div>
   `,
 };
@@ -225,15 +225,15 @@ export const ClaimActions: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Upload evidence</p>
         <div class="civ-button-row">
-          <civ-button variant="primary">Upload documents</civ-button>
-          <civ-button variant="tertiary">Skip for now</civ-button>
+          <civ-button emphasis="primary">Upload documents</civ-button>
+          <civ-button emphasis="tertiary">Skip for now</civ-button>
         </div>
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Manage dependents</p>
         <div class="civ-button-row">
-          <civ-button variant="secondary">Add dependent</civ-button>
-          <civ-button variant="tertiary" danger>Remove dependent</civ-button>
+          <civ-button emphasis="secondary">Add dependent</civ-button>
+          <civ-button emphasis="tertiary" danger>Remove dependent</civ-button>
         </div>
       </div>
     </div>

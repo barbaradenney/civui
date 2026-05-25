@@ -24,14 +24,14 @@ describe('civ-button', () => {
   });
 
   it('applies secondary variant class', async () => {
-    const el = await fixture('<civ-button variant="secondary">Click</civ-button>');
+    const el = await fixture('<civ-button emphasis="secondary">Click</civ-button>');
 
     const btn = el.querySelector('button')!;
     expect(btn.className).toContain('civ-btn--secondary');
   });
 
   it('applies tertiary variant class', async () => {
-    const el = await fixture('<civ-button variant="tertiary">Click</civ-button>');
+    const el = await fixture('<civ-button emphasis="tertiary">Click</civ-button>');
 
     const btn = el.querySelector('button')!;
     expect(btn.className).toContain('civ-btn--tertiary');
@@ -41,21 +41,24 @@ describe('civ-button', () => {
     const el = await fixture('<civ-button danger>Delete</civ-button>');
 
     const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--primary-danger');
+    expect(btn.className).toContain('civ-btn--primary');
+    expect(btn.className).toContain('civ-btn--danger');
   });
 
   it('applies danger class to secondary variant', async () => {
-    const el = await fixture('<civ-button variant="secondary" danger>Remove</civ-button>');
+    const el = await fixture('<civ-button emphasis="secondary" danger>Remove</civ-button>');
 
     const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--secondary-danger');
+    expect(btn.className).toContain('civ-btn--secondary');
+    expect(btn.className).toContain('civ-btn--danger');
   });
 
   it('applies danger class to tertiary variant', async () => {
-    const el = await fixture('<civ-button variant="tertiary" danger>Cancel</civ-button>');
+    const el = await fixture('<civ-button emphasis="tertiary" danger>Cancel</civ-button>');
 
     const btn = el.querySelector('button')!;
-    expect(btn.className).toContain('civ-btn--tertiary-danger');
+    expect(btn.className).toContain('civ-btn--tertiary');
+    expect(btn.className).toContain('civ-btn--danger');
   });
 
   it('sets disabled attribute on button', async () => {

@@ -239,8 +239,8 @@ export const ButtonStyledLinkComparison: Story = {
           civ-button with href (renders as &lt;a&gt; with underline)
         </p>
         <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
-          <civ-button href="/start" variant="primary">Start application</civ-button>
-          <civ-button href="/details" variant="secondary">View details</civ-button>
+          <civ-button href="/start" emphasis="primary">Start application</civ-button>
+          <civ-button href="/details" emphasis="secondary">View details</civ-button>
         </div>
       </div>
       <p class="civ-m-0 civ-text-sm">

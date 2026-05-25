@@ -7,7 +7,7 @@
 | `multiple` | `boolean` | `false` | Whether multiple files can be selected |
 | `show-preview` | `boolean` | `false` | When true, image files render as thumbnails in the file list |
 | `capture` | `''` \| `'user'` \| `'environment'` | `''` | On mobile, hint which camera to open. Empty string keeps the standard file picker |
-| `variant` | `'default'` \| `'compact'` \| `'full'` | `'default'` | Dropzone visual variant. compact = file-name + button row, default = standard dropzone, full = larger drag-target |
+| `variant` | `'default'` \| `'inline'` \| `'large'` | `'default'` | Visual **layout** of the file picker (not density — there is no density knob on file-upload today). `default` = standard medium dropzone with drag-and-drop. `inline` = pseudo-input + browse-button row, matching the layout of native `<input type="file">` for placement in dense forms (no drag-and-drop). `large` = taller drag target for landing pages or document-heavy workflows where upload is the primary page action. Previously named values `compact` and `full` were renamed to `inline` and `large` to disambiguate from the system-wide `spacing="sm"` density convention used by every other CivUI component |
 | `initial-files` | `array` | — | Server-resident files hydrated on mount (e.g. draft restore). Each item: &lcub;id, name, size, url?, type?&rcub; |
 | `max-size` | `number` | `0` | Maximum file size in bytes (0 = no limit) |
 | `max-files` | `number` | `0` | Maximum number of files (0 = no limit) |

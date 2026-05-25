@@ -59,14 +59,14 @@ describe('civ-popover', () => {
     expect((el as any).open).toBe(false);
   });
 
-  it('fires civ-popover-open and civ-popover-close', async () => {
+  it('fires civ-open and civ-close', async () => {
     const el = await fixture(template);
     await elementUpdated(el);
     await waitMicrotask();
     const opened = vi.fn();
     const closed = vi.fn();
-    el.addEventListener('civ-popover-open', opened);
-    el.addEventListener('civ-popover-close', closed);
+    el.addEventListener('civ-open', opened);
+    el.addEventListener('civ-close', closed);
     const trigger = el.querySelector('[data-testid="trigger"]') as HTMLElement;
     trigger.click();
     expect(opened).toHaveBeenCalledOnce();
@@ -87,7 +87,7 @@ describe('civ-popover', () => {
     expect(document.activeElement).toBe(innerBtn);
 
     const handler = vi.fn();
-    el.addEventListener('civ-popover-close', handler);
+    el.addEventListener('civ-close', handler);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await elementUpdated(el);

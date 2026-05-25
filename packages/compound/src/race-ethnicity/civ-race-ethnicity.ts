@@ -78,7 +78,7 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
    * — which matches the OMB shape (Race has 6, Ethnicity has 3) without
    * the consumer having to set anything. Pass `card` or `list` to override.
    */
-  @property({ type: String }) variant: 'card' | 'list' | 'auto' = 'auto';
+  @property({ type: String }) layout: 'card' | 'list' | 'auto' = 'auto';
 
   @state() private _data: RaceEthnicityValue = { ...EMPTY_VALUE };
 
@@ -149,7 +149,7 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
     // and ethnicity auto-resolves to `card` (sparse) and the two
     // sub-groups look like different components. Explicit `card` /
     // `list` from the consumer is honored on both groups symmetrically.
-    const groupVariant = this.variant === 'auto' ? 'list' : this.variant;
+    const groupVariant = this.layout === 'auto' ? 'list' : this.layout;
 
     return html`
       <fieldset
@@ -168,7 +168,7 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
           name="${this.name ? `${this.name}.race` : 'race'}"
           value="${this._data.race.join(',')}"
           error="${this.raceError}"
-          variant="${groupVariant}"
+          layout="${groupVariant}"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
           @civ-input="${this._onRaceInput}"
@@ -185,7 +185,7 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
           name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
           value="${this._data.ethnicity}"
           error="${this.ethnicityError}"
-          variant="${groupVariant}"
+          layout="${groupVariant}"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
           @civ-change="${this._onEthnicityChange}"

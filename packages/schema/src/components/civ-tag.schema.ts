@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    color: {
       type: 'enum',
       description: 'Color palette for categorization. `gray` is the neutral default; the other values are aesthetic colors (not semantic status) — use them to distinguish category groupings, not to encode meaning (success/error)',
       default: 'gray',

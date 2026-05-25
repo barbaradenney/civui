@@ -14,7 +14,7 @@ const schema: ComponentSchema = {
       description: 'Fragment URL (e.g. `#installation`). The parent reads this to locate the corresponding heading element',
       default: '',
     },
-    active: {
+    current: {
       type: 'boolean',
       description: 'Set by the parent when this item\'s target heading is the closest one currently in the viewport. Reflects to `aria-current="location"` and a visual indicator',
       default: false,

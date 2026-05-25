@@ -26,10 +26,7 @@ public struct CivRelationship: View {
     /// Relationship type preset (e.g., "spouse", "child", "parent").
     public var preset: String
 
-    /// Whether to show the name fields.
-    public var showName: Bool
-
-    /// Inverse of `showName` — when true, hides the inner name fields.
+    /// Hide the inner name fields. Defaults to false (name fields render).
     /// Use when an enclosing repeater step already captures the name and
     /// you want to avoid duplicating it inside CivRelationship.
     public var isHideName: Bool
@@ -121,7 +118,6 @@ public struct CivRelationship: View {
     public init(
         legend: String = "",
         preset: String = "",
-        showName: Bool = true,
         isHideName: Bool = false,
         showDeceased: Bool = false,
         deceasedAssumed: Bool = false,
@@ -152,7 +148,6 @@ public struct CivRelationship: View {
     ) {
         self.legend = legend
         self.preset = preset
-        self.showName = showName
         self.isHideName = isHideName
         self.showDeceased = showDeceased
         self.deceasedAssumed = deceasedAssumed

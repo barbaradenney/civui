@@ -118,7 +118,7 @@ public struct CivAddress: View {
     public var isReadonly: Bool
 
     /// Whether to show the Street address line 2 field.
-    public var showStreet2: Bool
+    public var hideStreet2: Bool
 
     /// Called on value change (parallels `civ-change` event).
     public var onChange: ((AddressValue) -> Void)?
@@ -182,7 +182,7 @@ public struct CivAddress: View {
         isRequired: Bool = false,
         isDisabled: Bool = false,
         isReadonly: Bool = false,
-        showStreet2: Bool = true,
+        hideStreet2: Bool = true,
         onChange: ((AddressValue) -> Void)? = nil,
         onInput: ((AddressValue) -> Void)? = nil,
         onReset: (() -> Void)? = nil,
@@ -209,7 +209,7 @@ public struct CivAddress: View {
         self.isRequired = isRequired
         self.isDisabled = isDisabled
         self.isReadonly = isReadonly
-        self.showStreet2 = showStreet2
+        self.hideStreet2 = hideStreet2
         self.onChange = onChange
         self.onInput = onInput
         self.onReset = onReset
@@ -269,7 +269,7 @@ public struct CivAddress: View {
                 )
 
                 // Street address line 2
-                if showStreet2 {
+                if hideStreet2 {
                     addressField(
                         label: "Street address line 2",
                         text: $value.street2,
@@ -548,7 +548,7 @@ struct CivAddress_Previews: PreviewProvider {
                         legend: "Without street line 2",
                         value: $mailing,
                         isRequired: true,
-                        showStreet2: false
+                        hideStreet2: false
                     )
                 }
                 .padding()

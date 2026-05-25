@@ -97,7 +97,7 @@ An accessible alert component for informational, warning, error, or success mess
 
 ```html
 <civ-alert
-  variant="info"
+  intent="info"
   heading="Scheduled maintenance"
   label="The system will be unavailable Saturday from 2:00 AM to 6:00 AM ET."
 ></civ-alert>
@@ -107,7 +107,7 @@ An accessible alert component for informational, warning, error, or success mess
 
 ```html
 <civ-alert
-  variant="error"
+  intent="error"
   heading="There is a problem"
   label="Your session has expired. Please sign in again to continue."
 ></civ-alert>
@@ -117,7 +117,7 @@ An accessible alert component for informational, warning, error, or success mess
 
 ```html
 <civ-alert
-  variant="success"
+  intent="success"
   heading="Application submitted"
   label="Your claim has been received. You will get a confirmation email within 24 hours."
 ></civ-alert>
@@ -127,7 +127,7 @@ An accessible alert component for informational, warning, error, or success mess
 
 ```html
 <civ-alert
-  variant="warning"
+  intent="warning"
   heading="Unsaved changes"
   label="You have unsaved changes. If you leave this page, your progress will be lost."
 ></civ-alert>
@@ -137,7 +137,7 @@ An accessible alert component for informational, warning, error, or success mess
 
 ```html
 <civ-alert
-  variant="info"
+  intent="info"
   heading="New feature available"
   label="You can now upload documents directly from your phone."
   dismissible
@@ -147,15 +147,15 @@ An accessible alert component for informational, warning, error, or success mess
 ### Slim (compact) variant
 
 ```html
-<civ-alert variant="success" slim label="Your changes have been saved."></civ-alert>
+<civ-alert intent="success" slim label="Your changes have been saved."></civ-alert>
 ```
 
 ### Primary style (high emphasis)
 
 ```html
 <civ-alert
-  variant="error"
-  alert-style="primary"
+  intent="error"
+  emphasis="primary"
   heading="Service unavailable"
   label="We are experiencing technical difficulties. Please try again later."
 ></civ-alert>

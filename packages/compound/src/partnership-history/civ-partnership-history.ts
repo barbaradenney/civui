@@ -294,7 +294,7 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
           name="${prefix}.status"
           value="${this._data.status}"
           error="${this.statusError}"
-          variant="list"
+          layout="list"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
           data-marriage-status

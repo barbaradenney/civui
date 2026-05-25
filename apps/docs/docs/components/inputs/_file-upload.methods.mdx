@@ -1,0 +1,8 @@
+{/* Generated from @civui/schema by tools/sync-doc-tables.ts.
+    Do not edit by hand. Run `pnpm sync:doc-tables` to regenerate. */}
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `setFileStatus(index: number, status: string, opts?: object)` | `void` | Update a file's upload status from the consumer's upload pipeline. Drives the per-file UI state machine: `pending` (initial), `uploading` (spinner + progress bar + Cancel), `success` (check icon), `error` (error icon + Retry button + per-file error text from opts.error), `locked` (lock icon + inline password input + Unlock button — fires `civ-file-unlock` on submit). The transition clears `file.error` unless `opts.error` is provided, so transitions from error to a new state don't carry stale messages. Out-of-range index is a no-op |
+| `getAbortController(index: number)` | `object` | Lazily create and return an `AbortController` scoped to this file index, for the consumer to wire into their fetch call. Returning the same controller on repeat calls lets you signal cancellation from anywhere. Calling `cancel` from the Cancel button aborts the same controller; this is the integration seam. Returns `undefined` for an out-of-range index |
+| `removeFile(index: number, opts?: object)` | `void` | Remove a file from the list by index. Fires the cancelable `civ-file-upload-before-remove` event first; if the consumer wires confirmation via that hook, they call `preventDefault()` and then re-invoke this with `{ skipConfirm: true }` from their confirm handler |

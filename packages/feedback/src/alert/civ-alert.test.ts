@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-alert.js';
-import type { CivAlert, AlertVariant } from './civ-alert.js';
+import type { CivAlert, AlertIntent } from './civ-alert.js';
 
 afterEach(cleanupFixtures);
 
@@ -21,28 +21,28 @@ describe('civ-alert', () => {
   });
 
   it('renders info variant with correct classes', async () => {
-    const el = await fixture('<civ-alert variant="info">Info message.</civ-alert>');
+    const el = await fixture('<civ-alert intent="info">Info message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--info');
   });
 
   it('renders warning variant with correct classes', async () => {
-    const el = await fixture('<civ-alert variant="warning">Warning message.</civ-alert>');
+    const el = await fixture('<civ-alert intent="warning">Warning message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--warning');
   });
 
   it('renders error variant with correct classes', async () => {
-    const el = await fixture('<civ-alert variant="error">Error message.</civ-alert>');
+    const el = await fixture('<civ-alert intent="error">Error message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--error');
   });
 
   it('renders success variant with correct classes', async () => {
-    const el = await fixture('<civ-alert variant="success">Success message.</civ-alert>');
+    const el = await fixture('<civ-alert intent="success">Success message.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.className).toContain('civ-alert--success');
@@ -56,21 +56,21 @@ describe('civ-alert', () => {
   });
 
   it('uses role="alert" on error variant', async () => {
-    const el = await fixture('<civ-alert variant="error">Error.</civ-alert>');
+    const el = await fixture('<civ-alert intent="error">Error.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.getAttribute('role')).toBe('alert');
   });
 
   it('uses role="status" on warning variant', async () => {
-    const el = await fixture('<civ-alert variant="warning">Warning.</civ-alert>');
+    const el = await fixture('<civ-alert intent="warning">Warning.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.getAttribute('role')).toBe('status');
   });
 
   it('uses role="status" on success variant', async () => {
-    const el = await fixture('<civ-alert variant="success">Success.</civ-alert>');
+    const el = await fixture('<civ-alert intent="success">Success.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.getAttribute('role')).toBe('status');
@@ -128,7 +128,7 @@ describe('civ-alert', () => {
   });
 
   it('uses aria-label with variant name when no heading', async () => {
-    const el = await fixture('<civ-alert variant="error">Error.</civ-alert>');
+    const el = await fixture('<civ-alert intent="error">Error.</civ-alert>');
 
     const alert = el.querySelector('.civ-alert')!;
     expect(alert.getAttribute('aria-label')).toBe('Error alert');
@@ -405,10 +405,10 @@ describe('civ-alert', () => {
     it('switches role to "region" regardless of variant (landmark, not live region)', async () => {
       // role="alert" / role="status" would re-announce the banner on
       // every page navigation — wrong for a persistent site-wide notice.
-      const cases: AlertVariant[] = ['info', 'warning', 'error', 'success'];
+      const cases: AlertIntent[] = ['info', 'warning', 'error', 'success'];
       for (const variant of cases) {
         const el = await fixture(
-          `<civ-alert full-width variant="${variant}" heading="Site notice">Body.</civ-alert>`,
+          `<civ-alert full-width intent="${variant}" heading="Site notice">Body.</civ-alert>`,
         );
         expect(el.querySelector('.civ-alert')?.getAttribute('role')).toBe('region');
       }
@@ -428,7 +428,7 @@ describe('civ-alert', () => {
 
     it('falls back to the variant label for aria-label when no heading', async () => {
       const el = await fixture(
-        '<civ-alert full-width variant="warning">Body without heading.</civ-alert>',
+        '<civ-alert full-width intent="warning">Body without heading.</civ-alert>',
       );
       const banner = el.querySelector('.civ-alert')!;
       // The variant-label string ("Warning", "Information", etc.)

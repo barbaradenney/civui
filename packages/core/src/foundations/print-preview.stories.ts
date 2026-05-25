@@ -153,7 +153,7 @@ export const CompoundFields: Story = {
     <civ-name
       legend="Veteran's name"
       value='{"first":"Jane","middle":"A","last":"Smith","suffix":""}'
-      show-middle
+      hide-middle
     ></civ-name>
 
     <civ-address
@@ -172,7 +172,7 @@ export const CompleteForm: Story = {
     <civ-name
       legend="Applicant name"
       value='{"first":"Jane","middle":"A","last":"Smith","suffix":""}'
-      show-middle
+      hide-middle
     ></civ-name>
 
     <civ-memorable-date legend="Date of birth" required name="dob" value="1990-01-15"></civ-memorable-date>

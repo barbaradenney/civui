@@ -7,7 +7,7 @@ description: 'Two-stage content disclosure: always-visible teaser plus a Read mo
 props:
   type: object
   properties:
-    expanded:
+    open:
       title: Expanded
       type: boolean
       default: false

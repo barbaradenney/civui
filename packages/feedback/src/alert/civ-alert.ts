@@ -18,8 +18,8 @@ import type { SlotConfig } from '@civui/core';
 // live) so feedback → layout's actions → feedback cycle stays
 // broken.
 
-export type AlertVariant = 'info' | 'warning' | 'error' | 'success';
-export type AlertStyle = 'primary' | 'secondary' | 'tertiary';
+export type AlertIntent = 'info' | 'warning' | 'error' | 'success';
+export type AlertEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
 
@@ -58,8 +58,8 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  *
  * @element civ-alert
  *
- * @prop {AlertVariant} variant - Alert type (sets colors + ARIA role)
- * @prop {AlertStyle} alertStyle - Visual treatment (primary, secondary, tertiary)
+ * @prop {AlertIntent} intent - Alert type (sets colors + ARIA role)
+ * @prop {AlertEmphasis} emphasis - Visual treatment (primary, secondary, tertiary)
  * @prop {string} heading - Optional heading text
  * @prop {AlertHeadingLevel} headingLevel - Heading element level (2-6)
  * @prop {string} label - Body text (preferred over child content)
@@ -79,8 +79,8 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  */
 @customElement('civ-alert')
 export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
-  @property({ type: String }) variant: AlertVariant = 'info';
-  @property({ type: String, attribute: 'alert-style' }) alertStyle: AlertStyle = 'secondary';
+  @property({ type: String }) intent: AlertIntent = 'info';
+  @property({ type: String, attribute: 'emphasis' }) emphasis: AlertEmphasis = 'secondary';
   @property({ type: String }) heading = '';
   @property({ type: Number, attribute: 'heading-level' }) headingLevel: AlertHeadingLevel = 4;
   @property({ type: String }) label = '';
@@ -127,8 +127,8 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
 
     const classes = [
       'civ-alert',
-      `civ-alert--${this.variant}`,
-      `civ-alert--style-${this.alertStyle}`,
+      `civ-alert--${this.intent}`,
+      `civ-alert--style-${this.emphasis}`,
       (this.slim || this.spacing === 'sm') ? 'civ-alert--sm' : '',
       this.fullWidth ? 'civ-alert--full-width' : '',
       collapsibleActive ? 'civ-alert--collapsible' : '',
@@ -138,7 +138,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
 
     const hasHeading = !this.slim && this.heading;
     const level = Math.max(2, Math.min(6, this.headingLevel)) as AlertHeadingLevel;
-    const variantLabelKey = `alertLabel${this.variant.charAt(0).toUpperCase()}${this.variant.slice(1)}` as
+    const variantLabelKey = `alertLabel${this.intent.charAt(0).toUpperCase()}${this.intent.slice(1)}` as
       'alertLabelInfo' | 'alertLabelWarning' | 'alertLabelError' | 'alertLabelSuccess';
     const variantLabel = t(variantLabelKey);
 
@@ -146,7 +146,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
     // region. role="region" + aria-label gives it a landmark name that
     // screen-reader rotor can jump to without re-announcing on every
     // page navigation (which a live-region role="alert" would do).
-    const role = this.fullWidth ? 'region' : this.variant === 'error' ? 'alert' : 'status';
+    const role = this.fullWidth ? 'region' : this.intent === 'error' ? 'alert' : 'status';
     const ariaLabel = this.fullWidth
       ? (this.heading || variantLabel)
       : (hasHeading ? null : variantLabel);

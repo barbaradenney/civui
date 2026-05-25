@@ -32,11 +32,11 @@ const schema: ComponentSchema = {
       values: ['sm', 'md', 'lg', 'xl'],
       webOnly: true,
     },
-    showStreet2: {
+    hideStreet2: {
       type: 'boolean',
       description: 'Render the optional second address line',
       default: true,
-      attribute: 'show-street2',
+      attribute: 'hide-street2',
     },
     showStreet3: {
       type: 'boolean',
@@ -113,7 +113,7 @@ const schema: ComponentSchema = {
         { type: 'error', condition: 'error', bindings: { text: 'error' } },
         // Sub-fields rendered as nested civ-text-input / civ-select / civ-zip
         { type: 'slot', bindings: { name: 'street' } },
-        { type: 'slot', condition: 'showStreet2', bindings: { name: 'street2' } },
+        { type: 'slot', condition: 'hideStreet2', bindings: { name: 'street2' } },
         { type: 'slot', condition: 'showStreet3', bindings: { name: 'street3' } },
         { type: 'slot', bindings: { name: 'city' } },
         { type: 'slot', bindings: { name: 'state' } },

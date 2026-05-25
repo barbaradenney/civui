@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 fun CivReadMore(
-    expanded: Boolean = false,
+    open: Boolean = false,
     moreLabel: String = "",
     lessLabel: String = "",
     icon: String = "",

@@ -122,12 +122,12 @@ export const WithTagAndActions: Story = {
   render: () => html`
     <civ-card>
       <div data-card-header>
-        <civ-badge label="In progress" variant="info"></civ-badge>
+        <civ-badge label="In progress" intent="info"></civ-badge>
         <div class="civ-flex civ-justify-between civ-items-center">
           <h3 class="civ-heading-md">Disability compensation</h3>
           <div class="civ-flex civ-gap-2">
-            <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
-            <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+            <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
+            <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
           </div>
         </div>
       </div>
@@ -159,10 +159,10 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Dense</p>
         <civ-card>
           <div data-card-header>
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -176,10 +176,10 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default</p>
         <civ-card>
           <div data-card-header>
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -193,10 +193,10 @@ export const DensityScale: Story = {
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Spacious</p>
         <civ-card>
           <div data-card-header>
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
             <div class="civ-flex civ-justify-between civ-items-center">
               <civ-link href="#" class="civ-heading-md">Disability compensation</civ-link>
-              <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
+              <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
             </div>
           </div>
           <p>Filed: March 10, 2026</p>
@@ -214,7 +214,7 @@ export const AppointmentCards: Story = {
     <div class="civ-flex civ-flex-col civ-gap-4">
       <civ-card>
         <div data-card-header>
-          <civ-tag label="In person" variant="blue"></civ-tag>
+          <civ-tag label="In person" color="blue"></civ-tag>
           <h3 class="civ-heading-md">Primary care</h3>
         </div>
         <p>Dr. Smith — January 15, 2026 at 2:30 PM</p>
@@ -226,7 +226,7 @@ export const AppointmentCards: Story = {
 
       <civ-card>
         <div data-card-header>
-          <civ-tag label="Video" variant="purple"></civ-tag>
+          <civ-tag label="Video" color="purple"></civ-tag>
           <h3 class="civ-heading-md">Mental health</h3>
         </div>
         <p>Dr. Johnson — January 18, 2026 at 10:00 AM</p>
@@ -238,7 +238,7 @@ export const AppointmentCards: Story = {
 
       <civ-card>
         <div data-card-header>
-          <civ-badge label="Completed" variant="success"></civ-badge>
+          <civ-badge label="Completed" intent="success"></civ-badge>
           <h3 class="civ-heading-md">Lab work</h3>
         </div>
         <p>January 10, 2026</p>
@@ -257,8 +257,8 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-badge label="In progress" variant="info"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-badge label="In progress" intent="info"></civ-badge>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/123" class="civ-heading-md">Disability compensation</civ-link>
         </div>
@@ -269,8 +269,8 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-badge label="Decision made" variant="success"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-badge label="Decision made" intent="success"></civ-badge>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/456" class="civ-heading-md">Travel reimbursement</civ-link>
         </div>
@@ -281,8 +281,8 @@ export const ClaimStatusCards: Story = {
       <civ-card>
         <div data-card-header>
           <div class="civ-flex civ-justify-between civ-items-center">
-            <civ-badge label="Action needed" variant="error"></civ-badge>
-            <civ-action-button label="View details" variant="tertiary"></civ-action-button>
+            <civ-badge label="Action needed" intent="error"></civ-badge>
+            <civ-action-button label="View details" emphasis="tertiary"></civ-action-button>
           </div>
           <civ-link href="#/claims/789" class="civ-heading-md">Education benefits</civ-link>
         </div>
@@ -300,8 +300,8 @@ export const DependentCard: Story = {
         <div class="civ-flex civ-justify-between civ-items-center">
           <h3 class="civ-heading-md">Dependent: Jane Doe</h3>
           <div class="civ-flex civ-gap-2">
-            <civ-action-button label="Edit" variant="tertiary"></civ-action-button>
-            <civ-action-button label="Remove" variant="tertiary" danger></civ-action-button>
+            <civ-action-button label="Edit" emphasis="tertiary"></civ-action-button>
+            <civ-action-button label="Remove" emphasis="tertiary" danger></civ-action-button>
           </div>
         </div>
       </div>

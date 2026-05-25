@@ -30,7 +30,7 @@ The 80% case: a single screen listing records with search and an "Add" action ab
 ```html
 <civ-toolbar label="Applications toolbar">
   <civ-text-input label="Search applicants" type="search"></civ-text-input>
-  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+  <civ-button data-civ-toolbar-end emphasis="primary" icon-start="add" label="New application"></civ-button>
 </civ-toolbar>
 <civ-data-grid caption="Applications"></civ-data-grid>
 <civ-pagination item-name="application"></civ-pagination>
@@ -83,13 +83,13 @@ When users routinely act on multiple records at once (export selected, reassign,
 ```html
 <civ-toolbar label="Applications toolbar">
   <civ-text-input label="Search applicants" type="search"></civ-text-input>
-  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+  <civ-button data-civ-toolbar-end emphasis="primary" icon-start="add" label="New application"></civ-button>
 </civ-toolbar>
 
 <civ-bulk-actions count="0" item-name="application">
-  <civ-action-button variant="secondary" icon-start="download" label="Export"></civ-action-button>
-  <civ-action-button variant="secondary" icon-start="forward" label="Reassign"></civ-action-button>
-  <civ-action-button variant="secondary" danger icon-start="delete" label="Delete"></civ-action-button>
+  <civ-action-button emphasis="secondary" icon-start="download" label="Export"></civ-action-button>
+  <civ-action-button emphasis="secondary" icon-start="forward" label="Reassign"></civ-action-button>
+  <civ-action-button emphasis="secondary" danger icon-start="delete" label="Delete"></civ-action-button>
 </civ-bulk-actions>
 
 <civ-data-grid caption="Applications"></civ-data-grid>
@@ -129,7 +129,7 @@ For back-office staff who live in the screen all day. Per-column filters (the in
 <civ-toolbar label="Applications toolbar">
   <civ-text-input label="Search applicants" type="search"></civ-text-input>
   <civ-column-visibility data-civ-toolbar-end></civ-column-visibility>
-  <civ-button data-civ-toolbar-end variant="primary" icon-start="add" label="New application"></civ-button>
+  <civ-button data-civ-toolbar-end emphasis="primary" icon-start="add" label="New application"></civ-button>
 </civ-toolbar>
 <civ-data-grid caption="Applications" bordered></civ-data-grid>
 <civ-pagination item-name="application"></civ-pagination>
@@ -176,7 +176,7 @@ For "browse the list, dive into a record" workflows. Mark the grid `interactive`
 
 ```html
 <civ-data-grid caption="Applications" interactive></civ-data-grid>
-<civ-drawer position="end" heading="Application details">
+<civ-drawer align="end" heading="Application details">
   <dl id="detail-fields" style="margin: 0;"></dl>
 </civ-drawer>
 ```

@@ -82,7 +82,7 @@ export const ActionBar: Story = {
          form actions typically put the affirmative action at the
          visually-strongest position (right-most on desktop). -->
     <div class="civ-button-row civ-justify-end">
-      <civ-button variant="secondary" label="Save draft"></civ-button>
+      <civ-button emphasis="secondary" label="Save draft"></civ-button>
       <civ-button label="Continue"></civ-button>
     </div>
   `,
@@ -100,7 +100,7 @@ export const ListItem: Story = {
           </span>
         </div>
         <span class="civ-list-item__actions">
-          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+          <civ-action-button emphasis="tertiary" danger label="Remove"></civ-action-button>
         </span>
       </li>
       <li class="civ-list-item civ-list-item--error">
@@ -113,8 +113,8 @@ export const ListItem: Story = {
           <span class="civ-text-sm civ-text-error">File exceeds 3 MB limit</span>
         </div>
         <span class="civ-list-item__actions">
-          <civ-action-button variant="tertiary" label="Retry"></civ-action-button>
-          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+          <civ-action-button emphasis="tertiary" label="Retry"></civ-action-button>
+          <civ-action-button emphasis="tertiary" danger label="Remove"></civ-action-button>
         </span>
       </li>
       <li class="civ-list-item">
@@ -123,8 +123,8 @@ export const ListItem: Story = {
           <span class="civ-ms-2">(800 KB)</span>
         </div>
         <span class="civ-list-item__actions">
-          <civ-action-button variant="tertiary" label="Edit"></civ-action-button>
-          <civ-action-button variant="tertiary" danger label="Remove"></civ-action-button>
+          <civ-action-button emphasis="tertiary" label="Edit"></civ-action-button>
+          <civ-action-button emphasis="tertiary" danger label="Remove"></civ-action-button>
         </span>
       </li>
     </ul>

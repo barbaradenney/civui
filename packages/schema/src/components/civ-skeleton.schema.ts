@@ -9,7 +9,7 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
-    variant: {
+    shape: {
       type: 'enum',
       description: 'Shape. `text` (default) is one or more 1em-high text lines; `heading` is a taller text block for h1–h3 placeholders; `block` is a rectangular media / card body; `circle` is an avatar / icon round',
       default: 'text',

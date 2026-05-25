@@ -99,7 +99,7 @@ const schema: ComponentSchema = {
 
   platform: {
     web: {
-      controlClasses: ['civ-income-fields'],
+      controlClasses: ['civ-income__fields'],
     },
     ios: {
       // SwiftUI HStack of CivCurrency + CivSelect

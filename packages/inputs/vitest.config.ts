@@ -18,6 +18,7 @@ export default defineConfig({
       '@civui/inputs/segmented-control': resolve(__dirname, 'src/segmented-control/index.ts'),
       '@civui/inputs': resolve(__dirname, 'src/index.ts'),
       '@civui/actions/toggle-button': resolve(__dirname, '../actions/src/toggle-button/index.ts'),
+      '@civui/actions/action-button': resolve(__dirname, '../actions/src/action-button/index.ts'),
       '@civui/actions': resolve(__dirname, '../actions/src/index.ts'),
       // Defensive — the `@civui/actions` barrel transitively imports
       // `@civui/feedback/spinner` via civ-button. No inputs test pulls

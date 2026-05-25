@@ -44,7 +44,7 @@ export const WithStatusBadge: Story = {
     <civ-page-header>
       <h1 data-heading class="civ-heading-xl">
         Disability compensation claim
-        <civ-badge label="Decision made" variant="success"></civ-badge>
+        <civ-badge label="Decision made" intent="success"></civ-badge>
       </h1>
       <span data-subheading>Claim ID: 12345678</span>
     </civ-page-header>
@@ -85,11 +85,11 @@ export const AllSlotCombinations: Story = {
       <div>
         <p class="civ-m-0 civ-mb-2 civ-font-semibold">Stacked Tag + Eyebrow + Heading + Inline Badge + Subheading</p>
         <civ-page-header>
-          <civ-tag data-tag label="Claim #12345678" variant="gray"></civ-tag>
+          <civ-tag data-tag label="Claim #12345678" color="gray"></civ-tag>
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-badge label="Decision made" variant="success"></civ-badge>
+            <civ-badge label="Decision made" intent="success"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -107,7 +107,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -118,7 +118,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -129,7 +129,7 @@ export const DensityScale: Story = {
           <span data-eyebrow>Benefits</span>
           <h1 data-heading class="civ-heading-xl">
             Disability compensation
-            <civ-badge label="In progress" variant="info"></civ-badge>
+            <civ-badge label="In progress" intent="info"></civ-badge>
           </h1>
           <span data-subheading>VA Form 21-526EZ</span>
         </civ-page-header>
@@ -153,11 +153,11 @@ export const ClaimDetailHeader: Story = {
   name: 'Claim Detail',
   render: () => html`
     <civ-page-header>
-      <civ-badge data-tag label="Active" variant="success"></civ-badge>
+      <civ-badge data-tag label="Active" intent="success"></civ-badge>
       <span data-eyebrow>Claims and appeals</span>
       <h1 data-heading class="civ-heading-xl">
         Disability compensation claim
-        <civ-badge label="Decision made" variant="success"></civ-badge>
+        <civ-badge label="Decision made" intent="success"></civ-badge>
       </h1>
       <span data-subheading>Claim ID: 12345678 — Filed March 10, 2026</span>
     </civ-page-header>

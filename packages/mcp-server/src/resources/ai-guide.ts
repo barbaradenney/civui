@@ -58,13 +58,13 @@ For architecture and internals, see \`CLAUDE.md\` in the repo root.
 | \`<civ-yes-no>\` | Choice | \`legend\`, \`yes-label\`, \`no-label\`, \`unsure-label\`, \`skip-label\` | \`{ value }\` |
 | \`<civ-conditional>\` | Layout | \`when\`, \`equals\`, \`not-equals\`, \`includes\`, \`has-value\`, \`matches\` | — |
 | \`<civ-alert>\` | Feedback | \`variant\` (info/warning/error/success), \`heading\`, \`dismissible\`, \`slim\`, \`alert-style\` | \`civ-dismiss\` |
-| \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-modal-close\` |
-| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\` | \`civ-action-sheet-close\` |
-| \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
-| \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`show-middle\`, \`show-suffix\` | \`{ value: NameValue }\` |
+| \`<civ-modal>\` | Overlay | \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\` | \`civ-close\` |
+| \`<civ-action-sheet>\` | Overlay | \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside-close\` | \`civ-close\` |
+| \`<civ-address>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`hide-street2\`, \`show-country\`, \`show-military\` | \`{ value: AddressValue }\` |
+| \`<civ-name>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`format\`, \`hide-middle\`, \`hide-suffix\` | \`{ value: NameValue }\` |
 | \`<civ-direct-deposit>\` | Compound | \`legend\`, \`heading-level\`, \`size\` | \`{ value: DirectDepositValue }\` |
 | \`<civ-signature>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`statement\` | \`{ value: { name, certified, signedAt } }\` |
-| \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`show-name\` | \`{ value: RelationshipValue }\` |
+| \`<civ-relationship>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`preset\`, \`show-deceased\`, \`hide-name\` | \`{ value: RelationshipValue }\` |
 | \`<civ-race-ethnicity>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`ethnicity-legend\`, \`race-legend\` | \`{ value: RaceEthnicityValue }\` |
 | \`<civ-partnership-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-marriage-type\`, \`status-assumed\` | \`{ value: PartnershipValue }\` |
 | \`<civ-service-history>\` | Compound | \`legend\`, \`heading-level\`, \`size\`, \`show-service-number\` | \`{ value: ServicePeriodValue }\` |
@@ -470,8 +470,8 @@ Action button. Always renders a \`<button>\` element. For links, use \`<civ-link
 
 \`\`\`html
 <civ-button label="Submit" type="submit"></civ-button>
-<civ-button label="Cancel" variant="tertiary"></civ-button>
-<civ-button label="Delete" variant="secondary" danger></civ-button>
+<civ-button label="Cancel" emphasis="tertiary"></civ-button>
+<civ-button label="Delete" emphasis="secondary" danger></civ-button>
 \`\`\`
 
 ### civ-link
@@ -494,8 +494,8 @@ Categorization label (topic, taxonomy, filter chip). For status indicators ("App
 **Props:** \`label\`, \`variant\` (blue/orange/purple/gray), \`tag-style\` (primary/secondary)
 
 \`\`\`html
-<civ-tag label="Healthcare" variant="blue"></civ-tag>
-<civ-tag label="Disability" variant="purple" tag-style="primary"></civ-tag>
+<civ-tag label="Healthcare" color="blue"></civ-tag>
+<civ-tag label="Disability" color="purple" tag-style="primary"></civ-tag>
 \`\`\`
 
 ### civ-badge
@@ -507,10 +507,10 @@ Compact status indicator (text or dot). Carries \`role="status"\` for label mode
 Set \`with-icon\` to render the variant's semantic icon at the start (success → check-circle, warning → warning, error → error, info → info). Use \`icon-start\` / \`icon-end\` for explicit overrides.
 
 \`\`\`html
-<civ-badge label="Approved" variant="success" with-icon></civ-badge>
-<civ-badge label="Denied" variant="error" badge-style="primary" with-icon></civ-badge>
-<civ-badge label="Read more" variant="info" icon-end="chevron-right"></civ-badge>
-<civ-badge dot label="Unread messages" variant="error"></civ-badge>
+<civ-badge label="Approved" intent="success" with-icon></civ-badge>
+<civ-badge label="Denied" intent="error" emphasis="primary" with-icon></civ-badge>
+<civ-badge label="Read more" intent="info" icon-end="chevron-right"></civ-badge>
+<civ-badge dot label="Unread messages" intent="error"></civ-badge>
 \`\`\`
 
 ### civ-count
@@ -521,10 +521,10 @@ Numeric annotation — match counts in filter chips, item counts in nav, notific
 
 \`\`\`html
 <span>Inbox <civ-count count="12"></civ-count></span>
-<civ-count count="3" variant="error" count-style="primary"></civ-count>
+<civ-count count="3" intent="error" emphasis="primary"></civ-count>
 <span class="civ-badge-anchor">
   <civ-icon name="mail"></civ-icon>
-  <civ-count overlay count="3" variant="error" count-style="primary"></civ-count>
+  <civ-count overlay count="3" intent="error" emphasis="primary"></civ-count>
 </span>
 \`\`\`
 
@@ -536,11 +536,11 @@ Structured page heading with four slot areas: tag, eyebrow, heading, subheading.
 
 \`\`\`html
 <civ-page-header>
-  <civ-badge data-tag label="Active" variant="success"></civ-badge>
+  <civ-badge data-tag label="Active" intent="success"></civ-badge>
   <span data-eyebrow>Benefits</span>
   <h1 data-heading class="civ-heading-xl">
     Apply for disability compensation
-    <civ-badge label="In progress" variant="info"></civ-badge>
+    <civ-badge label="In progress" intent="info"></civ-badge>
   </h1>
   <span data-subheading>VA Form 21-526EZ</span>
 </civ-page-header>
@@ -568,7 +568,7 @@ Structured container with header, body, and footer slots.
 \`\`\`html
 <civ-card>
   <div data-card-header>
-    <civ-badge label="In progress" variant="info"></civ-badge>
+    <civ-badge label="In progress" intent="info"></civ-badge>
     <h3 class="civ-heading-md">Disability compensation</h3>
   </div>
   <p>Filed: March 10, 2026</p>
@@ -598,16 +598,16 @@ The "task list" is a usage pattern, not a dedicated component. Compose \`<civ-li
 <civ-list dividers>
   <civ-list-item href="#/personal">
     <span class="civ-block civ-font-bold">Personal info</span>
-    <civ-badge data-list-item-end label="Complete" variant="success" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item href="#/contact">
     <span class="civ-block civ-font-bold">Contact info</span>
     <span class="civ-block civ-text-sm civ-text-muted">Phone needed</span>
-    <civ-badge data-list-item-end label="In progress" variant="info" badge-style="primary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
   </civ-list-item>
   <civ-list-item>
     <span class="civ-block civ-font-bold">Service history</span>
-    <civ-badge data-list-item-end label="Cannot start yet" variant="neutral" badge-style="secondary" with-icon></civ-badge>
+    <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
   </civ-list-item>
 </civ-list>
 \`\`\`
@@ -654,7 +654,7 @@ Segmented step indicator for multi-step forms. Each step is a rectangle — fill
 
 Percentage-based progress indicator for dynamic forms.
 
-**Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`show-percent\`
+**Props:** \`value\` (0-100), \`label\` (aria-label), \`status\` (e.g., "3 of 8 sections"), \`hide-percent\`
 
 \`\`\`html
 <civ-progress-percent value="37" label="Application progress" status="3 of 8 sections complete"></civ-progress-percent>
@@ -708,8 +708,8 @@ Accessible alert for informational, warning, error, or success messages.
 **Props:** \`variant\` (info/warning/error/success), \`heading\`, \`label\` (body text), \`dismissible\`, \`slim\`, \`alert-style\` (primary/secondary/tertiary), \`heading-level\` (2-6)
 
 \`\`\`html
-<civ-alert variant="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
-<civ-alert variant="info" label="Processing takes up to 3 business days." slim></civ-alert>
+<civ-alert intent="warning" heading="Action needed" label="Your session will expire in 5 minutes."></civ-alert>
+<civ-alert intent="info" label="Processing takes up to 3 business days." slim></civ-alert>
 \`\`\`
 
 ---
@@ -720,13 +720,13 @@ Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on 
 
 **Props:** \`open\`, \`heading\`, \`label\`, \`no-close-button\`, \`no-backdrop-close\`, \`no-escape-close\`
 
-**Events:** \`civ-modal-close\`
+**Events:** \`civ-close\`
 
 \`\`\`html
 <civ-modal heading="Confirm submission" open>
   <p>Are you sure?</p>
   <civ-button label="Submit" type="submit"></civ-button>
-  <civ-button label="Cancel" variant="secondary"></civ-button>
+  <civ-button label="Cancel" emphasis="secondary"></civ-button>
 </civ-modal>
 \`\`\`
 
@@ -736,9 +736,9 @@ Modal dialog built on native \`<dialog>\`. Centered on desktop, bottom sheet on 
 
 Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
 
-**Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside\`
+**Props:** \`open\`, \`max-height\`, \`trap-focus\`, \`no-click-outside-close\`
 
-**Events:** \`civ-action-sheet-close\`
+**Events:** \`civ-close\`
 
 ---
 
@@ -746,7 +746,7 @@ Popup overlay: absolute dropdown on desktop, bottom sheet on mobile.
 
 Compound address component with street, city, state, ZIP.
 
-**Props:** \`legend\`, \`show-street2\` (default true), \`show-street3\`, \`show-country\`, \`show-military\`, \`validate-address\` (JS only). Per-field errors: \`street-error\`, \`city-error\`, \`state-error\`, \`zip-error\`.
+**Props:** \`legend\`, \`hide-street2\` (default true), \`show-street3\`, \`show-country\`, \`show-military\`, \`validate-address\` (JS only). Per-field errors: \`street-error\`, \`city-error\`, \`state-error\`, \`zip-error\`.
 
 \`\`\`html
 <civ-address legend="Mailing address" name="mailingAddress" required></civ-address>
@@ -758,7 +758,7 @@ Compound address component with street, city, state, ZIP.
 
 Compound name component with first, middle, last, suffix fields.
 
-**Props:** \`legend\`, \`show-middle\` (default true), \`show-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`. Field labels read "First name or given name" and "Last name or family name" so they apply to any naming convention.
+**Props:** \`legend\`, \`hide-middle\` (default true), \`hide-suffix\` (default true). Per-field errors: \`first-error\`, \`middle-error\`, \`last-error\`. Field labels read "First name or given name" and "Last name or family name" so they apply to any naming convention.
 
 \`\`\`html
 <civ-name legend="Your full legal name" name="fullName" required></civ-name>
@@ -794,7 +794,7 @@ Electronic signature with certification statement, name input, and confirm check
 
 Compound component for a person and their relationship to the applicant.
 
-**Props:** \`legend\`, \`preset\` (general/dependent/survivor/benefits-survivor/immigration/tax), \`show-name\`, \`show-deceased\`, \`show-divorce-date\`, \`show-adoption-date\`, \`deceased-assumed\`. Per-field errors: \`name-error\`, \`relationship-error\`, \`marriage-date-error\`, etc.
+**Props:** \`legend\`, \`preset\` (general/dependent/survivor/benefits-survivor/immigration/tax), \`hide-name\`, \`show-deceased\`, \`show-divorce-date\`, \`show-adoption-date\`, \`deceased-assumed\`. Per-field errors: \`name-error\`, \`relationship-error\`, \`marriage-date-error\`, etc.
 
 \`\`\`html
 <civ-relationship legend="About the dependent" name="dependent" preset="dependent" required></civ-relationship>

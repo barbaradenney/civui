@@ -37,26 +37,26 @@ props:
       type: string
       description: 'Preset option set name'
     preset_variant:
-      title: Preset variant
+      title: Preset layout
       type: string
       description: 'Variant of the preset options'
     tile:
       title: Tile
       type: boolean
       default: true
-      description: 'Tile variant with bordered card styling for child checkboxes. Default true — tiles are the standard treatment'
+      description: 'Tile layout with bordered card styling for child checkboxes. Default true — tiles are the standard treatment'
     orientation:
       title: Orientation
       type: string
       enum: ['vertical', 'horizontal']
       default: 'vertical'
       description: 'Layout orientation for child checkboxes'
-    variant:
+    layout:
       title: Variant
       type: string
       enum: ['auto', 'card', 'list']
       default: 'auto'
-      description: 'Tile rendering variant. auto picks card for ≤4 options and list for 5+. Vertical + tile only'
+      description: 'Tile rendering layout. auto picks card for ≤4 options and list for 5+. Vertical + tile only'
     max_selections:
       title: Max selections
       type: integer

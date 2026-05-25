@@ -2,11 +2,11 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement } from '@civui/core';
 
-export type BadgeVariant = 'info' | 'warning' | 'error' | 'success' | 'neutral';
-export type BadgeStyle = 'primary' | 'secondary';
+export type BadgeIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
+export type BadgeEmphasis = 'primary' | 'secondary';
 
 /** Default icon name per variant for `with-icon`. Neutral has no default. */
-const VARIANT_DEFAULT_ICON: Record<BadgeVariant, string> = {
+const VARIANT_DEFAULT_ICON: Record<BadgeIntent, string> = {
   info: 'info',
   warning: 'warning',
   error: 'error',
@@ -45,8 +45,8 @@ const VARIANT_DEFAULT_ICON: Record<BadgeVariant, string> = {
  *
  * @prop {string} label - Badge text (or accessible name when `dot`)
  * @prop {boolean} dot - Render as a dot only
- * @prop {BadgeVariant} variant - Semantic color
- * @prop {BadgeStyle} badgeStyle - Emphasis level: 'primary' or 'secondary' (default)
+ * @prop {BadgeIntent} intent - Semantic color
+ * @prop {BadgeEmphasis} emphasis - Emphasis level: 'primary' or 'secondary' (default)
  * @prop {string} spacing - Padding size: 'default' or 'sm'
  * @prop {boolean} overlay - Position absolutely in the top-end corner of a relative parent
  * @prop {boolean} withIcon - Auto-render the variant's semantic icon at start
@@ -55,10 +55,10 @@ const VARIANT_DEFAULT_ICON: Record<BadgeVariant, string> = {
  *
  * @example
  * ```html
- * <civ-badge label="Approved" variant="success" with-icon></civ-badge>
- * <civ-badge label="Denied" variant="error" badge-style="primary" with-icon></civ-badge>
- * <civ-badge label="Done" variant="success" icon-start="star"></civ-badge>
- * <civ-badge dot label="Unread" variant="error"></civ-badge>
+ * <civ-badge label="Approved" intent="success" with-icon></civ-badge>
+ * <civ-badge label="Denied" intent="error" emphasis="primary" with-icon></civ-badge>
+ * <civ-badge label="Done" intent="success" icon-start="star"></civ-badge>
+ * <civ-badge dot label="Unread" intent="error"></civ-badge>
  * ```
  */
 @customElement('civ-badge')
@@ -70,10 +70,10 @@ export class CivBadge extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) dot = false;
 
   /** Semantic color variant. */
-  @property({ type: String }) variant: BadgeVariant = 'neutral';
+  @property({ type: String }) intent: BadgeIntent = 'neutral';
 
   /** Emphasis: 'primary' (dark bg, light text) or 'secondary' (light bg, dark text). */
-  @property({ type: String, attribute: 'badge-style' }) badgeStyle: BadgeStyle = 'secondary';
+  @property({ type: String, attribute: 'emphasis' }) emphasis: BadgeEmphasis = 'secondary';
 
   /** Padding size: 'default' or 'sm' for compact layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
@@ -102,15 +102,15 @@ export class CivBadge extends CivBaseElement {
   /** Resolve the leading icon: explicit > variant default (when with-icon) > none. */
   private get _leadingIcon(): string {
     if (this.iconStart) return this.iconStart;
-    if (this.withIcon) return VARIANT_DEFAULT_ICON[this.variant];
+    if (this.withIcon) return VARIANT_DEFAULT_ICON[this.intent];
     return '';
   }
 
   override render() {
     const classes = [
       'civ-badge',
-      `civ-badge--${this.variant}`,
-      `civ-badge--style-${this.badgeStyle}`,
+      `civ-badge--${this.intent}`,
+      `civ-badge--style-${this.emphasis}`,
     ];
     if (this.spacing === 'sm') classes.push('civ-badge--sm');
     if (this.dot) classes.push('civ-badge--dot');

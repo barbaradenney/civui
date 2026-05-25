@@ -131,18 +131,36 @@ export const ImagePreview: Story = {
   `,
 };
 
-export const CompactVariant: Story = {
+export const InlineVariant: Story = {
+  name: 'Inline variant (no dropzone)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant="inline"` renders a pseudo-input + browse-button row matching the layout of native `<input type="file">`. Use in dense forms where the dropzone would take too much vertical space. No drag-and-drop. Previously named `variant="compact"` — renamed to disambiguate from the system-wide `spacing="sm"` density convention.',
+      },
+    },
+  },
   render: () => html`
     <civ-file-upload label="Resume" hint="PDF or Word document, max 5 MB" name="resume"
-        variant="compact"
+        variant="inline"
         accept=".pdf,.doc,.docx"></civ-file-upload>
   `,
 };
 
-export const FullVariant: Story = {
+export const LargeVariant: Story = {
+  name: 'Large variant (taller drag target)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant="large"` renders a taller drag target (`min-height: 250px`) for landing pages or document-heavy workflows where upload is the primary action. Previously named `variant="full"`.',
+      },
+    },
+  },
   render: () => html`
     <civ-file-upload label="Upload case documents" hint="Drag all related documents here. Accepted: PDF, JPEG, PNG, TIFF. Maximum 10 files." name="case-docs"
-        variant="full"
+        variant="large"
         multiple
         accept=".pdf,.jpg,.png,.tiff"
         max-files="10"
@@ -154,16 +172,16 @@ export const AllVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
       <div>
-        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Compact -- inline in dense forms</h3>
-        <civ-file-upload label="Attachment" name="attachment" variant="compact" accept=".pdf"></civ-file-upload>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Inline -- pseudo-input + browse button (no dropzone)</h3>
+        <civ-file-upload label="Attachment" name="attachment" variant="inline" accept=".pdf"></civ-file-upload>
       </div>
       <div>
-        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Default -- standard forms</h3>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Default -- standard dropzone</h3>
         <civ-file-upload label="Supporting document" name="doc" accept=".pdf,.jpg"></civ-file-upload>
       </div>
       <div>
-        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Full -- document-heavy workflows</h3>
-        <civ-file-upload label="Case file upload" name="case-files" variant="full" multiple show-preview accept=".pdf,.jpg,.png"></civ-file-upload>
+        <h3 class="civ-text-sm civ-font-bold civ-m-0 civ-mb-2">Large -- taller drag target for document-heavy workflows</h3>
+        <civ-file-upload label="Case file upload" name="case-files" variant="large" multiple show-preview accept=".pdf,.jpg,.png"></civ-file-upload>
       </div>
     </div>
   `,
@@ -229,6 +247,67 @@ export const UploadSimulation: Story = {
             }, 250);
           }}"
         ></civ-file-upload>
+    `;
+  },
+};
+
+// ── Password-protected files (encrypted PDFs, ZIPs) ────────────
+
+export const PasswordProtectedFiles: Story = {
+  name: 'Password-protected files (medical records)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Patients often receive medical records as password-protected PDFs (Kaiser, Mayo, VA Healthcare all do this). The password is typically the patient's date of birth or last 4 of SSN, sent in a separate email. Rather than rejecting the file or asking the user to strip the password externally, the consumer's upload handler marks the file `locked` and the component renders an inline password input with show/hide reveal. On unlock the component fires `civ-file-unlock` with the password; the consumer's pipeline decrypts (typically server-side via qpdf/pdftk, or client-side via pdf.js).\n\n**Try it:** upload any file. After a brief delay it will be marked as password-protected. Enter `dob-1985` to unlock successfully; any other password will show the incorrect-password error.",
+      },
+    },
+  },
+  render: () => {
+    const CORRECT = 'dob-1985';
+
+    const onUpload = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+      const detail = (e as CustomEvent).detail;
+      if (!el || !detail?.files?.length) return;
+
+      const totalFiles = el.files?.length ?? detail.files.length;
+      const startIndex = totalFiles - detail.files.length;
+      for (let i = startIndex; i < totalFiles; i++) {
+        const fileIndex = i;
+        el.setFileStatus(fileIndex, 'uploading', { progress: 0 });
+        setTimeout(() => el.setFileStatus(fileIndex, 'locked'), 600);
+      }
+    };
+
+    const onUnlock = (e: Event) => {
+      const el = (e.target as HTMLElement).closest('civ-file-upload') as CivFileUpload;
+      const detail = (e as CustomEvent).detail;
+      if (!el || detail?.index === undefined) return;
+      const fileIndex = detail.index;
+      setTimeout(() => {
+        if (detail.password === CORRECT) {
+          el.setFileStatus(fileIndex, 'success');
+        } else {
+          el.setFileStatus(fileIndex, 'locked', { error: 'Incorrect password. Try again.' });
+        }
+      }, 500);
+    };
+
+    return html`
+      <civ-file-upload
+        label="Upload medical records"
+        hint="Encrypted PDFs from your provider are supported. You'll be prompted for the password after upload."
+        name="medical"
+        accept=".pdf"
+        multiple
+        max-files="5"
+        @civ-change="${onUpload}"
+        @civ-file-unlock="${onUnlock}"
+      ></civ-file-upload>
+      <p class="civ-mt-4 civ-text-sm">
+        Demo password: <code>dob-1985</code>
+      </p>
     `;
   },
 };

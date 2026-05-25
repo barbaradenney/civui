@@ -15,18 +15,18 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
-    variant: {
+    intent: {
       type: 'enum',
       description: 'Semantic tone. Drives color palette and (with `with-icon`) the auto-rendered icon',
       default: 'neutral',
       values: ['info', 'success', 'warning', 'error', 'neutral'],
     },
-    badgeStyle: {
+    emphasis: {
       type: 'enum',
       description: 'Visual treatment. `primary` = solid fill; `secondary` = subtle background',
       default: 'secondary',
       values: ['primary', 'secondary'],
-      attribute: 'badge-style',
+      attribute: 'emphasis',
     },
     spacing: {
       type: 'enum',

@@ -12,7 +12,6 @@ fun CivRelationship(
     legend: String = "",
     preset: String = "",
     options: String = "",
-    showName: Boolean = true,
     hideName: Boolean = false,
     showDeceased: Boolean = false,
     deceasedAssumed: Boolean = false,

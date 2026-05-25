@@ -126,7 +126,7 @@ export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
   /** Tell each chip whether to use radio or toggle ARIA. */
   private _applyChipRoles(): void {
     const role = this.mode === 'single' ? 'radio' : 'toggle';
-    for (const chip of this._chips) chip.chipRole = role;
+    for (const chip of this._chips) chip.variant = role;
   }
 
   /** tabindex=0 on the first selected chip (or first chip), -1 elsewhere. */

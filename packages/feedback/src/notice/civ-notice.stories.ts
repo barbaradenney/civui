@@ -150,7 +150,7 @@ export const InsideCallout: Story = {
   name: 'Composed inside a callout',
   render: () => html`
     <div style="max-width: 560px;">
-      <civ-callout variant="warning">
+      <civ-callout intent="warning">
         <p style="margin: 0 0 0.75rem; font-weight: bold;">Before you continue</p>
         <p style="margin: 0 0 1rem;">
           Make sure your identity documents are scanned and ready before
@@ -186,22 +186,22 @@ body styling stay identical.`,
     <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 560px;">
       <civ-notice
         intent="info"
-        notice-style="secondary"
+        emphasis="secondary"
         body="Info — quieter affordance for ambient information."
       ></civ-notice>
       <civ-notice
         intent="warning"
-        notice-style="secondary"
+        emphasis="secondary"
         body="Warning — softer cue when nested in a colored panel."
       ></civ-notice>
       <civ-notice
         intent="error"
-        notice-style="secondary"
+        emphasis="secondary"
         body="Error — less visually loud than the primary default."
       ></civ-notice>
       <civ-notice
         intent="success"
-        notice-style="secondary"
+        emphasis="secondary"
         body="Success — same shape, lighter weight."
       ></civ-notice>
     </div>
@@ -298,13 +298,13 @@ spacing) rather than the glyph variant.`,
     <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 560px;">
       <civ-notice
         intent="neutral"
-        notice-style="secondary"
+        emphasis="secondary"
         icon="calendar"
         body="Renewal due February 28, 2026."
       ></civ-notice>
       <civ-notice
         intent="info"
-        notice-style="secondary"
+        emphasis="secondary"
         icon="mail"
         body="Your benefit letter was mailed on January 18."
       ></civ-notice>

@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, LightDomTextMixin, announce, devWarn, sanitizeHref, t } from '@civui/core';
 import '@civui/feedback/spinner';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
+export type ButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
 /**
@@ -28,7 +28,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
  * @element civ-button
  *
  * @prop {string} label - Button text (preferred over child text)
- * @prop {ButtonVariant} variant - Visual variant
+ * @prop {ButtonEmphasis} emphasis - Visual variant
  * @prop {boolean} danger - Destructive action styling
  * @prop {boolean} disabled - Disabled state
  * @prop {boolean} loading - When true, swaps the leading icon area for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (form submit, save).
@@ -48,7 +48,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
 @customElement('civ-button')
 export class CivButton extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) label = '';
-  @property({ type: String }) variant: ButtonVariant = 'primary';
+  @property({ type: String }) emphasis: ButtonEmphasis = 'primary';
   @property({ type: Boolean, reflect: true }) danger = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   /**
@@ -121,13 +121,10 @@ export class CivButton extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _classes(): string {
-    const variantClass = this.danger
-      ? `civ-btn--${this.variant}-danger`
-      : `civ-btn--${this.variant}`;
-
     return [
       'civ-btn',
-      variantClass,
+      `civ-btn--${this.emphasis}`,
+      this.danger ? 'civ-btn--danger' : '',
       // Link mode adds an underline so the navigation affordance reads
       // as a link even when wearing button chrome.
       this._isLink ? 'civ-btn--link' : '',

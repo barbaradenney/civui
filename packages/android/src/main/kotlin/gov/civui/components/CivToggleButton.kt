@@ -27,6 +27,7 @@ fun CivToggleButton(
     pressedLabel: String = "",
     pressed: Boolean = false,
     variant: ToggleButtonVariant = ToggleButtonVariant.CHIP,
+    iconStart: String = "",
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
     onToggle: ((Boolean) -> Unit)? = null,

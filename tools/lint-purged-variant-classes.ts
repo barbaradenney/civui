@@ -6,7 +6,7 @@
  *
  * The class of bug this catches (commit f315b575):
  *
- *   `civ-action-button` builds its variant class via template literal:
+ *   Components used to build danger classes via template literal:
  *
  *     `civ-action-btn--${this.variant}-danger`
  *
@@ -15,11 +15,14 @@
  *   match, Tailwind treats the corresponding rule in components.css
  *   as unused and silently drops it. The symptom is invisible — no
  *   console error, no test failure, just buttons rendering without
- *   their `--primary-danger` background.
+ *   their danger color.
  *
- *   The sibling `civ-button` doesn't have this bug because its test
- *   asserts the full resolved class names: the test file IS the
- *   literal-string source that protects the CSS rule.
+ *   Post-slice-6.2 refactor: danger is now emitted as a standalone
+ *   `civ-btn--danger` / `civ-action-btn--danger` / `civ-link--danger`
+ *   class, and CSS uses compound selectors. Both halves are static
+ *   string literals in the source, so Tailwind preserves both rules.
+ *   This lint continues to guard against future regressions where a
+ *   per-variant modifier class is reintroduced via template literal.
  *
  * To prevent: every `.civ-X--Y` selector in components.css whose
  * class doesn't appear as a literal string in any `*.ts` file is

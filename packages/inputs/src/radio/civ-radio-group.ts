@@ -57,7 +57,7 @@ export class CivRadioGroup extends LegendHeadingMixin(GroupListenerMixin(LightDo
    * vertical. The auto threshold counts slotted `<civ-radio>` children
    * (or `preset` option count when used).
    */
-  @property({ type: String, reflect: true }) variant: 'card' | 'list' | 'auto' = 'auto';
+  @property({ type: String, reflect: true }) layout: 'card' | 'list' | 'auto' = 'auto';
 
   /** Pre-populate radio options from a built-in preset data set. */
   @property({ type: String }) preset?: SelectPresetName;
@@ -153,7 +153,7 @@ export class CivRadioGroup extends LegendHeadingMixin(GroupListenerMixin(LightDo
    * out of the DOM, so querySelector('civ-radio') would return 0.
    */
   private _resolveVariant(): 'card' | 'list' {
-    if (this.variant !== 'auto') return this.variant;
+    if (this.layout !== 'auto') return this.layout;
     const presetCount = this.preset
       ? resolvePresetOptions(this.preset, this.presetVariant).length
       : 0;

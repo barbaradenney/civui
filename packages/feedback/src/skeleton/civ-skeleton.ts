@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { CivBaseElement, devWarn } from '@civui/core';
 
-export type SkeletonVariant = 'text' | 'heading' | 'block' | 'circle';
+export type SkeletonShape = 'text' | 'heading' | 'block' | 'circle';
 
 /**
  * Allowed CSS length units for the `width` prop. We don't accept
@@ -48,7 +48,7 @@ const MAX_LINES = 50;
  *
  * @element civ-skeleton
  *
- * @prop {SkeletonVariant} variant - Shape: 'text' (default, one or more text lines), 'heading' (taller text block), 'block' (rectangular media / card body), 'circle' (avatar / icon).
+ * @prop {SkeletonShape} shape - Shape: 'text' (default, one or more text lines), 'heading' (taller text block), 'block' (rectangular media / card body), 'circle' (avatar / icon).
  * @prop {string} width - CSS length for the skeleton width (e.g. '100%', '12rem', '80px'). Defaults to 100% for text/heading/block, 2.5rem for circle. Invalid values fall back to the default with a dev-warn.
  * @prop {number} lines - Number of text lines to render. Only meaningful for the `text` variant. Default 1. Values below 1 render nothing; values above `MAX_LINES` (50) are clamped.
  *
@@ -56,20 +56,20 @@ const MAX_LINES = 50;
  * ```html
  * <!-- Heading + three lines of body text -->
  * <div aria-busy="true">
- *   <civ-skeleton variant="heading" width="60%"></civ-skeleton>
- *   <civ-skeleton variant="text" lines="3"></civ-skeleton>
+ *   <civ-skeleton shape="heading" width="60%"></civ-skeleton>
+ *   <civ-skeleton shape="text" lines="3"></civ-skeleton>
  * </div>
  *
  * <!-- Avatar + name placeholder -->
  * <div aria-busy="true" class="civ-flex civ-gap-3">
- *   <civ-skeleton variant="circle" width="3rem"></civ-skeleton>
- *   <civ-skeleton variant="text" width="8rem"></civ-skeleton>
+ *   <civ-skeleton shape="circle" width="3rem"></civ-skeleton>
+ *   <civ-skeleton shape="text" width="8rem"></civ-skeleton>
  * </div>
  * ```
  */
 @customElement('civ-skeleton')
 export class CivSkeleton extends CivBaseElement {
-  @property({ type: String, reflect: true }) variant: SkeletonVariant = 'text';
+  @property({ type: String, reflect: true }) shape: SkeletonShape = 'text';
 
   @property({ type: String }) width = '';
 
@@ -110,7 +110,7 @@ export class CivSkeleton extends CivBaseElement {
   }
 
   private get _defaultWidth(): string {
-    return this.variant === 'circle' ? '2.5rem' : '100%';
+    return this.shape === 'circle' ? '2.5rem' : '100%';
   }
 
   /**
@@ -135,11 +135,11 @@ export class CivSkeleton extends CivBaseElement {
   override render() {
     // Bail when lines < 1 — `lines="0"` should render nothing, not
     // a single placeholder. Also catches lines=NaN (`<civ-skeleton lines="abc">`).
-    if (this.variant === 'text' && !(this.lines >= 1)) return nothing;
+    if (this.shape === 'text' && !(this.lines >= 1)) return nothing;
 
     const w = this._safeWidth(this.width);
 
-    if (this.variant === 'text' && this.lines > 1) {
+    if (this.shape === 'text' && this.lines > 1) {
       // Clamp to MAX_LINES so a malformed `lines="10000"` doesn't
       // tie up render. Multiple text lines — render N lines, last
       // line shortened to mimic a paragraph's natural ragged-right
@@ -157,7 +157,7 @@ export class CivSkeleton extends CivBaseElement {
     }
 
     return html`<span
-      class="civ-skeleton civ-skeleton--${this.variant}"
+      class="civ-skeleton civ-skeleton--${this.shape}"
       style="width: ${w}"
     ></span>`;
   }

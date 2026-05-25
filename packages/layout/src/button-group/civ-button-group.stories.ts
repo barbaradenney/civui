@@ -50,21 +50,21 @@ export const AllVariants: Story = {
   render: () => html`
     <div class="civ-flex civ-gap-6 civ-items-start">
       <civ-button-group>
-        <civ-action-button label="One" variant="primary"></civ-action-button>
-        <civ-action-button label="Two" variant="primary"></civ-action-button>
-        <civ-action-button label="Three" variant="primary"></civ-action-button>
+        <civ-action-button label="One" emphasis="primary"></civ-action-button>
+        <civ-action-button label="Two" emphasis="primary"></civ-action-button>
+        <civ-action-button label="Three" emphasis="primary"></civ-action-button>
       </civ-button-group>
 
       <civ-button-group>
-        <civ-action-button label="One" variant="secondary"></civ-action-button>
-        <civ-action-button label="Two" variant="secondary"></civ-action-button>
-        <civ-action-button label="Three" variant="secondary"></civ-action-button>
+        <civ-action-button label="One" emphasis="secondary"></civ-action-button>
+        <civ-action-button label="Two" emphasis="secondary"></civ-action-button>
+        <civ-action-button label="Three" emphasis="secondary"></civ-action-button>
       </civ-button-group>
 
       <civ-button-group>
-        <civ-action-button label="One" variant="tertiary"></civ-action-button>
-        <civ-action-button label="Two" variant="tertiary"></civ-action-button>
-        <civ-action-button label="Three" variant="tertiary"></civ-action-button>
+        <civ-action-button label="One" emphasis="tertiary"></civ-action-button>
+        <civ-action-button label="Two" emphasis="tertiary"></civ-action-button>
+        <civ-action-button label="Three" emphasis="tertiary"></civ-action-button>
       </civ-button-group>
     </div>
   `,

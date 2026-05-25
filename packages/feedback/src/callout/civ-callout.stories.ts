@@ -371,3 +371,57 @@ weights read as the same family.`,
     </div>
   `,
 };
+
+export const Compact: Story = {
+  name: 'Compact (spacing="sm")',
+  parameters: {
+    docs: {
+      description: {
+        story: `\`spacing="sm"\` shrinks the inner padding from 12px / 16px
+to 8px / 12px (one step on the spacing ladder) for placements inside
+dense surfaces — data-grid empty states, compact reference tables,
+sidebar notes. Per the density-convention Contract A: pure shrink,
+no chrome dropped, no layout change. The rail width, intent colors,
+and content layout are identical.`,
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6" style="max-width: 600px;">
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">Default vs sm — same intent, side-by-side</p>
+        <div class="civ-flex civ-flex-col civ-gap-3">
+          <civ-callout intent="info">
+            <p class="civ-m-0 civ-font-bold civ-mb-1">Default padding (12 / 16)</p>
+            <p class="civ-m-0">Established callout spacing. Use in normal page flow.</p>
+          </civ-callout>
+          <civ-callout intent="info" spacing="sm">
+            <p class="civ-m-0 civ-font-bold civ-mb-1">Compact padding (8 / 12)</p>
+            <p class="civ-m-0">One step denser. Use inside dense admin surfaces.</p>
+          </civ-callout>
+        </div>
+      </div>
+
+      <div>
+        <p class="civ-m-0 civ-mb-2 civ-font-semibold">All variants at sm</p>
+        <div class="civ-flex civ-flex-col civ-gap-2">
+          <civ-callout spacing="sm">
+            <p class="civ-m-0">Default — neutral accent.</p>
+          </civ-callout>
+          <civ-callout intent="info" spacing="sm">
+            <p class="civ-m-0">Info — routine guidance.</p>
+          </civ-callout>
+          <civ-callout intent="warning" spacing="sm">
+            <p class="civ-m-0">Warning — heads-up.</p>
+          </civ-callout>
+          <civ-callout intent="error" spacing="sm">
+            <p class="civ-m-0">Error — problem callout.</p>
+          </civ-callout>
+          <civ-callout intent="success" spacing="sm">
+            <p class="civ-m-0">Success — confirmation.</p>
+          </civ-callout>
+        </div>
+      </div>
+    </div>
+  `,
+};

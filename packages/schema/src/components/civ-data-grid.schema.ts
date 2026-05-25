@@ -159,6 +159,12 @@ const schema: ComponentSchema = {
       default: true,
       attribute: 'show-group-subtotals',
     },
+    spacing: {
+      type: 'enum',
+      description: 'Row density ladder. `default` keeps the established 12px / 8px header + body cell padding. `sm` shrinks to 8px / 4px for compact admin grids. `xs` shrinks further to 8px / 2px for ultra-dense reference tables — at the WCAG SC 2.5.8 Target Size (Minimum) floor for touch surfaces, do not shrink further. Per density-convention.md Contract A: padding only, no chrome dropped, no layout change.',
+      default: 'default',
+      values: ['default', 'sm', 'xs'],
+    },
   },
 
   events: {

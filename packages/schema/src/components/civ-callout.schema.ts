@@ -23,6 +23,13 @@ const schema: ComponentSchema = {
       attribute: 'emphasis',
       reflect: true,
     },
+    spacing: {
+      type: 'enum',
+      description: 'Inner padding density. `default` keeps the established 12px / 16px padding; `sm` shrinks to 8px / 12px for placements inside dense surfaces (data-grid empty state, compact reference tables, sidebar notes). Pure shrink per Contract A — accent rail, intent colors, and content layout unchanged.',
+      default: 'default',
+      values: ['default', 'sm'],
+      reflect: true,
+    },
   },
 
   events: {},

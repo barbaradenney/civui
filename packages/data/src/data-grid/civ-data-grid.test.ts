@@ -2837,3 +2837,56 @@ describe('civ-data-grid — multi-column sort', () => {
     expect(next).toEqual([{ key: 'name', direction: 'asc' }]); // unchanged
   });
 });
+
+describe('civ-data-grid — density (spacing)', () => {
+  it('defaults to no density modifier class', async () => {
+    const el = await mountGrid();
+    expect(el.spacing).toBe('default');
+    const wrap = el.querySelector('.civ-data-grid');
+    expect(wrap?.classList.contains('civ-data-grid--sm')).toBe(false);
+    expect(wrap?.classList.contains('civ-data-grid--xs')).toBe(false);
+  });
+
+  it('applies .civ-data-grid--sm when spacing="sm"', async () => {
+    const el = await mountGrid();
+    el.spacing = 'sm';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sm')).not.toBeNull();
+    expect(el.querySelector('.civ-data-grid--xs')).toBeNull();
+  });
+
+  it('applies .civ-data-grid--xs when spacing="xs"', async () => {
+    const el = await mountGrid();
+    el.spacing = 'xs';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--xs')).not.toBeNull();
+    expect(el.querySelector('.civ-data-grid--sm')).toBeNull();
+  });
+
+  it('swaps cleanly when density changes (no class bleed)', async () => {
+    const el = await mountGrid();
+    el.spacing = 'sm';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sm')).not.toBeNull();
+    el.spacing = 'xs';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sm')).toBeNull();
+    expect(el.querySelector('.civ-data-grid--xs')).not.toBeNull();
+    el.spacing = 'default';
+    await elementUpdated(el);
+    expect(el.querySelector('.civ-data-grid--sm')).toBeNull();
+    expect(el.querySelector('.civ-data-grid--xs')).toBeNull();
+  });
+
+  it('density modifier coexists with striped + bordered', async () => {
+    const el = await mountGrid();
+    el.spacing = 'sm';
+    el.striped = true;
+    el.bordered = true;
+    await elementUpdated(el);
+    const wrap = el.querySelector('.civ-data-grid')!;
+    expect(wrap.classList.contains('civ-data-grid--sm')).toBe(true);
+    expect(wrap.classList.contains('civ-data-grid--striped')).toBe(true);
+    expect(wrap.classList.contains('civ-data-grid--bordered')).toBe(true);
+  });
+});

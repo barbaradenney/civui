@@ -199,6 +199,36 @@ describe('civ-modal slots', () => {
   });
 });
 
+describe('civ-modal spacing', () => {
+  it('defaults to spacing="default" with no host attribute', async () => {
+    const el = await fixture('<civ-modal heading="Test"><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    expect((el as unknown as { spacing: string }).spacing).toBe('default');
+    expect(el.getAttribute('spacing')).toBe('default');
+  });
+
+  it('reflects spacing="sm" to the host attribute', async () => {
+    const el = await fixture('<civ-modal heading="Test" spacing="sm"><p>Content</p></civ-modal>');
+    await elementUpdated(el);
+    expect((el as unknown as { spacing: string }).spacing).toBe('sm');
+    expect(el.getAttribute('spacing')).toBe('sm');
+  });
+
+  it('keeps dialog + header/body/footer structure across density changes', async () => {
+    const el = await fixture(`
+      <civ-modal heading="Test" spacing="sm" open>
+        <p>Body content</p>
+        <div data-modal-footer><button>OK</button></div>
+      </civ-modal>
+    `);
+    await elementUpdated(el);
+    expect(el.querySelector('dialog.civ-modal')).not.toBeNull();
+    expect(el.querySelector('.civ-modal__header')).not.toBeNull();
+    expect(el.querySelector('.civ-modal__body')).not.toBeNull();
+    expect(el.querySelector('.civ-modal__footer')).not.toBeNull();
+  });
+});
+
 describe('civ-modal required decision', () => {
   it('blocks all close methods when fully locked', async () => {
     const el = await fixture(

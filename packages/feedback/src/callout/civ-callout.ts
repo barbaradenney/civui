@@ -3,6 +3,7 @@ import { CivBaseElement, warnInvalidProp } from '@civui/core';
 
 export type CalloutIntent = 'default' | 'info' | 'warning' | 'error' | 'success';
 export type CalloutEmphasis = 'primary' | 'secondary';
+export type CalloutSpacing = 'default' | 'sm';
 
 const VALID_INTENTS: ReadonlySet<CalloutIntent> = new Set([
   'default',
@@ -13,6 +14,8 @@ const VALID_INTENTS: ReadonlySet<CalloutIntent> = new Set([
 ]);
 
 const VALID_EMPHASIS: ReadonlySet<CalloutEmphasis> = new Set(['primary', 'secondary']);
+
+const VALID_SPACING: ReadonlySet<CalloutSpacing> = new Set(['default', 'sm']);
 
 /**
  * CivUI Callout
@@ -60,6 +63,7 @@ const VALID_EMPHASIS: ReadonlySet<CalloutEmphasis> = new Set(['primary', 'second
  *
  * @prop {CalloutIntent} intent - Accent border color
  * @prop {CalloutEmphasis} emphasis - `primary` (default, 5px rail) or `secondary` (3px rail for subtle emphasis)
+ * @prop {CalloutSpacing} spacing - Inner padding density. `default` (12/16px) or `sm` (8/12px) for placements inside dense surfaces (data-grid empty state, sidebar notes)
  *
  * @example
  * ```html
@@ -108,6 +112,18 @@ export class CivCallout extends CivBaseElement {
   emphasis: CalloutEmphasis = 'primary';
 
   /**
+   * Inner padding density. `default` keeps the established 12px / 16px
+   * padding; `sm` shrinks to 8px / 12px (one step on the spacing
+   * ladder) for placements inside dense surfaces — data-grid empty
+   * states, compact reference tables, sidebar notes. Pure shrink only;
+   * the accent rail, intent colors, and content layout are unchanged.
+   * `useDefault: true` keeps the initial `'default'` value off the
+   * attribute so plain `<civ-callout>` markup matches today's output.
+   */
+  @property({ type: String, reflect: true, useDefault: true })
+  spacing: CalloutSpacing = 'default';
+
+  /**
    * Render into a detached throwaway root. See the class-level JSDoc
    * for the design rationale and the two constraints this imposes
    * (no `render()`, no `static styles`).
@@ -139,6 +155,14 @@ export class CivCallout extends CivBaseElement {
         'emphasis',
         "one of 'primary' | 'secondary'",
         this.emphasis,
+      );
+    }
+    if (changed.has('spacing') && !VALID_SPACING.has(this.spacing)) {
+      warnInvalidProp(
+        'civ-callout',
+        'spacing',
+        "one of 'default' | 'sm'",
+        this.spacing,
       );
     }
   }

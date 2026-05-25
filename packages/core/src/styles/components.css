@@ -4708,6 +4708,16 @@
   }
   .civ-notice--default .civ-notice__icon {
     font-size: var(--civ-typography-fontSize-4xl);
+    /* Optical centering with single-line body text. The 4xl icon
+       (~36px) sits in a `line-height: 1` box, while the lg body
+       (~18px @ line-height ~1.5) sits in a ~27px line-box. Under
+       `align-items: start`, the icon's vertical center lands ~4-5px
+       below the text's vertical center. This negative offset shifts
+       the icon up so it reads as centered on single-line notices;
+       on multi-line notices the small shift is imperceptible against
+       the wrapped text block. Sm doesn't need this — its 24px icon
+       and 16px text already share visual centers. */
+    margin-block-start: calc(var(--civ-spacing-1) * -1);
   }
   .civ-notice--default .civ-notice__header,
   .civ-notice--default .civ-notice__body {

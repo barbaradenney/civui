@@ -291,6 +291,7 @@ export interface CivLocaleStrings {
   alertLabelWarning: string;
   alertLabelError: string;
   alertLabelSuccess: string;
+  alertLabelNeutral: string;
 
   // Checkbox group
   selectAll: string;
@@ -1024,6 +1025,7 @@ const defaultStrings: CivLocaleStrings = {
   alertLabelWarning: 'Warning alert',
   alertLabelError: 'Error alert',
   alertLabelSuccess: 'Success alert',
+  alertLabelNeutral: 'Notice',
 
   progressStepsLabel: 'Progress',
   progressStepLabel: 'Step {step} of {total}: {label}',

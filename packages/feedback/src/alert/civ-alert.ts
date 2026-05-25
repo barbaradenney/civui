@@ -18,7 +18,7 @@ import type { SlotConfig } from '@civui/core';
 // live) so feedback → layout's actions → feedback cycle stays
 // broken.
 
-export type AlertIntent = 'info' | 'warning' | 'error' | 'success';
+export type AlertIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
 export type AlertEmphasis = 'primary' | 'secondary' | 'tertiary';
 export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
 
@@ -156,7 +156,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
     const hasHeading = !this.slim && this.heading;
     const level = Math.max(2, Math.min(6, this.headingLevel)) as AlertHeadingLevel;
     const variantLabelKey = `alertLabel${this.intent.charAt(0).toUpperCase()}${this.intent.slice(1)}` as
-      'alertLabelInfo' | 'alertLabelWarning' | 'alertLabelError' | 'alertLabelSuccess';
+      'alertLabelInfo' | 'alertLabelWarning' | 'alertLabelError' | 'alertLabelSuccess' | 'alertLabelNeutral';
     const variantLabel = t(variantLabelKey);
 
     // Full-width mode is a persistent landmark, not a transient live

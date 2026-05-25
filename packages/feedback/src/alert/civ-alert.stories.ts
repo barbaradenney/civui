@@ -11,7 +11,7 @@ const meta: Meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'warning', 'error', 'success'],
+      options: ['info', 'warning', 'error', 'success', 'neutral'],
     },
     emphasis: {
       control: 'select',
@@ -87,6 +87,28 @@ export const Success: Story = {
   `,
 };
 
+export const Neutral: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `Use \`intent="neutral"\` for non-status announcements that
+shouldn't carry a semantic color — new feature notices, "heads up"
+context, or housekeeping reminders that aren't informational, warning,
+error, or success. Renders with the base-darker palette so the alert
+reads as content emphasis rather than a status signal. The CSS
+literal \`civ-alert--neutral\` is referenced here so Tailwind's
+content scanner emits the class.`,
+      },
+    },
+  },
+  render: () => html`
+    <civ-alert intent="neutral" heading="New: Save and continue later">
+      You can now save your application at any step and return to it
+      later from your account dashboard. Drafts are kept for 60 days.
+    </civ-alert>
+  `,
+};
+
 // ── All Variants ──────────────────────────────────────────────
 
 export const AllVariants: Story = {
@@ -103,6 +125,9 @@ export const AllVariants: Story = {
       </civ-alert>
       <civ-alert intent="success" heading="Success">
         Your form has been submitted.
+      </civ-alert>
+      <civ-alert intent="neutral" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
       </civ-alert>
     </div>
   `,
@@ -125,6 +150,9 @@ export const PrimaryStyle: Story = {
       <civ-alert intent="success" emphasis="primary" heading="Success">
         Your form has been submitted.
       </civ-alert>
+      <civ-alert intent="neutral" emphasis="primary" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
+      </civ-alert>
     </div>
   `,
 };
@@ -143,6 +171,9 @@ export const TertiaryStyle: Story = {
       </civ-alert>
       <civ-alert intent="success" emphasis="tertiary" heading="Success">
         Your form has been submitted.
+      </civ-alert>
+      <civ-alert intent="neutral" emphasis="tertiary" heading="Heads up">
+        Drafts older than 60 days are removed automatically.
       </civ-alert>
     </div>
   `,

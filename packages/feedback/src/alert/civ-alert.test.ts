@@ -48,6 +48,20 @@ describe('civ-alert', () => {
     expect(alert.className).toContain('civ-alert--success');
   });
 
+  it('renders neutral variant with correct classes', async () => {
+    const el = await fixture('<civ-alert intent="neutral">Neutral message.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.className).toContain('civ-alert--neutral');
+  });
+
+  it('uses role="status" on neutral variant', async () => {
+    const el = await fixture('<civ-alert intent="neutral">Neutral.</civ-alert>');
+
+    const alert = el.querySelector('.civ-alert')!;
+    expect(alert.getAttribute('role')).toBe('status');
+  });
+
   it('uses role="status" on info variant', async () => {
     const el = await fixture('<civ-alert>Message.</civ-alert>');
 
@@ -405,7 +419,7 @@ describe('civ-alert', () => {
     it('switches role to "region" regardless of variant (landmark, not live region)', async () => {
       // role="alert" / role="status" would re-announce the banner on
       // every page navigation — wrong for a persistent site-wide notice.
-      const cases: AlertIntent[] = ['info', 'warning', 'error', 'success'];
+      const cases: AlertIntent[] = ['info', 'warning', 'error', 'success', 'neutral'];
       for (const variant of cases) {
         const el = await fixture(
           `<civ-alert full-width intent="${variant}" heading="Site notice">Body.</civ-alert>`,

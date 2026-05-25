@@ -3780,6 +3780,7 @@
   .civ-alert--warning { border-color: var(--civ-color-warning-dark); }
   .civ-alert--error { border-color: var(--civ-color-error-DEFAULT); }
   .civ-alert--success { border-color: var(--civ-color-success-dark); }
+  .civ-alert--neutral { border-color: var(--civ-color-base-darker); }
 
   /* ── Alert: Primary (solid dark bg, white text) ────────────── */
 
@@ -3792,6 +3793,7 @@
   .civ-alert--style-primary.civ-alert--warning { background-color: var(--civ-color-warning-dark); }
   .civ-alert--style-primary.civ-alert--error { background-color: var(--civ-color-error-DEFAULT); }
   .civ-alert--style-primary.civ-alert--success { background-color: var(--civ-color-success-dark); }
+  .civ-alert--style-primary.civ-alert--neutral { background-color: var(--civ-color-base-darker); }
 
   /* ── Alert: Secondary (light tinted bg) ────────────────────── */
 
@@ -3802,6 +3804,7 @@
   .civ-alert--style-secondary.civ-alert--warning { @apply civ-bg-warning-lighter; }
   .civ-alert--style-secondary.civ-alert--error { @apply civ-bg-error-lighter; }
   .civ-alert--style-secondary.civ-alert--success { @apply civ-bg-success-lighter; }
+  .civ-alert--style-secondary.civ-alert--neutral { background-color: var(--civ-color-base-lightest); }
 
   /* ── Alert: Tertiary (white bg, border only) ───────────────── */
 

@@ -135,7 +135,7 @@ export const InsuranceCardUpload: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-alert intent="info" slim>
+      <civ-alert intent="info" spacing="sm">
         Please upload clear photos of the front and back of your insurance card.
         Accepted formats: JPG, PNG, or PDF.
       </civ-alert>
@@ -218,7 +218,7 @@ export const AppointmentConfirmation: Story = {
           <civ-link label="Cancel appointment" href="#cancel"></civ-link>
         </div>
       </civ-card>
-      <civ-alert intent="info" slim>
+      <civ-alert intent="info" spacing="sm">
         Please arrive 15 minutes early and bring your insurance card and photo ID.
       </civ-alert>
     </div>
@@ -255,7 +255,7 @@ export const SymptomChecker: Story = {
       </civ-conditional>
 
       <civ-conditional when="symptoms" equals="breathing">
-        <civ-alert intent="warning" slim>
+        <civ-alert intent="warning" spacing="sm">
           If you are having severe difficulty breathing, please call 911 or go to the nearest emergency room.
         </civ-alert>
         <civ-radio-group legend="When does the shortness of breath occur?" required name="breathing_when">
@@ -339,7 +339,7 @@ export const MedicalHistoryScreening: Story = {
   },
   render: () => html`
     <div style="max-width: 480px; display: grid; gap: 1rem;">
-      <civ-alert intent="info" slim>
+      <civ-alert intent="info" spacing="sm">
         Please answer the following questions about your medical history. This information helps your provider give you the best care.
       </civ-alert>
 
@@ -488,7 +488,7 @@ export const ReferralStatusTracker: Story = {
         </civ-list>
       </civ-card>
 
-      <civ-alert intent="info" slim>
+      <civ-alert intent="info" spacing="sm">
         You will receive a notification when your authorization is approved and you can schedule your appointment.
       </civ-alert>
     </div>

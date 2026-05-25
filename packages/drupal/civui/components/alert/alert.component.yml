@@ -26,10 +26,10 @@ props:
       default: false
       description: 'Show a dismiss button'
     slim:
-      title: Slim
+      title: 'Slim (deprecated)'
       type: boolean
       default: false
-      description: 'Compact intent without heading'
+      description: 'Deprecated — use spacing="sm". Compact intent without heading.'
     heading_level:
       title: Heading level
       type: integer

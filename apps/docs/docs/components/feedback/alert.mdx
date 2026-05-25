@@ -18,7 +18,7 @@ import EventsTable from "./_alert.events.mdx";
 
 `<civ-alert>`
 
-An accessible alert component for informational, warning, error, or success messages. Supports a heading, dismissible close button, and slim (compact) variant.
+An accessible alert component for informational, warning, error, or success messages. Supports a heading, dismissible close button, and compact layout via `spacing="sm"`.
 
 ## Examples
 
@@ -144,11 +144,13 @@ An accessible alert component for informational, warning, error, or success mess
 ></civ-alert>
 ```
 
-### Slim (compact) variant
+### Compact (sm spacing) variant
 
 ```html
 <civ-alert intent="success" spacing="sm" label="Your changes have been saved."></civ-alert>
 ```
+
+The legacy `slim` boolean is deprecated — it still produces the same `.civ-alert--sm` class but emits a dev-mode warning. Migrate to `spacing="sm"`.
 
 ### Primary style (high emphasis)
 

@@ -28,7 +28,7 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  *
  * An accessible alert component for informational, warning, error, or
  * success messages. Supports a heading, dismissible close button, and
- * slim (compact) variant.
+ * compact layout via `spacing="sm"`.
  *
  * **Body content:** set via the `label` prop for plain text, or by
  * placing children inside the host for rich content (paragraphs,
@@ -68,7 +68,7 @@ export type AlertHeadingLevel = 2 | 3 | 4 | 5 | 6;
  * @prop {boolean} collapsible - Wrap heading + body in a `<details>` disclosure; requires `heading`
  * @prop {boolean} open - When `collapsible`, controls / reflects the expanded state
  * @prop {boolean} fullWidth - Render as a site-wide banner (role="region", content centered to `--civ-site-max-width`)
- * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies slim layout)
+ * @prop {string} spacing - Padding size: 'default' or 'sm' (sm applies compact single-line layout)
  *
  * @slot - Body content. Used when `label` is unset. Accepts text or
  *   rich markup including composed CivUI components.
@@ -91,7 +91,7 @@ export class CivAlert extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: Boolean, reflect: true, attribute: 'full-width' }) fullWidth = false;
 
-  /** Padding size: 'default' or 'sm' for compact layouts (applies slim styling). */
+  /** Padding size: 'default' or 'sm' for compact single-line layouts. */
   @property({ type: String }) spacing: 'default' | 'sm' = 'default';
 
   private readonly _headingId = this.generateId('heading');

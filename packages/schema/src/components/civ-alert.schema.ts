@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-alert',
-  description: 'Status / informational banner with semantic variants (info / success / warning / error / neutral). Includes optional dismiss, heading, slim layout, and primary or secondary visual treatments. Native platforms expose the same variants with platform-idiomatic icons.',
+  description: 'Status / informational banner with semantic variants (info / success / warning / error / neutral). Includes optional dismiss, heading, compact (`spacing="sm"`) layout, and primary or secondary visual treatments. Native platforms expose the same variants with platform-idiomatic icons.',
   category: 'feedback',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -41,7 +41,7 @@ const schema: ComponentSchema = {
     },
     slim: {
       type: 'boolean',
-      description: 'Compact single-line layout (no heading, smaller padding). Use for inline / inside-form messages',
+      description: '**Deprecated** — use `spacing="sm"` instead. Compact single-line layout (no heading, smaller padding). Emits a dev-mode warning when set. Will be removed in a future major.',
       default: false,
     },
     spacing: {

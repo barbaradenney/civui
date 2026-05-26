@@ -17,9 +17,9 @@
       "base": { "$type": "dimension", "$value": "16px" },
       "lg": { "$type": "dimension", "$value": "18px" },
       "xl": { "$type": "dimension", "$value": "20px" },
-      "2xl": { "$type": "dimension", "$value": "24px" },
-      "3xl": { "$type": "dimension", "$value": "28px" },
-      "4xl": { "$type": "dimension", "$value": "36px" },
+      "2xl": { "$type": "dimension", "$value": "22px" },
+      "3xl": { "$type": "dimension", "$value": "26px" },
+      "4xl": { "$type": "dimension", "$value": "30px" },
       "5xl": { "$type": "dimension", "$value": "48px" }
     },
     "fontWeight": {

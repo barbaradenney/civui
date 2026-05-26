@@ -270,21 +270,30 @@ This work is real engineering — a brand font rollout is its own branch, not a 
 
 ---
 
-## Modular scale — audit candidate
+## Modular scale — retuned 2026-05-26
 
-The current `fontSize` ladder is `12 / 14 / 16 / 18 / 20 / 24 / 28 / 36 / 48` px. Step ratios:
-- 12 → 14 = 1.167× (between minor-second 1.067 and major-second 1.125)
-- 14 → 16 = 1.143× (major-second)
-- 16 → 18 = 1.125× (major-second)
-- 18 → 20 = 1.111× (between major-second and minor-third)
-- 20 → 24 = 1.2× (minor-third)
-- 24 → 28 = 1.167× (between major-second and minor-third)
-- 28 → 36 = 1.286× (between minor-third 1.2 and major-third 1.25)
-- 36 → 48 = 1.333× (perfect-fourth)
+**Important distinction**: there are two `fontSize` ladders in this codebase, and the one that actually renders is NOT the one quoted in `typography.tokens.json`.
 
-The ladder is not a clean modular scale. The lower rungs (xs–xl) cluster around a major-second ratio (1.125); the upper rungs (xl–5xl) expand into a perfect-fourth (1.333). Whether this is intentional (tight body sizes, expansive display sizes — common in editorial design) or accreted is a design-team call. Document the audit, don't fix it unilaterally — consumers depend on the existing sizes and a tighter ladder would mean reflows everywhere.
+1. **Static ladder** (in `typography.tokens.json`): `12 / 14 / 16 / 18 / 20 / 22 / 26 / 30 / 48`. This populates a `:root` block in the generated CSS but is **immediately overridden** by the fluid default scale (see #2). It serves as a fallback when the fluid CSS hasn't loaded; for all practical purposes the static values never render. They're useful as a designer-facing "reference ladder" so the conceptual steps have integer names.
+2. **Fluid ladder** (generated from `scales.tokens.json` → `scales.default`): each step `n` renders as `clamp(basePx.min × ratio.min^n, …, basePx.max × ratio.max^n)`. With `basePx { min: 17, max: 19 }` and `ratio { min: 1.125, max: 1.2 }`, the rendered sizes are:
 
-If/when retuning, a tested-in-the-wild ladder for government forms (USWDS uses a major-second 1.125 throughout): `12 / 14 / 16 / 18 / 20 / 22 / 26 / 30 / 36`. Smoother visual rhythm, denser top end.
+   | Step | Token | Mobile (320 px) | Desktop (1200 px+) |
+   |---|---|---|---|
+   | −2 | xs | 13.4 px (static — negative steps don't scale) | 13.4 px |
+   | −1 | sm | 15.1 px | 15.8 px |
+   | 0 | base | 17 px | 19 px |
+   | 1 | lg | 19.1 px | 22.8 px |
+   | 2 | xl | 21.5 px | 27.4 px |
+   | 3 | 2xl | 24.2 px | 32.8 px |
+   | 4 | 3xl | 27.2 px | 39.4 px |
+   | 5 | 4xl | 30.6 px | 47.3 px |
+   | 6 | 5xl | 34.5 px | 56.7 px |
+
+**Why this shape**: 1.125 (major-second) on mobile gives the dense, tight body-text rhythm USWDS uses for forms. Blending up to 1.2 (minor-third) on desktop opens the headings without going hyperbolic — the previous configuration (`{ min: 1.2, max: 1.333 }`) produced a 107 px desktop `5xl`, which is fine for an editorial hero but read as "shouting" inside a federal-form context. The retuned `5xl` at ~57 px desktop functions as the new display/hero step; no separate hero token is needed.
+
+**Why the static ladder shape differs from the fluid rendering**: the static values are chosen for designer-readability ("the scale is 12/14/16/18/20/22/26/30, with 48 reserved as a hero") rather than as a literal description of what renders at any one viewport. The fluid scale interpolates *between* basePx min/max so a single step renders different sizes across screen widths.
+
+**If you want to retune again**: change `scales.tokens.json` → `scales.default.ratio` and/or `basePx`. Keep the static ladder in `typography.tokens.json` aligned with the conceptual ladder for documentation purposes. Run `pnpm --filter @civui/tokens build` and inspect `packages/tokens/dist/css/tokens.css` to verify the generated clamps.
 
 ---
 

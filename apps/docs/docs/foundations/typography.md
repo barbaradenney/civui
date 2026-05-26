@@ -48,14 +48,14 @@ Headings come in two styles: **primary** (bold) for section titles and **seconda
 
 ### Primary headings
 
-Bold weight for main section headers and page titles.
+Bold weight for main section headers and page titles. Sizes are fluid — they grow smoothly from the mobile minimum to the desktop maximum.
 
-| Class | Size | Weight | Margin |
-|-------|------|--------|--------|
-| `.civ-heading-xl` | 24px (1.5rem) | Bold (700) | `civ-mb-6` |
-| `.civ-heading-lg` | 20px (1.25rem) | Bold (700) | `civ-mb-4` |
-| `.civ-heading-md` | 18px (1.125rem) | Bold (700) | `civ-mb-3` |
-| `.civ-heading-sm` | 16px (1rem) | Bold (700) | `civ-mb-2` |
+| Class | Token | Fluid range (mobile → desktop) | Weight | Margin |
+|-------|-------|--------------------------------|--------|--------|
+| `.civ-heading-xl` | `2xl` | 24px → 33px | Bold (700) | `civ-mb-6` |
+| `.civ-heading-lg` | `xl` | 22px → 27px | Bold (700) | `civ-mb-4` |
+| `.civ-heading-md` | `lg` | 19px → 23px | Bold (700) | `civ-mb-3` |
+| `.civ-heading-sm` | `base` | 17px → 19px | Bold (700) | `civ-mb-2` |
 
 ```html
 <h1 class="civ-heading-xl">Apply for disability compensation</h1>
@@ -68,12 +68,12 @@ Bold weight for main section headers and page titles.
 
 Regular weight for supporting context, sub-sections, or form step descriptions.
 
-| Class | Size | Weight | Margin |
-|-------|------|--------|--------|
-| `.civ-heading-xl-secondary` | 24px (1.5rem) | Regular (400) | `civ-mb-6` |
-| `.civ-heading-lg-secondary` | 20px (1.25rem) | Regular (400) | `civ-mb-4` |
-| `.civ-heading-md-secondary` | 18px (1.125rem) | Regular (400) | `civ-mb-3` |
-| `.civ-heading-sm-secondary` | 16px (1rem) | Regular (400) | `civ-mb-2` |
+| Class | Token | Fluid range (mobile → desktop) | Weight | Margin |
+|-------|-------|--------------------------------|--------|--------|
+| `.civ-heading-xl-secondary` | `2xl` | 24px → 33px | Regular (400) | `civ-mb-6` |
+| `.civ-heading-lg-secondary` | `xl` | 22px → 27px | Regular (400) | `civ-mb-4` |
+| `.civ-heading-md-secondary` | `lg` | 19px → 23px | Regular (400) | `civ-mb-3` |
+| `.civ-heading-sm-secondary` | `base` | 17px → 19px | Regular (400) | `civ-mb-2` |
 
 ```html
 <h2 class="civ-heading-lg-secondary">We'll use this information to verify your identity</h2>
@@ -92,12 +92,12 @@ Regular weight for supporting context, sub-sections, or form step descriptions.
 
 ## Body text
 
-| Class | Size | Color | Use for |
-|-------|------|-------|---------|
-| `.civ-text-body` | 16px | `base-darkest` | Default paragraph text |
-| `.civ-text-muted` | 16px | `base` | Secondary or de-emphasized text |
-| `.civ-text-caption` | 14px | `base-dark` | Field hints, footnotes, supplementary context |
-| `.civ-text-small` | 12px | `base-dark` | Legal disclaimers, fine print, timestamps |
+| Class | Token | Fluid range (mobile → desktop) | Color | Use for |
+|-------|-------|--------------------------------|-------|---------|
+| `.civ-text-body` | `base` | 17px → 19px | `base-darkest` | Default paragraph text |
+| `.civ-text-muted` | `base` | 17px → 19px | `base` | Secondary or de-emphasized text |
+| `.civ-text-caption` | `sm` | 15px → 16px | `base-dark` | Field hints, footnotes, supplementary context |
+| `.civ-text-small` | `xs` | 13px (static) | `base-dark` | Legal disclaimers, fine print, timestamps |
 
 ```html
 <p class="civ-text-body">Your application has been submitted.</p>
@@ -108,19 +108,21 @@ Regular weight for supporting context, sub-sections, or form step descriptions.
 
 ## Font sizes
 
-Available via Tailwind utilities with the `civ-` prefix:
+Available via Tailwind utilities with the `civ-` prefix. Sizes are fluid — they scale smoothly from a mobile minimum (at 320px viewport) up to a desktop maximum (at 1200px+). The ratio between adjacent steps is 1.125 (major-second) on mobile, smoothing to 1.2 (minor-third) on desktop.
 
-| Class | Size |
-|-------|------|
-| `civ-text-xs` | 12px (0.75rem) |
-| `civ-text-sm` | 14px (0.875rem) |
-| `civ-text-base` | 16px (1rem) |
-| `civ-text-lg` | 18px (1.125rem) |
-| `civ-text-xl` | 20px (1.25rem) |
-| `civ-text-2xl` | 24px (1.5rem) |
-| `civ-text-3xl` | 28px (1.75rem) |
-| `civ-text-4xl` | 36px (2.25rem) |
-| `civ-text-5xl` | 48px (3rem) |
+| Class | Token step | Fluid range (mobile → desktop) |
+|-------|------------|--------------------------------|
+| `civ-text-xs` | −2 | 13px (static — negative steps don't scale) |
+| `civ-text-sm` | −1 | 15px → 16px |
+| `civ-text-base` | 0 | 17px → 19px |
+| `civ-text-lg` | 1 | 19px → 23px |
+| `civ-text-xl` | 2 | 22px → 27px |
+| `civ-text-2xl` | 3 | 24px → 33px |
+| `civ-text-3xl` | 4 | 27px → 39px |
+| `civ-text-4xl` | 5 | 31px → 47px |
+| `civ-text-5xl` | 6 | 34px → 57px (display / hero) |
+
+The `[data-civ-scale="dense|spacious"]` density modifiers retune the base size and ratio — see [Density scaling](#density-scaling) below.
 
 ## Font weights
 

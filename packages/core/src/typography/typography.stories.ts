@@ -67,27 +67,27 @@ export const AllStyles: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p class="civ-text-caption civ-mb-1">Primary headings (bold)</p>
-        <h1 class="civ-heading-xl">Heading XL (24px bold)</h1>
-        <h2 class="civ-heading-lg">Heading LG (20px bold)</h2>
-        <h3 class="civ-heading-md">Heading MD (18px bold)</h3>
-        <h4 class="civ-heading-sm">Heading SM (16px bold)</h4>
+        <p class="civ-text-caption civ-mb-1">Primary headings (bold) — fluid sizes scale with viewport</p>
+        <h1 class="civ-heading-xl">Heading XL (2xl token, bold)</h1>
+        <h2 class="civ-heading-lg">Heading LG (xl token, bold)</h2>
+        <h3 class="civ-heading-md">Heading MD (lg token, bold)</h3>
+        <h4 class="civ-heading-sm">Heading SM (base token, bold)</h4>
       </div>
       <civ-divider></civ-divider>
       <div>
         <p class="civ-text-caption civ-mb-1">Secondary headings (regular)</p>
-        <h1 class="civ-heading-xl-secondary">Heading XL Secondary (24px regular)</h1>
-        <h2 class="civ-heading-lg-secondary">Heading LG Secondary (20px regular)</h2>
-        <h3 class="civ-heading-md-secondary">Heading MD Secondary (18px regular)</h3>
-        <h4 class="civ-heading-sm-secondary">Heading SM Secondary (16px regular)</h4>
+        <h1 class="civ-heading-xl-secondary">Heading XL Secondary (2xl token, regular)</h1>
+        <h2 class="civ-heading-lg-secondary">Heading LG Secondary (xl token, regular)</h2>
+        <h3 class="civ-heading-md-secondary">Heading MD Secondary (lg token, regular)</h3>
+        <h4 class="civ-heading-sm-secondary">Heading SM Secondary (base token, regular)</h4>
       </div>
       <civ-divider></civ-divider>
       <div>
         <p class="civ-text-caption civ-mb-1">Body text</p>
-        <p class="civ-text-body">Body (16px, darkest)</p>
-        <p class="civ-text-muted">Muted (16px, lighter)</p>
-        <p class="civ-text-caption">Caption (14px, dark)</p>
-        <p class="civ-text-small">Small (12px, dark)</p>
+        <p class="civ-text-body">Body (base token, darkest)</p>
+        <p class="civ-text-muted">Muted (base token, lighter)</p>
+        <p class="civ-text-caption">Caption (sm token, dark)</p>
+        <p class="civ-text-small">Small (xs token, dark)</p>
       </div>
     </div>
   `,

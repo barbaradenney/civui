@@ -4436,6 +4436,43 @@
     min-width: 0;
   }
 
+  /*
+   * Touch-friendly spacing — opt-in via `<civ-side-nav spacing="lg">`.
+   * Bumps every row's padding + min-height to the WCAG 2.5.5 AAA
+   * 44px tap-target floor. Controls padding only — combine with
+   * `emphasis="primary"` to also pick up civ-nav's bold typography.
+   *
+   * The cascade is rooted at the `<nav>` (which carries the
+   * modifier) so individual side-nav-item children pick up the
+   * treatment without an explicit prop on each.
+   */
+  .civ-side-nav--lg .civ-side-nav__link,
+  .civ-side-nav--lg .civ-side-nav__trigger {
+    padding: var(--civ-spacing-3) var(--civ-spacing-4);
+    /* not density: WCAG 2.5.5 AAA tap-target floor (44×44). */
+    min-height: max(var(--civ-spacing-10), 2.75rem);
+  }
+  /*
+   * Re-anchor the current-item rail-overlay math for sublists at
+   * the larger padding. Mirrors the default-padding adjustment
+   * 30 lines above; same logic, scaled to the lg horizontal pad.
+   */
+  .civ-side-nav--lg .civ-side-nav__sublist .civ-side-nav__link--current {
+    margin-inline-start: calc(-1 * var(--civ-spacing-4) - 1px);
+    padding-inline-start: calc(var(--civ-spacing-4) + var(--civ-spacing-3) + 1px);
+  }
+
+  /*
+   * Primary typography — opt-in via `<civ-side-nav emphasis="primary">`.
+   * Swaps the rail to bold base-sized body text so it reads as
+   * primary navigation (matches `.civ-nav__link`). Compose with
+   * `spacing="lg"` for the full mobile-primary look.
+   */
+  .civ-side-nav--primary .civ-side-nav__link,
+  .civ-side-nav--primary .civ-side-nav__trigger {
+    @apply civ-font-bold civ-text-base;
+  }
+
   /* ── On This Page (in-page anchor nav / table of contents) ─ */
 
   .civ-on-this-page {

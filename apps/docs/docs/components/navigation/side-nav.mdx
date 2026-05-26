@@ -54,6 +54,24 @@ On first paint, any parent containing a descendant with `current` is automatical
 
 <StoryEmbed id="navigation-side-nav--documentation-layout" />
 
+### Large spacing — WCAG AAA touch targets
+
+<StoryEmbed id="navigation-side-nav--large-spacing" />
+
+`spacing="lg"` bumps every row's padding + min-height to the WCAG 2.5.5 AAA 44px tap-target floor. Use on mobile-primary surfaces or fingertip-heavy government deployments. Padding only — typography is unchanged.
+
+### Primary emphasis — bold typography (matches civ-nav)
+
+<StoryEmbed id="navigation-side-nav--primary-emphasis" />
+
+`emphasis="primary"` swaps the rail to `civ-nav`'s bold body-sized text so it reads as primary site navigation rather than a quiet sub-nav. Typography only — padding is unchanged.
+
+### Mobile-primary — composed (`spacing="lg"` + `emphasis="primary"`)
+
+<StoryEmbed id="navigation-side-nav--mobile-primary" />
+
+The full mobile-primary look — 44px AAA tap targets plus bold body-sized typography. Use when the side-nav IS the primary navigation of the surface (mobile app shell, drawer navigation).
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/navigation-side-nav--default)
 
 ## Usage

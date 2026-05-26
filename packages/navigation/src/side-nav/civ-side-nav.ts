@@ -32,6 +32,22 @@ import type { SlotConfig } from '@civui/core';
  *   landmark (e.g. "Documentation navigation"). Strongly
  *   recommended when the page contains more than one `<nav>`.
  *
+ * @prop {string} spacing - Tap-target density. `default` (~36px row
+ *   height) sits within WCAG 2.5.8 AA but is sub-AAA. `lg` bumps
+ *   every link / trigger to the WCAG 2.5.5 AAA 44px floor —
+ *   preferred for mobile-primary surfaces, fingertip-heavy
+ *   contexts, and accessibility-conscious government deployments.
+ *   Controls padding only; combine with `emphasis="primary"` to
+ *   also match civ-nav's bolder typography.
+ *
+ * @prop {string} emphasis - Typographic weight. `secondary`
+ *   (default) renders rows in the normal body weight — quiet
+ *   secondary-navigation treatment. `primary` swaps in bold body
+ *   text, exactly matching `civ-nav`'s top-level treatment, so the
+ *   rail reads as primary site navigation rather than a sub-nav
+ *   inside a section. Controls font weight + size only; combine
+ *   with `spacing="lg"` for the full mobile-primary look.
+ *
  * @slot - `<civ-side-nav-item>` children.
  *
  * @example
@@ -50,6 +66,22 @@ export class CivSideNav extends LightDomSlotMixin(CivBaseElement) {
   /** Accessible name for the `<nav>` landmark. */
   @property({ type: String }) label = '';
 
+  /**
+   * Tap-target density. `default` keeps the compact rail; `lg`
+   * raises every row's padding + min-height to the WCAG 2.5.5
+   * AAA 44px floor. Reflected so the cascade selectors in
+   * components.css can find it.
+   */
+  @property({ type: String, reflect: true }) spacing: 'default' | 'lg' = 'default';
+
+  /**
+   * Typographic weight. `secondary` renders the normal-weight,
+   * quiet treatment used for sub-navigation. `primary` swaps in
+   * the bold body-sized treatment that matches `civ-nav`,
+   * elevating the rail to read as primary site navigation.
+   */
+  @property({ type: String, reflect: true }) emphasis: 'primary' | 'secondary' = 'secondary';
+
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-side-nav-content]' };
   }
@@ -59,8 +91,13 @@ export class CivSideNav extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const classes = [
+      'civ-side-nav',
+      this.spacing === 'lg' ? 'civ-side-nav--lg' : '',
+      this.emphasis === 'primary' ? 'civ-side-nav--primary' : '',
+    ].filter(Boolean).join(' ');
     return html`
-      <nav class="civ-side-nav" aria-label="${ifDefined(this.label || undefined)}">
+      <nav class="${classes}" aria-label="${ifDefined(this.label || undefined)}">
         <ul class="civ-side-nav__list" data-civ-side-nav-content></ul>
       </nav>
     `;

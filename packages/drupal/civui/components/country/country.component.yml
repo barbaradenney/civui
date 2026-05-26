@@ -30,7 +30,7 @@ props:
     us_first:
       title: US first
       type: boolean
-      default: false
+      default: true
       description: 'Show United States at top of list'
     include:
       title: Include

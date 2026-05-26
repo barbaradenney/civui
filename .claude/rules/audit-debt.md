@@ -243,12 +243,15 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Why deferred:** Adding `'icon'` to the union is a schema-spec change that ripples through every schema with an iconStart / iconEnd (civ-button, civ-action-button, civ-link, civ-filter-chip, civ-action-chip — at least 5 schemas), the `validate-schemas.ts` checker, the doc-tables generator, and the Drupal sync. It's a coordinated change worth its own branch.
 - **What to watch for in the meantime:** When a new component schema declares an icon child, follow the existing pattern (`type: 'label'` with the icon-prop bindings). Don't try to add `type: 'icon'` to a single schema — it'll trip the validator.
 
-### `lint:schema-default-values` for native default drift
+### Native default-value drift cleanup (post lint-schema-default-values landing)
 
-- **Files:** schemas under `packages/schema/src/components/` with enum `default` fields; native counterparts under `packages/ios/Sources/CivUI/` and `packages/android/src/main/kotlin/gov/civui/components/`.
-- **State:** `lint:schema-enum-values` catches Lit ↔ schema enum-value drift but doesn't compare *default* values across platforms. The actions audit found three concrete defaults drifts: civ-filter-chip `emphasis: "default"` (iOS+Android, schema is `"secondary"`), civ-filter-chip `variant: "checkbox"` (iOS+Android, schema is `"toggle"`), civ-action-chip `count: Int = 0` (should be `Int? = nil`). All fixed in the same branch.
-- **Why deferred:** Native source files declare defaults with platform-specific syntax (Swift `String = "secondary"`, Kotlin `String = "secondary"`, Drupal SDC YAML `default: 'secondary'`). The lint would need a TS-aware parser for each. The audit-pass fix is sufficient for the chips that landed; broader audit later.
-- **What to watch for in the meantime:** When adding a new component, manually verify native defaults match the schema's `default:` value. Reach for the audit playbook (`audit.skill`) to catch the others if they exist.
+- **Surfaced:** lint-schema-default-values branch, 2026-05-26. The lint shipped with 49 existing native default-value drifts pre-populated into an allowlist at `tools/schema-default-value-allowlist.ts`. Each entry is a one-line edit in a Swift / Kotlin source file, but most are intentional decisions to defer to a focused "align native defaults with schema" pass.
+- **Files:** `tools/schema-default-value-allowlist.ts` (the canonical list of remaining cases); each entry points at the platform source file via the lint output.
+- **Categories of drift:**
+  - **Stub-grade defaults** (~38 entries): components on `IOS_STUB_ALLOWLIST` whose SwiftUI body is `EmptyView()` and whose Kotlin body is `Column { }`. The default values were picked arbitrarily when the stubs were scaffolded; aligning them to the schema is low-risk because the bodies don't render anything.
+  - **Real-implementation drift** (~11 entries): components with substantive native implementations (`civ-text-input.width = .full` vs schema `'default'`; `civ-checkbox.tile = false` vs schema `true`; `civ-pagination.pageSize = 10` vs schema `25`) where the default-value change has behavioral implications a reviewer needs to look at. These should be batched per-component-group with platform-owner sign-off.
+- **Why deferred:** ~45 file edits in a single PR would be hard to review; bundling them per-component-group lets each owner spot-check the behavioral change. The allowlist mechanism mirrors `lint:ios-stub-allowlist` — entries are removable only via a deliberate human edit + the matching source-default change.
+- **What to watch for in the meantime:** When you're already touching a native source file for another reason (audit, feature add, parity work), align that component's defaults in the same change and drop the allowlist entries. The lint flags stale allowlist entries to enforce the cleanup.
 
 ### `lint:sdc-enum-values` for Drupal SDC enum drift
 

@@ -29,14 +29,14 @@ const schema: ComponentSchema = {
     },
     hideMiddle: {
       type: 'boolean',
-      description: 'Render the middle-name input',
-      default: true,
+      description: 'When true, omits the middle-name input. Default false — middle renders',
+      default: false,
       attribute: 'hide-middle',
     },
     hideSuffix: {
       type: 'boolean',
-      description: 'Render the suffix select (Jr, Sr, II, III, etc.)',
-      default: true,
+      description: 'When true, omits the suffix select (Jr, Sr, II, III). Default false — suffix renders',
+      default: false,
       attribute: 'hide-suffix',
     },
     firstError: {

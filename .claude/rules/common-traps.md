@@ -415,6 +415,58 @@ is intentional for some props.
 
 ---
 
+## Native default-value drift from the schema
+
+`pnpm parity:schema` checks that each schema prop EXISTS on every
+platform but NOT that its DEFAULT VALUE matches. A native source
+file can declare a different default than the schema and ship a
+subtly different out-of-the-box visual on that platform — exactly
+what the actions audit caught:
+
+```swift
+// CivFilterChip.swift (before audit fix)
+public init(emphasis: String = "default", ...) { ... }
+//                                ^^^^^^^^
+// Schema says default is "secondary"; iOS ships "default".
+// Drupal users hit a different emphasis variant on iOS.
+```
+
+Three concrete drifts the audit found (all in the chip family):
+- `civ-filter-chip.emphasis` (iOS+Android `"default"`, schema `"secondary"`)
+- `civ-filter-chip.variant` (iOS+Android `"checkbox"`, schema `"toggle"`)
+- `civ-action-chip.count` (iOS+Android `Int = 0`, schema `Int? = nil`)
+
+Other drifts the lint surfaced when introduced (~49 in the initial
+allowlist): `civ-checkbox.tile = false` (schema `true`),
+`civ-pagination.pageSize = 10` (schema `25`),
+`civ-spinner.{delay,minDuration} = 0` (schema `200` / `400`),
+`civ-text-input.width = .full` (schema `'default'`), and ~40 more.
+
+**Caught by:** `pnpm lint:schema-default-values` — walks
+`COVERED_COMPONENTS`, parses each platform's source for default
+values (Swift `public init(...)` parameters; Kotlin
+`@Composable fun CivX(...)` parameters; Drupal SDC YAML
+`default:` lines), normalizes the defaults to a canonical form
+(`.primary`/`"primary"`/`Primary` → `primary`,
+`.constant(false)` → `false`, `EnumName.CASE` → `case`), and
+compares against `def.default` in the schema. Wired into
+`pnpm validate:lints` and the drift-lints CI gate. **Only enum /
+boolean / number defaults are compared** — string defaults have
+too many edge cases (empty-string sentinels, locale-resolved
+fallbacks, `aria-label` overrides) and the audit's drifts were
+all enum/number.
+
+Known drift is recorded in `tools/schema-default-value-allowlist.ts`
+(mirrors the `lint:ios-stub-allowlist` pattern). Entries are
+human-edited; stale entries (drift cleared by aligning a default)
+fail the lint until they're removed. New drift can be deferred by
+adding a justified allowlist entry, but the lint will fail without
+one. The intent is to make per-component "align native defaults
+with schema" cleanup happen incrementally — a follow-up PR per
+component group shrinks the allowlist.
+
+---
+
 ## Section legends don't carry (required); leaf inputs do
 
 CivUI distinguishes two kinds of `<legend>`:

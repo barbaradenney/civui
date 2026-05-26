@@ -27,8 +27,8 @@ const schema: ComponentSchema = {
     },
     hidePercent: {
       type: 'boolean',
-      description: 'When true, render the numeric percentage alongside the label',
-      default: true,
+      description: 'When true, omits the numeric percentage. Default false — the percent value renders alongside the label',
+      default: false,
       attribute: 'hide-percent',
     },
   },

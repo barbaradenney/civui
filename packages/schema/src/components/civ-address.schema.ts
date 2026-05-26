@@ -34,8 +34,8 @@ const schema: ComponentSchema = {
     },
     hideStreet2: {
       type: 'boolean',
-      description: 'Render the optional second address line',
-      default: true,
+      description: 'When true, omits the optional second address line (apartment / suite / unit). Default false — street2 renders',
+      default: false,
       attribute: 'hide-street2',
     },
     showStreet3: {

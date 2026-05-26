@@ -30,7 +30,7 @@ props:
     rows:
       title: Rows
       type: integer
-      default: 4
+      default: 5
       description: 'Number of visible text rows'
     maxlength:
       title: Max length

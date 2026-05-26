@@ -644,6 +644,69 @@
     text-box-edge: cap alphabetic;
   }
 
+  /* Tabular numerals — see .claude/rules/typography.md
+     Proportional figures wobble columns of dates, dollar amounts, page
+     numbers, masked digit clusters. Tabular figures fix each glyph to a
+     constant width so adjacent digits line up visually. Existing
+     opt-ins (kept in their original sites for adjacency with text-align
+     / font-weight): .civ-data-grid__td--num, .civ-table__num,
+     .civ-count, .civ-itemized-total__amount /__total-amount. */
+  .civ-metric-tile__value,
+  .civ-timeline-item__timestamp,
+  .civ-timeline-item__timestamp-relative,
+  .civ-pagination__status,
+  .civ-pagination__page,
+  .civ-input[inputmode='numeric'],
+  .civ-input[inputmode='decimal'],
+  .civ-input[inputmode='tel'],
+  .civ-input[type='number'],
+  .civ-num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Text-wrap balance — see .claude/rules/typography.md
+     Distributes short text (headings, single-line labels that wrap)
+     evenly across lines so the last line isn't an orphan word. The
+     browser limits the algorithm to ≤6 lines for performance, which
+     matches every heading placement in CivUI. Progressive enhancement
+     — older browsers wrap normally. For arbitrary elements, use
+     Tailwind's `civ-text-balance` utility. */
+  .civ-heading-xl,
+  .civ-heading-lg,
+  .civ-heading-md,
+  .civ-heading-sm,
+  .civ-heading-xl-secondary,
+  .civ-heading-lg-secondary,
+  .civ-heading-md-secondary,
+  .civ-heading-sm-secondary,
+  .civ-page-header__heading,
+  .civ-page-header__subheading,
+  .civ-alert__heading,
+  .civ-notice__header,
+  .civ-link-card__heading,
+  .civ-section-intro__heading,
+  .civ-repeater__row-heading {
+    text-wrap: balance;
+  }
+
+  /* Text-wrap pretty — see .claude/rules/typography.md
+     Optimized line-breaking for body prose so the last line isn't a
+     single orphan word. Strictly progressive enhancement — older
+     browsers wrap normally. For arbitrary elements, use Tailwind's
+     `civ-text-pretty` utility. */
+  .civ-text-body,
+  .civ-text-muted,
+  .civ-text-caption,
+  .civ-text-small,
+  .civ-hint,
+  .civ-hint--group,
+  .civ-alert__body,
+  .civ-notice__body,
+  .civ-section-intro__body,
+  .civ-link-card__description {
+    text-wrap: pretty;
+  }
+
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
   }

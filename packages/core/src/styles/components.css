@@ -707,6 +707,39 @@
     text-wrap: pretty;
   }
 
+  /* Link underline geometry — see .claude/rules/typography.md
+     Browser-default underlines sit too close to the baseline and pass
+     through descenders. Em-relative offset + thickness scales with
+     font-size: a heading-sized link gets a proportionally thicker
+     underline at proportionally lower offset, which is what the eye
+     expects. Values: 0.0625em = 1px at 16px body, 0.1875em = 3px.
+
+     Not applied to .civ-data-grid__sort-btn:hover (subtle 2px feedback
+     for a sortable column header — not a link) or .civ-nav__link--current
+     (4px / 2px accent line indicating the active page — accent, not
+     link). Both keep their context-specific hardcoded values. */
+  .civ-link--primary,
+  .civ-link--secondary,
+  .civ-link--back,
+  .civ-link--primary.civ-link--danger,
+  .civ-link--secondary.civ-link--danger,
+  .civ-breadcrumb__link {
+    text-decoration-thickness: 0.0625em;
+    text-underline-offset: 0.1875em;
+  }
+
+  /* Long-form prose wrapper — see .claude/rules/typography.md
+     Caps the reading width at the WCAG 1.4.8 recommended 45–75 chars
+     per line (65ch hits the middle of the band at the body font-size).
+     Bundles text-wrap: pretty (orphan prevention) and
+     hanging-punctuation (Safari-only opt-in, quiet polish).
+     Apply at the section/article wrapper, not individual paragraphs. */
+  .civ-prose {
+    max-width: 65ch;
+    text-wrap: pretty;
+    hanging-punctuation: first allow-end last;
+  }
+
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
   }

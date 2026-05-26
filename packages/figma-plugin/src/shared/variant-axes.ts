@@ -40,7 +40,10 @@ export function axisValuesForProp(schema: ComponentSchema, propName: string): st
     if (!prop.values || prop.values.length === 0) {
       throw new VariantAxisError(`Enum prop ${schema.name}.${propName} has no values`);
     }
-    return prop.values.filter((v) => v !== '');
+    // Schema enum values can be `(string | number)[]` — coerce numeric
+    // values (e.g. headingLevel `[2, 3, 4, 5, 6]`) to strings so they
+    // can flow through the rest of the axis-derivation pipeline.
+    return prop.values.filter((v) => v !== '').map((v) => String(v));
   }
   if (prop.type === 'boolean') {
     return ['false', 'true'];

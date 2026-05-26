@@ -102,9 +102,10 @@ function parseTypeAliases(src: string): Map<string, string[] | null> {
 
 /**
  * Parse a string like `'a' | 'b' | 'c'` (with optional surrounding
- * whitespace / newlines / parens) into ['a','b','c']. Returns null
- * if any member isn't a single-quoted string literal — that means
- * the union isn't a plain enum and we shouldn't compare values.
+ * whitespace / newlines / parens) into ['a','b','c']. Also accepts
+ * integer-literal unions like `2 | 3 | 4 | 5 | 6` (stringified).
+ * Returns null if any member isn't a string-literal or integer
+ * literal — mixed-type or non-literal unions don't compare cleanly.
  */
 function parseLiteralUnion(body: string): string[] | null {
   const cleaned = body.replace(/[()]/g, '').trim();
@@ -113,9 +114,10 @@ function parseLiteralUnion(body: string): string[] | null {
   if (parts.length === 0) return null;
   const values: string[] = [];
   for (const part of parts) {
-    const litMatch = part.match(/^['"]([^'"]*)['"]$/);
-    if (!litMatch) return null;
-    values.push(litMatch[1]);
+    const strMatch = part.match(/^['"]([^'"]*)['"]$/);
+    if (strMatch) { values.push(strMatch[1]); continue; }
+    if (/^-?\d+(?:\.\d+)?$/.test(part)) { values.push(part); continue; }
+    return null;
   }
   return values;
 }
@@ -132,11 +134,10 @@ function resolveTypeExpression(typeExpr: string, aliases: Map<string, string[] |
   const parts = cleaned.split('|').map((p) => p.trim()).filter(Boolean);
   const acc: string[] = [];
   for (const part of parts) {
-    const litMatch = part.match(/^['"]([^'"]*)['"]$/);
-    if (litMatch) {
-      acc.push(litMatch[1]);
-      continue;
-    }
+    const strMatch = part.match(/^['"]([^'"]*)['"]$/);
+    if (strMatch) { acc.push(strMatch[1]); continue; }
+    // Integer literal (`2 | 3 | 4 | 5 | 6` for headingLevel).
+    if (/^-?\d+(?:\.\d+)?$/.test(part)) { acc.push(part); continue; }
     // Strip generic parameters or array suffix — anything other than
     // a bare identifier means "not a plain literal union", skip.
     if (!/^\w+$/.test(part)) return null;
@@ -210,7 +211,10 @@ async function main(): Promise<void> {
 
     for (const [propName, propDef] of Object.entries(schema.props as Record<string, any>)) {
       if (propDef?.type !== 'enum' || !Array.isArray(propDef?.values)) continue;
-      const schemaValues: string[] = propDef.values;
+      // Integer enum values (e.g. `[2, 3, 4, 5, 6]` for civ-alert.headingLevel)
+      // need to be stringified for comparison — `parseLiteralUnion` returns
+      // string-form numeric literals from the TS source.
+      const schemaValues: string[] = propDef.values.map((v: string | number) => String(v));
 
       const sourceType = propTypes.get(propName);
       if (!sourceType) {

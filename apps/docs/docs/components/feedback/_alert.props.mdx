@@ -6,7 +6,7 @@
 | `intent` | `'info'` \| `'success'` \| `'warning'` \| `'error'` \| `'neutral'` | `'info'` | Semantic tone. Drives icon and color palette |
 | `emphasis` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'secondary'` | Visual treatment. `primary` = filled with stronger emphasis; `secondary` = subtle background (default); `tertiary` = transparent with a colored leading border |
 | `heading` | `string` | `''` | Optional heading rendered above the body content |
-| `heading-level` | `number` | `4` | Semantic heading level (2–6) for the alert heading. Web-only. Native platforms use platform-idiomatic header semantics |
+| `heading-level` | `2` \| `3` \| `4` \| `5` \| `6` | `4` | Semantic heading level for the alert heading. Constrained to H2–H6 (H1 belongs to the page title). Web-only. Native platforms use platform-idiomatic header semantics |
 | `dismissible` | `boolean` | `false` | Render a dismiss (×) button. Fires `civ-dismiss` (cancelable) when clicked |
 | `slim` | `boolean` | `false` | **Deprecated** — use `spacing="sm"` instead. Compact single-line layout (no heading, smaller padding). Both attributes currently produce the same `.civ-alert--sm` chrome but `slim` fires a one-time dev-mode console warning so consumers can migrate. The boolean will be removed in a future release. |
 | `spacing` | `'default'` \| `'sm'` | `'default'` | Vertical padding. `default` for standalone alerts; `sm` for nested/dense contexts |

@@ -621,6 +621,29 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /* Leading trim — see .claude/rules/typography.md
+     Trims the half-leading from the first and last line of every named
+     typography class so visual edges match container padding. The
+     existing form-chrome trim (.civ-label, .civ-legend, .civ-hint,
+     .civ-data-field__*) uses the same two declarations; consolidating
+     to a single selector here keeps the policy in one place. */
+  .civ-text-body,
+  .civ-text-muted,
+  .civ-text-caption,
+  .civ-text-small,
+  .civ-heading-xl,
+  .civ-heading-lg,
+  .civ-heading-md,
+  .civ-heading-sm,
+  .civ-heading-xl-secondary,
+  .civ-heading-lg-secondary,
+  .civ-heading-md-secondary,
+  .civ-heading-sm-secondary,
+  .civ-text-trim {
+    text-box-trim: both;
+    text-box-edge: cap alphabetic;
+  }
+
   .civ-required-mark {
     @apply civ-text-error civ-font-normal civ-ms-0;
   }

@@ -34,6 +34,7 @@ props:
     inputmode:
       title: Inputmode
       type: string
+      enum: ['text', 'numeric', 'decimal', 'tel', 'search', 'email', 'url']
       description: 'Mobile keyboard hint passed to the inner input (numeric, decimal, tel, etc.)'
     no_results_text:
       title: No results text

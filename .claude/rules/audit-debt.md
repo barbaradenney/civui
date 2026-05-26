@@ -250,12 +250,12 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Why deferred:** Native source files declare defaults with platform-specific syntax (Swift `String = "secondary"`, Kotlin `String = "secondary"`, Drupal SDC YAML `default: 'secondary'`). The lint would need a TS-aware parser for each. The audit-pass fix is sufficient for the chips that landed; broader audit later.
 - **What to watch for in the meantime:** When adding a new component, manually verify native defaults match the schema's `default:` value. Reach for the audit playbook (`audit.skill`) to catch the others if they exist.
 
-### `lint:sdc-enum-values` for Drupal SDC enum drift
+### `lint:sdc-enum-values` for orphan removals in Drupal SDC
 
 - **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`.
-- **State:** `pnpm sync:drupal` is append-only and doesn't prune. When a schema enum value is removed (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML keeps it silently — Drupal authors who set the orphan value get an unstyled component with no validation error. The actions audit caught one (`civ-link.variant: 'tertiary'`); fixed manually.
-- **Why deferred:** The lint is a YAML parser + schema cross-reference. Mechanically simple but a new tool; better as a focused branch than tagging onto an audit-fix PR.
-- **What to watch for in the meantime:** When removing an enum value from a schema, `grep -rn "<value>" packages/drupal/civui/components/<name>/` to verify the SDC YAML doesn't still list it.
+- **State (additive direction CLEARED):** `tools/sync-drupal-sdc.ts` now reconciles enum constraints on existing props — adds an `enum:` line when the schema declares values but the YAML doesn't, and updates the line when the values differ. 39 existing YAMLs were brought into alignment in the same branch. Sister branch (`claude/lint-sdc-enum-values`) adds the lint to catch future drift.
+- **State (subtractive direction REMAINS):** Sync deliberately does NOT remove an existing `enum:` line when the schema drops it (over-constraining is acceptable; accidentally widening lets bad authoring through). When a schema enum value is REMOVED (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML still keeps the orphan silently. The lint (sister PR) is the catch.
+- **What to watch for in the meantime:** When removing an enum value from a schema, run `pnpm sync:drupal` then manually verify the SDC YAML doesn't still list it (or wait for the sister lint PR to merge so CI catches it).
 
 ### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components
 

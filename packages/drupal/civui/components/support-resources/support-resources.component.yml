@@ -19,6 +19,7 @@ props:
     tone:
       title: Tone
       type: string
+      enum: ['default', 'crisis']
       default: default
       description: 'Visual tone: default or crisis'
 

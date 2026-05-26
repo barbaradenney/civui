@@ -18,6 +18,7 @@ props:
     status:
       title: Status
       type: string
+      enum: ['success', 'error']
       description: 'Status text displayed with the bar'
     hide_percent:
       title: Show percent

@@ -14,14 +14,17 @@ props:
     color:
       title: Variant
       type: string
+      enum: ['blue', 'orange', 'purple', 'gray']
       description: 'Color color'
     tag_style:
       title: Tag style
       type: string
+      enum: ['primary', 'secondary']
       description: 'Visual style of the tag'
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Spacing color'
     icon_start:
       title: Icon start

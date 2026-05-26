@@ -27,6 +27,7 @@ props:
     size:
       title: Size
       type: string
+      enum: ['default', 'sm']
       description: 'Trigger size variant'
     inline:
       title: Inline

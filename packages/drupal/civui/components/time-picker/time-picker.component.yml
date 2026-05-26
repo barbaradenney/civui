@@ -10,6 +10,7 @@ props:
     mode:
       title: Mode
       type: string
+      enum: ['combo', 'select', 'text']
       description: 'Input mode: "combo" (default), "select", or "text"'
     legend:
       title: Legend
@@ -34,6 +35,7 @@ props:
     format:
       title: Format
       type: string
+      enum: ['12', '24']
       description: 'Display format ("12" or "24")'
     minute_step:
       title: Minute step

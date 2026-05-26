@@ -60,6 +60,7 @@ props:
     mask:
       title: Mask
       type: string
+      enum: ['ssn', 'phone-us', 'zip', 'zip4', 'ein', 'currency']
       description: 'Input mask preset (ssn, phone-us, zip, etc.)'
     validate:
       title: Validate

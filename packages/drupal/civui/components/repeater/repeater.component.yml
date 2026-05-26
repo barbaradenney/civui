@@ -22,6 +22,7 @@ props:
     mode:
       title: Mode
       type: string
+      enum: ['inline', 'form-steps', 'route']
       description: 'Repeater mode variant'
     min:
       title: Min

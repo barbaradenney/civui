@@ -37,8 +37,9 @@ export interface PropDef {
   /** Whether this prop is required for the component to function */
   required?: boolean;
 
-  /** For enum types: the allowed values */
-  values?: string[];
+  /** For enum types: the allowed values. Mostly string literals; integer literals
+   *  are also supported for numeric enums (e.g. heading levels `[2, 3, 4, 5, 6]`). */
+  values?: (string | number)[];
 
   /** For array types: the shape of each item */
   items?: Record<string, PropDef>;

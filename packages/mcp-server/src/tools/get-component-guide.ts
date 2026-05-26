@@ -30,7 +30,7 @@ interface PropDef {
   type?: string;
   description?: string;
   default?: unknown;
-  values?: string[];
+  values?: (string | number)[];
   webOnly?: boolean;
 }
 
@@ -66,7 +66,7 @@ interface PropSummary {
   type: string;
   default?: unknown;
   description?: string;
-  values?: string[];
+  values?: (string | number)[];
   webOnly?: boolean;
 }
 

@@ -28,9 +28,10 @@ const schema: ComponentSchema = {
       default: '',
     },
     headingLevel: {
-      type: 'number',
-      description: 'Semantic heading level (2–6) for the alert heading. Web-only. Native platforms use platform-idiomatic header semantics',
+      type: 'enum',
+      description: 'Semantic heading level for the alert heading. Constrained to H2–H6 (H1 belongs to the page title). Web-only. Native platforms use platform-idiomatic header semantics',
       default: 4,
+      values: [2, 3, 4, 5, 6],
       attribute: 'heading-level',
       webOnly: true,
     },

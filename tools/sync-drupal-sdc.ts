@@ -218,8 +218,8 @@ export function renderPropYaml(propName: string, def: any, indent: string): stri
   lines.push(`${indent}  type: ${schemaTypeToDrupal(def.type)}`);
   if (def.values && def.values.length > 0) {
     const enumList = def.values
-      .filter((v: string) => v !== '')
-      .map((v: string) => `'${v}'`)
+      .filter((v: string | number) => v !== '')
+      .map((v: string | number) => (typeof v === 'number' ? String(v) : `'${v}'`))
       .join(', ');
     if (enumList) {
       lines.push(`${indent}  enum: [${enumList}]`);

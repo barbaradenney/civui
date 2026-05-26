@@ -20,7 +20,7 @@ interface PropDef {
   type?: string;
   description?: string;
   default?: unknown;
-  values?: string[];
+  values?: (string | number)[];
   webOnly?: boolean;
 }
 

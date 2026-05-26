@@ -77,7 +77,11 @@ function formatDefault(def: PropDef): string {
 
 function formatType(def: PropDef): string {
   if (def.type === 'enum' && def.values) {
-    return def.values.map(v => `\`'${v}'\``).join(' \\| ');
+    // String values render as `'secondary'`; integer values render as `2`
+    // (no quotes) since they aren't string literals.
+    return def.values
+      .map((v) => (typeof v === 'number' ? `\`${v}\`` : `\`'${v}'\``))
+      .join(' \\| ');
   }
   return `\`${def.type}\``;
 }

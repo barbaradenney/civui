@@ -127,18 +127,41 @@ silently does nothing. Past examples that wasted reader time:
 
 ---
 
-## Hidden civ-conditional content is still in the DOM
+## Hidden civ-conditional / collapsed civ-accordion content is still in the DOM
 
-`civ-conditional` toggles its slotted content with `display: none`
-plus `aria-hidden="true"` — children stay in the DOM. **`civ-form`
-already excludes hidden-conditional fields** from `validate()`,
-`getFormData()`, and `toFormData()`, so a `required` field inside a
-hidden branch will *not* block submit or send a stale value.
+Two patterns keep form fields rendered even when the user can't
+see them:
+
+- **`civ-conditional`** toggles its slotted content with
+  `display: none` plus `aria-hidden="true"` — children stay in
+  the DOM.
+- **`civ-accordion-item`** renders a native `<details>` element;
+  children of a collapsed `<details>` stay in the DOM (the browser
+  just doesn't paint them).
+
+**`civ-form` excludes both** from `validate()`, `getFormData()`,
+and `toFormData()`, so a `required` field inside a hidden branch
+or a collapsed accordion will *not* block submit or send a stale
+value. Nested cases work too: a field inside an OPEN inner
+accordion that's wrapped in a COLLAPSED outer one is excluded
+(the user can't reach it).
 
 If you write a non-civ-form orchestrator that iterates
-`[data-civ-form-field]`, walk up via
-`closest('[data-civ-conditional-content][aria-hidden="true"]')` and
-skip those fields too.
+`[data-civ-form-field]`, walk up via:
+
+```ts
+// hidden civ-conditional
+el.closest('[data-civ-conditional-content][aria-hidden="true"]')
+// collapsed civ-accordion-item — walk every ancestor, not just
+// the nearest, since nesting matters
+let cur = el.parentElement;
+while (cur) {
+  if (cur.tagName === 'CIV-ACCORDION-ITEM' && !(cur as any).open) return true;
+  cur = cur.parentElement;
+}
+```
+
+and skip those fields.
 
 ---
 

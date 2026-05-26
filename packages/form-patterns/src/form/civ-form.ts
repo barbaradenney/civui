@@ -218,6 +218,35 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     return !!el.closest('[data-civ-conditional-content][aria-hidden="true"]');
   }
 
+  /**
+   * True when `el` is inside a collapsed `civ-accordion-item`. Walks
+   * every accordion-item ancestor (not just the nearest) — a field
+   * inside an open inner accordion that's itself inside a collapsed
+   * outer accordion is still hidden from the user, so it's excluded.
+   *
+   * Why this lives in civ-form, not on the accordion: accordion-item
+   * renders a native `<details>` element which keeps children in the
+   * DOM even when collapsed. Without this check, `validate()` would
+   * complain about required fields the user can't see, and submit
+   * payloads would carry stale collapsed-accordion data.
+   */
+  private _isInCollapsedAccordion(el: Element): boolean {
+    let current: Element | null = el.parentElement;
+    while (current && current !== this) {
+      if (current.tagName.toLowerCase() === 'civ-accordion-item') {
+        const item = current as unknown as { open?: boolean };
+        if (!item.open) return true;
+      }
+      current = current.parentElement;
+    }
+    return false;
+  }
+
+  /** Combined: a field is excluded if it's in a hidden conditional OR a collapsed accordion. */
+  private _isHidden(el: Element): boolean {
+    return this._isInHiddenConditional(el) || this._isInCollapsedAccordion(el);
+  }
+
   private _summaryId = this.generateId('summary');
   private _summaryHeadingId = this.generateId('summary-heading');
   private _boundOnClick = this._onButtonClick.bind(this);
@@ -413,7 +442,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (formEl.disabled) continue;
-      if (this._isInHiddenConditional(el)) continue;
+      if (this._isHidden(el)) continue;
       if (formEl.required && !formEl.value) {
         const label = formEl.label || formEl.name || t('fieldFallbackLabel');
         const message = interpolate(t('fieldRequired'), { label });
@@ -578,7 +607,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         el.querySelector('[data-civ-pii]') ||
         el.querySelector('[data-persist-exclude]')
       )) continue;
-      if (this._isInHiddenConditional(el)) continue;
+      if (this._isHidden(el)) continue;
       if (formEl.name) {
         data[formEl.name] = formEl.value ?? '';
       }
@@ -600,7 +629,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
     for (const el of formElements) {
       const formEl = el as unknown as CivFormFieldLike;
       if (!formEl.name || formEl.disabled) continue;
-      if (this._isInHiddenConditional(el)) continue;
+      if (this._isHidden(el)) continue;
 
       // file-upload: append actual File objects
       if (Array.isArray(formEl.files) && formEl.files.length > 0) {

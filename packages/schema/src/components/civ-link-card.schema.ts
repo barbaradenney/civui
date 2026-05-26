@@ -59,6 +59,12 @@ const schema: ComponentSchema = {
       description: 'Small text rendered above the heading (e.g. category label, status)',
       default: '',
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the card surface is inert; click does not navigate and the visual is dimmed',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {},

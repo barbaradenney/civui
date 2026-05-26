@@ -27,6 +27,12 @@ const schema: ComponentSchema = {
       description: 'Tabindex assigned by the parent `civ-segmented-control` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute',
       webOnly: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the segment is inert. Also cascades from a disabled parent `civ-segmented-control`',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

@@ -56,6 +56,12 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'loading-label',
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the button is inert and suppresses the `civ-click` event',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

@@ -114,6 +114,12 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'empty-state-text',
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — cascades to every leaf input the repeater renders, and the Add / Remove buttons go inert',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

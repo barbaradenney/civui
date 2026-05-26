@@ -257,18 +257,19 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Why deferred:** The lint is a YAML parser + schema cross-reference. Mechanically simple but a new tool; better as a focused branch than tagging onto an audit-fix PR.
 - **What to watch for in the meantime:** When removing an enum value from a schema, `grep -rn "<value>" packages/drupal/civui/components/<name>/` to verify the SDC YAML doesn't still list it.
 
-### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components
-
-- **Files:** `tools/sync-doc-tables.ts`, `tools/lib/inherited.ts:14` (`INHERITED_FORM_PROPS`).
-- **State:** The Props-table generator filters `INHERITED_FORM_PROPS` (including `disabled`) as inherited, but `CivBaseElement` does NOT define `disabled` — only `CivFormElement` does. Components extending `CivBaseElement` that declare their own `disabled` (`civ-link`, `civ-link-card`, `civ-button`, `civ-action-button`, `civ-tag`, and others) have their `disabled` silently dropped from the rendered Props tables. Consumers reading the docs see no on-page reference for a real public prop.
-- **Why deferred:** Fixing this requires the doc-tables generator to detect whether each component actually inherits from `CivFormElement` (in which case skip `disabled`) vs `CivBaseElement` (in which case keep it). The same logic applies to `label`, `value`, `readonly` and other "is this actually inherited?" props.
-- **What to watch for in the meantime:** When auditing a component that declares its own `disabled`, manually verify the docs page either lists it elsewhere or call it out in prose.
-
 ### Native `loading` prop parity gap for confirm-button / toggle-button
 
 - **Files:** the relevant Swift / Kotlin stubs.
 - **State:** Web `civ-confirm-button` and `civ-toggle-button` do NOT use `LoadingMixin` because they're fast-completing UI state changes, not network actions. Native stubs likewise don't declare loading props. This is correct — but the asymmetry vs the sibling family (civ-button, civ-action-button, civ-text-button all DO use LoadingMixin) is non-obvious. A future audit might reflexively try to add `loading` to confirm/toggle for "consistency."
 - **Why deferred:** No fix needed — it's documenting a deliberate asymmetry. Captured here so the rationale survives across audit cycles.
+
+### Inherited-prop schema declarations beyond `disabled`
+
+- **Surfaced:** disabled-in-Props-tables branch, 2026-05-26. Branch `claude/disabled-in-props-tables` fixed `disabled` on 14 CivBaseElement schemas; ~30 other schemas have a similar gap for `label` / `value` / `name`.
+- **Files:** schemas under `packages/schema/src/components/` whose source extends CivBaseElement and declares one of `label`, `value`, `name` as a real `@property` but the schema omits it. Concrete list (33 entries): civ-action-chip (label), civ-button (label), civ-filter-chip-group (label, name), civ-input-chip (label), civ-filter-chip (label, value), civ-action-button (label), civ-link (label), civ-skip-link (label), civ-alert (label), civ-badge (label), civ-data-field (label, value), civ-repeater (name), civ-segment (label, value), civ-radio (label, name, value), civ-button-group (label), civ-breadcrumb-item (label), civ-nav-item (label), civ-tag (label), civ-tab-nav-item (label), civ-on-this-page-item (label), civ-tab-panel (value), civ-side-nav-item (label), civ-tab (label, value), civ-modal (label), civ-tabs (label, value).
+- **Why deferred:** Same root cause as the `disabled` gap — schema authors assumed these props were "inherited form chrome" and omitted them, but for CivBaseElement-extending components there's nothing to inherit. The fix is mechanical (declare the prop in each schema with an appropriate description), but the per-schema description authoring isn't auto-generatable — each needs a sentence that reflects the component's role (e.g. `label` on `civ-nav-item` means the nav-item text; `label` on `civ-modal` means the dialog accessible name). Best handled as its own focused branch so the descriptions get the same care the `disabled` ones got.
+- **Detection:** the audit-debt-fixer one-liner from the disabled branch still works for finding remaining cases: `for f in $(grep -lE 'CivBaseElement' packages/*/src/*/civ-*.ts | grep -v '.test.ts' | grep -v '.stories.ts'); do base=$(basename "$f" .ts); s="packages/schema/src/components/${base}.schema.ts"; [ -f "$s" ] || continue; for p in label name value; do grep -qE "@property[^)]*\)\s*\b${p}\b" "$f" && ! grep -qE "^    ${p}:" "$s" && echo "$base: $p"; done; done`.
+- **What to watch for in the meantime:** When auditing one of the listed components, also add the relevant prop declaration in the same change rather than letting the docs drift.
 
 ### Colored `civ-link-card` variants lack hover / active feedback
 

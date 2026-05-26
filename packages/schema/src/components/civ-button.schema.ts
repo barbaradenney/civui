@@ -88,6 +88,12 @@ const schema: ComponentSchema = {
       attribute: 'new-tab',
       webOnly: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the button is inert and suppresses click + analytics events. In link mode (`href` set), renders `aria-disabled="true"` on the rendered `<a>`',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {},

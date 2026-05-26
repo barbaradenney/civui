@@ -38,6 +38,12 @@ const schema: ComponentSchema = {
       default: '',
       values: ['', 'chip', 'inline'],
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the button is inert and suppresses the `civ-confirm` event. The success-state receipt does not appear',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

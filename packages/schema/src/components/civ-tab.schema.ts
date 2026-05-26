@@ -15,6 +15,12 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the tab is inert and `aria-disabled="true"` is set on the rendered `<button role="tab">`. Focus skips disabled tabs during roving keyboard navigation',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

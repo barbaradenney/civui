@@ -50,6 +50,12 @@ const schema: ComponentSchema = {
       type: 'number',
       description: 'Optional count badge appended after the label (e.g. `Open jobs (12)`). `null` hides the badge',
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the chip is inert and the selection cannot be toggled',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

@@ -37,6 +37,12 @@ const schema: ComponentSchema = {
       description: 'Tabindex assigned by the parent `civ-radio-group` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute',
       webOnly: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the radio is inert. Also cascades from a disabled parent `civ-radio-group`',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

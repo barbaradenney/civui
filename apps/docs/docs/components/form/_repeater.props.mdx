@@ -20,3 +20,4 @@
 | `summary-template` | `string` | `''` | Format string with `{prop}` placeholders for the per-row summary line (e.g. `"{firstName} {lastName} ({relationship})"`). Cross-platform; takes precedence over `summary-fields` when set; loses to `rowSummary` function when both are set |
 | `row-summary` | `string` | — | Function `(row: object, index: number) => string` that returns the summary line for each row in `mode="route"`. Set programmatically (not as an attribute). When set, takes precedence over `summary-template` and `summary-fields` |
 | `empty-state-text` | `string` | `''` | Hint shown between the header and the Add button when the list has no rows. Leave blank to omit |
+| `disabled` | `boolean` | `false` | Disabled state — cascades to every leaf input the repeater renders, and the Add / Remove buttons go inert |

@@ -20,6 +20,12 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — renders as a non-interactive `<span aria-disabled="true">` instead of `<a href>`',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {},

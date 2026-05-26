@@ -111,6 +111,12 @@ const schema: ComponentSchema = {
       attribute: 'new-tab',
       webOnly: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the button is inert and suppresses click + analytics events',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {},

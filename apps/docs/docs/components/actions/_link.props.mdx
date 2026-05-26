@@ -19,3 +19,4 @@
 | `rel` | `string` | `''` | HTML `rel` attribute. Web-only. `new-tab` automatically sets `rel="noopener noreferrer"` |
 | `download` | `string` | `''` | HTML `download` attribute (suggested filename). Web-only. Native platforms handle downloads via OS share/save sheets |
 | `new-tab` | `boolean` | `false` | Open the link in a new tab/window. Sets `target="_blank"` + `rel="noopener noreferrer"` and adds an external-link icon. Web-only. Native platforms route URLs through the OS, which has no "new tab" concept |
+| `disabled` | `boolean` | `false` | Disabled state — the link is inert. In link mode (default), renders `aria-disabled="true"` + `tabindex="-1"` on the rendered `<a>`. In button mode (`as="button"`), the rendered `<button>` carries native `disabled` |

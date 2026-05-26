@@ -102,6 +102,12 @@ const schema: ComponentSchema = {
       attribute: 'new-tab',
       webOnly: true,
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the link is inert. In link mode (default), renders `aria-disabled="true"` + `tabindex="-1"` on the rendered `<a>`. In button mode (`as="button"`), the rendered `<button>` carries native `disabled`',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {},

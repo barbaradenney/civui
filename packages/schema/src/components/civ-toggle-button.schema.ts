@@ -44,6 +44,12 @@ const schema: ComponentSchema = {
       default: '',
       attribute: 'icon-start',
     },
+    disabled: {
+      type: 'boolean',
+      description: 'Disabled state — the button is inert and the pressed state cannot be toggled',
+      default: false,
+      reflect: true,
+    },
   },
 
   events: {

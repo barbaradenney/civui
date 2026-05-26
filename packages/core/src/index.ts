@@ -8,6 +8,8 @@ export type { SlotConfig } from './base/light-dom-mixins.js';
 export type { SelectLike } from './types/sub-components.js';
 export { LegendHeadingMixin } from './base/legend-heading-mixin.js';
 export { GroupListenerMixin } from './base/group-listener-mixin.js';
+export { LoadingMixin } from './base/loading-mixin.js';
+export type { LoadingMixinInterface } from './base/loading-mixin.js';
 
 // A11y utilities
 export { announce, cancelAnnouncements, cleanupLiveRegions, SEARCH_ANNOUNCE_MS, COUNT_ANNOUNCE_MS } from './a11y/live-region.js';

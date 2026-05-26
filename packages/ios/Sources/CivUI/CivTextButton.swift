@@ -51,6 +51,14 @@ public struct CivTextButton: View {
     /// Whether the button is disabled.
     public var isDisabled: Bool
 
+    /// Async-in-flight state. Mirrors the web `loading` prop — VoiceOver
+    /// announces the loading label and the button surfaces a busy state.
+    public var isLoading: Bool
+
+    /// Accessible name spoken while `isLoading` is true (e.g. "Generating…").
+    /// Mirrors the web `loadingLabel` prop.
+    public var loadingLabel: String
+
     /// Called on tap (parallels the `civ-click` event).
     public var onClick: (() -> Void)?
 
@@ -65,6 +73,8 @@ public struct CivTextButton: View {
         iconEnd: String = "",
         type: String = "button",
         isDisabled: Bool = false,
+        isLoading: Bool = false,
+        loadingLabel: String = "",
         onClick: (() -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
@@ -75,6 +85,8 @@ public struct CivTextButton: View {
         self.iconEnd = iconEnd
         self.type = type
         self.isDisabled = isDisabled
+        self.isLoading = isLoading
+        self.loadingLabel = loadingLabel
         self.onClick = onClick
         self.onAnalytics = onAnalytics
     }

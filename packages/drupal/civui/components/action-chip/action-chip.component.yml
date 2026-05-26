@@ -10,7 +10,7 @@ props:
     spacing:
       title: Spacing
       type: string
-      enum: ['default', 'sm']
+      enum: ['default', 'sm', 'lg']
       default: 'default'
       description: 'Padding density. `default` for standalone; `sm` for dense rows'
     icon_start:

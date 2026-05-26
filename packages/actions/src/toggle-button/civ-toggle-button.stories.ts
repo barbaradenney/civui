@@ -24,10 +24,10 @@ export const Default: Story = {
   `,
 };
 
-export const Chip: Story = {
-  name: 'Chip variant (prominent pill)',
+export const Secondary: Story = {
+  name: 'Secondary emphasis (prominent gray pill)',
   render: () => html`
-    <civ-toggle-button variant="chip" label="Show details" pressed-label="Hide details"></civ-toggle-button>
+    <civ-toggle-button emphasis="secondary" label="Show details" pressed-label="Hide details"></civ-toggle-button>
   `,
 };
 

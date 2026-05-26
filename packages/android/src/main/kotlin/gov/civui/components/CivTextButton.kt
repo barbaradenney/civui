@@ -37,6 +37,8 @@ fun CivTextButton(
     iconEnd: String = "",
     type: String = "button",
     disabled: Boolean = false,
+    loading: Boolean = false,
+    loadingLabel: String = "",
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

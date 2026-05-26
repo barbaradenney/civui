@@ -63,7 +63,7 @@ For architecture and internals, see `CLAUDE.md` in the repo root.
 | `<civ-modal>` | Overlay | `open`, `heading`, `label`, `no-close-button`, `no-backdrop-close`, `no-escape-close` | `civ-modal-close` |
 | `<civ-action-sheet>` | Overlay | `open`, `max-height`, `trap-focus`, `no-click-outside` | `civ-action-sheet-close` |
 | `<civ-button-group>` | UI | `orientation`, `label` | — (`role="toolbar"`) |
-| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `removable`, `disabled`, `chip-style`, `chip-role` (toggle/radio), `spacing`, `icon-start`, `icon-end`, `count` | `civ-change`, `civ-remove`, `civ-analytics` |
+| `<civ-filter-chip>` | UI | `label`, `value`, `selected`, `disabled`, `emphasis`, `variant` (toggle/radio), `spacing`, `icon-start`, `icon-end`, `count` | `civ-change`, `civ-analytics` |
 | `<civ-filter-chip-group>` | UI | `mode` (single/multi), `label`. Roving tabindex + keyboard nav. | `civ-change` (aggregated) |
 | `<civ-input-group>` | UI | — (layout container) | — |
 | `<civ-ssn>` | Preset | `mode` (`'full'` \| `'last4'`) | `civ-input`, `civ-change` |
@@ -1361,7 +1361,7 @@ Drupal stories are co-located next to web component source as `*.drupal.stories.
 | Notification dot (no number) | `civ-badge` (with `dot`) | Compact marker; `label` becomes `aria-label` |
 | Numeric count ("5", "99+") | `civ-count` | Lighter chrome than badge; primary/secondary emphasis; `live="off"` by default |
 | Notification count over an icon ("3 unread") | `civ-count` (with `overlay`) | Same primitive; `overlay` pins it top-end of a relative parent |
-| Interactive filter (toggle on/off, applied filter chip) | `civ-filter-chip` | Button-like, fires `civ-change` / `civ-remove` |
+| Interactive filter (toggle on/off) | `civ-filter-chip` | Button-like, fires `civ-change`. For removable user-entered tokens, use `civ-input-chip` instead. |
 | Static categorization / taxonomy ("Healthcare", "Disability") | `civ-tag` | Non-semantic palette (blue/orange/purple/gray) |
 | Metadata label | `civ-tag` | Same palette, multiple emphasis levels |
 

@@ -110,6 +110,13 @@
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
     },
     {
+      "story": "Loading",
+      "name": "Loading state",
+      "category": "Actions/Action Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;\">\n      <civ-action-button label=\"Apply\" emphasis=\"primary\" loading loading-label=\"Applying…\"></civ-action-button>\n      <civ-action-button label=\"Refresh\" emphasis=\"secondary\" icon-start=\"refresh\" loading loading-label=\"Refreshing…\"></civ-action-button>\n      <civ-action-button label=\"Archive\" emphasis=\"tertiary\" loading loading-label=\"Archiving 12 rows…\"></civ-action-button>\n    </div>",
+      "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
+    },
+    {
       "story": "Pressed",
       "name": "Toggle (Pressed)",
       "category": "Actions/Action Button",
@@ -146,7 +153,7 @@
     {
       "story": "Spacing",
       "category": "Actions/Action Chip",
-      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-action-chip label=\"Today\"></civ-action-chip>\n        <civ-action-chip label=\"This week\"></civ-action-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-action-chip label=\"Today\" spacing=\"sm\"></civ-action-chip>\n        <civ-action-chip label=\"This week\" spacing=\"sm\"></civ-action-chip>\n      </div>\n    </div>",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-action-chip label=\"Today\"></civ-action-chip>\n        <civ-action-chip label=\"This week\"></civ-action-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-action-chip label=\"Today\" spacing=\"sm\"></civ-action-chip>\n        <civ-action-chip label=\"This week\" spacing=\"sm\"></civ-action-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">lg (AAA):</span>\n        <civ-action-chip label=\"Today\" spacing=\"lg\"></civ-action-chip>\n        <civ-action-chip label=\"This week\" spacing=\"lg\"></civ-action-chip>\n      </div>\n    </div>",
       "source": "packages/actions/src/action-chip/civ-action-chip.stories.ts"
     },
     {
@@ -1375,10 +1382,10 @@
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     },
     {
-      "story": "Inline",
-      "name": "Inline variant (transparent text-link style)",
+      "story": "Tertiary",
+      "name": "Tertiary emphasis (transparent text-link style)",
       "category": "Actions/Confirm Button",
-      "html": "<civ-confirm-button\n      variant=\"inline\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
+      "html": "<civ-confirm-button\n      emphasis=\"tertiary\"\n      label=\"Copy\"\n      success-label=\"Copied\"\n      @civ-confirm=${() => navigator.clipboard?.writeText('sample value')}\n    ></civ-confirm-button>",
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     }
   ],
@@ -2406,7 +2413,7 @@
     {
       "story": "Default",
       "category": "Actions/Filter Chip",
-      "html": "<civ-filter-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      emphasis=\"${args.emphasis || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?selected=\"${args.selected}\"\n      ?removable=\"${args.removable}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-filter-chip>",
+      "html": "<civ-filter-chip\n      label=\"${args.label}\"\n      value=\"${args.value}\"\n      emphasis=\"${args.emphasis || 'secondary'}\"\n      spacing=\"${args.spacing || 'default'}\"\n      ?selected=\"${args.selected}\"\n      ?disabled=\"${args.disabled}\"\n    ></civ-filter-chip>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
@@ -2429,12 +2436,6 @@
       "source": "packages/feedback/src/count/civ-count.stories.ts"
     },
     {
-      "story": "Removable",
-      "category": "Actions/Filter Chip",
-      "html": "<div style=\"display: grid; gap: 0.5rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Applied filters:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n        <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"Disability\" value=\"disability\" selected removable></civ-filter-chip>\n        <civ-filter-chip label=\"VA Form 21-526EZ\" value=\"form-21-526ez\" selected removable></civ-filter-chip>\n      </div>\n    </div>",
-      "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
-    },
-    {
       "story": "SnapAndFade",
       "name": "Snap + Fade",
       "category": "Foundations/Horizontal Scroll",
@@ -2444,7 +2445,7 @@
     {
       "story": "Spacing",
       "category": "Actions/Filter Chip",
-      "html": "<div style=\"display: grid; gap: 0.75rem;\">\n      <div>\n        <p style=\"margin: 0 0 0.25rem; font-weight: 600;\">Default</p>\n        <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n          <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Education\" value=\"education\"></civ-filter-chip>\n          <civ-filter-chip label=\"Housing\" value=\"housing\"></civ-filter-chip>\n        </div>\n      </div>\n      <div>\n        <p style=\"margin: 0 0 0.25rem; font-weight: 600;\">Compact (sm)</p>\n        <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n          <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" spacing=\"sm\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Education\" value=\"education\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"Housing\" value=\"housing\" spacing=\"sm\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "html": "<div style=\"display: grid; gap: 0.75rem;\">\n      <div>\n        <p style=\"margin: 0 0 0.25rem; font-weight: 600;\">Default (24px, AA)</p>\n        <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n          <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Education\" value=\"education\"></civ-filter-chip>\n          <civ-filter-chip label=\"Housing\" value=\"housing\"></civ-filter-chip>\n        </div>\n      </div>\n      <div>\n        <p style=\"margin: 0 0 0.25rem; font-weight: 600;\">Compact (sm, 24px floor)</p>\n        <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n          <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" spacing=\"sm\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Education\" value=\"education\" spacing=\"sm\"></civ-filter-chip>\n          <civ-filter-chip label=\"Housing\" value=\"housing\" spacing=\"sm\"></civ-filter-chip>\n        </div>\n      </div>\n      <div>\n        <p style=\"margin: 0 0 0.25rem; font-weight: 600;\">Large (lg, 44px AAA)</p>\n        <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n          <civ-filter-chip label=\"Healthcare\" value=\"healthcare\" spacing=\"lg\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Education\" value=\"education\" spacing=\"lg\"></civ-filter-chip>\n          <civ-filter-chip label=\"Housing\" value=\"housing\" spacing=\"lg\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
@@ -3196,7 +3197,7 @@
     {
       "story": "Spacing",
       "category": "Actions/Input Chip",
-      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-input-chip label=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\"></civ-input-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-input-chip label=\"alice@example.com\" spacing=\"sm\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" spacing=\"sm\"></civ-input-chip>\n      </div>\n    </div>",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">default:</span>\n        <civ-input-chip label=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\"></civ-input-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">sm:</span>\n        <civ-input-chip label=\"alice@example.com\" spacing=\"sm\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" spacing=\"sm\"></civ-input-chip>\n      </div>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <span style=\"font-size: 0.875rem; min-width: 5rem;\">lg (AAA):</span>\n        <civ-input-chip label=\"alice@example.com\" spacing=\"lg\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" spacing=\"lg\"></civ-input-chip>\n      </div>\n    </div>",
       "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
     },
     {
@@ -6196,6 +6197,13 @@
       "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
     },
     {
+      "story": "Loading",
+      "name": "Loading state",
+      "category": "Actions/Text Button",
+      "html": "<div style=\"display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;\">\n      <civ-text-button label=\"Generate\" emphasis=\"primary\" loading loading-label=\"Generating…\"></civ-text-button>\n      <civ-text-button label=\"Scan\" emphasis=\"secondary\" icon-start=\"refresh\" loading loading-label=\"Scanning…\"></civ-text-button>\n      <civ-text-button label=\"Refresh\" emphasis=\"tertiary\" loading loading-label=\"Refreshing…\"></civ-text-button>\n    </div>",
+      "source": "packages/actions/src/text-button/civ-text-button.stories.ts"
+    },
+    {
       "story": "Spacing",
       "name": "Spacing (default vs sm)",
       "category": "Actions/Text Button",
@@ -6781,13 +6789,6 @@
   ],
   "civ-toggle-button": [
     {
-      "story": "Chip",
-      "name": "Chip variant (prominent pill)",
-      "category": "Actions/Toggle Button",
-      "html": "<civ-toggle-button variant=\"chip\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
-      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
-    },
-    {
       "story": "Default",
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\"></civ-toggle-button>",
@@ -6818,6 +6819,13 @@
       "name": "Pre-pressed state",
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button label=\"Show\" pressed-label=\"Hide\" pressed></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "Secondary",
+      "name": "Secondary emphasis (prominent gray pill)",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button emphasis=\"secondary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
       "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
     }
   ],

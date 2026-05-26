@@ -184,3 +184,113 @@ describe('CivActionButton icon-only mode', () => {
     expect(el.hasAttribute('icon-only')).toBe(true);
   });
 });
+
+describe('CivActionButton loading state', () => {
+  it('renders a civ-spinner in place of the leading icon when loading', async () => {
+    const el = await fixture('<civ-action-button loading icon-start="check" label="Apply"></civ-action-button>');
+    expect(el.querySelector('civ-spinner')).not.toBeNull();
+    expect(el.querySelector('civ-icon[name="check"]')).toBeNull();
+  });
+
+  it('the inner spinner is decorative', async () => {
+    const el = await fixture('<civ-action-button loading label="Apply"></civ-action-button>');
+    const spinner = el.querySelector('civ-spinner') as HTMLElement;
+    expect(spinner.hasAttribute('decorative')).toBe(true);
+  });
+
+  it('disables the underlying button while loading', async () => {
+    const el = await fixture('<civ-action-button loading label="Apply"></civ-action-button>');
+    expect(el.querySelector('button')!.disabled).toBe(true);
+  });
+
+  it('sets aria-busy on the button while loading', async () => {
+    const el = await fixture('<civ-action-button loading label="Apply"></civ-action-button>');
+    expect(el.querySelector('button')!.getAttribute('aria-busy')).toBe('true');
+  });
+
+  it('does NOT set aria-busy when not loading', async () => {
+    const el = await fixture('<civ-action-button label="Apply"></civ-action-button>');
+    expect(el.querySelector('button')!.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('swaps the accessible name to loadingLabel while loading', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Applying filter…" label="Apply"></civ-action-button>',
+    );
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Applying filter…');
+  });
+
+  it('falls back to the locale buttonLoadingLabel when loadingLabel is empty', async () => {
+    const el = await fixture('<civ-action-button loading label="Apply"></civ-action-button>');
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Loading…');
+  });
+
+  it('removes aria-busy and aria-label when loading flips back to false', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Applying…" label="Apply"></civ-action-button>',
+    ) as any;
+    expect(el.querySelector('button')!.getAttribute('aria-busy')).toBe('true');
+    el.loading = false;
+    await elementUpdated(el);
+    expect(el.querySelector('button')!.hasAttribute('aria-busy')).toBe(false);
+    expect(el.querySelector('button')!.hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('does not fire click handlers while loading', async () => {
+    const el = await fixture('<civ-action-button loading label="Apply"></civ-action-button>');
+    const handler = vi.fn();
+    el.addEventListener('click', handler);
+    el.querySelector('button')!.click();
+    // disabled buttons swallow clicks at the DOM level
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('link-mode ignores loading (navigation is not a state we wait on)', async () => {
+    const el = await fixture('<civ-action-button loading href="/x" label="Edit"></civ-action-button>') as any;
+    // No spinner because link mode suppresses isLoading
+    expect(el.querySelector('civ-spinner')).toBeNull();
+    expect(el.querySelector('a')).not.toBeNull();
+  });
+});
+
+describe('CivActionButton aria-label semantics', () => {
+  it('honors a consumer-supplied aria-label when not loading', async () => {
+    const el = await fixture(
+      '<civ-action-button aria-label="Archive 3 selected rows" label="Archive"></civ-action-button>',
+    );
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archive 3 selected rows');
+  });
+
+  it('empty aria-label="" falls through to "no override" — the visible label becomes the accessible name (prevents ARIA-invalid empty aria-label from stripping the name)', async () => {
+    const el = await fixture('<civ-action-button aria-label="" label="Save"></civ-action-button>');
+    // The button should NOT carry an empty aria-label attribute that
+    // strips its accessible name; the visible label "Save" is the name.
+    expect(el.querySelector('button')!.hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('loading-label takes precedence over consumer aria-label while loading', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Archiving…" aria-label="Archive 3 rows" label="Archive"></civ-action-button>',
+    );
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archiving…');
+  });
+
+  it('restores consumer aria-label when loading flips back off', async () => {
+    const el = await fixture(
+      '<civ-action-button loading loading-label="Archiving…" aria-label="Archive 3 rows" label="Archive"></civ-action-button>',
+    ) as any;
+    el.loading = false;
+    await elementUpdated(el);
+    expect(el.querySelector('button')!.getAttribute('aria-label')).toBe('Archive 3 rows');
+  });
+});
+
+describe('CivActionButton pressed="false" HTML boolean trap', () => {
+  it('dev-warns when the literal string "false" is set on the pressed attribute', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await fixture('<civ-action-button pressed="false" label="Mute"></civ-action-button>');
+    const warnCalls = warnSpy.mock.calls.map((c) => c.join(' '));
+    expect(warnCalls.some((m) => /pressed=\"false\".*truthy|HTML boolean attribute trap/i.test(m))).toBe(true);
+    warnSpy.mockRestore();
+  });
+});

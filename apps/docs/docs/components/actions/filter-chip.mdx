@@ -20,9 +20,9 @@ import GroupEvents from "./_filter-chip-group.events.mdx";
 
 `<civ-filter-chip>` · `<civ-filter-chip-group>`
 
-An interactive, button-like control for filter selection. Click to toggle the chip's `selected` state; in `removable` mode, click the trailing `×` to dismiss without toggling. Use horizontal rows of chips to represent active or available filters.
+An interactive, button-like control for filter selection. Click to toggle the chip's `selected` state. Use horizontal rows of chips to represent active or available filters.
 
-For static categorization labels use [`civ-tag`](../layout/tag); for status indicators use [`civ-badge`](../feedback/badge); for primary CTAs use [`civ-button`](./button).
+For removable user-entered tokens (recipient lists, applied-filter readouts), use [`civ-input-chip`](./input-chip) instead — its always-present × is the canonical removable-chip affordance. For static categorization labels use [`civ-tag`](../layout/tag); for status indicators use [`civ-badge`](../feedback/badge); for primary CTAs use [`civ-button`](./button).
 
 When you have more than two or three chips, wrap them in `<civ-filter-chip-group>` to get keyboard navigation and (optionally) single-select coordination. See [the group section](#group) below.
 
@@ -39,10 +39,6 @@ When you have more than two or three chips, wrap them in `<civ-filter-chip-group
 ### Filter row
 
 <StoryEmbed id="actions-filter-chip--filter-row" />
-
-### Removable (applied-filter dismiss)
-
-<StoryEmbed id="actions-filter-chip--removable" />
 
 ### Styles
 
@@ -76,11 +72,9 @@ When you have more than two or three chips, wrap them in `<civ-filter-chip-group
 
 ## Accessibility
 
-- The chip renders a non-interactive `<span role="presentation">` wrapper containing one or two real `<button>` elements (toggle + optional remove). This avoids the "interactive content nested inside a `<button>`" anti-pattern.
-- In default `chip-role="toggle"` mode the action button uses `aria-pressed`. In `chip-role="radio"` (set by a single-select group) it uses `role="radio"` + `aria-checked`. Re-clicking an already-selected radio is a no-op (matches platform radio semantics).
-- The remove `×` is its own real `<button>` with `aria-label="Remove {label} filter"`. Enter and Space activate it natively. Clicking it does not toggle the chip.
+- The chip renders a non-interactive `<span role="presentation">` wrapper containing one real `<button>` element. The wrapper exists so the chip's chrome (background, border, focus ring) sits at the same DOM level as siblings in the chip family.
+- In default `variant="toggle"` mode the action button uses `aria-pressed`. In `variant="radio"` (set by a single-select group) it uses `role="radio"` + `aria-checked`. Re-clicking an already-selected radio is a no-op (matches platform radio semantics).
 - Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.
-- `disabled` propagates to both inner buttons.
 
 ## Patterns
 
@@ -103,11 +97,11 @@ Wire `civ-change` to your filter store; let the chip own its `selected` state an
 
 ### Applied-filters bar
 
-Use `removable` to show currently-active filters that the user can dismiss:
+For "currently-applied filters with × to dismiss" — use [`civ-input-chip`](./input-chip) instead. Filter-chip is toggle-only; the input-chip's always-present remove handle is the canonical removable-chip affordance:
 
 ```html
-<civ-filter-chip label="Healthcare" value="healthcare" selected removable></civ-filter-chip>
-<civ-filter-chip label="VA Form 21-526EZ" value="form-21-526ez" selected removable></civ-filter-chip>
+<civ-input-chip label="Healthcare" value="healthcare"></civ-input-chip>
+<civ-input-chip label="VA Form 21-526EZ" value="form-21-526ez"></civ-input-chip>
 ```
 
 ## Anti-patterns
@@ -115,6 +109,7 @@ Use `removable` to show currently-active filters that the user can dismiss:
 - **Don't use a filter chip as a category label.** If it doesn't filter anything, use `civ-tag` (a static `<span>`).
 - **Don't use a filter chip for status.** Use `civ-badge`, which carries `role="status"` for assistive tech.
 - **Don't use a filter chip as a primary action.** Use `civ-button` for "Submit", "Save", etc.
+- **Don't reach for `removable` on a filter chip.** The prop was removed in the chip-family responsibility split — toggleable selection lives here, removable user-entered tokens live on [`civ-input-chip`](./input-chip).
 
 ---
 

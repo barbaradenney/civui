@@ -44,6 +44,18 @@ const schema: ComponentSchema = {
       default: 'button',
       values: ['button', 'submit', 'reset'],
     },
+    loading: {
+      type: 'boolean',
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner` (xs size), disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network)',
+      default: false,
+      reflect: true,
+    },
+    loadingLabel: {
+      type: 'string',
+      description: 'Accessible name applied as `aria-label` while `loading` is true, and announced once via `@civui/core`\'s shared `announce()` queue on the loading transition. Empty default falls back to the locale\'s `buttonLoadingLabel` ("Loading…" in English). Pass an action-specific present-participle verb ("Generating…", "Scanning…")',
+      default: '',
+      attribute: 'loading-label',
+    },
   },
 
   events: {

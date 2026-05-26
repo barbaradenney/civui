@@ -38,7 +38,7 @@ import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, renderCloseBu
  * @prop {string} label - Chip text (preferred over child text)
  * @prop {string} value - Identifier passed in the remove event detail (consumer correlates removals)
  * @prop {boolean} disabled - Disabled state — visually muted; remove handle is inert
- * @prop {string} spacing - Padding size: 'default' or 'sm'
+ * @prop {string} spacing - Padding size. `default` (AA target 24px), `sm` (also clamps to 24px floor), or `lg` (44px — WCAG 2.5.5 AAA Enhanced target)
  *
  * @fires civ-remove - `{ value }` when the user clicks the × button
  * @fires civ-analytics - Analytics tracking event on remove
@@ -49,8 +49,8 @@ export class CivInputChip extends LightDomTextMixin(CivBaseElement) {
   @property({ type: String }) value = '';
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /** Padding size: 'default' or 'sm' for compact layouts. */
-  @property({ type: String }) spacing: 'default' | 'sm' = 'default';
+  /** Padding size: 'default', 'sm' for compact layouts, or 'lg' for the WCAG 2.5.5 AAA Enhanced tap target (44×44) on the remove button. */
+  @property({ type: String }) spacing: 'default' | 'sm' | 'lg' = 'default';
 
   private get _text(): string {
     return this.label || this._initialText;
@@ -61,6 +61,7 @@ export class CivInputChip extends LightDomTextMixin(CivBaseElement) {
       'civ-chip',
       'civ-chip--input',
       this.spacing === 'sm' ? 'civ-chip--sm' : '',
+      this.spacing === 'lg' ? 'civ-chip--lg' : '',
       this.disabled ? 'civ-chip--disabled' : '',
     ]
       .filter(Boolean)

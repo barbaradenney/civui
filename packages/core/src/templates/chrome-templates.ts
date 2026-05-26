@@ -24,7 +24,7 @@ interface CloseButtonOptions {
   extraClass?: string;
   /** Icon name. Defaults to `'close'` (the X). Override for variants. */
   iconName?: string;
-  /** Disabled state (used by filter-chip's removable affordance). */
+  /** Disabled state. */
   disabled?: boolean;
 }
 
@@ -37,9 +37,9 @@ interface CloseButtonOptions {
 
 /**
  * Renders the canonical close / dismiss button used by modal,
- * action-sheet, drawer, alert (dismissible), filter-chip (removable),
- * combobox / text-input / date-picker (clear), file-upload (cancel
- * file). All instances share the `.civ-close-btn` chrome class which
+ * action-sheet, drawer, alert (dismissible), input-chip (remove
+ * token), combobox / text-input / date-picker (clear), file-upload
+ * (cancel file). All instances share the `.civ-close-btn` chrome class which
  * lives in `@civui/core/styles/components.css`.
  *
  * Composing `civ-button` instead is rejected because:

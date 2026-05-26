@@ -97,14 +97,20 @@ describe('civ-input-chip', () => {
   });
 
   describe('spacing', () => {
-    it('default spacing does not apply --sm', async () => {
+    it('default spacing does not apply --sm or --lg', async () => {
       const el = await fixture<CivInputChip>('<civ-input-chip label="X"></civ-input-chip>');
       expect(wrapper(el).className).not.toContain('civ-chip--sm');
+      expect(wrapper(el).className).not.toContain('civ-chip--lg');
     });
 
     it('applies civ-chip--sm when spacing="sm"', async () => {
       const el = await fixture<CivInputChip>('<civ-input-chip label="X" spacing="sm"></civ-input-chip>');
       expect(wrapper(el).className).toContain('civ-chip--sm');
+    });
+
+    it('applies civ-chip--lg when spacing="lg" (WCAG 2.5.5 AAA target)', async () => {
+      const el = await fixture<CivInputChip>('<civ-input-chip label="X" spacing="lg"></civ-input-chip>');
+      expect(wrapper(el).className).toContain('civ-chip--lg');
     });
   });
 });

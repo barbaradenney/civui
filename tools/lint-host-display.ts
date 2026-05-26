@@ -56,7 +56,12 @@ function collectStylesheets(): string[] {
   return out;
 }
 
-const CUSTOM_ELEMENT_RE = /@customElement\(\s*['"](civ-[a-z][a-z0-9-]*)['"]\s*\)/g;
+// Negative lookbehind for backslash so the JSDoc-escaped form
+// `\@customElement('civ-X')` (used in docstring examples that
+// document a hypothetical consumer component) does NOT register a
+// fake element that the lint would then demand a host-display rule
+// for. Matches the same convention as `lint-coverage-trinity.ts`.
+const CUSTOM_ELEMENT_RE = /(?<!\\)@customElement\(\s*['"](civ-[a-z][a-z0-9-]*)['"]\s*\)/g;
 
 function* walk(path: string): Generator<string> {
   let stat;

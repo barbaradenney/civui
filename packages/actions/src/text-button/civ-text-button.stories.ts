@@ -121,3 +121,22 @@ export const InsideHelperRow: Story = {
     </div>
   `,
 };
+
+export const Loading: Story = {
+  name: 'Loading state',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Async-in-flight state for the rare text-button case that hits the network (Generate / Scan that wraps an API call). Swaps the leading icon for an `xs` `civ-spinner`, sets `aria-busy="true"`, disables the button, and swaps the accessible name to `loading-label`. For Copy with a transient ✓ receipt — use `civ-confirm-button` instead.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+      <civ-text-button label="Generate" emphasis="primary" loading loading-label="Generating…"></civ-text-button>
+      <civ-text-button label="Scan" emphasis="secondary" icon-start="refresh" loading loading-label="Scanning…"></civ-text-button>
+      <civ-text-button label="Refresh" emphasis="tertiary" loading loading-label="Refreshing…"></civ-text-button>
+    </div>
+  `,
+};

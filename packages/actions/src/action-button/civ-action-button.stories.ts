@@ -185,3 +185,22 @@ export const AsLink: Story = {
     </div>
   `,
 };
+
+export const Loading: Story = {
+  name: 'Loading state',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Async-in-flight state for toolbar / row-action use cases (apply filter, refresh, archive selected). Swaps the leading icon for a `civ-spinner`, sets `aria-busy="true"`, disables the button, and swaps the accessible name to `loading-label` so AT users hear the busy verb ("Applying…") instead of the stale label. Use a present-participle verb specific to the action.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+      <civ-action-button label="Apply" emphasis="primary" loading loading-label="Applying…"></civ-action-button>
+      <civ-action-button label="Refresh" emphasis="secondary" icon-start="refresh" loading loading-label="Refreshing…"></civ-action-button>
+      <civ-action-button label="Archive" emphasis="tertiary" loading loading-label="Archiving 12 rows…"></civ-action-button>
+    </div>
+  `,
+};

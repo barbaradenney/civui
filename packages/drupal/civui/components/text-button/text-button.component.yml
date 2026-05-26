@@ -22,7 +22,7 @@ props:
       type: string
       enum: ['default', 'sm']
       default: 'default'
-      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts'
+      description: 'Density. sm shrinks padding and font-size for dense prose / read-more contexts.'
     icon_start:
       title: Icon start
       type: string
@@ -37,11 +37,15 @@ props:
       enum: ['button', 'submit', 'reset']
       default: 'button'
       description: 'HTML button type'
-
-slots:
-  default:
-    title: Default
-    description: 'Child content (alternative to label prop).'
+    loading:
+      title: Loading
+      type: boolean
+      default: false
+      description: 'Async-in-flight state. Swaps the leading icon for a civ-spinner (xs size), disables the button, and sets aria-busy.'
+    loading_label:
+      title: Loading label
+      type: string
+      description: 'Accessible name applied as aria-label while loading is true. Falls back to the locale buttonLoadingLabel ("Loading…").'
 
 libraryOverrides:
   dependencies:

@@ -11,7 +11,7 @@ const meta: Meta = {
     label: { control: 'text' },
     value: { control: 'text' },
     disabled: { control: 'boolean' },
-    spacing: { control: 'select', options: ['default', 'sm'] },
+    spacing: { control: 'select', options: ['default', 'sm', 'lg'] },
     iconStart: { control: 'text', name: 'icon-start' },
     iconEnd: { control: 'text', name: 'icon-end' },
     count: { control: 'number' },
@@ -127,6 +127,14 @@ export const WithCount: Story = {
 };
 
 export const Spacing: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Three sizes. `default` and `sm` both hit the WCAG 2.5.8 AA minimum target (24px). `lg` hits the WCAG 2.5.5 AAA Enhanced target (44px) for fingertip-heavy mobile placements.',
+      },
+    },
+  },
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 0.75rem;">
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
@@ -138,6 +146,11 @@ export const Spacing: Story = {
         <span style="font-size: 0.875rem; min-width: 5rem;">sm:</span>
         <civ-action-chip label="Today" spacing="sm"></civ-action-chip>
         <civ-action-chip label="This week" spacing="sm"></civ-action-chip>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <span style="font-size: 0.875rem; min-width: 5rem;">lg (AAA):</span>
+        <civ-action-chip label="Today" spacing="lg"></civ-action-chip>
+        <civ-action-chip label="This week" spacing="lg"></civ-action-chip>
       </div>
     </div>
   `,

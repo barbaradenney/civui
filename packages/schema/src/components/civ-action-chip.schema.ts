@@ -22,9 +22,9 @@ const schema: ComponentSchema = {
     },
     spacing: {
       type: 'enum',
-      description: 'Padding density. `default` for standalone; `sm` for dense rows',
+      description: 'Padding density. `default` (24px, WCAG 2.5.8 AA target) is the common case. `sm` also clamps to the 24px floor for ultra-dense rows. `lg` (44px, WCAG 2.5.5 AAA Enhanced target) is for AAA-conscious surfaces or fingertip-heavy mobile placements',
       default: 'default',
-      values: ['default', 'sm'],
+      values: ['default', 'sm', 'lg'],
     },
     iconStart: {
       type: 'string',

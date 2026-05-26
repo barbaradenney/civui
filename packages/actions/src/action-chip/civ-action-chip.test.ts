@@ -99,14 +99,20 @@ describe('civ-action-chip', () => {
   });
 
   describe('spacing', () => {
-    it('default spacing does not apply --sm', async () => {
+    it('default spacing does not apply --sm or --lg', async () => {
       const el = await fixture<CivActionChip>('<civ-action-chip label="X"></civ-action-chip>');
       expect(btn(el).className).not.toContain('civ-chip--sm');
+      expect(btn(el).className).not.toContain('civ-chip--lg');
     });
 
     it('applies civ-chip--sm when spacing="sm"', async () => {
       const el = await fixture<CivActionChip>('<civ-action-chip label="X" spacing="sm"></civ-action-chip>');
       expect(btn(el).className).toContain('civ-chip--sm');
+    });
+
+    it('applies civ-chip--lg when spacing="lg" (WCAG 2.5.5 AAA target)', async () => {
+      const el = await fixture<CivActionChip>('<civ-action-chip label="X" spacing="lg"></civ-action-chip>');
+      expect(btn(el).className).toContain('civ-chip--lg');
     });
   });
 });

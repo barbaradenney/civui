@@ -64,6 +64,15 @@ props:
       type: boolean
       default: false
       description: 'Marks this button as the current item in a navigation set (e.g. active page in pagination, current step in a wizard). Renders `aria-current="page"` on the inner `<button>`. Distinct from `pressed` (toggle-button semantics)'
+    loading:
+      title: Loading
+      type: boolean
+      default: false
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (apply filter, refresh data, archive selected). Link-mode (`href` set) ignores `loading` becaus...'
+    loading_label:
+      title: Loading label
+      type: string
+      description: 'Accessible name applied as `aria-label` while `loading` is true, and announced once via `@civui/core`''s shared `announce()` queue on the loading transition. Empty default falls back to the locale''s `buttonLoadingLabel` ("Loading…" in Eng...'
 
 libraryOverrides:
   dependencies:

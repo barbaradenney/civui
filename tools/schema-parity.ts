@@ -214,6 +214,8 @@ import {
   INHERITED_BOOLEAN_PROPS,
   LEGEND_HEADING_MIXIN_PROPS,
   LEGEND_HEADING_MIXIN_PATTERN,
+  LOADING_MIXIN_PROPS,
+  LOADING_MIXIN_PATTERN,
   INHERITED_FORM_EVENTS,
   BASE_DISPATCHED_EVENTS,
 } from './lib/inherited.js';
@@ -294,6 +296,24 @@ export function parseLitPropsFromSource(src: string, isBoolean: boolean): LitPro
       default: dflt,
       attribute: attrMatch ? attrMatch[1] : undefined,
     });
+  }
+  // Seed props contributed by LoadingMixin when the source composes it.
+  // Unlike LEGEND_HEADING_MIXIN_PROPS (which are filtered on both sides
+  // as inherited), LOADING_MIXIN_PROPS are REAL public props that must
+  // appear in the schema and on every native platform — we just need to
+  // make the source-side prop list reflect their presence even though
+  // the `@property` decorators live in the mixin file.
+  if (LOADING_MIXIN_PATTERN.test(src)) {
+    for (const mixinProp of LOADING_MIXIN_PROPS) {
+      if (!props.some((p) => p.name === mixinProp.name)) {
+        props.push({
+          name: mixinProp.name,
+          type: mixinProp.type,
+          default: mixinProp.default,
+          attribute: mixinProp.attribute,
+        });
+      }
+    }
   }
   return props;
 }

@@ -12,23 +12,21 @@ const meta: Meta = {
     label: { control: 'text' },
     value: { control: 'text' },
     selected: { control: 'boolean' },
-    removable: { control: 'boolean' },
     disabled: { control: 'boolean' },
-    chipStyle: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary'],
-      name: 'chip-style',
     },
     spacing: {
       control: 'select',
-      options: ['default', 'sm'],
+      options: ['default', 'sm', 'lg'],
     },
   },
   parameters: {
     docs: {
       description: {
         component:
-          'An interactive, button-like control for filter selection. Click to toggle `selected`; in `removable` mode, click the trailing `×` to dismiss. Use horizontal rows of chips for filter sets in search results, list views, or faceted browse. Not for status (use `civ-badge`) or static categorization labels (use `civ-tag`).',
+          'An interactive, button-like control for filter selection. Click to toggle `selected`. Use horizontal rows of chips for filter sets in search results, list views, or faceted browse. For removable user-entered tokens use `civ-input-chip`. Not for status (use `civ-badge`) or static categorization labels (use `civ-tag`).',
       },
     },
   },
@@ -42,9 +40,8 @@ export const Default: Story = {
     label: 'Healthcare',
     value: 'healthcare',
     selected: false,
-    removable: false,
     disabled: false,
-    chipStyle: 'secondary',
+    emphasis: 'secondary',
     spacing: 'default',
   },
   render: (args) => html`
@@ -54,7 +51,6 @@ export const Default: Story = {
       emphasis="${args.emphasis || 'secondary'}"
       spacing="${args.spacing || 'default'}"
       ?selected="${args.selected}"
-      ?removable="${args.removable}"
       ?disabled="${args.disabled}"
     ></civ-filter-chip>
   `,
@@ -87,27 +83,6 @@ export const FilterRow: Story = {
       <civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
       <civ-filter-chip label="Disability" value="disability" selected></civ-filter-chip>
       <civ-filter-chip label="Employment" value="employment"></civ-filter-chip>
-    </div>
-  `,
-};
-
-export const Removable: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Removable chips show currently-applied filters. The `×` fires `civ-remove` (without toggling); the chip body still fires `civ-change`.',
-      },
-    },
-  },
-  render: () => html`
-    <div style="display: grid; gap: 0.5rem;">
-      <p style="margin: 0; font-weight: 600;">Applied filters:</p>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <civ-filter-chip label="Healthcare" value="healthcare" selected removable></civ-filter-chip>
-        <civ-filter-chip label="Disability" value="disability" selected removable></civ-filter-chip>
-        <civ-filter-chip label="VA Form 21-526EZ" value="form-21-526ez" selected removable></civ-filter-chip>
-      </div>
     </div>
   `,
 };
@@ -147,26 +122,35 @@ export const Spacing: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Default and compact (`sm`) padding for dense filter rows.',
+        story:
+          'Three sizes. `default` and `sm` both hit the WCAG 2.5.8 AA minimum target (24px). `lg` hits the WCAG 2.5.5 AAA Enhanced target (44px) for AAA-conscious surfaces or fingertip-heavy mobile placements.',
       },
     },
   },
   render: () => html`
     <div style="display: grid; gap: 0.75rem;">
       <div>
-        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default</p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Default (24px, AA)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
           <civ-filter-chip label="Healthcare" value="healthcare" selected></civ-filter-chip>
           <civ-filter-chip label="Education" value="education"></civ-filter-chip>
           <civ-filter-chip label="Housing" value="housing"></civ-filter-chip>
         </div>
       </div>
       <div>
-        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm)</p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Compact (sm, 24px floor)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
           <civ-filter-chip label="Healthcare" value="healthcare" spacing="sm" selected></civ-filter-chip>
           <civ-filter-chip label="Education" value="education" spacing="sm"></civ-filter-chip>
           <civ-filter-chip label="Housing" value="housing" spacing="sm"></civ-filter-chip>
+        </div>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; font-weight: 600;">Large (lg, 44px AAA)</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+          <civ-filter-chip label="Healthcare" value="healthcare" spacing="lg" selected></civ-filter-chip>
+          <civ-filter-chip label="Education" value="education" spacing="lg"></civ-filter-chip>
+          <civ-filter-chip label="Housing" value="housing" spacing="lg"></civ-filter-chip>
         </div>
       </div>
     </div>

@@ -27,6 +27,18 @@ const schema: ComponentSchema = {
       default: false,
       reflect: true,
     },
+    loading: {
+      type: 'boolean',
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner`, disables the button, and sets `aria-busy`. Use during in-flight async work (apply filter, refresh data, archive selected). Link-mode (`href` set) ignores `loading` because navigation isn\'t a state we wait on',
+      default: false,
+      reflect: true,
+    },
+    loadingLabel: {
+      type: 'string',
+      description: 'Accessible name applied as `aria-label` while `loading` is true, and announced once via `@civui/core`\'s shared `announce()` queue on the loading transition. Empty default falls back to the locale\'s `buttonLoadingLabel` ("Loading…" in English). Pass an action-specific present-participle verb ("Applying…", "Archiving…")',
+      default: '',
+      attribute: 'loading-label',
+    },
     pressed: {
       type: 'boolean',
       description: 'Tri-state pressed/active indicator. `true` = active (e.g. favorited); `false` = inactive but toggle-aware (sets aria-pressed="false"); omitted = no toggle semantics',
@@ -40,8 +52,7 @@ const schema: ComponentSchema = {
     },
     ariaLabel: {
       type: 'string',
-      description: 'Override the inner `<button>`\'s accessible name with a richer label for AT (e.g. pagination "Page 3 of 10" vs the visible "3"). When unset, the visible `label` doubles as the accessible name. Native platforms handle this through their own accessibility APIs (`.accessibilityLabel` on iOS, `contentDescription` on Android) so this prop is web-specific',
-      default: '',
+      description: 'Override the inner `<button>`\'s accessible name with a richer label for AT (e.g. pagination "Page 3 of 10" vs the visible "3"). When unset (omitted) or set to the empty string, the visible `label` doubles as the accessible name (an empty `aria-label` would otherwise strip the accessible name per ARIA spec — the component coerces it to "no override"). While `loading` is true, the host\'s `aria-label` is replaced by `loadingLabel` for the duration of the loading state; the consumer-supplied override is restored when loading flips off. Native platforms handle this through their own accessibility APIs (`.accessibilityLabel` on iOS, `contentDescription` on Android) so this prop is web-specific',
       attribute: 'aria-label',
       webOnly: true,
     },

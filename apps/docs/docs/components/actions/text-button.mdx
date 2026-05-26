@@ -48,6 +48,10 @@ For heavier page-level CTAs use [`civ-button`](./button); for toolbar / row acti
 
 <StoryEmbed id="actions-text-button--disabled" minHeight={100} />
 
+### Loading
+
+<StoryEmbed id="actions-text-button--loading" minHeight={120} />
+
 [Open in Storybook →](pathname:///civui/storybook/?path=/story/actions-text-button--default)
 
 ## Props
@@ -77,7 +81,7 @@ For heavier page-level CTAs use [`civ-button`](./button); for toolbar / row acti
 | Component | What it adds on top of text-button chrome |
 |---|---|
 | `<civ-text-button>` | Plain click (`civ-click` event). |
-| `<civ-confirm-button>` | Success-receipt state machine: click → success label + ✓ for `successMs` → revert. Wires `aria-live="polite"` during the success window. |
+| `<civ-confirm-button>` | Success-receipt state machine: click → success label + ✓ for `successMs` → revert. Announces the receipt label via the shared polite live-region queue. |
 | `<civ-toggle-button>` | Two-state press toggle: click flips `pressed` and swaps the label. Wires `aria-pressed="true \| false"`. |
 | `<civ-disclosure>` | Native `<details>` element with custom-styled `<summary>`. Browser owns the open/closed machinery. |
 | `<civ-read-more>` | Prose-truncation expand/collapse for body text. |

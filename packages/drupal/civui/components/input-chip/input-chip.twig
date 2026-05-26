@@ -1,3 +1,6 @@
 <civ-input-chip
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if disabled %}disabled{% endif %}
   {% if spacing %}spacing="{{ spacing }}"{% endif %}
 ></civ-input-chip>

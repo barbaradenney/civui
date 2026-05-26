@@ -60,7 +60,7 @@ For toggleable on/off selection use [`civ-filter-chip`](./filter-chip). For fire
 
 ## Accessibility
 
-- The chip renders a non-interactive `<span role="presentation">` wrapper containing the label text plus a real `<button>` for the remove handle. The label itself is not focusable — only the × is.
+- The chip renders a non-interactive `<span>` wrapper containing the label text plus a real `<button>` for the remove handle. The label itself is not focusable — only the × is.
 - The remove button carries `aria-label="Remove {label}"` so screen readers describe what's being removed without depending on the visible glyph.
 - The native focus ring on the × button is restored via a `:has()` rule that drops the wrapper's `overflow: hidden` when the remove button is focused.
 - Touch targets meet WCAG 2.5.8 (24×24 minimum) in both default and `--sm` sizes.

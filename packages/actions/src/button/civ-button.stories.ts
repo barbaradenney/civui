@@ -8,14 +8,14 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     label: { control: 'text' },
-    variant: {
+    emphasis: {
       control: 'select',
       options: ['primary', 'secondary', 'tertiary'],
     },
     danger: { control: 'boolean' },
     type: {
       control: 'select',
-      options: ['button', 'submit'],
+      options: ['button', 'submit', 'reset'],
     },
     disabled: { control: 'boolean' },
     iconStart: { control: 'text' },
@@ -29,7 +29,7 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     label: 'Continue',
-    variant: 'primary',
+    emphasis: 'primary',
     type: 'button',
     disabled: false,
     danger: false,

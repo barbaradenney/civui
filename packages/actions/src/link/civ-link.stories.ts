@@ -214,20 +214,22 @@ export const BackNavigationDemo: Story = {
   `,
 };
 
-// ── Button-styled link comparison ─────────────────────────────
-// Both <civ-link variant="primary"> and <civ-button href> render an
-// `<a>` element wearing primary-button chrome. The button-with-href
-// path adds an underline by default so the link affordance stays
-// visible — useful when the link sits next to a real button and a
-// reader needs to tell them apart at a glance.
+// ── Link vs Button[href] comparison ───────────────────────────
+// On web, `civ-link` renders an underlined text affordance (with a
+// trailing chevron on `--primary`, leading on `--back`). It does
+// NOT wear button chrome. `civ-button href` renders an `<a>` with
+// full button chrome plus an underline so the link affordance is
+// visually distinguishable from a real <button> sibling. Pick
+// civ-link when the row reads as a link; civ-button[href] when
+// the row reads as a button that happens to navigate.
 
 export const ButtonStyledLinkComparison: Story = {
-  name: 'Button-Styled: Link vs Button[href]',
+  name: 'Link vs Button[href]',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
         <p class="civ-m-0 civ-mb-2 civ-text-sm civ-font-semibold">
-          civ-link with button-shaped variants
+          civ-link — underlined text with trailing chevron (primary) or back chevron (back)
         </p>
         <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
           <civ-link href="/start" variant="primary" label="Start application"></civ-link>
@@ -236,7 +238,7 @@ export const ButtonStyledLinkComparison: Story = {
       </div>
       <div>
         <p class="civ-m-0 civ-mb-2 civ-text-sm civ-font-semibold">
-          civ-button with href (renders as &lt;a&gt; with underline)
+          civ-button with href — button chrome with an underline so the link affordance is visible
         </p>
         <div class="civ-flex civ-flex-wrap civ-gap-3 civ-items-center">
           <civ-button href="/start" emphasis="primary">Start application</civ-button>
@@ -245,10 +247,11 @@ export const ButtonStyledLinkComparison: Story = {
       </div>
       <p class="civ-m-0 civ-text-sm">
         Both produce a real <code>&lt;a&gt;</code>. Pick <code>civ-link</code> when
-        the affordance is primarily a link that happens to wear button chrome;
-        pick <code>civ-button href</code> when it sits alongside real buttons
-        and the underline helps a reader distinguish navigation from in-page
-        action.
+        the affordance reads as a link (inline prose, in-row navigation, "Learn
+        more"). Pick <code>civ-button href</code> when the affordance sits
+        alongside real buttons in a CTA cluster and the visual weight should
+        match — the underline keeps the link affordance distinguishable from
+        adjacent <code>&lt;button&gt;</code> siblings.
       </p>
     </div>
   `,

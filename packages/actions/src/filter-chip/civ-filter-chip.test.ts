@@ -60,7 +60,7 @@ describe('civ-filter-chip', () => {
   });
 
   describe('radio ARIA mode', () => {
-    it('uses role="radio" + aria-checked when chip-role="radio"', async () => {
+    it('uses role="radio" + aria-checked when variant="radio"', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test" variant="radio"></civ-filter-chip>');
       expect(action(el).getAttribute('role')).toBe('radio');
       expect(action(el).getAttribute('aria-checked')).toBe('false');
@@ -141,7 +141,7 @@ describe('civ-filter-chip', () => {
     expect(el.hasAttribute('disabled')).toBe(true);
   });
 
-  describe('chip-style', () => {
+  describe('emphasis', () => {
     it('defaults to secondary style on the wrapper', async () => {
       const el = await fixture<CivFilterChip>('<civ-filter-chip label="Test"></civ-filter-chip>');
       expect(wrapper(el).className).toContain('civ-chip--style-secondary');

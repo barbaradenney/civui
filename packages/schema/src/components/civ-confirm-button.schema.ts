@@ -50,16 +50,26 @@ const schema: ComponentSchema = {
   a11y: {
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
-    ariaAttributes: {
-      'aria-live': 'polite during the success window',
-    },
+    // The receipt label is announced on activation via the shared
+    // polite live-region queue owned by the platform's a11y
+    // infrastructure (web: @civui/core/a11y/live-region.ts; native
+    // platforms route through their own accessibility APIs:
+    // AccessibilityNotification.announcement on iOS,
+    // AccessibilityEvent.TYPE_ANNOUNCEMENT on Android). The button
+    // itself does not carry an `aria-live` attribute — toggling it
+    // during the success window is racy on NVDA / JAWS.
   },
 
   renderOrder: [
+    // Renders a single button whose label text swaps between
+    // `label` (resting) and `successLabel` (during the success
+    // window, with a check icon ✓ prefix). Native implementers
+    // toggle the displayed text on activation and revert after
+    // `successMs`. The component does NOT accept slotted children.
     {
-      type: 'container',
+      type: 'button',
       children: [
-        { type: 'slot', bindings: { name: 'default' } },
+        { type: 'label', bindings: { text: 'label' } },
       ],
     },
   ],

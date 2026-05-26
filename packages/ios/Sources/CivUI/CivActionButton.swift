@@ -5,8 +5,8 @@
 
 import SwiftUI
 
-/// Visual variant for an action button.
-public enum ActionButtonVariant: String, CaseIterable {
+/// Visual emphasis for an action button.
+public enum ActionButtonEmphasis: String, CaseIterable {
     case primary, secondary, tertiary
 }
 
@@ -36,8 +36,8 @@ public struct CivActionButton: View {
     /// Button text.
     public let label: String
 
-    /// Visual variant (primary, secondary, tertiary).
-    public var emphasis: ActionButtonVariant
+    /// Visual emphasis (primary, secondary, tertiary).
+    public var emphasis: ActionButtonEmphasis
 
     /// Density variant (default, sm).
     public var spacing: ActionButtonSpacing
@@ -96,7 +96,7 @@ public struct CivActionButton: View {
 
     public init(
         label: String,
-        emphasis: ActionButtonVariant = .tertiary,
+        emphasis: ActionButtonEmphasis = .tertiary,
         spacing: ActionButtonSpacing = .default,
         isDanger: Bool = false,
         isDisabled: Bool = false,
@@ -155,7 +155,7 @@ public struct CivActionButton: View {
 
     private func handleTap() {
         guard !isDisabled else { return }
-        onAnalytics?("click", ["variant": variant.rawValue, "danger": isDanger])
+        onAnalytics?("click", ["emphasis": emphasis.rawValue, "danger": isDanger])
         onClick?()
     }
 
@@ -163,7 +163,7 @@ public struct CivActionButton: View {
 
     private var foregroundColor: Color {
         if isDanger {
-            switch variant {
+            switch emphasis {
             case .primary:
                 return adaptiveColor(light: CivTokens.Colors.White.default_,
                                      dark: CivTokens.DarkColors.White.default_)
@@ -173,7 +173,7 @@ public struct CivActionButton: View {
             }
         }
 
-        switch variant {
+        switch emphasis {
         case .primary:
             return adaptiveColor(light: CivTokens.Colors.White.default_,
                                  dark: CivTokens.DarkColors.White.default_)
@@ -187,12 +187,12 @@ public struct CivActionButton: View {
     }
 
     private var backgroundColor: Color {
-        if isDanger && variant == .primary {
+        if isDanger && emphasis == .primary {
             return adaptiveColor(light: CivTokens.Colors.Error.default_,
                                  dark: CivTokens.DarkColors.Error.default_)
         }
 
-        switch variant {
+        switch emphasis {
         case .primary:
             return isPressed
                 ? adaptiveColor(light: CivTokens.Colors.Primary.darker,
@@ -215,7 +215,7 @@ public struct CivActionButton: View {
 
     private var borderOverlay: some View {
         Group {
-            if variant == .tertiary {
+            if emphasis == .tertiary {
                 let borderColor = isDanger
                     ? adaptiveColor(light: CivTokens.Colors.Error.default_,
                                     dark: CivTokens.DarkColors.Error.default_)
@@ -304,16 +304,16 @@ struct CivActionButton_Previews: PreviewProvider {
             ScrollView {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
                     // Standalone buttons
-                    CivActionButton(label: "Primary", variant: .primary)
-                    CivActionButton(label: "Secondary", variant: .secondary)
-                    CivActionButton(label: "Tertiary", variant: .tertiary)
+                    CivActionButton(label: "Primary", emphasis: .primary)
+                    CivActionButton(label: "Secondary", emphasis: .secondary)
+                    CivActionButton(label: "Tertiary", emphasis: .tertiary)
 
                     // Pressed state
-                    CivActionButton(label: "Pressed", variant: .tertiary, isPressed: true)
+                    CivActionButton(label: "Pressed", emphasis: .tertiary, isPressed: true)
 
                     // Danger variants
-                    CivActionButton(label: "Delete", variant: .primary, isDanger: true)
-                    CivActionButton(label: "Remove", variant: .tertiary, isDanger: true)
+                    CivActionButton(label: "Delete", emphasis: .primary, isDanger: true)
+                    CivActionButton(label: "Remove", emphasis: .tertiary, isDanger: true)
 
                     // Disabled
                     CivActionButton(label: "Disabled", isDisabled: true)
@@ -327,9 +327,9 @@ struct CivActionButton_Previews: PreviewProvider {
 
                     // Vertical toolbar
                     CivButtonGroup(orientation: "vertical") {
-                        CivActionButton(label: "Option 1", variant: .primary)
-                        CivActionButton(label: "Option 2", variant: .primary, isPressed: true)
-                        CivActionButton(label: "Option 3", variant: .primary)
+                        CivActionButton(label: "Option 1", emphasis: .primary)
+                        CivActionButton(label: "Option 2", emphasis: .primary, isPressed: true)
+                        CivActionButton(label: "Option 3", emphasis: .primary)
                     }
                 }
                 .padding()

@@ -1,0 +1,62 @@
+/**
+ * ChipNav — tertiary in-page navigation strip of chip-styled
+ * sibling-page links. Mirrors the CivUI filter-chip visual idiom
+ * (outlined rounded pills) using Infima tokens so it tracks the
+ * docs site's light/dark theming.
+ */
+
+.nav {
+  margin: 1rem 0 2rem;
+  padding: 0;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  margin: 0;
+  padding: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 9999px;
+  background-color: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.chip:hover,
+.chip:focus-visible {
+  background-color: var(--ifm-color-primary-lightest);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-darkest);
+  text-decoration: none;
+}
+
+[data-theme='dark'] .chip:hover,
+[data-theme='dark'] .chip:focus-visible {
+  background-color: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-lightest);
+}
+
+/* Keyboard focus ring tracks the docs site's primary color. */
+.chip:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}

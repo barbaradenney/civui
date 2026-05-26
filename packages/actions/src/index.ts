@@ -36,11 +36,11 @@ export { CivInputChip } from './input-chip/index.js';
 
 // Link
 export { CivLink } from './link/index.js';
-export type { LinkVariant, LinkType } from './link/civ-link.js';
+export type { LinkVariant, LinkType, LinkAs } from './link/index.js';
 
 // Link Card
 export { CivLinkCard } from './link-card/index.js';
-export type { LinkCardVariant } from './link-card/index.js';
+export type { LinkCardVariant, LinkCardColor } from './link-card/index.js';
 
 // Skip Link
 export { CivSkipLink } from './skip-link/index.js';

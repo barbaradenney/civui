@@ -5,12 +5,28 @@ sidebar_label: Overview
 ---
 
 import StoryEmbed from '@site/src/components/StoryEmbed';
+import ChipNav from '@site/src/components/ChipNav';
 
 # Layout
 
 The Layout category is the **structural toolkit** — components that group, contain, separate, expand/collapse, or visually classify content. They're the layer between raw HTML and the form-specific components above (inputs, compounds, feedback).
 
 The core design rule for this category: **compose before you hand-roll**. Most "I need a small panel with a border" instincts have an existing primitive already.
+
+<ChipNav items={[
+  { label: 'civ-card', href: './card' },
+  { label: 'civ-divider', href: './divider' },
+  { label: 'civ-page-header', href: './page-header' },
+  { label: 'civ-disclosure', href: './disclosure' },
+  { label: 'civ-accordion', href: './accordion' },
+  { label: 'civ-read-more', href: './read-more' },
+  { label: 'civ-input-group', href: './input-group' },
+  { label: 'civ-button-group', href: './button-group' },
+  { label: 'civ-tag', href: './tag' },
+  { label: 'civ-list', href: './list' },
+  { label: 'civ-image', href: './image' },
+  { label: 'civ-image-preview', href: './image-preview' },
+]} />
 
 ## Pick the right one
 
@@ -68,15 +84,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-card--default" />
 
-[Open civ-card →](./card)
-
 ---
 
 `<civ-divider>` — semantic horizontal separator between content blocks. Three emphasis levels; optional `rhythm` for surrounding spacing.
 
 <StoryEmbed id="layout-divider--default" />
-
-[Open civ-divider →](./divider)
 
 ---
 
@@ -84,15 +96,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-page-header--default" />
 
-[Open civ-page-header →](./page-header)
-
 ### Disclosure
 
 `<civ-disclosure>` — native `<details>` with custom-styled `<summary>` trigger. Browser owns the open/closed machinery; CivUI provides the chrome.
 
 <StoryEmbed id="layout-disclosure--default" />
-
-[Open civ-disclosure →](./disclosure)
 
 ---
 
@@ -100,15 +108,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-accordion--default" />
 
-[Open civ-accordion →](./accordion)
-
 ---
 
 `<civ-read-more>` — prose truncation with a "Show more / Hide" toggle. The trigger composes `.civ-text-btn`; the body is the prose that gets clipped.
 
 <StoryEmbed id="layout-read-more--default" />
-
-[Open civ-read-more →](./read-more)
 
 ### Grouping
 
@@ -116,15 +120,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-input-group--default" />
 
-[Open civ-input-group →](./input-group)
-
 ---
 
 `<civ-button-group>` — connected toolbar of buttons with `role="toolbar"`, flush borders, no gap. For toolbars (text formatting, view toggles). Not for primary form CTAs — that's `<div class="civ-button-row">`.
 
 <StoryEmbed id="layout-button-group--default" />
-
-[Open civ-button-group →](./button-group)
 
 ### Labels
 
@@ -132,15 +132,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-tag--default" />
 
-[Open civ-tag →](./tag)
-
 ### Lists
 
 `<civ-list>` + `<civ-list-item>` — semantic list wrapper with consistent rendering. Picks up the row-action layout (Edit / Remove right-aligned, stacking on mobile) when an `.civ-list-item__actions` element is present inside a list item.
 
 <StoryEmbed id="layout-list--default" />
-
-[Open civ-list →](./list)
 
 ### Images
 
@@ -148,15 +144,11 @@ The core design rule for this category: **compose before you hand-roll**. Most "
 
 <StoryEmbed id="layout-image--default" />
 
-[Open civ-image →](./image)
-
 ---
 
 `<civ-image-preview>` — larger image with a click-to-zoom modal preview.
 
 <StoryEmbed id="layout-image-preview--default" />
-
-[Open civ-image-preview →](./image-preview)
 
 ## Compose before hand-rolling
 

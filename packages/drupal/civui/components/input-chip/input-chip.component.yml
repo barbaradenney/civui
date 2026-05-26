@@ -7,6 +7,19 @@ description: 'See @civui/schema civ-input-chip for the canonical contract.'
 props:
   type: object
   properties:
+    label:
+      title: Label
+      type: string
+      description: 'Chip label text'
+    value:
+      title: Value
+      type: string
+      description: 'Identifier passed in the civ-remove event detail (consumer correlates removals)'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+      description: 'Disabled state — visually muted; the remove handle is inert'
     spacing:
       title: Spacing
       type: string

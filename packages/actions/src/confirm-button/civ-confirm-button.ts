@@ -2,7 +2,7 @@
 
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, devWarn, dispatch, t } from '@civui/core';
+import { CivBaseElement, announce, devWarn, dispatch, t } from '@civui/core';
 
 export type ConfirmButtonEmphasis = 'primary' | 'secondary' | 'tertiary';
 /** @deprecated Use `ConfirmButtonEmphasis` ("secondary" | "tertiary") instead. */
@@ -29,9 +29,13 @@ export type ConfirmButtonVariant = 'chip' | 'inline';
  * the `.is-success` flag is added; the label text changes; the
  * padding box does not shift.
  *
- * **Accessibility.** `aria-live="polite"` is enabled during the
- * success window so screen readers re-announce the receipt label
- * (a same-button text swap doesn't otherwise trigger SR re-read).
+ * **Accessibility.** The receipt label is announced via
+ * `@civui/core`'s shared polite live-region queue on activation. The
+ * button itself carries no `aria-live` — toggling it on the button at
+ * the same lit-html commit as the text change is racy on NVDA / JAWS
+ * (the region must already be observed as live BEFORE its content
+ * mutates). The shared queue owns a stable pre-mounted aria-live
+ * region, so the receipt is heard reliably.
  *
  * @element civ-confirm-button
  *
@@ -42,7 +46,7 @@ export type ConfirmButtonVariant = 'chip' | 'inline';
  * @prop {ConfirmButtonVariant} variant - **Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Will emit a one-time dev warning when set.
  * @prop {boolean} disabled - Standard disabled state.
  *
- * @fires civ-confirm - On activation, BEFORE entering the success window. Consumer does the actual work in the listener (clipboard write, share, etc.). detail: {}
+ * @fires civ-confirm - On activation, BEFORE entering the success window. Consumer does the actual work in the listener (clipboard write, share, etc.). Re-clicks during the success window re-dispatch — the second tap reads as "they meant it" (typical use: re-copy). detail: {}
  *
  * @example
  * ```html
@@ -91,15 +95,39 @@ export class CivConfirmButton extends CivBaseElement {
     this._success = false;
   }
 
+  /**
+   * Resolved success label — `successLabel` prop, else the
+   * `confirmButtonSuccess` i18n key, else a hard-coded "Done"
+   * fallback (the i18n lookup can return empty for missing keys).
+   */
+  private get _successText(): string {
+    return this.successLabel || t('confirmButtonSuccess') || 'Done';
+  }
+
   private _onClick(): void {
     if (this.disabled) return;
+    // Re-clicks during the success window re-dispatch `civ-confirm`
+    // (the consumer's listener fires every click — typically a second
+    // copy is the user's intent), re-announce the receipt, and
+    // restart the timer. The second tap reads as "they meant it;
+    // reset the confirmation."
     dispatch(this, 'civ-confirm', {});
     this.sendAnalytics('change');
-    // Re-clicks during the success window restart the timer (no
-    // stacking) — the second tap reads as "they meant it; reset the
-    // confirmation."
     if (this._successTimer !== undefined) clearTimeout(this._successTimer);
     this._success = true;
+    // Route the receipt announcement through @civui/core's shared
+    // polite live-region queue rather than toggling `aria-live` on
+    // the button itself. The previous pattern flipped
+    // aria-live="off"→"polite" on the button at the same lit-html
+    // commit as the text content change, which is racy on NVDA/JAWS
+    // (the region must already be observed as live BEFORE the
+    // content mutates for reliable announcement). The shared queue
+    // owns a stable, pre-mounted aria-live region, so the receipt
+    // is heard reliably. As a side benefit, the revert ("Copy"
+    // returning after successMs) no longer triggers a second
+    // announcement — only the receipt label is announced, not the
+    // revert.
+    announce(this._successText, 'polite');
     this._successTimer = setTimeout(() => {
       this._success = false;
       this._successTimer = undefined;
@@ -126,13 +154,17 @@ export class CivConfirmButton extends CivBaseElement {
       'civ-text-btn--chip';
     const classes = ['civ-text-btn', emphasisClass, this._success ? 'is-success' : ''].filter(Boolean).join(' ');
     const resting = this.label;
-    const success = this.successLabel || t('confirmButtonSuccess') || 'Done';
+    const success = this._successText;
+    // No `aria-live` on the button itself — the receipt is announced
+    // via the shared polite queue in `_onClick`. See the comment
+    // there for the rationale (avoids a race with screen readers
+    // that don't observe the off→polite transition before the
+    // content mutates).
     return html`
       <button
         type="button"
         class="${classes}"
         ?disabled="${this.disabled}"
-        aria-live="${this._success ? 'polite' : 'off'}"
         @click="${this._onClick}"
       >${this._success ? success : resting}</button>
     `;

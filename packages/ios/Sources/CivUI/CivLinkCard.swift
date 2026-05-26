@@ -6,7 +6,7 @@ import SwiftUI
 
 /// Link card variant determines the visual treatment.
 public enum LinkCardVariant: String, CaseIterable {
-    case primary, secondary, tertiary, critical
+    case primary, secondary, tertiary, critical, danger
 }
 
 /// Accessible link card for government applications.
@@ -137,7 +137,7 @@ public struct CivLinkCard: View {
 
     private var headingColor: Color {
         switch variant {
-        case .primary:
+        case .primary, .danger:
             return adaptiveColor(
                 light: CivTokens.Colors.White.default_,
                 dark: CivTokens.DarkColors.White.default_
@@ -157,7 +157,7 @@ public struct CivLinkCard: View {
 
     private var descriptionColor: Color {
         switch variant {
-        case .primary:
+        case .primary, .danger:
             return adaptiveColor(
                 light: CivTokens.Colors.White.default_,
                 dark: CivTokens.DarkColors.White.default_
@@ -189,13 +189,18 @@ public struct CivLinkCard: View {
             )
         case .critical:
             return Color(red: 250/255, green: 206/255, blue: 0/255) // #face00
+        case .danger:
+            return adaptiveColor(
+                light: CivTokens.Colors.Error.default_,
+                dark: CivTokens.DarkColors.Error.default_
+            )
         }
     }
 
     @ViewBuilder
     private var borderOverlay: some View {
         switch variant {
-        case .primary:
+        case .primary, .danger:
             EmptyView()
         case .secondary:
             RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)

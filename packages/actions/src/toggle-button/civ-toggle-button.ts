@@ -73,6 +73,30 @@ export class CivToggleButton extends CivBaseElement {
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   private _warnedVariant = false;
+  /** Tracks whether the `pressed="false"` HTML-boolean-trap dev warning has fired. */
+  private _warnedPressedLiteralFalse = false;
+
+  /**
+   * HTML boolean attributes are truthy whenever present — `pressed="false"`
+   * coerces to `pressed=true` and renders `aria-pressed="true"`, the
+   * opposite of intent. Catch the literal `"false"` string at attribute
+   * change time and dev-warn the author. Same pattern as `civ-action-button`
+   * (see `.claude/rules/common-traps.md#html-boolean-attributes-are-truthy-whenever-present`).
+   */
+  override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
+    super.attributeChangedCallback(name, old, value);
+    if (
+      name === 'pressed' &&
+      value === 'false' &&
+      !this._warnedPressedLiteralFalse
+    ) {
+      devWarn(
+        'civ-toggle-button',
+        '`pressed="false"` is treated as truthy (HTML boolean attribute trap). Use `.pressed=${false}` property binding or omit the attribute entirely to express the unpressed state.',
+      );
+      this._warnedPressedLiteralFalse = true;
+    }
+  }
 
   private _onClick(): void {
     if (this.disabled) return;

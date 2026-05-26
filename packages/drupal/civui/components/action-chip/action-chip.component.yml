@@ -7,6 +7,19 @@ description: 'See @civui/schema civ-action-chip for the canonical contract.'
 props:
   type: object
   properties:
+    label:
+      title: Label
+      type: string
+      description: 'Chip label text'
+    value:
+      title: Value
+      type: string
+      description: 'Identifier passed in the click event detail (consumer correlates clicks)'
+    disabled:
+      title: Disabled
+      type: boolean
+      default: false
+      description: 'Disabled state'
     spacing:
       title: Spacing
       type: string

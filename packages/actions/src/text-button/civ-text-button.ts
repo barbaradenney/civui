@@ -82,7 +82,7 @@ export class CivTextButton extends LoadingMixin(CivBaseElement) {
   private _onClick(): void {
     if (this._effectiveDisabled) return;
     dispatch(this, 'civ-click', {});
-    this.sendAnalytics('change');
+    this.sendAnalytics('click');
   }
 
   override render() {

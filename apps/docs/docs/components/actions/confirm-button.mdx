@@ -84,6 +84,6 @@ btn.addEventListener('civ-confirm', async () => {
 
 ## Accessibility
 
-- The button receives `aria-live="polite"` during the success window so screen readers re-announce the receipt label — a same-button text swap doesn't otherwise trigger an SR re-read.
+- The receipt label is announced via `@civui/core`'s shared polite live-region queue on click — a same-button text swap doesn't otherwise trigger a screen-reader re-read. The button itself does **not** carry `aria-live`; toggling it on the button at the same render commit as the text change is racy on NVDA/JAWS (the region must already be observed as live BEFORE its content mutates).
 - The check-icon decoration is a CSS `::before` mask with no semantic role; the label text carries the meaning.
 - The success color (`--civ-color-success-dark`) hits AA contrast on the surrounding chip background. Don't rely on color alone — the label text changes too.

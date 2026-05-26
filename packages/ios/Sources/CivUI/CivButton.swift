@@ -4,14 +4,14 @@
 
 import SwiftUI
 
-/// Button variant determines the visual treatment.
-public enum ButtonVariant: String, CaseIterable {
+/// Button emphasis determines the visual treatment.
+public enum ButtonEmphasis: String, CaseIterable {
     case primary, secondary, tertiary, danger
 }
 
 /// Accessible button for government applications.
 ///
-/// Renders a styled button with variant-based colors. When `href` is set,
+/// Renders a styled button with emphasis-based colors. When `href` is set,
 /// the button opens the URL as a link action. Mirrors the web `civ-button`
 /// component.
 ///
@@ -19,7 +19,7 @@ public enum ButtonVariant: String, CaseIterable {
 ///
 /// Usage:
 /// ```swift
-/// CivButton(label: "Submit application", variant: .primary) {
+/// CivButton(label: "Submit application", emphasis: .primary) {
 ///     submitForm()
 /// }
 /// ```
@@ -29,8 +29,8 @@ public struct CivButton: View {
     /// Button text.
     public let label: String
 
-    /// Visual variant (primary, secondary, tertiary, danger).
-    public var emphasis: ButtonVariant
+    /// Visual emphasis (primary, secondary, tertiary, danger).
+    public var emphasis: ButtonEmphasis
 
     /// Whether the button is disabled.
     public var isDisabled: Bool
@@ -74,7 +74,7 @@ public struct CivButton: View {
 
     public init(
         label: String,
-        emphasis: ButtonVariant = .primary,
+        emphasis: ButtonEmphasis = .primary,
         isDisabled: Bool = false,
         iconStart: String = "",
         iconEnd: String = "",
@@ -145,7 +145,7 @@ public struct CivButton: View {
 
     private func handleTap() {
         guard !isDisabled else { return }
-        onAnalytics?("click", ["variant": variant.rawValue])
+        onAnalytics?("click", ["emphasis": emphasis.rawValue])
 
         if let href, let url = URL(string: href) {
             UIApplication.shared.open(url)
@@ -157,7 +157,7 @@ public struct CivButton: View {
     // MARK: - Variant Colors
 
     private var foregroundColor: Color {
-        switch variant {
+        switch emphasis {
         case .primary:
             return adaptiveColor(light: CivTokens.Colors.White.default_,
                                  dark: CivTokens.DarkColors.White.default_)
@@ -174,7 +174,7 @@ public struct CivButton: View {
     }
 
     private var backgroundColor: Color {
-        switch variant {
+        switch emphasis {
         case .primary:
             return adaptiveColor(light: CivTokens.Colors.Primary.default_,
                                  dark: CivTokens.DarkColors.Primary.default_)
@@ -191,7 +191,7 @@ public struct CivButton: View {
 
     private var borderOverlay: some View {
         Group {
-            if variant == .tertiary {
+            if emphasis == .tertiary {
                 RoundedRectangle(cornerRadius: CivTokens.Border.Radius.default_)
                     .stroke(
                         adaptiveColor(light: CivTokens.Colors.Primary.default_,
@@ -219,31 +219,31 @@ struct CivButton_Previews: PreviewProvider {
         var body: some View {
             ScrollView {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
-                    CivButton(label: "Submit application", variant: .primary) {
+                    CivButton(label: "Submit application", emphasis: .primary) {
                         // Action
                     }
 
-                    CivButton(label: "Save draft", variant: .secondary) {
+                    CivButton(label: "Save draft", emphasis: .secondary) {
                         // Action
                     }
 
-                    CivButton(label: "Cancel", variant: .tertiary) {
+                    CivButton(label: "Cancel", emphasis: .tertiary) {
                         // Action
                     }
 
-                    CivButton(label: "Delete record", variant: .danger) {
+                    CivButton(label: "Delete record", emphasis: .danger) {
                         // Action
                     }
 
                     CivButton(
                         label: "Visit agency website",
-                        variant: .primary,
+                        emphasis: .primary,
                         href: "https://www.usa.gov"
                     )
 
                     CivButton(
                         label: "Disabled button",
-                        variant: .primary,
+                        emphasis: .primary,
                         isDisabled: true
                     )
                 }

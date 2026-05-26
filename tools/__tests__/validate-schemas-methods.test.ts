@@ -136,3 +136,40 @@ describe('schema validator — methods{} block', () => {
     expect(errs).toEqual([]);
   });
 });
+
+describe('schema validator — renderOrder element types', () => {
+  it('accepts the icon element type (added 2026-05-26 so schemas can distinguish icons from labels)', () => {
+    const errs = validateSchema(base({
+      renderOrder: [
+        {
+          type: 'container',
+          children: [
+            { type: 'icon', condition: 'iconStart', bindings: { name: 'iconStart' } },
+            { type: 'label', bindings: { text: 'label' } },
+            { type: 'icon', condition: 'iconEnd', bindings: { name: 'iconEnd' } },
+          ],
+        },
+      ],
+    })).filter(e => e.severity === 'error');
+    expect(errs).toEqual([]);
+  });
+
+  it('rejects an unknown render-element type', () => {
+    const errs = validateSchema(base({
+      renderOrder: [{ type: 'glyph' }],
+    })).filter(e => e.severity === 'error');
+    expect(errs.some((e) => /Invalid render element type "glyph"/.test(e.message))).toBe(true);
+  });
+
+  it('accepts every documented render-element type', () => {
+    const allTypes = [
+      'label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'icon', 'slot', 'container',
+    ];
+    for (const t of allTypes) {
+      const errs = validateSchema(base({
+        renderOrder: [{ type: t }],
+      })).filter(e => e.severity === 'error');
+      expect(errs, `type=${t} should be accepted`).toEqual([]);
+    }
+  });
+});

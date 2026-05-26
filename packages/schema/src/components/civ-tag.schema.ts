@@ -48,7 +48,7 @@ const schema: ComponentSchema = {
     {
       type: 'container',
       children: [
-        { type: 'label', condition: 'iconStart', bindings: { text: 'iconStart' } },
+        { type: 'icon', condition: 'iconStart', bindings: { name: 'iconStart' } },
         { type: 'label', bindings: { text: 'label' } },
       ],
     },

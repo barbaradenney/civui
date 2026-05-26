@@ -74,10 +74,10 @@ const schema: ComponentSchema = {
     {
       type: 'button',
       children: [
-        { type: 'label', condition: 'iconStart', bindings: { text: 'iconStart' } },
+        { type: 'icon', condition: 'iconStart', bindings: { name: 'iconStart' } },
         { type: 'label', bindings: { text: 'label' } },
         { type: 'label', condition: 'count', bindings: { text: 'count' } },
-        { type: 'label', condition: 'iconEnd', bindings: { text: 'iconEnd' } },
+        { type: 'icon', condition: 'iconEnd', bindings: { name: 'iconEnd' } },
       ],
     },
   ],

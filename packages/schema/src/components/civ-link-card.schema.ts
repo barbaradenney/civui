@@ -73,11 +73,11 @@ const schema: ComponentSchema = {
       type: 'container',
       bindings: { tag: 'a' },
       children: [
-        { type: 'label', condition: 'iconStart', bindings: { text: 'iconStart' } },
+        { type: 'icon', condition: 'iconStart', bindings: { name: 'iconStart' } },
         { type: 'label', condition: 'eyebrow', bindings: { text: 'eyebrow' } },
         { type: 'label', condition: 'heading', bindings: { text: 'heading' } },
         { type: 'label', condition: 'description', bindings: { text: 'description' } },
-        { type: 'label', condition: 'iconEnd', bindings: { text: 'iconEnd' } },
+        { type: 'icon', condition: 'iconEnd', bindings: { name: 'iconEnd' } },
       ],
     },
   ],

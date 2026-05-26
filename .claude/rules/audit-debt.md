@@ -236,13 +236,6 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 - **Surfaced:** Full @civui/actions audit, branch `claude/combined-input-action-component-Zw9R3`. Major + Critical findings fixed in the same branch (iOS Swift `variant` → `emphasis` compilation fix, civ-link CSS resets, native filter-chip / action-chip default-value drift, Drupal SDC missing props for action-chip + input-chip, confirm/toggle-button renderOrder, etc.). Cross-cutting items below are deferred — they're tool / generator changes that affect many components.
 
-### Schema spec lacks a dedicated `icon` render-element type
-
-- **Files:** `packages/schema/src/schema.types.ts:184` (`RENDER_ELEMENT_TYPES`).
-- **State:** The schema's render-element-type union is `['label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'slot', 'container']`. There is no `'icon'` type. Schemas with iconStart / iconEnd children currently use `type: 'label'` with `bindings: { text: 'iconStart' }`, which is misleading — native implementers reading `text: 'iconStart'` could plausibly render the literal string `"download"` as a label rather than an icon.
-- **Why deferred:** Adding `'icon'` to the union is a schema-spec change that ripples through every schema with an iconStart / iconEnd (civ-button, civ-action-button, civ-link, civ-filter-chip, civ-action-chip — at least 5 schemas), the `validate-schemas.ts` checker, the doc-tables generator, and the Drupal sync. It's a coordinated change worth its own branch.
-- **What to watch for in the meantime:** When a new component schema declares an icon child, follow the existing pattern (`type: 'label'` with the icon-prop bindings). Don't try to add `type: 'icon'` to a single schema — it'll trip the validator.
-
 ### `lint:schema-default-values` for native default drift
 
 - **Files:** schemas under `packages/schema/src/components/` with enum `default` fields; native counterparts under `packages/ios/Sources/CivUI/` and `packages/android/src/main/kotlin/gov/civui/components/`.

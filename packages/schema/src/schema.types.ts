@@ -178,10 +178,19 @@ export interface WidthVariant {
  *   input  → <input>       / TextField       / TextField
  *   select → <select>      / Picker          / ExposedDropdownMenu
  *   button → <button>      / Button          / Button
+ *   icon   → <civ-icon>    / Image           / Icon
  *   slot   → <slot>        / ViewBuilder     / @Composable content
+ *
+ * `icon` elements use a `name:` binding pointing at the prop that
+ * supplies the icon identifier (e.g. `bindings: { name: 'iconStart' }`
+ * means "look up `iconStart` on the parent component and pass that
+ * value as the icon name"). Previously schemas modelled icons as
+ * `type: 'label'` with `text: 'iconStart'` — that misleads native
+ * implementers into rendering the literal string "download" as label
+ * text instead of as an icon glyph.
  */
 export const RENDER_ELEMENT_TYPES = [
-  'label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'slot', 'container',
+  'label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'icon', 'slot', 'container',
 ] as const;
 export type RenderElementType = typeof RENDER_ELEMENT_TYPES[number];
 

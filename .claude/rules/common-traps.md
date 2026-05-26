@@ -127,18 +127,41 @@ silently does nothing. Past examples that wasted reader time:
 
 ---
 
-## Hidden civ-conditional content is still in the DOM
+## Hidden civ-conditional / collapsed civ-accordion content is still in the DOM
 
-`civ-conditional` toggles its slotted content with `display: none`
-plus `aria-hidden="true"` — children stay in the DOM. **`civ-form`
-already excludes hidden-conditional fields** from `validate()`,
-`getFormData()`, and `toFormData()`, so a `required` field inside a
-hidden branch will *not* block submit or send a stale value.
+Two patterns keep form fields rendered even when the user can't
+see them:
+
+- **`civ-conditional`** toggles its slotted content with
+  `display: none` plus `aria-hidden="true"` — children stay in
+  the DOM.
+- **`civ-accordion-item`** renders a native `<details>` element;
+  children of a collapsed `<details>` stay in the DOM (the browser
+  just doesn't paint them).
+
+**`civ-form` excludes both** from `validate()`, `getFormData()`,
+and `toFormData()`, so a `required` field inside a hidden branch
+or a collapsed accordion will *not* block submit or send a stale
+value. Nested cases work too: a field inside an OPEN inner
+accordion that's wrapped in a COLLAPSED outer one is excluded
+(the user can't reach it).
 
 If you write a non-civ-form orchestrator that iterates
-`[data-civ-form-field]`, walk up via
-`closest('[data-civ-conditional-content][aria-hidden="true"]')` and
-skip those fields too.
+`[data-civ-form-field]`, walk up via:
+
+```ts
+// hidden civ-conditional
+el.closest('[data-civ-conditional-content][aria-hidden="true"]')
+// collapsed civ-accordion-item — walk every ancestor, not just
+// the nearest, since nesting matters
+let cur = el.parentElement;
+while (cur) {
+  if (cur.tagName === 'CIV-ACCORDION-ITEM' && !(cur as any).open) return true;
+  cur = cur.parentElement;
+}
+```
+
+and skip those fields.
 
 ---
 
@@ -412,6 +435,47 @@ and "schema lists but source rejects"). Wired into
 type is bare `string` (or any non-literal union) are skipped — the
 schema is documenting beyond what the type system enforces, which
 is intentional for some props.
+
+---
+
+## Orphan enum values in Drupal SDC YAMLs
+
+`pnpm sync:drupal` is **append-only** — it adds missing props but
+doesn't rewrite existing prop definitions. When a schema's enum
+value is removed (e.g. `civ-link.variant` dropped `tertiary` after
+a design pass), the Drupal SDC YAML keeps the orphan silently.
+Drupal authors who pick the orphan value get an unstyled component
+with no validation error.
+
+```yaml
+# packages/drupal/civui/components/link/link.component.yml (after sync)
+variant:
+  type: string
+  enum: ['primary', 'secondary', 'back', 'tertiary']   # ← `tertiary` orphan
+                                                       #   the schema dropped it
+```
+
+The symmetric direction is also drift: an SDC YAML hand-edited to
+add an `enum: [...]` constraint that the schema doesn't share
+(e.g. early civ-alert.heading_level had `enum: [2, 3, 4, 5, 6]`
+matching the source's `2 | 3 | 4 | 5 | 6` union, but the schema's
+`type: 'number'` declared no values). Drupal then over-constrains
+relative to the schema contract.
+
+**Caught by:** `pnpm lint:sdc-enum-values` — for every component in
+`COVERED_COMPONENTS` with a `drupal:` path, walks the SDC YAML's
+`props.properties` block, captures each prop's `enum: [...]`
+array, and compares it against the schema's `values:` (filtering
+out `''` to match `sync-drupal-sdc.ts`'s empty-string filter).
+Reports two failure modes: **orphan-in-drupal** (YAML has values
+the schema rejects) and **drupal-over-constrains** (schema isn't
+enum but YAML has one). Wired into `pnpm validate:lints` and the
+drift-lints CI gate.
+
+The lint deliberately does NOT flag the symmetric "schema is enum
+but YAML has no enum constraint" case — that's widespread legacy
+drift across ~30 SDCs, tracked in audit-debt as "Tighten Drupal
+SDC enum constraints" rather than blocking CI.
 
 ---
 

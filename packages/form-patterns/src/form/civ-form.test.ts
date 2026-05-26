@@ -3,6 +3,7 @@ import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form.js';
 import '../conditional/civ-conditional.js';
 import '@civui/inputs';
+import '@civui/layout/accordion';
 
 async function waitForChildren(el: HTMLElement): Promise<void> {
   await elementUpdated(el);
@@ -741,6 +742,107 @@ describe('civ-form + civ-conditional', () => {
     const data = el.getFormData();
     expect(data.name).toBe('Ada');
     expect(data.branch).toBeUndefined();
+  });
+});
+
+describe('civ-form + civ-accordion-item', () => {
+  it('does not validate fields inside a collapsed civ-accordion-item', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" required></civ-text-input>
+        <civ-accordion-item label="Advanced">
+          <civ-text-input label="Reference number" name="ref" required></civ-text-input>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    const errors = el.validate();
+    // Only the visible required field should be flagged. The
+    // accordion is collapsed by default, so its required field
+    // must not appear in the error summary.
+    expect(errors.map((e: { name: string }) => e.name)).toEqual(['name']);
+  });
+
+  it('validates fields inside an open civ-accordion-item', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-accordion-item label="Advanced" open>
+          <civ-text-input label="Reference number" name="ref" required></civ-text-input>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    const errors = el.validate();
+    expect(errors.map((e: { name: string }) => e.name)).toEqual(['ref']);
+  });
+
+  it('omits collapsed-accordion fields from getFormData()', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-accordion-item label="Advanced">
+          <civ-text-input label="Reference number" name="ref" value="X-12"></civ-text-input>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    const data = el.getFormData();
+    expect(data.name).toBe('Ada');
+    expect(data.ref).toBeUndefined();
+  });
+
+  it('includes open-accordion fields in getFormData()', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-accordion-item label="Advanced" open>
+          <civ-text-input label="Reference number" name="ref" value="X-12"></civ-text-input>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    const data = el.getFormData();
+    expect(data.name).toBe('Ada');
+    expect(data.ref).toBe('X-12');
+  });
+
+  it('excludes fields inside an open accordion nested inside a collapsed one', async () => {
+    // The outer accordion is collapsed → the inner accordion (even
+    // if open) is also not visible to the user. Fields inside it
+    // must be excluded.
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-text-input label="Name" name="name" value="Ada"></civ-text-input>
+        <civ-accordion-item label="Outer">
+          <civ-accordion-item label="Inner" open>
+            <civ-text-input label="Deep field" name="deep" value="hidden" required></civ-text-input>
+          </civ-accordion-item>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    const errors = el.validate();
+    expect(errors.map((e: { name: string }) => e.name)).toEqual([]);
+    const data = el.getFormData();
+    expect(data.deep).toBeUndefined();
+  });
+
+  it('reacts to runtime toggle of the accordion-item open state', async () => {
+    const el = await fixture(`
+      <civ-form form-label="Test">
+        <civ-accordion-item label="Advanced">
+          <civ-text-input label="Reference number" name="ref" value="X-12"></civ-text-input>
+        </civ-accordion-item>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+    expect(el.getFormData().ref).toBeUndefined();
+
+    const item = el.querySelector('civ-accordion-item');
+    item.open = true;
+    await elementUpdated(item);
+    expect(el.getFormData().ref).toBe('X-12');
   });
 });
 

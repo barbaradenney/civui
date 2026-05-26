@@ -21,6 +21,7 @@ export default defineConfig({
       '@civui/feedback/spinner': resolve(__dirname, '../feedback/src/spinner/index.ts'),
       '@civui/layout/list': resolve(__dirname, '../layout/src/list/index.ts'),
       '@civui/layout/divider': resolve(__dirname, '../layout/src/divider/index.ts'),
+      '@civui/layout/accordion': resolve(__dirname, '../layout/src/accordion/index.ts'),
       // Needed for civ-file-upload's transitive import of <civ-image>.
       '@civui/layout/image': resolve(__dirname, '../layout/src/image/index.ts'),
       '@civui/layout': resolve(__dirname, '../layout/src/index.ts'),

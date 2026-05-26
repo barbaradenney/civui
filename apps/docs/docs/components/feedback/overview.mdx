@@ -5,6 +5,7 @@ sidebar_label: Overview
 ---
 
 import StoryEmbed from '@site/src/components/StoryEmbed';
+import ChipNav from '@site/src/components/ChipNav';
 
 # Feedback
 
@@ -15,6 +16,18 @@ The Feedback category covers every component that **tells the user something hap
 - **Loading and time indicators** (spinner, skeleton, timeline, process-list)
 
 Most feedback decisions come down to *intent strength* and *whether the user can dismiss it*.
+
+<ChipNav items={[
+  { label: 'civ-alert', href: './alert' },
+  { label: 'civ-notice', href: './notice' },
+  { label: 'civ-callout', href: './callout' },
+  { label: 'civ-badge', href: './badge' },
+  { label: 'civ-count', href: './count' },
+  { label: 'civ-spinner', href: './spinner' },
+  { label: 'civ-skeleton', href: './skeleton' },
+  { label: 'civ-timeline', href: './timeline' },
+  { label: 'civ-process-list', href: './process-list' },
+]} />
 
 ## Pick the right one
 
@@ -55,15 +68,11 @@ Most feedback decisions come down to *intent strength* and *whether the user can
 
 <StoryEmbed id="feedback-alert--default" />
 
-[Open civ-alert →](./alert)
-
 ---
 
 `<civ-notice>` — emphasis text with leading icon, no background, no dismiss. Use inside flowing content for "make sure you read this" prose. Five intents: `info` / `warning` / `error` / `success` / `neutral`.
 
 <StoryEmbed id="feedback-notice--default" />
-
-[Open civ-notice →](./notice)
 
 ---
 
@@ -71,15 +80,11 @@ Most feedback decisions come down to *intent strength* and *whether the user can
 
 <StoryEmbed id="feedback-callout--default" />
 
-[Open civ-callout →](./callout)
-
 ### Status pills
 
 `<civ-badge>` — semantic-intent status pill. Three style emphasis levels (`primary` / `secondary` / `dot`) crossed with five intents.
 
 <StoryEmbed id="feedback-badge--default" />
-
-[Open civ-badge →](./badge)
 
 ---
 
@@ -87,15 +92,11 @@ Most feedback decisions come down to *intent strength* and *whether the user can
 
 <StoryEmbed id="feedback-count--default" />
 
-[Open civ-count →](./count)
-
 ### Loading indicators
 
 `<civ-spinner>` — inline loading spinner with a size ladder (`xs` / `sm` / `md` / `lg`).
 
 <StoryEmbed id="feedback-spinner--default" />
-
-[Open civ-spinner →](./spinner)
 
 ---
 
@@ -103,23 +104,17 @@ Most feedback decisions come down to *intent strength* and *whether the user can
 
 <StoryEmbed id="feedback-skeleton--default" />
 
-[Open civ-skeleton →](./skeleton)
-
 ### Time-ordered displays
 
 `<civ-timeline>` + `<civ-timeline-item>` — dated event list rendered as `<ol>` with rail-and-dot chrome. Use for audit logs, version histories, status timelines.
 
 <StoryEmbed id="feedback-timeline--claim-history" />
 
-[Open civ-timeline →](./timeline)
-
 ---
 
 `<civ-process-list>` + `<civ-process-list-item>` — numbered vertical preview of upcoming steps. Display-only (not an active progress indicator — for "you are here", use `civ-progress-steps`).
 
 <StoryEmbed id="feedback-process-list--benefit-application" />
-
-[Open civ-process-list →](./process-list)
 
 ## Semantic-intent vs categorical color
 

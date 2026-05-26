@@ -5,12 +5,27 @@ sidebar_label: Overview
 ---
 
 import StoryEmbed from '@site/src/components/StoryEmbed';
+import ChipNav from '@site/src/components/ChipNav';
 
 # Actions
 
 The Actions category covers every component that does or navigates something when the user activates it. CivUI ships **eleven** action-shaped affordances — a wider catalog than most design systems on purpose, because the right affordance is rarely the same as the next-loudest one.
 
 If you're not sure which to reach for, start here.
+
+<ChipNav items={[
+  { label: 'civ-button', href: './button' },
+  { label: 'civ-action-button', href: './action-button' },
+  { label: 'civ-text-button', href: './text-button' },
+  { label: 'civ-confirm-button', href: './confirm-button' },
+  { label: 'civ-toggle-button', href: './toggle-button' },
+  { label: 'civ-action-chip', href: './action-chip' },
+  { label: 'civ-filter-chip', href: './filter-chip' },
+  { label: 'civ-input-chip', href: './input-chip' },
+  { label: 'civ-link', href: './link' },
+  { label: 'civ-link-card', href: './link-card' },
+  { label: 'civ-skip-link', href: './skip-link' },
+]} />
 
 ## Pick the right one
 
@@ -36,15 +51,11 @@ If you're not sure which to reach for, start here.
 
 <StoryEmbed id="actions-button--default" />
 
-[Open civ-button →](./button)
-
 ---
 
 `<civ-action-button>` — compact toolbar / row-action button with the same emphasis system (`primary` / `secondary` / `tertiary`) at smaller padding. Use inside cards, list rows, table cells, toolbars. Supports a tri-state `pressed` for toggle affordances.
 
 <StoryEmbed id="actions-action-button--default" />
-
-[Open civ-action-button →](./action-button)
 
 ---
 
@@ -52,15 +63,11 @@ If you're not sure which to reach for, start here.
 
 <StoryEmbed id="actions-text-button--default" />
 
-[Open civ-text-button →](./text-button)
-
 ---
 
 `<civ-confirm-button>` — text-button + a transient ✓ receipt. Announces the receipt label via the shared polite live-region queue on activation so screen readers re-announce a same-button text swap. Consumer does the actual work in the `civ-confirm` listener.
 
 <StoryEmbed id="actions-confirm-button--default" />
-
-[Open civ-confirm-button →](./confirm-button)
 
 ---
 
@@ -68,15 +75,11 @@ If you're not sure which to reach for, start here.
 
 <StoryEmbed id="actions-toggle-button--default" />
 
-[Open civ-toggle-button →](./toggle-button)
-
 ### Chips
 
 `<civ-action-chip>` — outlined rounded pill that fires `civ-click` and stays visually unchanged. No toggle, no check icon. Use for suggestion chips, quick-filter rows that immediately re-fetch.
 
 <StoryEmbed id="actions-action-chip--default" />
-
-[Open civ-action-chip →](./action-chip)
 
 ---
 
@@ -84,15 +87,11 @@ If you're not sure which to reach for, start here.
 
 <StoryEmbed id="actions-filter-chip--default" />
 
-[Open civ-filter-chip →](./filter-chip)
-
 ---
 
 `<civ-input-chip>` — display chip representing user-entered content with an always-present remove handle. Use for recipient lists, applied-filter readouts, typed tags.
 
 <StoryEmbed id="actions-input-chip--default" />
-
-[Open civ-input-chip →](./input-chip)
 
 ### Links
 
@@ -100,23 +99,17 @@ If you're not sure which to reach for, start here.
 
 <StoryEmbed id="navigation-link--default" />
 
-[Open civ-link →](./link)
-
 ---
 
 `<civ-link-card>` — clickable card surface that navigates. The whole card is the click target.
 
 <StoryEmbed id="navigation-link-card--default" />
 
-[Open civ-link-card →](./link-card)
-
 ---
 
 `<civ-skip-link>` — visually hidden link that becomes visible on focus. Required for Section 508 keyboard accessibility.
 
 <StoryEmbed id="navigation-skip-link--default" />
-
-[Open civ-skip-link →](./skip-link)
 
 ## Shared emphasis vocabulary
 

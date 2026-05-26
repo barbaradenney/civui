@@ -46,7 +46,7 @@ export type ConfirmButtonVariant = 'chip' | 'inline';
  * @prop {ConfirmButtonVariant} variant - **Deprecated** alias for `emphasis`. `variant="chip"` maps to `emphasis="secondary"`; `variant="inline"` maps to `emphasis="tertiary"`. Will emit a one-time dev warning when set.
  * @prop {boolean} disabled - Standard disabled state.
  *
- * @fires civ-confirm - On activation, BEFORE entering the success window. Consumer does the actual work in the listener (clipboard write, share, etc.). detail: {}
+ * @fires civ-confirm - On activation, BEFORE entering the success window. Consumer does the actual work in the listener (clipboard write, share, etc.). Re-clicks during the success window re-dispatch — the second tap reads as "they meant it" (typical use: re-copy). detail: {}
  *
  * @example
  * ```html
@@ -95,13 +95,24 @@ export class CivConfirmButton extends CivBaseElement {
     this._success = false;
   }
 
+  /**
+   * Resolved success label — `successLabel` prop, else the
+   * `confirmButtonSuccess` i18n key, else a hard-coded "Done"
+   * fallback (the i18n lookup can return empty for missing keys).
+   */
+  private get _successText(): string {
+    return this.successLabel || t('confirmButtonSuccess') || 'Done';
+  }
+
   private _onClick(): void {
     if (this.disabled) return;
+    // Re-clicks during the success window re-dispatch `civ-confirm`
+    // (the consumer's listener fires every click — typically a second
+    // copy is the user's intent), re-announce the receipt, and
+    // restart the timer. The second tap reads as "they meant it;
+    // reset the confirmation."
     dispatch(this, 'civ-confirm', {});
     this.sendAnalytics('change');
-    // Re-clicks during the success window restart the timer (no
-    // stacking) — the second tap reads as "they meant it; reset the
-    // confirmation."
     if (this._successTimer !== undefined) clearTimeout(this._successTimer);
     this._success = true;
     // Route the receipt announcement through @civui/core's shared
@@ -116,7 +127,7 @@ export class CivConfirmButton extends CivBaseElement {
     // returning after successMs) no longer triggers a second
     // announcement — only the receipt label is announced, not the
     // revert.
-    announce(this.successLabel || t('confirmButtonSuccess') || 'Done', 'polite');
+    announce(this._successText, 'polite');
     this._successTimer = setTimeout(() => {
       this._success = false;
       this._successTimer = undefined;
@@ -143,7 +154,7 @@ export class CivConfirmButton extends CivBaseElement {
       'civ-text-btn--chip';
     const classes = ['civ-text-btn', emphasisClass, this._success ? 'is-success' : ''].filter(Boolean).join(' ');
     const resting = this.label;
-    const success = this.successLabel || t('confirmButtonSuccess') || 'Done';
+    const success = this._successText;
     // No `aria-live` on the button itself — the receipt is announced
     // via the shared polite queue in `_onClick`. See the comment
     // there for the rationale (avoids a race with screen readers

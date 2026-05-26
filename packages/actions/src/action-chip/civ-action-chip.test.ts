@@ -74,15 +74,18 @@ describe('civ-action-chip', () => {
   });
 
   describe('iconStart / iconEnd', () => {
-    it('renders a leading icon when iconStart is set', async () => {
+    it('renders a leading icon resolving to the iconStart name', async () => {
       const el = await fixture<CivActionChip>('<civ-action-chip label="Filter" icon-start="add"></civ-action-chip>');
-      const icons = el.querySelectorAll('.civ-chip__icon');
-      expect(icons.length).toBeGreaterThanOrEqual(1);
+      const icon = el.querySelector('civ-icon.civ-chip__icon');
+      expect(icon).not.toBeNull();
+      expect(icon?.getAttribute('name')).toBe('add');
     });
 
-    it('renders a trailing icon when iconEnd is set', async () => {
+    it('renders a trailing icon resolving to the iconEnd name', async () => {
       const el = await fixture<CivActionChip>('<civ-action-chip label="Sort" icon-end="arrow-down"></civ-action-chip>');
-      expect(el.querySelector('.civ-chip__icon--end')).not.toBeNull();
+      const icon = el.querySelector('civ-icon.civ-chip__icon--end');
+      expect(icon).not.toBeNull();
+      expect(icon?.getAttribute('name')).toBe('arrow-down');
     });
   });
 

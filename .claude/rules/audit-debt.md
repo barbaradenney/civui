@@ -270,6 +270,13 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **State:** Web `civ-confirm-button` and `civ-toggle-button` do NOT use `LoadingMixin` because they're fast-completing UI state changes, not network actions. Native stubs likewise don't declare loading props. This is correct — but the asymmetry vs the sibling family (civ-button, civ-action-button, civ-text-button all DO use LoadingMixin) is non-obvious. A future audit might reflexively try to add `loading` to confirm/toggle for "consistency."
 - **Why deferred:** No fix needed — it's documenting a deliberate asymmetry. Captured here so the rationale survives across audit cycles.
 
+### Colored `civ-link-card` variants lack hover / active feedback
+
+- **Files:** `packages/actions/src/link-card/civ-link-card.ts:103-105` (class selection); `packages/core/src/styles/components.css:4585-4593` (the missing hover/active hooks); `packages/core/src/styles/components.css:5847-5854` (the colored-card BEM that gets used in place).
+- **State:** When a consumer sets both `color` and `variant="primary"` on `<civ-link-card>`, the renderer swaps the interactive `.civ-link-card--primary` class for the static `.civ-card--{color}-primary` class. The static class has no `:hover` / `:active` rules — so the link-card visually doesn't respond to mouse interaction, even though it's a real clickable affordance. The `ColorsPrimary` Storybook story (`civ-link-card.stories.ts:264-278`) is the documented placement that hits this.
+- **Why deferred:** The proper fix is design-system-level — add hover/active rules to either the shared `.civ-card--{color}-primary` selectors (affects static civ-card too — wrong direction) or scope new rules to `.civ-link-card.civ-card--{color}-primary:hover` (cleaner, but multiplies CSS line count by 8 color values × 2 states). Either way the design choice of "what's the hover delta for a colored card?" deserves a design pass rather than picking arbitrarily — a slight darken via `filter: brightness(0.95)` is heavy-handed; a per-color hover-bg token is the principled fix and means new tokens.
+- **What to watch for in the meantime:** Consumers wanting hover/active feedback on colored link-cards should use the non-colored `variant="primary"` (filled brand color) and accept the visual difference; or wrap the card in their own `:hover` rule that adjusts `filter` or `opacity` locally.
+
 ---
 
 ## Process

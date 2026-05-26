@@ -184,6 +184,13 @@ export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
     const chips = this._chips.filter((c) => !c.disabled);
     if (chips.length === 0) return;
 
+    // Precondition: focus must already be inside a chip. The handler
+    // is no-op when invoked from outside the group (e.g. before the
+    // user has Tab'd into the row, or after a programmatic .focus()
+    // on the host without first focusing a child chip). Consumers
+    // wanting Home/End to land focus on the first chip from outside
+    // should call `this._chips[0]?.focus()` themselves before
+    // dispatching the synthetic keydown.
     const active = document.activeElement as HTMLElement | null;
     const currentIndex = chips.findIndex((c) => c.contains(active));
     if (currentIndex === -1) return;

@@ -94,4 +94,12 @@ describe('civ-skip-link', () => {
     const link = el.querySelector('a')!;
     expect(link.textContent).toBe('Updated');
   });
+
+  it('strips dangerous javascript: protocol via sanitizeHref', async () => {
+    const el = await fixture('<civ-skip-link href="javascript:alert(1)"></civ-skip-link>');
+
+    const link = el.querySelector('a')!;
+    expect(link.getAttribute('href')).not.toContain('javascript:');
+    expect(link.getAttribute('href')).toBe('');
+  });
 });

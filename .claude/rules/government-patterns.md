@@ -51,7 +51,8 @@ globs:
 - Do NOT use gray text (`civ-text-base-dark`, `civ-text-base-light`, `civ-text-base`) for labels, headings, descriptions, or body text. Let text inherit the default color (`base-darkest`).
 - Visual hierarchy comes from **font size and weight**, not color muting.
 - The only acceptable uses of muted/gray text are: hint text, disabled states (`civ-opacity-disabled`), placeholder text, and explicit consumer overrides.
-- Error text uses `civ-text-error`, success uses `civ-text-success` — never gray for status.
+- Error text uses `civ-text-error` (6.98:1 on white — AA). For success status text at body size, use `civ-text-success-dark` (4.63:1 on white — AA), not `civ-text-success` (which is 3.14:1 — AA-large/non-text only). For warning status text, use `civ-text-warning-darkest` on a `warning-lighter` background, not bare `civ-text-warning` (`warning-DEFAULT` is 1.84:1 — fails everything).
+- The measured contrast matrix for every blessed combination lives in `.claude/rules/colors.md` → "Contrast & WCAG."
 
 ## Form validation
 - Validate on submit, not on blur.

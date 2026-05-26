@@ -155,7 +155,7 @@ export const AppointmentWithSelection: Story = {
     docs: {
       description: {
         story:
-          'Shows a selected time slot with primary chip style for stronger visual emphasis. The selected chip uses `chip-style="primary"` to stand out as the confirmed choice.',
+          'Shows a selected time slot with primary chip emphasis for stronger visual weight. The selected chip uses `emphasis="primary"` to stand out as the confirmed choice.',
       },
     },
   },

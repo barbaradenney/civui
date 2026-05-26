@@ -3,7 +3,7 @@ import type { ComponentSchema } from '../schema.types.js';
 const schema: ComponentSchema = {
   $schema: '1.0',
   name: 'civ-link',
-  description: 'Anchor-based link with four visual variants (primary / secondary / tertiary / back). Renders a real `<a>` on web (native focus ring applied automatically); native platforms map to a styled tappable Text. Set `type` to `phone` / `email` / `download` for device-action shortcuts that auto-build the href, leading icon, and display text. Automatically appends `target="_blank" rel="noopener noreferrer"` when `new-tab` is set.',
+  description: 'Anchor-based link with three visual variants (primary / secondary / back). Renders a real `<a>` on web (native focus ring applied automatically); native platforms map to a styled tappable Text. Set `type` to `phone` / `email` / `download` for device-action shortcuts that auto-build the href, leading icon, and display text. Automatically appends `target="_blank" rel="noopener noreferrer"` when `new-tab` is set.',
   category: 'navigation',
   extends: 'CivBaseElement',
   isGroup: false,
@@ -11,7 +11,7 @@ const schema: ComponentSchema = {
   props: {
     href: {
       type: 'string',
-      description: 'Link destination. Empty href renders the link as a non-interactive span',
+      description: 'Link destination. When `type` is `phone` / `email` / `download`, the type-specific props build the href and this prop is ignored. Ignored when `as="button"`. Dangerous protocols (`javascript:`, `data:`, `vbscript:`) are stripped at render time',
       default: '',
     },
     variant: {

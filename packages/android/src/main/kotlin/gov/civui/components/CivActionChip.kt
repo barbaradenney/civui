@@ -17,7 +17,7 @@ fun CivActionChip(
     spacing: String = "default",
     iconStart: String = "",
     iconEnd: String = "",
-    count: Int = 0,
+    count: Int? = null,
     modifier: Modifier = Modifier,
     onClick: ((String) -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,

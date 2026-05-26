@@ -64,10 +64,16 @@ const schema: ComponentSchema = {
   },
 
   renderOrder: [
+    // Renders a single button whose label text swaps between
+    // `label` (resting) and `pressedLabel` (active state), with
+    // `aria-pressed` reflecting the boolean `pressed` prop. Native
+    // implementers toggle the displayed text alongside the
+    // accessibility-pressed state. The component does NOT accept
+    // slotted children.
     {
-      type: 'container',
+      type: 'button',
       children: [
-        { type: 'slot', bindings: { name: 'default' } },
+        { type: 'label', bindings: { text: 'label' } },
       ],
     },
   ],

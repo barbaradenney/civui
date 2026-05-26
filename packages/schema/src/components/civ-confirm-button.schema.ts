@@ -61,10 +61,15 @@ const schema: ComponentSchema = {
   },
 
   renderOrder: [
+    // Renders a single button whose label text swaps between
+    // `label` (resting) and `successLabel` (during the success
+    // window, with a check icon ✓ prefix). Native implementers
+    // toggle the displayed text on activation and revert after
+    // `successMs`. The component does NOT accept slotted children.
     {
-      type: 'container',
+      type: 'button',
       children: [
-        { type: 'slot', bindings: { name: 'default' } },
+        { type: 'label', bindings: { text: 'label' } },
       ],
     },
   ],

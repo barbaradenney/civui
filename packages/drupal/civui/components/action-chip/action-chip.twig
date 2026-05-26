@@ -1,4 +1,7 @@
 <civ-action-chip
+  {% if label %}label="{{ label }}"{% endif %}
+  {% if value %}value="{{ value }}"{% endif %}
+  {% if disabled %}disabled{% endif %}
   {% if spacing %}spacing="{{ spacing }}"{% endif %}
   {% if icon_start %}icon-start="{{ icon_start }}"{% endif %}
   {% if icon_end %}icon-end="{{ icon_end }}"{% endif %}

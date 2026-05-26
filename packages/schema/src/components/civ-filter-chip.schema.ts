@@ -77,6 +77,7 @@ const schema: ComponentSchema = {
         { type: 'label', condition: 'iconStart', bindings: { text: 'iconStart' } },
         { type: 'label', bindings: { text: 'label' } },
         { type: 'label', condition: 'count', bindings: { text: 'count' } },
+        { type: 'label', condition: 'iconEnd', bindings: { text: 'iconEnd' } },
       ],
     },
   ],

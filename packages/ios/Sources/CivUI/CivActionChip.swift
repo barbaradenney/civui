@@ -25,8 +25,8 @@ public struct CivActionChip: View {
     /// Trailing icon name (rendered after the label and count).
     public var iconEnd: String
 
-    /// Optional count rendered as " (N)" after the label.
-    public var count: Int
+    /// Optional count rendered as " (N)" after the label. `nil` = no count.
+    public var count: Int?
 
     /// Click handler.
     public var onClick: ((String) -> Void)?
@@ -41,7 +41,7 @@ public struct CivActionChip: View {
         spacing: String = "default",
         iconStart: String = "",
         iconEnd: String = "",
-        count: Int = 0,
+        count: Int? = nil,
         onClick: ((String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {

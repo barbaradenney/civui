@@ -56,7 +56,7 @@ If you're not sure which to reach for, start here.
 
 ---
 
-`<civ-confirm-button>` — text-button + a transient ✓ receipt. Wires `aria-live="polite"` during the success window so screen readers re-announce the receipt label. Consumer does the actual work in the `civ-confirm` listener.
+`<civ-confirm-button>` — text-button + a transient ✓ receipt. Announces the receipt label via the shared polite live-region queue on activation so screen readers re-announce a same-button text swap. Consumer does the actual work in the `civ-confirm` listener.
 
 <StoryEmbed id="actions-confirm-button--default" />
 

@@ -284,7 +284,7 @@ export const BelowActionSlot: Story = {
       Use the <code>data-below-action</code> slot for value-shortcuts the design system doesn't ship as first-class props (copy, paste, scan, generate). The slot renders in a helper row directly under the input — a larger, clearer tap target than an inset button inside the input's chrome.
     </p>
     <p class="civ-mt-3 civ-text-sm">
-      For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the "Copy → Copied ✓ → Copy" feedback loop, keeps padding stable across the swap, and wires <code>aria-live="polite"</code> so screen readers announce the receipt. Consumer does the actual work in the <code>civ-confirm</code> listener.
+      For ephemeral confirmation, drop in <code>&lt;civ-confirm-button&gt;</code>. It handles the "Copy → Copied ✓ → Copy" feedback loop, keeps padding stable across the swap, and routes the receipt label through the shared polite live-region queue so screen readers announce it reliably. Consumer does the actual work in the <code>civ-confirm</code> listener.
     </p>
     <p class="civ-mt-3 civ-text-sm">
       The inset action region is reserved for one control: the close / × clear button. Anything else — Copy, Today, Now, Show / Hide password, custom shortcuts — belongs in the below-input helper row.

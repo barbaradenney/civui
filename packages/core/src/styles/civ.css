@@ -232,6 +232,38 @@ summary:focus,
     color: var(--civ-color-base-darker, #333) !important;
   }
 
+  /* Typography classes — print sizes in points so output is paper-
+     calibrated rather than screen-calibrated. See
+     .claude/rules/typography.md "Print" section. */
+  .civ-text-body {
+    font-size: 11pt !important;
+  }
+  .civ-text-caption {
+    font-size: 9pt !important;
+  }
+  .civ-text-small {
+    font-size: 8pt !important;
+  }
+  .civ-heading-xl,
+  .civ-heading-xl-secondary {
+    font-size: 14pt !important;
+  }
+  .civ-heading-lg,
+  .civ-heading-lg-secondary {
+    font-size: 13pt !important;
+  }
+  .civ-heading-md,
+  .civ-heading-md-secondary {
+    font-size: 12pt !important;
+  }
+  .civ-heading-sm,
+  .civ-heading-sm-secondary {
+    font-size: 11pt !important;
+  }
+  .civ-eyebrow {
+    font-size: 8pt !important;
+  }
+
   /* Remove spacing that wastes paper */
   .civ-mb-4 {
     margin-bottom: 8pt !important;

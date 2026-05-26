@@ -1509,7 +1509,9 @@
   }
 
   .civ-dropzone__icon {
-    color: var(--civ-color-base-light);
+    /* base-dark (6.74:1 on white) hits WCAG SC 1.4.11 non-text contrast.
+       base-light was 2.24:1 — under the 3:1 floor for UI components. */
+    color: var(--civ-color-base-dark);
   }
 
   /* Mobile: collapse dropzone to inline browse button (no drag on touch).

@@ -415,6 +415,47 @@ is intentional for some props.
 
 ---
 
+## Orphan enum values in Drupal SDC YAMLs
+
+`pnpm sync:drupal` is **append-only** — it adds missing props but
+doesn't rewrite existing prop definitions. When a schema's enum
+value is removed (e.g. `civ-link.variant` dropped `tertiary` after
+a design pass), the Drupal SDC YAML keeps the orphan silently.
+Drupal authors who pick the orphan value get an unstyled component
+with no validation error.
+
+```yaml
+# packages/drupal/civui/components/link/link.component.yml (after sync)
+variant:
+  type: string
+  enum: ['primary', 'secondary', 'back', 'tertiary']   # ← `tertiary` orphan
+                                                       #   the schema dropped it
+```
+
+The symmetric direction is also drift: an SDC YAML hand-edited to
+add an `enum: [...]` constraint that the schema doesn't share
+(e.g. early civ-alert.heading_level had `enum: [2, 3, 4, 5, 6]`
+matching the source's `2 | 3 | 4 | 5 | 6` union, but the schema's
+`type: 'number'` declared no values). Drupal then over-constrains
+relative to the schema contract.
+
+**Caught by:** `pnpm lint:sdc-enum-values` — for every component in
+`COVERED_COMPONENTS` with a `drupal:` path, walks the SDC YAML's
+`props.properties` block, captures each prop's `enum: [...]`
+array, and compares it against the schema's `values:` (filtering
+out `''` to match `sync-drupal-sdc.ts`'s empty-string filter).
+Reports two failure modes: **orphan-in-drupal** (YAML has values
+the schema rejects) and **drupal-over-constrains** (schema isn't
+enum but YAML has one). Wired into `pnpm validate:lints` and the
+drift-lints CI gate.
+
+The lint deliberately does NOT flag the symmetric "schema is enum
+but YAML has no enum constraint" case — that's widespread legacy
+drift across ~30 SDCs, tracked in audit-debt as "Tighten Drupal
+SDC enum constraints" rather than blocking CI.
+
+---
+
 ## Section legends don't carry (required); leaf inputs do
 
 CivUI distinguishes two kinds of `<legend>`:

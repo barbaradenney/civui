@@ -29,7 +29,7 @@ props:
     variant:
       title: Variant
       type: string
-      enum: ['', 'chip', 'inline']
+      enum: ['chip', 'inline']
       default: ''
       description: 'Deprecated alias for emphasis. variant=chip → emphasis=secondary; variant=inline → emphasis=tertiary. Will be removed in the next major release.'
 

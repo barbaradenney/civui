@@ -250,12 +250,18 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Why deferred:** Native source files declare defaults with platform-specific syntax (Swift `String = "secondary"`, Kotlin `String = "secondary"`, Drupal SDC YAML `default: 'secondary'`). The lint would need a TS-aware parser for each. The audit-pass fix is sufficient for the chips that landed; broader audit later.
 - **What to watch for in the meantime:** When adding a new component, manually verify native defaults match the schema's `default:` value. Reach for the audit playbook (`audit.skill`) to catch the others if they exist.
 
-### `lint:sdc-enum-values` for Drupal SDC enum drift
+### Tighten Drupal SDC enum constraints (schema-enum but YAML has none)
 
-- **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`.
-- **State:** `pnpm sync:drupal` is append-only and doesn't prune. When a schema enum value is removed (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML keeps it silently — Drupal authors who set the orphan value get an unstyled component with no validation error. The actions audit caught one (`civ-link.variant: 'tertiary'`); fixed manually.
-- **Why deferred:** The lint is a YAML parser + schema cross-reference. Mechanically simple but a new tool; better as a focused branch than tagging onto an audit-fix PR.
-- **What to watch for in the meantime:** When removing an enum value from a schema, `grep -rn "<value>" packages/drupal/civui/components/<name>/` to verify the SDC YAML doesn't still list it.
+- **Surfaced:** lint-sdc-enum-values branch, 2026-05-26. The new lint catches orphans (audit's primary concern) but the broader symmetric drift — schemas whose enum prop is unconstrained in the SDC YAML — was deferred to keep the lint PR scoped.
+- **Scale:** 55 props across ~30 SDC YAMLs have `type: string` with no `enum:` constraint, while the schema declares them as `type: 'enum'` with a `values: [...]` array. Concrete sample: civ-text-input.mask, civ-radio-group.{size,preset}, civ-yes-no.size, civ-checkbox-group.{size,preset}, civ-combobox.{inputmode,spacing}, civ-currency.currency, and many more.
+- **Why deferred:** `pnpm sync:drupal` is append-only and doesn't rewrite enum constraints on existing props (line 307 of `tools/sync-drupal-sdc.ts` early-returns when the prop already exists). Fixing requires either (a) enhancing sync to overwrite enum + type + default on existing props, or (b) hand-editing 55 YAML entries. Option (a) is the right architectural fix but needs care — sync becomes destructive to hand-edits.
+- **What to watch for in the meantime:** Drupal authors using SDC validation can pass arbitrary strings for these props, which the web component then ignores silently. Low impact (the runtime degrades gracefully), but the YAMLs are lying about the contract.
+
+### `lint:schema-spec` should support integer enums
+
+- **Surfaced:** lint-sdc-enum-values branch, 2026-05-26. civ-alert.headingLevel has source type `2 | 3 | 4 | 5 | 6` (real integer union) but the schema spec's `values?: string[]` only accepts strings, so the schema declares `type: 'number'` (no enum constraint). The Drupal SDC YAML had a hand-added `enum: [2, 3, 4, 5, 6]` matching the source — over-constraining vs. schema. This branch removed the YAML enum to align with the schema; the proper fix is the inverse (extend the schema spec).
+- **Files:** `packages/schema/src/schema.types.ts:N` (`values?: string[]`); `tools/sync-drupal-sdc.ts` (the `'${v}'` string quoting at line 222 would need to handle numbers); `tools/lint-schema-enum-values.ts` (the literal-union parser would need numeric-literal support); `tools/sync-doc-tables.ts` (the `\`'${v}'\`` rendering would need to skip quotes for numbers); civ-alert schema (would migrate from `type: 'number'` to `type: 'enum'` with `values: [2,3,4,5,6]`).
+- **Why deferred:** Coordinated change across 4–5 files for one current use case. When a second integer-enum case appears (likely candidates: line-clamp limits, max-step counts, level constraints), bundle the spec extension with the new component's landing.
 
 ### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components
 

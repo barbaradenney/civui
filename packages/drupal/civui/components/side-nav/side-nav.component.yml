@@ -7,6 +7,18 @@ description: 'See @civui/schema civ-side-nav for the canonical contract.'
 props:
   type: object
   properties:
+    spacing:
+      title: Spacing
+      type: string
+      enum: ['default', 'lg']
+      default: 'default'
+      description: 'Tap-target density. `default` (~36px row, WCAG 2.5.8 AA) is the compact left-rail used in docs / admin. `lg` raises every link and trigger to the WCAG 2.5.5 AAA 44px floor with a base-sized bold font — matches `civ-nav` and is preferred ...'
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'secondary'
+      description: 'Typographic weight of the rail. `secondary` (default) keeps the quiet sub-navigation treatment with normal-weight text. `primary` switches to civ-nav''s bold base-sized body text so the rail reads as primary site navigation. Compose with ...'
 
 libraryOverrides:
   dependencies:

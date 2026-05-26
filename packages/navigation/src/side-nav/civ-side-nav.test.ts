@@ -51,6 +51,63 @@ describe('civ-side-nav', () => {
     expect(sublist.children.length).toBe(2);
     expect(sublist.children[0].getAttribute('label')).toBe('Button');
   });
+
+  it('omits the --lg modifier class by default', async () => {
+    const el = await fixture<CivSideNav>(sideNavHtml);
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--lg')).toBe(false);
+  });
+
+  it('applies the --lg modifier class when spacing="lg"', async () => {
+    const el = await fixture<CivSideNav>(
+      `<civ-side-nav spacing="lg"><civ-side-nav-item href="/x" label="X"></civ-side-nav-item></civ-side-nav>`,
+    );
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--lg')).toBe(true);
+    expect(nav.classList.contains('civ-side-nav--primary')).toBe(false);
+  });
+
+  it('omits the --primary modifier class by default (emphasis="secondary")', async () => {
+    const el = await fixture<CivSideNav>(sideNavHtml);
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--primary')).toBe(false);
+  });
+
+  it('applies the --primary modifier class when emphasis="primary"', async () => {
+    const el = await fixture<CivSideNav>(
+      `<civ-side-nav emphasis="primary"><civ-side-nav-item href="/x" label="X"></civ-side-nav-item></civ-side-nav>`,
+    );
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--primary')).toBe(true);
+    expect(nav.classList.contains('civ-side-nav--lg')).toBe(false);
+  });
+
+  it('composes spacing="lg" + emphasis="primary" — the mobile-primary look', async () => {
+    const el = await fixture<CivSideNav>(
+      `<civ-side-nav spacing="lg" emphasis="primary"><civ-side-nav-item href="/x" label="X"></civ-side-nav-item></civ-side-nav>`,
+    );
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--lg')).toBe(true);
+    expect(nav.classList.contains('civ-side-nav--primary')).toBe(true);
+  });
+
+  it('reflects spacing and emphasis to host attributes', async () => {
+    const el = await fixture<CivSideNav>(
+      `<civ-side-nav spacing="lg" emphasis="primary"><civ-side-nav-item href="/x" label="X"></civ-side-nav-item></civ-side-nav>`,
+    );
+    expect(el.getAttribute('spacing')).toBe('lg');
+    expect(el.getAttribute('emphasis')).toBe('primary');
+  });
+
+  it('toggles modifier classes when props change at runtime', async () => {
+    const el = await fixture<CivSideNav>(sideNavHtml);
+    el.spacing = 'lg';
+    el.emphasis = 'primary';
+    await elementUpdated(el);
+    const nav = el.querySelector('nav')!;
+    expect(nav.classList.contains('civ-side-nav--lg')).toBe(true);
+    expect(nav.classList.contains('civ-side-nav--primary')).toBe(true);
+  });
 });
 
 describe('civ-side-nav-item — leaf rows', () => {

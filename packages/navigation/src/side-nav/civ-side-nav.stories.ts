@@ -133,6 +133,67 @@ export const WithDisabled: Story = {
   `,
 };
 
+export const LargeSpacing: Story = {
+  name: 'spacing="lg" — WCAG AAA touch targets',
+  render: () => html`
+    <p class="civ-italic civ-mb-3">
+      <code>spacing="lg"</code> bumps every row to the WCAG 2.5.5 AAA
+      44px tap-target floor. Padding only — typography is unchanged
+      so it still reads as quiet secondary navigation. Combine with
+      <code>emphasis="primary"</code> for the mobile-primary look.
+    </p>
+    <div style="${wrapStyle}">
+      <civ-side-nav label="Sections" spacing="lg">
+        <civ-side-nav-item href="/start" label="Get started" current></civ-side-nav-item>
+        <civ-side-nav-item href="/personal" label="Personal information"></civ-side-nav-item>
+        <civ-side-nav-item href="/income" label="Income"></civ-side-nav-item>
+        <civ-side-nav-item href="/submit" label="Submit"></civ-side-nav-item>
+      </civ-side-nav>
+    </div>
+  `,
+};
+
+export const PrimaryEmphasis: Story = {
+  name: 'emphasis="primary" — bold typography (matches civ-nav)',
+  render: () => html`
+    <p class="civ-italic civ-mb-3">
+      <code>emphasis="primary"</code> swaps in
+      <code>civ-nav</code>'s bold base-sized body text so the rail
+      reads as primary navigation rather than a quiet sub-nav.
+      Typography only — padding is unchanged.
+    </p>
+    <div style="${wrapStyle}">
+      <civ-side-nav label="Site sections" emphasis="primary">
+        <civ-side-nav-item href="/home" label="Home" current></civ-side-nav-item>
+        <civ-side-nav-item href="/benefits" label="Benefits"></civ-side-nav-item>
+        <civ-side-nav-item href="/services" label="Services"></civ-side-nav-item>
+        <civ-side-nav-item href="/contact" label="Contact us"></civ-side-nav-item>
+      </civ-side-nav>
+    </div>
+  `,
+};
+
+export const MobilePrimary: Story = {
+  name: 'Mobile-primary (spacing=lg + emphasis=primary)',
+  render: () => html`
+    <p class="civ-italic civ-mb-3">
+      The composed mobile-primary look — 44px AAA tap targets plus
+      bold body-sized typography. Use this when the side-nav IS the
+      primary navigation of the surface (mobile app shell, drawer
+      navigation, fingertip-heavy government deployment).
+    </p>
+    <div style="${wrapStyle}">
+      <civ-side-nav label="App navigation" spacing="lg" emphasis="primary">
+        <civ-side-nav-item href="/dashboard" label="Dashboard" current></civ-side-nav-item>
+        <civ-side-nav-item href="/claims" label="My claims"></civ-side-nav-item>
+        <civ-side-nav-item href="/messages" label="Messages"></civ-side-nav-item>
+        <civ-side-nav-item href="/documents" label="Documents"></civ-side-nav-item>
+        <civ-side-nav-item href="/settings" label="Settings"></civ-side-nav-item>
+      </civ-side-nav>
+    </div>
+  `,
+};
+
 export const DocumentationLayout: Story = {
   name: 'Documentation page layout',
   render: () => html`

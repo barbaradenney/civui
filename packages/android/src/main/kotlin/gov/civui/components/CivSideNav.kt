@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivSideNav(
     label: String = "",
+    spacing: String = "default",
+    emphasis: String = "secondary",
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {

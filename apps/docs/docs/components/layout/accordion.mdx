@@ -196,12 +196,22 @@ assistive-tech rotor navigation.
 
 ## Form fields inside an accordion
 
-Unlike [`<civ-conditional>`](../form/conditional), accordion-hidden
-content **stays in the DOM**. Form fields rendered inside a collapsed
-item are still validated, submitted, and reset by `<civ-form>`. If a
-field's value depends on context that only becomes visible when the
-accordion is expanded, surface it outside the accordion or wrap it
-in a `<civ-conditional>` block bound to a separate state.
+Accordion-hidden content **stays in the DOM** (a native `<details>`
+keeps its children rendered even when collapsed) but `<civ-form>`
+**excludes fields inside a collapsed accordion-item** from
+`validate()`, `getFormData()`, and `toFormData()`. This matches the
+behavior of [`<civ-conditional>`](../form/conditional) — a required
+field a user can't see won't block submit, and stale values left
+inside a collapsed branch don't get sent.
+
+Nested accordions are handled too: a field inside an OPEN inner
+accordion that's wrapped in a COLLAPSED outer one is still excluded
+because the user can't reach it.
+
+If your form-step needs the user to confirm an accordion-hidden
+field before continuing, expand the accordion before validation
+(set `open` on the relevant `<civ-accordion-item>` so the user can
+see it).
 
 ## Behavioral contract
 

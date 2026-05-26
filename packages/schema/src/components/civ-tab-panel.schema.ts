@@ -8,7 +8,13 @@ const schema: ComponentSchema = {
   extends: 'CivBaseElement',
   isGroup: false,
 
-  props: {},
+  props: {
+    value: {
+      type: 'string',
+      description: 'Unique identifier matching the corresponding `<civ-tab>`\'s `value`. The parent `<civ-tabs>` shows the panel when its tab is active',
+      default: '',
+    },
+  },
 
   events: {},
 

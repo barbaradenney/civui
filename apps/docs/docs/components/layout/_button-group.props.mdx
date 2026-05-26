@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Accessible name (`aria-label`) applied to the `role="toolbar"` wrapper. **Strongly recommended.** Without a name, assistive tech reads an unnamed toolbar landmark |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them. Useful for narrow viewports or full-width primary actions |
 | `allow-overflow` | `boolean` | `false` | Opt-in. When set on a horizontal group, measure available width on mount + resize and collapse trailing buttons that don't fit into a "More" popover-menu. The collapsed buttons stay in the DOM (hidden) so author-attached event listeners keep firing. Web-only because the overflow depends on DOM layout measurement (ResizeObserver) that doesn't translate to SwiftUI / Compose. |
 | `overflow-label` | `string` | `''` | Accessible name for the "More" trigger that opens the overflow menu. Defaults to the localized "More" string. Web-only. Paired with `allowOverflow`. |

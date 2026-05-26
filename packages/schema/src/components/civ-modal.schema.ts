@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Accessible name (`aria-label`) for the dialog when no `heading` is set. If both are provided, `heading` wins for the visible title and `label` is ignored',
+      default: '',
+    },
     open: {
       type: 'boolean',
       description: 'Whether the modal is currently visible. Reflects to the host attribute',

@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible TOC link text. Falls back to initial child text content if unset',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Fragment URL (e.g. `#installation`). The parent reads this to locate the corresponding heading element',

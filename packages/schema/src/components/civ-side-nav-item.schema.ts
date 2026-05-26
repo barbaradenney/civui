@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible side-nav row text. Required',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Destination URL. Ignored when the item has nested children — parents are disclosure-only.',

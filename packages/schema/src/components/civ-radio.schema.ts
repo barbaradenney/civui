@@ -15,6 +15,21 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    value: {
+      type: 'string',
+      description: 'Form-submission value when this radio is selected. The parent `civ-radio-group` matches its `value` against this to determine the selection',
+      default: '',
+    },
+    name: {
+      type: 'string',
+      description: 'Form field name. Set automatically by the parent `civ-radio-group` from its own `name` prop — consumers don\'t set this directly',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Radio-option label text',
+      default: '',
+    },
     checked: {
       type: 'boolean',
       description: 'Whether this radio is the selected option. Managed by the parent group. Setting it directly is uncommon',

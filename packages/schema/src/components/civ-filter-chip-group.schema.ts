@@ -9,6 +9,16 @@ const schema: ComponentSchema = {
   isGroup: true,
 
   props: {
+    name: {
+      type: 'string',
+      description: 'Identifier used by composition parents (e.g. `civ-filterable-list`) to bind this group\'s selection to a filter column. NOT a form-field name — the group is not form-associated',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Accessible name for the wrapper (`aria-label`). **Strongly recommended.** The wrapper carries `role="toolbar"` in multi mode or `role="radiogroup"` in single mode; both roles require a name per WAI-ARIA. Omit only when the surrounding context already names the group',
+      default: '',
+    },
     mode: {
       type: 'enum',
       description: 'Selection mode. `multi` = any subset can be selected; `single` = radio-like, one at a time',

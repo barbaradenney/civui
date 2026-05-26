@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible tab-nav link text. Falls back to initial child text content if unset',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Destination URL',

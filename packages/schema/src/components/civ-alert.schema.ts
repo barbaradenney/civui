@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Alert body text. Preferred over child slot content. Distinct from `heading`, which is the optional bold title rendered above the body',
+      default: '',
+    },
     intent: {
       type: 'enum',
       description: 'Semantic tone. Drives icon and color palette',

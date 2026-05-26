@@ -9,6 +9,16 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    value: {
+      type: 'string',
+      description: 'Display value rendered on the right side of the row in bold',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Field label rendered on the left side of the row',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'When set, the value is rendered as a download link (web only. Native platforms render the value as plain text)',

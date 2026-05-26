@@ -8,7 +8,18 @@ const schema: ComponentSchema = {
   extends: 'CivBaseElement',
   isGroup: false,
 
-  props: {},
+  props: {
+    label: {
+      type: 'string',
+      description: 'Accessible name (`aria-label`) for the `role="tablist"` wrapper. **Strongly recommended** so AT users hear the tablist named',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'The currently selected tab\'s `value`. Controlled prop — listen to the `civ-tab-select` event and reflect the new value back to keep tabs in sync',
+      default: '',
+    },
+  },
 
   events: {
     'civ-change': {

@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Badge text. When `dot` is true, becomes the accessible name (`aria-label`) for the otherwise-empty dot indicator',
+      default: '',
+    },
     dot: {
       type: 'boolean',
       description: 'Render as a colored dot (no text). For notification indicators',

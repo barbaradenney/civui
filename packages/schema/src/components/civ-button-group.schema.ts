@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Accessible name (`aria-label`) applied to the `role="toolbar"` wrapper. **Strongly recommended.** Without a name, assistive tech reads an unnamed toolbar landmark',
+      default: '',
+    },
     orientation: {
       type: 'enum',
       description: 'Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them. Useful for narrow viewports or full-width primary actions',

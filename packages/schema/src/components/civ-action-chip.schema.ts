@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Chip text. Preferred over child text content',
+      default: '',
+    },
     value: {
       type: 'string',
       description: 'Identifier passed in the `civ-click` event detail so consumers can correlate clicks',

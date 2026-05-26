@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Link text. Preferred over child text content. When `type` is set, falls back to a formatted display string built from the type-specific props (e.g. formatted phone number, email address, filename)',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Link destination. When `type` is `phone` / `email` / `download`, the type-specific props build the href and this prop is ignored. Ignored when `as="button"`. Dangerous protocols (`javascript:`, `data:`, `vbscript:`) are stripped at render time',

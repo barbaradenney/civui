@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: true,
 
   props: {
+    name: {
+      type: 'string',
+      description: 'Form field name prefix used to namespace the repeater\'s child-row field names when serialized for form submission. Required when binding to a form',
+      default: '',
+    },
     legend: {
       type: 'string',
       description: 'Top-level legend rendered above the repeated instances',

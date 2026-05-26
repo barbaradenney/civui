@@ -15,6 +15,16 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    value: {
+      type: 'string',
+      description: 'The segment\'s value. The parent `civ-segmented-control`\'s `value` matches this when this segment is the active selection',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Segment-button text',
+      default: '',
+    },
     selected: {
       type: 'boolean',
       description: 'Whether this segment is the active option. Web-only. Native platforms encode the active segment via the parent control\'s `value` binding pointing at one of its options',

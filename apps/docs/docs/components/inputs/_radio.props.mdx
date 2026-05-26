@@ -3,6 +3,9 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `value` | `string` | `''` | Form-submission value when this radio is selected. The parent `civ-radio-group` matches its `value` against this to determine the selection |
+| `name` | `string` | `''` | Form field name. Set automatically by the parent `civ-radio-group` from its own `name` prop — consumers don't set this directly |
+| `label` | `string` | `''` | Radio-option label text |
 | `checked` | `boolean` | `false` | Whether this radio is the selected option. Managed by the parent group. Setting it directly is uncommon |
 | `description` | `string` | `''` | Secondary descriptive text below the label |
 | `tile` | `boolean` | `true` | Tile variant with bordered card styling. Default is true. Tiles are the standard treatment; opt out for blank inline radios |

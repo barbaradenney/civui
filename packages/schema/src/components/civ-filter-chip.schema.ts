@@ -9,6 +9,16 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    value: {
+      type: 'string',
+      description: 'Filter identifier emitted in the `civ-change` event detail when the chip toggles. Consumers correlate the value to a filter column or query parameter',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Chip text. Preferred over child text content',
+      default: '',
+    },
     selected: {
       type: 'boolean',
       description: 'Active state. Reflects to the host attribute. In `radio` variant this is managed by the parent group',

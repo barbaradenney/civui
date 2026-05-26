@@ -3,5 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `value` | `string` | `''` | The segment's value. The parent `civ-segmented-control`'s `value` matches this when this segment is the active selection |
+| `label` | `string` | `''` | Segment-button text |
 | `selected` | `boolean` | `false` | Whether this segment is the active option. Web-only. Native platforms encode the active segment via the parent control's `value` binding pointing at one of its options |
 | `managed-tab-index` | `number` | — | Tabindex assigned by the parent `civ-segmented-control` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute |

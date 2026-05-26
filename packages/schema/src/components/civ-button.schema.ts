@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Button text. Preferred over child text content — the slot fallback exists for backwards compatibility',
+      default: '',
+    },
     emphasis: {
       type: 'enum',
       description: 'Visual emphasis. `primary` = solid filled (main page action); `secondary` = bordered; `tertiary` = text-only',

@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible breadcrumb text. Falls back to initial child text content if unset',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Destination URL. Omit on the last item, or set `current`, to render as a non-link `<span aria-current="page">`',

@@ -9,6 +9,16 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    value: {
+      type: 'string',
+      description: 'Unique identifier matching a sibling `<civ-tab-panel>`\'s `value`. The parent `<civ-tabs>` wires the pair (clicking the tab activates the panel)',
+      default: '',
+    },
+    label: {
+      type: 'string',
+      description: 'Visible tab-button text. Falls back to initial child text content if unset',
+      default: '',
+    },
     selected: {
       type: 'boolean',
       description: 'Set by the parent `<civ-tabs>` to reflect the current selection. Don\'t set this directly. Set `value` on `<civ-tabs>` instead. Reflected so CSS can style `[selected]`',

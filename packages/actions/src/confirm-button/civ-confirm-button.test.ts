@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import * as liveRegion from '@civui/core';
 import './civ-confirm-button.js';
 
 afterEach(cleanupFixtures);
@@ -75,6 +76,22 @@ describe('civ-confirm-button', () => {
     await elementUpdated(el);
     expect(el.querySelector('button')!.textContent?.trim()).toBe('Copy');
     vi.useRealTimers();
+  });
+
+  it('announces the receipt label via the shared polite live-region queue (NOT via toggling aria-live on the button itself, which is racy on NVDA/JAWS)', async () => {
+    const spy = vi.spyOn(liveRegion, 'announce');
+    const el = await fixture('<civ-confirm-button label="Copy" success-label="Copied"></civ-confirm-button>');
+    (el.querySelector('button') as HTMLButtonElement).click();
+    expect(spy).toHaveBeenCalledWith('Copied', 'polite');
+  });
+
+  it('does NOT set aria-live on the button itself', async () => {
+    const el = await fixture('<civ-confirm-button label="Copy" success-label="Copied"></civ-confirm-button>') as any;
+    (el.querySelector('button') as HTMLButtonElement).click();
+    await elementUpdated(el);
+    // Even during the success window, the button must not carry
+    // aria-live — the announcement lives in the shared queue.
+    expect(el.querySelector('button')!.hasAttribute('aria-live')).toBe(false);
   });
 
   it('defaults to secondary emphasis (civ-text-btn--chip class)', async () => {

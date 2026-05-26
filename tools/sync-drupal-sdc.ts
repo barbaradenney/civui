@@ -249,6 +249,142 @@ export function renderPropYaml(propName: string, def: any, indent: string): stri
   return lines.join('\n');
 }
 
+/**
+ * Locate each existing prop's line range inside `props.properties`.
+ * Returns a map: drupal-key → `{ start, end }` where `start` is the
+ * index of the `    <key>:` line and `end` is the LAST line that
+ * belongs to that prop's block (so `lines.slice(start, end + 1)` is
+ * the full block).
+ *
+ * The "end" of a block is the line BEFORE either the next prop key
+ * at the same 4-space indent, or the first line that exits the
+ * properties block entirely (less indented than the prop-key indent).
+ */
+export function mapPropBlocks(yaml: string): Map<string, { start: number; end: number }> {
+  const lines = yaml.split('\n');
+  const map = new Map<string, { start: number; end: number }>();
+  let inProperties = false;
+  let baseIndent = 0;
+  let currentKey: string | null = null;
+  let currentStart = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const propsMatch = line.match(/^(\s*)properties\s*:/);
+    if (propsMatch && !inProperties) {
+      inProperties = true;
+      baseIndent = propsMatch[1].length;
+      continue;
+    }
+    if (!inProperties) continue;
+    const m = line.match(/^(\s*)([\w-]+)\s*:/);
+    if (!m) continue;
+    const indent = m[1].length;
+    // Out of properties — close any open block and stop.
+    if (indent <= baseIndent && line.trim() !== '') {
+      if (currentKey !== null) {
+        map.set(currentKey, { start: currentStart, end: i - 1 });
+        currentKey = null;
+      }
+      inProperties = false;
+      continue;
+    }
+    if (indent === baseIndent + 2) {
+      // New prop key — close the previous block.
+      if (currentKey !== null) {
+        map.set(currentKey, { start: currentStart, end: i - 1 });
+      }
+      currentKey = m[2];
+      currentStart = i;
+    }
+  }
+  // Close the last block (running to the end of the file or trailing
+  // blank lines).
+  if (currentKey !== null) {
+    let endIdx = lines.length - 1;
+    while (endIdx > currentStart && lines[endIdx].trim() === '') endIdx--;
+    map.set(currentKey, { start: currentStart, end: endIdx });
+  }
+  return map;
+}
+
+/**
+ * Render the schema's enum values into the canonical YAML form
+ * (filters out the empty-string sentinel, quotes strings, leaves
+ * numbers bare). Returns null when the schema has no usable enum
+ * (no values array or only the empty-string sentinel).
+ */
+function formatEnumValues(values: (string | number)[] | undefined): string | null {
+  if (!values || values.length === 0) return null;
+  const filtered = values.filter((v) => v !== '');
+  if (filtered.length === 0) return null;
+  return filtered.map((v) => (typeof v === 'number' ? String(v) : `'${v}'`)).join(', ');
+}
+
+/**
+ * Reconcile each existing prop's `enum: [...]` line with the schema's
+ * `values: [...]` array. Adds the enum line when the schema declares
+ * one and the YAML doesn't, replaces it when they differ. Does NOT
+ * remove the enum line when the schema drops it (a deliberate
+ * conservative choice — over-constraining is usually fine; under-
+ * constraining lets bad Drupal authoring through).
+ *
+ * Returns the rewritten YAML plus a list of `<prop>: <action>` strings
+ * for the summary log.
+ */
+export function reconcileEnums(yaml: string, schemaProps: Record<string, any>): { yaml: string; changes: string[] } {
+  const lines = yaml.split('\n');
+  const blocks = mapPropBlocks(yaml);
+  const changes: string[] = [];
+  // Walk schema props; for each enum prop, find its block and reconcile.
+  // We splice the lines array as we go — but only INSERT additions
+  // bottom-up so earlier block indices remain valid. Collect first,
+  // then apply in reverse.
+  interface Action {
+    blockEnd: number;
+    apply: (lines: string[]) => void;
+  }
+  const actions: Action[] = [];
+  for (const [propName, def] of Object.entries(schemaProps)) {
+    if (def?.type !== 'enum') continue;
+    if (def?.webOnly) continue;
+    const target = formatEnumValues(def.values);
+    if (target === null) continue;
+    const drupalKey = drupalKeyFor(propName, def);
+    const block =
+      blocks.get(drupalKey) ?? blocks.get(propName) ?? blocks.get(camelToSnake(propName));
+    if (!block) continue; // prop not in YAML yet; the appender will handle it
+    const targetLine = `      enum: [${target}]`;
+    let enumLineIdx = -1;
+    let typeLineIdx = -1;
+    for (let i = block.start; i <= block.end; i++) {
+      const ln = lines[i];
+      if (/^      enum\s*:/.test(ln)) enumLineIdx = i;
+      else if (/^      type\s*:/.test(ln)) typeLineIdx = i;
+    }
+    if (enumLineIdx !== -1) {
+      if (lines[enumLineIdx] !== targetLine) {
+        const finalIdx = enumLineIdx;
+        actions.push({
+          blockEnd: block.end,
+          apply(ls) { ls[finalIdx] = targetLine; },
+        });
+        changes.push(`${drupalKey}: updated enum`);
+      }
+    } else if (typeLineIdx !== -1) {
+      const insertAt = typeLineIdx + 1;
+      actions.push({
+        blockEnd: block.end,
+        apply(ls) { ls.splice(insertAt, 0, targetLine); },
+      });
+      changes.push(`${drupalKey}: added enum`);
+    }
+  }
+  // Apply inserts bottom-up so earlier indices stay valid.
+  actions.sort((a, b) => b.blockEnd - a.blockEnd);
+  for (const a of actions) a.apply(lines);
+  return { yaml: lines.join('\n'), changes };
+}
+
 export function existingDrupalProps(yaml: string): Set<string> {
   const names = new Set<string>();
   const lines = yaml.split('\n');
@@ -279,20 +415,27 @@ export function existingDrupalProps(yaml: string): Set<string> {
 interface SyncResult {
   component: string;
   added: string[];
+  /** `<prop>: added enum` / `<prop>: updated enum` strings from the enum-reconcile pass. */
+  enumChanges: string[];
   skipped: 'no-schema' | 'no-yaml' | null;
 }
 
 async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
   const schemaPath = join(ROOT, 'packages/schema/src/components', `${c.schema}.schema.ts`);
   const yamlPath = join(ROOT, 'packages/drupal/civui/components', c.drupal, `${c.drupal}.component.yml`);
-  if (!existsSync(schemaPath)) return { component: c.schema, added: [], skipped: 'no-schema' };
-  if (!existsSync(yamlPath)) return { component: c.schema, added: [], skipped: 'no-yaml' };
+  if (!existsSync(schemaPath)) return { component: c.schema, added: [], enumChanges: [], skipped: 'no-schema' };
+  if (!existsSync(yamlPath)) return { component: c.schema, added: [], enumChanges: [], skipped: 'no-yaml' };
 
   const mod = await import(pathToFileURL(schemaPath).href);
   const schema = mod.default ?? mod;
   const schemaProps = schema.props ?? {};
 
-  const yaml = readFileSync(yamlPath, 'utf-8');
+  let yaml = readFileSync(yamlPath, 'utf-8');
+  // 1) Reconcile enum constraints on EXISTING props (this is the new
+  //    behavior — sync used to be append-only, so when a schema enum
+  //    value was added or removed the YAML kept its stale shape).
+  const enumPass = reconcileEnums(yaml, schemaProps);
+  yaml = enumPass.yaml;
   const existing = existingDrupalProps(yaml);
 
   const toAdd: Array<{ name: string; def: any }> = [];
@@ -312,7 +455,12 @@ async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
     toAdd.push({ name: propName, def });
   }
 
-  if (toAdd.length === 0) return { component: c.schema, added: [], skipped: null };
+  if (toAdd.length === 0) {
+    // Even when no new props to append, we may still have rewritten
+    // the YAML during the enum-reconcile pass. Persist that.
+    if (enumPass.changes.length > 0 && !DRY_RUN) writeFileSync(yamlPath, yaml);
+    return { component: c.schema, added: [], enumChanges: enumPass.changes, skipped: null };
+  }
 
   // Find the indentation under the existing `properties:` block.
   // SDC convention is 4-space indent for each prop key.
@@ -342,7 +490,7 @@ async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
   }
   if (propsLineIdx < 0) {
     // No `props.properties` — skip.
-    return { component: c.schema, added: [], skipped: null };
+    return { component: c.schema, added: [], enumChanges: enumPass.changes, skipped: null };
   }
   // Walk forward from the `properties:` line. The block ends at the
   // first line whose indentation is at or below the indentation of
@@ -373,7 +521,7 @@ async function syncComponent(c: ComponentMapping): Promise<SyncResult> {
   const newYaml = `${before}\n${additions}${sep}${after}`;
 
   if (!DRY_RUN) writeFileSync(yamlPath, newYaml);
-  return { component: c.schema, added: toAdd.map((p) => p.name), skipped: null };
+  return { component: c.schema, added: toAdd.map((p) => p.name), enumChanges: enumPass.changes, skipped: null };
 }
 
 async function main() {
@@ -382,6 +530,7 @@ async function main() {
     results.push(await syncComponent(c));
   }
   let totalAdded = 0;
+  let totalEnumChanges = 0;
   for (const r of results) {
     if (r.skipped === 'no-schema') {
       console.log(`⚠  ${r.component}: no schema file`);
@@ -391,14 +540,18 @@ async function main() {
       console.log(`⚠  ${r.component}: no Drupal SDC YAML`);
       continue;
     }
-    if (r.added.length === 0) {
+    if (r.added.length === 0 && r.enumChanges.length === 0) {
       console.log(`✓  ${r.component} (already in sync)`);
       continue;
     }
     totalAdded += r.added.length;
-    console.log(`✗  ${r.component}: added ${r.added.length} prop(s) — ${r.added.join(', ')}`);
+    totalEnumChanges += r.enumChanges.length;
+    const parts: string[] = [];
+    if (r.added.length > 0) parts.push(`added ${r.added.length} prop(s) — ${r.added.join(', ')}`);
+    if (r.enumChanges.length > 0) parts.push(`enum: ${r.enumChanges.join(', ')}`);
+    console.log(`✗  ${r.component}: ${parts.join('; ')}`);
   }
-  console.log(`\n${DRY_RUN ? '[dry-run] would add' : 'added'} ${totalAdded} prop(s) across ${COMPONENTS.length} components.`);
+  console.log(`\n${DRY_RUN ? '[dry-run] would add' : 'added'} ${totalAdded} prop(s); ${DRY_RUN ? 'would reconcile' : 'reconciled'} ${totalEnumChanges} enum constraint(s) across ${COMPONENTS.length} components.`);
 }
 
 if (isCliInvocation()) {

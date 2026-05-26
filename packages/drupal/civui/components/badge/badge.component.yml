@@ -27,10 +27,12 @@ props:
     intent:
       title: Variant
       type: string
+      enum: ['info', 'success', 'warning', 'error', 'neutral']
       description: 'Color intent'
     emphasis:
       title: Emphasis
       type: string
+      enum: ['primary', 'secondary']
       description: 'Visual style of the badge'
     with_icon:
       title: With icon

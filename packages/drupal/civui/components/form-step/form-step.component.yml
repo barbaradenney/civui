@@ -37,11 +37,13 @@ props:
     progress:
       title: Progress
       type: string
+      enum: ['minimal', 'steps', 'bar']
       default: minimal
       description: 'Progress indicator style: minimal, steps, bar'
     header_size:
       title: Header size
       type: string
+      enum: ['primary', 'secondary', 'tertiary']
       default: secondary
       description: 'Header size: primary, secondary, tertiary'
     step_title:

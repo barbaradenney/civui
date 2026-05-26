@@ -34,6 +34,7 @@ props:
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Spacing variant'
 
 libraryOverrides:

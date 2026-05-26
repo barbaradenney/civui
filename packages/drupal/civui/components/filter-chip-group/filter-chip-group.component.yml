@@ -10,7 +10,7 @@ props:
     mode:
       title: Mode
       type: string
-      enum: ['single', 'multi']
+      enum: ['multi', 'single']
       description: 'Selection mode'
     label:
       title: Label

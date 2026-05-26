@@ -14,14 +14,17 @@ props:
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Internal spacing variant'
     color:
       title: Color
       type: string
+      enum: ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray']
       description: 'Card color variant'
     card_style:
       title: Card style
       type: string
+      enum: ['primary', 'secondary', 'tertiary']
       description: 'Visual style of the card'
     icon_start:
       title: Icon start

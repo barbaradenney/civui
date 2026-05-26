@@ -30,6 +30,7 @@ props:
     mode:
       title: Mode
       type: string
+      enum: ['full', 'last4']
       description: 'Display mode (e.g. last4)'
     required:
       title: Required

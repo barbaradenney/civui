@@ -250,12 +250,12 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Why deferred:** Native source files declare defaults with platform-specific syntax (Swift `String = "secondary"`, Kotlin `String = "secondary"`, Drupal SDC YAML `default: 'secondary'`). The lint would need a TS-aware parser for each. The audit-pass fix is sufficient for the chips that landed; broader audit later.
 - **What to watch for in the meantime:** When adding a new component, manually verify native defaults match the schema's `default:` value. Reach for the audit playbook (`audit.skill`) to catch the others if they exist.
 
-### Tighten Drupal SDC enum constraints (schema-enum but YAML has none)
+### `lint:sdc-enum-values` for orphan removals in Drupal SDC
 
-- **Surfaced:** lint-sdc-enum-values branch, 2026-05-26. The new lint catches orphans (audit's primary concern) but the broader symmetric drift — schemas whose enum prop is unconstrained in the SDC YAML — was deferred to keep the lint PR scoped.
-- **Scale:** 55 props across ~30 SDC YAMLs have `type: string` with no `enum:` constraint, while the schema declares them as `type: 'enum'` with a `values: [...]` array. Concrete sample: civ-text-input.mask, civ-radio-group.{size,preset}, civ-yes-no.size, civ-checkbox-group.{size,preset}, civ-combobox.{inputmode,spacing}, civ-currency.currency, and many more.
-- **Why deferred:** `pnpm sync:drupal` is append-only and doesn't rewrite enum constraints on existing props (line 307 of `tools/sync-drupal-sdc.ts` early-returns when the prop already exists). Fixing requires either (a) enhancing sync to overwrite enum + type + default on existing props, or (b) hand-editing 55 YAML entries. Option (a) is the right architectural fix but needs care — sync becomes destructive to hand-edits.
-- **What to watch for in the meantime:** Drupal authors using SDC validation can pass arbitrary strings for these props, which the web component then ignores silently. Low impact (the runtime degrades gracefully), but the YAMLs are lying about the contract.
+- **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`.
+- **State (additive direction CLEARED):** `tools/sync-drupal-sdc.ts` now reconciles enum constraints on existing props — adds an `enum:` line when the schema declares values but the YAML doesn't, and updates the line when the values differ. 39 existing YAMLs were brought into alignment in the same branch. Sister branch (`claude/lint-sdc-enum-values`) adds the lint to catch future drift.
+- **State (subtractive direction REMAINS):** Sync deliberately does NOT remove an existing `enum:` line when the schema drops it (over-constraining is acceptable; accidentally widening lets bad authoring through). When a schema enum value is REMOVED (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML still keeps the orphan silently. The lint (sister PR) is the catch.
+- **What to watch for in the meantime:** When removing an enum value from a schema, run `pnpm sync:drupal` then manually verify the SDC YAML doesn't still list it (or wait for the sister lint PR to merge so CI catches it).
 
 ### `lint:schema-spec` should support integer enums
 

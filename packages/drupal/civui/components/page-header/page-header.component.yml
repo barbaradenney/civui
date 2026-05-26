@@ -10,6 +10,7 @@ props:
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Bottom spacing variant'
     icon_start:
       title: Icon start

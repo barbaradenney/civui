@@ -19,6 +19,7 @@ props:
     tone:
       title: Tone
       type: string
+      enum: ['info', 'sensitive', 'neutral']
       description: 'Tone variant for styling'
 
 slots:

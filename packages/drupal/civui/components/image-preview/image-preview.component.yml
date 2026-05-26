@@ -26,6 +26,7 @@ props:
     size:
       title: Size
       type: string
+      enum: ['sm', 'md', 'lg', 'full']
       description: 'Preview size variant'
     webp_src:
       title: Webp src

@@ -10,7 +10,7 @@ props:
     intent:
       title: Variant
       type: string
-      enum: ['info', 'warning', 'error', 'success', 'neutral']
+      enum: ['info', 'success', 'warning', 'error', 'neutral']
       description: 'Alert type'
     heading:
       title: Heading

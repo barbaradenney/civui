@@ -22,14 +22,17 @@ props:
     variant:
       title: Variant
       type: string
+      enum: ['primary', 'secondary', 'tertiary', 'critical', 'danger']
       description: 'Visual style variant'
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Internal spacing variant'
     color:
       title: Color
       type: string
+      enum: ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray']
       description: 'Card color variant'
     disabled:
       title: Disabled

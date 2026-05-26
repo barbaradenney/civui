@@ -22,6 +22,7 @@ props:
     emphasis:
       title: Emphasis
       type: string
+      enum: ['primary', 'secondary', 'tertiary']
       default: secondary
       description: 'Visual emphasis level (renamed from `size`; the prop never controlled pixel size): primary, secondary, tertiary'
     heading_level:

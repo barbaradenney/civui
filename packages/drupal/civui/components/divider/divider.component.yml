@@ -10,10 +10,12 @@ props:
     spacing:
       title: Spacing
       type: string
+      enum: ['default', 'sm']
       description: 'Vertical spacing emphasis'
     emphasis:
       title: Variant
       type: string
+      enum: ['default', 'primary']
       description: 'Visual style emphasis'
     rhythm:
       title: Rhythm

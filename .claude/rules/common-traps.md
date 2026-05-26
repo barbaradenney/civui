@@ -1112,6 +1112,65 @@ makes that ambiguous.
 
 ---
 
+## `text-overflow: ellipsis` violates WCAG 1.4.12
+
+When a CSS rule pairs `overflow: hidden` with `text-overflow: ellipsis`
+(or `text-overflow: clip`) and a width constraint (`max-width`, fixed
+`width`), the content is **truncated** when it grows past that width.
+Under WCAG 2.1 SC 1.4.12 (Text Spacing), users can override
+`line-height` / `letter-spacing` / `word-spacing` / paragraph spacing,
+which grows text. Ellipsis truncation hides the overflow — failing
+the success criterion.
+
+```css
+/* ✗ truncates label content when user-spacing grows it past 50% */
+.civ-data-field__label {
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ✓ wraps to a second line within the 50% cap — content preserved */
+.civ-data-field__label {
+  max-width: 50%;
+}
+```
+
+The default fix is to **drop the truncation and let the content
+wrap**. The 50% width cap is preserved; long content wraps to a
+second line instead of clipping. Visual rhythm is mostly
+maintained — federal-form data fields rarely have labels long
+enough to trip this in practice, and when they do, two-line labels
+are preferable to invisible labels.
+
+When wrapping is genuinely not acceptable (decorative previews
+that have the data stored elsewhere — the `civ-signature-preview`
+cursive font is the canonical example), allowlist the class in
+`tools/lint-wcag-text-spacing.ts` → `ALLOWLIST_CLASSES` with a
+one-line rationale that names the accessible escape (where the
+non-truncated content lives so users still reach it). For a single-
+declaration exemption, add a `/* clip ok: <reason> */` comment
+immediately above the declaration.
+
+`white-space: nowrap` on currency / dollar-amount cells is NOT
+flagged — the surrounding cell is expected to grow horizontally
+under user-spacing overrides (it's a `flex` row); the `nowrap` is
+correct content-protection (you never want `$1,234.\n56`).
+`overflow: hidden` on chip pill shapes (clipping inner corners
+against `border-radius: 9999px`) is NOT flagged — the chip is
+`inline-flex` and grows with its content; the overflow is purely
+cosmetic.
+
+**Caught by:** `pnpm lint:wcag-text-spacing` — scans
+`components.css` for every `text-overflow` declaration and fails
+on selectors not in the class allowlist AND not annotated.
+Wired into `pnpm validate:lints` and the drift-lints CI gate.
+Fixed `height: <px|rem>` on text-containing blocks is caught
+separately by `lint:hardcoded-spacing` (which gates ALL hardcoded
+dimensions in components.css against a decorative allowlist).
+
+---
+
 ## Local-first commit / push workflow
 
 The project's convention is to commit locally and push only when

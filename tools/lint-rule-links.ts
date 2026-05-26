@@ -94,6 +94,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/design-rules.md',
     anchor: 'semantic-intent-vs-categorical-color-components',
   },
+  'typography': {
+    path: '.claude/rules/typography.md',
+    anchor: 'wcag-1412--text-spacing',
+  },
 };
 
 /**

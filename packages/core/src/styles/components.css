@@ -6927,9 +6927,13 @@
   .civ-data-field__label {
     @apply civ-flex-shrink-0;
     color: var(--civ-color-base-darkest);
+    /* Cap the label width so the value column gets at least half the row,
+       but let long labels WRAP instead of truncating — WCAG SC 1.4.12 (Text
+       Spacing) prohibits clipping content under user-applied letter-spacing
+       / word-spacing / line-height overrides, and `text-overflow: ellipsis`
+       on a fixed-width label clips. With wrap allowed, the label grows to
+       a second line if needed; the row stays readable. */
     max-width: 50%;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .civ-data-field__value {

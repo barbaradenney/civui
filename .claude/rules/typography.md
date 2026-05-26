@@ -223,10 +223,12 @@ WCAG 2.1 SC 1.4.12 requires that users can override the following without conten
 - Word-spacing to at least 0.16× the font-size
 
 CivUI must not block these overrides. Two patterns to watch:
-- Fixed-height chrome (buttons, chips, badges, list rows) with text inside. When the user forces line-height to 1.5×, the text grows; the chrome must accommodate via `min-height` (not `height`).
-- `overflow: hidden` on text containers — clips the overflowing text under user override. Prefer `overflow: visible` on text-bearing containers.
+- Fixed-height chrome (buttons, chips, badges, list rows) with text inside. When the user forces line-height to 1.5×, the text grows; the chrome must accommodate via `min-height` (not `height`). The hardcoded-spacing lint already gates every fixed `height: <px|rem>` in `components.css` (allowlist of decorative classes + `/* not density: <reason> */` annotation), so any non-allowlisted fixed height shows up in code review.
+- `text-overflow: ellipsis` (or `clip`) explicitly truncates content past a width constraint — the user can't see the full label / value / heading. Prefer wrapping. When wrapping isn't acceptable (the truncation is decorative, or the host component renders the full content elsewhere), allowlist the class with a one-line rationale.
 
-A future `pnpm lint:wcag-text-spacing` test sweep would fixture each component with the four overrides applied and assert no content is hidden / clipped / overflowed.
+The `pnpm lint:wcag-text-spacing` lint enforces the second rule. It scans `components.css` for every `text-overflow` declaration and fails unless the selector targets an entry in `ALLOWLIST_CLASSES` (in `tools/lint-wcag-text-spacing.ts`) or the lines immediately above carry a `/* clip ok: <reason> */` annotation. The allowlist exists for the genuinely-decorative cases (signature preview, where the actual data is held in the form value, not the visual preview). Wired into `pnpm validate:lints` and the drift-lints CI gate.
+
+A full Vitest-level sweep that fixtures each component with the four overrides applied and measures rendered clipping is not feasible in jsdom (no layout engine). The static lint is a strict over-approximation: it catches every CSS pattern that COULD clip text, regardless of whether a specific viewport actually triggers the clip.
 
 ---
 
@@ -308,7 +310,7 @@ These are the proposed work items, ordered by visible-quality leverage per line 
 5. **Font-feature baseline on body** — add `font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1; font-kerning: normal; font-optical-sizing: auto;` on `body`. ~5 lines. Quality bump on every text element, no API surface change.
 6. **`.civ-prose` wrapper utility** — `max-width: 65ch; text-wrap: pretty; hanging-punctuation: first allow-end last;` for long-form content blocks. ~5 lines. Mostly relevant on docs pages and any future content-heavy gov pages.
 7. **Print typography audit** — add print-mode font sizes for `.civ-text-body`, `.civ-text-caption`, `.civ-text-small`, all `.civ-heading-*`, `.civ-eyebrow`. ~25 lines in the `@media print` block. Government forms get printed routinely.
-8. **WCAG 1.4.12 test sweep** — fixture each component with the four user overrides applied, assert no clipping. Test, not CSS.
+8. ~~**WCAG 1.4.12 test sweep** — fixture each component with the four user overrides applied, assert no clipping. Test, not CSS.~~ Shipped 2026-05-26 as `pnpm lint:wcag-text-spacing` — static CSS check (jsdom has no layout engine so a runtime fixture sweep can't measure actual clipping). The lint gates every `text-overflow: ellipsis|clip` in `components.css` against `ALLOWLIST_CLASSES` + `/* clip ok: <reason> */` annotations. Fixed `civ-data-field__label` (was `overflow: hidden + text-overflow: ellipsis + max-width: 50%` → now wraps within the 50% cap). Allowlist seeded with `civ-signature-preview__cursive` (decorative preview; signature value lives in the form control).
 9. **Modular scale audit** — design-team decision, no code.
 10. **Brand-font extension point** — captured in this document for when a client requires it. Not a current ship item.
 

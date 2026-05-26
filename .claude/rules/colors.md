@@ -301,7 +301,7 @@ A brand-color rollout is a real engineering branch, not a single file edit — s
 These are proposed work items, ordered by leverage. None are committed yet; each is a follow-on branch.
 
 1. ~~**Fix `civ-dropzone__icon` low contrast**~~ — shipped 2026-05-26. Changed `color: var(--civ-color-base-light)` (2.24:1) to `color: var(--civ-color-base-dark)` (6.74:1) on `.civ-dropzone__icon`. The file-upload SVG icon now meets WCAG SC 1.4.11 (3:1 non-text contrast).
-2. **Tokenized contrast lint** — `pnpm lint:contrast` that reads `color.tokens.json` + `color-dark.tokens.json`, computes WCAG ratios for every recipe combination AND every common surface pairing (text + body color on `civ-bg-{intent}-{shade}`), and fails on regressions. Threshold: 4.5:1 body / 3:1 non-text. ~150 LOC + a small contrast helper, no runtime cost.
+2. ~~**Tokenized contrast lint**~~ — shipped 2026-05-26 as `pnpm lint:contrast`. Reads `color.tokens.json` + `color-dark.tokens.json`, resolves dotted-path token references to hex values, and computes WCAG 2.1 luminance contrast for 31 blessed pairs (recipe combinations, body/hint/link text on surface, status text colors, all 8 tag categorical pairs) in both light and dark mode — 62 contrast checks per run. Fails on regressions below `minRatio` (4.5 AA body / 3.0 AA-large or non-text). Wired into `pnpm validate:lints` and the drift-lints CI gate. 19 helper tests in `tools/__tests__/lint-contrast.test.ts`. The lint catches the canonical drift mode: a designer brightens `success-dark` by 5% to look more lively and silently drops below the 4.5:1 AA floor.
 3. **Light-mode `--civ-color-border` darkening** — `base-light` at 2.24:1 fails SC 1.4.11 as an input border. Darken to `base` (4.59:1) or `base-dark` (6.74:1). Will affect every input, divider, callout border in light mode — visible change but WCAG-correct. Requires design-team sign-off because the visual identity shifts.
 4. **Forced-colors mode pass** — extend `@media (forced-colors: active)` patches to all tinted-bg surfaces (alerts, callouts, notices, chips, tags, filter-chip selected, segmented selected, accordion expanded, list-item selected, link-card colored, badge intent bgs). ~80 LOC across components.css. Test in real Edge browser with Windows High Contrast turned on; no automated test covers it.
 5. **Dark-mode token parity check** — build-script assertion that `color-dark.tokens.json` has 1:1 leaf paths with `color.tokens.json`. ~30 LOC in `build-tokens.js`. Catches silent dark-mode drift.
@@ -329,6 +329,7 @@ These are proposed work items, ordered by leverage. None are committed yet; each
 - `tools/lint-color-classes.ts` — color-class typo gate.
 - `tools/lint-muted-body-text.ts` — gray-text-on-body gate.
 - `tools/lint-semantic-color-recipe.ts` — `RECIPE` for badge/count intent pairs.
+- `tools/lint-contrast.ts` — WCAG ratio gate for blessed token pairs in light + dark mode.
 - `.claude/rules/design-rules.md` "Semantic-intent vs categorical-color components" — the canonical rule for the two color-family kinds.
 - `.claude/rules/government-patterns.md` "Text color rules" — the gray-text policy.
 - `.claude/rules/common-traps.md` "Color-utility class typos silently render unstyled text" — the canonical trap for token-name typos.

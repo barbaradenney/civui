@@ -10,8 +10,8 @@
       "lineHeight": { "body": 1.75, "heading": 1.4 }
     },
     "default": {
-      "$description": "Standard density — relaxed spacing for comfortable reading. Body fluid 17–19 px (mobile 17, desktop 19). Bumped from 16-18 on 2026-05-20 — federal accessibility guidance (USWDS, GOV.UK) trends toward a meatier body baseline.",
-      "ratio": { "min": 1.2, "max": 1.333 },
+      "$description": "Standard density — relaxed spacing for comfortable reading. Body fluid 17–19 px (mobile 17, desktop 19). Step ratio 1.125 (major-second, USWDS-aligned) on mobile blending to 1.2 (minor-third) on desktop — gentler than the previous 1.2 → 1.333 (perfect-fourth at the top) which produced 107px display headings at 1440px. Retuned 2026-05-26.",
+      "ratio": { "min": 1.125, "max": 1.2 },
       "basePx": { "min": 17, "max": 19 },
       "viewportPx": { "min": 320, "max": 1200 },
       "spacingFactor": 1,

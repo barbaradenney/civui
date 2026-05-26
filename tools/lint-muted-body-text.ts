@@ -93,11 +93,11 @@ const ALLOWLIST = new Set([
  * of these substrings, treat it as a known demonstration of the
  * muted token and skip the check for that line. Used to allow the
  * typography swatch entry inside `component-examples.json` to keep
- * its `<p class="civ-text-muted">Muted (16px, lighter)</p>` side-by-
- * side row.
+ * its `<p class="civ-text-muted">Muted (base token, lighter)</p>`
+ * side-by-side row.
  */
 const LINE_CONTENT_EXEMPTIONS: string[] = [
-  'Muted (16px, lighter)',
+  'Muted (base token, lighter)',
 ];
 
 interface Finding {

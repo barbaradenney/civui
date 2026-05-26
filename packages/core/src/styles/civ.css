@@ -16,9 +16,25 @@
    — 36 places in components.css do exactly that. Setting it once
    on body means new components inherit correctly by default; the
    pre-existing explicit overrides remain harmless no-ops (same
-   value as inherited). */
+   value as inherited).
+
+   Font features baseline — see .claude/rules/typography.md:
+   - `font-kerning: normal` + `'kern' 1` — pair-kern every text run.
+     OS-default fonts ship different kerning defaults (Segoe UI on
+     Windows 10 ships less kerning than San Francisco on macOS).
+   - `'liga' 1` — standard ligatures (fi, fl).
+   - `'calt' 1` — contextual alternates (smarter spacing around
+     punctuation). On by default in San Francisco, off in older
+     Segoe UI builds — declaring it explicitly removes the OS gap.
+   - `font-optical-sizing: auto` — when the OS font is variable
+     (San Francisco, Segoe UI Variable, Roboto Flex), the browser
+     picks an optical-size variant tuned for the rendered size.
+     No-op on non-variable fonts. */
 body {
   font-size: var(--civ-typography-fontSize-base);
+  font-kerning: normal;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  font-optical-sizing: auto;
 }
 
 /* Semantic chrome tokens — single source of truth for the colors
@@ -214,6 +230,38 @@ summary:focus,
   .civ-hint {
     font-size: 9pt !important;
     color: var(--civ-color-base-darker, #333) !important;
+  }
+
+  /* Typography classes — print sizes in points so output is paper-
+     calibrated rather than screen-calibrated. See
+     .claude/rules/typography.md "Print" section. */
+  .civ-text-body {
+    font-size: 11pt !important;
+  }
+  .civ-text-caption {
+    font-size: 9pt !important;
+  }
+  .civ-text-small {
+    font-size: 8pt !important;
+  }
+  .civ-heading-xl,
+  .civ-heading-xl-secondary {
+    font-size: 14pt !important;
+  }
+  .civ-heading-lg,
+  .civ-heading-lg-secondary {
+    font-size: 13pt !important;
+  }
+  .civ-heading-md,
+  .civ-heading-md-secondary {
+    font-size: 12pt !important;
+  }
+  .civ-heading-sm,
+  .civ-heading-sm-secondary {
+    font-size: 11pt !important;
+  }
+  .civ-eyebrow {
+    font-size: 8pt !important;
   }
 
   /* Remove spacing that wastes paper */

@@ -67,27 +67,27 @@ export const AllStyles: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
       <div>
-        <p class="civ-text-caption civ-mb-1">Primary headings (bold)</p>
-        <h1 class="civ-heading-xl">Heading XL (24px bold)</h1>
-        <h2 class="civ-heading-lg">Heading LG (20px bold)</h2>
-        <h3 class="civ-heading-md">Heading MD (18px bold)</h3>
-        <h4 class="civ-heading-sm">Heading SM (16px bold)</h4>
+        <p class="civ-text-caption civ-mb-1">Primary headings (bold) — fluid sizes scale with viewport</p>
+        <h1 class="civ-heading-xl">Heading XL (2xl token, bold)</h1>
+        <h2 class="civ-heading-lg">Heading LG (xl token, bold)</h2>
+        <h3 class="civ-heading-md">Heading MD (lg token, bold)</h3>
+        <h4 class="civ-heading-sm">Heading SM (base token, bold)</h4>
       </div>
       <civ-divider></civ-divider>
       <div>
         <p class="civ-text-caption civ-mb-1">Secondary headings (regular)</p>
-        <h1 class="civ-heading-xl-secondary">Heading XL Secondary (24px regular)</h1>
-        <h2 class="civ-heading-lg-secondary">Heading LG Secondary (20px regular)</h2>
-        <h3 class="civ-heading-md-secondary">Heading MD Secondary (18px regular)</h3>
-        <h4 class="civ-heading-sm-secondary">Heading SM Secondary (16px regular)</h4>
+        <h1 class="civ-heading-xl-secondary">Heading XL Secondary (2xl token, regular)</h1>
+        <h2 class="civ-heading-lg-secondary">Heading LG Secondary (xl token, regular)</h2>
+        <h3 class="civ-heading-md-secondary">Heading MD Secondary (lg token, regular)</h3>
+        <h4 class="civ-heading-sm-secondary">Heading SM Secondary (base token, regular)</h4>
       </div>
       <civ-divider></civ-divider>
       <div>
         <p class="civ-text-caption civ-mb-1">Body text</p>
-        <p class="civ-text-body">Body (16px, darkest)</p>
-        <p class="civ-text-muted">Muted (16px, lighter)</p>
-        <p class="civ-text-caption">Caption (14px, dark)</p>
-        <p class="civ-text-small">Small (12px, dark)</p>
+        <p class="civ-text-body">Body (base token, darkest)</p>
+        <p class="civ-text-muted">Muted (base token, lighter)</p>
+        <p class="civ-text-caption">Caption (sm token, dark)</p>
+        <p class="civ-text-small">Small (xs token, dark)</p>
       </div>
     </div>
   `,
@@ -124,6 +124,49 @@ export const GovFormExample: Story = {
       <p class="civ-text-small">
         Privacy Act statement: VA collects this information under authority of 38 U.S.C. Sections 1705 and 1710.
       </p>
+    </div>
+  `,
+};
+
+export const LeadingTrim: Story = {
+  name: 'Leading Trim',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <p class="civ-text-caption">
+        Every <code>civ-heading-*</code>, <code>civ-text-body</code>,
+        <code>civ-text-muted</code>, <code>civ-text-caption</code>, and
+        <code>civ-text-small</code> class has its line-box half-leading
+        trimmed via <code>text-box-trim: both</code>. The visible glyph
+        sits flush with the container's padding edge — no floating gap
+        above the heading or below the last paragraph. Consumers can
+        opt arbitrary elements in with <code>class="civ-text-trim"</code>.
+      </p>
+
+      <div class="civ-flex civ-flex-col civ-gap-3 sm:civ-flex-row">
+        <div
+          class="civ-flex-1 civ-p-4"
+          style="border: 1px dashed var(--civ-color-base-light);"
+        >
+          <p class="civ-text-caption civ-mb-2">Heading + body in a padded container</p>
+          <h3 class="civ-heading-md">Mailing address</h3>
+          <p class="civ-text-body">
+            Where should we send correspondence about your application?
+            We'll only use this address for official VA communications.
+          </p>
+        </div>
+
+        <div
+          class="civ-flex-1 civ-p-4"
+          style="border: 1px dashed var(--civ-color-base-light);"
+        >
+          <p class="civ-text-caption civ-mb-2">Body-only paragraph</p>
+          <p class="civ-text-body">
+            Application status updates are sent to the email address
+            on file. You can change your preferred contact method any
+            time in your account settings.
+          </p>
+        </div>
+      </div>
     </div>
   `,
 };

@@ -232,6 +232,46 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 ---
 
+## @civui/actions audit follow-ups (2026-05-26)
+
+- **Surfaced:** Full @civui/actions audit, branch `claude/combined-input-action-component-Zw9R3`. Major + Critical findings fixed in the same branch (iOS Swift `variant` → `emphasis` compilation fix, civ-link CSS resets, native filter-chip / action-chip default-value drift, Drupal SDC missing props for action-chip + input-chip, confirm/toggle-button renderOrder, etc.). Cross-cutting items below are deferred — they're tool / generator changes that affect many components.
+
+### Schema spec lacks a dedicated `icon` render-element type
+
+- **Files:** `packages/schema/src/schema.types.ts:184` (`RENDER_ELEMENT_TYPES`).
+- **State:** The schema's render-element-type union is `['label', 'hint', 'error', 'input', 'select', 'checkbox', 'switch', 'button', 'slot', 'container']`. There is no `'icon'` type. Schemas with iconStart / iconEnd children currently use `type: 'label'` with `bindings: { text: 'iconStart' }`, which is misleading — native implementers reading `text: 'iconStart'` could plausibly render the literal string `"download"` as a label rather than an icon.
+- **Why deferred:** Adding `'icon'` to the union is a schema-spec change that ripples through every schema with an iconStart / iconEnd (civ-button, civ-action-button, civ-link, civ-filter-chip, civ-action-chip — at least 5 schemas), the `validate-schemas.ts` checker, the doc-tables generator, and the Drupal sync. It's a coordinated change worth its own branch.
+- **What to watch for in the meantime:** When a new component schema declares an icon child, follow the existing pattern (`type: 'label'` with the icon-prop bindings). Don't try to add `type: 'icon'` to a single schema — it'll trip the validator.
+
+### `lint:schema-default-values` for native default drift
+
+- **Files:** schemas under `packages/schema/src/components/` with enum `default` fields; native counterparts under `packages/ios/Sources/CivUI/` and `packages/android/src/main/kotlin/gov/civui/components/`.
+- **State:** `lint:schema-enum-values` catches Lit ↔ schema enum-value drift but doesn't compare *default* values across platforms. The actions audit found three concrete defaults drifts: civ-filter-chip `emphasis: "default"` (iOS+Android, schema is `"secondary"`), civ-filter-chip `variant: "checkbox"` (iOS+Android, schema is `"toggle"`), civ-action-chip `count: Int = 0` (should be `Int? = nil`). All fixed in the same branch.
+- **Why deferred:** Native source files declare defaults with platform-specific syntax (Swift `String = "secondary"`, Kotlin `String = "secondary"`, Drupal SDC YAML `default: 'secondary'`). The lint would need a TS-aware parser for each. The audit-pass fix is sufficient for the chips that landed; broader audit later.
+- **What to watch for in the meantime:** When adding a new component, manually verify native defaults match the schema's `default:` value. Reach for the audit playbook (`audit.skill`) to catch the others if they exist.
+
+### `lint:sdc-enum-values` for Drupal SDC enum drift
+
+- **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`.
+- **State:** `pnpm sync:drupal` is append-only and doesn't prune. When a schema enum value is removed (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML keeps it silently — Drupal authors who set the orphan value get an unstyled component with no validation error. The actions audit caught one (`civ-link.variant: 'tertiary'`); fixed manually.
+- **Why deferred:** The lint is a YAML parser + schema cross-reference. Mechanically simple but a new tool; better as a focused branch than tagging onto an audit-fix PR.
+- **What to watch for in the meantime:** When removing an enum value from a schema, `grep -rn "<value>" packages/drupal/civui/components/<name>/` to verify the SDC YAML doesn't still list it.
+
+### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components
+
+- **Files:** `tools/sync-doc-tables.ts`, `tools/lib/inherited.ts:14` (`INHERITED_FORM_PROPS`).
+- **State:** The Props-table generator filters `INHERITED_FORM_PROPS` (including `disabled`) as inherited, but `CivBaseElement` does NOT define `disabled` — only `CivFormElement` does. Components extending `CivBaseElement` that declare their own `disabled` (`civ-link`, `civ-link-card`, `civ-button`, `civ-action-button`, `civ-tag`, and others) have their `disabled` silently dropped from the rendered Props tables. Consumers reading the docs see no on-page reference for a real public prop.
+- **Why deferred:** Fixing this requires the doc-tables generator to detect whether each component actually inherits from `CivFormElement` (in which case skip `disabled`) vs `CivBaseElement` (in which case keep it). The same logic applies to `label`, `value`, `readonly` and other "is this actually inherited?" props.
+- **What to watch for in the meantime:** When auditing a component that declares its own `disabled`, manually verify the docs page either lists it elsewhere or call it out in prose.
+
+### Native `loading` prop parity gap for confirm-button / toggle-button
+
+- **Files:** the relevant Swift / Kotlin stubs.
+- **State:** Web `civ-confirm-button` and `civ-toggle-button` do NOT use `LoadingMixin` because they're fast-completing UI state changes, not network actions. Native stubs likewise don't declare loading props. This is correct — but the asymmetry vs the sibling family (civ-button, civ-action-button, civ-text-button all DO use LoadingMixin) is non-obvious. A future audit might reflexively try to add `loading` to confirm/toggle for "consistency."
+- **Why deferred:** No fix needed — it's documenting a deliberate asymmetry. Captured here so the rationale survives across audit cycles.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

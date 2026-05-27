@@ -284,7 +284,7 @@ Cross-cutting design principles live in `.claude/rules/design-rules.md`. Two rul
 - **Only interactive elements get rounded corners.** Buttons, inputs, links, controls, overlay panels, and pills/badges may carry `border-radius`. Static container chrome (cards, callouts, metric tiles, image thumbnails, info blocks) stays flat. Enforced by `pnpm lint:border-radius` — adding a new rounded class requires a deliberate allowlist entry.
 - **Compose existing components before hand-rolling chrome.** Before writing a new `<aside>` / `<div>` with bordered / padded / backgrounded chrome, check the decision tree in `design-rules.md` — the chances are `civ-card`, `civ-callout`, `civ-support-resources`, `civ-link-card`, `civ-section-intro`, `civ-alert`, or one of the form-pattern components already does it. Hand-rolling a parallel BEM (`civ-form-support-resources` next to `civ-support-resources`) is the canonical drift smell.
 
-Long-form audits of the color and typography systems (palette structure, contrast measurements, dark mode, forced-colors, print, recommendations) live in `.claude/rules/colors.md` and `.claude/rules/typography.md`.
+Long-form audits of the color, typography, and spacing systems (palette structure, contrast measurements, dark mode, forced-colors, print, rhythm tiers, orphan tokens, recommendations) live in `.claude/rules/colors.md`, `.claude/rules/typography.md`, and `.claude/rules/spacing.md`.
 
 ## AI Component Usage Guide
 

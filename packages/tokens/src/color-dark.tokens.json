@@ -23,29 +23,29 @@
     "warning": {
       "$type": "color",
       "lightest": { "$value": "#4a3d1a", "$description": "Softest dark amber bg (was `lighter` before the 2026-05-27 restructure)" },
-      "lighter": { "$value": "#8a6c2f", "$description": "Mid-darker gold — stronger soft bg between lightest and light" },
+      "lighter": { "$value": "#6b5226", "$description": "Mid-darker gold — stronger soft bg between lightest and light. Tuned to clear AA against `warning.darkest` text in dark mode." },
       "light": { "$value": "#f5d576" },
       "DEFAULT": { "$value": "#f5c542" },
       "dark": { "$value": "#c9a24d" },
-      "darkest": { "$value": "#f5d576" }
+      "darkest": { "$value": "#fae89c", "$description": "Brightest pale amber — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "success": {
       "$type": "color",
       "lightest": { "$value": "#1e3a20", "$description": "Softest dark green bg (was `lighter` before the 2026-05-27 restructure)" },
-      "lighter": { "$value": "#3d6e42", "$description": "Mid-darker green — stronger soft bg between lightest and light" },
+      "lighter": { "$value": "#2d5832", "$description": "Mid-darker green — stronger soft bg between lightest and light. Tuned to clear AA against `success.darkest` text in dark mode." },
       "light": { "$value": "#81d88a" },
       "DEFAULT": { "$value": "#5cb85c" },
       "dark": { "$value": "#7ec97e" },
-      "darkest": { "$value": "#81d88a" }
+      "darkest": { "$value": "#a8e8b0", "$description": "Brightest pale green — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "info": {
       "$type": "color",
       "lightest": { "$value": "#1a3a40", "$description": "Softest dark cyan bg (was `lighter` before the 2026-05-27 restructure)" },
-      "lighter": { "$value": "#2d5e6a", "$description": "Mid-darker teal — stronger soft bg between lightest and light" },
+      "lighter": { "$value": "#244a55", "$description": "Mid-darker teal — stronger soft bg between lightest and light. Tuned to clear AA against `info.darkest` text in dark mode." },
       "light": { "$value": "#7dd3e0" },
       "DEFAULT": { "$value": "#4dd0e1" },
       "dark": { "$value": "#80deea" },
-      "darkest": { "$value": "#7dd3e0", "$description": "Mirrors light-mode `darkest` semantic role (deepest text)" }
+      "darkest": { "$value": "#b8e8f0", "$description": "Brightest pale cyan — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "purple": {
       "$type": "color",

@@ -191,7 +191,7 @@ When a user enables Windows High Contrast Mode, `@media (forced-colors: active)`
 
 This produces three failure modes in CivUI today:
 
-1. **Background-tinted surfaces lose their identity.** A `civ-bg-warning-lighter` callout becomes a plain `Canvas` rectangle — indistinguishable from a default container. The only way to preserve it is to switch from `background-color` to `background` (which forced-colors leaves alone) OR use a system-color fallback inside the `@media (forced-colors: active)` block.
+1. **Background-tinted surfaces lose their identity.** A `civ-bg-warning-lightest` callout becomes a plain `Canvas` rectangle — indistinguishable from a default container. The only way to preserve it is to switch from `background-color` to `background` (which forced-colors leaves alone) OR use a system-color fallback inside the `@media (forced-colors: active)` block.
 
 2. **Focus indicators built on box-shadow disappear.** CivUI's focus ring uses `box-shadow` for the yellow halo + dark band. Forced-colors strips both. The current rule on `.civ-focus-ring` (civ.css:321) drops the transparent outline so the system Highlight color fills the focus shape — that's the GOV.UK pattern and it works.
 
@@ -243,7 +243,7 @@ Government forms get printed. `civ.css:202–233` defines the current print rule
 **What's NOT covered in print today:**
 
 - **Status colors don't translate.** `civ-alert--error` renders with `error-lighter` bg + `error-dark` text on screen. In print, the bg disappears (background-printing is off by default in most browsers) and the text prints in red — which is **invisible on a B&W printer** (red ink renders as light gray, below readability). The status meaning is lost on the printed page unless the alert also has the icon + "Error:" prefix (which it does — but the user pays for the icon being a colored SVG that loses its color).
-- **Semantic intent backgrounds don't print.** Same issue — `civ-bg-warning-lighter` callouts vanish in print.
+- **Semantic intent backgrounds don't print.** Same issue — `civ-bg-warning-lightest` callouts vanish in print.
 - **Links lose their underline distinction from body text.** Underline is preserved automatically by browsers, so this is fine.
 
 **Recommended fixes:**

@@ -51,6 +51,7 @@ Validation errors, required field marks, and destructive actions.
 | Light | `#d63e04` | `civ-bg-error-light` |
 | **Default** | **`#b50909`** | `civ-bg-error` |
 | Dark | `#8b0a03` | `civ-bg-error-dark` |
+| Darkest | `#5a0602` | `civ-text-error-darkest` (AAA / hero) |
 
 ### Warning
 
@@ -58,10 +59,12 @@ Caution messages and alerts that need attention but aren't errors.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#faf3d1` | `civ-bg-warning-lightest` |
+| Lightest | `#faf3d1` | `civ-bg-warning-lightest` (softest surface) |
+| Lighter | `#fcedb7` | `civ-bg-warning-lighter` (stronger soft bg) |
 | Light | `#fee685` | `civ-bg-warning-light` |
 | **Default** | **`#e5a000`** | `civ-bg-warning` |
 | Dark | `#936f38` | `civ-bg-warning-dark` |
+| Darkest | `#6b4c11` | `civ-text-warning-darkest` (AA text on lightest) |
 
 ### Success
 
@@ -69,10 +72,12 @@ Confirmations and completed states.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#ecf3ec` | `civ-bg-success-lightest` |
+| Lightest | `#ecf3ec` | `civ-bg-success-lightest` (softest surface) |
+| Lighter | `#b8e6b8` | `civ-bg-success-lighter` (stronger soft bg) |
 | Light | `#70e17b` | `civ-bg-success-light` |
 | **Default** | **`#00a91c`** | `civ-bg-success` |
 | Dark | `#4d8055` | `civ-bg-success-dark` |
+| Darkest | `#1a4d1a` | `civ-text-success-darkest` (AA text on lightest) |
 
 ### Info
 
@@ -80,10 +85,12 @@ Informational messages and neutral highlights.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#e7f6f8` | `civ-bg-info-lightest` |
+| Lightest | `#e7f6f8` | `civ-bg-info-lightest` (softest surface) |
+| Lighter | `#c5ecf2` | `civ-bg-info-lighter` (stronger soft bg) |
 | Light | `#99deea` | `civ-bg-info-light` |
 | **Default** | **`#00bde3`** | `civ-bg-info` |
 | Dark | `#2e6276` | `civ-bg-info-dark` |
+| Darkest | `#1d4554` | `civ-text-info-darkest` (AAA / hero) |
 
 ### Base
 

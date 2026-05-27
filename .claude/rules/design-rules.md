@@ -153,13 +153,13 @@ between light and dark mode rather than deriving per-shade.
 
 | Emphasis | bg | text |
 |---|---|---|
-| secondary | `<intent>-lighter` (base-lightest for neutral) | `<intent>-darkest` for success/warning; `<intent>-dark` for info/error; `base-darker` for neutral |
+| secondary | `<intent>-lightest` for info/success/warning, `error-lighter` for error (error didn't restructure in the 2026-05-27 shade-ladder pass); `base-lightest` for neutral | `<intent>-darkest` for success/warning/info; `<intent>-dark` for error; `base-darker` for neutral |
 | primary | `<intent>-dark` (`error-DEFAULT` for error; `base-darker` for neutral) | `white-DEFAULT` |
 | dot (badge) | same shade as primary bg | — |
 | tertiary (count) | transparent | `<intent>-dark` (neutral inherits parent color) |
 
-success and warning use `-darkest` for text because `*-dark` for
-those families is too muted to hit AA on the `-lighter` bg.
+success, warning, and info use `-darkest` for text because `*-dark`
+for those families is too muted to hit AA on the `-lightest` bg.
 
 Error's primary bg uses `error-DEFAULT` (saturated brand red), not
 `error-dark` (muted burgundy), so the "this is bad" cue stays

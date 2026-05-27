@@ -73,8 +73,8 @@ civ-demo-frame {
   letter-spacing: 0.04em;
   padding: 2px 6px;
   border-radius: 3px;
-  background-color: var(--civ-color-warning-lightest, #fff1d2);
-  color: var(--civ-color-warning-darkest, #5b4300);
+  background-color: var(--civ-color-warning-lightest, #faf3d1);
+  color: var(--civ-color-warning-darkest, #6b4c11);
   font-family: ui-sans-serif, system-ui, sans-serif;
   flex-shrink: 0;
 }

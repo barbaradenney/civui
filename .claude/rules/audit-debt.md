@@ -6,6 +6,18 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Orphan spacing tokens (`spacing-px`, `spacing-2.5`, `spacing-16`)
+
+- **Surfaced:** Spacing audit, 2026-05-27. Branch `claude/typography-system-design-RykOU` (filed during the typography → spacing follow-up).
+- **State:** Three tokens in `packages/tokens/src/spacing.tokens.json` are never used in production CSS (`packages/core/src/styles/components.css` / `civ.css`):
+  - `spacing-px` (1px) — zero hits. Most likely candidate for an eventual consumer (a `civ-border-px` divider, dense-row separator), so worth keeping; the others aren't.
+  - `spacing-2.5` (13px) — zero hits. Authors who need ~13px reach for `2` (10px) or `3` (15px). The intermediate step is redundant.
+  - `spacing-16` (80px) — zero hits. Authors who need 80px reach for `12` (60px) or `20` (100px); 80px is an awkward outlier in the workhorse cadence.
+- **Why deferred:** Removing tokens from `spacing.tokens.json` is a breaking change at the `@civui/tokens` package level — the Tailwind preset loses `civ-p-16` / `civ-p-2.5` / `civ-p-px` utilities, and `var(--civ-spacing-16)` etc. stop resolving. Should land in the next `@civui/tokens` major bump with a release note. The audit-recommendation order is: remove `2.5` and `16` first (clear orphans); leave `px` (plausible future use).
+- **What to watch for in the meantime:** When proposing a new component that needs a "between 10px and 15px" or "between 60px and 100px" gap, push back — the workhorse cadence (`0/1/2/3/4/6`) is intentional, and reaching for an orphan step usually means the layout wants a non-standard rhythm. If it genuinely needs the in-between step, document why in a comment alongside the use, so the deletion candidate becomes a "first real use" instead.
+
+---
+
 ## Non-inverting dark-text token for warning-light surfaces
 
 - **Surfaced:** Eyebrow contrast audit, 2026-05-26. Branch `claude/typography-system-design-RykOU`.

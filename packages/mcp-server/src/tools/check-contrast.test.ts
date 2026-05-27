@@ -38,7 +38,7 @@ describe('checkContrast', () => {
 
   it('strips "civ-bg-" prefix from token name', () => {
     const result = checkContrast('black', 'civ-bg-error-lighter');
-    expect(result.background).toBe('#f4e3db');
+    expect(result.background).toBe('#f4caca');
   });
 
   it('throws on unknown token', () => {

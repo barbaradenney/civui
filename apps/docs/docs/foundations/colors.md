@@ -47,7 +47,7 @@ Validation errors, required field marks, and destructive actions.
 | Shade | Value | Class |
 |-------|-------|-------|
 | Lightest | `#faf0f0` | `civ-bg-error-lightest` |
-| Lighter | `#f4e3db` | `civ-bg-error-lighter` |
+| Lighter | `#f4caca` | `civ-bg-error-lighter` |
 | Light | `#d63e04` | `civ-bg-error-light` |
 | **Default** | **`#b50909`** | `civ-bg-error` |
 | Dark | `#8b0a03` | `civ-bg-error-dark` |
@@ -164,6 +164,6 @@ All colors are available as CSS custom properties for dynamic theming:
 
 ```css
 color: var(--civ-color-primary-DEFAULT);
-background: var(--civ-color-error-lighter);
+background: var(--civ-color-error-lightest);
 border-color: var(--civ-color-base-light);
 ```

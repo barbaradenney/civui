@@ -16,7 +16,7 @@ const TOKEN_COLORS: Record<string, string> = {
 
   // Error
   'error-lightest': '#faf0f0',
-  'error-lighter': '#f4e3db',
+  'error-lighter': '#f4caca',
   'error-light': '#d63e04',
   'error': '#b50909',
   'error-dark': '#8b0a03',

@@ -155,10 +155,12 @@ parseGroup(
     },
     error: {
       $type: 'color',
-      lighter: { $value: '#f4e3db' },
+      lightest: { $value: '#faf0f0' },
+      lighter: { $value: '#f4caca' },
       light: { $value: '#d63e04' },
       DEFAULT: { $value: '#b50909' },
       dark: { $value: '#8b0a03' },
+      darkest: { $value: '#5a0602' },
     },
     warning: {
       $type: 'color',

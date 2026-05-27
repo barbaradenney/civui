@@ -45,7 +45,7 @@ export const Primary: Story = {
 export const Error: Story = {
   render: () => paletteSection('Error', [
     swatch('Lightest', '--civ-color-error-lightest', '#faf0f0'),
-    swatch('Lighter', '--civ-color-error-lighter', '#f4e3db'),
+    swatch('Lighter', '--civ-color-error-lighter', '#f4caca'),
     swatch('Light', '--civ-color-error-light', '#d63e04'),
     swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
     swatch('Dark', '--civ-color-error-dark', '#8b0a03'),
@@ -112,7 +112,7 @@ export const AllColors: Story = {
       ])}
       ${paletteSection('Error', [
         swatch('Lightest', '--civ-color-error-lightest', '#faf0f0'),
-        swatch('Lighter', '--civ-color-error-lighter', '#f4e3db'),
+        swatch('Lighter', '--civ-color-error-lighter', '#f4caca'),
         swatch('Light', '--civ-color-error-light', '#d63e04'),
         swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
         swatch('Dark', '--civ-color-error-dark', '#8b0a03'),

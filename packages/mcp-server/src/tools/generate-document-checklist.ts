@@ -52,7 +52,7 @@ export function generateDocumentChecklist(schema: FormSchema): DocumentChecklist
     const label = escapeHtml(req.label);
     const isRequired = req.required !== false;
     const badgeClass = isRequired
-      ? 'civ-text-xs civ-ms-2 civ-px-2 civ-py-0.5 civ-rounded civ-bg-error-lighter civ-text-error'
+      ? 'civ-text-xs civ-ms-2 civ-px-2 civ-py-0.5 civ-rounded civ-bg-error-lightest civ-text-error'
       : 'civ-text-xs civ-ms-2 civ-px-2 civ-py-0.5 civ-rounded civ-bg-base-lighter';
     const badgeText = isRequired ? 'Required' : 'Optional';
 

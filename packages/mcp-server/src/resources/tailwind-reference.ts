@@ -27,7 +27,7 @@ All Tailwind utilities in CivUI MUST use the \`civ-\` prefix. Standard Tailwind 
 ## 2. Semantic Colors
 
 All colors use CSS custom properties for automatic dark mode switching.
-Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lighter\`).
+Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`).
 
 ### primary
 | Shade | Light | Dark | Class examples |
@@ -44,7 +44,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lighter\`).
 | Shade | Light | Dark | Class examples |
 |-------|-------|------|----------------|
 | lightest | #faf0f0 | #3a1a1a | \`civ-bg-error-lightest\` |
-| lighter | #f4e3db | #4a2020 | \`civ-bg-error-lighter\` |
+| lighter | #f4caca | #4a2020 | \`civ-bg-error-lighter\` (mid-tone — danger-button hover) |
 | light | #d63e04 | #e87461 | \`civ-text-error-light\` |
 | DEFAULT | #b50909 | #f28b82 | \`civ-text-error\`, \`civ-border-error\` |
 | dark | #8b0a03 | #f5b7b1 | \`civ-text-error-dark\` |
@@ -248,7 +248,7 @@ Semantic classes from \`components.css\` — use these instead of composing raw 
 ### Form Error Summary
 | Class | Purpose | Expands to |
 |-------|---------|------------|
-| \`.civ-form-error-summary\` | Error summary container | border-s-4, border-error, bg-error-lighter, p-4, mb-4 |
+| \`.civ-form-error-summary\` | Error summary container | border-s-4, border-error, bg-error-lightest, p-4, mb-4 |
 | \`.civ-form-error-heading\` | Error summary heading | text-error, font-bold, text-lg, mt-0, mb-2 |
 
 ### Screen Reader Only

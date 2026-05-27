@@ -153,7 +153,7 @@ between light and dark mode rather than deriving per-shade.
 
 | Emphasis | bg | text |
 |---|---|---|
-| secondary | `<intent>-lightest` for info/success/warning, `error-lighter` for error (error didn't restructure in the 2026-05-27 shade-ladder pass); `base-lightest` for neutral | `<intent>-darkest` for success/warning/info; `<intent>-dark` for error; `base-darker` for neutral |
+| secondary | `<intent>-lightest` (uniform across all five intents as of the 2026-05-28 error-ladder normalization); `base-lightest` for neutral | `<intent>-darkest` for success/warning/info; `<intent>-dark` for error; `base-darker` for neutral |
 | primary | `<intent>-dark` (`error-DEFAULT` for error; `base-darker` for neutral) | `white-DEFAULT` |
 | dot (badge) | same shade as primary bg | — |
 | tertiary (count) | transparent | `<intent>-dark` (neutral inherits parent color) |

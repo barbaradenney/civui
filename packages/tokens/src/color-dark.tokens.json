@@ -13,8 +13,8 @@
     },
     "error": {
       "$type": "color",
-      "lightest": { "$value": "#3a1a1a" },
-      "lighter": { "$value": "#4a2020" },
+      "lightest": { "$value": "#3a1a1a", "$description": "Softest dark red bg — consumed by alert / badge / count / card / form-error-summary recipes. Mirrors warning/success/info's lightest role." },
+      "lighter": { "$value": "#4a2020", "$description": "Mid-darker red — stronger soft bg between lightest and light. Used by danger-button hover step (rest=lightest, hover=lighter, active=light). Tuned to clear AAA against `error.darkest` text in dark mode." },
       "light": { "$value": "#e87461" },
       "DEFAULT": { "$value": "#f28b82" },
       "dark": { "$value": "#f5b7b1" },

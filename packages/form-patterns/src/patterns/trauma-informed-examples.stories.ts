@@ -120,7 +120,7 @@ export const DeceasedAssumed: Story = {
           value='{"relationship":"spouse","marriageDate":"2015-06-12"}'
         ></civ-relationship>
       </div>
-      <div class="civ-border civ-border-s-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-rounded">
+      <div class="civ-border civ-border-s-4 civ-border-error civ-bg-error-lightest civ-p-4 civ-rounded">
         <p class="civ-font-semibold civ-mb-1 civ-text-error-dark">✗ Avoid — show-deceased</p>
         <p class="civ-text-sm civ-mb-4">
           Making a grieving family member confirm "Yes, this person is

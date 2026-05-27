@@ -214,7 +214,7 @@ const ELEMENT_STYLES: Record<ElementType, ElementStyleDef> = {
   'form-error-summary': {
     classes: ['.civ-form-error-summary', '.civ-form-error-heading'],
     notes: [
-      '.civ-form-error-summary for the error list container (border-s-4, border-error, bg-error-lighter)',
+      '.civ-form-error-summary for the error list container (border-s-4, border-error, bg-error-lightest)',
       '.civ-form-error-heading for the heading inside the summary',
     ],
   },

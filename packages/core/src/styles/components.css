@@ -1814,7 +1814,7 @@
   /* ── Form error summary ─────────────────────────────────────── */
 
   .civ-form-error-summary {
-    @apply civ-border-s-4 civ-border-error civ-bg-error-lighter civ-p-4 civ-mb-4;
+    @apply civ-border-s-4 civ-border-error civ-bg-error-lightest civ-p-4 civ-mb-4;
   }
 
   .civ-form-error-heading {
@@ -4067,7 +4067,7 @@
 
   .civ-alert--style-secondary.civ-alert--info { @apply civ-bg-info-lightest; }
   .civ-alert--style-secondary.civ-alert--warning { @apply civ-bg-warning-lightest; }
-  .civ-alert--style-secondary.civ-alert--error { @apply civ-bg-error-lighter; }
+  .civ-alert--style-secondary.civ-alert--error { @apply civ-bg-error-lightest; }
   .civ-alert--style-secondary.civ-alert--success { @apply civ-bg-success-lightest; }
   .civ-alert--style-secondary.civ-alert--neutral { background-color: var(--civ-color-base-lightest); }
 
@@ -5508,7 +5508,7 @@
   }
 
   .civ-badge--style-secondary.civ-badge--error {
-    background-color: var(--civ-color-error-lighter);
+    background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
   }
 
@@ -5642,7 +5642,7 @@
     color: var(--civ-color-warning-darkest);
   }
   .civ-count--style-secondary.civ-count--error {
-    background-color: var(--civ-color-error-lighter);
+    background-color: var(--civ-color-error-lightest);
     color: var(--civ-color-error-dark);
   }
   .civ-count--style-secondary.civ-count--neutral {
@@ -6019,7 +6019,7 @@
   /* Card color variants — secondary (light tint) */
   .civ-card--blue { background-color: var(--civ-color-primary-lightest); color: var(--civ-color-primary-dark); border-color: transparent; }
   .civ-card--teal { background-color: var(--civ-color-info-lightest); color: var(--civ-color-info-dark); border-color: transparent; }
-  .civ-card--red { background-color: var(--civ-color-error-lighter); color: var(--civ-color-error-dark); border-color: transparent; }
+  .civ-card--red { background-color: var(--civ-color-error-lightest); color: var(--civ-color-error-dark); border-color: transparent; }
   .civ-card--green { background-color: var(--civ-color-success-lightest); color: var(--civ-color-success-darkest); border-color: transparent; }
   .civ-card--yellow { background-color: var(--civ-color-warning-lightest); color: var(--civ-color-warning-darkest); border-color: transparent; }
   .civ-card--orange { background-color: var(--civ-color-accent-warm-lightest); color: var(--civ-color-accent-warm-darkest); border-color: transparent; }

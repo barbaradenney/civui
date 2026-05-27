@@ -13,8 +13,8 @@
     },
     "error": {
       "$type": "color",
-      "lightest": { "$value": "#faf0f0" },
-      "lighter": { "$value": "#f4e3db" },
+      "lightest": { "$value": "#faf0f0", "$description": "Quietest pale pink-white surface — soft bg consumed by alert / badge / count / card / form-error-summary recipes" },
+      "lighter": { "$value": "#f4caca", "$description": "Mid-pale pink-red — stronger soft bg between lightest and light, used by danger-button hover step (rest=lightest, hover=lighter, active=light). Tuned to clear AAA against `error.darkest` text" },
       "light": { "$value": "#d63e04" },
       "DEFAULT": { "$value": "#b50909" },
       "dark": { "$value": "#8b0a03" },

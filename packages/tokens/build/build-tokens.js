@@ -271,6 +271,15 @@ function buildScales(tokens, scalesConfig) {
     }
     lines.push(`  --civ-typography-lineHeight-normal: ${lineHeight.body};`);
     lines.push(`  --civ-typography-lineHeight-tight: ${lineHeight.heading};`);
+    // Apply the base font-size on the contextual scale wrapper so descendants
+    // re-inherit the scoped --civ-typography-fontSize-base. Body sets this
+    // once at :root scope; without re-applying it here, children inside
+    // [data-civ-scale="dense|spacious"] keep the body-computed size and only
+    // padding scales. The default :root case is already covered by body.
+    if (scaleName !== 'default') {
+      lines.push(`  font-size: var(--civ-typography-fontSize-base);`);
+      lines.push(`  line-height: var(--civ-typography-lineHeight-normal);`);
+    }
     lines.push('}');
     cssBlocks.push(lines.join('\n'));
 

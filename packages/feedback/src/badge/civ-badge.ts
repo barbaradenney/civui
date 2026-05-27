@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, devWarn } from '@civui/core';
 
 export type BadgeIntent = 'info' | 'warning' | 'error' | 'success' | 'neutral';
 export type BadgeEmphasis = 'primary' | 'secondary';
@@ -25,7 +25,11 @@ const VARIANT_DEFAULT_ICON: Record<BadgeIntent, string> = {
  *
  * **Modes:**
  * - `label` — text status indicator (default)
- * - `dot` — small colored marker only; `label` becomes `aria-label`
+ * - `dot` — small colored marker only; `label` becomes `aria-label`.
+ *   Dot mode with `intent` but no `label` communicates status via color
+ *   alone and emits a dev-mode warning (color-blind users can't
+ *   distinguish intents). Set `label` to add a text alternative, or
+ *   drop the intent for a presence-only marker.
  *
  * **Emphasis levels:**
  * - `secondary` (default) — light tint background with dark text
@@ -106,6 +110,8 @@ export class CivBadge extends CivBaseElement {
     return '';
   }
 
+  private _warnedDotIntentNoLabel = false;
+
   override render() {
     const classes = [
       'civ-badge',
@@ -121,6 +127,19 @@ export class CivBadge extends CivBaseElement {
       // doesn't announce an empty live region. Callers who need AT exposure
       // must supply `label` (which becomes aria-label and adds role="status").
       if (!this.label) {
+        // CVD safeguard: a colored dot with no text alternative communicates
+        // status via color alone. ~8% of male / 0.5% of female users have
+        // some color vision deficiency and can't reliably distinguish
+        // success-green from warning-amber dots at this size. Either drop
+        // the intent (a neutral dot is a presence indicator only) or set
+        // a label so the meaning reaches every user. Fires once per instance.
+        if (this.intent !== 'neutral' && !this._warnedDotIntentNoLabel) {
+          devWarn(
+            'civ-badge',
+            `dot mode with intent="${this.intent}" but no label communicates status by color alone — color-blind users can't tell intents apart. Set label="…" (becomes aria-label and adds role="status") or drop the intent for a presence-only marker.`,
+          );
+          this._warnedDotIntentNoLabel = true;
+        }
         return html`<span class="${classes.join(' ')}" aria-hidden="true"></span>`;
       }
       return html`

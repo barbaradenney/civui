@@ -772,7 +772,7 @@
   }
 
   .civ-input {
-    @apply civ-block civ-w-full civ-border civ-rounded civ-px-2 civ-py-2
+    @apply civ-block civ-w-full civ-border civ-rounded civ-px-3 civ-py-3
            civ-font-sans civ-bg-surface civ-border-base;
     color: var(--civ-color-base-darkest);
   }
@@ -813,14 +813,37 @@
   }
 
 
+  /* Prefix / suffix addons sit flush against the input. The input drops
+     its border + radius on the joined edge (see rules below) so the
+     prefix → input → suffix reads as a single bounded field with no
+     vertical seam between the addon and the typing surface. Text color
+     is `base` (4.59:1 on surface, AA) rather than `base-dark` (6.74:1)
+     to read as decorative chrome — the addons are `aria-hidden="true"`
+     and should not compete with the input as a clickable target. */
   .civ-input-prefix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-surface;
-    color: var(--civ-color-base-dark);
+    @apply civ-flex civ-items-center civ-px-3 civ-border civ-border-e-0 civ-rounded-s civ-border-base civ-bg-surface;
+    color: var(--civ-color-base-DEFAULT);
   }
 
   .civ-input-suffix {
-    @apply civ-flex civ-items-center civ-px-2 civ-border civ-border-s-0 civ-rounded-e civ-border-base civ-bg-surface;
-    color: var(--civ-color-base-dark);
+    @apply civ-flex civ-items-center civ-px-3 civ-border civ-border-s-0 civ-rounded-e civ-border-base civ-bg-surface;
+    color: var(--civ-color-base-DEFAULT);
+  }
+
+  /* Drop the input's leading border + radius when a prefix sits to its
+     left, and the trailing border + radius when a suffix sits to its
+     right. The addon owns the outer rounded corner; removing the
+     input's joined-edge border eliminates the visible vertical line
+     between prefix/suffix and input. */
+  .civ-input-icon-wrap > .civ-input-prefix + .civ-input {
+    border-inline-start: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  .civ-input-icon-wrap:has(> .civ-input-suffix) > .civ-input {
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   /* Escape-hatch slot for consumer-provided trailing action buttons (copy,
@@ -3888,17 +3911,16 @@
   }
 
   /* Ensure buttons match input height. The bare `.civ-action-btn` only
-     pads horizontally (line-height + border ≈ 38px), but `.civ-input`
-     adds `civ-py-2` (8px top + 8px bottom) which makes the rendered
-     `<input>` ≈ 48px. Apply the same vertical padding to the button
-     when inside an input-group so the heights line up exactly. */
+     pads horizontally (line-height + border), so apply the same
+     vertical padding (`civ-py-3`) as `.civ-input` when inside an
+     input-group so the heights line up exactly. */
   .civ-input-group > civ-action-button {
     @apply civ-flex-shrink-0;
   }
 
   .civ-input-group > civ-action-button button,
   .civ-input-group > button {
-    @apply civ-py-2;
+    @apply civ-py-3;
   }
 
   /* `.civ-action-btn--sm` keeps its own compact vertical padding inside

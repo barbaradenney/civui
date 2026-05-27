@@ -45,6 +45,19 @@
  *   developer writing `civ-bg-warning-light` + `civ-text-warning-DEFAULT`).
  *   That's a documentation + review concern; the lint catches the
  *   token-pair shape, not arbitrary author-choice.
+ * - **Rendered cascade combinations.** When a child element sets an
+ *   explicit `color` and an ancestor sets an explicit `background-
+ *   color`, the lint does NOT walk the selector chain to discover
+ *   the rendered pair. Example: `.civ-eyebrow { color: base-dark }`
+ *   is fine on a white surface (passes), and `.civ-link-card--primary
+ *   { background: primary-DEFAULT; color: white }` is fine in isolation
+ *   (white-on-primary passes). The CASCADE — eyebrow rendered inside
+ *   primary link-card — produces base-dark gray on primary blue at
+ *   1.00:1 (invisible). The fix is to add an explicit PAIR for the
+ *   rendered combination (see "Link-card variant rendered combinations"
+ *   below) OR write a CSS-AST crawler that discovers them automatically.
+ *   The pragmatic policy is: when a variant sets bg and a child element
+ *   sets explicit color (not `inherit`), add the rendered pair here.
  * - Components that compose their own bg/text from non-token sources
  *   (none today — all CivUI components use tokens).
  * - Forced-colors mode (system-color override — measured by the OS,
@@ -123,7 +136,25 @@ export const PAIRS: ContrastPair[] = [
   { name: 'civ-text-error-dark on surface',    bg: 'white.DEFAULT', text: 'error.dark',    minRatio: 4.5 },
   { name: 'civ-text-success-dark on surface',  bg: 'white.DEFAULT', text: 'success.dark',  minRatio: 4.5 },
 
-  // 8. Tag categorical pairs (8 colors)
+  // 8. Link-card variant rendered combinations — codify the bg + text
+  //    pair the variant paints. The eyebrow + heading + description
+  //    inside each variant inherit the variant's color, so these
+  //    pairs ALSO guarantee the eyebrow renders legibly. (Originally
+  //    motivated by the .civ-eyebrow + .civ-link-card--primary
+  //    cascade bug: .civ-eyebrow set color: base-dark explicitly,
+  //    rendering 1.00:1 on primary-DEFAULT.)
+  { name: 'link-card primary bg/text',    bg: 'primary.DEFAULT',  text: 'white.DEFAULT',  minRatio: 4.5 },
+  { name: 'link-card secondary bg/text',  bg: 'primary.lightest', text: 'primary.dark',   minRatio: 4.5 },
+  { name: 'link-card tertiary bg/text',   bg: 'white.DEFAULT',    text: 'primary.dark',   minRatio: 4.5 },
+  // link-card --critical is intentionally OFF this list. The variant
+  // uses a literal #1b1b1b text color (not a token) because no token
+  // stays dark in both modes for the warning-light surface — see the
+  // CSS rule and audit-debt "Non-inverting dark-text token for
+  // warning-light surfaces". If the literal is replaced with a token
+  // in a future palette pass, add the rendered pair back here.
+  { name: 'link-card danger bg/text',     bg: 'error.DEFAULT',    text: 'white.DEFAULT',  minRatio: 4.5 },
+
+  // 9. Tag categorical pairs (8 colors)
   { name: 'tag blue (bg+text)',   bg: 'tag.blue.bg',   text: 'tag.blue.text',   minRatio: 4.5 },
   { name: 'tag teal (bg+text)',   bg: 'tag.teal.bg',   text: 'tag.teal.text',   minRatio: 4.5 },
   { name: 'tag red (bg+text)',    bg: 'tag.red.bg',    text: 'tag.red.text',    minRatio: 4.5 },

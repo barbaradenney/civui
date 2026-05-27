@@ -6,6 +6,15 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
+## Non-inverting dark-text token for warning-light surfaces
+
+- **Surfaced:** Eyebrow contrast audit, 2026-05-26. Branch `claude/typography-system-design-RykOU`.
+- **State:** `.civ-link-card--critical` uses a literal `#1b1b1b` text color rather than a token, because no current token has "always dark, never inverts" semantics. The `warning-light` surface stays a soft yellow in BOTH light (#fee685) and dark (#f5d576) mode — so the text on it must also stay dark in both modes. Every existing neutral/black/white token inverts. `base-darkest` (#1b1b1b → #f0f0f0) shipped in this variant for months and rendered at 1.26:1 in dark mode (invisible); the literal swap is the tactical fix.
+- **Why deferred:** Adding a `surface.warning.text` (or similar non-inverting) token requires a palette-design decision and ripples through every other "always-yellow surface" that needs always-dark text. The candidates are `civ-callout--warning`, `civ-alert--warning`, `civ-notice` warning variant, `civ-tag color="yellow"` — each currently relies on bg/text token pairs that may or may not have the same drift. A systematic audit + new token + migration of all consumers is its own branch.
+- **What to watch for in the meantime:** When adding a new "always-light surface" variant (yellow, cream, pastel-pink), don't reach for `base-darkest` as the text color — measure dark-mode contrast first with `pnpm lint:contrast` (extend `PAIRS` with the rendered combination). The `lint:contrast` docstring's "Rendered cascade combinations" section captures the same trap.
+
+---
+
 ## Native platform implementation pass (iOS + Android)
 
 - **Surfaced:** Overlays + Compound audits, 2026-05-11. Scope corrected 2026-05-12. Allowlist mechanised 2026-05-19.

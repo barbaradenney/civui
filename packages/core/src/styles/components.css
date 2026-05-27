@@ -4722,6 +4722,13 @@
 
   .civ-link-card__eyebrow {
     @apply civ-block civ-mb-1 civ-eyebrow;
+    /* The .civ-eyebrow class sets color: base-dark (the standalone
+       page-header eyebrow rendering on a white surface). Inside a
+       link-card variant (--primary, --danger, etc.), the variant
+       paints the host with a dark background and white text — base-
+       dark gray on primary-DEFAULT is 1.00:1, fully invisible. Reset
+       to inherit so the eyebrow picks up the variant's foreground. */
+    color: inherit;
   }
 
   .civ-link-card__heading {
@@ -4780,11 +4787,18 @@
     background-color: var(--civ-color-primary-lighter);
   }
 
-  /* Critical — bold gold, always dark text regardless of color scheme */
+  /* Critical — bold gold, always dark text regardless of color scheme.
+     `warning-light` is a soft-yellow surface in BOTH light AND dark
+     mode (#fee685 light / #f5d576 dark), so the text must also stay
+     dark in both modes. `base-darkest` inverts to #f0f0f0 in dark mode
+     (1.26:1 on the dark-mode yellow — invisible), so a literal #1b1b1b
+     is used instead. No current token has the "always dark, never
+     inverts" semantics this surface needs; see audit-debt entry
+     "Non-inverting dark-text token for warning-light surfaces". */
   .civ-link-card--critical {
     background-color: var(--civ-color-warning-light);
     border-color: var(--civ-color-warning-light);
-    color: var(--civ-color-base-darkest);
+    color: #1b1b1b;
   }
   @media (hover: hover) {
     .civ-link-card--critical:hover {
@@ -6095,10 +6109,7 @@
   }
 
   .civ-metric-tile__label {
-    @apply civ-text-sm civ-font-semibold;
-    color: var(--civ-color-base-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    @apply civ-eyebrow;
   }
 
   .civ-metric-tile__value-row {

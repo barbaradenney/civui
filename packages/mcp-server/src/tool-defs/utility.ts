@@ -60,7 +60,7 @@ export const UTILITY_TOOLS: ToolDefinition[] = [
   },
   {
     name: 'check_contrast',
-    description: 'Check WCAG 2.1 contrast ratio between two colors. Accepts hex colors (#005ea2) or CivUI token names (primary, text-primary, civ-bg-error-light). Returns ratio, AA/AAA pass status for normal and large text, and overall WCAG level.',
+    description: 'Check WCAG 2.1 contrast ratio between two colors. Accepts hex colors (#005ea2) or CivUI token names (primary, text-primary, civ-bg-error-light). Returns ratio, AA/AAA pass status for normal and large text, and overall WCAG level. Pass mode="dark" to validate the rendered contrast a dark-mode user sees (token names resolve against the dark palette; hex inputs are unaffected).',
     params: {
       foreground: z
         .string()
@@ -68,8 +68,12 @@ export const UTILITY_TOOLS: ToolDefinition[] = [
       background: z
         .string()
         .describe('Background color — hex (#ffffff) or token name (white, bg-base-lightest)'),
+      mode: z
+        .enum(['light', 'dark'])
+        .optional()
+        .describe('Palette to resolve token names against. Default "light". Use "dark" to validate the rendered contrast in dark mode.'),
     },
-    handler: ({ foreground, background }) => checkContrast(foreground, background),
+    handler: ({ foreground, background, mode }) => checkContrast(foreground, background, mode),
   },
   {
     name: 'query_tokens',

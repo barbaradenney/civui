@@ -711,21 +711,18 @@
      Browser-default underlines sit too close to the baseline and pass
      through descenders. Em-relative offset + thickness scales with
      font-size: a heading-sized link gets a proportionally thicker
-     underline at proportionally lower offset, which is what the eye
-     expects. Values: 0.0625em = 1px at 16px body, 0.1875em = 3px.
-
-     Not applied to .civ-data-grid__sort-btn:hover (subtle 2px feedback
-     for a sortable column header — not a link) or .civ-nav__link--current
-     (4px / 2px accent line indicating the active page — accent, not
-     link). Both keep their context-specific hardcoded values. */
+     underline at proportionally larger offset, which is what the eye
+     expects. Tokens: underline.thickness = 0.0625em (1px at 16px),
+     underline.offset = 0.1875em (3px at 16px), underline.thicknessHover
+     = 0.125em (2px at 16px) for hover / state-indicator surfaces. */
   .civ-link--primary,
   .civ-link--secondary,
   .civ-link--back,
   .civ-link--primary.civ-link--danger,
   .civ-link--secondary.civ-link--danger,
   .civ-breadcrumb__link {
-    text-decoration-thickness: 0.0625em;
-    text-underline-offset: 0.1875em;
+    text-decoration-thickness: var(--civ-typography-underline-thickness);
+    text-underline-offset: var(--civ-typography-underline-offset);
   }
 
   /* Long-form prose wrapper — see .claude/rules/typography.md
@@ -1509,7 +1506,9 @@
   }
 
   .civ-dropzone__icon {
-    color: var(--civ-color-base-light);
+    /* base-dark (6.74:1 on white) hits WCAG SC 1.4.11 non-text contrast.
+       base-light was 2.24:1 — under the 3:1 floor for UI components. */
+    color: var(--civ-color-base-dark);
   }
 
   /* Mobile: collapse dropzone to inline browse button (no drag on touch).
@@ -2934,7 +2933,13 @@
     .civ-data-grid__sort-btn:hover {
       color: var(--civ-color-primary-dark);
       text-decoration: underline;
-      text-underline-offset: 2px;
+      /* Em-based via typography tokens — see typography.md "Underline
+         geometry". Sort-btn :hover behaves as an interactive-affordance
+         hover (sortable column header), so it uses the same recipe as
+         civ-link hovers: thicknessHover (2px-equivalent at body size)
+         + the standard offset. */
+      text-decoration-thickness: var(--civ-typography-underline-thicknessHover);
+      text-underline-offset: var(--civ-typography-underline-offset);
     }
   }
 
@@ -4291,8 +4296,16 @@
      page reads as visited even before keyboard focus. */
   .civ-nav__link--current {
     @apply civ-text-primary civ-underline;
+    /* Em-based thickness via typography token (same value as a hover-
+       state link). The 4px offset is intentionally larger than the
+       standard 3px underline-offset — this is a persistent state
+       indicator (active page), not a hover or rest-state link, and
+       the extra clearance reads as "accent line under the label"
+       rather than "this is hyperlinked". Kept as a hardcoded value
+       since there's only one consumer; promote to a token if a second
+       state-indicator surface appears. */
     text-underline-offset: 4px;
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: var(--civ-typography-underline-thicknessHover);
   }
 
   .civ-nav__link--disabled {
@@ -4720,6 +4733,13 @@
 
   .civ-link-card__eyebrow {
     @apply civ-block civ-mb-1 civ-eyebrow;
+    /* The .civ-eyebrow class sets color: base-dark (the standalone
+       page-header eyebrow rendering on a white surface). Inside a
+       link-card variant (--primary, --danger, etc.), the variant
+       paints the host with a dark background and white text — base-
+       dark gray on primary-DEFAULT is 1.00:1, fully invisible. Reset
+       to inherit so the eyebrow picks up the variant's foreground. */
+    color: inherit;
   }
 
   .civ-link-card__heading {
@@ -4778,11 +4798,18 @@
     background-color: var(--civ-color-primary-lighter);
   }
 
-  /* Critical — bold gold, always dark text regardless of color scheme */
+  /* Critical — bold gold, always dark text regardless of color scheme.
+     `warning-light` is a soft-yellow surface in BOTH light AND dark
+     mode (#fee685 light / #f5d576 dark), so the text must also stay
+     dark in both modes. `base-darkest` inverts to #f0f0f0 in dark mode
+     (1.26:1 on the dark-mode yellow — invisible), so a literal #1b1b1b
+     is used instead. No current token has the "always dark, never
+     inverts" semantics this surface needs; see audit-debt entry
+     "Non-inverting dark-text token for warning-light surfaces". */
   .civ-link-card--critical {
     background-color: var(--civ-color-warning-light);
     border-color: var(--civ-color-warning-light);
-    color: var(--civ-color-base-darkest);
+    color: #1b1b1b;
   }
   @media (hover: hover) {
     .civ-link-card--critical:hover {
@@ -6093,10 +6120,7 @@
   }
 
   .civ-metric-tile__label {
-    @apply civ-text-sm civ-font-semibold;
-    color: var(--civ-color-base-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    @apply civ-eyebrow;
   }
 
   .civ-metric-tile__value-row {

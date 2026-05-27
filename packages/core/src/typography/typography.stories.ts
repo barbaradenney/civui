@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import '@civui/layout/divider';
+import '@civui/layout/page-header';
+import '@civui/actions/link-card';
+import '@civui/data/metric-tile';
 
 const meta: Meta = {
   title: 'Foundations/Typography',
@@ -124,6 +127,68 @@ export const GovFormExample: Story = {
       <p class="civ-text-small">
         Privacy Act statement: VA collects this information under authority of 38 U.S.C. Sections 1705 and 1710.
       </p>
+    </div>
+  `,
+};
+
+export const Eyebrow: Story = {
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <p class="civ-text-caption">
+        The <code>.civ-eyebrow</code> recipe is a small uppercase caption
+        used above a heading or value to provide context — e.g. a
+        section label, a card category, a metric name. It's
+        <code>civ-text-sm</code> + <code>civ-font-semibold</code> +
+        uppercase + <code>letter-spacing: 0.05em</code> +
+        <code>color: base-dark</code>. Three components compose it
+        today: <code>civ-page-header</code> (via the
+        <code>data-eyebrow</code> slot), <code>civ-link-card</code>
+        (via the <code>eyebrow</code> prop), and <code>civ-metric-tile</code>
+        (via the <code>label</code> prop). When used inside a dark-bg
+        variant container (e.g. <code>civ-link-card variant="primary"</code>),
+        the eyebrow inherits the variant's foreground color instead of
+        the default gray so it stays legible.
+      </p>
+
+      <div class="civ-flex civ-flex-col civ-gap-6 sm:civ-grid sm:civ-grid-cols-3 sm:civ-gap-4">
+        <div
+          class="civ-p-4"
+          style="border: 1px dashed var(--civ-color-base-light);"
+        >
+          <p class="civ-text-caption civ-mb-2">Page-header (gray on white surface)</p>
+          <civ-page-header>
+            <span data-eyebrow>Disability</span>
+            <h1 data-heading>Apply for compensation</h1>
+            <p data-subheading>Tell us about your service-connected condition</p>
+          </civ-page-header>
+        </div>
+
+        <div
+          class="civ-p-4"
+          style="border: 1px dashed var(--civ-color-base-light);"
+        >
+          <p class="civ-text-caption civ-mb-2">Link-card primary (inherits white)</p>
+          <civ-link-card
+            href="#"
+            variant="primary"
+            eyebrow="Healthcare"
+            heading="Schedule an appointment"
+            description="Find a VA provider near you"
+          ></civ-link-card>
+        </div>
+
+        <div
+          class="civ-p-4"
+          style="border: 1px dashed var(--civ-color-base-light);"
+        >
+          <p class="civ-text-caption civ-mb-2">Metric-tile label</p>
+          <civ-metric-tile
+            label="Pending claims"
+            value="3"
+            description="Average review time is 28 days."
+          ></civ-metric-tile>
+        </div>
+      </div>
     </div>
   `,
 };

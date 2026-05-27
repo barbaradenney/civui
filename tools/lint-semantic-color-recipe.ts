@@ -21,7 +21,12 @@
  * The 2026-05-27 shade-ladder restructure renamed the softest pale
  * surface from `<intent>-lighter` to `<intent>-lightest` for info /
  * success / warning, and inserted a new mid-tone at `<intent>-lighter`.
- * (`error` stayed at `error-lighter` because it didn't restructure.)
+ * Error followed the same restructure on 2026-05-28: the soft-bg
+ * recipe consumers (form-error-summary, alert / badge / count
+ * secondary error, card-red) migrated to `error-lightest`, and
+ * `error-lighter` was retuned from peach (#f4e3db) to mid-pale
+ * pink-red (#f4caca) where it now serves as the danger-button hover
+ * mid-tone in the gradient `lightest → lighter → light`.
  * Several rules outside the badge/count recipe migrated to the new
  * tokens: alert--style-secondary backgrounds, card-secondary colored
  * variants, process-list-item complete-state marker, timeline-item
@@ -46,12 +51,12 @@
  *      since components.css mixes the two for historical reasons.
  *
  * RECIPE / EXTENDED_SELECTORS are the single source of truth. Drift
- * fails CI. Each documented exception is encoded inline (today: error
- * is special-cased in both the secondary recipe entry and several
- * card/alert selectors because `error` didn't restructure on
- * 2026-05-27 — its softest surface is still `error-lighter`, not
- * `error-lightest`). Adding a new exception requires editing this
- * file — the change is deliberate and shows up in code review.
+ * fails CI. With the 2026-05-28 error-ladder normalization, all five
+ * intents now follow the uniform `<intent>-lightest` soft-bg pattern;
+ * the previous `error-lighter` exception in the secondary recipe and
+ * the alert / card selectors is gone. Adding a new exception requires
+ * editing this file — the change is deliberate and shows up in code
+ * review.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
@@ -79,11 +84,10 @@ interface Expectation {
 /**
  * The single source of truth for the semantic-intent recipe.
  *
- * Secondary  — bg: `<intent>-lightest` for info/success/warning,
- *              `error-lighter` (error didn't restructure in the
- *              2026-05-27 shade-ladder pass), `base-lightest` for
- *              neutral; text: darkest available shade that hits AA
- *              on the bg (info/error: `-dark`; success/warning:
+ * Secondary  — bg: `<intent>-lightest` (all five intents follow the
+ *              uniform pattern as of the 2026-05-28 error-ladder
+ *              normalization); text: darkest available shade that hits
+ *              AA on the bg (info/error: `-dark`; success/warning:
  *              `-darkest`; neutral: `base-darker`).
  *
  * Primary    — bg: `<intent>-dark` (error: `error-DEFAULT` for brand
@@ -100,7 +104,7 @@ export const RECIPE: Record<Emphasis, Partial<Record<Intent, Expectation>>> = {
     info:    { bg: '--civ-color-info-lightest',    text: '--civ-color-info-dark' },
     success: { bg: '--civ-color-success-lightest', text: '--civ-color-success-darkest' },
     warning: { bg: '--civ-color-warning-lightest', text: '--civ-color-warning-darkest' },
-    error:   { bg: '--civ-color-error-lighter',    text: '--civ-color-error-dark' },
+    error:   { bg: '--civ-color-error-lightest',   text: '--civ-color-error-dark' },
     neutral: { bg: '--civ-color-base-lightest',    text: '--civ-color-base-darker' },
   },
   primary: {
@@ -144,9 +148,9 @@ const SUPPORTED: Record<Component, ReadonlySet<Emphasis>> = {
  * utility form; the other selectors use plain var).
  *
  * Notes per family:
- * - civ-alert--style-secondary uses `*-lightest` for info / warning /
- *   success / neutral, `error-lighter` for error (didn't restructure).
- *   Text colours on these rules are set by the separate
+ * - civ-alert--style-secondary uses `*-lightest` for every intent
+ *   (uniform after the 2026-05-28 error-ladder normalization). Text
+ *   colours on these rules are set by the separate
  *   `.civ-alert--style-secondary .civ-alert__heading|__body` rules
  *   (always `base-darkest`) — not at restructure risk, not gated here.
  * - civ-card categorical secondary mirrors the semantic mapping:
@@ -168,13 +172,13 @@ export const EXTENDED_SELECTORS: ReadonlyArray<{
   { selector: '.civ-alert--style-secondary.civ-alert--info',    bg: 'info-lightest' },
   { selector: '.civ-alert--style-secondary.civ-alert--warning', bg: 'warning-lightest' },
   { selector: '.civ-alert--style-secondary.civ-alert--success', bg: 'success-lightest' },
-  { selector: '.civ-alert--style-secondary.civ-alert--error',   bg: 'error-lighter' },
+  { selector: '.civ-alert--style-secondary.civ-alert--error',   bg: 'error-lightest' },
   { selector: '.civ-alert--style-secondary.civ-alert--neutral', bg: 'base-lightest' },
 
   // ── civ-card categorical secondary (light tint) ─────────────────
   { selector: '.civ-card--blue',   bg: 'primary-lightest',     text: 'primary-dark' },
   { selector: '.civ-card--teal',   bg: 'info-lightest',        text: 'info-dark' },
-  { selector: '.civ-card--red',    bg: 'error-lighter',        text: 'error-dark' },
+  { selector: '.civ-card--red',    bg: 'error-lightest',       text: 'error-dark' },
   { selector: '.civ-card--green',  bg: 'success-lightest',     text: 'success-darkest' },
   { selector: '.civ-card--yellow', bg: 'warning-lightest',     text: 'warning-darkest' },
   { selector: '.civ-card--orange', bg: 'accent-warm-lightest', text: 'accent-warm-darkest' },

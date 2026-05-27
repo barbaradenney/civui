@@ -78,7 +78,8 @@ const DARK_TOKENS = path.join(REPO_ROOT, 'packages/tokens/src/color-dark.tokens.
  *
  * Categories:
  *   1. Recipe — badge/count secondary (lightest bg + darkest/dark text;
- *      error uses `lighter` bg since it didn't restructure)
+ *      all five intents follow the uniform pattern as of the
+ *      2026-05-28 error-ladder normalization)
  *   2. Recipe — badge/count primary (dark bg + white text)
  *   3. Recipe — count tertiary (transparent bg ≈ surface + dark text)
  *   4. Body text on surface
@@ -101,13 +102,13 @@ interface ContrastPair {
 }
 
 export const PAIRS: ContrastPair[] = [
-  // 1. Recipe — secondary (lightest bg + dark text). Error didn't
-  //    restructure in the 2026-05-27 shade-ladder pass; its softest
-  //    bg is still `error.lighter`.
+  // 1. Recipe — secondary (lightest bg + dark text). All five intents
+  //    follow the uniform pattern as of the 2026-05-28 error-ladder
+  //    normalization.
   { name: 'badge/count secondary info',    bg: 'info.lightest',    text: 'info.dark',       minRatio: 4.5 },
   { name: 'badge/count secondary success', bg: 'success.lightest', text: 'success.darkest', minRatio: 4.5 },
   { name: 'badge/count secondary warning', bg: 'warning.lightest', text: 'warning.darkest', minRatio: 4.5 },
-  { name: 'badge/count secondary error',   bg: 'error.lighter',    text: 'error.dark',      minRatio: 4.5 },
+  { name: 'badge/count secondary error',   bg: 'error.lightest',   text: 'error.dark',      minRatio: 4.5 },
   { name: 'badge/count secondary neutral', bg: 'base.lightest',    text: 'base.darker',     minRatio: 4.5 },
 
   // 2. Recipe — primary (dark bg + white text)
@@ -149,8 +150,9 @@ export const PAIRS: ContrastPair[] = [
   { name: 'civ-text-warning-darkest on surface', bg: 'white.DEFAULT', text: 'warning.darkest', minRatio: 4.5 },
   { name: 'civ-text-success-darkest on surface', bg: 'white.DEFAULT', text: 'success.darkest', minRatio: 4.5 },
 
-  // 7c. The new mid-tone `*-lighter` shades (introduced 2026-05-27)
-  //     fail AA when paired with the same family's `-dark` text
+  // 7c. The mid-tone `*-lighter` shades (introduced 2026-05-27 for
+  //     warning/success/info, extended to error on 2026-05-28) fail
+  //     AA when paired with the same family's `-dark` text
   //     (success-lighter + success-dark = 3.32, warning-lighter +
   //     warning-dark = 3.92). Document the safe pairing — `-lighter`
   //     bg pairs with `-darkest` text, not `-dark`. These pairs
@@ -158,6 +160,13 @@ export const PAIRS: ContrastPair[] = [
   { name: 'success-lighter bg + success-darkest text', bg: 'success.lighter', text: 'success.darkest', minRatio: 4.5 },
   { name: 'warning-lighter bg + warning-darkest text', bg: 'warning.lighter', text: 'warning.darkest', minRatio: 4.5 },
   { name: 'info-lighter bg + info-darkest text',       bg: 'info.lighter',    text: 'info.darkest',    minRatio: 4.5 },
+  { name: 'error-lighter bg + error-darkest text',     bg: 'error.lighter',   text: 'error.darkest',   minRatio: 4.5 },
+
+  // 7d. error-lighter is also consumed in real CSS as the hover step
+  //     in the danger-button gradient `lightest (rest) → lighter
+  //     (hover) → light (active)`. The hover text color is
+  //     `error-dark`, so this pair must also clear AA.
+  { name: 'error-lighter bg + error-dark text (danger hover)', bg: 'error.lighter', text: 'error.dark', minRatio: 4.5 },
 
   // 8. Link-card variant rendered combinations — codify the bg + text
   //    pair the variant paints. The eyebrow + heading + description

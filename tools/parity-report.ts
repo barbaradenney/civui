@@ -646,7 +646,7 @@ function generateReport(): string {
   .component-header:hover { background: #e8e8e8; }
   .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
   .badge.yes { background: #ecf3ec; color: #4d8055; }
-  .badge.no { background: #f4e3db; color: #8b0a03; }
+  .badge.no { background: #faf0f0; color: #8b0a03; }
   .component-body { display: none; padding: 0; }
   .component-body.open { display: block; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }

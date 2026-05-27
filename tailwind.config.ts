@@ -1,3 +1,13 @@
+/**
+ * Root Tailwind config — drives Storybook and the component-package
+ * compile of `packages/core/src/styles/components.css`.
+ *
+ * The docs site at `apps/civ-site/tailwind.config.ts` imports this
+ * config and overrides `content` + `plugins`. Theme changes (colors,
+ * spacing, typography, etc.) made HERE automatically reach the docs
+ * site too. Don't duplicate theme keys into the app config — that's
+ * the duplication the 2026-05-28 dedupe deliberately removed.
+ */
 import type { Config } from 'tailwindcss';
 
 const config: Config = {

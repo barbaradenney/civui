@@ -33,7 +33,7 @@ All Tailwind utilities must use the `civ-` prefix:
 
 Each color has shades: `lightest`, `lighter`, `light`, default, `vivid` (primary only), `dark`, `darker`.
 
-Examples: `civ-bg-error-lighter`, `civ-text-primary-dark`, `civ-border-base-light`.
+Examples: `civ-bg-error-lightest`, `civ-text-primary-dark`, `civ-border-base-light`.
 
 ## Focus Ring
 

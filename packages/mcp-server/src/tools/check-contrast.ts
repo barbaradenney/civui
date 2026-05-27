@@ -1,76 +1,72 @@
 /**
  * check_contrast tool — WCAG 2.1 contrast ratio checker.
  * Resolves CivUI design token names or hex colors and computes contrast ratios.
+ *
+ * Token resolution
+ * ----------------
+ * Light + dark palettes are imported from `@civui/tokens` (the generated
+ * `dist/js/tokens.js`) so there is no hand-maintained mirror — the
+ * canonical JSON is the only source. The flattener walks `tokens.color`
+ * to produce `{ 'primary-lightest': '#d9e8f6', 'primary': '#005ea2',
+ * 'accent-cool-lightest': '#e1f3f8', 'tag-blue-bg': '#1a4480', … }`.
+ * Trailing `-DEFAULT` segments collapse to the bare family name so
+ * `civ-text-primary` resolves to the DEFAULT shade.
+ *
+ * Dark-mode resolution opts in via the `mode` parameter on
+ * `checkContrast()` (and the MCP tool surface). The dark palette only
+ * defines color tokens (per `color-dark.tokens.json` scope), so the
+ * flattener for `darkTokens` produces the same shape and falls back to
+ * the light value for any path the dark JSON doesn't define — that
+ * matches the rendered CSS cascade behavior (a missing dark override
+ * inherits the light variable).
  */
+import { tokens, darkTokens } from '@civui/tokens';
 
-/** Light-mode token colors from color.tokens.json. */
-const TOKEN_COLORS: Record<string, string> = {
-  // Primary
-  'primary-lightest': '#d9e8f6',
-  'primary-lighter': '#73b3e7',
-  'primary-light': '#2378c3',
-  'primary': '#005ea2',
-  'primary-vivid': '#0050d8',
-  'primary-dark': '#1a4480',
-  'primary-darker': '#162e51',
+type ColorTree = { [k: string]: string | ColorTree };
 
-  // Error
-  'error-lightest': '#faf0f0',
-  'error-lighter': '#f4e3db',
-  'error-light': '#d63e04',
-  'error': '#b50909',
-  'error-dark': '#8b0a03',
-  'error-darkest': '#5a0602',
+/**
+ * Walk a `color` token tree and flatten to a `{ 'family-shade': hex }`
+ * map. Collapses `DEFAULT` to the bare family name (`primary` instead
+ * of `primary-DEFAULT`) so users typing `civ-text-primary` resolve
+ * cleanly. Three-level paths (`accent.cool.lightest`,
+ * `tag.blue.bg`) recurse through the same code path.
+ */
+export function flattenColors(tree: ColorTree, prefix = ''): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(tree)) {
+    if (typeof value === 'string') {
+      if (key === 'DEFAULT') {
+        // Bare family alias — `color.primary.DEFAULT` → `primary`.
+        // If `prefix` is empty here we're flattening a value that has
+        // no parent path (shouldn't happen for the color tree), skip.
+        if (prefix) out[prefix] = value;
+      } else {
+        out[prefix ? `${prefix}-${key}` : key] = value;
+      }
+    } else if (value && typeof value === 'object') {
+      const newPrefix = prefix ? `${prefix}-${key}` : key;
+      Object.assign(out, flattenColors(value, newPrefix));
+    }
+  }
+  return out;
+}
 
-  // Warning
-  'warning-lightest': '#faf3d1',
-  'warning-lighter': '#fcedb7',
-  'warning-light': '#fee685',
-  'warning': '#e5a000',
-  'warning-dark': '#936f38',
-  'warning-darkest': '#6b4c11',
+const LIGHT_COLORS: Record<string, string> = flattenColors(
+  (tokens.color ?? {}) as ColorTree,
+);
 
-  // Success
-  'success-lightest': '#ecf3ec',
-  'success-lighter': '#b8e6b8',
-  'success-light': '#70e17b',
-  'success': '#00a91c',
-  'success-dark': '#4d8055',
-  'success-darkest': '#1a4d1a',
-
-  // Info
-  'info-lightest': '#e7f6f8',
-  'info-lighter': '#c5ecf2',
-  'info-light': '#99deea',
-  'info': '#00bde3',
-  'info-dark': '#2e6276',
-  'info-darkest': '#1d4554',
-
-  // Base (neutrals)
-  'base-lightest': '#f0f0f0',
-  'base-lighter': '#dfe1e2',
-  'base-light': '#a9aeb1',
-  'base': '#71767a',
-  'base-dark': '#565c65',
-  'base-darker': '#3d4551',
-  'base-darkest': '#1b1b1b',
-
-  // White & black
-  'white': '#ffffff',
-  'black': '#000000',
-
-  // Accent - cool
-  'accent-cool-lightest': '#e1f3f8',
-  'accent-cool-light': '#97d4ea',
-  'accent-cool': '#00bde3',
-  'accent-cool-dark': '#28a0cb',
-
-  // Accent - warm
-  'accent-warm-lightest': '#f2e4d4',
-  'accent-warm-light': '#ffbc78',
-  'accent-warm': '#fa9441',
-  'accent-warm-dark': '#c05600',
+/**
+ * Dark palette only defines color tokens; for any path the dark JSON
+ * doesn't override (none today since validateDarkTokenParity in
+ * `packages/tokens/build/build-tokens.js` enforces 1:1 parity), fall
+ * back to the light value. This mirrors the rendered CSS cascade.
+ */
+const DARK_COLORS: Record<string, string> = {
+  ...LIGHT_COLORS,
+  ...flattenColors((darkTokens.color ?? {}) as ColorTree),
 };
+
+export type ContrastMode = 'light' | 'dark';
 
 export interface ContrastResult {
   foreground: string;
@@ -80,6 +76,7 @@ export interface ContrastResult {
   normalText: { aa: boolean; aaa: boolean };
   largeText: { aa: boolean; aaa: boolean };
   wcag21Level: 'AAA' | 'AA' | 'AA Large' | 'Fail';
+  mode: ContrastMode;
 }
 
 /** Parse a 3- or 6-digit hex color to [r, g, b] in 0–255. */
@@ -121,7 +118,7 @@ export function contrastRatio(l1: number, l2: number): number {
  * Accepts hex (`#005ea2`) or a token name (`primary`, `text-primary`, `civ-bg-error-light`).
  * Strips common Tailwind prefixes: `text-`, `bg-`, `civ-text-`, `civ-bg-`, `border-`, `civ-border-`.
  */
-export function resolveColor(input: string): string {
+export function resolveColor(input: string, mode: ContrastMode = 'light'): string {
   const trimmed = input.trim();
 
   // Already a hex color
@@ -136,10 +133,12 @@ export function resolveColor(input: string): string {
     }
   }
 
-  const hex = TOKEN_COLORS[token];
+  const palette = mode === 'dark' ? DARK_COLORS : LIGHT_COLORS;
+  const hex = palette[token];
   if (!hex) {
     throw new Error(
-      `Unknown color token: "${input}". Available tokens: ${Object.keys(TOKEN_COLORS).join(', ')}`,
+      `Unknown color token: "${input}". Available tokens (${mode} mode): ` +
+        Object.keys(palette).sort().join(', '),
     );
   }
   return hex;
@@ -147,10 +146,19 @@ export function resolveColor(input: string): string {
 
 /**
  * Check WCAG 2.1 contrast ratio between foreground and background colors.
+ *
+ * @param mode  `'light'` (default) resolves tokens against the light
+ *              palette; `'dark'` resolves against the dark palette so
+ *              consumers can validate the rendered contrast a dark-mode
+ *              user sees. Hex inputs are unaffected by the mode flag.
  */
-export function checkContrast(foreground: string, background: string): ContrastResult {
-  const fgHex = resolveColor(foreground);
-  const bgHex = resolveColor(background);
+export function checkContrast(
+  foreground: string,
+  background: string,
+  mode: ContrastMode = 'light',
+): ContrastResult {
+  const fgHex = resolveColor(foreground, mode);
+  const bgHex = resolveColor(background, mode);
 
   const [fgR, fgG, fgB] = parseHex(fgHex);
   const [bgR, bgG, bgB] = parseHex(bgHex);
@@ -185,5 +193,6 @@ export function checkContrast(foreground: string, background: string): ContrastR
     normalText: { aa: normalAA, aaa: normalAAA },
     largeText: { aa: largeAA, aaa: largeAAA },
     wcag21Level,
+    mode,
   };
 }

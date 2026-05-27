@@ -260,15 +260,18 @@ describe('EXTENDED_SELECTORS', () => {
     }
   });
 
-  it('alert secondary error uses error-lighter (error didn\'t restructure on 2026-05-27)', () => {
-    // Documented exception — error's softest pale surface is still
-    // `error-lighter`, not `error-lightest`. If this flips, the
-    // ladder symmetry has been completed; update both the entry and
-    // audit-debt's "Asymmetric `error` ladder" follow-up.
+  it('alert secondary error uses error-lightest (uniform after 2026-05-28 normalization)', () => {
+    // All five intents now follow the uniform `<intent>-lightest`
+    // soft-bg pattern. The 2026-05-28 error-ladder normalization
+    // migrated form-error-summary, alert / badge / count secondary,
+    // and card-red from `error-lighter` (peach) to `error-lightest`
+    // (pale pink-white). The freed `error-lighter` slot was retuned
+    // to a mid-pale red-pink (#f4caca) and now serves as the
+    // danger-button hover mid-tone.
     const entry = EXTENDED_SELECTORS.find(
       (e) => e.selector === '.civ-alert--style-secondary.civ-alert--error',
     );
-    expect(entry?.bg).toBe('error-lighter');
+    expect(entry?.bg).toBe('error-lightest');
   });
 
   it('covers every card categorical color', () => {
@@ -281,9 +284,9 @@ describe('EXTENDED_SELECTORS', () => {
     }
   });
 
-  it('card red maps through error-lighter (categorical mirror of the alert exception)', () => {
+  it('card red maps through error-lightest (categorical mirror of the uniform pattern)', () => {
     const entry = EXTENDED_SELECTORS.find((e) => e.selector === '.civ-card--red');
-    expect(entry?.bg).toBe('error-lighter');
+    expect(entry?.bg).toBe('error-lightest');
   });
 
   it('covers all five timeline-item intent dots', () => {

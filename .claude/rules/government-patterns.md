@@ -43,7 +43,7 @@ globs:
 
 ## Tailwind rules
 - All utilities MUST use `civ-` prefix: `civ-p-4`, `civ-text-error`.
-- Use semantic color tokens: `civ-text-primary`, `civ-bg-error-lighter`.
+- Use semantic color tokens: `civ-text-primary`, `civ-bg-error-lightest`.
 - Use logical properties for RTL safety: `civ-border-s-4`, `civ-rounded-s`, `civ-me-2`.
 - Use `.civ-input` class for standard input styling (includes border, padding, full-width).
 

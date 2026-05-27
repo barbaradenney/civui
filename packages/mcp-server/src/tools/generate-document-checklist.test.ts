@@ -101,7 +101,7 @@ describe('generateDocumentChecklist', () => {
     const photoIdStart = result.html.indexOf('data-civ-doc-item="photo-id"');
     const photoIdEnd = result.html.indexOf('</li>', photoIdStart);
     const photoIdBlock = result.html.substring(photoIdStart, photoIdEnd);
-    expect(photoIdBlock).toContain('civ-bg-error-lighter');
+    expect(photoIdBlock).toContain('civ-bg-error-lightest');
     expect(photoIdBlock).toContain('>Required</span>');
   });
 

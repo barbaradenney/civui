@@ -66,7 +66,7 @@ function buildHtml(config: ResolvedOptions): string {
 
   // Resume banner
   parts.push(
-    `<div data-civ-resume-banner class="civ-p-4 civ-bg-info-lighter civ-border civ-rounded civ-mb-4" hidden role="alert">`,
+    `<div data-civ-resume-banner class="civ-p-4 civ-bg-info-lightest civ-border civ-rounded civ-mb-4" hidden role="alert">`,
     `  <p>You have a saved draft from <span data-civ-saved-date></span>.</p>`,
     `  <div class="civ-flex civ-gap-2 civ-mt-2">`,
     `    <button data-civ-resume class="civ-px-3 civ-py-1 civ-rounded civ-bg-primary civ-text-white civ-text-sm">Resume where you left off</button>`,

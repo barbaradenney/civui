@@ -17,30 +17,35 @@
       "lighter": { "$value": "#f4e3db" },
       "light": { "$value": "#d63e04" },
       "DEFAULT": { "$value": "#b50909" },
-      "dark": { "$value": "#8b0a03" }
+      "dark": { "$value": "#8b0a03" },
+      "darkest": { "$value": "#5a0602", "$description": "Deeper red — AAA text + high-emphasis hero" }
     },
     "warning": {
       "$type": "color",
-      "lighter": { "$value": "#faf3d1" },
+      "lightest": { "$value": "#faf3d1", "$description": "Quietest pale-cream surface (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#fcedb7", "$description": "Mid-pale yellow — stronger soft bg between lightest and light" },
       "light": { "$value": "#fee685" },
       "DEFAULT": { "$value": "#e5a000" },
       "dark": { "$value": "#936f38" },
-      "darkest": { "$value": "#6b4c11", "$description": "Dark amber — AA text on warning-lighter" }
+      "darkest": { "$value": "#6b4c11", "$description": "Dark amber — AA text on warning-lightest" }
     },
     "success": {
       "$type": "color",
-      "lighter": { "$value": "#ecf3ec" },
+      "lightest": { "$value": "#ecf3ec", "$description": "Quietest pale-mint surface (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#b8e6b8", "$description": "Mid-pale green — stronger soft bg between lightest and light" },
       "light": { "$value": "#70e17b" },
       "DEFAULT": { "$value": "#00a91c" },
       "dark": { "$value": "#4d8055" },
-      "darkest": { "$value": "#1a4d1a", "$description": "Dark green — AA text on success-lighter" }
+      "darkest": { "$value": "#1a4d1a", "$description": "Dark green — AA text on success-lightest" }
     },
     "info": {
       "$type": "color",
-      "lighter": { "$value": "#e7f6f8" },
+      "lightest": { "$value": "#e7f6f8", "$description": "Quietest pale-cyan surface (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#c5ecf2", "$description": "Mid-pale cyan — stronger soft bg between lightest and light" },
       "light": { "$value": "#99deea" },
       "DEFAULT": { "$value": "#00bde3" },
-      "dark": { "$value": "#2e6276" }
+      "dark": { "$value": "#2e6276" },
+      "darkest": { "$value": "#1d4554", "$description": "Deeper teal — AAA text on info-lightest" }
     },
     "purple": {
       "$type": "color",

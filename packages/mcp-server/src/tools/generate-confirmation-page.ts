@@ -58,7 +58,7 @@ export function generateConfirmationPage(
 
   // --- Success banner ---
   parts.push(
-    '  <div class="civ-bg-success-lighter civ-border-s-4 civ-border-success civ-p-4 civ-mb-6" role="status">',
+    '  <div class="civ-bg-success-lightest civ-border-s-4 civ-border-success civ-p-4 civ-mb-6" role="status">',
   );
   parts.push('    <h2>Your form has been submitted</h2>');
   parts.push(

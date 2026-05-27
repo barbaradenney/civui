@@ -68,7 +68,7 @@ export function generateAmendmentFlow(
 
     if (isChanged) {
       htmlParts.push(
-        `      <tr class="civ-bg-warning-lighter">`,
+        `      <tr class="civ-bg-warning-lightest">`,
         `        <td>${escapeHtml(field.label)}</td>`,
         `        <td><del>${escapeHtml(original)}</del></td>`,
         `        <td><ins>${escapeHtml(amended)}</ins></td>`,
@@ -96,7 +96,7 @@ export function generateAmendmentFlow(
   if (requiresApproval) {
     features.push('requires-approval');
     htmlParts.push(
-      `  <div data-civ-amendment-approval class="civ-mt-4 civ-p-4 civ-bg-info-lighter civ-rounded" role="note">`,
+      `  <div data-civ-amendment-approval class="civ-mt-4 civ-p-4 civ-bg-info-lightest civ-rounded" role="note">`,
       `    <p>This amendment requires approval before taking effect.</p>`,
       `  </div>`,
     );

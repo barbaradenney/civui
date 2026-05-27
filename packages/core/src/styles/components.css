@@ -4087,10 +4087,10 @@
   .civ-alert--style-secondary .civ-alert__heading { color: var(--civ-color-base-darkest); }
   .civ-alert--style-secondary .civ-alert__body { color: var(--civ-color-base-darkest); }
 
-  .civ-alert--style-secondary.civ-alert--info { @apply civ-bg-info-lighter; }
-  .civ-alert--style-secondary.civ-alert--warning { @apply civ-bg-warning-lighter; }
+  .civ-alert--style-secondary.civ-alert--info { @apply civ-bg-info-lightest; }
+  .civ-alert--style-secondary.civ-alert--warning { @apply civ-bg-warning-lightest; }
   .civ-alert--style-secondary.civ-alert--error { @apply civ-bg-error-lighter; }
-  .civ-alert--style-secondary.civ-alert--success { @apply civ-bg-success-lighter; }
+  .civ-alert--style-secondary.civ-alert--success { @apply civ-bg-success-lightest; }
   .civ-alert--style-secondary.civ-alert--neutral { background-color: var(--civ-color-base-lightest); }
 
   /* ── Alert: Tertiary (white bg, border only) ───────────────── */
@@ -5140,15 +5140,15 @@
      shade for contrast against the dot. */
   civ-timeline-item[intent='success'] .civ-timeline-item__dot {
     background-color: var(--civ-color-success-DEFAULT);
-    color: var(--civ-color-success-lighter);
+    color: var(--civ-color-success-lightest);
   }
   civ-timeline-item[intent='info'] .civ-timeline-item__dot {
     background-color: var(--civ-color-info-DEFAULT);
-    color: var(--civ-color-info-lighter);
+    color: var(--civ-color-info-lightest);
   }
   civ-timeline-item[intent='warning'] .civ-timeline-item__dot {
     background-color: var(--civ-color-warning-DEFAULT);
-    color: var(--civ-color-warning-lighter);
+    color: var(--civ-color-warning-lightest);
   }
   civ-timeline-item[intent='error'] .civ-timeline-item__dot {
     background-color: var(--civ-color-error-DEFAULT);
@@ -5305,7 +5305,7 @@
   /* Complete state — swap to a success-tinted background; the
      `check` icon rendered in the template fills the marker. */
   civ-process-list-item[state='complete'] .civ-process-list-item__marker {
-    background-color: var(--civ-color-success-lighter);
+    background-color: var(--civ-color-success-lightest);
     color: var(--civ-color-success-darkest);
   }
 
@@ -5515,17 +5515,17 @@
      Secondary — light tint background, dark text (default). */
 
   .civ-badge--style-secondary.civ-badge--info {
-    background-color: var(--civ-color-info-lighter);
+    background-color: var(--civ-color-info-lightest);
     color: var(--civ-color-info-dark);
   }
 
   .civ-badge--style-secondary.civ-badge--success {
-    background-color: var(--civ-color-success-lighter);
+    background-color: var(--civ-color-success-lightest);
     color: var(--civ-color-success-darkest);
   }
 
   .civ-badge--style-secondary.civ-badge--warning {
-    background-color: var(--civ-color-warning-lighter);
+    background-color: var(--civ-color-warning-lightest);
     color: var(--civ-color-warning-darkest);
   }
 
@@ -5652,15 +5652,15 @@
   }
 
   .civ-count--style-secondary.civ-count--info {
-    background-color: var(--civ-color-info-lighter);
+    background-color: var(--civ-color-info-lightest);
     color: var(--civ-color-info-dark);
   }
   .civ-count--style-secondary.civ-count--success {
-    background-color: var(--civ-color-success-lighter);
+    background-color: var(--civ-color-success-lightest);
     color: var(--civ-color-success-darkest);
   }
   .civ-count--style-secondary.civ-count--warning {
-    background-color: var(--civ-color-warning-lighter);
+    background-color: var(--civ-color-warning-lightest);
     color: var(--civ-color-warning-darkest);
   }
   .civ-count--style-secondary.civ-count--error {
@@ -6040,10 +6040,10 @@
 
   /* Card color variants — secondary (light tint) */
   .civ-card--blue { background-color: var(--civ-color-primary-lightest); color: var(--civ-color-primary-dark); border-color: transparent; }
-  .civ-card--teal { background-color: var(--civ-color-info-lighter); color: var(--civ-color-info-dark); border-color: transparent; }
+  .civ-card--teal { background-color: var(--civ-color-info-lightest); color: var(--civ-color-info-dark); border-color: transparent; }
   .civ-card--red { background-color: var(--civ-color-error-lighter); color: var(--civ-color-error-dark); border-color: transparent; }
-  .civ-card--green { background-color: var(--civ-color-success-lighter); color: var(--civ-color-success-darkest); border-color: transparent; }
-  .civ-card--yellow { background-color: var(--civ-color-warning-lighter); color: var(--civ-color-warning-darkest); border-color: transparent; }
+  .civ-card--green { background-color: var(--civ-color-success-lightest); color: var(--civ-color-success-darkest); border-color: transparent; }
+  .civ-card--yellow { background-color: var(--civ-color-warning-lightest); color: var(--civ-color-warning-darkest); border-color: transparent; }
   .civ-card--orange { background-color: var(--civ-color-accent-warm-lightest); color: var(--civ-color-accent-warm-darkest); border-color: transparent; }
   .civ-card--purple { background-color: var(--civ-color-purple-lightest); color: var(--civ-color-purple-dark); border-color: transparent; }
   .civ-card--gray { background-color: var(--civ-color-base-lightest); color: var(--civ-color-base-darker); border-color: transparent; }

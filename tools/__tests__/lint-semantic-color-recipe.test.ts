@@ -11,8 +11,10 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  bodyHasToken,
   classifySelector,
   extractVar,
+  EXTENDED_SELECTORS,
   RECIPE,
 } from '../lint-semantic-color-recipe.js';
 
@@ -194,5 +196,115 @@ describe('RECIPE completeness', () => {
     // someone shifted the recipe accidentally — investigate first.
     expect(RECIPE.primary.error?.bg).toBe('--civ-color-error-DEFAULT');
     expect(RECIPE.dot.error?.bg).toBe('--civ-color-error-DEFAULT');
+  });
+});
+
+describe('bodyHasToken', () => {
+  it('recognizes the CSS-var form for bg', () => {
+    expect(
+      bodyHasToken('background-color: var(--civ-color-info-lightest);', 'bg', 'info-lightest'),
+    ).toBe(true);
+  });
+
+  it('recognizes the CSS-var form for text', () => {
+    expect(
+      bodyHasToken('color: var(--civ-color-success-darkest);', 'text', 'success-darkest'),
+    ).toBe(true);
+  });
+
+  it('recognizes the @apply Tailwind-utility form for bg', () => {
+    expect(bodyHasToken('@apply civ-bg-warning-lightest;', 'bg', 'warning-lightest')).toBe(true);
+  });
+
+  it('recognizes the @apply Tailwind-utility form for text', () => {
+    expect(bodyHasToken('@apply civ-text-error-dark;', 'text', 'error-dark')).toBe(true);
+  });
+
+  it('does not match a different shade with the same prefix', () => {
+    // Regression guard: `civ-bg-info-light` must not match
+    // `info-lightest`, and `civ-bg-info-lightest` must not match
+    // `info-light`. Both are real Tailwind utilities and would
+    // produce different rendered colors.
+    expect(bodyHasToken('@apply civ-bg-info-light;', 'bg', 'info-lightest')).toBe(false);
+    expect(bodyHasToken('@apply civ-bg-info-lightest;', 'bg', 'info-light')).toBe(false);
+  });
+
+  it('does not match bg utility when checking for text (and vice versa)', () => {
+    expect(bodyHasToken('@apply civ-bg-info-lightest;', 'text', 'info-lightest')).toBe(false);
+    expect(bodyHasToken('@apply civ-text-info-dark;', 'bg', 'info-dark')).toBe(false);
+  });
+
+  it('does not match `color` shade inside `background-color: var(...)` (property anchor)', () => {
+    // The CSS-var path uses extractVar which has the property anchor.
+    // Asserting through bodyHasToken confirms the integration too.
+    expect(
+      bodyHasToken('background-color: var(--civ-color-info-dark);', 'text', 'info-dark'),
+    ).toBe(false);
+  });
+
+  it('returns false on an empty body', () => {
+    expect(bodyHasToken('', 'bg', 'info-lightest')).toBe(false);
+    expect(bodyHasToken('', 'text', 'info-dark')).toBe(false);
+  });
+});
+
+describe('EXTENDED_SELECTORS', () => {
+  it('covers every alert--style-secondary intent', () => {
+    const intents = ['info', 'success', 'warning', 'error', 'neutral'];
+    for (const intent of intents) {
+      const found = EXTENDED_SELECTORS.find(
+        (e) => e.selector === `.civ-alert--style-secondary.civ-alert--${intent}`,
+      );
+      expect(found, `alert secondary ${intent}`).toBeDefined();
+      expect(found?.bg, `alert secondary ${intent} bg`).toBeDefined();
+    }
+  });
+
+  it('alert secondary error uses error-lighter (error didn\'t restructure on 2026-05-27)', () => {
+    // Documented exception — error's softest pale surface is still
+    // `error-lighter`, not `error-lightest`. If this flips, the
+    // ladder symmetry has been completed; update both the entry and
+    // audit-debt's "Asymmetric `error` ladder" follow-up.
+    const entry = EXTENDED_SELECTORS.find(
+      (e) => e.selector === '.civ-alert--style-secondary.civ-alert--error',
+    );
+    expect(entry?.bg).toBe('error-lighter');
+  });
+
+  it('covers every card categorical color', () => {
+    const colors = ['blue', 'teal', 'red', 'green', 'yellow', 'orange', 'purple', 'gray'];
+    for (const color of colors) {
+      const found = EXTENDED_SELECTORS.find((e) => e.selector === `.civ-card--${color}`);
+      expect(found, `card ${color}`).toBeDefined();
+      expect(found?.bg, `card ${color} bg`).toBeDefined();
+      expect(found?.text, `card ${color} text`).toBeDefined();
+    }
+  });
+
+  it('card red maps through error-lighter (categorical mirror of the alert exception)', () => {
+    const entry = EXTENDED_SELECTORS.find((e) => e.selector === '.civ-card--red');
+    expect(entry?.bg).toBe('error-lighter');
+  });
+
+  it('covers all five timeline-item intent dots', () => {
+    const intents = ['info', 'success', 'warning', 'error', 'neutral'];
+    for (const intent of intents) {
+      const found = EXTENDED_SELECTORS.find((e) =>
+        e.selector.startsWith(`civ-timeline-item[intent='${intent}']`),
+      );
+      expect(found, `timeline ${intent}`).toBeDefined();
+      // Dot rules pair `*-DEFAULT` bg with `*-lightest` text icon.
+      expect(found?.bg, `timeline ${intent} bg`).toMatch(/-DEFAULT$/);
+      expect(found?.text, `timeline ${intent} text`).toMatch(/-lightest$/);
+    }
+  });
+
+  it('covers the process-list-item complete-state marker', () => {
+    const found = EXTENDED_SELECTORS.find(
+      (e) => e.selector.includes('civ-process-list-item') && e.selector.includes('complete'),
+    );
+    expect(found).toBeDefined();
+    expect(found?.bg).toBe('success-lightest');
+    expect(found?.text).toBe('success-darkest');
   });
 });

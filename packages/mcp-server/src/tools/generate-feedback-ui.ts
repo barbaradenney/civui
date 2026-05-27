@@ -67,7 +67,7 @@ export function generateFeedbackUi(
     const unresolved = existingComments.filter((c) => !c.resolved);
     if (unresolved.length > 0) {
       htmlParts.push(
-        `<div class="civ-p-4 civ-mb-4 civ-bg-warning-lighter civ-border civ-border-warning civ-rounded" role="alert">`,
+        `<div class="civ-p-4 civ-mb-4 civ-bg-warning-lightest civ-border civ-border-warning civ-rounded" role="alert">`,
         `  <p class="civ-font-bold">${unresolved.length} unresolved comment${unresolved.length === 1 ? '' : 's'}</p>`,
         `  <ul class="civ-mt-2 civ-list-disc civ-ps-6">`,
       );

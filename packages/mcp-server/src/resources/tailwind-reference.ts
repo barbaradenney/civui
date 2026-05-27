@@ -43,34 +43,42 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lighter\`).
 ### error
 | Shade | Light | Dark | Class examples |
 |-------|-------|------|----------------|
+| lightest | #faf0f0 | #3a1a1a | \`civ-bg-error-lightest\` |
 | lighter | #f4e3db | #4a2020 | \`civ-bg-error-lighter\` |
 | light | #d63e04 | #e87461 | \`civ-text-error-light\` |
 | DEFAULT | #b50909 | #f28b82 | \`civ-text-error\`, \`civ-border-error\` |
 | dark | #8b0a03 | #f5b7b1 | \`civ-text-error-dark\` |
+| darkest | #5a0602 | #fad5d0 | \`civ-text-error-darkest\` (AAA / hero) |
 
 ### warning
 | Shade | Light | Dark | Class examples |
 |-------|-------|------|----------------|
-| lighter | #faf3d1 | #4a3d1a | \`civ-bg-warning-lighter\` |
+| lightest | #faf3d1 | #4a3d1a | \`civ-bg-warning-lightest\` (softest surface) |
+| lighter | #fcedb7 | #8a6c2f | \`civ-bg-warning-lighter\` (mid-pale, stronger soft bg) |
 | light | #fee685 | #f5d576 | \`civ-text-warning-light\` |
 | DEFAULT | #e5a000 | #f5c542 | \`civ-text-warning\`, \`civ-bg-warning\` |
 | dark | #936f38 | #c9a24d | \`civ-text-warning-dark\` |
+| darkest | #6b4c11 | #f5d576 | \`civ-text-warning-darkest\` (AA text on lightest) |
 
 ### success
 | Shade | Light | Dark | Class examples |
 |-------|-------|------|----------------|
-| lighter | #ecf3ec | #1e3a20 | \`civ-bg-success-lighter\` |
+| lightest | #ecf3ec | #1e3a20 | \`civ-bg-success-lightest\` (softest surface) |
+| lighter | #b8e6b8 | #3d6e42 | \`civ-bg-success-lighter\` (mid-pale, stronger soft bg) |
 | light | #70e17b | #81d88a | \`civ-text-success-light\` |
 | DEFAULT | #00a91c | #5cb85c | \`civ-text-success\`, \`civ-bg-success\` |
 | dark | #4d8055 | #7ec97e | \`civ-text-success-dark\` |
+| darkest | #1a4d1a | #81d88a | \`civ-text-success-darkest\` (AA text on lightest) |
 
 ### info
 | Shade | Light | Dark | Class examples |
 |-------|-------|------|----------------|
-| lighter | #e7f6f8 | #1a3a40 | \`civ-bg-info-lighter\` |
+| lightest | #e7f6f8 | #1a3a40 | \`civ-bg-info-lightest\` (softest surface) |
+| lighter | #c5ecf2 | #2d5e6a | \`civ-bg-info-lighter\` (mid-pale, stronger soft bg) |
 | light | #99deea | #7dd3e0 | \`civ-text-info-light\` |
 | DEFAULT | #00bde3 | #4dd0e1 | \`civ-text-info\`, \`civ-bg-info\` |
 | dark | #2e6276 | #80deea | \`civ-text-info-dark\` |
+| darkest | #1d4554 | #7dd3e0 | \`civ-text-info-darkest\` (AAA / hero) |
 
 ### base
 | Shade | Light | Dark | Class examples |

@@ -35,21 +35,21 @@ Five intents represent **status**: the color carries meaning (this is an error /
 | Family | Light DEFAULT | Dark DEFAULT | Shades available |
 |---|---|---|---|
 | `primary` | `#005ea2` | `#73b3e7` | lightest, lighter, light, DEFAULT, vivid, dark, darker |
-| `error` | `#b50909` | `#f28b82` | lightest, lighter, light, DEFAULT, dark |
-| `warning` | `#e5a000` | `#f5c542` | lighter, light, DEFAULT, dark, darkest |
-| `success` | `#00a91c` | `#5cb85c` | lighter, light, DEFAULT, dark, darkest |
-| `info` | `#00bde3` | `#4dd0e1` | lighter, light, DEFAULT, dark |
+| `error` | `#b50909` | `#f28b82` | lightest, lighter, light, DEFAULT, dark, darkest |
+| `warning` | `#e5a000` | `#f5c542` | lightest, lighter, light, DEFAULT, dark, darkest |
+| `success` | `#00a91c` | `#5cb85c` | lightest, lighter, light, DEFAULT, dark, darkest |
+| `info` | `#00bde3` | `#4dd0e1` | lightest, lighter, light, DEFAULT, dark, darkest |
 | `accent.cool` | `#00bde3` | `#4dd0e1` | lightest, light, DEFAULT, dark |
 | `accent.warm` | `#fa9441` | `#f5a654` | lightest, light, DEFAULT, dark, darkest |
 
 **Shade-ladder irregularities to know about:**
 - `primary` has an extra `vivid` step between `DEFAULT` and `dark` — it's the USWDS "vivid" hue used sparingly for hero accents. Not consumed by any component today.
-- `warning` and `success` have a `darkest` shade NOT for surfaces but for **AA-compliant text on the lighter background** — `warning-darkest` (#6b4c11) hits 7.05:1 on `warning-lighter`; `warning-dark` (#936f38) hits 3.14:1, AA-large only.
-- `error` has no `darker`/`darkest`. `error-dark` is the bottom of the ladder; the recipe uses it for AA text on `error-lighter`.
-- `info` has no `lightest` or `darker`/`darkest`. `info-dark` carries the AA text role.
+- `warning`, `success`, `info` were restructured on 2026-05-27: what used to be called `lighter` (the softest pale surface) is now `lightest`, and a new mid-pale `lighter` value sits between `lightest` and `light`. The new `darkest` shade for `info` (#1d4554) and `error` (#5a0602) provides AAA-level text contrast and high-emphasis hero typography.
+- `warning` and `success` carry a `darkest` shade NOT for surfaces but for **AA-compliant text on the `lightest` background** — `warning-darkest` (#6b4c11) hits 7.05:1 on `warning-lightest`; `warning-dark` (#936f38) hits 3.14:1, AA-large only.
+- `error` did NOT restructure — its softest surface is still `error-lighter` (the recipe lint references it that way). `error-darkest` is the new AAA text/hero shade.
 - `accent.cool` lacks `lighter` and `darkest` — it's a sparingly-used family.
 
-These irregularities are captured by the `lint:color-classes` lint: a typo like `civ-text-info-darkest` fails because no token resolves.
+These irregularities are captured by the `lint:color-classes` lint: a typo like `civ-text-accent-cool-darkest` fails because no token resolves.
 
 ### Categorical color families (`tag-*`)
 
@@ -191,7 +191,7 @@ When a user enables Windows High Contrast Mode, `@media (forced-colors: active)`
 
 This produces three failure modes in CivUI today:
 
-1. **Background-tinted surfaces lose their identity.** A `civ-bg-warning-lighter` callout becomes a plain `Canvas` rectangle — indistinguishable from a default container. The only way to preserve it is to switch from `background-color` to `background` (which forced-colors leaves alone) OR use a system-color fallback inside the `@media (forced-colors: active)` block.
+1. **Background-tinted surfaces lose their identity.** A `civ-bg-warning-lightest` callout becomes a plain `Canvas` rectangle — indistinguishable from a default container. The only way to preserve it is to switch from `background-color` to `background` (which forced-colors leaves alone) OR use a system-color fallback inside the `@media (forced-colors: active)` block.
 
 2. **Focus indicators built on box-shadow disappear.** CivUI's focus ring uses `box-shadow` for the yellow halo + dark band. Forced-colors strips both. The current rule on `.civ-focus-ring` (civ.css:321) drops the transparent outline so the system Highlight color fills the focus shape — that's the GOV.UK pattern and it works.
 
@@ -243,7 +243,7 @@ Government forms get printed. `civ.css:202–233` defines the current print rule
 **What's NOT covered in print today:**
 
 - **Status colors don't translate.** `civ-alert--error` renders with `error-lighter` bg + `error-dark` text on screen. In print, the bg disappears (background-printing is off by default in most browsers) and the text prints in red — which is **invisible on a B&W printer** (red ink renders as light gray, below readability). The status meaning is lost on the printed page unless the alert also has the icon + "Error:" prefix (which it does — but the user pays for the icon being a colored SVG that loses its color).
-- **Semantic intent backgrounds don't print.** Same issue — `civ-bg-warning-lighter` callouts vanish in print.
+- **Semantic intent backgrounds don't print.** Same issue — `civ-bg-warning-lightest` callouts vanish in print.
 - **Links lose their underline distinction from body text.** Underline is preserved automatically by browsers, so this is fine.
 
 **Recommended fixes:**
@@ -273,7 +273,7 @@ Document these so future authors don't reflexively paste them in:
 - **Gray text on body content.** `civ-text-base`, `civ-text-base-dark`, `civ-text-base-light`, `civ-text-muted` on `<p>` paragraphs violates the visual-hierarchy rule. Use font size + weight instead. Caught by `lint:muted-body-text`.
 - **Color as the sole indicator of status.** Every status surface must also carry an icon, a text label, or a position cue. Caught by code review (no lint covers this; the design discipline is enforced by component API — `civ-alert`, `civ-notice`, `civ-badge`, `civ-count` all force a label or icon when `intent` is set).
 - **`civ-text-success` on body text.** `success-DEFAULT` is 3.14:1 on white — fails AA for body sizes. Use `civ-text-success-dark` (4.63:1) when status text needs to be readable at body sizes. The lint should warn on this — recommended.
-- **`civ-text-warning` on body text.** `warning-DEFAULT` (#e5a000) is 1.84:1 on white — fails everything including non-text contrast. Only ever use `warning-darkest` (`warning-darkest` on `warning-lighter` background per recipe) for status text.
+- **`civ-text-warning` on body text.** `warning-DEFAULT` (#e5a000) is 1.84:1 on white — fails everything including non-text contrast. Only ever use `warning-darkest` (`warning-darkest` on `warning-lightest` background per recipe) for status text.
 - **`{family}-dark + white` substituted for the tag-color pair.** Breaks the dark-mode flip. Use `var(--civ-color-tag-{color}-bg)` + `var(--civ-color-tag-{color}-text)`.
 - **`background-color: <hardcoded-hex>` anywhere in component CSS.** Use a token. Defensive `var(…, #fallback)` is acceptable only where the token may not be loaded yet (skeleton-shimmer animations, print mode).
 - **`color: red` / `color: green` / `color: orange`** in inline styles or stories. Use semantic intent tokens. (Light-mode `red` reads as `#ff0000` which is 4.0:1 on white — passes large-text only.)
@@ -308,11 +308,12 @@ These are proposed work items, ordered by leverage. None are committed yet; each
 6. **Dark-mode recipe lint** — extend `lint:semantic-color-recipe` to validate the dark palette pairs too. Today only the light palette is gated. ~40 LOC.
 7. **Print intent preservation** — add `@media print` rules that force semantic-intent text to black + add a thin black border to intent containers (`civ-alert`, `civ-notice`, `civ-callout`). Intent stays conveyed via icon + text + container outline. ~25 LOC.
 8. **`civ-text-success` / `civ-text-warning` on body — lint warning** — extend `lint:muted-body-text` (or a sibling lint `lint:status-text-contrast`) to flag bare `civ-text-success` and `civ-text-warning` on `<p>` body text and prompt the author to use `-dark` / `-darkest` shades instead. ~30 LOC.
-9. ~~**Color-blindness CVD pass on `civ-badge--dot`**~~ — shipped 2026-05-27. `civ-badge` now fires a per-instance `devWarn` when `dot=true && intent !== 'neutral' && !label` — the canonical color-alone failure mode where ~1.5% of users (combined protanopia + deuteranopia) can't distinguish red-vs-green or amber-vs-green dots at this size. The warning suggests two recoveries: set `label` (becomes `aria-label` + adds `role="status"`, surfacing the meaning to screen readers AND CVD users via the visible-on-hover tooltip in some browsers) or drop the intent for a presence-only marker. Per-instance dedup via `_warnedDotIntentNoLabel` field — fires once per badge, not session-globally, so multiple buggy badges each surface. JSDoc class doc + the badge docs page Accessibility section updated to call out the failure mode. 6 new tests in `civ-badge.test.ts` cover all four branches of the safeguard (warn on intent-without-label, no warn for labelled / neutral / text badge, single-fire dedup, per-instance independence).
-10. **Categorical color-blindness simulation in Storybook** — add a Foundations/Colors story that renders each intent + tag color through a CSS filter approximating protanopia / deuteranopia (`filter: url(#protanopia)` with an inline SVG filter definition). Designers see at a glance which colors collapse together. Visual-only, no test enforcement.
-11. **Hardcoded-hex lint** — `pnpm lint:hardcoded-hex` that fails on any bare hex literal in `components.css` / `civ.css` NOT inside a `var(…, #fallback)` form. Low priority (discipline already followed) but useful as a forward-looking gate.
-12. **Document a contrast playbook** — short doc on how to MEASURE contrast when picking new colors (the inline math the audit used). Lives at `apps/docs/docs/foundations/contrast.md`.
-13. **Brand-palette extension point** — captured in this document for when a client requires it. Not a current ship item.
+9. ~~**Shade-ladder restructure for warning / success / info, plus `darkest` for info / error**~~ — shipped 2026-05-27. The softest pale surface that used to be called `<intent>-lighter` is now `<intent>-lightest` (same hex value; semantic-role rename), and a new mid-pale `<intent>-lighter` value was inserted between `lightest` and `light` for the cases where a single soft-bg step wasn't enough emphasis. `info-darkest` (#1d4554) and `error-darkest` (#5a0602) added for AAA text contrast and high-emphasis hero typography. Migration touched 64 source references across 24 files: `components.css` (16), MCP server tools (~20), stories / docs / configs (rest). `lint:semantic-color-recipe` RECIPE updated to use `<intent>-lightest` for info/success/warning secondary bg (error still uses `lighter` because error didn't restructure). `lint:contrast` PAIRS updated to measure the new bg/text combinations. Dark-mode counterparts added with parity validation. `error-lightest` and `error-lighter` were already present and not touched. (CVD pass on `civ-badge--dot` also shipped 2026-05-27 — see entry below.)
+10. ~~**Color-blindness CVD pass on `civ-badge--dot`**~~ — shipped 2026-05-27. `civ-badge` now fires a per-instance `devWarn` when `dot=true && intent !== 'neutral' && !label` — the canonical color-alone failure mode where ~1.5% of users (combined protanopia + deuteranopia) can't distinguish red-vs-green or amber-vs-green dots at this size. The warning suggests two recoveries: set `label` (becomes `aria-label` + adds `role="status"`, surfacing the meaning to screen readers AND CVD users via the visible-on-hover tooltip in some browsers) or drop the intent for a presence-only marker. Per-instance dedup via `_warnedDotIntentNoLabel` field — fires once per badge, not session-globally, so multiple buggy badges each surface. JSDoc class doc + the badge docs page Accessibility section updated to call out the failure mode. 6 new tests in `civ-badge.test.ts` cover all four branches of the safeguard (warn on intent-without-label, no warn for labelled / neutral / text badge, single-fire dedup, per-instance independence).
+11. **Categorical color-blindness simulation in Storybook** — add a Foundations/Colors story that renders each intent + tag color through a CSS filter approximating protanopia / deuteranopia (`filter: url(#protanopia)` with an inline SVG filter definition). Designers see at a glance which colors collapse together. Visual-only, no test enforcement.
+12. **Hardcoded-hex lint** — `pnpm lint:hardcoded-hex` that fails on any bare hex literal in `components.css` / `civ.css` NOT inside a `var(…, #fallback)` form. Low priority (discipline already followed) but useful as a forward-looking gate.
+13. **Document a contrast playbook** — short doc on how to MEASURE contrast when picking new colors (the inline math the audit used). Lives at `apps/docs/docs/foundations/contrast.md`.
+14. **Brand-palette extension point** — captured in this document for when a client requires it. Not a current ship item.
 
 ---
 

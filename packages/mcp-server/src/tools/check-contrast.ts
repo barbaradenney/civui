@@ -15,28 +15,36 @@ const TOKEN_COLORS: Record<string, string> = {
   'primary-darker': '#162e51',
 
   // Error
+  'error-lightest': '#faf0f0',
   'error-lighter': '#f4e3db',
   'error-light': '#d63e04',
   'error': '#b50909',
   'error-dark': '#8b0a03',
+  'error-darkest': '#5a0602',
 
   // Warning
-  'warning-lighter': '#faf3d1',
+  'warning-lightest': '#faf3d1',
+  'warning-lighter': '#fcedb7',
   'warning-light': '#fee685',
   'warning': '#e5a000',
   'warning-dark': '#936f38',
+  'warning-darkest': '#6b4c11',
 
   // Success
-  'success-lighter': '#ecf3ec',
+  'success-lightest': '#ecf3ec',
+  'success-lighter': '#b8e6b8',
   'success-light': '#70e17b',
   'success': '#00a91c',
   'success-dark': '#4d8055',
+  'success-darkest': '#1a4d1a',
 
   // Info
-  'info-lighter': '#e7f6f8',
+  'info-lightest': '#e7f6f8',
+  'info-lighter': '#c5ecf2',
   'info-light': '#99deea',
   'info': '#00bde3',
   'info-dark': '#2e6276',
+  'info-darkest': '#1d4554',
 
   // Base (neutrals)
   'base-lightest': '#f0f0f0',

@@ -1,7 +1,10 @@
 #!/usr/bin/env tsx
 /**
  * lint-semantic-color-recipe — enforce the shared bg/text recipe for
- * semantic-intent components (civ-badge, civ-count).
+ * semantic-intent components (civ-badge, civ-count) plus the static
+ * soft-bg + intent-tint rules on alert / card / process-list-item /
+ * timeline-item that migrated to the new `*-lightest` shades during
+ * the 2026-05-27 shade-ladder restructure.
  *
  * Background
  * ----------
@@ -15,23 +18,40 @@
  * picked `error-lighter`; the inconsistency went unnoticed for months
  * because no test or CI gate compared the two CSS rule blocks.
  *
+ * The 2026-05-27 shade-ladder restructure renamed the softest pale
+ * surface from `<intent>-lighter` to `<intent>-lightest` for info /
+ * success / warning, and inserted a new mid-tone at `<intent>-lighter`.
+ * (`error` stayed at `error-lighter` because it didn't restructure.)
+ * Several rules outside the badge/count recipe migrated to the new
+ * tokens: alert--style-secondary backgrounds, card-secondary colored
+ * variants, process-list-item complete-state marker, timeline-item
+ * dot. A refactor renaming `*-lightest` back to `*-lighter` "for
+ * brevity" would silently re-introduce the new (darker) mid-tone
+ * visual — these EXTENDED_SELECTORS gate that drift.
+ *
  * What it does
  * ------------
- * Parses `packages/core/src/styles/components.css`, finds every rule
- * whose selector matches the expected `.civ-{comp}--style-{emphasis}.
- * civ-{comp}--{intent}` (or `.civ-{comp}--dot.civ-{comp}--{intent}` /
- * `.civ-{comp}--style-tertiary.civ-{comp}--{intent}`) shape, extracts
- * the `background-color` and `color` declarations, and verifies they
- * match RECIPE below.
+ * Parses `packages/core/src/styles/components.css`, runs two passes:
  *
- * RECIPE is keyed by emphasis × intent and stores the expected CSS
- * variable name (e.g. `--civ-color-error-lighter`). Drift fails CI.
+ *   1. Combinatorial recipe — finds every rule whose selector
+ *      matches `.civ-{badge|count}--style-{emphasis}.civ-…--{intent}`
+ *      (or the dot / tertiary equivalents), extracts the
+ *      `background-color` and `color` declarations, and verifies they
+ *      match RECIPE.
  *
- * Each documented exception is encoded inline (today: error-primary
- * and error-dot intentionally use `error-DEFAULT` for the saturated
- * brand red, while every other intent uses `*-dark`). Adding a new
- * exception requires editing RECIPE in this file — the change is
- * deliberate and shows up in code review.
+ *   2. Static selectors — looks up each entry in EXTENDED_SELECTORS
+ *      and verifies the rule body contains the expected bg + text
+ *      tokens. Both the `background-color: var(--civ-color-X)` form
+ *      and the `@apply civ-bg-X` Tailwind utility form are accepted
+ *      since components.css mixes the two for historical reasons.
+ *
+ * RECIPE / EXTENDED_SELECTORS are the single source of truth. Drift
+ * fails CI. Each documented exception is encoded inline (today: error
+ * is special-cased in both the secondary recipe entry and several
+ * card/alert selectors because `error` didn't restructure on
+ * 2026-05-27 — its softest surface is still `error-lighter`, not
+ * `error-lightest`). Adding a new exception requires editing this
+ * file — the change is deliberate and shows up in code review.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
@@ -59,10 +79,12 @@ interface Expectation {
 /**
  * The single source of truth for the semantic-intent recipe.
  *
- * Secondary  — bg: `<intent>-lighter` (base-lightest for neutral);
- *              text: darkest available shade that hits AA on the bg
- *              (info/error: `-dark`; success/warning: `-darkest`;
- *              neutral: `base-darker`).
+ * Secondary  — bg: `<intent>-lightest` for info/success/warning,
+ *              `error-lighter` (error didn't restructure in the
+ *              2026-05-27 shade-ladder pass), `base-lightest` for
+ *              neutral; text: darkest available shade that hits AA
+ *              on the bg (info/error: `-dark`; success/warning:
+ *              `-darkest`; neutral: `base-darker`).
  *
  * Primary    — bg: `<intent>-dark` (error: `error-DEFAULT` for brand
  *              saturation; neutral: `base-darker`);
@@ -75,11 +97,11 @@ interface Expectation {
  */
 export const RECIPE: Record<Emphasis, Partial<Record<Intent, Expectation>>> = {
   secondary: {
-    info:    { bg: '--civ-color-info-lighter',    text: '--civ-color-info-dark' },
-    success: { bg: '--civ-color-success-lighter', text: '--civ-color-success-darkest' },
-    warning: { bg: '--civ-color-warning-lighter', text: '--civ-color-warning-darkest' },
-    error:   { bg: '--civ-color-error-lighter',   text: '--civ-color-error-dark' },
-    neutral: { bg: '--civ-color-base-lightest',   text: '--civ-color-base-darker' },
+    info:    { bg: '--civ-color-info-lightest',    text: '--civ-color-info-dark' },
+    success: { bg: '--civ-color-success-lightest', text: '--civ-color-success-darkest' },
+    warning: { bg: '--civ-color-warning-lightest', text: '--civ-color-warning-darkest' },
+    error:   { bg: '--civ-color-error-lighter',    text: '--civ-color-error-dark' },
+    neutral: { bg: '--civ-color-base-lightest',    text: '--civ-color-base-darker' },
   },
   primary: {
     info:    { bg: '--civ-color-info-dark',     text: '--civ-color-white-DEFAULT' },
@@ -110,6 +132,97 @@ const SUPPORTED: Record<Component, ReadonlySet<Emphasis>> = {
   badge: new Set<Emphasis>(['secondary', 'primary', 'dot']),
   count: new Set<Emphasis>(['secondary', 'primary', 'tertiary']),
 };
+
+/**
+ * EXTENDED_SELECTORS — static lookup of soft-bg / intent-tint rules
+ * outside the badge/count combinatorial recipe.
+ *
+ * Each entry's `bg` and `text` fields name the expected shade (without
+ * the `--civ-color-` prefix). The lint accepts either the CSS-var form
+ * `background-color: var(--civ-color-<shade>)` OR the Tailwind utility
+ * form `@apply civ-bg-<shade>` (alert--style-secondary uses the
+ * utility form; the other selectors use plain var).
+ *
+ * Notes per family:
+ * - civ-alert--style-secondary uses `*-lightest` for info / warning /
+ *   success / neutral, `error-lighter` for error (didn't restructure).
+ *   Text colours on these rules are set by the separate
+ *   `.civ-alert--style-secondary .civ-alert__heading|__body` rules
+ *   (always `base-darkest`) — not at restructure risk, not gated here.
+ * - civ-card categorical secondary mirrors the semantic mapping:
+ *   blue→primary, teal→info, red→error, green→success, yellow→warning,
+ *   orange→accent.warm, purple→purple, gray→base. Each carries a
+ *   matching text shade.
+ * - civ-process-list-item complete-state marker uses success-lightest
+ *   bg + success-darkest text (the new AAA pairing).
+ * - civ-timeline-item dot uses `*-DEFAULT` bg + `*-lightest` text —
+ *   that's an icon-on-color contrast pattern, not a soft-bg pattern,
+ *   but gating it locks the lightest-shade choice for the icon.
+ */
+export const EXTENDED_SELECTORS: ReadonlyArray<{
+  selector: string;
+  bg?: string;
+  text?: string;
+}> = [
+  // ── civ-alert secondary tinted bg ───────────────────────────────
+  { selector: '.civ-alert--style-secondary.civ-alert--info',    bg: 'info-lightest' },
+  { selector: '.civ-alert--style-secondary.civ-alert--warning', bg: 'warning-lightest' },
+  { selector: '.civ-alert--style-secondary.civ-alert--success', bg: 'success-lightest' },
+  { selector: '.civ-alert--style-secondary.civ-alert--error',   bg: 'error-lighter' },
+  { selector: '.civ-alert--style-secondary.civ-alert--neutral', bg: 'base-lightest' },
+
+  // ── civ-card categorical secondary (light tint) ─────────────────
+  { selector: '.civ-card--blue',   bg: 'primary-lightest',     text: 'primary-dark' },
+  { selector: '.civ-card--teal',   bg: 'info-lightest',        text: 'info-dark' },
+  { selector: '.civ-card--red',    bg: 'error-lighter',        text: 'error-dark' },
+  { selector: '.civ-card--green',  bg: 'success-lightest',     text: 'success-darkest' },
+  { selector: '.civ-card--yellow', bg: 'warning-lightest',     text: 'warning-darkest' },
+  { selector: '.civ-card--orange', bg: 'accent-warm-lightest', text: 'accent-warm-darkest' },
+  { selector: '.civ-card--purple', bg: 'purple-lightest',      text: 'purple-dark' },
+  { selector: '.civ-card--gray',   bg: 'base-lightest',        text: 'base-darker' },
+
+  // ── civ-process-list-item complete state marker ─────────────────
+  {
+    selector: "civ-process-list-item[state='complete'] .civ-process-list-item__marker",
+    bg: 'success-lightest',
+    text: 'success-darkest',
+  },
+
+  // ── civ-timeline-item dot (bg = brand, icon = pale for contrast) ─
+  { selector: "civ-timeline-item[intent='success'] .civ-timeline-item__dot", bg: 'success-DEFAULT', text: 'success-lightest' },
+  { selector: "civ-timeline-item[intent='info'] .civ-timeline-item__dot",    bg: 'info-DEFAULT',    text: 'info-lightest' },
+  { selector: "civ-timeline-item[intent='warning'] .civ-timeline-item__dot", bg: 'warning-DEFAULT', text: 'warning-lightest' },
+  { selector: "civ-timeline-item[intent='error'] .civ-timeline-item__dot",   bg: 'error-DEFAULT',   text: 'error-lightest' },
+  { selector: "civ-timeline-item[intent='neutral'] .civ-timeline-item__dot", bg: 'base-DEFAULT',    text: 'base-lightest' },
+];
+
+/**
+ * Verify the rule body sets the given property to the expected shade.
+ * Accepts two forms:
+ *   - `background-color: var(--civ-color-<shade>);` (or with fallback)
+ *   - `@apply civ-bg-<shade>;` for bg, `@apply civ-text-<shade>;` for text
+ *
+ * The Tailwind utility form is checked with a word-boundary regex so
+ * `civ-bg-info-lightest` doesn't trip a sibling like
+ * `civ-bg-info-lightest-something`.
+ */
+export function bodyHasToken(
+  body: string,
+  kind: 'bg' | 'text',
+  shade: string,
+): boolean {
+  const utility = kind === 'bg' ? `civ-bg-${shade}` : `civ-text-${shade}`;
+  // Allowed boundary chars after the utility class: whitespace, `;`,
+  // closing brace `}`, end-of-string. `(?![\w-])` rejects suffix
+  // characters that would make this a different class name.
+  const utilRe = new RegExp(
+    String.raw`(?<![\w-])${utility}(?![\w-])`,
+  );
+  if (utilRe.test(body)) return true;
+
+  const property = kind === 'bg' ? 'background-color' : 'color';
+  return extractVar(body, property) === `--civ-color-${shade}`;
+}
 
 const INTENTS: readonly Intent[] = ['info', 'success', 'warning', 'error', 'neutral'];
 const COMPONENTS: readonly Component[] = ['badge', 'count'];
@@ -378,11 +491,65 @@ async function main(): Promise<void> {
     }
   }
 
+  // ── Pass 2: EXTENDED_SELECTORS static lookup ──────────────────
+  // Index the parsed blocks by canonical-whitespace selector so the
+  // O(rules × selectors) outer loop becomes O(rules + selectors).
+  const blocksBySelector = new Map<string, Block>();
+  for (const block of parseRules(css)) {
+    const canon = block.selector.replace(/\s+/g, ' ').trim();
+    // First occurrence wins — duplicate selector blocks are unusual
+    // and the first-wins choice keeps the failure mode "your edit at
+    // the canonical site drifted" rather than "the lint missed your
+    // copy at the bottom of the file".
+    if (!blocksBySelector.has(canon)) blocksBySelector.set(canon, block);
+  }
+
+  for (const entry of EXTENDED_SELECTORS) {
+    const canon = entry.selector.replace(/\s+/g, ' ').trim();
+    const block = blocksBySelector.get(canon);
+    if (!block) {
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: 0,
+        selector: entry.selector,
+        detail:
+          `No rule found for this selector. Either add the CSS rule ` +
+          `or remove the entry from EXTENDED_SELECTORS in ` +
+          `tools/lint-semantic-color-recipe.ts.`,
+      });
+      continue;
+    }
+
+    if (entry.bg && !bodyHasToken(block.body, 'bg', entry.bg)) {
+      const actualVar = extractVar(block.body, 'background-color');
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: block.openLine,
+        selector: entry.selector,
+        detail:
+          `bg expected civ-bg-${entry.bg} or var(--civ-color-${entry.bg}); ` +
+          `got ${actualVar ? `var(${actualVar})` : '<missing or non-recipe form>'}`,
+      });
+    }
+    if (entry.text && !bodyHasToken(block.body, 'text', entry.text)) {
+      const actualVar = extractVar(block.body, 'color');
+      findings.push({
+        file: COMPONENTS_CSS,
+        line: block.openLine,
+        selector: entry.selector,
+        detail:
+          `text expected civ-text-${entry.text} or var(--civ-color-${entry.text}); ` +
+          `got ${actualVar ? `var(${actualVar})` : '<missing or non-recipe form>'}`,
+      });
+    }
+  }
+
   if (findings.length === 0) {
     console.log(
       `✓ civ-badge + civ-count semantic-intent rules in components.css ` +
       `match the shared recipe across all ${COMPONENTS.length} components × ` +
-      `${INTENTS.length} intents.`,
+      `${INTENTS.length} intents, and all ${EXTENDED_SELECTORS.length} ` +
+      `static intent-tint selectors carry the expected shades.`,
     );
     return;
   }

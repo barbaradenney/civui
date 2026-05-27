@@ -170,7 +170,7 @@ export const LogicalPropertiesDemo: Story = {
         <p class="civ-text-caption civ-mb-2">LTR</p>
         <div
           class="civ-p-3 civ-border-s-4"
-          style="background: var(--civ-color-info-lighter); border-color: var(--civ-color-info-DEFAULT);"
+          style="background: var(--civ-color-info-lightest); border-color: var(--civ-color-info-DEFAULT);"
         >
           <span class="civ-font-semibold">civ-border-s-4</span> renders on
           the inline-start edge.
@@ -180,7 +180,7 @@ export const LogicalPropertiesDemo: Story = {
         <p class="civ-text-caption civ-mb-2">RTL</p>
         <div
           class="civ-p-3 civ-border-s-4"
-          style="background: var(--civ-color-info-lighter); border-color: var(--civ-color-info-DEFAULT);"
+          style="background: var(--civ-color-info-lightest); border-color: var(--civ-color-info-DEFAULT);"
         >
           نفس الحدّ ينعكس تلقائيًا إلى الجانب البادئ.
         </div>

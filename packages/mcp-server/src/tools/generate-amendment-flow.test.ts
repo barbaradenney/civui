@@ -63,13 +63,13 @@ describe('generateAmendmentFlow', () => {
     expect(result.html).toContain('Doe (no change)');
   });
 
-  it('changed rows have civ-bg-warning-lighter class', () => {
+  it('changed rows have civ-bg-warning-lightest class', () => {
     const amended = { ...originalValues, 'first-name': 'John' };
     const result = generateAmendmentFlow(schema, originalValues, amended);
-    expect(result.html).toContain('civ-bg-warning-lighter');
+    expect(result.html).toContain('civ-bg-warning-lightest');
     // The changed row should have the class
     const lines = result.html.split('\n');
-    const warningLine = lines.find((l) => l.includes('civ-bg-warning-lighter'));
+    const warningLine = lines.find((l) => l.includes('civ-bg-warning-lightest'));
     expect(warningLine).toBeDefined();
     expect(warningLine).toContain('<tr');
   });

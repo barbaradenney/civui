@@ -77,7 +77,8 @@ const DARK_TOKENS = path.join(REPO_ROOT, 'packages/tokens/src/color-dark.tokens.
  * `tag.blue.bg`), resolved against the respective mode's JSON tree.
  *
  * Categories:
- *   1. Recipe — badge/count secondary (lighter bg + dark text)
+ *   1. Recipe — badge/count secondary (lightest bg + darkest/dark text;
+ *      error uses `lighter` bg since it didn't restructure)
  *   2. Recipe — badge/count primary (dark bg + white text)
  *   3. Recipe — count tertiary (transparent bg ≈ surface + dark text)
  *   4. Body text on surface
@@ -100,12 +101,14 @@ interface ContrastPair {
 }
 
 export const PAIRS: ContrastPair[] = [
-  // 1. Recipe — secondary (lighter bg + dark text)
-  { name: 'badge/count secondary info',    bg: 'info.lighter',    text: 'info.dark',       minRatio: 4.5 },
-  { name: 'badge/count secondary success', bg: 'success.lighter', text: 'success.darkest', minRatio: 4.5 },
-  { name: 'badge/count secondary warning', bg: 'warning.lighter', text: 'warning.darkest', minRatio: 4.5 },
-  { name: 'badge/count secondary error',   bg: 'error.lighter',   text: 'error.dark',      minRatio: 4.5 },
-  { name: 'badge/count secondary neutral', bg: 'base.lightest',   text: 'base.darker',     minRatio: 4.5 },
+  // 1. Recipe — secondary (lightest bg + dark text). Error didn't
+  //    restructure in the 2026-05-27 shade-ladder pass; its softest
+  //    bg is still `error.lighter`.
+  { name: 'badge/count secondary info',    bg: 'info.lightest',    text: 'info.dark',       minRatio: 4.5 },
+  { name: 'badge/count secondary success', bg: 'success.lightest', text: 'success.darkest', minRatio: 4.5 },
+  { name: 'badge/count secondary warning', bg: 'warning.lightest', text: 'warning.darkest', minRatio: 4.5 },
+  { name: 'badge/count secondary error',   bg: 'error.lighter',    text: 'error.dark',      minRatio: 4.5 },
+  { name: 'badge/count secondary neutral', bg: 'base.lightest',    text: 'base.darker',     minRatio: 4.5 },
 
   // 2. Recipe — primary (dark bg + white text)
   { name: 'badge/count primary info',     bg: 'info.dark',     text: 'white.DEFAULT', minRatio: 4.5 },
@@ -135,6 +138,26 @@ export const PAIRS: ContrastPair[] = [
   { name: 'civ-text-error on surface',         bg: 'white.DEFAULT', text: 'error.DEFAULT', minRatio: 4.5 },
   { name: 'civ-text-error-dark on surface',    bg: 'white.DEFAULT', text: 'error.dark',    minRatio: 4.5 },
   { name: 'civ-text-success-dark on surface',  bg: 'white.DEFAULT', text: 'success.dark',  minRatio: 4.5 },
+
+  // 7b. `*-darkest` text shades on surface. Light-mode darkest variants
+  //     are advertised by the token JSON `$description` as AAA / hero
+  //     text colors — gate the claim at 7:1 so a future palette tune
+  //     can't silently regress them to plain AA. (Dark-mode counterparts
+  //     measured against base-darkest in section 11.)
+  { name: 'civ-text-error-darkest on surface',   bg: 'white.DEFAULT', text: 'error.darkest',   minRatio: 7.0 },
+  { name: 'civ-text-info-darkest on surface',    bg: 'white.DEFAULT', text: 'info.darkest',    minRatio: 7.0 },
+  { name: 'civ-text-warning-darkest on surface', bg: 'white.DEFAULT', text: 'warning.darkest', minRatio: 4.5 },
+  { name: 'civ-text-success-darkest on surface', bg: 'white.DEFAULT', text: 'success.darkest', minRatio: 4.5 },
+
+  // 7c. The new mid-tone `*-lighter` shades (introduced 2026-05-27)
+  //     fail AA when paired with the same family's `-dark` text
+  //     (success-lighter + success-dark = 3.32, warning-lighter +
+  //     warning-dark = 3.92). Document the safe pairing — `-lighter`
+  //     bg pairs with `-darkest` text, not `-dark`. These pairs
+  //     enforce that constraint.
+  { name: 'success-lighter bg + success-darkest text', bg: 'success.lighter', text: 'success.darkest', minRatio: 4.5 },
+  { name: 'warning-lighter bg + warning-darkest text', bg: 'warning.lighter', text: 'warning.darkest', minRatio: 4.5 },
+  { name: 'info-lighter bg + info-darkest text',       bg: 'info.lighter',    text: 'info.darkest',    minRatio: 4.5 },
 
   // 8. Link-card variant rendered combinations — codify the bg + text
   //    pair the variant paints. The eyebrow + heading + description

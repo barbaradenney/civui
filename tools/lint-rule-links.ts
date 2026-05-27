@@ -102,6 +102,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/colors.md',
     anchor: 'contrast--wcag',
   },
+  'spacing': {
+    path: '.claude/rules/spacing.md',
+    anchor: 'three-rhythm-tiers',
+  },
 };
 
 /**

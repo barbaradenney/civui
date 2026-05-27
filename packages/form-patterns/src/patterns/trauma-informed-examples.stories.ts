@@ -104,7 +104,7 @@ export const DeceasedAssumed: Story = {
   name: 'Deceased Assumed vs Show Deceased',
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-8">
-      <div class="civ-border civ-border-s-4 civ-border-success civ-bg-success-lighter civ-p-4 civ-rounded">
+      <div class="civ-border civ-border-s-4 civ-border-success civ-bg-success-lightest civ-p-4 civ-rounded">
         <p class="civ-font-semibold civ-mb-1 civ-text-success-darkest">✓ Good — deceased-assumed</p>
         <p class="civ-text-sm civ-mb-4">
           The form is a survivor benefit claim, so the context already

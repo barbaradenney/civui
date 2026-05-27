@@ -59,10 +59,12 @@ interface Expectation {
 /**
  * The single source of truth for the semantic-intent recipe.
  *
- * Secondary  — bg: `<intent>-lighter` (base-lightest for neutral);
- *              text: darkest available shade that hits AA on the bg
- *              (info/error: `-dark`; success/warning: `-darkest`;
- *              neutral: `base-darker`).
+ * Secondary  — bg: `<intent>-lightest` for info/success/warning,
+ *              `error-lighter` (error didn't restructure in the
+ *              2026-05-27 shade-ladder pass), `base-lightest` for
+ *              neutral; text: darkest available shade that hits AA
+ *              on the bg (info/error: `-dark`; success/warning:
+ *              `-darkest`; neutral: `base-darker`).
  *
  * Primary    — bg: `<intent>-dark` (error: `error-DEFAULT` for brand
  *              saturation; neutral: `base-darker`);
@@ -75,11 +77,11 @@ interface Expectation {
  */
 export const RECIPE: Record<Emphasis, Partial<Record<Intent, Expectation>>> = {
   secondary: {
-    info:    { bg: '--civ-color-info-lighter',    text: '--civ-color-info-dark' },
-    success: { bg: '--civ-color-success-lighter', text: '--civ-color-success-darkest' },
-    warning: { bg: '--civ-color-warning-lighter', text: '--civ-color-warning-darkest' },
-    error:   { bg: '--civ-color-error-lighter',   text: '--civ-color-error-dark' },
-    neutral: { bg: '--civ-color-base-lightest',   text: '--civ-color-base-darker' },
+    info:    { bg: '--civ-color-info-lightest',    text: '--civ-color-info-dark' },
+    success: { bg: '--civ-color-success-lightest', text: '--civ-color-success-darkest' },
+    warning: { bg: '--civ-color-warning-lightest', text: '--civ-color-warning-darkest' },
+    error:   { bg: '--civ-color-error-lighter',    text: '--civ-color-error-dark' },
+    neutral: { bg: '--civ-color-base-lightest',    text: '--civ-color-base-darker' },
   },
   primary: {
     info:    { bg: '--civ-color-info-dark',     text: '--civ-color-white-DEFAULT' },

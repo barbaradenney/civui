@@ -58,7 +58,7 @@ Caution messages and alerts that need attention but aren't errors.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#faf3d1` | `civ-bg-warning-lighter` |
+| Lighter | `#faf3d1` | `civ-bg-warning-lightest` |
 | Light | `#fee685` | `civ-bg-warning-light` |
 | **Default** | **`#e5a000`** | `civ-bg-warning` |
 | Dark | `#936f38` | `civ-bg-warning-dark` |
@@ -69,7 +69,7 @@ Confirmations and completed states.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#ecf3ec` | `civ-bg-success-lighter` |
+| Lighter | `#ecf3ec` | `civ-bg-success-lightest` |
 | Light | `#70e17b` | `civ-bg-success-light` |
 | **Default** | **`#00a91c`** | `civ-bg-success` |
 | Dark | `#4d8055` | `civ-bg-success-dark` |
@@ -80,7 +80,7 @@ Informational messages and neutral highlights.
 
 | Shade | Value | Class |
 |-------|-------|-------|
-| Lighter | `#e7f6f8` | `civ-bg-info-lighter` |
+| Lighter | `#e7f6f8` | `civ-bg-info-lightest` |
 | Light | `#99deea` | `civ-bg-info-light` |
 | **Default** | **`#00bde3`** | `civ-bg-info` |
 | Dark | `#2e6276` | `civ-bg-info-dark` |
@@ -115,7 +115,7 @@ Default text, backgrounds, borders, and neutral elements.
 ```html
 <div class="civ-bg-primary-lightest civ-p-4">Info panel</div>
 <div class="civ-bg-error-lightest civ-p-4">Error summary</div>
-<div class="civ-bg-success-lighter civ-p-4">Success banner</div>
+<div class="civ-bg-success-lightest civ-p-4">Success banner</div>
 ```
 
 ### Borders
@@ -135,8 +135,8 @@ Default text, backgrounds, borders, and neutral elements.
 | Links | `primary` | `civ-text-primary` |
 | Error messages | `error` | `civ-text-error`, `civ-border-error` |
 | Error field border | `error` | `civ-border-error civ-border-s-4` |
-| Alert backgrounds | varies | `civ-bg-info-lighter`, `civ-bg-warning-lighter` |
-| Success indicators | `success` | `civ-text-success`, `civ-bg-success-lighter` |
+| Alert backgrounds | varies | `civ-bg-info-lightest`, `civ-bg-warning-lightest` |
+| Success indicators | `success` | `civ-text-success`, `civ-bg-success-lightest` |
 | Disabled elements | `base-light` | `civ-text-base-light` |
 | Focus ring | `primary` | Applied automatically by `civ.css` to every native interactive element |
 

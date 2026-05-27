@@ -69,7 +69,7 @@ function generateInline(sections: HelpSection[]): { html: string; js: string } {
     htmlParts.push(
       `<div data-civ-help-inline="${escapeHtml(section.id)}" class="civ-mb-4">`,
       `  <button type="button" id="${escapeHtml(linkId)}" data-civ-help-expand="${escapeHtml(section.id)}" class="civ-text-primary civ-underline civ-text-sm" aria-expanded="false" aria-controls="${escapeHtml(contentId)}">More info: ${escapeHtml(section.heading)}</button>`,
-      `  <div id="${escapeHtml(contentId)}" class="civ-p-2 civ-mt-1 civ-bg-info-lighter civ-rounded civ-text-sm" hidden>`,
+      `  <div id="${escapeHtml(contentId)}" class="civ-p-2 civ-mt-1 civ-bg-info-lightest civ-rounded civ-text-sm" hidden>`,
       `    <p>${escapeHtml(section.body)}</p>`,
       `  </div>`,
       `</div>`,

@@ -143,7 +143,7 @@ export function generateEligibilityScreener(schema: FormSchema): EligibilityScre
 
     resultDiv.removeAttribute('hidden');
     resultDiv.className = 'civ-mt-4 civ-p-4 civ-rounded civ-border ' +
-      (eligible ? 'civ-bg-success-lighter' : 'civ-bg-error-lighter');
+      (eligible ? 'civ-bg-success-lightest' : 'civ-bg-error-lighter');
     resultDiv.textContent = eligible
       ? ${jsPassMessage}
       : ${jsFailMessage};

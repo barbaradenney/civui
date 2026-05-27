@@ -171,7 +171,7 @@ export const InContext: Story = {
         <p class="civ-text-caption civ-mb-2">Inside an alert</p>
         <div
           class="civ-flex civ-items-start civ-gap-2 civ-p-3"
-          style="background: var(--civ-color-warning-lighter); border-inline-start: 4px solid var(--civ-color-warning-DEFAULT); border-radius: var(--civ-border-radius-md);"
+          style="background: var(--civ-color-warning-lightest); border-inline-start: 4px solid var(--civ-color-warning-DEFAULT); border-radius: var(--civ-border-radius-md);"
           role="status"
         >
           <civ-icon name="warning" class="civ-text-warning" label="Warning"></civ-icon>

@@ -100,12 +100,14 @@ interface ContrastPair {
 }
 
 export const PAIRS: ContrastPair[] = [
-  // 1. Recipe — secondary (lighter bg + dark text)
-  { name: 'badge/count secondary info',    bg: 'info.lighter',    text: 'info.dark',       minRatio: 4.5 },
-  { name: 'badge/count secondary success', bg: 'success.lighter', text: 'success.darkest', minRatio: 4.5 },
-  { name: 'badge/count secondary warning', bg: 'warning.lighter', text: 'warning.darkest', minRatio: 4.5 },
-  { name: 'badge/count secondary error',   bg: 'error.lighter',   text: 'error.dark',      minRatio: 4.5 },
-  { name: 'badge/count secondary neutral', bg: 'base.lightest',   text: 'base.darker',     minRatio: 4.5 },
+  // 1. Recipe — secondary (lightest bg + dark text). Error didn't
+  //    restructure in the 2026-05-27 shade-ladder pass; its softest
+  //    bg is still `error.lighter`.
+  { name: 'badge/count secondary info',    bg: 'info.lightest',    text: 'info.dark',       minRatio: 4.5 },
+  { name: 'badge/count secondary success', bg: 'success.lightest', text: 'success.darkest', minRatio: 4.5 },
+  { name: 'badge/count secondary warning', bg: 'warning.lightest', text: 'warning.darkest', minRatio: 4.5 },
+  { name: 'badge/count secondary error',   bg: 'error.lighter',    text: 'error.dark',      minRatio: 4.5 },
+  { name: 'badge/count secondary neutral', bg: 'base.lightest',    text: 'base.darker',     minRatio: 4.5 },
 
   // 2. Recipe — primary (dark bg + white text)
   { name: 'badge/count primary info',     bg: 'info.dark',     text: 'white.DEFAULT', minRatio: 4.5 },

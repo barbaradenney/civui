@@ -49,33 +49,40 @@ export const Error: Story = {
     swatch('Light', '--civ-color-error-light', '#d63e04'),
     swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
     swatch('Dark', '--civ-color-error-dark', '#8b0a03'),
+    swatch('Darkest', '--civ-color-error-darkest', '#5a0602'),
   ]),
 };
 
 export const Warning: Story = {
   render: () => paletteSection('Warning', [
-    swatch('Lighter', '--civ-color-warning-lighter', '#faf3d1'),
+    swatch('Lightest', '--civ-color-warning-lightest', '#faf3d1'),
+    swatch('Lighter', '--civ-color-warning-lighter', '#fcedb7'),
     swatch('Light', '--civ-color-warning-light', '#fee685'),
     swatch('Default', '--civ-color-warning-DEFAULT', '#e5a000'),
     swatch('Dark', '--civ-color-warning-dark', '#936f38'),
+    swatch('Darkest', '--civ-color-warning-darkest', '#6b4c11'),
   ]),
 };
 
 export const Success: Story = {
   render: () => paletteSection('Success', [
-    swatch('Lighter', '--civ-color-success-lighter', '#ecf3ec'),
+    swatch('Lightest', '--civ-color-success-lightest', '#ecf3ec'),
+    swatch('Lighter', '--civ-color-success-lighter', '#b8e6b8'),
     swatch('Light', '--civ-color-success-light', '#70e17b'),
     swatch('Default', '--civ-color-success-DEFAULT', '#00a91c'),
     swatch('Dark', '--civ-color-success-dark', '#4d8055'),
+    swatch('Darkest', '--civ-color-success-darkest', '#1a4d1a'),
   ]),
 };
 
 export const Info: Story = {
   render: () => paletteSection('Info', [
-    swatch('Lighter', '--civ-color-info-lighter', '#e7f6f8'),
+    swatch('Lightest', '--civ-color-info-lightest', '#e7f6f8'),
+    swatch('Lighter', '--civ-color-info-lighter', '#c5ecf2'),
     swatch('Light', '--civ-color-info-light', '#99deea'),
     swatch('Default', '--civ-color-info-DEFAULT', '#00bde3'),
     swatch('Dark', '--civ-color-info-dark', '#2e6276'),
+    swatch('Darkest', '--civ-color-info-darkest', '#1d4554'),
   ]),
 };
 
@@ -109,24 +116,31 @@ export const AllColors: Story = {
         swatch('Light', '--civ-color-error-light', '#d63e04'),
         swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
         swatch('Dark', '--civ-color-error-dark', '#8b0a03'),
+        swatch('Darkest', '--civ-color-error-darkest', '#5a0602'),
       ])}
       ${paletteSection('Warning', [
-        swatch('Lighter', '--civ-color-warning-lighter', '#faf3d1'),
+        swatch('Lightest', '--civ-color-warning-lightest', '#faf3d1'),
+        swatch('Lighter', '--civ-color-warning-lighter', '#fcedb7'),
         swatch('Light', '--civ-color-warning-light', '#fee685'),
         swatch('Default', '--civ-color-warning-DEFAULT', '#e5a000'),
         swatch('Dark', '--civ-color-warning-dark', '#936f38'),
+        swatch('Darkest', '--civ-color-warning-darkest', '#6b4c11'),
       ])}
       ${paletteSection('Success', [
-        swatch('Lighter', '--civ-color-success-lighter', '#ecf3ec'),
+        swatch('Lightest', '--civ-color-success-lightest', '#ecf3ec'),
+        swatch('Lighter', '--civ-color-success-lighter', '#b8e6b8'),
         swatch('Light', '--civ-color-success-light', '#70e17b'),
         swatch('Default', '--civ-color-success-DEFAULT', '#00a91c'),
         swatch('Dark', '--civ-color-success-dark', '#4d8055'),
+        swatch('Darkest', '--civ-color-success-darkest', '#1a4d1a'),
       ])}
       ${paletteSection('Info', [
-        swatch('Lighter', '--civ-color-info-lighter', '#e7f6f8'),
+        swatch('Lightest', '--civ-color-info-lightest', '#e7f6f8'),
+        swatch('Lighter', '--civ-color-info-lighter', '#c5ecf2'),
         swatch('Light', '--civ-color-info-light', '#99deea'),
         swatch('Default', '--civ-color-info-DEFAULT', '#00bde3'),
         swatch('Dark', '--civ-color-info-dark', '#2e6276'),
+        swatch('Darkest', '--civ-color-info-darkest', '#1d4554'),
       ])}
       ${paletteSection('Base', [
         swatch('Lightest', '--civ-color-base-lightest', '#f0f0f0'),
@@ -160,9 +174,9 @@ export const SemanticUsage: Story = {
         <div class="civ-flex civ-flex-col civ-gap-2">
           <div class="civ-bg-primary-lightest civ-p-3 civ-rounded">civ-bg-primary-lightest — info panels</div>
           <div class="civ-bg-error-lightest civ-p-3 civ-rounded">civ-bg-error-lightest — error summaries</div>
-          <div class="civ-bg-warning-lighter civ-p-3 civ-rounded">civ-bg-warning-lighter — warning alerts</div>
-          <div class="civ-bg-success-lighter civ-p-3 civ-rounded">civ-bg-success-lighter — success banners</div>
-          <div class="civ-bg-info-lighter civ-p-3 civ-rounded">civ-bg-info-lighter — informational callouts</div>
+          <div class="civ-bg-warning-lightest civ-p-3 civ-rounded">civ-bg-warning-lightest — warning alerts</div>
+          <div class="civ-bg-success-lightest civ-p-3 civ-rounded">civ-bg-success-lightest — success banners</div>
+          <div class="civ-bg-info-lightest civ-p-3 civ-rounded">civ-bg-info-lightest — informational callouts</div>
         </div>
       </div>
 

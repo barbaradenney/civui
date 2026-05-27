@@ -17,11 +17,13 @@
       "lighter": { "$value": "#4a2020" },
       "light": { "$value": "#e87461" },
       "DEFAULT": { "$value": "#f28b82" },
-      "dark": { "$value": "#f5b7b1" }
+      "dark": { "$value": "#f5b7b1" },
+      "darkest": { "$value": "#fad5d0", "$description": "Brightest pale red — mirrors light-mode `darkest` semantic role (deepest text), inverted for dark-bg readability" }
     },
     "warning": {
       "$type": "color",
-      "lighter": { "$value": "#4a3d1a" },
+      "lightest": { "$value": "#4a3d1a", "$description": "Softest dark amber bg (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#8a6c2f", "$description": "Mid-darker gold — stronger soft bg between lightest and light" },
       "light": { "$value": "#f5d576" },
       "DEFAULT": { "$value": "#f5c542" },
       "dark": { "$value": "#c9a24d" },
@@ -29,7 +31,8 @@
     },
     "success": {
       "$type": "color",
-      "lighter": { "$value": "#1e3a20" },
+      "lightest": { "$value": "#1e3a20", "$description": "Softest dark green bg (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#3d6e42", "$description": "Mid-darker green — stronger soft bg between lightest and light" },
       "light": { "$value": "#81d88a" },
       "DEFAULT": { "$value": "#5cb85c" },
       "dark": { "$value": "#7ec97e" },
@@ -37,10 +40,12 @@
     },
     "info": {
       "$type": "color",
-      "lighter": { "$value": "#1a3a40" },
+      "lightest": { "$value": "#1a3a40", "$description": "Softest dark cyan bg (was `lighter` before the 2026-05-27 restructure)" },
+      "lighter": { "$value": "#2d5e6a", "$description": "Mid-darker teal — stronger soft bg between lightest and light" },
       "light": { "$value": "#7dd3e0" },
       "DEFAULT": { "$value": "#4dd0e1" },
-      "dark": { "$value": "#80deea" }
+      "dark": { "$value": "#80deea" },
+      "darkest": { "$value": "#7dd3e0", "$description": "Mirrors light-mode `darkest` semantic role (deepest text)" }
     },
     "purple": {
       "$type": "color",

@@ -182,9 +182,9 @@ export const OnColoredBackground: Story = {
   render: () => html`
     <div
       class="civ-p-6 civ-rounded"
-      style="background-color: var(--civ-color-info-lighter);"
+      style="background-color: var(--civ-color-info-lightest);"
     >
-      <civ-read-more style="--civ-read-more-bg: var(--civ-color-info-lighter);">
+      <civ-read-more style="--civ-read-more-bg: var(--civ-color-info-lightest);">
         <p>
           The fade defaults to white. On a colored card, override
           <code>--civ-read-more-bg</code> with the card's fill so the gradient

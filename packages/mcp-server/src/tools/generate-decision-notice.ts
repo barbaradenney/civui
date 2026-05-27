@@ -53,7 +53,7 @@ export function generateDecisionNotice(
       if (!missingFields.includes(fieldName)) {
         missingFields.push(fieldName);
       }
-      return `<mark data-civ-merge-field="${escapeHtml(fieldName)}" class="civ-bg-warning-lighter civ-px-1">{{${escapeHtml(fieldName)}}}</mark>`;
+      return `<mark data-civ-merge-field="${escapeHtml(fieldName)}" class="civ-bg-warning-lightest civ-px-1">{{${escapeHtml(fieldName)}}}</mark>`;
     },
   );
 
@@ -119,7 +119,7 @@ export function generateDecisionNotice(
   if (template.appealInfo) {
     features.push('appeal-info');
     htmlParts.push(
-      `  <aside data-civ-appeal-info class="civ-mt-6 civ-p-4 civ-bg-info-lighter civ-border civ-rounded" role="note">`,
+      `  <aside data-civ-appeal-info class="civ-mt-6 civ-p-4 civ-bg-info-lightest civ-border civ-rounded" role="note">`,
       `    <h3>Appeal rights</h3>`,
       `    <p>${escapeHtml(template.appealInfo)}</p>`,
       `  </aside>`,

@@ -1,9 +1,13 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures } from '@civui/test-utils';
+import { resetDevWarnDedupe } from '@civui/core';
 import './civ-badge.js';
 import type { CivBadge } from './civ-badge.js';
 
-afterEach(cleanupFixtures);
+afterEach(() => {
+  cleanupFixtures();
+  resetDevWarnDedupe();
+});
 
 // Tailwind content-scanner protection (`pnpm lint:purged-variants`).
 // civ-badge builds variant classes via template literal:
@@ -63,6 +67,63 @@ describe('civ-badge', () => {
   it('reflects dot attribute', async () => {
     const el = await fixture<CivBadge>('<civ-badge dot></civ-badge>');
     expect(el.hasAttribute('dot')).toBe(true);
+  });
+
+  describe('CVD safeguard for dot mode', () => {
+    it('warns when dot mode has intent but no label (color-alone status)', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<CivBadge>('<civ-badge dot intent="error"></civ-badge>');
+      expect(spy).toHaveBeenCalledOnce();
+      const message = String(spy.mock.calls[0][0]);
+      expect(message).toContain('civ-badge');
+      expect(message).toContain('color alone');
+      spy.mockRestore();
+    });
+
+    it('does not warn when dot mode has a label (label becomes aria-label)', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<CivBadge>('<civ-badge dot intent="error" label="Unread"></civ-badge>');
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('does not warn for a neutral dot with no label (presence-only marker)', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<CivBadge>('<civ-badge dot></civ-badge>');
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('does not warn for text badges with intent (visible label is the cue)', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<CivBadge>('<civ-badge intent="error" label="Denied"></civ-badge>');
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('fires at most once per instance even across re-renders', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const el = await fixture<CivBadge>('<civ-badge dot intent="warning"></civ-badge>');
+      // Trigger a re-render by mutating a render-affecting property.
+      el.emphasis = 'primary';
+      await el.updateComplete;
+      el.emphasis = 'secondary';
+      await el.updateComplete;
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
+    });
+
+    it('fires independently for each badge instance', async () => {
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<CivBadge>(`
+        <div>
+          <civ-badge dot intent="error"></civ-badge>
+          <civ-badge dot intent="warning"></civ-badge>
+        </div>
+      `);
+      expect(spy).toHaveBeenCalledTimes(2);
+      spy.mockRestore();
+    });
   });
 
   describe('badge-style', () => {

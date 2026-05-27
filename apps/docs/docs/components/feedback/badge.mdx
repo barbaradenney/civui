@@ -86,6 +86,7 @@ For **numeric counts** ("5", "99+", or notification overlays like "3 unread"), u
 
 - Text badges and dots-with-label render `role="status"` so screen readers announce the badge value.
 - In **dot mode**, `label` becomes the `aria-label`. **If `label` is omitted, the dot is marked `aria-hidden="true"`** (no empty live region). Always set `label` when the dot conveys meaning that isn't already present in a parent's accessible name.
+- **Color is never the sole indicator.** Dot mode without a label communicates status via color alone — ~8% of male / 0.5% of female users can't reliably distinguish red-vs-green or amber-vs-green dots at this size (protanopia / deuteranopia, ~1.5% combined). A dot badge with `intent` but no `label` emits a dev-mode warning; either supply `label` (preferred — surfaces the meaning to screen readers too) or drop the intent for a presence-only marker.
 - Restricted to semantic colors so visual meaning matches the announced value.
 
 ### Notification overlay

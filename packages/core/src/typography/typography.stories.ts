@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import '@civui/layout/divider';
 import '@civui/layout/page-header';
+import '@civui/actions/link';
 import '@civui/actions/link-card';
 import '@civui/data/metric-tile';
 
@@ -187,6 +188,53 @@ export const Eyebrow: Story = {
             value="3"
             description="Average review time is 28 days."
           ></civ-metric-tile>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const UnderlineGeometry: Story = {
+  name: 'Underline Geometry',
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-6">
+      <p class="civ-text-caption">
+        Link underlines use em-based geometry from the typography
+        tokens so they scale with font-size. A heading-sized link
+        gets a proportionally thicker underline at proportionally
+        larger offset — what the eye expects.
+        <code>--civ-typography-underline-thickness</code> = 0.0625em
+        (1px at body) for rest state;
+        <code>--civ-typography-underline-thicknessHover</code> = 0.125em
+        (2px at body) for hover and state-indicator surfaces;
+        <code>--civ-typography-underline-offset</code> = 0.1875em
+        (3px at body) — applied uniformly across
+        <code>civ-link</code>, <code>civ-breadcrumb</code>, and
+        <code>civ-data-grid</code> sort-header hover.
+      </p>
+
+      <div class="civ-flex civ-flex-col civ-gap-4">
+        <div>
+          <p class="civ-text-caption civ-mb-2">Body-size link (16px)</p>
+          <p class="civ-text-body">
+            For questions about your claim, visit the
+            <civ-link href="#" variant="secondary">VA benefits help center</civ-link>
+            or call 1-800-827-1000.
+          </p>
+        </div>
+
+        <div>
+          <p class="civ-text-caption civ-mb-2">Heading-size link (lg, 22px) — underline scales</p>
+          <h2 class="civ-heading-lg">
+            <civ-link href="#" variant="secondary">Continue to step 2: Personal information</civ-link>
+          </h2>
+        </div>
+
+        <div>
+          <p class="civ-text-caption civ-mb-2">Heading-size link (xl, 27px) — underline scales further</p>
+          <h1 class="civ-heading-xl">
+            <civ-link href="#" variant="secondary">Apply for disability compensation</civ-link>
+          </h1>
         </div>
       </div>
     </div>

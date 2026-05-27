@@ -35,6 +35,12 @@
       "normal": { "$type": "number", "$value": 1.5 },
       "relaxed": { "$type": "number", "$value": 1.625 },
       "loose": { "$type": "number", "$value": 2 }
+    },
+    "underline": {
+      "$description": "Link underline geometry. Em-based so a heading-sized link gets a proportionally thicker underline at proportionally larger offset — what the eye expects. Applied uniformly via .civ-link, breadcrumb, in-prose <a> tags. Hover thickens via underline.thicknessHover.",
+      "thickness": { "$type": "dimension", "$value": "0.0625em" },
+      "thicknessHover": { "$type": "dimension", "$value": "0.125em" },
+      "offset": { "$type": "dimension", "$value": "0.1875em" }
     }
   }
 }

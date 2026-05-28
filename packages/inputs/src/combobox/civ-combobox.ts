@@ -177,14 +177,23 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _cachedFilter = '';
+  private _cachedOptionsRef: ComboboxOption[] | null = null;
   private _cachedFilteredOptions: ComboboxOption[] = [];
 
   private get _filteredOptions(): ComboboxOption[] {
     // Remote mode: server-supplied results are already filtered.
     if (this._isRemote) return this._remoteOptions;
     if (!this._filter) return this.options;
-    // Memoize: only re-filter when the filter text changes
-    if (this._filter === this._cachedFilter && this._cachedFilteredOptions.length > 0) {
+    // Memoize: only re-filter when the filter text OR the options array
+    // reference changes. Tracking `_cachedOptionsRef` is the fix for
+    // cascading-dropdown patterns ("State" → "County") where a sibling
+    // field updates `this.options` while the filter text stays the same —
+    // without the reference check, the cache would serve stale matches.
+    if (
+      this._filter === this._cachedFilter
+      && this._cachedOptionsRef === this.options
+      && this._cachedFilteredOptions.length > 0
+    ) {
       return this._cachedFilteredOptions;
     }
     const lower = this._filter.toLowerCase();
@@ -195,6 +204,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     // ("2:30") and AM/PM modifiers ("9 AM" → "9am").
     const compact = lower.replace(/[^a-z0-9]/g, '');
     this._cachedFilter = this._filter;
+    this._cachedOptionsRef = this.options;
     this._cachedFilteredOptions = this.options.filter((o) => {
       const label = o.label.toLowerCase();
       if (label.includes(lower)) return true;
@@ -217,6 +227,32 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     return this._cachedFilteredOptions;
   }
 
+  /**
+   * Filtered options reordered into the visual sequence used for both
+   * rendering and keyboard navigation: ungrouped entries first (in filter
+   * order), then each group's entries together (in encounter order). The
+   * separate getter exists because index-based keyboard navigation
+   * (`_activeIndex`, arrow keys, Home/End) MUST walk the same array the
+   * renderer walks — using `_filteredOptions` directly previously left
+   * ArrowDown jumping over visually-adjacent options when ungrouped and
+   * grouped entries were mixed.
+   */
+  private get _displayOptions(): ComboboxOption[] {
+    const filtered = this._filteredOptions;
+    if (!filtered.some((o) => o.group)) return filtered;
+    const ungrouped: ComboboxOption[] = [];
+    const grouped = new Map<string, ComboboxOption[]>();
+    for (const o of filtered) {
+      if (o.group) {
+        if (!grouped.has(o.group)) grouped.set(o.group, []);
+        grouped.get(o.group)!.push(o);
+      } else {
+        ungrouped.push(o);
+      }
+    }
+    return [...ungrouped, ...[...grouped.values()].flat()];
+  }
+
   /** True when remote mode is active and the user must type more to trigger a fetch. */
   private get _belowMinQuery(): boolean {
     return this._isRemote && this.minQueryLength > 0 && this._filter.length < this.minQueryLength;
@@ -230,9 +266,13 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
   override render() {
-    const filtered = this._filteredOptions;
+    // `displayed` is the rendered visual sequence — keyboard navigation
+    // and active-descendant ARIA must walk THIS array, not `_filteredOptions`,
+    // so the index aligns with what the user sees. (`_filteredOptions` may
+    // be re-ordered by `_displayOptions` when groups are present.)
+    const displayed = this._displayOptions;
     const activeOptionId =
-      this._activeIndex >= 0 && this._activeIndex < filtered.length
+      this._activeIndex >= 0 && this._activeIndex < displayed.length
         ? `${this._listboxId}-option-${this._activeIndex}`
         : '';
 
@@ -295,22 +335,22 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             <civ-icon name="chevron-down" aria-hidden="true"></civ-icon>
           </button>
 
-          ${this._open && filtered.length > 0
+          ${this._open && displayed.length > 0
             ? html`
                 <ul
                   id="${this._listboxId}"
                   role="listbox"
                   class="civ-combobox-listbox"
-                  aria-labelledby="${this.label ? this._labelId : nothing}"
+                  aria-labelledby="${!isCompact && this.label ? this._labelId : nothing}"
                   aria-describedby="${this._ariaDescribedBy || nothing}"
                   aria-busy="${this._loading ? 'true' : nothing}"
                   @mousedown="${this._onListboxMousedown}"
                 >
-                  ${this._renderGroupedOptions(filtered)}
+                  ${this._renderGroupedOptions(displayed)}
                 </ul>
               `
             : nothing}
-          ${this._open && filtered.length === 0 ? this._renderEmptyState() : nothing}
+          ${this._open && displayed.length === 0 ? this._renderEmptyState() : nothing}
         </div>
       </div>
     `;
@@ -365,7 +405,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     }
     if (this._belowMinQuery) {
       return html`
-        <div class="${baseClass} civ-text-muted" role="status">
+        <div class="${baseClass} civ-text-muted" role="status" aria-live="polite">
           ${interpolate(t('comboboxTypeToSearch'), { count: this.minQueryLength })}
         </div>
       `;
@@ -412,33 +452,30 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     `;
   }
 
-  private _renderGroupedOptions(filtered: ComboboxOption[]): TemplateResult {
-    // Check if any options have groups
-    const hasGroups = filtered.some((o) => o.group);
+  /**
+   * Render the visual list. `displayed` is `_displayOptions` — already in
+   * the rendered sequence (ungrouped first, then groups), so the index
+   * passed to `_renderOption` matches the keyboard-navigation index.
+   * Group headers are emitted at the transition where the previous item's
+   * group differs from the current item's group.
+   */
+  private _renderGroupedOptions(displayed: ComboboxOption[]): TemplateResult {
+    const hasGroups = displayed.some((o) => o.group);
     if (!hasGroups) {
-      return html`${repeat(filtered, (o) => o.value, (option, i) => this._renderOption(option, i))}`;
+      return html`${repeat(displayed, (o) => o.value, (option, i) => this._renderOption(option, i))}`;
     }
-
-    // Group options preserving filtered order
-    const grouped = new Map<string, { option: ComboboxOption; index: number }[]>();
-    const ungrouped: { option: ComboboxOption; index: number }[] = [];
-    for (let i = 0; i < filtered.length; i++) {
-      const option = filtered[i];
-      if (option.group) {
-        if (!grouped.has(option.group)) grouped.set(option.group, []);
-        grouped.get(option.group)!.push({ option, index: i });
-      } else {
-        ungrouped.push({ option, index: i });
+    const chunks: TemplateResult[] = [];
+    let lastGroup: string | undefined = undefined;
+    for (let i = 0; i < displayed.length; i++) {
+      const option = displayed[i];
+      const group = option.group;
+      if (group && group !== lastGroup) {
+        chunks.push(html`<div class="civ-combobox-group-header" role="presentation">${group}</div>`);
       }
+      lastGroup = group;
+      chunks.push(this._renderOption(option, i));
     }
-
-    return html`
-      ${ungrouped.map(({ option, index }) => this._renderOption(option, index))}
-      ${[...grouped.entries()].map(([groupName, items]) => html`
-        <div class="civ-combobox-group-header" role="presentation">${groupName}</div>
-        ${items.map(({ option, index }) => this._renderOption(option, index))}
-      `)}
-    `;
+    return html`${chunks}`;
   }
 
   private _setOpen(open: boolean): void {
@@ -456,6 +493,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   private _onClear(): void {
     this.value = '';
     this._filter = '';
+    this._activeIndex = -1;
     this.updateFormValue('');
     if (this._isRemote) {
       this._debouncedLoad.cancel();
@@ -507,9 +545,18 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     this._activeIndex = -1;
     // Clear the selected value when the user types — filtering invalidates
     // the previous selection. A new selection is committed via _selectOption().
+    const hadSelection = !!this.value;
     this.value = '';
     this.updateFormValue('');
     dispatch(this, 'civ-input', { value: this._filter });
+    // When typing invalidates a previously-committed selection, fire
+    // `civ-change` with the empty value so cascading-dropdown orchestrators
+    // ("State → County") clear their dependent field's options. Without
+    // this, the form data goes empty silently and only `civ-input`
+    // listeners notice.
+    if (hadSelection) {
+      dispatch(this, 'civ-change', { value: '' });
+    }
 
     if (this._isRemote) {
       this._maybeLoad(this._filter);
@@ -606,19 +653,32 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
     }
   }
 
+  /** Threshold below which the loading announce is suppressed (matches the spinner's flash-protection delay). */
+  private static readonly _LOADING_ANNOUNCE_DELAY_MS = 200;
+
   /**
    * Invoke the loader, ignore stale responses, and surface loading / error
    * state. Each call increments `_requestId`; only the most recent call's
    * resolution updates the listbox.
+   *
+   * The "Loading…" announce is delayed so a fast fetch (<200ms) doesn't
+   * stack a "Loading… 3 results available" double-announce in rapid
+   * succession. On slow fetches AT users still hear the in-progress cue.
    */
   private async _runLoad(query: string): Promise<void> {
     if (!this.loadOptions) return;
     const id = ++this._requestId;
     this._loading = true;
     this._loadError = '';
-    this.announce(this.loadingText || t('comboboxLoadingAnnouncement'));
+    const loadingAnnounceTimer = setTimeout(() => {
+      // Only announce if this call hasn't been superseded by a newer one.
+      if (id === this._requestId) {
+        this.announce(this.loadingText || t('comboboxLoadingAnnouncement'));
+      }
+    }, CivCombobox._LOADING_ANNOUNCE_DELAY_MS);
     try {
       const results = await this.loadOptions(query);
+      clearTimeout(loadingAnnounceTimer);
       if (id !== this._requestId) return; // stale — newer request superseded us
       this._remoteOptions = Array.isArray(results) ? results : [];
       this._loading = false;
@@ -629,6 +689,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
           : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
       );
     } catch (err) {
+      clearTimeout(loadingAnnounceTimer);
       if (id !== this._requestId) return;
       this._loading = false;
       this._remoteOptions = [];
@@ -638,7 +699,10 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
   }
 
   private _onKeydown(e: KeyboardEvent): void {
-    const filtered = this._filteredOptions;
+    // Walk the visual display order — `_displayOptions` reorders mixed
+    // grouped/ungrouped lists so the index here matches what the user
+    // sees in the dropdown. See `_displayOptions` for the rationale.
+    const displayed = this._displayOptions;
 
     switch (e.key) {
       case 'ArrowDown':
@@ -646,7 +710,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         if (!this._open) {
           this._setOpen(true);
         } else {
-          this._activeIndex = this._nextEnabledIndex(filtered, this._activeIndex, 1);
+          this._activeIndex = this._nextEnabledIndex(displayed, this._activeIndex, 1);
         }
         break;
 
@@ -656,29 +720,29 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
           this._setOpen(true);
         } else {
           // APG: ArrowUp from no selection goes to last item
-          const start = this._activeIndex <= 0 ? filtered.length : this._activeIndex;
-          this._activeIndex = this._nextEnabledIndex(filtered, start, -1);
+          const start = this._activeIndex <= 0 ? displayed.length : this._activeIndex;
+          this._activeIndex = this._nextEnabledIndex(displayed, start, -1);
         }
         break;
 
       case 'Home':
-        if (this._open && filtered.length > 0) {
+        if (this._open && displayed.length > 0) {
           e.preventDefault();
-          this._activeIndex = this._nextEnabledIndex(filtered, -1, 1);
+          this._activeIndex = this._nextEnabledIndex(displayed, -1, 1);
         }
         break;
 
       case 'End':
-        if (this._open && filtered.length > 0) {
+        if (this._open && displayed.length > 0) {
           e.preventDefault();
-          this._activeIndex = this._nextEnabledIndex(filtered, filtered.length, -1);
+          this._activeIndex = this._nextEnabledIndex(displayed, displayed.length, -1);
         }
         break;
 
       case 'Enter':
-        if (this._open && this._activeIndex >= 0 && this._activeIndex < filtered.length) {
+        if (this._open && this._activeIndex >= 0 && this._activeIndex < displayed.length) {
           e.preventDefault();
-          this._selectOption(filtered[this._activeIndex]);
+          this._selectOption(displayed[this._activeIndex]);
         }
         break;
 
@@ -704,8 +768,8 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         // arrow-navigated to a match, then Tabbed away would lose the
         // selection — the listbox just closed and `value` was already
         // cleared by `_onFilterInput`.
-        if (this._open && this._activeIndex >= 0 && this._activeIndex < filtered.length) {
-          this._selectOption(filtered[this._activeIndex]);
+        if (this._open && this._activeIndex >= 0 && this._activeIndex < displayed.length) {
+          this._selectOption(displayed[this._activeIndex]);
         } else {
           this._setOpen(false);
         }

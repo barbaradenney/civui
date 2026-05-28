@@ -1165,3 +1165,260 @@ describe('civ-combobox readonly', () => {
     expect((el as any)._open).toBe(false);
   });
 });
+
+describe('civ-combobox — grouped + ungrouped keyboard navigation', () => {
+  afterEach(cleanupFixtures);
+
+  // Mixed list: some entries have a group, some don't. The render order is
+  // ungrouped first, then groups together. Keyboard navigation MUST walk
+  // the same visual sequence — previously it walked the raw filtered array
+  // indices, so ArrowDown jumped over visually-adjacent options.
+  const MIXED = [
+    { value: 'a', label: 'Alpha', group: 'Letters' },
+    { value: 'b', label: 'Bravo' },
+    { value: 'c', label: 'Charlie', group: 'Letters' },
+    { value: 'd', label: 'Delta' },
+  ];
+
+  it('renders ungrouped options first, then groups together (visual order)', async () => {
+    const el = await fixture('<civ-combobox label="Pick"></civ-combobox>') as any;
+    el.options = MIXED;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    const options = el.querySelectorAll('[role="option"]');
+    const labels = Array.from(options).map((o: any) => o.textContent!.trim());
+    // Ungrouped first (Bravo, Delta), then Letters group (Alpha, Charlie)
+    expect(labels).toEqual(['Bravo', 'Delta', 'Alpha', 'Charlie']);
+  });
+
+  it('ArrowDown moves to the next visually-adjacent option, not the next filter-array index', async () => {
+    const el = await fixture('<civ-combobox label="Pick"></civ-combobox>') as any;
+    el.options = MIXED;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    // ArrowDown four times: cursor should land on Bravo, Delta, Alpha, Charlie in turn.
+    const expectedSequence = ['Bravo', 'Delta', 'Alpha', 'Charlie'];
+    for (const expected of expectedSequence) {
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      await elementUpdated(el);
+      const active = el.querySelector('[role="option"][data-active]') as HTMLElement | null;
+      expect(active?.textContent!.trim()).toBe(expected);
+    }
+  });
+
+  it('Enter commits the option that is visually active (not a different filter-array index)', async () => {
+    const el = await fixture('<civ-combobox label="Pick" name="pick"></civ-combobox>') as any;
+    el.options = MIXED;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    // Navigate to the 3rd visual option (Alpha — first grouped entry).
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('a');
+  });
+
+  it('renders the group header at the first grouped option', async () => {
+    const el = await fixture('<civ-combobox label="Pick"></civ-combobox>') as any;
+    el.options = MIXED;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    const headers = el.querySelectorAll('.civ-combobox-group-header');
+    expect(headers.length).toBe(1);
+    expect(headers[0].textContent).toBe('Letters');
+  });
+});
+
+describe('civ-combobox — cache invalidation', () => {
+  afterEach(cleanupFixtures);
+
+  it('re-filters when the options array reference changes (cascading-dropdown pattern)', async () => {
+    const el = await fixture('<civ-combobox label="County"></civ-combobox>') as any;
+    el.options = [{ value: 'la', label: 'Los Angeles' }, { value: 'sf', label: 'San Francisco' }];
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.value = 'San';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.querySelectorAll('[role="option"]').length).toBe(1);
+
+    // Sibling field changed (e.g. user picked a different State) — options swap
+    // to a new array containing different "San" matches. The filter text is
+    // still "San"; without options-reference invalidation, the cache would
+    // serve the stale single-entry result.
+    el.options = [
+      { value: 'sd', label: 'San Diego' },
+      { value: 'sj', label: 'San Jose' },
+      { value: 'sa', label: 'Santa Cruz' },
+    ];
+    await elementUpdated(el);
+    const labels = Array.from(el.querySelectorAll('[role="option"]')).map((o: any) => o.textContent!.trim());
+    expect(labels).toEqual(['San Diego', 'San Jose', 'Santa Cruz']);
+  });
+});
+
+describe('civ-combobox — listbox aria-labelledby in compact mode', () => {
+  afterEach(cleanupFixtures);
+
+  it('omits aria-labelledby on the listbox when spacing="sm" (label is not rendered)', async () => {
+    const el = await fixture('<civ-combobox label="State" spacing="sm" aria-label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    const listbox = el.querySelector('[role="listbox"]') as HTMLElement;
+    expect(listbox).not.toBeNull();
+    // Compact mode doesn't render the <label>, so `aria-labelledby` would
+    // point to a missing id. The host's `aria-label` on the inner <input>
+    // carries the accessible name instead.
+    expect(listbox.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('sets aria-labelledby on the listbox in default (non-compact) mode', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+
+    const listbox = el.querySelector('[role="listbox"]') as HTMLElement;
+    const labelledBy = listbox.getAttribute('aria-labelledby');
+    expect(labelledBy).toBeTruthy();
+    expect(el.querySelector(`#${labelledBy}`)).not.toBeNull();
+  });
+});
+
+describe('civ-combobox — typing invalidates committed selection', () => {
+  afterEach(cleanupFixtures);
+
+  it('fires civ-change with empty value when the user types over a selected option', async () => {
+    const el = await fixture('<civ-combobox label="State" name="state"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+    // Select CA
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('CA');
+
+    const changes: string[] = [];
+    el.addEventListener('civ-change', (e: CustomEvent<{ value: string }>) => {
+      changes.push(e.detail.value);
+    });
+
+    // User starts typing — should invalidate the selection AND fire civ-change.
+    input.value = 'N';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el.value).toBe('');
+    expect(changes).toEqual(['']);
+  });
+
+  it('does NOT fire civ-change on every keystroke after invalidation', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+
+    const changes: string[] = [];
+    el.addEventListener('civ-change', (e: CustomEvent<{ value: string }>) => { changes.push(e.detail.value); });
+
+    // Type twice — civ-change should fire once (on first invalidation), not twice.
+    input.value = 'N';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+    input.value = 'Ne';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    expect(changes).toEqual(['']);
+  });
+});
+
+describe('civ-combobox — minor follow-ups', () => {
+  afterEach(cleanupFixtures);
+
+  it('clear button resets _activeIndex so a stale value doesn\'t persist into the next open', async () => {
+    const el = await fixture('<civ-combobox label="State"></civ-combobox>') as any;
+    el.options = STATES;
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(el._activeIndex).toBe(1);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await elementUpdated(el);
+    expect(el.value).toBe('CO');
+
+    const clearBtn = el.querySelector('.civ-close-btn') as HTMLButtonElement;
+    expect(clearBtn).not.toBeNull();
+    clearBtn.click();
+    await elementUpdated(el);
+    expect(el._activeIndex).toBe(-1);
+  });
+
+  it('below-min-query message carries aria-live="polite"', async () => {
+    const el = await fixture('<civ-combobox label="Search" min-query-length="3"></civ-combobox>') as any;
+    el.loadOptions = async () => [];
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    await elementUpdated(el);
+    input.value = 'ab';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await elementUpdated(el);
+
+    const prompt = el.querySelector('[role="status"]') as HTMLElement;
+    expect(prompt).not.toBeNull();
+    expect(prompt.getAttribute('aria-live')).toBe('polite');
+  });
+
+  it('Loading announce is suppressed when the fetch resolves under the 200ms delay', async () => {
+    vi.useFakeTimers();
+    const announced: string[] = [];
+    const el = await fixture('<civ-combobox label="Search"></civ-combobox>') as any;
+    el.announce = (msg: string) => { announced.push(msg); };
+    el.loadOptions = async () => [{ value: 'a', label: 'Alpha' }];
+    await elementUpdated(el);
+    const input = el.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new FocusEvent('focus'));
+    // _onFocus triggers an immediate fetch; advance just past the
+    // microtask boundary so the promise resolves before the 200ms timer
+    // fires.
+    await vi.advanceTimersByTimeAsync(50);
+    await elementUpdated(el);
+
+    expect(announced).not.toContain('Loading...');
+    vi.useRealTimers();
+  });
+});

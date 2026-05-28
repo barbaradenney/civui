@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Alert message text. Alternatively pass content as a light-DOM child; `label` is used when no body is slotted',
+      default: '',
+    },
     intent: {
       type: 'enum',
       description: 'Semantic tone. Drives icon and color palette',

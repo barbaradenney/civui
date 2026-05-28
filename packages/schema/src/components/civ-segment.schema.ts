@@ -15,6 +15,22 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible label text for this segment',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'Value emitted when this segment is selected',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables this segment — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     selected: {
       type: 'boolean',
       description: 'Whether this segment is the active option. Web-only. Native platforms encode the active segment via the parent control\'s `value` binding pointing at one of its options',

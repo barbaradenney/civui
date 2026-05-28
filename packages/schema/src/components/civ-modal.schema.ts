@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Accessible label for the dialog. Use when there is no visible `heading` to name the dialog',
+      default: '',
+    },
     open: {
       type: 'boolean',
       description: 'Whether the modal is currently visible. Reflects to the host attribute',

@@ -15,6 +15,28 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible label text for this radio option',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'Value submitted when this radio is the selected option',
+      default: '',
+    },
+    required: {
+      type: 'boolean',
+      description: 'Marks the option required. Usually set on the parent `civ-radio-group` instead',
+      default: false,
+      reflect: true,
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables this radio option — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     checked: {
       type: 'boolean',
       description: 'Whether this radio is the selected option. Managed by the parent group. Setting it directly is uncommon',

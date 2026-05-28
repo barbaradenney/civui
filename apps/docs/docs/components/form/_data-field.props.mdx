@@ -3,6 +3,9 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Field label (the term) |
+| `value` | `string` | `''` | Field value (the definition). Alternatively pass content as a light-DOM child |
+| `hint` | `string` | `''` | Hint text shown below the value |
 | `href` | `string` | `''` | When set, the value is rendered as a download link (web only. Native platforms render the value as plain text) |
 | `values` | `array` | — | Multi-value display. Renders each entry on its own line. JS property only (no HTML attribute reflection) |
 | `edit-href` | `string` | `''` | Edit link destination. When set, renders an inline tertiary link beside the value |

@@ -9,6 +9,22 @@ const schema: ComponentSchema = {
   isGroup: true,
 
   props: {
+    hint: {
+      type: 'string',
+      description: 'Hint text shown below the repeater legend',
+      default: '',
+    },
+    error: {
+      type: 'string',
+      description: 'Error message shown for the repeater',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the repeater — the add / remove controls and all rows become non-interactive',
+      default: false,
+      reflect: true,
+    },
     legend: {
       type: 'string',
       description: 'Top-level legend rendered above the repeated instances',

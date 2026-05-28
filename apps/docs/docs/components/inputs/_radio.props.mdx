@@ -3,6 +3,10 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible label text for this radio option |
+| `value` | `string` | `''` | Value submitted when this radio is the selected option |
+| `required` | `boolean` | `false` | Marks the option required. Usually set on the parent `civ-radio-group` instead |
+| `disabled` | `boolean` | `false` | Disables this radio option — non-interactive and dimmed |
 | `checked` | `boolean` | `false` | Whether this radio is the selected option. Managed by the parent group. Setting it directly is uncommon |
 | `description` | `string` | `''` | Secondary descriptive text below the label |
 | `tile` | `boolean` | `true` | Tile variant with bordered card styling. Default is true. Tiles are the standard treatment; opt out for blank inline radios |

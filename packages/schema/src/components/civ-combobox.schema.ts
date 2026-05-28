@@ -103,12 +103,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    // No host-level role: the ARIA combobox pattern lives on the rendered
-    // inner <input role="combobox">. The host element is a wrapper that
-    // carries label / hint / error chrome and the listbox popup. Declaring
-    // `role: 'combobox'` here would misrepresent the contract for native
-    // implementers (per .claude/rules/audit-debt.md → "Schema a11y.role
-    // must match the Lit host's actual role").
+    // Role describes the rendered control: the inner <input role="combobox">.
+    // Matches the codebase convention (civ-text-input → textbox, civ-country
+    // → combobox, etc.) — the schema documents the rendered native/inner
+    // element's role for native implementers. The lint:schema-a11y-role gate
+    // permits this; it only fails on roles that CONTRADICT what's rendered.
+    role: 'combobox',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],

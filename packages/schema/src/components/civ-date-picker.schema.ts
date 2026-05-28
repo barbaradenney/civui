@@ -167,11 +167,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    // No host-level role: the date-picker renders a real <input type="text">
-    // (implicit role textbox) plus a separate calendar trigger <button>. The
-    // host element is a wrapper carrying label / hint / error chrome — it
-    // doesn't set a role (per .claude/rules/audit-debt.md → "Schema a11y.role
-    // must match the Lit host's actual role").
+    // Role describes the rendered control: the inner <input type="text">
+    // (implicit role textbox). Matches the convention used by civ-text-input
+    // and the preset wrappers (currency/ssn/ein/…) which render the same
+    // <input> and declare textbox. The lint:schema-a11y-role gate permits
+    // this; it only fails on roles that CONTRADICT what's rendered.
+    role: 'textbox',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],

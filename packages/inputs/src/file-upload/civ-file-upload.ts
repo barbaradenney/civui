@@ -385,9 +385,22 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
   /**
    * Render the visible file-picker trigger — either the inline browse pill
    * (variant=inline) or the dropzone with drag-and-drop affordances
-   * (variant=default | large).
+   * (variant=default | large). Both triggers carry `data-civ-file-trigger`
+   * so focus-restoration logic (e.g. after removing the last file) can
+   * locate the trigger without knowing the variant.
    */
   private _renderTrigger() {
+    // Combine the question (this.label) with the action ("Browse") so the
+    // accessible name contains the visible "Browse" text — WCAG 2.5.3 Label
+    // in Name requires voice-control users saying "Browse" to be able to
+    // activate the control.
+    const browseText = this.browseText || t('fileUploadBrowseText');
+    const triggerAriaLabel = `${this.label}, ${browseText}`;
+    const triggerAriaDescribedBy =
+      [this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : '']
+        .filter(Boolean)
+        .join(' ') || nothing;
+
     if (this.variant === 'inline') {
       // Compact trigger summary matches native <input type="file"> behavior:
       //   - empty           → "No file chosen"
@@ -408,15 +421,17 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
           type="button"
           class="civ-flex civ-items-stretch civ-w-full civ-bg-transparent civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded"
           @click="${this._onDropzoneClick}"
-          aria-label="${this.label}"
+          aria-label="${triggerAriaLabel}"
           aria-required="${this.required || nothing}"
           aria-invalid="${this._displayedError ? 'true' : nothing}"
+          aria-describedby="${triggerAriaDescribedBy}"
           ?disabled="${this.disabled}"
+          data-civ-file-trigger
         >
-          <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s" aria-invalid="${this._displayedError ? 'true' : nothing}">
+          <span class="civ-input civ-input--joined-end civ-flex-1 civ-truncate civ-text-start civ-rounded-s">
             ${triggerText}
           </span>
-          <span class="civ-action-btn civ-action-btn--tertiary civ-action-btn--joined-start civ-shrink-0 civ-rounded-e">${this.browseText || t('fileUploadBrowseText')}</span>
+          <span class="civ-action-btn civ-action-btn--tertiary civ-action-btn--joined-start civ-shrink-0 civ-rounded-e">${browseText}</span>
         </button>`;
     }
     return html`
@@ -428,17 +443,18 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         @dragleave="${this._boundDragLeave}"
         @drop="${this._boundDrop}"
         @click="${this._onDropzoneClick}"
-        aria-label="${this.label}"
+        aria-label="${triggerAriaLabel}"
         aria-required="${this.required || nothing}"
         aria-invalid="${this._displayedError ? 'true' : nothing}"
         ?disabled="${this.disabled}"
-        aria-describedby="${[this._ariaDescribedBy, this._files.length > 0 ? this._filesListId : ''].filter(Boolean).join(' ') || nothing}"
+        aria-describedby="${triggerAriaDescribedBy}"
         data-dragging="${this._dragging ? '' : nothing}"
+        data-civ-file-trigger
       >
         <span class="civ-block civ-text-body civ-mb-1">
           ${this.dragText || t('fileUploadDragText')}
         </span>
-        <span class="civ-action-btn civ-action-btn--tertiary">${this.browseText || t('fileUploadBrowseText')}</span>
+        <span class="civ-action-btn civ-action-btn--tertiary">${browseText}</span>
         ${this.accept
           ? html`<span class="civ-block civ-text-sm civ-mt-1">${this.acceptedLabel || t('fileUploadAcceptedLabel')}${formatAcceptedTypes(this.accept)}</span>`
           : nothing}
@@ -555,7 +571,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
               ></civ-text-input>
               <civ-action-button
                 class="civ-mt-2"
-                variant="secondary"
+                emphasis="secondary"
                 label="${t('fileUploadUnlockText')}"
                 aria-label="${interpolate(t('fileUploadUnlockAriaLabel'), { name: file.name })}"
                 ?disabled="${this.disabled}"
@@ -955,16 +971,30 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     // Clear validation error only if no validation errors occurred
     if (errors.length === 0) this._validationError = '';
 
+    let addedCount: number;
     if (this.multiple) {
       this._files = [...this._files, ...validated];
+      addedCount = validated.length;
     } else {
+      // Single-file mode: the incoming file replaces the current selection.
+      // Release the previous file's resources before swap — otherwise the
+      // ObjectURL handle leaks for the lifetime of the component and an
+      // in-flight upload of the replaced file keeps consuming network /
+      // server resources for a file the user can no longer see.
+      for (const old of this._files) {
+        this._revokePreviewUrl(old.file);
+        old.abortController?.abort();
+        this._progressMilestones.delete(old.file);
+        this._passwordEntries.delete(old.file);
+      }
       this._files = validated.slice(0, 1);
+      addedCount = this._files.length;
     }
 
     this._updateFormData();
     this._dispatchChange();
     this.sendAnalytics('upload', { fileCount: this._files.length });
-    this.announce(interpolate(this.fileAddedMessage || t('fileUploadFileAddedMessage'), { count: validated.length, total: this._files.length }));
+    this.announce(interpolate(this.fileAddedMessage || t('fileUploadFileAddedMessage'), { count: addedCount, total: this._files.length }));
   }
 
   /**
@@ -1042,15 +1072,18 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
     this.sendAnalytics('remove', { fileCount: this._files.length });
     this.announce(interpolate(this.fileRemovedMessage || t('fileUploadFileRemovedMessage'), { name: removed.name, total: this._files.length }));
 
-    // Move focus to the next remove button, or the dropzone if no files remain
+    // Move focus to the next remove button, or the trigger if no files
+    // remain. Use `[data-civ-file-trigger]` so the fallback works for every
+    // variant — `.civ-dropzone` only exists on default/large, leaving focus
+    // lost on the inline variant when the last file is removed.
     void this._afterUpdate('restore focus after file removal', () => {
       const buttons = this.querySelectorAll<HTMLButtonElement>('[data-file-remove]');
       if (buttons.length > 0) {
         const next = buttons[Math.min(index, buttons.length - 1)];
         next.focus();
       } else {
-        const dropzone = this.querySelector<HTMLElement>('.civ-dropzone');
-        dropzone?.focus();
+        const trigger = this.querySelector<HTMLElement>('[data-civ-file-trigger]');
+        trigger?.focus();
       }
     });
   }

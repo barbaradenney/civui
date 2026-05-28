@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-file-upload.js';
 import '@civui/core';
@@ -1241,10 +1241,22 @@ describe('civ-file-upload inline variant', () => {
     expect(el.querySelectorAll('.civ-file-item')).toHaveLength(1);
   });
 
-  it('inline button has an accessible name from this.label', async () => {
+  it('inline button accessible name combines label + browse text (WCAG 2.5.3 Label in Name)', async () => {
+    // The accessible name must contain the visible "Browse" text so voice-control
+    // users saying "click Browse" can activate the button. Label-first preserves
+    // the question context for screen-reader users (e.g. "Upload your tax return,
+    // Choose from folder, button").
     const el = await fixture('<civ-file-upload label="Upload your tax return" variant="inline" name="tax"></civ-file-upload>') as any;
     const button = el.querySelector('button')!;
-    expect(button.getAttribute('aria-label')).toBe('Upload your tax return');
+    const aria = button.getAttribute('aria-label')!;
+    expect(aria).toContain('Upload your tax return');
+    expect(aria).toContain('Choose from folder');
+  });
+
+  it('inline button respects a custom browse-text in the accessible name', async () => {
+    const el = await fixture('<civ-file-upload label="Tax" variant="inline" name="tax" browse-text="Pick file"></civ-file-upload>') as any;
+    const button = el.querySelector('button')!;
+    expect(button.getAttribute('aria-label')).toContain('Pick file');
   });
 
   it('inline variant exposes aria-required and aria-invalid on the button', async () => {
@@ -1514,5 +1526,145 @@ describe('civ-file-upload readonly', () => {
     const el = await fixture('<civ-file-upload legend="Upload" readonly></civ-file-upload>');
     const input = el.querySelector('input[type="file"]') as HTMLInputElement;
     expect(input.disabled).toBe(true);
+  });
+});
+
+describe('civ-file-upload single-file replacement cleanup', () => {
+  // jsdom doesn't ship URL.createObjectURL / revokeObjectURL. Stub them at
+  // the describe scope so the stub survives cleanupFixtures (which triggers
+  // disconnectedCallback → _revokeAllPreviewUrls during teardown).
+  let revoked: string[];
+  let counter: number;
+  let origCreate: typeof URL.createObjectURL | undefined;
+  let origRevoke: typeof URL.revokeObjectURL | undefined;
+
+  beforeEach(() => {
+    revoked = [];
+    counter = 0;
+    origCreate = (URL as any).createObjectURL;
+    origRevoke = (URL as any).revokeObjectURL;
+    (URL as any).createObjectURL = () => `blob:test/${++counter}`;
+    (URL as any).revokeObjectURL = (url: string) => { revoked.push(url); };
+  });
+
+  afterEach(() => {
+    cleanupFixtures();
+    (URL as any).createObjectURL = origCreate;
+    (URL as any).revokeObjectURL = origRevoke;
+  });
+
+  it('revokes the previous file\'s preview URL when a new file replaces it', async () => {
+    const el = await fixture('<civ-file-upload label="Photo" show-preview accept="image/*" name="photo"></civ-file-upload>') as any;
+    const a = new File(['a'], 'a.png', { type: 'image/png' });
+    el._addFiles([a]);
+    await el.updateComplete;
+    // Trigger preview-URL creation
+    const urlForA = el._getPreviewUrl(a);
+    expect(urlForA).toBeTruthy();
+
+    const b = new File(['b'], 'b.png', { type: 'image/png' });
+    el._addFiles([b]);
+    await el.updateComplete;
+
+    expect(revoked).toContain(urlForA);
+  });
+
+  it('aborts the previous file\'s upload when a new file replaces it', async () => {
+    const el = await fixture('<civ-file-upload label="Doc" name="doc"></civ-file-upload>') as any;
+    const a = new File(['a'], 'a.pdf', { type: 'application/pdf' });
+    el._addFiles([a]);
+    await el.updateComplete;
+
+    const controller = el.getAbortController(0)!;
+    expect(controller.signal.aborted).toBe(false);
+
+    const b = new File(['b'], 'b.pdf', { type: 'application/pdf' });
+    el._addFiles([b]);
+    await el.updateComplete;
+
+    expect(controller.signal.aborted).toBe(true);
+  });
+});
+
+describe('civ-file-upload announcement count', () => {
+  afterEach(cleanupFixtures);
+
+  it('single-file mode with multi-file drop announces the actual added count, not the validated count', async () => {
+    const el = await fixture('<civ-file-upload label="Doc" name="doc"></civ-file-upload>') as any;
+    const announced: string[] = [];
+    el.announce = (msg: string) => { announced.push(msg); };
+
+    el._addFiles([
+      new File(['a'], 'a.pdf', { type: 'application/pdf' }),
+      new File(['b'], 'b.pdf', { type: 'application/pdf' }),
+      new File(['c'], 'c.pdf', { type: 'application/pdf' }),
+    ]);
+    await el.updateComplete;
+
+    expect(el.files.length).toBe(1);
+    const addedAnnounce = announced.find((m) => m.includes('added'));
+    expect(addedAnnounce).toBeTruthy();
+    // Must say "1 file added", not "3 files added"
+    expect(addedAnnounce).toContain('1');
+    expect(addedAnnounce).not.toContain('3');
+  });
+});
+
+describe('civ-file-upload inline variant a11y', () => {
+  afterEach(cleanupFixtures);
+
+  it('does not duplicate aria-invalid onto the inner span', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc" error="Required"></civ-file-upload>') as any;
+    const span = el.querySelector('.civ-input') as HTMLElement;
+    expect(span.hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('wires aria-describedby on the inline trigger to hint and error', async () => {
+    const el = await fixture(
+      '<civ-file-upload label="Upload" variant="inline" hint="PDF only" error="Required" name="doc"></civ-file-upload>',
+    ) as any;
+    const button = el.querySelector('[data-civ-file-trigger]') as HTMLElement;
+    const describedBy = button.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    const ids = describedBy!.split(' ').filter(Boolean);
+    expect(ids.length).toBeGreaterThanOrEqual(2);
+    for (const id of ids) {
+      expect(el.querySelector(`#${id}`)).not.toBeNull();
+    }
+  });
+
+  it('moves focus to the inline trigger when the last file is removed', async () => {
+    const el = await fixture('<civ-file-upload label="Docs" variant="inline" multiple name="docs"></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'a.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+
+    expect(el.querySelectorAll('[data-file-remove]').length).toBe(1);
+    el.removeFile(0);
+    await el.updateComplete;
+    // _afterUpdate awaits updateComplete internally; flush a microtask
+    await Promise.resolve();
+
+    const trigger = el.querySelector('[data-civ-file-trigger]') as HTMLElement;
+    expect(trigger).not.toBeNull();
+    expect(el.ownerDocument!.activeElement).toBe(trigger);
+  });
+});
+
+describe('civ-file-upload unlock button emphasis', () => {
+  afterEach(cleanupFixtures);
+
+  it('uses emphasis="secondary" (not variant) on the Unlock button', async () => {
+    const el = await fixture('<civ-file-upload label="Doc" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['a'], 'a.pdf', { type: 'application/pdf' })]);
+    await el.updateComplete;
+    el.setFileStatus(0, 'locked');
+    await el.updateComplete;
+
+    const unlockBtn = el.querySelector('.civ-file-item__unlock civ-action-button') as HTMLElement;
+    expect(unlockBtn).not.toBeNull();
+    // civ-action-button has no `variant` prop — only `emphasis`. The previous
+    // attribute was a silent no-op leaving the button at default tertiary.
+    expect(unlockBtn.getAttribute('emphasis')).toBe('secondary');
+    expect(unlockBtn.hasAttribute('variant')).toBe(false);
   });
 });

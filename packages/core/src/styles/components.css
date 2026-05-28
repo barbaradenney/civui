@@ -234,21 +234,14 @@
     max-width: 22rem;
   }
 
-  /* Joined-edge modifiers for compact inline triggers (e.g. the compact
-     file-upload variant pairs an .civ-input span with a .civ-action-btn
-     to form a single visual control). Replaces hand-rolled inline styles
-     so consumers can compose the same pattern without redefining the
-     border / radius overrides each time. */
-  .civ-input--joined-end {
-    border-inline-end: 0;
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
-  }
-
-  .civ-action-btn--joined-start {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-  }
+  /* Joined-edge modifiers live next to their respective base classes
+     (`.civ-input--joined-end` after `.civ-input`, `.civ-action-btn--joined-start`
+     after `.civ-action-btn`). Source order matters: the base classes apply
+     `border-radius` via `@apply civ-rounded`, which is a shorthand that
+     sets all four corner properties. When the modifier sits BEFORE the
+     base class at the same specificity, the base wins and re-rounds the
+     joined edge — the visible bug was the file-upload compact trigger
+     where the input/button seam carried rounded corners. */
 
   /* ── List (civ-list / civ-list-item) ───────────────────────── */
   /* `civ-list-item { display: block }` lives in the host-display
@@ -775,6 +768,17 @@
     @apply civ-block civ-w-full civ-border civ-rounded civ-px-3 civ-py-3
            civ-font-sans civ-bg-surface civ-border-base;
     color: var(--civ-color-base-darkest);
+  }
+
+  /* Joined-edge modifier — drops the end (right in LTR) border and
+     rounded corners so a trailing button can sit flush. Must come AFTER
+     `.civ-input` because the base class applies `border-radius` as a
+     shorthand that sets all four corners; if this modifier came first
+     the base's shorthand would re-round the joined edge. */
+  .civ-input--joined-end {
+    border-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   /* Suppress the browsers' user-agent clear button on
@@ -2551,6 +2555,16 @@
        tokens; the floor must hold even at [data-civ-scale="dense"]. */
     min-width: 2.5rem;
     min-height: 2.5rem;
+  }
+
+  /* Joined-edge modifier — drops the start (left in LTR) rounded
+     corners so a leading input can sit flush. Must come AFTER
+     `.civ-action-btn` because the base class applies `border-radius`
+     as a shorthand that sets all four corners; if this modifier came
+     first the base's shorthand would re-round the joined edge. */
+  .civ-action-btn--joined-start {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
   }
 
   /* Icon-only mode — square, padding shrinks to match icon. */

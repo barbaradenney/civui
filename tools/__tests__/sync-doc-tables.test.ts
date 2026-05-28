@@ -1,5 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { escapeCell } from '../sync-doc-tables.js';
+import { escapeCell, isCliInvocation } from '../sync-doc-tables.js';
+
+describe('isCliInvocation (side-effect guard)', () => {
+  it('returns false when the module is imported (not invoked as CLI)', () => {
+    // Under vitest, process.argv[1] is the test runner, not
+    // sync-doc-tables.ts — so main() must NOT run on import. Without
+    // this guard, importing the module (e.g. for escapeCell) regenerated
+    // all 115 doc partials against the real docs dir and could truncate
+    // a partial to 0 bytes under the parallel runner.
+    expect(isCliInvocation()).toBe(false);
+  });
+});
 
 describe('escapeCell', () => {
   it('backslash-escapes pipes (table delimiter collision)', () => {

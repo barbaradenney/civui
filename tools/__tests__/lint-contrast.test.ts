@@ -171,9 +171,12 @@ describe('PAIRS (live data)', () => {
     expect(names.some((n) => n.startsWith('tag '))).toBe(true);
   });
 
-  it('all entries use either 4.5 (AA body) or 3.0 (large/non-text)', () => {
+  it('all entries use a recognized WCAG tier: 3.0 (large/non-text), 4.5 (AA body), or 7.0 (AAA enhanced)', () => {
+    // 7.0 entries gate the `*-darkest` text shades the token JSON
+    // advertises as AAA / hero colors (error-darkest, info-darkest) so a
+    // palette tune can't silently regress them to plain AA.
     for (const pair of PAIRS) {
-      expect([3.0, 4.5]).toContain(pair.minRatio);
+      expect([3.0, 4.5, 7.0]).toContain(pair.minRatio);
     }
   });
 });

@@ -666,6 +666,39 @@ describe('civ-repeater form-steps mode', () => {
     expect(field.value).toBe('Curie');
   });
 
+  it('round-trips a checkbox checked state through save and edit', async () => {
+    // A single checkbox's state lives in .checked, not .value — extract must
+    // capture it and populate must restore it on edit.
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="People" name="people" item-label="person" mode="form-steps">
+        <div data-step-label="Consent">
+          <input type="checkbox" name="agree" value="yes" />
+        </div>
+      </civ-repeater>
+    `);
+    await elementUpdated(el);
+    const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
+
+    // Add a row with the checkbox checked.
+    (el.querySelector(':scope > fieldset > civ-button') as HTMLElement).click();
+    await elementUpdated(el);
+    await elementUpdated(el);
+    (el.querySelector('civ-form-step input[type="checkbox"]') as HTMLInputElement).checked = true;
+    el.querySelector('[data-civ-repeater-form-steps]')!
+      .dispatchEvent(new CustomEvent('civ-step-complete', { bubbles: true }));
+    await elementUpdated(el);
+    expect(el.rowCount).toBe(1);
+
+    // Edit the row — the checkbox must come back checked.
+    (el.querySelector('[data-civ-repeater-row] [data-civ-repeater-action="edit"]') as HTMLElement).click();
+    await elementUpdated(el);
+    await nextFrame();
+    await nextFrame();
+
+    const checkbox = el.querySelector('civ-form-step input[type="checkbox"]') as HTMLInputElement;
+    expect(checkbox.checked).toBe(true);
+  });
+
   it('cancel closes form-steps flow without saving', async () => {
     const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);

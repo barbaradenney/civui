@@ -9,6 +9,17 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible button text',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the button — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     emphasis: {
       type: 'enum',
       description: 'Visual emphasis. Same scale as civ-button but defaults to `tertiary` (text-only) for inline contexts',

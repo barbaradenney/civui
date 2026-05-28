@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible skip-link text (e.g. "Skip to main content")',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'Internal anchor target. Defaults to `#main-content`. Web-only. Native platforms have no anchor concept; iOS uses a `targetId` + `onActivate` callback; Android uses `onActivate` to focus the next view',

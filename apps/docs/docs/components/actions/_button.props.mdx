@@ -3,6 +3,8 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible button text. Alternatively pass text as a light-DOM child; `label` wins when both are set |
+| `disabled` | `boolean` | `false` | Disables the button — non-interactive and dimmed. In link mode (`href` set) the disabled affordance renders with `aria-disabled` |
 | `emphasis` | `'primary'` \| `'secondary'` \| `'tertiary'` | `'primary'` | Visual emphasis. `primary` = solid filled (main page action); `secondary` = bordered; `tertiary` = text-only |
 | `danger` | `boolean` | `false` | Apply destructive-action styling (red palette). Combine with any variant |
 | `type` | `'button'` \| `'submit'` \| `'reset'` | `'button'` | HTML button type. `submit` triggers the enclosing form; `reset` clears it; `button` (default) does neither |

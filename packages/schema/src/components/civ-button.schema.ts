@@ -9,6 +9,17 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible button text. Alternatively pass text as a light-DOM child; `label` wins when both are set',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the button — non-interactive and dimmed. In link mode (`href` set) the disabled affordance renders with `aria-disabled`',
+      default: false,
+      reflect: true,
+    },
     emphasis: {
       type: 'enum',
       description: 'Visual emphasis. `primary` = solid filled (main page action); `secondary` = bordered; `tertiary` = text-only',

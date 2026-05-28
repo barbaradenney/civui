@@ -3,6 +3,9 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible chip text |
+| `value` | `string` | `''` | Value emitted in the change event when the chip is toggled |
+| `disabled` | `boolean` | `false` | Disables the chip — non-interactive and dimmed |
 | `selected` | `boolean` | `false` | Active state. Reflects to the host attribute. In `radio` variant this is managed by the parent group |
 | `emphasis` | `'primary'` \| `'secondary'` | `'secondary'` | Visual treatment. `primary` = solid filled when selected; `secondary` = subtle background |
 | `variant` | `'toggle'` \| `'radio'` | `'toggle'` | Interaction model. `toggle` (default) = standalone on/off; `radio` = single member of a single-select group (use civ-filter-chip-group to enforce mutual exclusivity) |

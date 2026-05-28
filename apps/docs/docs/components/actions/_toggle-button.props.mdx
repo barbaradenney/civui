@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `disabled` | `boolean` | `false` | Disables the button — non-interactive and dimmed |
 | `label` | `string` | `''` | Unpressed label ("Show", "Mute", "Expand") |
 | `pressed-label` | `string` | `''` | Pressed label ("Hide", "Unmute", "Collapse"). Required — the swap label gives the toggle its meaning. There is no fallback because the two labels are intent-specific |
 | `pressed` | `boolean` | `false` | Reflected boolean state. Two-way bindable; consumers can set this externally to drive the rendered label and ARIA state without going through a click |

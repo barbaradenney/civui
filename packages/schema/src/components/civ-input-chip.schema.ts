@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible chip text (the entered token)',
+      default: '',
+    },
     value: {
       type: 'string',
       description: 'Identifier passed in the `civ-remove` event detail so consumers can correlate removals',

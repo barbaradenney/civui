@@ -9,6 +9,12 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    disabled: {
+      type: 'boolean',
+      description: 'Renders the card disabled — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     href: {
       type: 'string',
       description: 'Card destination',

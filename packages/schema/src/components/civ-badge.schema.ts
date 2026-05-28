@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible badge text. For dot badges (`dot`), set `label` so the intent is announced to assistive tech',
+      default: '',
+    },
     dot: {
       type: 'boolean',
       description: 'Render as a colored dot (no text). For notification indicators',

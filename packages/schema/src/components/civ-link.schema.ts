@@ -9,6 +9,17 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible link text. Alternatively pass text as a light-DOM child; `label` wins when both are set',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Renders the link disabled — non-interactive and dimmed (emits `aria-disabled` in link mode)',
+      default: false,
+      reflect: true,
+    },
     href: {
       type: 'string',
       description: 'Link destination. When `type` is `phone` / `email` / `download`, the type-specific props build the href and this prop is ignored. Ignored when `as="button"`. Dangerous protocols (`javascript:`, `data:`, `vbscript:`) are stripped at render time',

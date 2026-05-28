@@ -214,7 +214,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'button',
+    // No host-level role: civ-file-upload is a wrapper around a rendered
+    // <button> (default/large = dropzone, inline = browse pill). The
+    // native button child carries its own implicit role; declaring
+    // role: 'button' on the host would misrepresent the contract for
+    // native implementers (see .claude/rules/audit-debt.md → "Schema
+    // a11y.role must match the Lit host's actual role").
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],

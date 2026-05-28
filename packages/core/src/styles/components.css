@@ -4235,8 +4235,15 @@
     }
   }
 
+  /* Clickable segment: the role="listitem" wrapper is the flex item; the
+     button fills it (no longer a direct flex child of the list). */
+  .civ-progress-segment-item {
+    @apply civ-flex-1;
+  }
+
   button.civ-progress-segment {
     @apply civ-border-0 civ-p-0 civ-cursor-pointer civ-rounded-sm;
+    width: 100%;
   }
 
   @media (hover: hover) {

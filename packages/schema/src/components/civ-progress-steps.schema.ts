@@ -25,6 +25,12 @@ const schema: ComponentSchema = {
       description: 'Render completed steps as buttons that navigate back when clicked. Fires civ-step-click',
       default: false,
     },
+    silent: {
+      type: 'boolean',
+      description: 'Suppress the per-change screen-reader announcement. Used by an orchestrator (civ-form-step in steps mode) that already announces via civ-progress-header, to avoid a duplicate read. Web-only — native platforms coordinate announcements through their own a11y APIs',
+      default: false,
+      webOnly: true,
+    },
     errorSteps: {
       type: 'string',
       description: 'Step IDs to render in error state. Web: JSON-encoded array string; native: typed list. See `steps` for the same wire-format note',

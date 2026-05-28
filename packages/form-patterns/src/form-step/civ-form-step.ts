@@ -265,6 +265,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
             .steps="${JSON.stringify(this._steps.map(s => ({ label: s.getAttribute('data-step-label') || '' })))}"
             current="${idx}"
             clickable
+            silent
             @civ-step-click="${(e: CustomEvent) => this.goToStep(e.detail.step)}"
           ></civ-progress-steps>
         `;

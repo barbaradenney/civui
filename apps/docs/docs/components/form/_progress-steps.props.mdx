@@ -6,4 +6,5 @@
 | `steps` | `string` | `'[]'` | Step list. On web: JSON-encoded array of `{id, label, status?}` (HTML attributes are strings). On native: a typed `[String]` / `List<String>` of step labels. Conceptually the same data, different wire format per platform |
 | `current` | `number` | `0` | Index of the current step (0-based) |
 | `clickable` | `boolean` | `false` | Render completed steps as buttons that navigate back when clicked. Fires civ-step-click |
+| `silent` | `boolean` | `false` | Suppress the per-change screen-reader announcement. Used by an orchestrator (civ-form-step in steps mode) that already announces via civ-progress-header, to avoid a duplicate read. Web-only — native platforms coordinate announcements through their own a11y APIs |
 | `error-steps` | `string` | `'[]'` | Step IDs to render in error state. Web: JSON-encoded array string; native: typed list. See `steps` for the same wire-format note |

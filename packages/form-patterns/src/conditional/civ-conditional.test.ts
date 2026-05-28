@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-conditional.js';
+import '@civui/inputs';
 
 afterEach(cleanupFixtures);
 
@@ -29,6 +30,46 @@ describe('civ-conditional', () => {
     expect(container.classList.contains('civ-conditional--visible')).toBe(true);
 
     fakeField.remove();
+  });
+
+  it('evaluates a prefilled checkbox-group on initial load via getCheckedValues', async () => {
+    // A checkbox-group exposes getCheckedValues(), not a `values` array.
+    // On load the conditional must read the checked values, not the
+    // serialized "a,b" value string, or a prefilled group mis-hides.
+    const root = await fixture(`
+      <div>
+        <civ-checkbox-group name="fruit" legend="Fruit" value="apple,pear">
+          <civ-checkbox value="apple" label="Apple" checked></civ-checkbox>
+          <civ-checkbox value="pear" label="Pear" checked></civ-checkbox>
+          <civ-checkbox value="plum" label="Plum"></civ-checkbox>
+        </civ-checkbox-group>
+        <civ-conditional when="fruit" includes="apple"><p>Apple content</p></civ-conditional>
+      </div>
+    `);
+    await elementUpdated(root);
+    const cond = root.querySelector('civ-conditional') as HTMLElement;
+    await elementUpdated(cond);
+
+    const container = cond.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.classList.contains('civ-conditional--visible')).toBe(true);
+  });
+
+  it('stays hidden when the prefilled checkbox-group does not include the target value', async () => {
+    const root = await fixture(`
+      <div>
+        <civ-checkbox-group name="fruit" legend="Fruit" value="pear">
+          <civ-checkbox value="apple" label="Apple"></civ-checkbox>
+          <civ-checkbox value="pear" label="Pear" checked></civ-checkbox>
+        </civ-checkbox-group>
+        <civ-conditional when="fruit" includes="apple"><p>Apple content</p></civ-conditional>
+      </div>
+    `);
+    await elementUpdated(root);
+    const cond = root.querySelector('civ-conditional') as HTMLElement;
+    await elementUpdated(cond);
+
+    const container = cond.querySelector('[data-civ-conditional-content]') as HTMLElement;
+    expect(container.classList.contains('civ-conditional--hidden')).toBe(true);
   });
 
   it('hides content when value no longer matches', async () => {

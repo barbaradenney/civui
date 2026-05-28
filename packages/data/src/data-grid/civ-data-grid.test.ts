@@ -250,6 +250,17 @@ describe('civ-data-grid — selection', () => {
     expect(rows[1].getAttribute('aria-selected')).toBe('true');
   });
 
+  it('omits aria-selected entirely when the grid is not selectable (no invalid empty attribute)', async () => {
+    const el = await mountGrid({ selectable: 'none' });
+    const rows = el.querySelectorAll('tbody tr.civ-data-grid__tr');
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      // Empty string is an invalid aria-selected value — the attribute
+      // must be absent on a non-selectable grid.
+      expect(row.hasAttribute('aria-selected')).toBe(false);
+    }
+  });
+
   it('shows the selection status when one or more rows are selected', async () => {
     const el = await mountGrid({ selectable: 'multiple', selectedRowIds: ['1', '2'] });
     const status = el.querySelector('.civ-data-grid__selection-status');
@@ -1689,6 +1700,28 @@ describe('civ-data-grid — keyboard navigation', () => {
     const sortBtn = el.querySelector('.civ-data-grid__sort-btn') as HTMLButtonElement;
     expect(sortBtn).not.toBeNull();
     expect(sortBtn.tabIndex).toBe(-1);
+  });
+
+  it('keeps expanded-detail content controls keyboard-reachable (NOT confined to tabindex=-1)', async () => {
+    const { html } = await import('lit');
+    const el = await mountGrid({
+      rows: [
+        { id: '1', cells: { name: 'A', status: 'x', updated: 'y' }, expandable: true },
+      ],
+      expandedRowIds: ['1'],
+      expandTemplate: () =>
+        html`<div><button class="detail-a">First</button><button class="detail-b">Second</button></div>` as unknown as string,
+    });
+    el.keyboardNav = true;
+    await elementUpdated(el);
+
+    const detailButtons = el.querySelectorAll('.civ-data-grid__td--detail button');
+    expect(detailButtons.length).toBe(2);
+    // Both detail-panel buttons stay in the natural tab order — the roving
+    // confinement would have stranded all but the first.
+    detailButtons.forEach((b: Element) => {
+      expect((b as HTMLButtonElement).tabIndex).not.toBe(-1);
+    });
   });
 
   it('arrow keys move the roving tabindex between cells', async () => {

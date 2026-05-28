@@ -757,7 +757,7 @@ export class CivDataGrid extends CivBaseElement {
       <tr
         class="${rowClass}"
         data-row-id="${row.id}"
-        aria-selected="${this.selectable !== 'none' ? String(isSelected) : ''}"
+        aria-selected="${this.selectable !== 'none' ? String(isSelected) : nothing}"
         @click="${onRowClick}"
       >
         ${showExpandColumn ? this._renderExpandCell(row, isExpanded, detailId) : nothing}
@@ -1661,6 +1661,13 @@ export class CivDataGrid extends CivBaseElement {
       '.civ-data-grid__th button, .civ-data-grid__td button, .civ-data-grid__td input, .civ-data-grid__td select, .civ-data-grid__td a, .civ-data-grid__td [role="button"]',
     ).forEach((el) => {
       if ((el as HTMLElement).closest('.civ-data-grid__td--editing')) return;
+      // Expanded-detail panels are consumer-rendered embedded regions
+      // (master-detail content), not grid cells — keep their controls in
+      // the natural tab order so all of them are keyboard-reachable, not
+      // just the first. Confining them to roving tabindex would strand
+      // every control after the first (Enter only activates one). This
+      // matches how AG-Grid / MUI DataGrid treat detail panels.
+      if ((el as HTMLElement).closest('.civ-data-grid__td--detail')) return;
       (el as HTMLElement).tabIndex = -1;
     });
 
@@ -1881,14 +1888,14 @@ export class CivDataGrid extends CivBaseElement {
     if (!cell) return;
     if (!this._syncFocusFromCell(cell, true)) return;
     // Sync tabindex imperatively here rather than via a re-render —
-    // re-rendering during a focus event would yank focus away.
-    const r = this._focusedRow;
-    const c = this._focusedCol;
-    this._allCells().forEach((rowEls, ri) =>
-      rowEls.forEach((cellEl, ci) => {
-        cellEl.tabIndex = ri === r && ci === c ? 0 : -1;
-      }),
-    );
+    // re-rendering during a focus event would yank focus away. `cell` is
+    // the newly-focused cell; demote whatever cell currently holds the
+    // roving tabindex (0-or-1 of them) and promote this one. Touching just
+    // those avoids re-walking every cell on each focusin.
+    this.querySelectorAll<HTMLElement>(
+      '.civ-data-grid__th[tabindex="0"], .civ-data-grid__td[tabindex="0"]',
+    ).forEach((el) => { if (el !== cell) el.tabIndex = -1; });
+    cell.tabIndex = 0;
   };
 }
 

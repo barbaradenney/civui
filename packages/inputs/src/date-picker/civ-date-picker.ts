@@ -120,8 +120,16 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
 
   private _headingId = this.generateId('heading');
   private _gridId = this.generateId('grid');
+  private _dialogId = this.generateId('dialog');
   private _buttonId = this.generateId('btn');
   private _cleanupTrap: (() => void) | null = null;
+  /**
+   * One-shot guard: when `_onTextChange` clears `value` because the typed
+   * text is invalid, this tells `willUpdate` to keep `_inputValue` (the
+   * typed text) so the user can correct it, instead of wiping it as the
+   * programmatic-clear path does.
+   */
+  private _keepInputText = false;
   private _clickOutside = clickOutside(this, () => this._closeDialog());
   private _cachedLocaleKey = '';
   private _cachedMonthNames: string[] = [];
@@ -148,20 +156,37 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
 
   override willUpdate(changed: Map<string, unknown>): void {
     super.willUpdate(changed);
-    if (changed.has('disabledDates') && this.disabledDates) {
-      try {
-        this._parsedDisabledDates = new Set(JSON.parse(this.disabledDates));
-      } catch { this._parsedDisabledDates = new Set(); }
+    if (changed.has('disabledDates')) {
+      if (this.disabledDates) {
+        try {
+          this._parsedDisabledDates = new Set(JSON.parse(this.disabledDates));
+        } catch { this._parsedDisabledDates = new Set(); }
+      } else {
+        // Cleared — drop the stale set so previously-disabled dates re-enable.
+        this._parsedDisabledDates = new Set();
+      }
     }
     // Sync derived state (input text, display month/year, focused date)
     // before render so we don't trigger a second update cycle.
-    if (changed.has('value') && this.value) {
-      const parsed = parseISODate(this.value);
-      if (parsed) {
-        this._inputValue = formatDate(parsed, this.locale);
-        this._displayMonth = parsed.getMonth();
-        this._displayYear = parsed.getFullYear();
-        this._focusedDate = parsed;
+    if (changed.has('value')) {
+      if (this.value) {
+        const parsed = parseISODate(this.value);
+        if (parsed) {
+          this._inputValue = formatDate(parsed, this.locale);
+          this._displayMonth = parsed.getMonth();
+          this._displayYear = parsed.getFullYear();
+          this._focusedDate = parsed;
+        }
+      } else if (this._keepInputText) {
+        // Value cleared by `_onTextChange`'s invalid-text branch — keep the
+        // user's typed text visible so they can correct the typo. One-shot.
+        this._keepInputText = false;
+      } else {
+        // Value cleared programmatically (e.g. `el.value = ''` from a form
+        // binding) — clear the displayed text too. Without this the input
+        // keeps showing the stale formatted date because `_inputValue`
+        // only updates in the truthy branch above.
+        this._inputValue = '';
       }
     }
   }
@@ -333,6 +358,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               .value="${this._inputValue}"
               placeholder="${this.placeholder || t('datePickerPlaceholder')}"
               ?disabled="${this.disabled}"
+              ?readonly="${this.readonly}"
               ?required="${this.required}"
               aria-label="${ariaLabel ?? nothing}"
               aria-describedby="${this._ariaDescribedBy || nothing}"
@@ -340,7 +366,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
               @input="${this._onTextInput}"
               @change="${this._onTextChange}"
             />
-            ${this.value && !this.disabled ? renderCloseButton({
+            ${this.value && !this.disabled && !this.readonly ? renderCloseButton({
               label: this.clearLabel || t('datePickerClearLabel'),
               onClick: this._onClear,
             }) : nothing}
@@ -352,8 +378,8 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
             aria-label="${buttonLabel}"
             aria-haspopup="dialog"
             aria-expanded="${this._open}"
-            aria-controls="${this._open ? this._gridId : nothing}"
-            ?disabled="${this.disabled}"
+            aria-controls="${this._open ? this._dialogId : nothing}"
+            ?disabled="${this.disabled || this.readonly}"
             @click="${this._toggleDialog}"
           >${this.chooseDateLabel || t('datePickerChooseDateLabel')}</button>
         </div>
@@ -418,6 +444,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     return html`
       <div
         data-civ-dialog
+        id="${this._dialogId}"
         role="dialog"
         aria-modal="true"
         aria-label="${this.dialogLabel || t('datePickerDialogLabel')}"
@@ -543,7 +570,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
   // --- Event handlers ---
 
   private _toggleDialog(): void {
-    if (this.disabled) return;
+    if (this.disabled || this.readonly) return;
     if (this._open) {
       this._closeDialog();
     } else {
@@ -691,26 +718,44 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
       this.sendAnalytics('change');
       this.announce(interpolate(this.dateSelectedMessage || t('datePickerDateSelectedMessage'), { date: formatDateLong(parsed, this.locale) }));
     } else {
-      // Invalid text: keep it in the input so users can correct typos,
-      // set the error visually and announce for screen readers.
+      // Invalid text: keep it in the input so users can correct typos, but
+      // clear any previously-committed value so the form doesn't submit a
+      // stale date the user can no longer see. The `_keepInputText` flag
+      // tells `willUpdate` NOT to wipe the typed text when value goes empty
+      // (the programmatic-clear path in willUpdate normally does).
+      if (this.value) {
+        this._keepInputText = true;
+        this.value = '';
+        this.updateFormValue('');
+        dispatch(this, 'civ-change', { value: '' });
+      }
       this.error = this.invalidFormatMessage || t('datePickerInvalidFormatMessage');
       this.announce(this.error, 'assertive');
     }
   }
 
   private _navigateMonth(delta: number): void {
-    const newMonth = this._displayMonth + delta;
-    if (newMonth < 0) {
-      this._displayMonth = 11;
-      this._displayYear--;
-    } else if (newMonth > 11) {
-      this._displayMonth = 0;
-      this._displayYear++;
-    } else {
-      this._displayMonth = newMonth;
+    let month = this._displayMonth + delta;
+    let year = this._displayYear;
+    if (month < 0) {
+      month = 11;
+      year--;
+    } else if (month > 11) {
+      month = 0;
+      year++;
     }
-    this._focusedDate = new Date(this._displayYear, this._displayMonth, 1);
-    this.announce(`${this._monthNames[this._displayMonth]} ${this._displayYear}`);
+    // Preserve the day-of-month across month navigation, clamping to the
+    // new month's length (Jan 31 → Feb 28/29). Matches both the WAI-ARIA
+    // APG datepicker behavior and the sibling `_jumpToMonth` (month/year
+    // selects); the previous reset-to-day-1 lost the user's position.
+    // DOM focus stays on the nav button (no `_focusDayAfterUpdate`) so
+    // repeated clicks keep working.
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const day = Math.min(this._focusedDate.getDate(), lastDay);
+    this._displayMonth = month;
+    this._displayYear = year;
+    this._focusedDate = new Date(year, month, day);
+    this.announce(`${this._monthNames[month]} ${year}`);
   }
 
   private _prevMonth(): void {
@@ -865,6 +910,15 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
   // --- Form integration ---
 
   override formResetCallback(): void {
+    // If the dialog is open during reset, tear down its focus trap and
+    // click-outside listener — setting `_open = false` alone re-renders
+    // without the dialog but leaks the listeners that `_closeDialog`
+    // would have removed.
+    if (this._open) {
+      this._clickOutside.remove();
+      this._cleanupTrap?.();
+      this._cleanupTrap = null;
+    }
     this.value = this._defaultValue;
     const initial = this._defaultValue ? parseISODate(this._defaultValue) : null;
     this._inputValue = initial ? formatDate(initial, this.locale) : '';

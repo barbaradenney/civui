@@ -91,7 +91,7 @@ const schema: ComponentSchema = {
     },
     disabledDates: {
       type: 'string',
-      description: 'Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays)',
+      description: 'JSON-encoded array of YYYY-MM-DD date strings to mark unselectable (e.g. holidays). Example: `\'["2026-07-04","2026-12-25"]\'`. Parsed with JSON.parse — a bare comma-separated string is silently ignored.',
       default: '',
       attribute: 'disabled-dates',
     },
@@ -167,7 +167,11 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    role: 'textbox',
+    // No host-level role: the date-picker renders a real <input type="text">
+    // (implicit role textbox) plus a separate calendar trigger <button>. The
+    // host element is a wrapper carrying label / hint / error chrome — it
+    // doesn't set a role (per .claude/rules/audit-debt.md → "Schema a11y.role
+    // must match the Lit host's actual role").
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],

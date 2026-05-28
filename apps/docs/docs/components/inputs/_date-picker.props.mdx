@@ -17,7 +17,7 @@
 | `dialog-opened-message` | `string` | `'Calendar dialog opened'` | Screen reader announcement when calendar opens |
 | `date-selected-message` | `string` | `'Selected {date}'` | Screen reader announcement when date is selected (&lcub;date&rcub; interpolated) |
 | `today-label` | `string` | `'today'` | Text appended to today's date for screen readers |
-| `disabled-dates` | `string` | `''` | Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays) |
+| `disabled-dates` | `string` | `''` | JSON-encoded array of YYYY-MM-DD date strings to mark unselectable (e.g. holidays). Example: `'["2026-07-04","2026-12-25"]'`. Parsed with JSON.parse — a bare comma-separated string is silently ignored. |
 | `clear-label` | `string` | `''` | Aria label for the clear (×) button when a value is set |
 | `today-button-label` | `string` | `''` | Visible label on the "today" shortcut button inside the calendar dialog |
 | `hide-today-button` | `boolean` | `false` | Suppress the "today" shortcut button. Useful for date-of-birth and other historical-only fields |

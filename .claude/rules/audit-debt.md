@@ -335,6 +335,15 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 ---
 
+## civ-repeater form-steps does not round-trip boolean control state (form-patterns audit, 2026-05-28)
+
+- **Surfaced:** form-patterns deep audit, 2026-05-28. Branch `claude/form-patterns-audit`.
+- **State:** form-steps mode stores each row's values in `_rowData` as a `Record<string, string>` extracted by `extractFormStepsValues` (`packages/form-patterns/src/repeater/repeater-row-builder.ts:228`), which reads only each field's `.value`. For a single `civ-checkbox` / `civ-toggle` inside a form-steps row, `.value` is the control's value attribute (a constant), not its `checked` state — so the checked/unchecked state isn't captured on save and isn't restored when the row is edited (`_populateFormStepsFromRowData` sets `.value`, never `.checked`). `civ-checkbox-group` round-trips fine because its `.value` getter/setter serializes the checked set to/from a `"a,b"` string.
+- **Why deferred:** the `_rowData` model and the extract/populate round-trip are string-keyed throughout; correctly handling boolean controls needs a richer value model (capture `checked`, serialize it, and branch on control type in populate) plus tests across checkbox / toggle / checkbox-group. That's a focused but real change, and boolean controls inside a repeater form-steps row are a narrower case than the indexed text/select fields the mode was built for.
+- **What to watch for in the meantime:** if a form-steps row needs a yes/no answer, prefer `civ-yes-no` or `civ-radio-group` (their `.value` is a string that round-trips) over a bare `civ-checkbox` / `civ-toggle`. Inline mode is unaffected — it keeps the live DOM controls rather than extracting to `_rowData`.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

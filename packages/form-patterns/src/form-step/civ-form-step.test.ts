@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import './civ-form-step.js';
+import '@civui/layout/accordion';
 import type { CivFormStep } from './civ-form-step.js';
 
 afterEach(cleanupFixtures);
@@ -204,6 +205,53 @@ describe('civ-form-step', () => {
 
     // Hidden required field should not block advance.
     expect((el as CivFormStep).current).toBe(1);
+  });
+
+  it('skips required fields inside a collapsed civ-accordion-item', async () => {
+    // A collapsed <details>-backed accordion keeps children in the DOM, but
+    // the user can't see them — they must not block advancing.
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <civ-accordion-item label="Optional details">
+            <civ-text-input label="Phone" name="phone" required></civ-text-input>
+          </civ-accordion-item>
+        </div>
+        <div data-step-label="Done">
+          <p>Done</p>
+        </div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
+    await elementUpdated(el);
+
+    expect((el as CivFormStep).current).toBe(1);
+  });
+
+  it('still blocks on a required field inside an OPEN civ-accordion-item', async () => {
+    const el = await fixture(`
+      <civ-form-step>
+        <div data-step-label="Name">
+          <civ-accordion-item label="Details" open>
+            <civ-text-input label="Phone" name="phone" required></civ-text-input>
+          </civ-accordion-item>
+        </div>
+        <div data-step-label="Done">
+          <p>Done</p>
+        </div>
+      </civ-form-step>
+    `);
+    await elementUpdated(el);
+
+    const btn = el.querySelector('civ-button') as HTMLElement;
+    btn.click();
+    await elementUpdated(el);
+
+    // Visible required field blocks advancement.
+    expect((el as CivFormStep).current).toBe(0);
   });
 
   it('uses Light DOM', async () => {

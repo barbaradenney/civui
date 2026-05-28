@@ -351,6 +351,26 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
    */
   private _ownedRequiredErrors = new WeakSet<Element>();
 
+  /**
+   * True when `el` sits inside a collapsed `civ-accordion-item`. Walks every
+   * accordion-item ancestor up to this host (not just the nearest), so a
+   * field inside an open inner accordion wrapped in a collapsed outer one is
+   * still excluded. Mirrors civ-form's exclusion — the rationale lives in
+   * `.claude/rules/common-traps.md` ("Hidden civ-conditional / collapsed
+   * civ-accordion content is still in the DOM").
+   */
+  private _isInCollapsedAccordion(el: Element): boolean {
+    let current: Element | null = el.parentElement;
+    while (current && current !== this) {
+      if (current.tagName === 'CIV-ACCORDION-ITEM') {
+        const item = current as unknown as { open?: boolean };
+        if (!item.open) return true;
+      }
+      current = current.parentElement;
+    }
+    return false;
+  }
+
   /** Validate required fields in the current step using CivUI component errors. */
   private _validateCurrentStep(): boolean {
     if (!this.validate) return true;
@@ -379,6 +399,14 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       // them and shouldn't be blocked by required-validation errors on
       // a branch that isn't visible. Mirrors civ-form's validate().
       if (el.closest('[data-civ-conditional-content][aria-hidden="true"]')) {
+        return;
+      }
+
+      // Skip fields inside a collapsed civ-accordion-item. A native
+      // <details>-backed accordion keeps collapsed children in the DOM, so
+      // a required field the user can't see would otherwise block advancing
+      // with no visible error. Mirrors civ-form's _isInCollapsedAccordion.
+      if (this._isInCollapsedAccordion(field)) {
         return;
       }
 

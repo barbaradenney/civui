@@ -8,7 +8,18 @@ const schema: ComponentSchema = {
   extends: 'CivBaseElement',
   isGroup: false,
 
-  props: {},
+  props: {
+    label: {
+      type: 'string',
+      description: 'Accessible label for the tablist (sets `aria-label` on the `role="tablist"` container)',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'The selected tab\'s `value` — set to control which tab is active',
+      default: '',
+    },
+  },
 
   events: {
     'civ-change': {

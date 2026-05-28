@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `disabled` | `boolean` | `false` | Disables the button — non-interactive and dimmed |
 | `label` | `string` | `''` | Resting label ("Copy", "Generate", "Scan"). Required — there is no fallback because the verb is intent-specific |
 | `success-label` | `string` | `''` | Transient receipt label shown during the success window ("Copied", "Generated"). Defaults to the localized "Done" |
 | `success-ms` | `number` | `1500` | How long the success state stays visible, in milliseconds. Default 1500. Re-clicks during the window restart the timer (no stacking) |

@@ -9,6 +9,17 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible tab text',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the tab — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     href: {
       type: 'string',
       description: 'Destination URL',

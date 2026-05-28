@@ -3,5 +3,8 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `label` | `string` | `''` | Visible label text for this segment |
+| `value` | `string` | `''` | Value emitted when this segment is selected |
+| `disabled` | `boolean` | `false` | Disables this segment — non-interactive and dimmed |
 | `selected` | `boolean` | `false` | Whether this segment is the active option. Web-only. Native platforms encode the active segment via the parent control's `value` binding pointing at one of its options |
 | `managed-tab-index` | `number` | — | Tabindex assigned by the parent `civ-segmented-control` for roving-tabindex keyboard navigation. Web-only. Set programmatically, never as an attribute |

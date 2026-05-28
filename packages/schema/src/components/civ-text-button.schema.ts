@@ -9,6 +9,12 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the button — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     label: {
       type: 'string',
       description: 'Button text. Required — there is no fallback because the verb is intent-specific',

@@ -103,6 +103,11 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
+    // Role describes the rendered control: the inner <input role="combobox">.
+    // Matches the codebase convention (civ-text-input → textbox, civ-country
+    // → combobox, etc.) — the schema documents the rendered native/inner
+    // element's role for native implementers. The lint:schema-a11y-role gate
+    // permits this; it only fails on roles that CONTRADICT what's rendered.
     role: 'combobox',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',

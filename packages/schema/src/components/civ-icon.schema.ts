@@ -15,6 +15,11 @@ const schema: ComponentSchema = {
       default: '',
       reflect: true,
     },
+    label: {
+      type: 'string',
+      description: 'Accessible label. When set, renders `role="img"` + `aria-label`; when omitted the icon is decorative (`aria-hidden="true"`)',
+      default: '',
+    },
     size: {
       type: 'string',
       description: 'Size shorthand. `sm` / `md` / `lg` / `xl` / `2xl` map to font-size multipliers; explicit values like `24px` or `1.5em` are passed through. Empty inherits parent font-size. Web-specific: native platforms take a numeric size in their idiomatic unit (CGFloat on iOS, Dp on Android). Consumers pass the resolved value directly',

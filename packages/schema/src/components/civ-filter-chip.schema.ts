@@ -9,6 +9,22 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Visible chip text',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'Value emitted in the change event when the chip is toggled',
+      default: '',
+    },
+    disabled: {
+      type: 'boolean',
+      description: 'Disables the chip — non-interactive and dimmed',
+      default: false,
+      reflect: true,
+    },
     selected: {
       type: 'boolean',
       description: 'Active state. Reflects to the host attribute. In `radio` variant this is managed by the parent group',

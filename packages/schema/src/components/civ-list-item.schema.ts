@@ -18,6 +18,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    error: {
+      type: 'string',
+      description: 'Error text shown below the row content',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'When set, the row renders as an anchor that navigates on click. Sanitized. `javascript:` / `data:` schemes are rejected',

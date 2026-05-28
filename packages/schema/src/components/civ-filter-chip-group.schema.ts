@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: true,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Accessible label for the chip group (sets the group\'s `aria-label`)',
+      default: '',
+    },
     mode: {
       type: 'enum',
       description: 'Selection mode. `multi` = any subset can be selected; `single` = radio-like, one at a time',

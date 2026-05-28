@@ -20,6 +20,7 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import type { ComponentSchema, PropDef, EventDef, MethodDef } from '@civui/schema';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
@@ -300,7 +301,26 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+/**
+ * Only run the generator when invoked directly as a CLI
+ * (`pnpm sync:doc-tables`). Without this guard, importing anything from
+ * this module — e.g. the `escapeCell` helper in the unit tests — runs
+ * `main()` as a side effect, regenerating all 115 doc partials against
+ * the real docs dir. Under vitest's parallel runner those background
+ * writes race and can truncate a partial to 0 bytes (the flaky empty
+ * `_accordion-item.props.mdx` symptom). Mirrors the guard in
+ * lint-schema-a11y-role.ts.
+ */
+export function isCliInvocation(): boolean {
+  const argv = process.argv[1];
+  if (!argv) return false;
+  try { return import.meta.url === pathToFileURL(argv).href; }
+  catch { return false; }
+}
+
+if (isCliInvocation()) {
+  main().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+}

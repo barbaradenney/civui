@@ -1157,6 +1157,160 @@ describe('civ-date-picker', () => {
       expect(trigger.classList.contains('civ-action-btn--sm')).toBe(false);
     });
   });
+
+  describe('readonly', () => {
+    it('forwards readonly to the inner <input>', async () => {
+      const el = await fixture('<civ-date-picker label="Date" readonly value="2026-03-15"></civ-date-picker>');
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.readOnly).toBe(true);
+    });
+
+    it('disables the calendar trigger button when readonly', async () => {
+      const el = await fixture('<civ-date-picker label="Date" readonly></civ-date-picker>');
+      const trigger = el.querySelector('button[aria-haspopup="dialog"]') as HTMLButtonElement;
+      expect(trigger.disabled).toBe(true);
+    });
+
+    it('does not open the dialog when readonly', async () => {
+      const el = await fixture('<civ-date-picker label="Date" readonly></civ-date-picker>') as any;
+      el._toggleDialog();
+      await elementUpdated(el);
+      expect(el._open).toBe(false);
+      expect(el.querySelector('[data-civ-dialog]')).toBeNull();
+    });
+
+    it('does not show the clear button when readonly', async () => {
+      const el = await fixture('<civ-date-picker label="Date" readonly value="2026-03-15"></civ-date-picker>');
+      expect(el.querySelector('.civ-close-btn')).toBeNull();
+    });
+  });
+
+  describe('programmatic value clearing', () => {
+    it('clears the displayed input text when value is set to empty', async () => {
+      const el = await fixture('<civ-date-picker label="Date" value="2026-03-15"></civ-date-picker>') as any;
+      await elementUpdated(el);
+      const input = el.querySelector('input') as HTMLInputElement;
+      expect(input.value).not.toBe('');
+
+      el.value = '';
+      await elementUpdated(el);
+      expect((el.querySelector('input') as HTMLInputElement).value).toBe('');
+      expect(el._inputValue).toBe('');
+    });
+  });
+
+  describe('disabledDates parsing', () => {
+    it('parses a JSON-encoded array of dates and marks them disabled', async () => {
+      const el = await fixture(
+        `<civ-date-picker label="Date" disabled-dates='["2026-03-15"]'></civ-date-picker>`,
+      ) as any;
+      await elementUpdated(el);
+      expect(el._isDateDisabled(new Date(2026, 2, 15))).toBe(true);
+      expect(el._isDateDisabled(new Date(2026, 2, 16))).toBe(false);
+    });
+
+    it('re-enables dates when disabled-dates is cleared', async () => {
+      const el = await fixture(
+        `<civ-date-picker label="Date" disabled-dates='["2026-03-15"]'></civ-date-picker>`,
+      ) as any;
+      await elementUpdated(el);
+      expect(el._isDateDisabled(new Date(2026, 2, 15))).toBe(true);
+
+      el.disabledDates = '';
+      await elementUpdated(el);
+      expect(el._isDateDisabled(new Date(2026, 2, 15))).toBe(false);
+    });
+  });
+
+  describe('month navigation preserves day-of-month', () => {
+    it('keeps the focused day-of-month when navigating to the next month', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 0; // January
+      el._displayYear = 2026;
+      el._focusedDate = new Date(2026, 0, 20);
+      await elementUpdated(el);
+
+      el._nextMonth();
+      await elementUpdated(el);
+      expect(el._focusedDate.getMonth()).toBe(1); // February
+      expect(el._focusedDate.getDate()).toBe(20); // day-of-month preserved
+    });
+
+    it('clamps the day-of-month to the new month length (Jan 31 → Feb 28)', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._open = true;
+      el._displayMonth = 0; // January
+      el._displayYear = 2026; // 2026 is not a leap year → Feb has 28 days
+      el._focusedDate = new Date(2026, 0, 31);
+      await elementUpdated(el);
+
+      el._nextMonth();
+      await elementUpdated(el);
+      expect(el._focusedDate.getMonth()).toBe(1); // February
+      expect(el._focusedDate.getDate()).toBe(28); // clamped
+    });
+  });
+
+  describe('reset while dialog open', () => {
+    it('cleans up the dialog focus trap when reset fires with the dialog open', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._openDialog();
+      await elementUpdated(el);
+      expect(el._open).toBe(true);
+
+      // The real focus trap is installed via rAF in _setupDialog, which may
+      // not have fired in jsdom — install a sentinel so we can assert
+      // formResetCallback tears it down.
+      let trapCleaned = false;
+      el._cleanupTrap = () => { trapCleaned = true; };
+
+      el.formResetCallback();
+      await elementUpdated(el);
+      expect(el._open).toBe(false);
+      expect(trapCleaned).toBe(true);
+      expect(el._cleanupTrap).toBeNull();
+    });
+  });
+
+  describe('aria-controls references the dialog', () => {
+    it('points the trigger aria-controls at the dialog element when open', async () => {
+      const el = await fixture('<civ-date-picker label="Date"></civ-date-picker>') as any;
+      el._openDialog();
+      await elementUpdated(el);
+      const trigger = el.querySelector('button[aria-haspopup="dialog"]') as HTMLElement;
+      const controls = trigger.getAttribute('aria-controls');
+      expect(controls).toBeTruthy();
+      const dialog = el.querySelector('[data-civ-dialog]') as HTMLElement;
+      expect(dialog.id).toBe(controls);
+    });
+  });
+
+  describe('invalid typed text invalidates the committed value', () => {
+    it('clears value but keeps the typed text for correction', async () => {
+      const el = await fixture('<civ-date-picker label="Date" name="d"></civ-date-picker>') as any;
+      const input = el.querySelector('input') as HTMLInputElement;
+      // Commit a valid date first
+      input.value = '03/15/2026';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+      expect(el.value).toBe('2026-03-15');
+
+      const changes: string[] = [];
+      el.addEventListener('civ-change', (e: CustomEvent<{ value: string }>) => changes.push(e.detail.value));
+
+      // Replace with an unparseable-but-digit-bearing value (survives the
+      // date mask, fails parsing — month 13 / day 45) and blur.
+      input.value = '13/45/2026';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el.value).toBe('');                 // form value invalidated
+      expect(el.error).toBeTruthy();             // error shown
+      expect((el.querySelector('input') as HTMLInputElement).value).toBe('13/45/2026'); // typo preserved
+      expect(changes).toEqual(['']);             // civ-change fired with empty
+    });
+  });
 });
 
 // Helper for keyboard events on dialog

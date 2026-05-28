@@ -3,6 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `error` | `string` | `''` | Error text shown below the row content |
 | `href` | `string` | `''` | When set, the row renders as an anchor that navigates on click. Sanitized. `javascript:` / `data:` schemes are rejected |
 | `current` | `boolean` | `false` | Mark this row as the current page. Adds `aria-current="page"` to the anchor (only meaningful when `href` is set) |
 | `heading` | `string` | `''` | Convenience shorthand for the bold heading text. The `data-list-item-heading` slot takes precedence when present |

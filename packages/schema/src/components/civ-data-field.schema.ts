@@ -9,6 +9,21 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Field label (the term)',
+      default: '',
+    },
+    value: {
+      type: 'string',
+      description: 'Field value (the definition). Alternatively pass content as a light-DOM child',
+      default: '',
+    },
+    hint: {
+      type: 'string',
+      description: 'Hint text shown below the value',
+      default: '',
+    },
     href: {
       type: 'string',
       description: 'When set, the value is rendered as a download link (web only. Native platforms render the value as plain text)',

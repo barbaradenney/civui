@@ -91,7 +91,7 @@ const schema: ComponentSchema = {
     },
     disabledDates: {
       type: 'string',
-      description: 'Comma-separated list of YYYY-MM-DD dates to mark unselectable (e.g. holidays)',
+      description: 'JSON-encoded array of YYYY-MM-DD date strings to mark unselectable (e.g. holidays). Example: `\'["2026-07-04","2026-12-25"]\'`. Parsed with JSON.parse — a bare comma-separated string is silently ignored.',
       default: '',
       attribute: 'disabled-dates',
     },
@@ -167,6 +167,11 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
+    // Role describes the rendered control: the inner <input type="text">
+    // (implicit role textbox). Matches the convention used by civ-text-input
+    // and the preset wrappers (currency/ssn/ein/…) which render the same
+    // <input> and declare textbox. The lint:schema-a11y-role gate permits
+    // this; it only fails on roles that CONTRADICT what's rendered.
     role: 'textbox',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',

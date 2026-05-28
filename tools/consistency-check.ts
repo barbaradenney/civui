@@ -158,7 +158,7 @@ function checkRenderOrder(comp: ComponentFile) {
   }
   if (hasHint && hasError) {
     // Self-contained components with tile layouts (checkbox, radio,
-    // segmented-control) deliberately render the error OUTSIDE the
+    // segmented-control, toggle) deliberately render the error OUTSIDE the
     // tile body — typically above the tile so the user sees the
     // validation message before they interact with the control. The
     // generic "hint must come before error in source" rule doesn't
@@ -167,7 +167,8 @@ function checkRenderOrder(comp: ComponentFile) {
     // existence warnings above for the same reason.
     const isTileLayout = comp.name.includes('checkbox') ||
                          comp.name.includes('radio') ||
-                         comp.name.includes('segment');
+                         comp.name.includes('segment') ||
+                         comp.name === 'civ-toggle';
     if (!isTileLayout) {
       const hintIdx = comp.src.indexOf('renderHint(');
       const errorIdx = comp.src.indexOf('renderError(');

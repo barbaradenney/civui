@@ -214,12 +214,12 @@ const schema: ComponentSchema = {
   },
 
   a11y: {
-    // No host-level role: civ-file-upload is a wrapper around a rendered
-    // <button> (default/large = dropzone, inline = browse pill). The
-    // native button child carries its own implicit role; declaring
-    // role: 'button' on the host would misrepresent the contract for
-    // native implementers (see .claude/rules/audit-debt.md → "Schema
-    // a11y.role must match the Lit host's actual role").
+    // Role describes the primary rendered affordance: the dropzone / browse
+    // <button> (implicit role button). Matches the codebase convention of
+    // documenting the rendered control's role for native implementers. The
+    // lint:schema-a11y-role gate permits this; it only fails on roles that
+    // CONTRADICT what's rendered.
+    role: 'button',
     requiredIndicator: 'asterisk',
     errorAnnouncement: 'assertive',
     describedBy: ['hint', 'error'],

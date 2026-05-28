@@ -3,4 +3,7 @@
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `value` | `string` | `''` | Unique identifier; must match the corresponding `civ-tab-panel`'s `value` |
+| `label` | `string` | `''` | Visible tab text. Alternatively pass text as a light-DOM child |
+| `disabled` | `boolean` | `false` | Disables the tab — skipped during keyboard navigation and non-interactive |
 | `selected` | `boolean` | `false` | Set by the parent `<civ-tabs>` to reflect the current selection. Don't set this directly. Set `value` on `<civ-tabs>` instead. Reflected so CSS can style `[selected]` |

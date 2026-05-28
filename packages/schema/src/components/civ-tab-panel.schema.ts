@@ -8,7 +8,13 @@ const schema: ComponentSchema = {
   extends: 'CivBaseElement',
   isGroup: false,
 
-  props: {},
+  props: {
+    value: {
+      type: 'string',
+      description: 'Unique identifier; must match the corresponding `civ-tab`\'s `value`',
+      default: '',
+    },
+  },
 
   events: {},
 

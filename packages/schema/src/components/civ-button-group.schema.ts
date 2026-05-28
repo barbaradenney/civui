@@ -9,6 +9,11 @@ const schema: ComponentSchema = {
   isGroup: false,
 
   props: {
+    label: {
+      type: 'string',
+      description: 'Accessible label for the toolbar group (sets `aria-label` on the `role="toolbar"` container)',
+      default: '',
+    },
     orientation: {
       type: 'enum',
       description: 'Stacking direction. `horizontal` (default) places buttons side-by-side; `vertical` stacks them. Useful for narrow viewports or full-width primary actions',

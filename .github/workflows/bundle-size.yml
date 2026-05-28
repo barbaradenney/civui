@@ -23,19 +23,69 @@ jobs:
 
       - name: Check bundle sizes
         run: |
+          # Per-package budgets in KB for the built (minified) dist/ output.
+          # Calibrated to the current size + headroom so legitimate growth
+          # doesn't flap CI, while a real regression trips the gate. When a
+          # bump is intentional, raise the number here in the same PR.
+          declare -A BUDGET_KB=(
+            [actions]=768
+            [cli]=384
+            [compound]=768
+            [content]=384
+            [core]=1200
+            [data]=896
+            [feedback]=576
+            [form-patterns]=1024
+            [inputs]=2048
+            [layout]=768
+            [mcp-server]=5632
+            [navigation]=576
+            [overlays]=448
+            [schema]=4096
+            [storybook-utils]=192
+            [test-utils]=128
+            [tokens]=192
+          )
+
           echo "## Bundle Sizes" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Package | Size |" >> $GITHUB_STEP_SUMMARY
-          echo "|---------|------|" >> $GITHUB_STEP_SUMMARY
-          for pkg in core forms ui feedback navigation; do
-            size=$(du -sh packages/$pkg/dist/ 2>/dev/null | cut -f1)
-            echo "| @civui/$pkg | $size |" >> $GITHUB_STEP_SUMMARY
+          echo "| Package | Size | Budget | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          over_budget=0
+
+          # Iterate every built package so coverage stays complete as packages
+          # are added or removed — no hard-coded package list to drift.
+          for dist in packages/*/dist; do
+            pkg=$(basename "$(dirname "$dist")")
+
+            # Skip private packages — they're not shipped to consumers.
+            if grep -q '"private": true' "packages/$pkg/package.json"; then
+              continue
+            fi
+
+            size_kb=$(du -sk "$dist" | cut -f1)
+            human=$(du -sh "$dist" | cut -f1)
+            budget=${BUDGET_KB[$pkg]:-}
+
+            if [ -z "$budget" ]; then
+              # A built, publishable package with no budget entry — fail loudly
+              # so new packages get an explicit budget instead of slipping the gate.
+              echo "| @civui/$pkg | $human | _(none)_ | ⚠️ unbudgeted |" >> $GITHUB_STEP_SUMMARY
+              echo "::error::@civui/$pkg has no bundle budget. Add a BUDGET_KB entry in .github/workflows/bundle-size.yml."
+              over_budget=1
+            elif [ "$size_kb" -gt "$budget" ]; then
+              echo "| @civui/$pkg | $human | ${budget}K | ❌ over |" >> $GITHUB_STEP_SUMMARY
+              echo "::error::@civui/$pkg is ${size_kb}K (budget: ${budget}K)."
+              over_budget=1
+            else
+              echo "| @civui/$pkg | $human | ${budget}K | ✅ |" >> $GITHUB_STEP_SUMMARY
+            fi
           done
+
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Fail if forms package exceeds 300K (after minification)
-          forms_size=$(du -sk packages/forms/dist/ | cut -f1)
-          echo "Forms dist: ${forms_size}K"
-          if [ "$forms_size" -gt 300 ]; then
-            echo "::warning::Forms package is ${forms_size}K (limit: 300K)"
+          if [ "$over_budget" -ne 0 ]; then
+            echo "One or more packages exceeded their bundle budget." >> $GITHUB_STEP_SUMMARY
+            exit 1
           fi

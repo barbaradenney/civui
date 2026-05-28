@@ -1199,15 +1199,33 @@ describe('civ-file-upload dragenter/dragleave depth tracking', () => {
 });
 
 describe('civ-file-upload inline variant', () => {
-  it('inline + single: trigger shows the filename, no list rendered', async () => {
+  it('inline + single: trigger shows the filename AND a list row with a remove button', async () => {
+    // Native <input type="file"> has no clear-selection affordance — once
+    // the user picks a file they can only replace by picking another.
+    // CivUI deliberately fills that gap by rendering the file list even in
+    // inline + single mode so the user retains agency via the × button.
     const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
     el._addFiles([new File(['x'], 'report.pdf', { type: 'application/pdf' })]);
     await elementUpdated(el);
 
     const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
     expect(triggerText).toContain('report.pdf');
-    // No list — the trigger alone shows the chosen file
-    expect(el.querySelector('ul.civ-list-none')).toBeNull();
+    expect(el.querySelector('ul.civ-list-none')).not.toBeNull();
+    expect(el.querySelectorAll('.civ-file-item')).toHaveLength(1);
+    expect(el.querySelector('[data-file-remove]')).not.toBeNull();
+  });
+
+  it('inline + single: clicking remove clears the selection and trigger reverts to placeholder', async () => {
+    const el = await fixture('<civ-file-upload label="Upload" variant="inline" name="doc"></civ-file-upload>') as any;
+    el._addFiles([new File(['x'], 'report.pdf', { type: 'application/pdf' })]);
+    await elementUpdated(el);
+
+    el.removeFile(0);
+    await elementUpdated(el);
+
+    expect(el.files.length).toBe(0);
+    const triggerText = el.querySelector('.civ-input')!.textContent!.trim();
+    expect(triggerText).not.toContain('report.pdf');
     expect(el.querySelector('.civ-file-item')).toBeNull();
   });
 

@@ -416,6 +416,13 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
         : this._files.length === 1
           ? this._files[0].name
           : interpolate(t('fileUploadFilesChosen'), { count: this._files.length });
+      // The wrapping <button> is a transparent flex container; the inner
+      // spans carry the visible chrome (input frame + browse pill). The
+      // `civ-rounded` here is intentional: the global focus ring renders
+      // outside the button via outline + box-shadow following its border-
+      // radius, so without it the focus halo would draw a sharp rectangle
+      // around the rounded input/button seam. The transparent body keeps
+      // the visual chrome owned by the inner spans.
       return html`
         <button
           type="button"
@@ -478,7 +485,7 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
       <input
         id="${this._inputId}"
         type="file"
-        name="${this.name}"
+        name="${this.name || nothing}"
         accept="${this.accept || nothing}"
         capture="${this.capture || nothing}"
         ?multiple="${this.multiple}"
@@ -495,15 +502,14 @@ export class CivFileUpload extends LegendHeadingMixin(CivFormElement) {
    * action buttons) plus the "show all" expander when there are more than
    * `_FILE_LIST_LIMIT`. Returns `nothing` while the list is empty.
    *
-   * Inline + single: skipped — the inline trigger already shows the file
-   * name; a single-row list below would just duplicate it.
-   *
-   * Inline + multiple: the list renders. The trigger collapses to a
-   * "{N} files chosen" summary so the two surfaces aren't redundant, and
-   * the list is the only way for the user to remove individual files.
+   * Always renders when files are present — including the inline + single
+   * case, where the brief filename duplication (trigger pseudo-input shows
+   * it; list row shows it again with a × remove button) is a worthwhile
+   * trade for giving the user agency to clear the selection. Native
+   * `<input type="file">` lacks this affordance; CivUI deliberately fills
+   * the gap.
    */
   private _renderFileList() {
-    if (this.variant === 'inline' && !this.multiple) return nothing;
     if (this._files.length === 0) return nothing;
     const visible = this._showAllFiles ? this._files : this._files.slice(0, CivFileUpload._FILE_LIST_LIMIT);
     return html`

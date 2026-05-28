@@ -44,6 +44,7 @@ export interface CivFormFieldLike extends HTMLElement {
   error: string;
   required: boolean;
   disabled: boolean;
+  readonly?: boolean;
   files?: File[];
   checkValidity?(): boolean;
   validationMessage?: string;
@@ -330,10 +331,18 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
         : nothing}
       ${this._errors.length > 0
         ? html`
+            <!-- No role="alert" here. The summary is announced by moving
+                 focus to this labelled, focusable (tabindex="-1") container
+                 after render — the screen reader reads the heading via
+                 aria-labelledby. Adding role="alert" on top of the focus
+                 move causes a double announcement (assertive auto-read on
+                 insertion AND the focus read), which is why GOV.UK Frontend
+                 dropped role="alert" from its error summary. Focus is moved
+                 on every path that populates _errors (_onSubmit,
+                 setServerErrors), so the announcement is reliable. -->
             <div
               id="${this._summaryId}"
               class="civ-form-error-summary"
-              role="alert"
               aria-labelledby="${this._summaryHeadingId}"
               data-civ-error-summary
               tabindex="-1"
@@ -553,26 +562,25 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
     if (collected.length === 0) return;
 
-    // Focus the error summary and announce, mirroring the validation-fail flow.
-    void this._focusErrorSummary(collected.length);
+    // Focus the error summary, mirroring the validation-fail flow.
+    void this._focusErrorSummary();
   }
 
   /**
-   * Focus the rendered error summary element and announce the error
-   * count to assistive tech. Awaits one render cycle so the summary
-   * is in the DOM before focusing. Errors are logged rather than
-   * swallowed silently (compared to the previous `.then(...)` shape).
+   * Move focus to the rendered error summary. Awaits one render cycle so
+   * the summary is in the DOM before focusing. The summary is a focusable
+   * (tabindex="-1") container labelled by its heading, so moving focus
+   * here is what announces the error count to assistive tech — there is
+   * deliberately no separate `announce()` call or `role="alert"` (either
+   * would double up with the focus read). Errors are logged rather than
+   * swallowed silently.
    */
-  private async _focusErrorSummary(count: number): Promise<void> {
+  private async _focusErrorSummary(): Promise<void> {
     try {
       await this.updateComplete;
       const summary = this.querySelector(`[data-civ-error-summary]`) as HTMLElement | null;
       if (!summary) return;
       summary.focus();
-      this.announce(
-        interpolate(t(count === 1 ? 'formErrorAnnouncementSingular' : 'formErrorAnnouncementPlural'), { count }),
-        'assertive',
-      );
     } catch (err) {
       console.error('civ-form: failed to focus error summary', err);
     }
@@ -835,7 +843,19 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
         if (prefill.locked) {
           field.setAttribute('data-civ-prefill-locked', '');
-          field.disabled = true;
+          // Lock with `readonly`, not `disabled`. A locked prefill value is
+          // authoritative profile data: the user must still be able to read it
+          // at full contrast, and it MUST be included in the submitted payload.
+          // `disabled` fields are skipped by getFormData()/toFormData() and
+          // render at reduced (disabled) contrast — so locking with `disabled`
+          // silently drops the value from submission and dims the text. The
+          // documented intent (PrefillField.locked → "read-only, editable only
+          // in profile") is exactly `readonly` semantics.
+          //
+          // Selection-only controls (radio/checkbox/segmented) don't honor
+          // `readonly`; those should be locked upstream with `disabled` since
+          // HTML defines no readonly behavior for them.
+          field.readonly = true;
         }
         appliedFields.push(field.name);
       });
@@ -905,7 +925,7 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
       this.sendAnalytics('invalid', { errorCount: errors.length });
 
       // Focus the error summary after render.
-      void this._focusErrorSummary(errors.length);
+      void this._focusErrorSummary();
       return;
     }
 

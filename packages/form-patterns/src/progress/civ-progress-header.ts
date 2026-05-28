@@ -49,7 +49,10 @@ export class CivProgressHeader extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('current') && this.total > 1) {
+    // Announce only on an actual step change, never on the initial mount
+    // (old value is undefined on first render). Otherwise "Step 1 of N"
+    // fires as the page loads.
+    if (changed.has('current') && changed.get('current') !== undefined && this.total > 1) {
       announce(interpolate(t('progressStepLabel'), {
         step: this._safeCurrent + 1,
         total: this.total,

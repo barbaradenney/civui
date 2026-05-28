@@ -44,6 +44,14 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
   /** Visual tone — 'crisis' uses error color left border for urgency. */
   @property({ type: String }) tone: SupportResourcesTone = 'default';
 
+  /**
+   * Stable id for the heading, generated once per instance. Generating it
+   * inside render() would mint a new id on every re-render — harmless for
+   * the aria-labelledby reference (it updates in lockstep) but wasteful and
+   * inconsistent with every sibling (civ-fieldset, civ-section-intro, …).
+   */
+  private _headingId = this.generateId('heading');
+
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-support-resources-content]' };
   }
@@ -62,7 +70,7 @@ export class CivSupportResources extends LightDomSlotMixin(CivBaseElement) {
     const rawLevel = Number.isFinite(this.headingLevel) ? this.headingLevel : 3;
     const level = Math.max(2, Math.min(6, rawLevel));
 
-    const headingId = this.generateId('heading');
+    const headingId = this._headingId;
 
     // `aria-labelledby` resolves to the heading text via the rendered
     // `<p>`'s id, but we also set `aria-label` as a safety net:

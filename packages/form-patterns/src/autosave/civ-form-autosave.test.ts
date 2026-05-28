@@ -265,6 +265,25 @@ describe('civ-form-autosave', () => {
     expect(adapter.saves.length).toBe(0);
   });
 
+  it('warns and falls back to localStorage when storage=custom but no adapter is set', async () => {
+    // The warning fires once per instance when a save actually falls back
+    // (not on the early restore, where .adapter may not be assigned yet).
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const form = await fixture(`
+      <civ-form>
+        <civ-form-autosave storage-key="cust-fallback" storage="custom" debounce-ms="0"></civ-form-autosave>
+        <civ-text-input label="N" name="n" value="hi"></civ-text-input>
+      </civ-form>
+    `);
+    const autosave = form.querySelector('civ-form-autosave') as CivFormAutosave;
+    await autosave.saveNow();
+
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('storage="custom"'));
+    // Falls back to localStorage so the draft isn't silently lost.
+    expect(globalThis.localStorage.getItem('cust-fallback')).not.toBeNull();
+    warnSpy.mockRestore();
+  });
+
   it('swallows adapter exceptions during save', async () => {
     const throwingAdapter: AutosaveAdapter = {
       load: () => null,

@@ -86,7 +86,10 @@ export class CivProgressSteps extends CivBaseElement {
 
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
-    if (changed.has('current')) {
+    // Announce only on an actual step change, never on the initial mount
+    // (old value is undefined on first render) — avoids reading "Step 1 of N"
+    // as the page loads.
+    if (changed.has('current') && changed.get('current') !== undefined) {
       const stepData = this._getStepData();
       const idx = this._safeCurrent;
       const step = stepData[idx];

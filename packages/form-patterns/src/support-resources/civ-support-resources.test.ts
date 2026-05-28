@@ -43,6 +43,20 @@ describe('civ-support-resources', () => {
     expect(el.shadowRoot).toBeNull();
   });
 
+  it('keeps a stable heading id across re-renders', async () => {
+    const el = await fixture('<civ-support-resources heading="Help"></civ-support-resources>') as any;
+    await elementUpdated(el);
+    const firstId = el.querySelector('[role="heading"]')!.id;
+
+    // Force a re-render via a prop change.
+    el.headingLevel = 4;
+    await elementUpdated(el);
+    const heading = el.querySelector('[role="heading"]')!;
+
+    expect(heading.id).toBe(firstId);
+    expect(el.querySelector('[role="complementary"]')!.getAttribute('aria-labelledby')).toBe(firstId);
+  });
+
   it('sets heading level via heading-level prop', async () => {
     const el = await fixture('<civ-support-resources heading="Help" heading-level="4"></civ-support-resources>');
     await elementUpdated(el);

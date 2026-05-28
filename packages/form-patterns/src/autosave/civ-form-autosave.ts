@@ -2,7 +2,7 @@
 
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivBaseElement, debounce, dispatch, interpolate, t } from '@civui/core';
+import { CivBaseElement, debounce, devWarn, dispatch, interpolate, t } from '@civui/core';
 import type { PrefillData } from '../prefill/types.js';
 import {
   localStorageAdapter,
@@ -137,6 +137,9 @@ export class CivFormAutosave extends CivBaseElement {
     }
   }
 
+  /** Fires the missing-custom-adapter warning at most once per instance. */
+  private _warnedMissingCustomAdapter = false;
+
   /** Resolve the active adapter for the current `storage` mode. */
   private get _adapter(): AutosaveAdapter {
     if (this.storage === 'session') return sessionStorageAdapter;
@@ -167,6 +170,21 @@ export class CivFormAutosave extends CivBaseElement {
 
   private async _save(): Promise<void> {
     if (!this._hostForm || !this.storageKey) return;
+    // storage="custom" is usually chosen to keep draft data OUT of the
+    // browser (server-side / encrypted store). If the consumer never set
+    // `.adapter`, _adapter silently falls back to localStorage — which would
+    // write the snapshot to disk against their intent. Warn (dev-only) at the
+    // point a save actually falls back, not on the early restore resolution
+    // (where `.adapter` may legitimately not be assigned yet).
+    if (this.storage === 'custom' && !this.adapter && !this._warnedMissingCustomAdapter) {
+      this._warnedMissingCustomAdapter = true;
+      devWarn(
+        'civ-form-autosave',
+        'storage="custom" but no `.adapter` was set — falling back to localStorage. ' +
+          'Assign el.adapter to your AutosaveAdapter, or draft data will be written to ' +
+          'the browser\'s localStorage.',
+      );
+    }
     // Always exclude PII-flagged fields. The default adapter writes to
     // unencrypted localStorage; consumers who really want to persist
     // SSN/EIN must override with a custom adapter that encrypts and

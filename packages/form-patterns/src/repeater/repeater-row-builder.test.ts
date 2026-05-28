@@ -169,6 +169,25 @@ describe('appendInlineRow', () => {
     const removeBtn = container.querySelector('civ-action-button[danger]')!;
     expect(removeBtn.getAttribute('data-civ-repeater-action')).toBe('remove');
   });
+
+  it('sets emphasis (not the dead variant attribute) on the Remove button', () => {
+    appendInlineRow({
+      container,
+      template: buildTemplate(),
+      index: 0,
+      baseName: 'items',
+      itemLabel: 'item',
+      idPrefix: 'r',
+      legendLevel: 2,
+      min: 0,
+      rowCount: 0,
+    });
+    const removeBtn = container.querySelector('civ-action-button[danger]')!;
+    // civ-action-button reads `emphasis`, not `variant` — a stray
+    // variant="tertiary" would be silently ignored.
+    expect(removeBtn.getAttribute('emphasis')).toBe('tertiary');
+    expect(removeBtn.hasAttribute('variant')).toBe(false);
+  });
 });
 
 describe('appendFormStepsSummaryCard', () => {
@@ -214,6 +233,9 @@ describe('appendFormStepsSummaryCard', () => {
     expect(editBtn).not.toBeNull();
     expect(removeBtn).not.toBeNull();
     expect(removeBtn.hasAttribute('danger')).toBe(true);
+    // Both use `emphasis` (the real prop), not the ignored `variant`.
+    expect(editBtn.getAttribute('emphasis')).toBe('tertiary');
+    expect(editBtn.hasAttribute('variant')).toBe(false);
   });
 
   it('puts the row heading id into aria-labelledby for the screen-reader landmark', () => {

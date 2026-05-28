@@ -53,7 +53,7 @@ export function buildRowHeading(opts: {
  */
 function buildRemoveButton(itemLabel: string, index: number): HTMLElement {
   const btn = document.createElement('civ-action-button');
-  btn.setAttribute('variant', 'tertiary');
+  btn.setAttribute('emphasis', 'tertiary');
   btn.setAttribute('danger', '');
   btn.setAttribute('label', interpolate(t('repeaterRemoveLabel'), { item: itemLabel }));
   btn.setAttribute('data-civ-repeater-action', 'remove');
@@ -68,7 +68,7 @@ function buildRemoveButton(itemLabel: string, index: number): HTMLElement {
  */
 function buildEditButton(itemLabel: string, index: number): HTMLElement {
   const btn = document.createElement('civ-action-button');
-  btn.setAttribute('variant', 'tertiary');
+  btn.setAttribute('emphasis', 'tertiary');
   btn.setAttribute('label', t('repeaterEditButton'));
   btn.setAttribute('data-civ-repeater-action', 'edit');
   btn.setAttribute('aria-label',

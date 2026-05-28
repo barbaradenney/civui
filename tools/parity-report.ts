@@ -721,22 +721,22 @@ function generateReport(): string {
     // Collect all events
     const allEvents = new Map<string, { web?: EventDef; ios?: EventDef; android?: EventDef; drupal?: EventDef }>();
     web?.events.forEach(e => {
-      const key = mapEventName(e.name);
+      const key = mapEventName(e.name, displayName);
       if (!allEvents.has(key)) allEvents.set(key, {});
       allEvents.get(key)!.web = e;
     });
     ios?.events.forEach(e => {
-      const key = mapEventName(e.name);
+      const key = mapEventName(e.name, displayName);
       if (!allEvents.has(key)) allEvents.set(key, {});
       allEvents.get(key)!.ios = e;
     });
     android?.events.forEach(e => {
-      const key = mapEventName(e.name);
+      const key = mapEventName(e.name, displayName);
       if (!allEvents.has(key)) allEvents.set(key, {});
       allEvents.get(key)!.android = e;
     });
     drupal?.events.forEach(e => {
-      const key = mapEventName(e.name);
+      const key = mapEventName(e.name, displayName);
       if (!allEvents.has(key)) allEvents.set(key, {});
       allEvents.get(key)!.drupal = e;
     });
@@ -746,6 +746,10 @@ function generateReport(): string {
       // Web platform specifics
       'action', 'method', 'inputmode', 'autocomplete', 'pattern', 'persist', 'prefill',
       'errorHeadingLevel', 'maskPattern', 'headingLevel',
+      // OnThisPage auto-detect: CSS selectors used to scan the DOM for
+      // headings. No native DOM/CSS-selector equivalent (schema marks both
+      // webOnly: true). Native consumers pass explicit items instead.
+      'selector', 'scopeSelector',
       // Label/legend size variant — CSS typography knob, native uses platform text styles
       'size',
       // Button 'type' (button vs submit) is a web HTML form concept
@@ -843,6 +847,23 @@ function generateReport(): string {
       // it. Native confirmations use platform-native dialog APIs that
       // don't bubble through DOM events.
       'civ-repeater-before-remove',
+      // Overlay/disclosure open + close. Native popovers / menus / sheets
+      // drive presentation through a bound state value, not a fired
+      // open/close event — so there is no native onOpen/onClose callback to
+      // match. The guard below only treats these as web-only for components
+      // where NO native platform exposes the callback, so a component that
+      // does (e.g. a future onOpen) still counts.
+      'civ-open', 'civ-close',
+      // Disclosure toggle. Components that expose a native callback
+      // (accordion-item's onToggle) still match via the guard; those that
+      // drive expansion through state binding (side-nav-item) don't fire a
+      // toggle event natively.
+      'civ-toggle',
+      // AccordionItem internal single-open coordination event, dispatched
+      // alongside the public civ-toggle. Documented as native-omittable —
+      // native platforms coordinate single-open through a different
+      // mechanism.
+      'civ-accordion-item-toggle',
     ]);
 
     // Native-only events/callbacks (not real events, excluded from parity)
@@ -1007,7 +1028,12 @@ function mapPropName(name: string, platform: 'ios' | 'android'): string {
   return map[normalized] || normalized;
 }
 
-function mapEventName(name: string): string {
+function mapEventName(name: string, component?: string): string {
+  // Component-specific overrides where a native callback name is ambiguous
+  // across components. `onRemove` globally maps to civ-repeater-remove (the
+  // repeater's row-remove), but on civ-input-chip the native onRemove is the
+  // chip's own civ-remove event.
+  if (component === 'InputChip' && name === 'onRemove') return 'civ-remove';
   const map: Record<string, string> = {
     // Web events
     'civ-input': 'civ-input',

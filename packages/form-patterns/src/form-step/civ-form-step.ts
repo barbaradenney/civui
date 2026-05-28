@@ -314,10 +314,16 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
       total: this._steps.length,
       label: this.currentLabel,
     });
-    announce(interpolate(t('formStepOf'), {
-      current: String(index + 1),
-      total: String(this._steps.length),
-    }));
+    // When nav is shown the rendered civ-progress-header announces the
+    // (richer) "Step X of Y: title" on every current change, so only
+    // announce here when nav is hidden and nothing else would — otherwise
+    // the user hears two near-identical announcements per step change.
+    if (this.hideNav) {
+      announce(interpolate(t('formStepOf'), {
+        current: String(index + 1),
+        total: String(this._steps.length),
+      }));
+    }
 
     // Scroll into view and focus first field. Respect reduced-motion preferences.
     if (typeof this.scrollIntoView === 'function') {

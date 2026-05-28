@@ -615,6 +615,57 @@ describe('civ-repeater form-steps mode', () => {
     expect(field!.getAttribute('name')).toBe('deps[0].firstName');
   });
 
+  it('preserves a saved row value when editing after an earlier row is removed', async () => {
+    // Regression: form-steps _rowData embeds the row index in its
+    // field-name keys (deps[2].firstName). Removing an earlier row
+    // reindexes the surviving rows; the rebuilt edit wizard uses the NEW
+    // index, so populate must find the saved value under the rewritten key.
+    // Native <input> is used so populate's `'value' in field` guard passes
+    // without registering civ-text-input.
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Dependents" name="deps" item-label="dependent" mode="form-steps">
+        <div data-step-label="Name"><input name="firstName" /></div>
+      </civ-repeater>
+    `);
+    await elementUpdated(el);
+
+    const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
+
+    async function addRow(firstName: string): Promise<void> {
+      (el.querySelector(':scope > fieldset > civ-button') as HTMLElement).click();
+      await elementUpdated(el);
+      await elementUpdated(el); // let _afterUpdate build the form-step
+      const field = el.querySelector('civ-form-step input[name$=".firstName"]') as HTMLInputElement;
+      field.value = firstName;
+      el.querySelector('[data-civ-repeater-form-steps]')!
+        .dispatchEvent(new CustomEvent('civ-step-complete', { bubbles: true }));
+      await elementUpdated(el);
+    }
+
+    await addRow('Ada');     // row 0
+    await addRow('Babbage'); // row 1
+    await addRow('Curie');   // row 2
+    expect(el.rowCount).toBe(3);
+
+    // Remove the middle row. Curie's card shifts from index 2 to index 1.
+    (getRowRemoveButton(el, 1) as HTMLElement).click();
+    await elementUpdated(el);
+    expect(el.rowCount).toBe(2);
+
+    // Edit the row now at index 1 (Curie).
+    const editBtn = el.querySelectorAll('[data-civ-repeater-row]')[1]
+      .querySelector('[data-civ-repeater-action="edit"]') as HTMLElement;
+    editBtn.click();
+    await elementUpdated(el);
+    // _afterUpdate builds the wizard, then _populateFormStepsFromRowData
+    // runs in a rAF — give both room to land.
+    await nextFrame();
+    await nextFrame();
+
+    const field = el.querySelector('civ-form-step input[name$=".firstName"]') as HTMLInputElement;
+    expect(field.value).toBe('Curie');
+  });
+
   it('cancel closes form-steps flow without saving', async () => {
     const el = await fixture<CivRepeater>(formStepsTemplate);
     await elementUpdated(el);

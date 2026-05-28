@@ -588,7 +588,17 @@ export class CivRepeater extends CivBaseElement {
       const reindexed = new Map<number, Record<string, string>>();
       let i = 0;
       for (const [, value] of [...this._rowData.entries()].sort(([a], [b]) => a - b)) {
-        reindexed.set(i, value);
+        // The stored field-name keys embed the row index
+        // (`deps[2].firstName`). Renumbering only the Map key isn't enough:
+        // a later edit rebuilds the form-step with the NEW index
+        // (`deps[1].firstName`), and _populateFormStepsFromRowData queries
+        // by name — so the saved values would silently fail to populate
+        // unless the embedded index is rewritten too.
+        const rekeyed: Record<string, string> = {};
+        for (const [k, v] of Object.entries(value)) {
+          rekeyed[k.replace(/\[\d+\]/, `[${i}]`)] = v;
+        }
+        reindexed.set(i, rekeyed);
         i++;
       }
       this._rowData = reindexed;

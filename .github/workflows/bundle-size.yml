@@ -19,7 +19,15 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
+      # Build only the publishable packages — not the docs app. The bundle
+      # budget measures shipped package dist/, so building apps/docs here is
+      # wasted work and would couple this gate to an unrelated build. The
+      # docs app has its own build job in parity.yml. `turbo build` doesn't
+      # run the root `postbuild` minify hook, so invoke minify explicitly —
+      # the budgets below are calibrated to the *minified* output.
+      - run: pnpm exec turbo build --filter='./packages/*'
+
+      - run: node scripts/minify.js
 
       - name: Check bundle sizes
         run: |
@@ -28,22 +36,22 @@ jobs:
           # doesn't flap CI, while a real regression trips the gate. When a
           # bump is intentional, raise the number here in the same PR.
           declare -A BUDGET_KB=(
-            [actions]=768
+            [actions]=640
             [cli]=384
-            [compound]=768
+            [compound]=640
             [content]=384
-            [core]=1200
-            [data]=896
-            [feedback]=576
-            [form-patterns]=1024
-            [inputs]=2048
-            [layout]=768
-            [mcp-server]=5632
-            [navigation]=576
-            [overlays]=448
-            [schema]=4096
-            [storybook-utils]=192
-            [test-utils]=128
+            [core]=1152
+            [data]=768
+            [feedback]=512
+            [form-patterns]=896
+            [inputs]=1792
+            [layout]=640
+            [mcp-server]=5120
+            [navigation]=512
+            [overlays]=384
+            [schema]=3840
+            [storybook-utils]=128
+            [test-utils]=64
             [tokens]=192
           )
 

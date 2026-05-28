@@ -120,3 +120,12 @@ Components include `@media (forced-colors: active)` overrides for date pickers, 
 - Required fields render an asterisk and set `aria-required="true"`
 
 <StoryEmbed id="foundations-accessibility--error-identification" />
+
+## Performance is an accessibility feature
+
+Fast download and load times keep services reachable on throttled mobile
+data, rural broadband, and older agency hardware — the conditions many
+government audiences actually use. See [Performance](./performance.md) for
+what CivUI does (system fonts, inline SVG icons, Light DOM, tree-shakeable
+sub-path exports, lazy images) and what you should do as a consumer to
+keep your bundle small.

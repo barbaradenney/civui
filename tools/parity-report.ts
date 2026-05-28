@@ -760,6 +760,11 @@ function generateReport(): string {
       'showCountry', 'showMilitary', 'showStreet3',
       // FormStep: navDisabled is web-only (native handles button disabled natively)
       'navDisabled',
+      // ProgressSteps: silent suppresses the aria-live announcement when an
+      // orchestrator (civ-form-step) already announces via civ-progress-header.
+      // Web aria-live coordination concern; native platforms announce through
+      // their own a11y APIs. Mirrors the schema's webOnly: true.
+      'silent',
       // i18n override props (native uses CivLocale instead)
       'chooseDateLabel', 'selectedDateLabel', 'dialogLabel', 'previousMonthLabel',
       'nextMonthLabel', 'dialogOpenedMessage', 'dateSelectedMessage', 'todayLabel',

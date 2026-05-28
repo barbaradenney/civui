@@ -50,11 +50,14 @@ and icon fonts. CivUI ships neither by default.
   This is the reason CivUI's import convention favors sub-path
   side-effect imports over barrel imports — barrels can defeat
   tree-shaking, and bundlers reliably preserve sub-path imports.
-- **Pure ESM, minified output.** All packages are `"type": "module"`.
-  After the TypeScript build, `scripts/minify.js` runs esbuild
-  (`minify: true`, `target: es2022`, `format: esm`) as a `postbuild`
-  step, so published `dist/` files are already minified while keeping
-  the module structure intact for downstream tree-shaking.
+- **Pure ESM.** All packages are `"type": "module"`, which is what makes
+  the sub-path tree-shaking above possible.
+- **Minification (partial today).** After the TypeScript build,
+  `scripts/minify.js` runs esbuild (`minify: true`, `target: es2022`,
+  `format: esm`) over `dist/` JS in place, keeping module structure
+  intact for downstream tree-shaking. **Caveat:** it currently only
+  processes a hardcoded subset of packages — see the known-gaps note
+  below.
 
 ### Light DOM — less work per component
 
@@ -144,14 +147,23 @@ every PR and reports per-package `dist/` sizes to the PR summary. This is
 the right shape for catching size creep over time.
 
 :::caution Known gaps (as of 2026-05)
-The current bundle-size gate is weaker than it looks, and we're being
-honest about it here:
+Two parts of the performance tooling are weaker than they look, and
+we're being honest about them here.
 
-- **It references stale package names.** The workflow loops over
-  `core forms ui feedback navigation`, but `forms` and `ui` no longer
-  exist — they were restructured into `inputs`, `actions`, `layout`,
-  and others. The `forms`-package 300K check measures a directory that
-  isn't there, so it effectively does nothing.
+**Minification only covers a subset of packages.** `scripts/minify.js`
+hardcodes `['core', 'forms', 'ui', 'feedback', 'navigation']`. `forms`
+and `ui` no longer exist (silently skipped), and every other real
+package — including the high-traffic `inputs`, `actions`, and `layout` —
+is never minified. The `tsc -b` build is the only thing that runs for
+those, and it doesn't minify. Fixing this means deriving the package
+list dynamically (glob `packages/*/dist`) instead of hardcoding it.
+
+**The bundle-size gate is largely inert:**
+
+- **It references the same stale package names.** The workflow loops over
+  `core forms ui feedback navigation`, so the only package with a
+  threshold (`forms`, 300K) measures a directory that isn't there — the
+  check effectively does nothing.
 - **The threshold is a `::warning::`, not a hard failure**, and only one
   (now-missing) package had a threshold at all. Size creep won't block a
   PR today.

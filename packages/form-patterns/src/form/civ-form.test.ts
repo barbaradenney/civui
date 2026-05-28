@@ -427,6 +427,64 @@ describe('civ-form URL prefill', () => {
   });
 });
 
+describe('civ-form prefillData locking', () => {
+  afterEach(cleanupFixtures);
+
+  async function nextFrame(): Promise<void> {
+    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+  }
+
+  it('locks a prefilled field with readonly (not disabled) so its value still submits', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Email" name="email"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    el.prefillData = {
+      email: { value: 'jane@agency.gov', source: 'profile', locked: true },
+    };
+    await elementUpdated(el);
+    await nextFrame();
+    const field = el.querySelector('civ-text-input') as any;
+    await elementUpdated(field);
+
+    // Locked => readonly, NOT disabled. Disabled would drop the value from
+    // submission and dim the text the user needs to read.
+    expect(field.readonly).toBe(true);
+    expect(field.disabled).toBe(false);
+    expect(field.hasAttribute('data-civ-prefill-locked')).toBe(true);
+
+    // The authoritative profile value must be included in the payload.
+    expect(field.value).toBe('jane@agency.gov');
+    expect(el.getFormData().email).toBe('jane@agency.gov');
+    expect(el.toFormData().get('email')).toBe('jane@agency.gov');
+  });
+
+  it('leaves an unlocked prefilled field editable', async () => {
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Phone" name="phone"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    el.prefillData = {
+      phone: { value: '202-555-0100', source: 'profile', locked: false },
+    };
+    await elementUpdated(el);
+    await nextFrame();
+    const field = el.querySelector('civ-text-input') as any;
+    await elementUpdated(field);
+
+    expect(field.readonly).toBe(false);
+    expect(field.disabled).toBe(false);
+    expect(field.value).toBe('202-555-0100');
+    expect(el.getFormData().phone).toBe('202-555-0100');
+  });
+});
+
 describe('civ-form support resources', () => {
   it('renders a support-resources footer when provided as JSON attribute', async () => {
     const el = await fixture(`

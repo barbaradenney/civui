@@ -44,6 +44,7 @@ export interface CivFormFieldLike extends HTMLElement {
   error: string;
   required: boolean;
   disabled: boolean;
+  readonly?: boolean;
   files?: File[];
   checkValidity?(): boolean;
   validationMessage?: string;
@@ -835,7 +836,19 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
         if (prefill.locked) {
           field.setAttribute('data-civ-prefill-locked', '');
-          field.disabled = true;
+          // Lock with `readonly`, not `disabled`. A locked prefill value is
+          // authoritative profile data: the user must still be able to read it
+          // at full contrast, and it MUST be included in the submitted payload.
+          // `disabled` fields are skipped by getFormData()/toFormData() and
+          // render at reduced (disabled) contrast — so locking with `disabled`
+          // silently drops the value from submission and dims the text. The
+          // documented intent (PrefillField.locked → "read-only, editable only
+          // in profile") is exactly `readonly` semantics.
+          //
+          // Selection-only controls (radio/checkbox/segmented) don't honor
+          // `readonly`; those should be locked upstream with `disabled` since
+          // HTML defines no readonly behavior for them.
+          field.readonly = true;
         }
         appliedFields.push(field.name);
       });

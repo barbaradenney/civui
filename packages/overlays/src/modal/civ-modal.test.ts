@@ -177,6 +177,19 @@ describe('civ-modal body scroll lock', () => {
     // Modal must restore the prior value, not blank it.
     expect(document.body.style.overflow).toBe('visible');
   });
+
+  it('restores body overflow when removed from the DOM while open', async () => {
+    // Parent unmounts the modal conditionally instead of toggling `open`,
+    // so the close path in updated() never runs. disconnectedCallback must
+    // still release the scroll lock.
+    document.body.style.overflow = 'visible';
+    const el = await fixture('<civ-modal heading="Test" open><p>Content</p></civ-modal>') as any;
+    await elementUpdated(el);
+    expect(document.body.style.overflow).toBe('hidden');
+
+    el.remove();
+    expect(document.body.style.overflow).toBe('visible');
+  });
 });
 
 describe('civ-modal slots', () => {

@@ -100,6 +100,13 @@ const schema: ComponentSchema = {
       description: 'Fires when the listbox closes',
       detail: {},
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on selection',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action (`select`)' },
+      },
+    },
   },
 
   a11y: {

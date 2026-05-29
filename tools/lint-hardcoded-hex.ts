@@ -20,8 +20,8 @@
  *      These are stripped before scanning, so the fallback hex is
  *      never flagged.
  *   2. A rule whose selector is on ALLOWLIST_CLASSES (a deliberate,
- *      documented literal — e.g. the `civ-link-card--critical`
- *      non-inverting-text case tracked in audit-debt).
+ *      documented literal). Currently empty — every color flows
+ *      through a token.
  *   3. A declaration carrying a `/​* hex ok: <reason> *​/` annotation on
  *      its own line or the line immediately above.
  *
@@ -43,12 +43,11 @@ const FILES = [
  * by the `civ-link-card--critical` entry.
  */
 export const ALLOWLIST_CLASSES: ReadonlyArray<{ cls: string; reason: string }> = [
-  {
-    cls: 'civ-link-card--critical',
-    reason:
-      'Non-inverting dark text on the always-yellow warning-light surface; ' +
-      'no token has "always dark, never inverts" semantics (audit-debt).',
-  },
+  // Currently empty: every color in components.css / civ.css flows
+  // through a token. The former `civ-link-card--critical` entry was
+  // retired once its literal #1b1b1b moved to the non-inverting
+  // `warning-ink` token. Add a new entry only for a genuinely
+  // unavoidable literal, with a one-line rationale.
 ];
 
 /** Replace all chars of a match with spaces but keep newlines, so byte
@@ -133,7 +132,11 @@ function lineOf(text: string, offset: number): number {
   return n;
 }
 
-export function scanCss(css: string, file: string): HexFinding[] {
+export function scanCss(
+  css: string,
+  file: string,
+  allowlist: ReadonlyArray<{ cls: string; reason: string }> = ALLOWLIST_CLASSES,
+): HexFinding[] {
   const findings: HexFinding[] = [];
   const stripped = stripComments(css);
   const scannable = stripVarSpans(stripped);
@@ -141,7 +144,7 @@ export function scanCss(css: string, file: string): HexFinding[] {
 
   for (const block of parseRules(stripped)) {
     // Allowlisted selector?
-    if (ALLOWLIST_CLASSES.some((a) => block.selector.includes(a.cls))) continue;
+    if (allowlist.some((a) => block.selector.includes(a.cls))) continue;
 
     // Re-derive the scannable (var-stripped) slice for this body.
     const bodyScannable = scannable.slice(block.bodyStart, block.bodyStart + block.body.length);

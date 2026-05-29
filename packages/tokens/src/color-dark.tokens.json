@@ -30,7 +30,8 @@
       "DEFAULT": { "$value": "#f5c542" },
       "dark": { "$value": "#c9a24d" },
       "darker": { "$value": "#e1c574", "$description": "Between `dark` and `darkest` — added 2026-05-29 for ladder alignment, inverted (brighter) for dark-bg readability" },
-      "darkest": { "$value": "#fae89c", "$description": "Brightest pale amber — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
+      "darkest": { "$value": "#fae89c", "$description": "Brightest pale amber — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" },
+      "ink": { "$value": "#1b1b1b", "$description": "Non-inverting dark ink — DELIBERATELY identical to the light-mode value (#1b1b1b). The warning-light surface stays yellow in dark mode (#f5d576), so text on it must stay dark. Do not invert this." }
     },
     "success": {
       "$type": "color",

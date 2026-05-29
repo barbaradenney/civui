@@ -30,7 +30,8 @@
       "DEFAULT": { "$value": "#e5a000" },
       "dark": { "$value": "#936f38" },
       "darker": { "$value": "#7f5d24", "$description": "Between `dark` and `darkest` — added 2026-05-29 to align the semantic ladder with primary/base (which carry `darker`). 6.01:1 on white (AA)" },
-      "darkest": { "$value": "#6b4c11", "$description": "Dark amber — AA text on warning-lightest" }
+      "darkest": { "$value": "#6b4c11", "$description": "Dark amber — AA text on warning-lightest" },
+      "ink": { "$value": "#1b1b1b", "$description": "Non-inverting dark ink — keeps the SAME value in light AND dark mode (does NOT invert like base-darkest). For text on the always-yellow warning-light surface (civ-link-card--critical), which stays yellow in both modes. 13.84:1 on warning-light (light), 12.03:1 (dark) — AAA both." }
     },
     "success": {
       "$type": "color",

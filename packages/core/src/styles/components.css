@@ -2248,6 +2248,15 @@
       display: flex;
       width: 100%;
     }
+    /* Plain civ-button siblings dropped into a generic container (a div,
+       card, or form body — NOT a .civ-button-row / footer / button-group)
+       go full-width block on mobile and would otherwise stack edge-to-edge
+       with no gap. Add a top margin between consecutive buttons so they
+       breathe. Scoped with :not(...) to the flex clusters that already own
+       their spacing (flex `gap`), so the margin never doubles up there. */
+    civ-button + civ-button:not(.civ-button-row *):not(.civ-modal__footer *):not([data-civ-modal-footer] *):not(.civ-drawer__footer *):not(civ-button-group *) {
+      margin-top: var(--civ-spacing-3);
+    }
   }
 
   /* Form-actions button row: the standard cluster for primary +

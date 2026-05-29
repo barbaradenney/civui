@@ -107,7 +107,7 @@ export function generateFeedbackUi(
           `  <div class="civ-mb-2 civ-p-2 civ-border-s-4 civ-border-primary${resolvedClass}">`,
           `    <p class="civ-text-sm civ-font-bold">${escapeHtml(comment.author)}${comment.timestamp ? ` <time datetime="${escapeHtml(comment.timestamp)}">${escapeHtml(comment.timestamp)}</time>` : ''}</p>`,
           `    <p>${escapeHtml(comment.text)}</p>`,
-          comment.resolved ? '    <p class="civ-text-sm civ-text-success">Resolved</p>' : '',
+          comment.resolved ? '    <p class="civ-text-sm civ-text-success-dark">Resolved</p>' : '',
           `  </div>`,
         );
       }

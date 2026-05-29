@@ -102,6 +102,18 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/colors.md',
     anchor: 'contrast--wcag',
   },
+  'dark-recipe-contrast': {
+    path: '.claude/rules/colors.md',
+    anchor: 'recipe-consistency-across-modes',
+  },
+  'status-body-text': {
+    path: '.claude/rules/colors.md',
+    anchor: 'what-not-to-do',
+  },
+  'hardcoded-hex': {
+    path: '.claude/rules/colors.md',
+    anchor: 'token-hygiene--no-hardcoded-hex',
+  },
   'spacing': {
     path: '.claude/rules/spacing.md',
     anchor: 'three-rhythm-tiers',

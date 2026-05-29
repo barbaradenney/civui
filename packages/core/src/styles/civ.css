@@ -196,9 +196,29 @@ summary:focus,
 
 /* Print styles: clean form rendering for paper */
 @media print {
-  /* Hide interactive-only UI */
+  /* Pin the system sans stack on paper. The `body` rule sets font-size
+     but leaves font-family to Tailwind's preflight (`html { font-family
+     }`); print / "Save as PDF" contexts that don't carry the preflight
+     layer fall back to the UA default — a serif (Times). Pinning the
+     token stack (which ends in `Arial, sans-serif`) keeps printed forms
+     in the same sans face as the screen. */
+  body {
+    font-family: var(--civ-typography-fontFamily-sans) !important;
+  }
+
+  /* Hide interactive-only UI. Includes the class-based affordances
+     (`.civ-action-btn`, `.civ-text-btn`) as well as the custom-element
+     forms — components like civ-date-picker render a bare
+     `<button class="civ-action-btn">` for the "Choose date" trigger
+     (and a `.civ-text-btn` "Today" shortcut) rather than nesting a
+     <civ-action-button>, so the element selectors alone missed them
+     and the trigger printed. */
   .civ-dropzone,
   .civ-btn,
+  .civ-action-btn,
+  .civ-text-btn,
+  .civ-chip--filter,
+  civ-back-to-top,
   civ-action-button,
   civ-button,
   [data-civ-combobox] button,
@@ -212,13 +232,35 @@ summary:focus,
     display: none !important;
   }
 
-  /* Remove decorative styling */
+  /* Remove decorative styling + compress chrome to save paper. The web
+     padding around inputs / tiles sizes the 44px touch target, which is
+     meaningless on paper — tighten it so more fields fit per page. */
   .civ-input,
   .civ-select-field,
   textarea {
     border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
     box-shadow: none !important;
     background: none !important;
+    padding: 2pt 4pt !important;
+  }
+
+  /* Checkbox / radio tiles: drop the touch-target padding to a tight
+     print inset. */
+  .civ-check-tile {
+    padding: 2pt 6pt !important;
+  }
+
+  /* Tighten vertical rhythm between blocks so a long form reflows onto
+     fewer sheets. (mb-4 is also reduced below; these cover the larger
+     section gap and the tighter inner gaps.) */
+  .civ-mb-6 {
+    margin-bottom: 10pt !important;
+  }
+  .civ-mb-3 {
+    margin-bottom: 6pt !important;
+  }
+  .civ-mb-2 {
+    margin-bottom: 4pt !important;
   }
 
   /* Show values legibly */
@@ -274,10 +316,69 @@ summary:focus,
     break-inside: avoid;
   }
 
-  /* Show checkbox/radio state as text */
+  /* Render the checked state in black instead of brand blue so reprints
+     don't burn colored ink. `print-color-adjust: exact` forces the
+     (now black) fill to render — without it the checkbox would print
+     as an empty box and lose the answer. */
   .civ-check-input {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+  .civ-check-input[type="checkbox"]:checked,
+  .civ-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--civ-color-black-DEFAULT, #000) !important;
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  /* Radio dot is a thick ring — black border on a white center reads as
+     a filled dot with almost no ink. */
+  .civ-check-input[type="radio"]:checked {
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+
+  /* Selected tiles: drop the light-blue fill + blue border entirely
+     (colored-ink waste). The checked control inside still conveys the
+     selection; mark the selected tile with a black border so it's
+     distinguishable from the gray border of unselected tiles. */
+  .civ-check-tile:has(:checked),
+  .civ-check-tile:has([aria-checked="mixed"]) {
+    background: none !important;
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+
+  /* Filled "primary"/categorical surfaces paint white (or light) text on
+     a colored background. Backgrounds don't print, so that text would
+     vanish on the white page — content loss, the same failure the
+     primary alert had. Drop the (non-printing) fill, force the text to
+     black, and outline the shape so the pill / card survives in
+     monochrome. Secondary variants (light bg + dark text) are already
+     fine and aren't touched. */
+  .civ-tag,
+  .civ-badge,
+  .civ-count,
+  .civ-data-grid__sort-position {
+    background: none !important;
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  /* Filled cards + link-cards: outline the box and force every
+     descendant text black (heading/body/eyebrow inherit the
+     container's white, which would disappear on paper). */
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger) {
+    background: none !important;
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger),
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger) * {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
   }
 
   /* Hide filter controls in printed lists */
@@ -308,6 +409,38 @@ summary:focus,
   /* Image preview: constrain for print */
   civ-image-preview img {
     max-width: 200pt !important;
+  }
+
+  /* Semantic-intent surfaces — preserve meaning on paper.
+     Backgrounds don't print by default, so a primary alert's white
+     text would vanish on the white page and error/warning text would
+     print as illegible light gray. Force all intent text to black,
+     blacken the leading icon (the ✓ / ! / × / i glyph still conveys
+     severity in grayscale), and outline the boxed surfaces (alert +
+     callout) so they stay visually delimited without their tint.
+     Intent is then carried by icon shape + the "Error:" / "Warning:"
+     text prefix + the container outline, never by color alone.
+     See .claude/rules/colors.md "Print". */
+  .civ-alert,
+  .civ-alert__heading,
+  .civ-alert__body,
+  .civ-alert__prefix,
+  .civ-notice,
+  .civ-notice__header,
+  .civ-notice__body,
+  civ-callout {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  .civ-notice__icon,
+  .civ-alert civ-icon,
+  .civ-notice civ-icon,
+  civ-callout civ-icon {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+    filter: grayscale(1) !important;
+  }
+  .civ-alert,
+  civ-callout {
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
   }
 
   /* Remove focus ring styles */

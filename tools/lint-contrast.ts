@@ -178,12 +178,11 @@ export const PAIRS: ContrastPair[] = [
   { name: 'link-card primary bg/text',    bg: 'primary.DEFAULT',  text: 'white.DEFAULT',  minRatio: 4.5 },
   { name: 'link-card secondary bg/text',  bg: 'primary.lightest', text: 'primary.dark',   minRatio: 4.5 },
   { name: 'link-card tertiary bg/text',   bg: 'white.DEFAULT',    text: 'primary.dark',   minRatio: 4.5 },
-  // link-card --critical is intentionally OFF this list. The variant
-  // uses a literal #1b1b1b text color (not a token) because no token
-  // stays dark in both modes for the warning-light surface — see the
-  // CSS rule and audit-debt "Non-inverting dark-text token for
-  // warning-light surfaces". If the literal is replaced with a token
-  // in a future palette pass, add the rendered pair back here.
+  // link-card --critical: text uses the non-inverting `warning-ink`
+  // token (#1b1b1b in BOTH modes) on the always-yellow warning-light
+  // surface. The lint resolves warning.ink per-mode, so this single
+  // pair guards legibility in light (13.84:1) AND dark (12.03:1).
+  { name: 'link-card critical bg/text',   bg: 'warning.light',    text: 'warning.ink',    minRatio: 4.5 },
   { name: 'link-card danger bg/text',     bg: 'error.DEFAULT',    text: 'white.DEFAULT',  minRatio: 4.5 },
 
   // 9. Tag categorical pairs (8 colors)

@@ -46,13 +46,23 @@ describe('scanCss', () => {
   });
 
   it('ignores hex in an allowlisted selector', () => {
-    const css = '.civ-link-card--critical {\n  color: #1b1b1b;\n}';
-    expect(scanCss(css, 'f.css')).toHaveLength(0);
+    const allow = [{ cls: 'civ-demo-allowed', reason: 'test' }];
+    const css = '.civ-demo-allowed {\n  color: #1b1b1b;\n}';
+    expect(scanCss(css, 'f.css', allow)).toHaveLength(0);
   });
 
   it('honors an allowlisted selector with a pseudo-class suffix', () => {
-    const css = '.civ-link-card--critical:hover {\n  color: #222222;\n}';
-    expect(scanCss(css, 'f.css')).toHaveLength(0);
+    const allow = [{ cls: 'civ-demo-allowed', reason: 'test' }];
+    const css = '.civ-demo-allowed:hover {\n  color: #222222;\n}';
+    expect(scanCss(css, 'f.css', allow)).toHaveLength(0);
+  });
+
+  it('flags a hex when its selector is not in the allowlist', () => {
+    // Regression: the formerly-allowlisted critical link-card literal
+    // moved to the non-inverting `warning-ink` token, so a bare hex
+    // there is now a real violation against the (empty) prod allowlist.
+    const css = '.civ-link-card--critical {\n  color: #1b1b1b;\n}';
+    expect(scanCss(css, 'f.css')).toHaveLength(1);
   });
 
   it('ignores a hex annotated with /* hex ok */', () => {

@@ -4883,14 +4883,14 @@
      `warning-light` is a soft-yellow surface in BOTH light AND dark
      mode (#fee685 light / #f5d576 dark), so the text must also stay
      dark in both modes. `base-darkest` inverts to #f0f0f0 in dark mode
-     (1.26:1 on the dark-mode yellow — invisible), so a literal #1b1b1b
-     is used instead. No current token has the "always dark, never
-     inverts" semantics this surface needs; see audit-debt entry
-     "Non-inverting dark-text token for warning-light surfaces". */
+     (1.26:1 on the dark-mode yellow — invisible), so the non-inverting
+     `warning-ink` token (#1b1b1b in both modes) is used instead. The
+     bg/border tokens swap automatically, so no dark-mode override is
+     needed for this variant. */
   .civ-link-card--critical {
     background-color: var(--civ-color-warning-light);
     border-color: var(--civ-color-warning-light);
-    color: #1b1b1b;
+    color: var(--civ-color-warning-ink);
   }
   @media (hover: hover) {
     .civ-link-card--critical:hover {
@@ -7108,11 +7108,9 @@
       color: var(--civ-color-base-darkest);
     }
 
-    .civ-link-card--critical {
-      background-color: var(--civ-color-warning-light);
-      border-color: var(--civ-color-warning-light);
-      color: var(--civ-color-black-DEFAULT);
-    }
+    /* `.civ-link-card--critical` needs no dark-mode override: its
+       bg/border tokens swap automatically and its text uses the
+       non-inverting `warning-ink` token, dark in both modes. */
 
     /* Cards, fieldsets, repeater rows — subtle border in dark mode */
     .civ-card,
@@ -7178,11 +7176,10 @@
     color: var(--civ-color-base-darkest);
   }
 
-  :root[data-civ-theme="dark"] .civ-link-card--critical {
-    background-color: var(--civ-color-warning-light);
-    border-color: var(--civ-color-warning-light);
-    color: var(--civ-color-black-DEFAULT);
-  }
+  /* `.civ-link-card--critical` intentionally omitted — see the
+     @media (prefers-color-scheme: dark) block above; the
+     non-inverting `warning-ink` token + auto-swapping bg/border
+     tokens mean no toolbar-dark override is needed either. */
 
   :root[data-civ-theme="dark"] .civ-card,
   :root[data-civ-theme="dark"] .civ-fieldset,

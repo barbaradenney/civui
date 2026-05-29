@@ -34,7 +34,7 @@ Five intents represent **status**: the color carries meaning (this is an error /
 
 | Family | Light DEFAULT | Dark DEFAULT | Shades available |
 |---|---|---|---|
-| `primary` | `#005ea2` | `#73b3e7` | lightest, lighter, light, DEFAULT, vivid, dark, darker, darkest |
+| `primary` | `#005ea2` | `#73b3e7` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
 | `error` | `#b50909` | `#f28b82` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
 | `warning` | `#e5a000` | `#f5c542` | lightest, lighter, light, DEFAULT, dark, darker, darkest, ink |
 | `success` | `#00a91c` | `#5cb85c` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
@@ -43,7 +43,7 @@ Five intents represent **status**: the color carries meaning (this is an error /
 | `accent.warm` | `#fa9441` | `#f5a654` | lightest, light, DEFAULT, dark, darkest |
 
 **Shade-ladder irregularities to know about:**
-- `primary` has an extra `vivid` step between `DEFAULT` and `dark` — it's the USWDS "vivid" hue used sparingly for hero accents. Not consumed by any component today.
+- `primary` no longer carries a `vivid` step. It was the USWDS "vivid blue" (`#0050d8`), reserved for hero accents but consumed by zero components — removed 2026-05-29 as a dead token. The focus ring (which some assumed used `primary-vivid`) has always used dedicated `focus.*` tokens, not a primary tint; see "Focus tokens" below. Removing it is a breaking change at the `@civui/tokens` level (drops the `civ-*-primary-vivid` utilities + the `--civ-color-primary-vivid` custom property) — note it in the next release.
 - **Ladder alignment (2026-05-29):** `primary` gained a `darkest` (#0d1f38 light / #e8f2fc dark) and `error` / `warning` / `success` / `info` each gained a `darker` between `dark` and `darkest`, so every status/brand family now exposes the full `…dark → darker → darkest` tail that `base` already had. The new shades are additive (no existing value changed) and not yet consumed by any component — they're available for AAA text and high-emphasis hero typography. Light-mode contrast on white: `primary-darkest` 16.53:1, `error-darker` 11.99:1, `warning-darker` 6.01:1, `success-darker` 6.78:1, `info-darker` 8.39:1 (all AA, most AAA).
 - `warning`, `success`, `info`, and `error` were all restructured (`warning/success/info` on 2026-05-27, `error` on 2026-05-28): what used to be called `lighter` (the softest pale surface) is now `lightest`, and a new mid-pale `lighter` value sits between `lightest` and `light`. The new `darkest` shade for `info` (#1d4554) and `error` (#5a0602) provides AAA-level text contrast and high-emphasis hero typography. For error specifically, `error-lighter` was retuned from peach (#f4e3db) to mid-pale pink-red (#f4caca) and now serves as the danger-button hover mid-tone in the `lightest → lighter → light` gradient.
 - `warning` and `success` carry a `darkest` shade NOT for surfaces but for **AA-compliant text on the `lightest` background** — `warning-darkest` (#6b4c11) hits 7.05:1 on `warning-lightest`; `warning-dark` (#936f38) hits 3.14:1, AA-large only.
@@ -97,6 +97,19 @@ The neutral ladder is the most-used family in the system. Seven steps, used for 
 | `black` | `#000000` (ink) | `#ffffff` (light text) |
 
 The aliases mean `civ-bg-white` and `civ-text-black` keep their semantic meaning ("surface" / "ink") across modes — a card with `civ-bg-white` is a card on the default surface, regardless of light/dark.
+
+### Focus tokens
+
+The focus ring is **not** a color-family token (a recurring misconception — it is not `primary-vivid` or any `primary-*` shade). It has its own dedicated family in `packages/tokens/src/focus.tokens.json`:
+
+| Token | Value | Role |
+|---|---|---|
+| `focus.outline.color` | `#face00` | high-visibility yellow halo (rendered via `box-shadow`) |
+| `focus.shadow.color` | `#0b0c0c` | dark band flush against the element (rendered via `outline`) |
+| `focus.outline.width` | `3px` | exceeds the WCAG 2.2 2px minimum |
+| `focus.shadow.spread` | `3px` | halo width beyond the outline |
+
+This is the **W3C Two-Color Technique (C40)** — two colors so the indicator is visible on any background (yellow on dark surfaces, the dark band on light/yellow surfaces). WCAG 2.2 SC 2.4.13 compliant. The ring is applied automatically by `civ.css` on `:focus` to every native interactive element; the inverted treatment (`focus-visible:civ-focus-ring-inverse`) swaps which band is which for dark-on-dark contexts. A single-color focus tint (the rejected "vivid focus" idea) would lose this background-independence — notably a blue ring on a blue primary button would nearly vanish.
 
 ---
 

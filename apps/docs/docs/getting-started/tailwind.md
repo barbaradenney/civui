@@ -31,7 +31,7 @@ All Tailwind utilities must use the `civ-` prefix:
 | `civ-text-info` / `civ-bg-info` | Informational messages |
 | `civ-text-base` / `civ-bg-base` | Default text and backgrounds |
 
-Each color has shades: `lightest`, `lighter`, `light`, default, `vivid` (primary only), `dark`, `darker`.
+Each color has shades: `lightest`, `lighter`, `light`, default, `dark`, `darker`, `darkest`.
 
 Examples: `civ-bg-error-lightest`, `civ-text-primary-dark`, `civ-border-base-light`.
 

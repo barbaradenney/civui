@@ -36,7 +36,6 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | lighter | #73b3e7 | #2e6ca8 | \`civ-text-primary-lighter\` |
 | light | #2378c3 | #5aa3e8 | \`civ-border-primary-light\` |
 | DEFAULT | #005ea2 | #73b3e7 | \`civ-text-primary\`, \`civ-bg-primary\` |
-| vivid | #0050d8 | #5ea7f5 | \`civ-text-primary-vivid\` |
 | dark | #1a4480 | #a4cef4 | \`civ-text-primary-dark\` |
 | darker | #162e51 | #d0e4f8 | \`civ-bg-primary-darker\` |
 | darkest | #0d1f38 | #e8f2fc | \`civ-text-primary-darkest\` (AAA / hero) |

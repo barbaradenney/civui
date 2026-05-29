@@ -7,7 +7,6 @@
       "lighter": { "$value": "#73b3e7" },
       "light": { "$value": "#2378c3" },
       "DEFAULT": { "$value": "#005ea2" },
-      "vivid": { "$value": "#0050d8" },
       "dark": { "$value": "#1a4480" },
       "darker": { "$value": "#162e51" },
       "darkest": { "$value": "#0d1f38", "$description": "Deepest navy — AAA text + high-emphasis hero. Added 2026-05-29 to align primary's ladder with the semantic families (which carry `darkest`)" }

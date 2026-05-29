@@ -36,9 +36,9 @@ Brand color for links, selected states, and primary actions.
 | Lighter | `#73b3e7` | `civ-bg-primary-lighter` |
 | Light | `#2378c3` | `civ-bg-primary-light` |
 | **Default** | **`#005ea2`** | `civ-bg-primary` |
-| Vivid | `#0050d8` | `civ-bg-primary-vivid` |
 | Dark | `#1a4480` | `civ-bg-primary-dark` |
 | Darker | `#162e51` | `civ-bg-primary-darker` |
+| Darkest | `#0d1f38` | `civ-text-primary-darkest` (AAA / hero) |
 
 ### Error
 
@@ -106,6 +106,19 @@ Default text, backgrounds, borders, and neutral elements.
 | Darker | `#3d4551` | `civ-bg-base-darker` |
 | Darkest | `#1b1b1b` | `civ-bg-base-darkest` |
 
+### Focus indicator
+
+The focus ring is **not** a primary-color tint — it has dedicated tokens in `packages/tokens/src/focus.tokens.json`. CivUI uses the [W3C Two-Color Technique (C40)](https://www.w3.org/WAI/WCAG22/Techniques/css/C40): a dark band sits flush against the element and a yellow halo extends past it, so the indicator stays visible on **any** background (light, dark, or a colored surface). This satisfies WCAG 2.2 SC 2.4.13 (Focus Appearance).
+
+| Role | Value | CSS custom property |
+|------|-------|---------------------|
+| Outline — yellow halo | `#face00` | `var(--civ-focus-outline-color)` |
+| Shadow — dark band | `#0b0c0c` | `var(--civ-focus-shadow-color)` |
+| Outline width | `3px` | `var(--civ-focus-outline-width)` |
+| Halo spread | `3px` | `var(--civ-focus-shadow-spread)` |
+
+You **do not** add a class to get the ring — render a real `<button>`, `<a href>`, or `<input>` and `civ.css` applies it on `:focus` (it triggers on click as well as keyboard, matching the GOV.UK pattern). For dark backgrounds where the dark band would disappear, opt into the inverted treatment with `focus-visible:civ-focus-ring-inverse`.
+
 ## Usage patterns
 
 ### Text
@@ -145,7 +158,7 @@ Default text, backgrounds, borders, and neutral elements.
 | Alert backgrounds | varies | `civ-bg-info-lightest`, `civ-bg-warning-lightest` |
 | Success indicators | `success` | `civ-text-success`, `civ-bg-success-lightest` |
 | Disabled elements | `base-light` | `civ-text-base-light` |
-| Focus ring | `primary` | Applied automatically by `civ.css` to every native interactive element |
+| Focus ring | `focus.*` | Applied automatically by `civ.css` to every native interactive element (see [Focus indicator](#focus-indicator)) |
 
 ## Accessibility
 

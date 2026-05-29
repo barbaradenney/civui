@@ -36,7 +36,6 @@ export const Primary: Story = {
     swatch('Lighter', '--civ-color-primary-lighter', '#73b3e7'),
     swatch('Light', '--civ-color-primary-light', '#2378c3'),
     swatch('Default', '--civ-color-primary-DEFAULT', '#005ea2'),
-    swatch('Vivid', '--civ-color-primary-vivid', '#0050d8'),
     swatch('Dark', '--civ-color-primary-dark', '#1a4480'),
     swatch('Darker', '--civ-color-primary-darker', '#162e51'),
     swatch('Darkest', '--civ-color-primary-darkest', '#0d1f38'),
@@ -103,6 +102,27 @@ export const Base: Story = {
   ]),
 };
 
+export const Focus: Story = {
+  name: 'Focus indicator',
+  render: () => html`
+    ${paletteSection('Focus indicator', [
+      swatch('Outline — yellow halo', '--civ-focus-outline-color', '#face00'),
+      swatch('Shadow — dark band', '--civ-focus-shadow-color', '#0b0c0c'),
+    ])}
+    <p class="civ-text-body civ-max-w-2xl">
+      The focus ring uses the W3C Two-Color Technique (C40): a dark band
+      flush against the element plus a yellow halo extending past it, so
+      the indicator stays visible on any background. Applied automatically
+      by <code>civ.css</code> to every native interactive element — no
+      class needed. Tokens live in
+      <code>packages/tokens/src/focus.tokens.json</code>.
+    </p>
+    <button class="civ-mt-4" type="button" style="padding: 8px 16px;">
+      Tab to me to see the focus ring
+    </button>
+  `,
+};
+
 export const AllColors: Story = {
   render: () => html`
     <div class="civ-grid civ-gap-8" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
@@ -111,7 +131,6 @@ export const AllColors: Story = {
         swatch('Lighter', '--civ-color-primary-lighter', '#73b3e7'),
         swatch('Light', '--civ-color-primary-light', '#2378c3'),
         swatch('Default', '--civ-color-primary-DEFAULT', '#005ea2'),
-        swatch('Vivid', '--civ-color-primary-vivid', '#0050d8'),
         swatch('Dark', '--civ-color-primary-dark', '#1a4480'),
         swatch('Darker', '--civ-color-primary-darker', '#162e51'),
         swatch('Darkest', '--civ-color-primary-darkest', '#0d1f38'),
@@ -160,6 +179,10 @@ export const AllColors: Story = {
         swatch('Dark', '--civ-color-base-dark', '#565c65'),
         swatch('Darker', '--civ-color-base-darker', '#3d4551'),
         swatch('Darkest', '--civ-color-base-darkest', '#1b1b1b'),
+      ])}
+      ${paletteSection('Focus indicator', [
+        swatch('Outline — yellow halo', '--civ-focus-outline-color', '#face00'),
+        swatch('Shadow — dark band', '--civ-focus-shadow-color', '#0b0c0c'),
       ])}
     </div>
   `,

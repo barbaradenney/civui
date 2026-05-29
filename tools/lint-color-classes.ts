@@ -6,7 +6,7 @@
  * `packages/tokens/dist/css/tokens.css`.
  *
  * Catches the recurring "shade that doesn't exist" trap:
- *   civ-text-success-vivid          ← `vivid` exists only on primary
+ *   civ-text-primary-vivid          ← `vivid` was removed from primary
  *   civ-bg-purple-darkest           ← purple stops at `dark`
  *   civ-border-accent-cool-darkest  ← accent-cool stops at `dark`
  *
@@ -96,7 +96,7 @@ async function readTokens(): Promise<TokenSets> {
   // Build family-prefix list by stripping trailing shade tokens from
   // the validSuffixes we've seen.
   const SHADES = new Set([
-    'lightest', 'lighter', 'light', 'vivid',
+    'lightest', 'lighter', 'light',
     'dark', 'darker', 'darkest',
   ]);
   for (const suffix of validSuffixes) {

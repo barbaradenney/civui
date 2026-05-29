@@ -7,7 +7,6 @@
       "lighter": { "$value": "#2e6ca8" },
       "light": { "$value": "#5aa3e8" },
       "DEFAULT": { "$value": "#73b3e7" },
-      "vivid": { "$value": "#5ea7f5" },
       "dark": { "$value": "#a4cef4" },
       "darker": { "$value": "#d0e4f8" },
       "darkest": { "$value": "#e8f2fc", "$description": "Brightest pale blue — mirrors light-mode `darkest` semantic role (deepest text) inverted for dark-bg readability. Added 2026-05-29 for ladder alignment" }

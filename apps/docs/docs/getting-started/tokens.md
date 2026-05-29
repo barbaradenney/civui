@@ -23,7 +23,7 @@ Semantic color tokens for consistent theming across components:
 | `info` | Informational messages |
 | `base` | Default text and backgrounds |
 
-Each color has shades: `lightest`, `lighter`, `light`, default, `vivid` (primary only), `dark`, `darker`.
+Each color has shades: `lightest`, `lighter`, `light`, default, `dark`, `darker`, `darkest`.
 
 ### Spacing
 

@@ -9,7 +9,8 @@
       "DEFAULT": { "$value": "#73b3e7" },
       "vivid": { "$value": "#5ea7f5" },
       "dark": { "$value": "#a4cef4" },
-      "darker": { "$value": "#d0e4f8" }
+      "darker": { "$value": "#d0e4f8" },
+      "darkest": { "$value": "#e8f2fc", "$description": "Brightest pale blue — mirrors light-mode `darkest` semantic role (deepest text) inverted for dark-bg readability. Added 2026-05-29 for ladder alignment" }
     },
     "error": {
       "$type": "color",
@@ -18,6 +19,7 @@
       "light": { "$value": "#e87461" },
       "DEFAULT": { "$value": "#f28b82" },
       "dark": { "$value": "#f5b7b1" },
+      "darker": { "$value": "#f7c6c0", "$description": "Between `dark` and `darkest` — added 2026-05-29 for ladder alignment, inverted (brighter) for dark-bg readability" },
       "darkest": { "$value": "#fad5d0", "$description": "Brightest pale red — mirrors light-mode `darkest` semantic role (deepest text), inverted for dark-bg readability" }
     },
     "warning": {
@@ -27,6 +29,7 @@
       "light": { "$value": "#f5d576" },
       "DEFAULT": { "$value": "#f5c542" },
       "dark": { "$value": "#c9a24d" },
+      "darker": { "$value": "#e1c574", "$description": "Between `dark` and `darkest` — added 2026-05-29 for ladder alignment, inverted (brighter) for dark-bg readability" },
       "darkest": { "$value": "#fae89c", "$description": "Brightest pale amber — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "success": {
@@ -36,6 +39,7 @@
       "light": { "$value": "#81d88a" },
       "DEFAULT": { "$value": "#5cb85c" },
       "dark": { "$value": "#7ec97e" },
+      "darker": { "$value": "#93d897", "$description": "Between `dark` and `darkest` — added 2026-05-29 for ladder alignment, inverted (brighter) for dark-bg readability" },
       "darkest": { "$value": "#a8e8b0", "$description": "Brightest pale green — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "info": {
@@ -45,6 +49,7 @@
       "light": { "$value": "#7dd3e0" },
       "DEFAULT": { "$value": "#4dd0e1" },
       "dark": { "$value": "#80deea" },
+      "darker": { "$value": "#9ce3ed", "$description": "Between `dark` and `darkest` — added 2026-05-29 for ladder alignment, inverted (brighter) for dark-bg readability" },
       "darkest": { "$value": "#b8e8f0", "$description": "Brightest pale cyan — distinct from `light`, brighter than `dark`. Mirrors light-mode `darkest` semantic role (deepest text on bg) inverted for dark-bg readability" }
     },
     "purple": {

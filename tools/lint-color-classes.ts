@@ -6,12 +6,15 @@
  * `packages/tokens/dist/css/tokens.css`.
  *
  * Catches the recurring "shade that doesn't exist" trap:
- *   civ-text-success-darker      ← no `darker` shade for success
- *   civ-bg-info-lightest         ← no `lightest` shade for info
- *   civ-border-error-darkest     ← no `darkest` shade for error
+ *   civ-text-success-vivid          ← `vivid` exists only on primary
+ *   civ-bg-purple-darkest           ← purple stops at `dark`
+ *   civ-border-accent-cool-darkest  ← accent-cool stops at `dark`
  *
- * The trauma-informed audit hit `civ-text-success-darker` only
- * because the rendered story still looked wrong — a static lint
+ * The canonical historical example was `civ-text-success-darker`,
+ * which the trauma-informed audit hit because the rendered story
+ * still looked wrong; that shade has since been added (the semantic
+ * ladders gained `darker` in the 2026-05-29 alignment), so the
+ * examples above use shades that remain undefined. A static lint
  * surfaces these the moment they're typed.
  *
  * Strategy

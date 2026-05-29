@@ -39,6 +39,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | vivid | #0050d8 | #5ea7f5 | \`civ-text-primary-vivid\` |
 | dark | #1a4480 | #a4cef4 | \`civ-text-primary-dark\` |
 | darker | #162e51 | #d0e4f8 | \`civ-bg-primary-darker\` |
+| darkest | #0d1f38 | #e8f2fc | \`civ-text-primary-darkest\` (AAA / hero) |
 
 ### error
 | Shade | Light | Dark | Class examples |
@@ -48,6 +49,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | light | #d63e04 | #e87461 | \`civ-text-error-light\` |
 | DEFAULT | #b50909 | #f28b82 | \`civ-text-error\`, \`civ-border-error\` |
 | dark | #8b0a03 | #f5b7b1 | \`civ-text-error-dark\` |
+| darker | #720802 | #f7c6c0 | \`civ-text-error-darker\` (AAA) |
 | darkest | #5a0602 | #fad5d0 | \`civ-text-error-darkest\` (AAA / hero) |
 
 ### warning
@@ -58,6 +60,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | light | #fee685 | #f5d576 | \`civ-text-warning-light\` |
 | DEFAULT | #e5a000 | #f5c542 | \`civ-text-warning\`, \`civ-bg-warning\` |
 | dark | #936f38 | #c9a24d | \`civ-text-warning-dark\` |
+| darker | #7f5d24 | #e1c574 | \`civ-text-warning-darker\` (AA) |
 | darkest | #6b4c11 | #f5d576 | \`civ-text-warning-darkest\` (AA text on lightest) |
 
 ### success
@@ -68,6 +71,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | light | #70e17b | #81d88a | \`civ-text-success-light\` |
 | DEFAULT | #00a91c | #5cb85c | \`civ-text-success\`, \`civ-bg-success\` |
 | dark | #4d8055 | #7ec97e | \`civ-text-success-dark\` |
+| darker | #336637 | #93d897 | \`civ-text-success-darker\` (AA) |
 | darkest | #1a4d1a | #81d88a | \`civ-text-success-darkest\` (AA text on lightest) |
 
 ### info
@@ -78,6 +82,7 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 | light | #99deea | #7dd3e0 | \`civ-text-info-light\` |
 | DEFAULT | #00bde3 | #4dd0e1 | \`civ-text-info\`, \`civ-bg-info\` |
 | dark | #2e6276 | #80deea | \`civ-text-info-dark\` |
+| darker | #255365 | #9ce3ed | \`civ-text-info-darker\` (AAA) |
 | darkest | #1d4554 | #7dd3e0 | \`civ-text-info-darkest\` (AAA / hero) |
 
 ### base

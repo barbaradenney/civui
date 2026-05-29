@@ -1,11 +1,18 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { cleanupLiveRegions } from '@civui/core';
 import './civ-progress-steps.js';
 
-afterEach(cleanupFixtures);
+afterEach(() => {
+  cleanupFixtures();
+  cleanupLiveRegions();
+});
 
 describe('civ-progress-steps', () => {
   const threeSteps = '["Personal Info","Address","Review"]';
+  // The announce queue waits QUEUE_DELAY (150ms) + a frame before writing
+  // the live-region text.
+  const flushAnnounce = () => new Promise<void>((r) => setTimeout(r, 250));
 
   it('renders segments for each step', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
@@ -14,12 +21,39 @@ describe('civ-progress-steps', () => {
     expect(segments.length).toBe(3);
   });
 
-  it('renders a group with accessible label', async () => {
+  it('announces step changes by default', async () => {
+    const el = await fixture<HTMLElement & { current: number }>(
+      `<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`,
+    );
+    await elementUpdated(el);
+    el.current = 1;
+    await elementUpdated(el);
+    await flushAnnounce();
+    expect(document.querySelector('[aria-live="polite"]')?.textContent).toContain('Step 2 of 3');
+  });
+
+  it('suppresses the announcement when silent is set', async () => {
+    const el = await fixture<HTMLElement & { current: number }>(
+      `<civ-progress-steps steps='${threeSteps}' current="0" silent></civ-progress-steps>`,
+    );
+    await elementUpdated(el);
+    el.current = 1;
+    await elementUpdated(el);
+    await flushAnnounce();
+    // No announcement fired, so no step text reaches the live region.
+    expect(document.querySelector('[aria-live="polite"]')?.textContent ?? '').not.toContain('Step 2 of 3');
+  });
+
+  it('renders a labelled list of steps', async () => {
     const el = await fixture(`<civ-progress-steps steps='${threeSteps}' current="0"></civ-progress-steps>`);
 
-    const group = el.querySelector('[role="group"]');
-    expect(group).not.toBeNull();
-    expect(group!.getAttribute('aria-label')).toBeTruthy();
+    // role="list" (matches the schema's a11y.role) so the role="listitem"
+    // segments are validly contained.
+    const list = el.querySelector('[role="list"]');
+    expect(list).not.toBeNull();
+    expect(list!.getAttribute('aria-label')).toBeTruthy();
+    const items = el.querySelectorAll('[role="listitem"]');
+    expect(items.length).toBe(3);
   });
 
   it('marks completed segments', async () => {

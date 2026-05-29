@@ -59,6 +59,12 @@ describe('civ-progress-percent', () => {
     expect(track.getAttribute('aria-label')).toBe('Form completion');
   });
 
+  it('falls back to the localized default label when none is set', async () => {
+    const el = await fixture<CivProgressPercent>('<civ-progress-percent value="50"></civ-progress-percent>');
+    const track = el.querySelector('[role="progressbar"]')!;
+    expect(track.getAttribute('aria-label')).toBe('Progress');
+  });
+
   it('updates fill width when value changes', async () => {
     const el = await fixture<CivProgressPercent>('<civ-progress-percent value="25"></civ-progress-percent>');
     const fill = el.querySelector('.civ-progress-fill') as HTMLElement;

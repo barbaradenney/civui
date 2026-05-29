@@ -305,6 +305,7 @@ export interface CivLocaleStrings {
   progressStepLabel: string; // "Step {step} of {total}: {label}"
   progressStepGoTo: string; // "Go to step {step}: {label}"
   progressStepsCounter: string; // "Step {current} of {total}"
+  progressBarLabel: string; // default aria-label for civ-progress-percent
 
   // Name
   nameFirst: string;
@@ -1026,6 +1027,7 @@ const defaultStrings: CivLocaleStrings = {
   progressStepLabel: 'Step {step} of {total}: {label}',
   progressStepGoTo: 'Go to step {step}: {label}',
   progressStepsCounter: 'Step {current} of {total}',
+  progressBarLabel: 'Progress',
 
   selectAll: 'Select all',
   deselectAll: 'Deselect all',

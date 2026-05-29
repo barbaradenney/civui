@@ -43,6 +43,9 @@ describe('civ-form-step', () => {
     expect(progress).not.toBeNull();
     const segments = progress!.querySelectorAll('.civ-progress-segment');
     expect(segments.length).toBe(2);
+    // The accompanying civ-progress-header announces step changes, so the
+    // steps bar is rendered silent to avoid a duplicate screen-reader read.
+    expect(progress!.hasAttribute('silent')).toBe(true);
   });
 
   it('renders civ-progress-percent when progress="bar"', async () => {

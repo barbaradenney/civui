@@ -27,6 +27,16 @@ export class CivProgressSteps extends CivBaseElement {
   @property({ type: Boolean }) clickable = false;
   @property({ type: String, attribute: 'error-steps' }) errorSteps = '[]';
 
+  /**
+   * Suppress the per-change screen-reader announcement. An orchestrator
+   * that already renders an announcing `civ-progress-header` alongside this
+   * bar (e.g. `civ-form-step` in `progress="steps"` mode) sets this so the
+   * step change isn't read twice. Standalone progress-steps announces by
+   * default. Web-only — native platforms coordinate announcements through
+   * their own accessibility APIs.
+   */
+  @property({ type: Boolean }) silent = false;
+
   private _cachedSteps: string | null = null;
   private _cachedStepData: Array<{ label: string }> = [];
   private _cachedErrorSteps: string | null = null;
@@ -88,8 +98,9 @@ export class CivProgressSteps extends CivBaseElement {
     super.updated(changed);
     // Announce only on an actual step change, never on the initial mount
     // (old value is undefined on first render) — avoids reading "Step 1 of N"
-    // as the page loads.
-    if (changed.has('current') && changed.get('current') !== undefined) {
+    // as the page loads. `silent` lets an orchestrator that already announces
+    // (civ-form-step + civ-progress-header) suppress the duplicate read.
+    if (!this.silent && changed.has('current') && changed.get('current') !== undefined) {
       const stepData = this._getStepData();
       const idx = this._safeCurrent;
       const step = stepData[idx];
@@ -110,11 +121,12 @@ export class CivProgressSteps extends CivBaseElement {
     const current = this._safeCurrent;
     const errorSet = this._getErrorSet();
 
+    // role="list" + role="listitem" segments (matches the schema's
+    // a11y.role: 'list'). A bare role="group" containing role="listitem"
+    // children is invalid ARIA ("listitem must be contained in a list").
     return html`
-      <div role="group" aria-label="${t('progressStepsLabel')}">
-        <div class="civ-progress-segments">
-          ${stepData.map((step, i) => this._renderSegment(step, i, stepData.length, current, errorSet))}
-        </div>
+      <div class="civ-progress-segments" role="list" aria-label="${t('progressStepsLabel')}">
+        ${stepData.map((step, i) => this._renderSegment(step, i, stepData.length, current, errorSet))}
       </div>
     `;
   }
@@ -144,14 +156,18 @@ export class CivProgressSteps extends CivBaseElement {
     });
 
     if (this.clickable && isCompleted) {
+      // Wrap the button in a role="listitem" so the list contains only
+      // listitems. The button keeps the segment styling + fills the wrapper.
       return html`
-        <button
-          type="button"
-          class="${segmentClass}"
-          aria-label="${ariaLabel}"
-          aria-current="${isCurrent ? 'step' : nothing}"
-          @click="${() => this._onStepClick(index)}"
-        ></button>
+        <div role="listitem" class="civ-progress-segment-item">
+          <button
+            type="button"
+            class="${segmentClass}"
+            aria-label="${ariaLabel}"
+            aria-current="${isCurrent ? 'step' : nothing}"
+            @click="${() => this._onStepClick(index)}"
+          ></button>
+        </div>
       `;
     }
 

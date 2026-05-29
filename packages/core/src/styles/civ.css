@@ -310,6 +310,38 @@ summary:focus,
     max-width: 200pt !important;
   }
 
+  /* Semantic-intent surfaces — preserve meaning on paper.
+     Backgrounds don't print by default, so a primary alert's white
+     text would vanish on the white page and error/warning text would
+     print as illegible light gray. Force all intent text to black,
+     blacken the leading icon (the ✓ / ! / × / i glyph still conveys
+     severity in grayscale), and outline the boxed surfaces (alert +
+     callout) so they stay visually delimited without their tint.
+     Intent is then carried by icon shape + the "Error:" / "Warning:"
+     text prefix + the container outline, never by color alone.
+     See .claude/rules/colors.md "Print". */
+  .civ-alert,
+  .civ-alert__heading,
+  .civ-alert__body,
+  .civ-alert__prefix,
+  .civ-notice,
+  .civ-notice__header,
+  .civ-notice__body,
+  civ-callout {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  .civ-notice__icon,
+  .civ-alert civ-icon,
+  .civ-notice civ-icon,
+  civ-callout civ-icon {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+    filter: grayscale(1) !important;
+  }
+  .civ-alert,
+  civ-callout {
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
+  }
+
   /* Remove focus ring styles */
   *:focus {
     outline: none !important;

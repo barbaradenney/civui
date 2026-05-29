@@ -143,29 +143,27 @@ your side:
 ## How we guard against regressions
 
 A bundle-size CI workflow (`.github/workflows/bundle-size.yml`) builds
-every PR, minifies, and enforces a **per-package KB budget**. It iterates
-every built publishable package (no hardcoded list), and **hard-fails the
-PR** when a package exceeds its budget — or when a built publishable
-package has no budget entry, so a new package can't slip the gate
-silently. A size / budget / status table is written to the PR summary.
+every PR, minifies, and enforces a **per-package gzipped-JS budget** —
+the size a browser actually downloads over the wire, not raw bytes on
+disk. It iterates every built publishable package (no hardcoded list),
+and **hard-fails the PR** when a package exceeds its budget — or when a
+built publishable package has no budget entry, so a new package can't
+slip the gate silently. A package / gzipped-size / budget / status table
+is written to the PR summary.
 
-:::caution Known gaps (as of 2026-05)
-The two biggest holes here — minification only covering a hardcoded
-subset of packages, and the size gate being an inert `::warning::`
-against a package that no longer exists — were fixed: minification now
-discovers every package's `dist/` from the workspace, and the gate
-hard-fails per-package budgets. Two honest gaps remain:
-
-- **It measures `dist/` bytes (`du -sk`), not gzip/brotli transfer
-  size** — which is what users actually download over the wire. The
-  budgets are a useful regression tripwire, but a gzip-based gate would
-  track the real on-the-wire cost more directly.
-- **No package declares `"sideEffects": false`.** Sub-path exports carry
-  most of the tree-shaking, but adding a `sideEffects` declaration (with
-  a carve-out for CSS) would let bundlers prune more aggressively.
-
-If you're touching the performance tooling, switching to a gzip-size gate
-is the highest-leverage remaining change.
+:::note On `sideEffects`
+You'll notice no package declares `"sideEffects": false`. That's
+deliberate, not an oversight. CivUI components register their custom
+element as a **module side effect** (the `@customElement` decorator runs
+on import — even `@civui/core` registers `civ-icon`). Marking the
+packages side-effect-free would let a bundler drop that registration as
+"unused," so the element silently never upgrades — the same failure mode
+that makes named barrel imports unsafe. The tree-shaking you want comes
+from the **sub-path side-effect imports** above: you pull in exactly the
+component modules you reference and nothing else. A blanket
+`sideEffects: false` would trade that safety for negligible extra
+pruning, so CivUI doesn't set it.
+:::
 :::
 
 ## Related

@@ -24,41 +24,49 @@ jobs:
       # wasted work and would couple this gate to an unrelated build. The
       # docs app has its own build job in parity.yml. `turbo build` doesn't
       # run the root `postbuild` minify hook, so invoke minify explicitly —
-      # the budgets below are calibrated to the *minified* output.
+      # the budgets below measure the *minified, gzipped* JS output.
       - run: pnpm exec turbo build --filter='./packages/*'
 
       - run: node scripts/minify.js
 
       - name: Check bundle sizes
         run: |
-          # Per-package budgets in KB for the built (minified) dist/ output.
-          # Calibrated to the current size + headroom so legitimate growth
-          # doesn't flap CI, while a real regression trips the gate. When a
-          # bump is intentional, raise the number here in the same PR.
-          declare -A BUDGET_KB=(
-            [actions]=640
-            [cli]=384
-            [compound]=640
-            [content]=384
-            [core]=1152
-            [data]=768
-            [feedback]=512
-            [form-patterns]=896
-            [inputs]=1792
-            [layout]=640
-            [mcp-server]=5120
-            [navigation]=512
-            [overlays]=384
-            [schema]=3840
-            [storybook-utils]=128
-            [test-utils]=64
-            [tokens]=192
+          # Per-package budgets in KB of GZIPPED JavaScript — the size a
+          # browser actually downloads over the wire, not raw bytes on disk.
+          # Calibrated to the current gzipped size + headroom so legitimate
+          # growth doesn't flap CI, while a real regression trips the gate.
+          # When a bump is intentional, raise the number here in the same PR.
+          declare -A BUDGET_GZIP_KB=(
+            [actions]=12
+            [cli]=16
+            [compound]=20
+            [content]=4
+            [core]=40
+            [data]=24
+            [feedback]=12
+            [form-patterns]=28
+            [inputs]=56
+            [layout]=16
+            [mcp-server]=256
+            [navigation]=10
+            [overlays]=10
+            [schema]=96
+            [storybook-utils]=4
+            [test-utils]=4
+            [tokens]=8
           )
 
-          echo "## Bundle Sizes" >> $GITHUB_STEP_SUMMARY
+          # Gzipped size (KB, rounded up) of all .js in a dist/ dir.
+          gzip_kb() {
+            local bytes
+            bytes=$(find "$1" -name '*.js' -exec cat {} + 2>/dev/null | gzip -c | wc -c)
+            echo $(( (bytes + 1023) / 1024 ))
+          }
+
+          echo "## Bundle Sizes (gzipped JS)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Package | Size | Budget | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|---------|------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Package | Gzipped JS | Budget | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-----------:|-------:|--------|" >> $GITHUB_STEP_SUMMARY
 
           over_budget=0
 
@@ -72,28 +80,27 @@ jobs:
               continue
             fi
 
-            size_kb=$(du -sk "$dist" | cut -f1)
-            human=$(du -sh "$dist" | cut -f1)
-            budget=${BUDGET_KB[$pkg]:-}
+            size_kb=$(gzip_kb "$dist")
+            budget=${BUDGET_GZIP_KB[$pkg]:-}
 
             if [ -z "$budget" ]; then
               # A built, publishable package with no budget entry — fail loudly
               # so new packages get an explicit budget instead of slipping the gate.
-              echo "| @civui/$pkg | $human | _(none)_ | ⚠️ unbudgeted |" >> $GITHUB_STEP_SUMMARY
-              echo "::error::@civui/$pkg has no bundle budget. Add a BUDGET_KB entry in .github/workflows/bundle-size.yml."
+              echo "| @civui/$pkg | ${size_kb} K | _(none)_ | ⚠️ unbudgeted |" >> $GITHUB_STEP_SUMMARY
+              echo "::error::@civui/$pkg has no bundle budget. Add a BUDGET_GZIP_KB entry in .github/workflows/bundle-size.yml."
               over_budget=1
             elif [ "$size_kb" -gt "$budget" ]; then
-              echo "| @civui/$pkg | $human | ${budget}K | ❌ over |" >> $GITHUB_STEP_SUMMARY
-              echo "::error::@civui/$pkg is ${size_kb}K (budget: ${budget}K)."
+              echo "| @civui/$pkg | ${size_kb} K | ${budget} K | ❌ over |" >> $GITHUB_STEP_SUMMARY
+              echo "::error::@civui/$pkg gzipped JS is ${size_kb}K (budget: ${budget}K)."
               over_budget=1
             else
-              echo "| @civui/$pkg | $human | ${budget}K | ✅ |" >> $GITHUB_STEP_SUMMARY
+              echo "| @civui/$pkg | ${size_kb} K | ${budget} K | ✅ |" >> $GITHUB_STEP_SUMMARY
             fi
           done
 
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "$over_budget" -ne 0 ]; then
-            echo "One or more packages exceeded their bundle budget." >> $GITHUB_STEP_SUMMARY
+            echo "One or more packages exceeded their gzipped-JS budget." >> $GITHUB_STEP_SUMMARY
             exit 1
           fi

@@ -39,6 +39,7 @@ const config: Config = {
           vivid: 'var(--civ-color-primary-vivid)',
           dark: 'var(--civ-color-primary-dark)',
           darker: 'var(--civ-color-primary-darker)',
+          darkest: 'var(--civ-color-primary-darkest)',
         },
         error: {
           lightest: 'var(--civ-color-error-lightest)',
@@ -46,6 +47,7 @@ const config: Config = {
           light: 'var(--civ-color-error-light)',
           DEFAULT: 'var(--civ-color-error-DEFAULT)',
           dark: 'var(--civ-color-error-dark)',
+          darker: 'var(--civ-color-error-darker)',
           darkest: 'var(--civ-color-error-darkest)',
         },
         warning: {
@@ -54,6 +56,7 @@ const config: Config = {
           light: 'var(--civ-color-warning-light)',
           DEFAULT: 'var(--civ-color-warning-DEFAULT)',
           dark: 'var(--civ-color-warning-dark)',
+          darker: 'var(--civ-color-warning-darker)',
           darkest: 'var(--civ-color-warning-darkest)',
         },
         success: {
@@ -62,6 +65,7 @@ const config: Config = {
           light: 'var(--civ-color-success-light)',
           DEFAULT: 'var(--civ-color-success-DEFAULT)',
           dark: 'var(--civ-color-success-dark)',
+          darker: 'var(--civ-color-success-darker)',
           darkest: 'var(--civ-color-success-darkest)',
         },
         info: {
@@ -70,6 +74,7 @@ const config: Config = {
           light: 'var(--civ-color-info-light)',
           DEFAULT: 'var(--civ-color-info-DEFAULT)',
           dark: 'var(--civ-color-info-dark)',
+          darker: 'var(--civ-color-info-darker)',
           darkest: 'var(--civ-color-info-darkest)',
         },
         base: {

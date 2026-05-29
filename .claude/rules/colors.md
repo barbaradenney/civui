@@ -34,16 +34,17 @@ Five intents represent **status**: the color carries meaning (this is an error /
 
 | Family | Light DEFAULT | Dark DEFAULT | Shades available |
 |---|---|---|---|
-| `primary` | `#005ea2` | `#73b3e7` | lightest, lighter, light, DEFAULT, vivid, dark, darker |
-| `error` | `#b50909` | `#f28b82` | lightest, lighter, light, DEFAULT, dark, darkest |
-| `warning` | `#e5a000` | `#f5c542` | lightest, lighter, light, DEFAULT, dark, darkest |
-| `success` | `#00a91c` | `#5cb85c` | lightest, lighter, light, DEFAULT, dark, darkest |
-| `info` | `#00bde3` | `#4dd0e1` | lightest, lighter, light, DEFAULT, dark, darkest |
+| `primary` | `#005ea2` | `#73b3e7` | lightest, lighter, light, DEFAULT, vivid, dark, darker, darkest |
+| `error` | `#b50909` | `#f28b82` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
+| `warning` | `#e5a000` | `#f5c542` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
+| `success` | `#00a91c` | `#5cb85c` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
+| `info` | `#00bde3` | `#4dd0e1` | lightest, lighter, light, DEFAULT, dark, darker, darkest |
 | `accent.cool` | `#00bde3` | `#4dd0e1` | lightest, light, DEFAULT, dark |
 | `accent.warm` | `#fa9441` | `#f5a654` | lightest, light, DEFAULT, dark, darkest |
 
 **Shade-ladder irregularities to know about:**
 - `primary` has an extra `vivid` step between `DEFAULT` and `dark` — it's the USWDS "vivid" hue used sparingly for hero accents. Not consumed by any component today.
+- **Ladder alignment (2026-05-29):** `primary` gained a `darkest` (#0d1f38 light / #e8f2fc dark) and `error` / `warning` / `success` / `info` each gained a `darker` between `dark` and `darkest`, so every status/brand family now exposes the full `…dark → darker → darkest` tail that `base` already had. The new shades are additive (no existing value changed) and not yet consumed by any component — they're available for AAA text and high-emphasis hero typography. Light-mode contrast on white: `primary-darkest` 16.53:1, `error-darker` 11.99:1, `warning-darker` 6.01:1, `success-darker` 6.78:1, `info-darker` 8.39:1 (all AA, most AAA).
 - `warning`, `success`, `info`, and `error` were all restructured (`warning/success/info` on 2026-05-27, `error` on 2026-05-28): what used to be called `lighter` (the softest pale surface) is now `lightest`, and a new mid-pale `lighter` value sits between `lightest` and `light`. The new `darkest` shade for `info` (#1d4554) and `error` (#5a0602) provides AAA-level text contrast and high-emphasis hero typography. For error specifically, `error-lighter` was retuned from peach (#f4e3db) to mid-pale pink-red (#f4caca) and now serves as the danger-button hover mid-tone in the `lightest → lighter → light` gradient.
 - `warning` and `success` carry a `darkest` shade NOT for surfaces but for **AA-compliant text on the `lightest` background** — `warning-darkest` (#6b4c11) hits 7.05:1 on `warning-lightest`; `warning-dark` (#936f38) hits 3.14:1, AA-large only.
 - `accent.cool` lacks `lighter` and `darkest` — it's a sparingly-used family.

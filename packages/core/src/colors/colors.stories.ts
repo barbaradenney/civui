@@ -39,6 +39,7 @@ export const Primary: Story = {
     swatch('Vivid', '--civ-color-primary-vivid', '#0050d8'),
     swatch('Dark', '--civ-color-primary-dark', '#1a4480'),
     swatch('Darker', '--civ-color-primary-darker', '#162e51'),
+    swatch('Darkest', '--civ-color-primary-darkest', '#0d1f38'),
   ]),
 };
 
@@ -49,6 +50,7 @@ export const Error: Story = {
     swatch('Light', '--civ-color-error-light', '#d63e04'),
     swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
     swatch('Dark', '--civ-color-error-dark', '#8b0a03'),
+    swatch('Darker', '--civ-color-error-darker', '#720802'),
     swatch('Darkest', '--civ-color-error-darkest', '#5a0602'),
   ]),
 };
@@ -60,6 +62,7 @@ export const Warning: Story = {
     swatch('Light', '--civ-color-warning-light', '#fee685'),
     swatch('Default', '--civ-color-warning-DEFAULT', '#e5a000'),
     swatch('Dark', '--civ-color-warning-dark', '#936f38'),
+    swatch('Darker', '--civ-color-warning-darker', '#7f5d24'),
     swatch('Darkest', '--civ-color-warning-darkest', '#6b4c11'),
   ]),
 };
@@ -71,6 +74,7 @@ export const Success: Story = {
     swatch('Light', '--civ-color-success-light', '#70e17b'),
     swatch('Default', '--civ-color-success-DEFAULT', '#00a91c'),
     swatch('Dark', '--civ-color-success-dark', '#4d8055'),
+    swatch('Darker', '--civ-color-success-darker', '#336637'),
     swatch('Darkest', '--civ-color-success-darkest', '#1a4d1a'),
   ]),
 };
@@ -82,6 +86,7 @@ export const Info: Story = {
     swatch('Light', '--civ-color-info-light', '#99deea'),
     swatch('Default', '--civ-color-info-DEFAULT', '#00bde3'),
     swatch('Dark', '--civ-color-info-dark', '#2e6276'),
+    swatch('Darker', '--civ-color-info-darker', '#255365'),
     swatch('Darkest', '--civ-color-info-darkest', '#1d4554'),
   ]),
 };
@@ -109,6 +114,7 @@ export const AllColors: Story = {
         swatch('Vivid', '--civ-color-primary-vivid', '#0050d8'),
         swatch('Dark', '--civ-color-primary-dark', '#1a4480'),
         swatch('Darker', '--civ-color-primary-darker', '#162e51'),
+        swatch('Darkest', '--civ-color-primary-darkest', '#0d1f38'),
       ])}
       ${paletteSection('Error', [
         swatch('Lightest', '--civ-color-error-lightest', '#faf0f0'),
@@ -116,6 +122,7 @@ export const AllColors: Story = {
         swatch('Light', '--civ-color-error-light', '#d63e04'),
         swatch('Default', '--civ-color-error-DEFAULT', '#b50909'),
         swatch('Dark', '--civ-color-error-dark', '#8b0a03'),
+        swatch('Darker', '--civ-color-error-darker', '#720802'),
         swatch('Darkest', '--civ-color-error-darkest', '#5a0602'),
       ])}
       ${paletteSection('Warning', [
@@ -124,6 +131,7 @@ export const AllColors: Story = {
         swatch('Light', '--civ-color-warning-light', '#fee685'),
         swatch('Default', '--civ-color-warning-DEFAULT', '#e5a000'),
         swatch('Dark', '--civ-color-warning-dark', '#936f38'),
+        swatch('Darker', '--civ-color-warning-darker', '#7f5d24'),
         swatch('Darkest', '--civ-color-warning-darkest', '#6b4c11'),
       ])}
       ${paletteSection('Success', [
@@ -132,6 +140,7 @@ export const AllColors: Story = {
         swatch('Light', '--civ-color-success-light', '#70e17b'),
         swatch('Default', '--civ-color-success-DEFAULT', '#00a91c'),
         swatch('Dark', '--civ-color-success-dark', '#4d8055'),
+        swatch('Darker', '--civ-color-success-darker', '#336637'),
         swatch('Darkest', '--civ-color-success-darkest', '#1a4d1a'),
       ])}
       ${paletteSection('Info', [
@@ -140,6 +149,7 @@ export const AllColors: Story = {
         swatch('Light', '--civ-color-info-light', '#99deea'),
         swatch('Default', '--civ-color-info-DEFAULT', '#00bde3'),
         swatch('Dark', '--civ-color-info-dark', '#2e6276'),
+        swatch('Darker', '--civ-color-info-darker', '#255365'),
         swatch('Darkest', '--civ-color-info-darkest', '#1d4554'),
       ])}
       ${paletteSection('Base', [

@@ -5,9 +5,9 @@
  *
  * The class of bug this catches:
  *
- *   `var(--civ-color-error-darker)` — looks plausible, but `error` has
- *   no `darker` shade in the token system (only `-lighter`, `-light`,
- *   `-DEFAULT`, `-dark`). The `var()` falls back to the initial value
+ *   `var(--civ-color-purple-darkest)` — looks plausible, but `purple`
+ *   has no `darkest` shade in the token system (it stops at `-dark`).
+ *   The `var()` falls back to the initial value
  *   (typically `unset` / `inherit` / a built-in default), so the
  *   element renders without color. No error is thrown — the symptom
  *   is invisible until someone notices the rendered output looks

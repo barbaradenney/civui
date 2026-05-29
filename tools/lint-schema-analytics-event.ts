@@ -39,7 +39,9 @@ const ROOT = join(import.meta.dirname, '..');
 
 /** True when a Lit source documents the analytics event as public API. */
 export function sourceFiresAnalytics(source: string): boolean {
-  return /@fires\s+civ-analytics\b/.test(source);
+  // `(?![\w-])` (not `\b`) so `@fires civ-analytics-foo` doesn't match —
+  // `\b` fires at the `s`/`-` transition since `-` is a non-word char.
+  return /@fires\s+civ-analytics(?![\w-])/.test(source);
 }
 
 /** True when a schema source declares the civ-analytics event key. */

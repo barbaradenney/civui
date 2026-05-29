@@ -217,6 +217,8 @@ summary:focus,
   .civ-btn,
   .civ-action-btn,
   .civ-text-btn,
+  .civ-chip--filter,
+  civ-back-to-top,
   civ-action-button,
   civ-button,
   [data-civ-combobox] button,
@@ -341,6 +343,42 @@ summary:focus,
   .civ-check-tile:has([aria-checked="mixed"]) {
     background: none !important;
     border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+
+  /* Filled "primary"/categorical surfaces paint white (or light) text on
+     a colored background. Backgrounds don't print, so that text would
+     vanish on the white page — content loss, the same failure the
+     primary alert had. Drop the (non-printing) fill, force the text to
+     black, and outline the shape so the pill / card survives in
+     monochrome. Secondary variants (light bg + dark text) are already
+     fine and aren't touched. */
+  .civ-tag,
+  .civ-badge,
+  .civ-count,
+  .civ-data-grid__sort-position {
+    background: none !important;
+    color: var(--civ-color-black-DEFAULT, #000) !important;
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  /* Filled cards + link-cards: outline the box and force every
+     descendant text black (heading/body/eyebrow inherit the
+     container's white, which would disappear on paper). */
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger) {
+    background: none !important;
+    border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger),
+  :is(.civ-card--primary, .civ-card--blue-primary, .civ-card--teal-primary,
+      .civ-card--red-primary, .civ-card--green-primary, .civ-card--yellow-primary,
+      .civ-card--orange-primary, .civ-card--purple-primary, .civ-card--gray-primary,
+      .civ-link-card--primary, .civ-link-card--danger) * {
+    color: var(--civ-color-black-DEFAULT, #000) !important;
   }
 
   /* Hide filter controls in printed lists */

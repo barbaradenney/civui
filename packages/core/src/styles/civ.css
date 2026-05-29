@@ -196,6 +196,16 @@ summary:focus,
 
 /* Print styles: clean form rendering for paper */
 @media print {
+  /* Pin the system sans stack on paper. The `body` rule sets font-size
+     but leaves font-family to Tailwind's preflight (`html { font-family
+     }`); print / "Save as PDF" contexts that don't carry the preflight
+     layer fall back to the UA default — a serif (Times). Pinning the
+     token stack (which ends in `Arial, sans-serif`) keeps printed forms
+     in the same sans face as the screen. */
+  body {
+    font-family: var(--civ-typography-fontFamily-sans) !important;
+  }
+
   /* Hide interactive-only UI */
   .civ-dropzone,
   .civ-btn,
@@ -212,13 +222,35 @@ summary:focus,
     display: none !important;
   }
 
-  /* Remove decorative styling */
+  /* Remove decorative styling + compress chrome to save paper. The web
+     padding around inputs / tiles sizes the 44px touch target, which is
+     meaningless on paper — tighten it so more fields fit per page. */
   .civ-input,
   .civ-select-field,
   textarea {
     border: 1px solid var(--civ-color-black-DEFAULT, #000) !important;
     box-shadow: none !important;
     background: none !important;
+    padding: 2pt 4pt !important;
+  }
+
+  /* Checkbox / radio tiles: drop the touch-target padding to a tight
+     print inset. */
+  .civ-check-tile {
+    padding: 2pt 6pt !important;
+  }
+
+  /* Tighten vertical rhythm between blocks so a long form reflows onto
+     fewer sheets. (mb-4 is also reduced below; these cover the larger
+     section gap and the tighter inner gaps.) */
+  .civ-mb-6 {
+    margin-bottom: 10pt !important;
+  }
+  .civ-mb-3 {
+    margin-bottom: 6pt !important;
+  }
+  .civ-mb-2 {
+    margin-bottom: 4pt !important;
   }
 
   /* Show values legibly */

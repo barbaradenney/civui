@@ -7046,8 +7046,8 @@
     }
 
     dialog.civ-modal {
-      background-color: var(--civ-color-base-darkest);
-      color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface);
+      color: var(--civ-color-base-darkest);
     }
 
     dialog.civ-drawer {
@@ -7061,7 +7061,7 @@
     }
 
     .civ-alert--style-tertiary {
-      background-color: var(--civ-color-base-darker);
+      background-color: var(--civ-color-surface);
     }
 
     .civ-link-card--tertiary {
@@ -7116,8 +7116,8 @@
   }
 
   :root[data-civ-theme="dark"] dialog.civ-modal {
-    background-color: var(--civ-color-base-darkest);
-    color: var(--civ-color-base-lightest);
+    background-color: var(--civ-color-surface);
+    color: var(--civ-color-base-darkest);
   }
 
   :root[data-civ-theme="dark"] dialog.civ-drawer {
@@ -7131,7 +7131,7 @@
   }
 
   :root[data-civ-theme="dark"] .civ-alert--style-tertiary {
-    background-color: var(--civ-color-base-darker);
+    background-color: var(--civ-color-surface);
   }
 
   :root[data-civ-theme="dark"] .civ-link-card--tertiary {

@@ -70,6 +70,13 @@ const schema: ComponentSchema = {
         value: { type: 'string', description: 'Committed textarea value' },
       },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on interaction',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action that triggered the event' },
+      },
+    },
   },
 
   a11y: {

@@ -48,7 +48,15 @@ const schema: ComponentSchema = {
   // `civ-analytics` is dispatched on click (when `href` is set) but is
   // declared on the base class and filtered by the parity tool, so it
   // doesn't appear here. No locally-owned events.
-  events: {},
+  events: {
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on interaction',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action that triggered the event' },
+      },
+    },
+  },
 
   a11y: {
     role: 'listitem',

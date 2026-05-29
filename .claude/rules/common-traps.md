@@ -479,6 +479,52 @@ SDC enum constraints" rather than blocking CI.
 
 ---
 
+## Schema must declare civ-analytics when the component fires it
+
+`civ-analytics` is the cross-cutting analytics event dispatched by
+`sendAnalytics()` (from `CivBaseElement`). When a component surfaces
+it as public API — a JSDoc `@fires civ-analytics` tag — the
+component's **schema must also declare the event** in its `events`
+block. The schema is the platform-neutral contract; a contractor (or
+a native implementation) reading it shouldn't have to also grep the
+Lit source to discover an event the component publicly fires.
+
+```ts
+// civ-button.ts
+/** @fires civ-analytics - Analytics tracking event on click */
+
+// civ-button.schema.ts  — events block MUST include:
+events: {
+  'civ-analytics': {
+    description: 'Analytics tracking event fired on interaction',
+    detail: {
+      componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+      action: { type: 'string', description: 'The user action that triggered the event' },
+    },
+  },
+},
+```
+
+The 2026-05-29 component audits found this drift on `civ-combobox`
+and `civ-date-picker` one at a time; a follow-up sweep added the
+event to all 22 covered components that documented `@fires
+civ-analytics` but omitted it from the schema.
+
+The check is one-directional (JSDoc → schema). A component that
+*calls* `sendAnalytics()` without a `@fires` tag is a separate
+JSDoc-completeness question and is **not** gated — add the `@fires`
+tag first if you want the event to be public API, and the schema
+requirement follows.
+
+**Caught by:** `pnpm lint:schema-analytics-event` — for every
+`COVERED_COMPONENTS` entry whose Lit source has `@fires
+civ-analytics`, asserts the schema declares the event. After adding
+it, run `pnpm sync:doc-tables` and commit the regenerated events
+partials. Wired into `pnpm validate:lints` and the drift-lints CI
+gate.
+
+---
+
 ## Section legends don't carry (required); leaf inputs do
 
 CivUI distinguishes two kinds of `<legend>`:

@@ -2248,6 +2248,15 @@
       display: flex;
       width: 100%;
     }
+    /* Plain civ-button siblings dropped into a generic container (a div,
+       card, or form body — NOT a .civ-button-row / footer / button-group)
+       go full-width block on mobile and would otherwise stack edge-to-edge
+       with no gap. Add a top margin between consecutive buttons so they
+       breathe. Scoped with :not(...) to the flex clusters that already own
+       their spacing (flex `gap`), so the margin never doubles up there. */
+    civ-button + civ-button:not(.civ-button-row *):not(.civ-modal__footer *):not([data-civ-modal-footer] *):not(.civ-drawer__footer *):not(civ-button-group *) {
+      margin-top: var(--civ-spacing-3);
+    }
   }
 
   /* Form-actions button row: the standard cluster for primary +
@@ -2353,13 +2362,29 @@
     flex-wrap: wrap;
     container-type: inline-size;
   }
-  /* When the modal itself is narrow (small modal on desktop, OR
-     any modal at mobile widths), stack the footer buttons full-
-     width so long labels don't put one button on two lines next
-     to a single-line sibling. Same pattern as `.civ-button-row` —
-     see its rule for the design rationale. */
+  /* The slot system relocates the authored `<div data-modal-footer>`
+     wrapper INTO this footer as its single child, so the footer's flex
+     `gap` only spaces that one wrapper — the buttons nested inside it
+     get no gap, and on mobile (where civ-button becomes display:block)
+     they stack edge-to-edge. `display: contents` promotes the wrapper's
+     buttons into the footer's own flex context, so gap / justify / wrap
+     reach the buttons directly. */
+  .civ-modal__footer > [data-modal-footer] {
+    display: contents;
+  }
+  /* Mobile: stack the footer buttons full-width. flex-direction:column
+     + the default align-items:stretch fills the width; the existing
+     `gap` paints the 20px gap between stacked buttons. */
+  @media (max-width: 480px) {
+    .civ-modal__footer {
+      flex-direction: column;
+    }
+  }
+  /* Narrow modal on a DESKTOP viewport (small modal ≥481px) — stack via
+     container query. The buttons are now flex items of the footer (via
+     display:contents above), so target them directly. */
   @container (max-width: 30rem) {
-    .civ-modal__footer > * {
+    .civ-modal__footer > [data-modal-footer] > * {
       flex-basis: 100%;
     }
   }
@@ -2490,11 +2515,24 @@
     flex-wrap: wrap;
     container-type: inline-size;
   }
-  /* Stack drawer footer buttons full-width when the drawer is
-     narrow. See `.civ-modal__footer` / `.civ-button-row` for the
-     same rule and rationale. */
+  /* Same wrapper-relocation issue as `.civ-modal__footer`: the authored
+     `<div data-drawer-footer>` is relocated in as the single child, so
+     promote its buttons into the footer flex context with
+     `display: contents`. */
+  .civ-drawer__footer > [data-drawer-footer] {
+    display: contents;
+  }
+  /* Mobile: stack the footer buttons full-width (column + default
+     align-items:stretch); the existing `gap` spaces them. */
+  @media (max-width: 480px) {
+    .civ-drawer__footer {
+      flex-direction: column;
+    }
+  }
+  /* Narrow drawer on a desktop viewport — stack via container query,
+     targeting the buttons directly (now footer flex items). */
   @container (max-width: 30rem) {
-    .civ-drawer__footer > * {
+    .civ-drawer__footer > [data-drawer-footer] > * {
       flex-basis: 100%;
     }
   }
@@ -7046,8 +7084,8 @@
     }
 
     dialog.civ-modal {
-      background-color: var(--civ-color-base-darkest);
-      color: var(--civ-color-base-lightest);
+      background-color: var(--civ-color-surface);
+      color: var(--civ-color-base-darkest);
     }
 
     dialog.civ-drawer {
@@ -7061,7 +7099,7 @@
     }
 
     .civ-alert--style-tertiary {
-      background-color: var(--civ-color-base-darker);
+      background-color: var(--civ-color-surface);
     }
 
     .civ-link-card--tertiary {
@@ -7116,8 +7154,8 @@
   }
 
   :root[data-civ-theme="dark"] dialog.civ-modal {
-    background-color: var(--civ-color-base-darkest);
-    color: var(--civ-color-base-lightest);
+    background-color: var(--civ-color-surface);
+    color: var(--civ-color-base-darkest);
   }
 
   :root[data-civ-theme="dark"] dialog.civ-drawer {
@@ -7131,7 +7169,7 @@
   }
 
   :root[data-civ-theme="dark"] .civ-alert--style-tertiary {
-    background-color: var(--civ-color-base-darker);
+    background-color: var(--civ-color-surface);
   }
 
   :root[data-civ-theme="dark"] .civ-link-card--tertiary {

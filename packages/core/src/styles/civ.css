@@ -314,10 +314,33 @@ summary:focus,
     break-inside: avoid;
   }
 
-  /* Show checkbox/radio state as text */
+  /* Render the checked state in black instead of brand blue so reprints
+     don't burn colored ink. `print-color-adjust: exact` forces the
+     (now black) fill to render — without it the checkbox would print
+     as an empty box and lose the answer. */
   .civ-check-input {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+  .civ-check-input[type="checkbox"]:checked,
+  .civ-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--civ-color-black-DEFAULT, #000) !important;
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+  /* Radio dot is a thick ring — black border on a white center reads as
+     a filled dot with almost no ink. */
+  .civ-check-input[type="radio"]:checked {
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
+  }
+
+  /* Selected tiles: drop the light-blue fill + blue border entirely
+     (colored-ink waste). The checked control inside still conveys the
+     selection; mark the selected tile with a black border so it's
+     distinguishable from the gray border of unselected tiles. */
+  .civ-check-tile:has(:checked),
+  .civ-check-tile:has([aria-checked="mixed"]) {
+    background: none !important;
+    border-color: var(--civ-color-black-DEFAULT, #000) !important;
   }
 
   /* Hide filter controls in printed lists */

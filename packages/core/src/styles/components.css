@@ -2176,6 +2176,27 @@
     cursor: default;
   }
 
+  /*
+   * Mobile (≤480px) — the Yes/No row expands to full width with each
+   * option splitting the row evenly, for a larger tap target. Mirrors
+   * the segmented-control mobile rule above and the primary-button
+   * `.civ-btn { width: 100% }` flip. The radiogroup is a flex item in
+   * the outer wrap row, so it sizes to its content (the buttons'
+   * natural width) by default — `width: 100%` makes it claim the full
+   * line (pushing the optional skip affordance to the next row, which
+   * the outer `flex-wrap` already allows). Each `.civ-btn--yesno`
+   * then `flex: 1` grows to fill its share. With a third "unsure"
+   * option the row splits into thirds instead of halves.
+   */
+  @media (max-width: 480px) {
+    .civ-yes-no__options {
+      width: 100%;
+    }
+    .civ-yes-no__options .civ-btn--yesno {
+      flex: 1;
+    }
+  }
+
   /* ── Danger variants ───────────────────────────────────────── */
   /*
    * Templates emit `civ-btn--{emphasis}` plus an additional

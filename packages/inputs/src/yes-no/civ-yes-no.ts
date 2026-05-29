@@ -101,7 +101,7 @@ export class CivYesNo extends LegendHeadingMixin(CivFormElement) {
     const inner = html`
       <div class="civ-flex civ-flex-wrap civ-items-center civ-gap-4">
         <div
-          class="civ-flex civ-gap-2"
+          class="civ-flex civ-gap-2 civ-yes-no__options"
           role="radiogroup"
           aria-labelledby="${this.legend ? this._legendId : nothing}"
           aria-describedby="${describedBy || nothing}"

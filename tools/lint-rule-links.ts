@@ -114,6 +114,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/colors.md',
     anchor: 'token-hygiene--no-hardcoded-hex',
   },
+  'schema-analytics-event': {
+    path: '.claude/rules/common-traps.md',
+    anchor: 'schema-must-declare-civ-analytics-when-the-component-fires-it',
+  },
   'spacing': {
     path: '.claude/rules/spacing.md',
     anchor: 'three-rhythm-tiers',

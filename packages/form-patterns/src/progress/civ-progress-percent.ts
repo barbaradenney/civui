@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement } from '@civui/core';
+import { CivBaseElement, t } from '@civui/core';
 
 /**
  * CivUI Progress Bar
@@ -19,7 +19,8 @@ import { CivBaseElement } from '@civui/core';
 @customElement('civ-progress-percent')
 export class CivProgressPercent extends CivBaseElement {
   @property({ type: Number }) value = 0;
-  @property({ type: String }) label = 'Progress';
+  /** Accessible label for the bar. Empty falls back to the localized default. */
+  @property({ type: String }) label = '';
   @property({ type: String }) status = '';
   @property({ type: Boolean, attribute: 'hide-percent' }) hidePercent = false;
 
@@ -47,7 +48,7 @@ export class CivProgressPercent extends CivBaseElement {
           aria-valuenow="${Math.round(clamped)}"
           aria-valuemin="0"
           aria-valuemax="100"
-          aria-label="${this.label}"
+          aria-label="${this.label || t('progressBarLabel')}"
         >
           <div
             class="civ-progress-fill ${isComplete ? 'civ-progress-fill--complete' : ''}"

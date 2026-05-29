@@ -230,13 +230,39 @@ export function extractFormStepsValues(container: Element): Record<string, strin
   for (const field of container.querySelectorAll('[name]')) {
     const name = field.getAttribute('name');
     if (!name) continue;
-    const val = (field as HTMLElement & { value?: string }).value;
-    if (val === undefined) continue;
     const tag = field.tagName;
     if (!(tag.startsWith('CIV-') || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA')) continue;
-    data[name] = val;
+    if (isBooleanControl(field)) {
+      // Capture the CHECKED state, not the constant value attribute. Store
+      // the control's value when checked (falling back to "on"), empty when
+      // unchecked — so populate can restore it and the summary naturally
+      // omits unchecked rows. Without this, a single civ-checkbox/civ-toggle's
+      // checked state was lost on save (its `.value` is a constant).
+      const f = field as HTMLElement & { checked?: boolean; value?: string };
+      data[name] = f.checked ? (f.value || 'on') : '';
+    } else {
+      const val = (field as { value?: string }).value;
+      if (val === undefined) continue;
+      data[name] = val;
+    }
   }
   return data;
+}
+
+/**
+ * True for a single boolean control whose state lives in `.checked`, not
+ * `.value` — native `<input type="checkbox">`, `civ-checkbox`, `civ-toggle`.
+ *
+ * Deliberately excludes radios (they share a name and need value-matching to
+ * restore — out of scope; raw radios in a form-steps row are an anti-pattern,
+ * use civ-radio-group) and `civ-checkbox-group` (its `.value` already
+ * serializes the checked set to "a,b" and round-trips on the value path).
+ */
+export function isBooleanControl(field: Element): boolean {
+  if (field instanceof HTMLInputElement) {
+    return field.type === 'checkbox';
+  }
+  return typeof (field as { checked?: unknown }).checked === 'boolean';
 }
 
 /**

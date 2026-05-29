@@ -413,6 +413,16 @@ describe('extractFormStepsValues', () => {
     expect(data).toEqual({ email: 'a@b.gov' });
   });
 
+  it('captures a checkbox checked state, not its constant value attribute', () => {
+    container.innerHTML = `
+      <input type="checkbox" name="agree" value="yes" checked />
+      <input type="checkbox" name="subscribe" value="news" />
+    `;
+    const data = extractFormStepsValues(container);
+    expect(data.agree).toBe('yes'); // checked → the control's value
+    expect(data.subscribe).toBe(''); // unchecked → empty (omitted from the summary)
+  });
+
   it('skips elements that have a [name] but no value property', () => {
     container.innerHTML = `
       <div name="not-a-field"></div>

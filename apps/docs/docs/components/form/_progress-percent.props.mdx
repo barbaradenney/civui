@@ -4,6 +4,6 @@
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `value` | `number` | `0` | Current progress value (0-100) |
-| `label` | `string` | `'Progress'` | Visible label rendered above the bar. Also used as aria-label when hidePercent is false |
+| `label` | `string` | `''` | Accessible label for the progress bar (aria-label). Empty falls back to the localized default ("Progress") |
 | `status` | `''` \| `'success'` \| `'error'` | `''` | Visual status. Empty = neutral primary fill; success = complete green; error = red error fill |
 | `hide-percent` | `boolean` | `true` | When true, render the numeric percentage alongside the label |

@@ -16,8 +16,8 @@ const schema: ComponentSchema = {
     },
     label: {
       type: 'string',
-      description: 'Visible label rendered above the bar. Also used as aria-label when hidePercent is false',
-      default: 'Progress',
+      description: 'Accessible label for the progress bar (aria-label). Empty falls back to the localized default ("Progress")',
+      default: '',
     },
     status: {
       type: 'enum',

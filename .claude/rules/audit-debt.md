@@ -321,29 +321,6 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 ---
 
-## Progress-cluster a11y follow-ups (form-patterns audit, 2026-05-28)
-
-- **Surfaced:** form-patterns deep audit, 2026-05-28. Branch `claude/form-patterns-audit`.
-- **What landed in the same audit:** the universal over-announcement was largely fixed — `civ-form-step.goToStep` now only announces when `hideNav` is set (otherwise the always-rendered `civ-progress-header` is the announcer), and both `civ-progress-header` and `civ-progress-steps` now skip the announce on initial mount (`changed.get('current') !== undefined`). That takes minimal/bar modes from 2 announcements per step change to 1, and removes the "Step 1 of N" mount announcement.
-- **What did NOT land:**
-
-  1. **Steps-mode `progress-header` + `progress-steps` identical-text double announcement.** In `progress="steps"` mode `civ-form-step` renders BOTH `civ-progress-header` and `civ-progress-steps`, and both announce the SAME `progressStepLabel` template ("Step X of Y: title") on a step change — so the user still hears it twice. Files: `packages/form-patterns/src/progress/civ-progress-header.ts:50`, `packages/form-patterns/src/progress/civ-progress-steps.ts:87`. **Why deferred:** the clean fix is a single-owner decision — either drop `civ-progress-steps`'s announce (it's the visual segmented bar; the header carries the text) or add an `announce`/`silent` boolean so the orchestrator can pick the announcer. Both `civ-progress-steps` and `civ-progress-header` are schema-covered, so a new prop touches schema + iOS/Android stubs + Drupal SDC, and the right answer needs real screen-reader verification (which announcer reads better, and whether standalone use of `civ-progress-steps` should still announce). **Watch for:** when adding another announcing progress surface, route it through the same single-owner model rather than adding a third `announce()`.
-
-  2. **`civ-progress-steps` renders `role="listitem"` children inside a `role="group"` container** (not a `role="list"`), which axe flags as "ARIA listitem must be contained in a list." Files: `packages/form-patterns/src/progress/civ-progress-steps.ts:111` (the `role="group"` wrapper) and `:155-162` (the `role="listitem"` segment) / `:143-152` (the clickable `<button>` segment). **Why deferred:** the correct fix makes the segments container a `role="list"` and wraps each segment (including the clickable `<button>` variant) in a `role="listitem"` — but that restructures the flex layout (`.civ-progress-segments` / `.civ-progress-segment` in `components.css`) and needs visual + SR verification that the segment sizing and `aria-current="step"` semantics survive. Simply switching the container to `role="list"` fixes the non-clickable (default) case but introduces a "list must only contain listitem" violation for the clickable case, so a half-fix isn't a clean win. **Watch for:** don't reach for `role="group"` + `role="listitem"`; use a real list container.
-
-  3. **`civ-progress-percent` default `label = 'Progress'` is a hardcoded English string** (`packages/form-patterns/src/progress/civ-progress-percent.ts:22`) while every sibling uses `t(...)`. **Why deferred:** needs a new i18n key in the locale files (low effort, but touches the content package's message catalog and every locale). **Watch for:** pass an explicit `label` until the i18n key lands.
-
----
-
-## civ-repeater form-steps does not round-trip boolean control state (form-patterns audit, 2026-05-28)
-
-- **Surfaced:** form-patterns deep audit, 2026-05-28. Branch `claude/form-patterns-audit`.
-- **State:** form-steps mode stores each row's values in `_rowData` as a `Record<string, string>` extracted by `extractFormStepsValues` (`packages/form-patterns/src/repeater/repeater-row-builder.ts:228`), which reads only each field's `.value`. For a single `civ-checkbox` / `civ-toggle` inside a form-steps row, `.value` is the control's value attribute (a constant), not its `checked` state — so the checked/unchecked state isn't captured on save and isn't restored when the row is edited (`_populateFormStepsFromRowData` sets `.value`, never `.checked`). `civ-checkbox-group` round-trips fine because its `.value` getter/setter serializes the checked set to/from a `"a,b"` string.
-- **Why deferred:** the `_rowData` model and the extract/populate round-trip are string-keyed throughout; correctly handling boolean controls needs a richer value model (capture `checked`, serialize it, and branch on control type in populate) plus tests across checkbox / toggle / checkbox-group. That's a focused but real change, and boolean controls inside a repeater form-steps row are a narrower case than the indexed text/select fields the mode was built for.
-- **What to watch for in the meantime:** if a form-steps row needs a yes/no answer, prefer `civ-yes-no` or `civ-radio-group` (their `.value` is a string that round-trips) over a bare `civ-checkbox` / `civ-toggle`. Inline mode is unaffected — it keeps the live DOM controls rather than extracting to `_rowData`.
-
----
-
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

@@ -19,6 +19,7 @@ import {
   buildFormStepShell,
   updateFormStepsSummaryText,
   extractFormStepsValues,
+  isBooleanControl,
 } from './repeater-row-builder.js';
 
 export type { RepeaterRow, RepeaterRowSummary, RepeaterMode } from './repeater-types.js';
@@ -745,8 +746,14 @@ export class CivRepeater extends CivBaseElement {
     requestAnimationFrame(() => {
       for (const [fieldName, value] of Object.entries(data)) {
         const escaped = fieldName.replace(/["\\]/g, '\\$&');
-        const field = container.querySelector(`[name="${escaped}"]`) as HTMLElement & { value?: string } | null;
-        if (field && 'value' in field) {
+        const field = container.querySelector(`[name="${escaped}"]`) as
+          | (HTMLElement & { value?: string; checked?: boolean })
+          | null;
+        if (!field) continue;
+        if (isBooleanControl(field)) {
+          // Stored empty = unchecked, non-empty = checked (see extract).
+          field.checked = value !== '';
+        } else if ('value' in field) {
           field.value = value;
         }
       }

@@ -206,9 +206,17 @@ summary:focus,
     font-family: var(--civ-typography-fontFamily-sans) !important;
   }
 
-  /* Hide interactive-only UI */
+  /* Hide interactive-only UI. Includes the class-based affordances
+     (`.civ-action-btn`, `.civ-text-btn`) as well as the custom-element
+     forms — components like civ-date-picker render a bare
+     `<button class="civ-action-btn">` for the "Choose date" trigger
+     (and a `.civ-text-btn` "Today" shortcut) rather than nesting a
+     <civ-action-button>, so the element selectors alone missed them
+     and the trigger printed. */
   .civ-dropzone,
   .civ-btn,
+  .civ-action-btn,
+  .civ-text-btn,
   civ-action-button,
   civ-button,
   [data-civ-combobox] button,

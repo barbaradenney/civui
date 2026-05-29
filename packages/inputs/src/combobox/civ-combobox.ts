@@ -275,6 +275,11 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       this._activeIndex >= 0 && this._activeIndex < displayed.length
         ? `${this._listboxId}-option-${this._activeIndex}`
         : '';
+    // The <ul id=_listboxId> only renders when there are options to show
+    // (`displayed.length > 0`); the empty / loading / error states render a
+    // separate status <div> with no id. Only point aria-controls at the
+    // listbox when it actually exists, so the reference never dangles.
+    const listboxVisible = this._open && displayed.length > 0;
 
     const widthClass = inputWidthClass(this.width);
     const isCompact = this.spacing === 'sm';
@@ -300,7 +305,7 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
             aria-autocomplete="list"
             aria-haspopup="listbox"
             aria-expanded="${this._open}"
-            aria-controls="${this._open ? this._listboxId : nothing}"
+            aria-controls="${listboxVisible ? this._listboxId : nothing}"
             aria-activedescendant="${this._open && activeOptionId ? activeOptionId : nothing}"
             aria-label="${ariaLabel ?? nothing}"
             aria-describedby="${this._ariaDescribedBy || nothing}"
@@ -563,15 +568,19 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       return;
     }
 
-    // Announce filtered results count for screen readers (debounced)
+    // Announce the available-results count for screen readers (debounced).
+    // The zero-results case is NOT announced here — the rendered no-results
+    // element carries role="status" aria-live="polite" and would otherwise
+    // double-announce. Only the >0 case has no rendered live region (the
+    // listbox renders instead), so it needs the queued announce.
     clearTimeout(this._announceTimer);
     this._announceTimer = setTimeout(() => {
       const count = this._filteredOptions.length;
-      this.announce(
-        count === 0
-          ? (this.noResultsText || t('comboboxNoResults'))
-          : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
-      );
+      if (count > 0) {
+        this.announce(
+          interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
+        );
+      }
     }, SEARCH_ANNOUNCE_MS);
   }
 
@@ -683,18 +692,23 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
       this._remoteOptions = Array.isArray(results) ? results : [];
       this._loading = false;
       const count = this._remoteOptions.length;
-      this.announce(
-        count === 0
-          ? (this.noResultsText || t('comboboxNoResults'))
-          : interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
-      );
+      // Only the >0 case lacks a rendered live region (the listbox shows).
+      // Zero results render the no-results <div role="status">, which
+      // announces on its own — announcing here too would double up.
+      if (count > 0) {
+        this.announce(
+          interpolate(t(count === 1 ? 'comboboxResultAvailable' : 'comboboxResultsAvailable'), { count }),
+        );
+      }
     } catch (err) {
       clearTimeout(loadingAnnounceTimer);
       if (id !== this._requestId) return;
       this._loading = false;
       this._remoteOptions = [];
       this._loadError = (err as Error)?.message || t('comboboxLoadError');
-      this.announce(this.loadingErrorText || t('comboboxLoadError'), 'assertive');
+      // No announce() here — the error state renders a <div role="alert">,
+      // which is assertive by default and announces on insertion. A queued
+      // assertive announce would double the message.
     }
   }
 
@@ -747,6 +761,14 @@ export class CivCombobox extends LegendHeadingMixin(CivFormElement) {
         break;
 
       case 'Escape': {
+        // When the listbox is open, Escape closes it and MUST be consumed —
+        // otherwise it also reaches an ancestor native <dialog> (civ-modal)
+        // whose UA Escape→cancel would close the modal in the same press.
+        // When already closed, let Escape bubble so the modal can handle it.
+        if (this._open) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
         // Restore display to the currently selected option's label
         const selected = this.options.find((o) => o.value === this.value)
           ?? this._remoteOptions.find((o) => o.value === this.value);

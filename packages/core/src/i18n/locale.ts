@@ -87,6 +87,7 @@ export interface CivLocaleStrings {
   dataGridSelectRow: string;      // "Select row {row}"
   dataGridSelectAll: string;      // "Select all rows on this page"
   dataGridRowActions: string;     // "Actions for row {row}"
+  dataGridActionsColumnHeader: string; // "Actions" — visually-hidden header for the row-actions column
   dataGridExpandRow: string;      // "Expand row {row}"
   dataGridCollapseRow: string;    // "Collapse row {row}"
   dataGridEditCell: string;       // "Edit {column}"
@@ -838,6 +839,7 @@ const defaultStrings: CivLocaleStrings = {
   dataGridSelectRow: 'Select row {row}',
   dataGridSelectAll: 'Select all rows on this page',
   dataGridRowActions: 'Actions for row {row}',
+  dataGridActionsColumnHeader: 'Actions',
   dataGridExpandRow: 'Expand row {row}',
   dataGridCollapseRow: 'Collapse row {row}',
   dataGridEditCell: 'Edit {column}',

@@ -62,6 +62,21 @@ export class CivModal extends LightDomSlotMixin(CivBaseElement) {
     this._relocateSlots();
   }
 
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    // If the modal is removed from the DOM while still open — e.g. a
+    // parent unmounts it conditionally (`${open ? html\`<civ-modal>\` :
+    // nothing}`) instead of toggling the `open` prop — `updated()` never
+    // runs the close path, so the global body scroll lock set in
+    // `_onOpen` would leak `overflow: hidden` onto the page forever.
+    // Restore it (and drop the focus-restore ref) defensively here.
+    if (this.open) {
+      document.body.style.overflow = this._priorBodyOverflow;
+      this._priorBodyOverflow = '';
+      this._previouslyFocused = null;
+    }
+  }
+
   override updated(changed: Map<string, unknown>): void {
     super.updated(changed);
     if (changed.has('open')) {

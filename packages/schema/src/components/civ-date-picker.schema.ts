@@ -164,6 +164,13 @@ const schema: ComponentSchema = {
         value: { type: 'string', description: 'Selected date in YYYY-MM-DD format' },
       },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on commit',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action (`change`)' },
+      },
+    },
   },
 
   a11y: {

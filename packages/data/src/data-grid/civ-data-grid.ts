@@ -260,7 +260,7 @@ export class CivDataGrid extends CivBaseElement {
                 ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--select"><span class="civ-sr-only">${t('dataGridSelectRow').replace('{row}', '')}</span></th>`
                 : nothing}
               ${this._visibleColumns.map((col) => this._renderHeaderCell(col))}
-              ${this._hasAnyRowActions() ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--actions"><span class="civ-sr-only">Actions</span></th>` : nothing}
+              ${this._hasAnyRowActions() ? html`<th scope="col" class="civ-data-grid__th civ-data-grid__th--actions"><span class="civ-sr-only">${t('dataGridActionsColumnHeader')}</span></th>` : nothing}
             </tr>
             ${this._hasAnyFilter() ? this._renderFilterRow() : nothing}
           </thead>
@@ -1355,10 +1355,17 @@ export class CivDataGrid extends CivBaseElement {
   }
 
   private _renderSelectionStatus(): TemplateResult | typeof nothing {
-    if (this.selectable === 'none' || this.selectedRowIds.length === 0) return nothing;
-    const text = t('dataGridSelectionStatus')
-      .replace('{count}', String(this.selectedRowIds.length))
-      .replace('{total}', String(this.rows.length));
+    if (this.selectable === 'none') return nothing;
+    // Keep the live region mounted while selection is possible — even at
+    // zero — so the count UPDATES in place rather than the region
+    // unmounting. An unmounting aria-live region doesn't announce, so
+    // clearing the last selection ("3 selected" → none) would otherwise be
+    // silent for AT users. Empty text at zero clears the prior count.
+    const text = this.selectedRowIds.length === 0
+      ? ''
+      : t('dataGridSelectionStatus')
+          .replace('{count}', String(this.selectedRowIds.length))
+          .replace('{total}', String(this.rows.length));
     return html`
       <p class="civ-data-grid__selection-status" aria-live="polite">${text}</p>
     `;

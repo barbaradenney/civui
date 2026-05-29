@@ -5197,6 +5197,17 @@
     width: 1.5rem;
   }
 
+  /* Bridge the gap to the next entry: pull the rail's bottom edge down
+     through the item's padding-bottom so its flex-1 connecting line
+     meets the next dot instead of stopping short. The negative margin
+     is matched to the same `--civ-spacing-4` token used for
+     padding-bottom above, so the bridge stays exact under
+     [data-civ-scale="dense|spacious"]. Scoped to non-last items —
+     the last item has no line (and padding-bottom: 0) to bridge. */
+  civ-timeline-item:not(:last-child) .civ-timeline-item__rail {
+    margin-bottom: calc(-1 * var(--civ-spacing-4));
+  }
+
   .civ-timeline-item__dot {
     @apply civ-inline-flex civ-items-center civ-justify-center civ-rounded-full;
     width: 1.25rem;
@@ -5353,6 +5364,17 @@
     @apply civ-flex civ-flex-col civ-items-center;
     flex-shrink: 0;
     width: 2rem;
+  }
+
+  /* Bridge the gap to the next step: pull the rail's bottom edge down
+     through the item's padding-bottom so its flex-1 connecting line
+     meets the next marker instead of stopping short. Matched to the
+     same `--civ-spacing-6` token used for padding-bottom above so the
+     bridge stays exact under [data-civ-scale="dense|spacious"]. Scoped
+     to non-last items — the last item has no line (and
+     padding-bottom: 0) to bridge. */
+  civ-process-list-item:not(:last-child) .civ-process-list-item__rail {
+    margin-bottom: calc(-1 * var(--civ-spacing-6));
   }
 
   /* Marker is a primary-tinted circle holding either the auto-

@@ -52,12 +52,12 @@ and icon fonts. CivUI ships neither by default.
   tree-shaking, and bundlers reliably preserve sub-path imports.
 - **Pure ESM.** All packages are `"type": "module"`, which is what makes
   the sub-path tree-shaking above possible.
-- **Minification (partial today).** After the TypeScript build,
-  `scripts/minify.js` runs esbuild (`minify: true`, `target: es2022`,
-  `format: esm`) over `dist/` JS in place, keeping module structure
-  intact for downstream tree-shaking. **Caveat:** it currently only
-  processes a hardcoded subset of packages — see the known-gaps note
-  below.
+- **Minification.** After the TypeScript build, `scripts/minify.js`
+  runs esbuild (`minify: true`, `target: es2022`, `format: esm`) over
+  `dist/` JS in place, keeping module structure intact for downstream
+  tree-shaking. It discovers every non-private package's `dist/` from
+  the workspace, so all published bundles are minified (~45% reduction);
+  there is no hardcoded package list to drift.
 
 ### Light DOM — less work per component
 
@@ -143,39 +143,29 @@ your side:
 ## How we guard against regressions
 
 A bundle-size CI workflow (`.github/workflows/bundle-size.yml`) builds
-every PR and reports per-package `dist/` sizes to the PR summary. This is
-the right shape for catching size creep over time.
+every PR, minifies, and enforces a **per-package KB budget**. It iterates
+every built publishable package (no hardcoded list), and **hard-fails the
+PR** when a package exceeds its budget — or when a built publishable
+package has no budget entry, so a new package can't slip the gate
+silently. A size / budget / status table is written to the PR summary.
 
 :::caution Known gaps (as of 2026-05)
-Two parts of the performance tooling are weaker than they look, and
-we're being honest about them here.
+The two biggest holes here — minification only covering a hardcoded
+subset of packages, and the size gate being an inert `::warning::`
+against a package that no longer exists — were fixed: minification now
+discovers every package's `dist/` from the workspace, and the gate
+hard-fails per-package budgets. Two honest gaps remain:
 
-**Minification only covers a subset of packages.** `scripts/minify.js`
-hardcodes `['core', 'forms', 'ui', 'feedback', 'navigation']`. `forms`
-and `ui` no longer exist (silently skipped), and every other real
-package — including the high-traffic `inputs`, `actions`, and `layout` —
-is never minified. The `tsc -b` build is the only thing that runs for
-those, and it doesn't minify. Fixing this means deriving the package
-list dynamically (glob `packages/*/dist`) instead of hardcoding it.
-
-**The bundle-size gate is largely inert:**
-
-- **It references the same stale package names.** The workflow loops over
-  `core forms ui feedback navigation`, so the only package with a
-  threshold (`forms`, 300K) measures a directory that isn't there — the
-  check effectively does nothing.
-- **The threshold is a `::warning::`, not a hard failure**, and only one
-  (now-missing) package had a threshold at all. Size creep won't block a
-  PR today.
-- **It measures raw `dist/` bytes (`du -sh`), not gzip/brotli transfer
-  size** — which is what users actually download over the wire.
+- **It measures `dist/` bytes (`du -sk`), not gzip/brotli transfer
+  size** — which is what users actually download over the wire. The
+  budgets are a useful regression tripwire, but a gzip-based gate would
+  track the real on-the-wire cost more directly.
 - **No package declares `"sideEffects": false`.** Sub-path exports carry
   most of the tree-shaking, but adding a `sideEffects` declaration (with
   a carve-out for CSS) would let bundlers prune more aggressively.
 
-These are tracked as follow-ups. If you're touching the performance
-tooling, fixing the package list and switching to a hard gzip-size gate
-are the highest-leverage changes.
+If you're touching the performance tooling, switching to a gzip-size gate
+is the highest-leverage remaining change.
 :::
 
 ## Related
@@ -188,5 +178,3 @@ are the highest-leverage changes.
   Symbols opt-in.
 - [Typography](./typography.md) — the system-font policy and the
   brand-font extension point.
-</content>
-</invoke>

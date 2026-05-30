@@ -4431,8 +4431,29 @@
   /* ── Tabs ─────────────────────────────────────────────────── */
 
   .civ-tabs__list {
-    @apply civ-flex civ-flex-wrap civ-items-stretch civ-gap-0
+    @apply civ-flex civ-items-stretch civ-gap-0
            civ-border-b-2;
+    /* Overflowing tabs scroll horizontally rather than wrapping to a
+       second row (multi-row tablists are discouraged by the ARIA APG /
+       Material guidance). Hand-rolled rather than composing .civ-scroll-x
+       — the utility's `scrollbar-gutter: stable` reserves a persistent
+       bottom strip that would push the tabs off the baseline rule the
+       selected-tab indicator sits on. Mirrors the civ-data-grid scroll
+       wrapper (.civ-data-grid__scroll). No role/tabindex here: every tab
+       is focusable + arrow-reachable (roving tabindex), so off-screen
+       tabs are reachable and the browser scrolls the focused tab into
+       view — adding tabindex would create a bogus extra tab stop. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--civ-color-base-light) transparent;
+    /* Focus-ring gutter: overflow-x forces overflow-y to clip, which
+       would trim a focused tab's ring. Pad the top by the ring radius
+       (outline width + halo spread) so the ring's top is protected; the
+       ring's bottom meets the tablist rule, which reads as intentional. */
+    padding-top: var(--civ-focus-shadow-radius);
   }
 
   .civ-tabs__panels {
@@ -6442,10 +6463,15 @@
      aria-label) when the contained content needs them.
 
      Why a utility and not a component: the contained content varies
-     too much (table, tablist, button group, filter chips) and each
-     of those owns its own ARIA + keyboard model. Components that
-     need horizontal scrolling for built-in chrome (civ-data-grid)
-     have their own scroll wrapper rather than composing this. */
+     too much (button group, filter chips, toolbar overflow) and each
+     of those owns its own ARIA + keyboard model. Components whose
+     scrollable strip is internal chrome (civ-data-grid's table,
+     civ-tabs' tablist) own their own scroll on that element rather
+     than composing this — a consumer can't reach the internal element
+     to wrap it, and each needs scroll tuning the generic utility
+     doesn't (data-grid's focusable region, tabs' baseline-rule
+     alignment). The utility is for strips the consumer authors
+     directly (a bare filter-chip row, civ-tab-nav, a custom toolbar). */
 
   .civ-scroll-x {
     overflow-x: auto;

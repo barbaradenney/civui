@@ -23,7 +23,7 @@ The contained content varies too much to wrap in a single generic component:
 
 A generic wrapper component would either flatten those differences in ways that hurt accessibility, or grow into a configuration grab-bag. A utility class adds the visual + scroll behavior consistently while leaving each consumer responsible for their own keyboard semantics.
 
-Components that need horizontal scrolling for their built-in chrome (`civ-data-grid`) have their own scroll wrapper rather than composing this utility, so they can wire the keyboard / `role="region"` behavior in one place.
+Components whose scrollable strip is internal chrome — `civ-data-grid` (its table) and `civ-tabs` (its tablist) — own their own scroll on that element rather than composing this utility. A consumer can't reach the internal element to wrap it, and each needs scroll tuning the generic utility doesn't (the data-grid's focusable `role="region"` wrapper; the tablist's baseline-rule alignment and focus-ring gutter). Reach for `.civ-scroll-x` for strips you author directly — a bare `civ-filter-chip` row, `civ-tab-nav`, or a custom toolbar.
 
 ## Usage
 

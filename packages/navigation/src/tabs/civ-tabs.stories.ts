@@ -98,23 +98,12 @@ export const HorizontalScroll: Story = {
     docs: {
       description: {
         story:
-          'When a tab set is wider than its container, scope the `.civ-scroll-x` horizontal-scroll treatment to the **tablist** so the tabs scroll while the panel below stays put. Because `civ-tabs` renders the tablist (`.civ-tabs__list`) and panels together inside the host, the scroll is applied to the tablist via a small scoped style rather than wrapping the whole component (wrapping the host would drag the panels into the horizontal scroll). Arrow-key navigation scrolls the focused tab into view. In production, a component-owned scroll wrapper is the cleaner home for this — consistent with how `civ-data-grid` owns its own scroll container.',
+          'When a tab set is wider than its container, the tablist scrolls horizontally instead of wrapping to a second row — built into `civ-tabs`, no wrapper needed. Only the tab strip scrolls; the panel below stays put. The active tab scrolls into view automatically on arrow-key navigation. (The tablist owns its scroll on `.civ-tabs__list`, mirroring how `civ-data-grid` owns its scroll container, rather than the consumer wrapping the component.)',
       },
     },
   },
   render: () => html`
-    <style>
-      .civ-tabs-scroll-demo .civ-tabs__list {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        overscroll-behavior-x: contain;
-        scrollbar-width: thin;
-        scrollbar-color: var(--civ-color-base-light) transparent;
-      }
-    </style>
     <div
-      class="civ-tabs-scroll-demo"
       style="max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);"
     >
       <civ-tabs label="Report sections" value="overview">

@@ -4,6 +4,7 @@
   "description": "CivUI compound form components — Address, name, direct deposit, signature",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

@@ -4,6 +4,7 @@
   "description": "CivUI input components — Text input, textarea, select, combobox, date picker, file upload, toggle, yes/no, checkbox, radio, segmented control",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

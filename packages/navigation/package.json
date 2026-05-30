@@ -4,6 +4,7 @@
   "description": "CivUI navigation surfaces — Breadcrumb, Nav, SideNav, Tabs, TabNav, OnThisPage, BackToTop",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

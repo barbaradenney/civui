@@ -4,6 +4,7 @@
   "description": "CivUI data-collection components — DataGrid, Pagination, Toolbar, BulkActions, FilterableList, MetricTile, MetricGroup, ItemizedTotal",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

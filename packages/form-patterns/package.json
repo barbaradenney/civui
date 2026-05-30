@@ -4,6 +4,7 @@
   "description": "CivUI form patterns — Form, form step, fieldset, conditional, repeater, summary, progress steps",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

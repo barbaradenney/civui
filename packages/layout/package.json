@@ -4,6 +4,7 @@
   "description": "CivUI layout components — Accordion, Card, Divider, InputGroup, PageHeader, Tag, List, ButtonGroup, ImagePreview, Image, Disclosure, ReadMore",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

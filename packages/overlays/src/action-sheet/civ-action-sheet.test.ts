@@ -133,6 +133,19 @@ describe('civ-action-sheet accessibility', () => {
     expect(document.activeElement?.id).toBe('first-action');
   });
 
+  it('falls back to focusing the panel (not the display:none close button) when content has no focusable element', async () => {
+    const el = await fixture(`
+      <civ-action-sheet><p>Just some text, nothing focusable.</p></civ-action-sheet>
+    `) as any;
+    document.body.focus();
+    el.open = true;
+    await elementUpdated(el);
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    await new Promise((r) => setTimeout(r, 0));
+    const panel = el.querySelector('[data-civ-action-sheet-panel]');
+    expect(document.activeElement).toBe(panel);
+  });
+
   it('returns focus to the trigger element when closed', async () => {
     const trigger = document.createElement('button');
     trigger.id = 'sheet-trigger';

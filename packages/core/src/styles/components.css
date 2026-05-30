@@ -5935,13 +5935,17 @@
     box-shadow: none;
   }
 
-  /* Remove (X) button focus — drop the chip wrapper's overflow:hidden
-     when the remove button is focused so its natural focus ring
-     renders normally instead of being clipped by the rounded corners.
-     Only civ-input-chip renders a remove inside the wrapper today;
-     civ-filter-chip is toggle-only (use civ-input-chip for removable
-     user-entered tokens). */
-  .civ-chip--input:has(.civ-chip__remove:focus) {
+  /* civ-input-chip opts OUT of the shared `overflow: hidden`. The base
+     overflow exists so filter/action chips' radius trims their inner
+     button; input-chip's only interactive control is the circular
+     remove button, which is now inset from the edge (see
+     .civ-chip__remove below) rather than trimmed by the corner. With
+     overflow visible the remove button's focus ring renders fully
+     instead of being clipped by the rounded wrapper — the previous
+     `:has(.civ-chip__remove:focus) { overflow: visible }` toggle only
+     un-clipped it on :focus, which never fires on tap in some mobile
+     browsers, so the ring appeared clipped/absent there. */
+  .civ-chip--input {
     overflow: visible;
   }
 
@@ -5998,9 +6002,12 @@
      tap target. */
   .civ-chip--input.civ-chip--lg .civ-chip__remove {
     /* not density: WCAG 2.5.5 AAA tap-target floor on the only
-       interactive control of civ-input-chip[spacing="lg"]. */
-    min-height: max(var(--civ-spacing-10), 2.75rem);
+       interactive control of civ-input-chip[spacing="lg"]. The circle
+       grows to the full 44px target. */
+    width: max(var(--civ-spacing-10), 2.75rem);
+    height: max(var(--civ-spacing-10), 2.75rem);
     min-width: 2.75rem;
+    min-height: max(var(--civ-spacing-10), 2.75rem);
   }
 
   /* Hover affordance — scoped to chip kinds that ARE interactive at
@@ -6078,20 +6085,26 @@
      split: filter-chip is toggle-only; user-entered tokens that need a
      × use civ-input-chip.) */
   .civ-chip__remove {
-    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-self-stretch;
+    @apply civ-inline-flex civ-items-center civ-justify-center civ-cursor-pointer civ-rounded-full;
+    align-self: center;
     background: transparent;
     color: inherit;
     border: 0;
-    /* Override .civ-close-btn sizing for chip context */
-    width: auto;
-    height: auto;
-    /* Touch target: 24px minimum (WCAG 2.5.8). */
-    min-width: 1.75rem;
-    padding: 0 0.5rem;
-    border-radius: 0;
-    border-start-end-radius: inherit;
-    border-end-end-radius: inherit;
+    /* Circular tap target inset from the pill's rounded end, so the
+       × sits centered within the rounded cap rather than stretched
+       full-height and flush against the edge. 1.5rem (24px) holds the
+       WCAG SC 2.5.8 minimum target; `margin-inline-end` nudges it off
+       the end so it reads as a button seated in the cap. */
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    /* Override .civ-close-btn's 44px min-height so the button is a true
+       24px circle in the default/sm chip (the lg override below
+       restores the 44px AAA target). */
+    min-height: 1.5rem;
+    padding: 0;
     margin: 0;
+    margin-inline-end: var(--civ-spacing-1);
   }
 
   @media (hover: hover) {

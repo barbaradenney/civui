@@ -75,6 +75,8 @@ Sub-path imports resolve to individual component index files, guaranteeing the `
 
 An ESLint rule (`no-restricted-imports`) enforces this in component source files. Tests and stories are exempt.
 
+**Every component package declares `"sideEffects": true`.** The `@customElement` decorator registers the element via `customElements.define()` at module-eval time — a side effect. Each sub-path export (`@civui/actions/button` → `dist/button/index.js`) is a thin re-export barrel; the registration lives one level down in `civ-button.js`. A consumer importing the sub-path purely for the side effect relies on the bundler keeping that re-export chain alive. With `sideEffects: false` (or even a `civ-*.js` glob, which leaves the re-export entry marked pure), esbuild/Rollup/Webpack tree-shake the whole chain away and `<civ-button>` silently fails to register — the bundle collapses from ~108 KB to ~56 bytes. **Only `true` is safe.** Enforced by `pnpm lint:side-effects` (in `validate:lints` + the drift gate); pure-data packages (tokens, schema, test-utils) are intentionally exempt.
+
 ### Form Components
 Form-participating components extend `CivFormElement` (which extends `CivBaseElement`):
 - `static formAssociated = true` enables ElementInternals

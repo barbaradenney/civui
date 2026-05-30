@@ -4,6 +4,7 @@
   "description": "CivUI feedback components — Alert, Callout, Notice, Badge, Count, Spinner, Skeleton, Timeline, Process List",
   "license": "MIT",
   "type": "module",
+  "sideEffects": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

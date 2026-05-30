@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-process-list.js';
 import './civ-process-list-item.js';
+import '@civui/actions/button';
+import '@civui/actions/link';
 
 const meta: Meta = {
   title: 'Feedback/Process List',
@@ -157,6 +159,45 @@ export const RichBody: Story = {
             After submission, you can check the status of your application
             in your <a href="#">account dashboard</a>.
           </p>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Eyebrow + call-to-action buttons / links ──────────────────
+
+export const WithActions: Story = {
+  name: 'With actions — eyebrow labels + buttons / links',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Create your account">
+          <p class="civ-eyebrow civ-m-0 civ-mb-1">Takes about 2 minutes</p>
+          <p class="civ-mt-0">
+            Sign in with Login.gov so your progress is saved as you go.
+          </p>
+          <civ-button href="#" label="Create account"></civ-button>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Verify your identity">
+          <p class="civ-eyebrow civ-m-0 civ-mb-1">Required</p>
+          <p class="civ-mt-0">
+            We use ID.me to confirm who you are before processing benefits.
+          </p>
+          <civ-link href="#" label="Why we ask for this"></civ-link>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Submit your application">
+          <p class="civ-eyebrow civ-m-0 civ-mb-1">Final step</p>
+          <p class="civ-mt-0">
+            Review your answers, then file your claim. You'll get a
+            confirmation number right away.
+          </p>
+          <div class="civ-button-row">
+            <civ-button label="Start application"></civ-button>
+            <civ-button emphasis="tertiary" href="#" label="Preview the form"></civ-button>
+          </div>
         </civ-process-list-item>
       </civ-process-list>
     </div>

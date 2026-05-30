@@ -43,6 +43,7 @@ public enum CivIconName: String, CaseIterable {
     case sortDesc = "sort-desc"
     case sortNone = "sort-none"
     case calendar
+    case location
 
     // Media / Content
     case upload
@@ -102,6 +103,7 @@ public enum CivIconName: String, CaseIterable {
         case .sortDesc: return "chevron.down"
         case .sortNone: return "arrow.up.arrow.down"
         case .calendar: return "calendar"
+        case .location: return "mappin.and.ellipse"
 
         // Media
         case .upload: return "arrow.up.doc"
@@ -154,6 +156,7 @@ public enum CivIconName: String, CaseIterable {
         case .sortDesc: return "Sorted descending"
         case .sortNone: return "Unsorted"
         case .calendar: return "Calendar"
+        case .location: return "Location"
         case .upload: return "Upload"
         case .download: return "Download"
         case .filter: return "Filter"

@@ -129,6 +129,25 @@ export const WithCustomIcons: Story = {
   `,
 };
 
+export const External: Story = {
+  name: 'External (opens in new tab)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `new-tab` for an external link. It auto-applies `target="_blank"`, `rel="noopener noreferrer"`, a trailing `external-link` icon, and visually-hidden "(opens in new tab)" text for screen readers — so you don\'t hand-compose those (do NOT just add `icon-end="external-link"`, which gives the glyph without the target / rel / SR affordance). Pairs with any `variant`.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3">
+      <civ-link href="https://www.va.gov" new-tab>VA.gov</civ-link>
+      <civ-link href="https://www.benefits.va.gov" new-tab variant="primary">Explore your benefits</civ-link>
+      <civ-link href="https://www.federalregister.gov" new-tab variant="secondary">Read the federal rule</civ-link>
+    </div>
+  `,
+};
+
 export const DensityScale: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">
@@ -352,6 +371,24 @@ export const GovernmentContactSection: Story = {
         <civ-link type="email" address="help@va.gov" label="Email us"></civ-link>
         <civ-link type="download" href="/guides/applying-for-benefits.pdf" filename="applying-for-benefits.pdf" file-size="850 KB" label="Download the application guide"></civ-link>
       </div>
+    </div>
+  `,
+};
+
+export const ComposedActionLinks: Story = {
+  name: 'Composed action links (calendar / directions)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The built-in `type` values (`phone` / `email` / `download`) exist because each maps to one universal, vendor-neutral scheme. "Add to calendar" and "Get directions" deliberately are NOT built-in types: a calendar link is an `.ics` file (which is just `download`) or a provider-specific URL, and a map/address link has no desktop-safe neutral scheme (`geo:` is mobile-only; a maps URL hardcodes a vendor). So the consumer composes them with a plain `civ-link` — they own the `href` (the `.ics` they generate, the maps provider they\'ve chosen) — plus a `calendar` / `location` icon. Use `new-tab` for external destinations so the external-link affordance is applied automatically.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 400px;">
+      <civ-link href="/events/town-hall.ics" icon-start="calendar">Add to your calendar</civ-link>
+      <civ-link href="https://maps.example.gov/?q=810+Vermont+Ave+NW+Washington+DC" icon-start="location" new-tab>Get directions to the regional office</civ-link>
     </div>
   `,
 };

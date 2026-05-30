@@ -54,9 +54,13 @@ jobs:
           echo "Kotlin syntax check — verifying file structure"
           find packages/android -name '*.kt' | wc -l
           echo "files found"
-          # Basic check: ensure all files have valid package declarations
+          # Basic check: ensure all files declare a package. Anchor on a
+          # column-0 `package ` line and scan the whole file — a Kotlin
+          # package declaration always starts at column 0, but it follows
+          # the file-header comment, which can run past the first 10 lines
+          # on documented stub components (CivNotice, CivTextButton).
           for f in $(find packages/android -name '*.kt'); do
-            if ! head -10 "$f" | grep -q 'package '; then
+            if ! grep -qE '^package ' "$f"; then
               echo "FAIL: $f missing package declaration"
               exit 1
             fi

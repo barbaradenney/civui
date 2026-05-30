@@ -74,9 +74,10 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'race-error' }) raceError = '';
   /**
    * Tile rendering variant forwarded to both inner groups. Defaults to
-   * `auto` so each group picks `card` for ≤4 options and `list` for 5+
-   * — which matches the OMB shape (Race has 6, Ethnicity has 3) without
-   * the consumer having to set anything. Pass `card` or `list` to override.
+   * `auto`, which this compound resolves to `list` for BOTH groups so
+   * race (6 options) and ethnicity (3 options) share one visual
+   * treatment — otherwise they'd look like two different components.
+   * Pass `card` or `list` to override (applied to both groups).
    */
   @property({ type: String }) layout: 'card' | 'list' | 'auto' = 'auto';
 

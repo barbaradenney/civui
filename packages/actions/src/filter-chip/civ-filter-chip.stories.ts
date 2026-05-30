@@ -195,6 +195,34 @@ export const WithCounts: Story = {
   `,
 };
 
+export const HorizontalScroll: Story = {
+  name: 'Horizontal Scroll (overflow)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When a filter row is too wide for its container, wrap a no-wrap row in the `.civ-scroll-x` utility so the chips scroll horizontally instead of wrapping to multiple lines. The `--fade` modifier masks the leading/trailing edges to hint at off-screen content. Each chip is focusable, so the scroll region is reachable by keyboard (Tab), and a focused chip scrolls into view automatically.',
+      },
+    },
+  },
+  render: () => html`
+    <div style="max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);">
+      <div class="civ-scroll-x civ-scroll-x--fade">
+        <div class="civ-flex civ-gap-2" style="flex-wrap: nowrap;">
+          <civ-filter-chip label="In review" value="review" selected></civ-filter-chip>
+          <civ-filter-chip label="Approved" value="approved"></civ-filter-chip>
+          <civ-filter-chip label="Denied" value="denied"></civ-filter-chip>
+          <civ-filter-chip label="Pending" value="pending"></civ-filter-chip>
+          <civ-filter-chip label="Returned" value="returned"></civ-filter-chip>
+          <civ-filter-chip label="Archived" value="archived"></civ-filter-chip>
+          <civ-filter-chip label="Withdrawn" value="withdrawn"></civ-filter-chip>
+          <civ-filter-chip label="Escalated" value="escalated"></civ-filter-chip>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
 export const VsTagAndBadge: Story = {
   name: 'Filter chip vs Tag vs Badge',
   parameters: {

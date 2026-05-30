@@ -92,6 +92,52 @@ export const RichPanelContent: Story = {
   `,
 };
 
+export const HorizontalScroll: Story = {
+  name: 'Horizontal Scroll (overflow)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When a tab set is wider than its container, scope the `.civ-scroll-x` horizontal-scroll treatment to the **tablist** so the tabs scroll while the panel below stays put. Because `civ-tabs` renders the tablist (`.civ-tabs__list`) and panels together inside the host, the scroll is applied to the tablist via a small scoped style rather than wrapping the whole component (wrapping the host would drag the panels into the horizontal scroll). Arrow-key navigation scrolls the focused tab into view. In production, a component-owned scroll wrapper is the cleaner home for this — consistent with how `civ-data-grid` owns its own scroll container.',
+      },
+    },
+  },
+  render: () => html`
+    <style>
+      .civ-tabs-scroll-demo .civ-tabs__list {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--civ-color-base-light) transparent;
+      }
+    </style>
+    <div
+      class="civ-tabs-scroll-demo"
+      style="max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);"
+    >
+      <civ-tabs label="Report sections" value="overview">
+        <civ-tab value="overview" label="Overview"></civ-tab>
+        <civ-tab value="eligibility" label="Eligibility"></civ-tab>
+        <civ-tab value="documents" label="Documents"></civ-tab>
+        <civ-tab value="payments" label="Payments"></civ-tab>
+        <civ-tab value="appeals" label="Appeals"></civ-tab>
+        <civ-tab value="correspondence" label="Correspondence"></civ-tab>
+        <civ-tab value="history" label="History"></civ-tab>
+
+        <civ-tab-panel value="overview">Overview of the claim.</civ-tab-panel>
+        <civ-tab-panel value="eligibility">Eligibility determination details.</civ-tab-panel>
+        <civ-tab-panel value="documents">Uploaded supporting documents.</civ-tab-panel>
+        <civ-tab-panel value="payments">Payment schedule and history.</civ-tab-panel>
+        <civ-tab-panel value="appeals">Open and resolved appeals.</civ-tab-panel>
+        <civ-tab-panel value="correspondence">Letters and messages.</civ-tab-panel>
+        <civ-tab-panel value="history">Full activity history.</civ-tab-panel>
+      </civ-tabs>
+    </div>
+  `,
+};
+
 export const Keyboard: Story = {
   render: () => html`
     <p class="civ-italic civ-mb-2">

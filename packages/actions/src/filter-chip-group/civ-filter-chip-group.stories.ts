@@ -176,6 +176,42 @@ export const AppointmentWithSelection: Story = {
   `,
 };
 
+export const HorizontalScroll: Story = {
+  name: 'Horizontal Scroll (overflow)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Wrap the group in the `.civ-scroll-x` utility so a long filter row scrolls horizontally instead of wrapping. The group keeps its roving-tabindex keyboard model — Tab once into the row, then arrow-key navigation scrolls the focused chip into view. A small scoped style switches the group\'s inner row from its default `flex-wrap` to `nowrap` so the chips overflow rather than stacking.',
+      },
+    },
+  },
+  render: () => html`
+    <style>
+      .civ-fcg-scroll-demo [data-civ-filter-chip-group-content] {
+        flex-wrap: nowrap;
+      }
+    </style>
+    <div
+      class="civ-fcg-scroll-demo"
+      style="max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);"
+    >
+      <div class="civ-scroll-x civ-scroll-x--fade">
+        <civ-filter-chip-group mode="single" label="Filter by status">
+          <civ-filter-chip label="In review" value="review" selected></civ-filter-chip>
+          <civ-filter-chip label="Approved" value="approved"></civ-filter-chip>
+          <civ-filter-chip label="Denied" value="denied"></civ-filter-chip>
+          <civ-filter-chip label="Pending" value="pending"></civ-filter-chip>
+          <civ-filter-chip label="Returned" value="returned"></civ-filter-chip>
+          <civ-filter-chip label="Archived" value="archived"></civ-filter-chip>
+          <civ-filter-chip label="Withdrawn" value="withdrawn"></civ-filter-chip>
+          <civ-filter-chip label="Escalated" value="escalated"></civ-filter-chip>
+        </civ-filter-chip-group>
+      </div>
+    </div>
+  `,
+};
+
 export const PrimaryStyleGroup: Story = {
   name: 'Primary-style chips',
   render: () => html`

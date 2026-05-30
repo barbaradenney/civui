@@ -321,6 +321,16 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 ---
 
+## Cross-overlay Escape coordination (nested overlays double-dismiss)
+
+- **Surfaced:** Overlays audit, 2026-05-30. Branch `claude/code-quality-components-FhUQi`.
+- **State:** Each dismissable overlay registers its own `document`-level `keydown` listener for Escape: `civ-popover` (`civ-popover.ts:121`), `civ-action-sheet` (`civ-action-sheet.ts:103`), and `civ-menu` (`civ-menu.ts:89`). `civ-modal` / `civ-drawer` use the native `<dialog>` cancel path instead. When one document-listener overlay is nested inside another (e.g. a `civ-popover` opened inside a `civ-action-sheet`), a single Escape fires BOTH listeners and dismisses both layers at once, instead of closing one layer per press.
+- **Why a one-line fix doesn't work:** the listeners share the same event target (`document`), so `stopPropagation()` doesn't stop the sibling listener (that needs `stopImmediatePropagation()`), and even that fails because document-listener firing order follows registration order, not nesting depth — the inner overlay (opened last) registers last and fires last, so it can't pre-empt the already-fired outer handler. `preventDefault()` (already present in each) correctly handles the native-`<dialog>` case (it suppresses the dialog's Escape-cancel), which is why popover-inside-modal does NOT double-dismiss — only the two document-listener overlays nested in each other do.
+- **Proper fix:** an overlay-stack / focus-layer manager — a shared registry where overlays push/pop on open/close and only the topmost layer consumes Escape (capture-phase listener checking "am I the top of the stack?"). This is a deliberate cross-cutting piece of infrastructure, not a per-component patch.
+- **What to watch for in the meantime:** nesting two of {popover, action-sheet, menu} is uncommon (the typical pattern is a menu/popover inside a modal, which works because modal uses the native dialog). Don't add `stopImmediatePropagation()` as a band-aid — it would swallow legitimate consumer-level document keydown handlers and still wouldn't fix the ordering.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

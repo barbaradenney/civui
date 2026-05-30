@@ -127,6 +127,45 @@ export const WithIcons: Story = {
   `,
 };
 
+export const Loading: Story = {
+  name: 'Loading state',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Async-submit state. Set `loading` to swap the label for a `civ-spinner`, set `aria-busy="true"`, force the inert/disabled state, and swap the accessible name to `loading-label` so AT users hear the in-flight verb ("Submitting…") instead of the stale label. Use a present-participle verb specific to the action. `loading` is suppressed in link mode (`href`) since navigation isn\'t a state we wait on.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
+      <civ-button loading loading-label="Submitting…">Submit application</civ-button>
+      <civ-button emphasis="secondary" loading loading-label="Saving…">Save and continue</civ-button>
+      <civ-button emphasis="primary" danger loading loading-label="Deleting…">Delete account</civ-button>
+    </div>
+  `,
+};
+
+export const IconOnly: Story = {
+  name: 'Icon only',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `icon-only` to render the label visually hidden so only the icon shows — for square icon buttons (compact toolbar actions, kebab triggers). The label still provides the accessible name, so always pass one (a dev warning fires if an icon-only button has no name). Requires at least one of `icon-start` / `icon-end`.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
+      <civ-button icon-only icon-start="edit">Edit</civ-button>
+      <civ-button icon-only icon-start="share" emphasis="secondary">Share</civ-button>
+      <civ-button icon-only icon-start="more-vert" emphasis="tertiary">More options</civ-button>
+      <civ-button icon-only icon-start="trash" emphasis="primary" danger>Delete</civ-button>
+    </div>
+  `,
+};
+
 export const AsLink: Story = {
   name: 'As Link (with href)',
   render: () => html`

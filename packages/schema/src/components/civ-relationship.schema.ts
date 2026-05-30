@@ -30,7 +30,7 @@ const schema: ComponentSchema = {
       type: 'enum',
       description: 'Built-in relationship-type preset. Determines which options appear in the relationship selector and which date fields are conditionally rendered',
       default: 'general',
-      values: ['general', 'beneficiary', 'dependent', 'survivor'],
+      values: ['general', 'detailed', 'dependent', 'survivor', 'benefits-survivor', 'immigration', 'tax'],
     },
     options: {
       type: 'array',

@@ -56,6 +56,7 @@ import { extractBraceBlock } from './schema-parity.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const COMPONENTS_DIR = join(ROOT, 'packages/schema/src/components');
+const PACKAGES_DIR = join(ROOT, 'packages');
 
 interface Finding {
   schemaFile: string;
@@ -87,7 +88,7 @@ async function loadSourceMap(): Promise<Map<string, string>> {
  * and unions that contain non-string-literal members (those return
  * `null` to signal "not a plain string-literal union").
  */
-function parseTypeAliases(src: string): Map<string, string[] | null> {
+export function parseTypeAliases(src: string): Map<string, string[] | null> {
   const aliases = new Map<string, string[] | null>();
   const aliasRegex = /^\s*(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]*?);/gm;
   let m: RegExpExecArray | null;
@@ -101,13 +102,100 @@ function parseTypeAliases(src: string): Map<string, string[] | null> {
 }
 
 /**
+ * Like `parseTypeAliases` but only captures `export type Name = …`
+ * declarations — used to build the cross-package map, where only
+ * *exported* types are importable by a component source file.
+ */
+export function parseExportedTypeAliases(src: string): Map<string, string[] | null> {
+  const aliases = new Map<string, string[] | null>();
+  const aliasRegex = /^\s*export\s+type\s+(\w+)\s*=\s*([\s\S]*?);/gm;
+  let m: RegExpExecArray | null;
+  while ((m = aliasRegex.exec(src)) !== null) {
+    const name = m[1];
+    const body = m[2].replace(/^[\s|()]+|[\s|()]+$/g, '').trim();
+    aliases.set(name, parseLiteralUnion(body));
+  }
+  return aliases;
+}
+
+/**
+ * Collect the set of identifiers brought in by `import { … }` /
+ * `import type { … }` statements. Handles `A as B` (records the local
+ * alias `B`). We gate cross-package resolution on this set so we only
+ * resolve a bare identifier against another package when the source
+ * file actually imports a type by that name — never a coincidental
+ * same-named local type elsewhere in the repo.
+ */
+export function parseImportedTypeNames(src: string): Set<string> {
+  const names = new Set<string>();
+  const importRegex = /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"][^'"]+['"]/g;
+  let m: RegExpExecArray | null;
+  while ((m = importRegex.exec(src)) !== null) {
+    for (const raw of m[1].split(',')) {
+      const part = raw.trim().replace(/^type\s+/, '');
+      if (!part) continue;
+      const asMatch = part.match(/^\w+\s+as\s+(\w+)$/);
+      names.add(asMatch ? asMatch[1] : part.split(/\s/)[0]);
+    }
+  }
+  return names;
+}
+
+/** Recursively collect `.ts` source files under a dir, skipping
+ * node_modules / dist / .d.ts / test / story files. */
+export function collectTsFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules' || entry.name === 'dist') continue;
+      out.push(...collectTsFiles(full));
+    } else if (
+      entry.name.endsWith('.ts') &&
+      !entry.name.endsWith('.d.ts') &&
+      !entry.name.endsWith('.test.ts') &&
+      !entry.name.endsWith('.stories.ts')
+    ) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+/**
+ * Build a repo-wide map of exported string-literal type aliases. A
+ * name defined identically in multiple files keeps its value set; a
+ * name with *conflicting* definitions maps to `null` (ambiguous →
+ * resolution skipped, never a false positive). Non-literal exported
+ * types are ignored.
+ */
+export function collectExternalAliasMap(srcFiles: string[]): Map<string, string[] | null> {
+  const merged = new Map<string, string[] | null>();
+  const firstSeen = new Map<string, string>();
+  for (const file of srcFiles) {
+    const exported = parseExportedTypeAliases(readFileSync(file, 'utf-8'));
+    for (const [name, values] of exported) {
+      if (values === null) continue;
+      const key = JSON.stringify([...values].sort());
+      if (!firstSeen.has(name)) {
+        firstSeen.set(name, key);
+        merged.set(name, values);
+      } else if (firstSeen.get(name) !== key) {
+        merged.set(name, null); // conflicting definitions → ambiguous
+      }
+    }
+  }
+  return merged;
+}
+
+/**
  * Parse a string like `'a' | 'b' | 'c'` (with optional surrounding
  * whitespace / newlines / parens) into ['a','b','c']. Also accepts
  * integer-literal unions like `2 | 3 | 4 | 5 | 6` (stringified).
  * Returns null if any member isn't a string-literal or integer
  * literal — mixed-type or non-literal unions don't compare cleanly.
  */
-function parseLiteralUnion(body: string): string[] | null {
+export function parseLiteralUnion(body: string): string[] | null {
   const cleaned = body.replace(/[()]/g, '').trim();
   if (!cleaned) return null;
   const parts = cleaned.split('|').map((p) => p.trim()).filter(Boolean);
@@ -128,7 +216,7 @@ function parseLiteralUnion(body: string): string[] | null {
  * using `aliases` to look up named types. Returns null if any part
  * of the union isn't resolvable to a literal.
  */
-function resolveTypeExpression(typeExpr: string, aliases: Map<string, string[] | null>): string[] | null {
+export function resolveTypeExpression(typeExpr: string, aliases: Map<string, string[] | null>): string[] | null {
   const cleaned = typeExpr.replace(/[()]/g, '').trim();
   if (!cleaned) return null;
   const parts = cleaned.split('|').map((p) => p.trim()).filter(Boolean);
@@ -194,6 +282,12 @@ async function main(): Promise<void> {
     .filter((f) => f.endsWith('.schema.ts'))
     .sort();
 
+  // Repo-wide map of exported string-literal type aliases, so a prop
+  // typed with a type imported from another package (e.g. civ-select's
+  // `preset: SelectPresetName` from @civui/core) resolves instead of
+  // being silently skipped. Built once.
+  const externalAliases = collectExternalAliasMap(collectTsFiles(PACKAGES_DIR));
+
   const findings: Finding[] = [];
 
   for (const schemaFile of schemaFiles) {
@@ -207,6 +301,13 @@ async function main(): Promise<void> {
 
     const sourceSrc = readFileSync(sourcePath, 'utf-8');
     const aliases = parseTypeAliases(sourceSrc);
+    // Merge in cross-package types the source imports, unless a local
+    // alias of the same name already exists (local wins).
+    for (const name of parseImportedTypeNames(sourceSrc)) {
+      if (!aliases.has(name) && externalAliases.has(name)) {
+        aliases.set(name, externalAliases.get(name)!);
+      }
+    }
     const propTypes = parseLitPropTypes(sourceSrc);
 
     for (const [propName, propDef] of Object.entries(schema.props as Record<string, any>)) {
@@ -292,7 +393,11 @@ async function main(): Promise<void> {
   process.exit(1);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Only run when invoked directly (not when the test suite imports the
+// exported helpers).
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

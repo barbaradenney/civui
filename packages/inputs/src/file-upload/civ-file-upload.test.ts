@@ -1469,19 +1469,28 @@ describe('civ-file-upload interactions', () => {
     expect(el._dragging).toBe(false);
   });
 
-  it('show-all expander toggles _showAllFiles state', async () => {
+  it('show-all expander renders past the file-list limit and reveals all files', async () => {
     const el = await fixture('<civ-file-upload label="Docs" name="docs" multiple></civ-file-upload>') as any;
-    // 6 files exceeds the default _FILE_LIST_LIMIT of 5
-    const files = Array.from({ length: 6 }, (_, i) =>
+    // 21 files exceeds the default _FILE_LIST_LIMIT of 20, so the
+    // collapsed list shows the first 20 plus a "show all" expander.
+    const files = Array.from({ length: 21 }, (_, i) =>
       new File(['x'], `f${i}.pdf`, { type: 'application/pdf' })
     );
     el._addFiles(files);
     await elementUpdated(el);
 
+    // Collapsed: only the first 20 rows render, and the expander button exists.
     expect(el._showAllFiles).toBe(false);
-    el._onShowAllFiles();
+    expect(el.querySelectorAll('.civ-file-item').length).toBe(20);
+    const expander = el.querySelector('button.civ-btn--tertiary');
+    expect(expander).not.toBeNull();
+
+    // Activating the expander reveals every file and removes the button.
+    expander!.click();
     await elementUpdated(el);
     expect(el._showAllFiles).toBe(true);
+    expect(el.querySelectorAll('.civ-file-item').length).toBe(21);
+    expect(el.querySelector('button.civ-btn--tertiary')).toBeNull();
   });
 
   it('_onFileSelect forwards files from the input event to _addFiles', async () => {

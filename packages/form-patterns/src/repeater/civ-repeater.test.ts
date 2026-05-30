@@ -539,6 +539,81 @@ describe('civ-repeater', () => {
   });
 });
 
+describe('civ-repeater floor-row Remove visibility', () => {
+  /** True when a row's Remove button exists AND is not display:none-hidden. */
+  function removeVisible(el: Element, index: number): boolean {
+    const btn = getRowRemoveButton(el, index);
+    return !!btn && !btn.classList.contains('civ-hidden');
+  }
+
+  it('hides Remove on the floor rows at mount (count === min)', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="2">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    await elementUpdated(el);
+
+    expect(rowCount(el)).toBe(2);
+    // Both rows are at the floor — Remove is built (in the DOM) but hidden.
+    expect(getRowRemoveButton(el, 0)).not.toBeNull();
+    expect(removeVisible(el, 0)).toBe(false);
+    expect(removeVisible(el, 1)).toBe(false);
+  });
+
+  it('reveals Remove on every row once the list grows above min', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="2">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    await elementUpdated(el);
+
+    el.addRow(); // 2 → 3, now above the floor
+    await elementUpdated(el);
+
+    expect(rowCount(el)).toBe(3);
+    expect(removeVisible(el, 0)).toBe(true);
+    expect(removeVisible(el, 1)).toBe(true);
+    expect(removeVisible(el, 2)).toBe(true);
+  });
+
+  it('re-hides Remove when the list shrinks back down to the floor', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item" min="2">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    await elementUpdated(el);
+
+    el.addRow(); // 2 → 3
+    await elementUpdated(el);
+    expect(removeVisible(el, 0)).toBe(true);
+
+    el.removeRow(2); // 3 → 2, back at the floor
+    await elementUpdated(el);
+
+    expect(rowCount(el)).toBe(2);
+    expect(removeVisible(el, 0)).toBe(false);
+    expect(removeVisible(el, 1)).toBe(false);
+  });
+
+  it('with min=0, the first added row is immediately removable', async () => {
+    const el = await fixture<CivRepeater>(`
+      <civ-repeater legend="Items" name="items" item-label="item">
+        <input type="text" name="val" />
+      </civ-repeater>
+    `) as CivRepeater;
+    await elementUpdated(el);
+
+    el.addRow(); // 0 → 1, and 1 > min(0) → removable
+    await elementUpdated(el);
+
+    expect(rowCount(el)).toBe(1);
+    expect(removeVisible(el, 0)).toBe(true);
+  });
+});
+
 describe('civ-repeater form-steps mode', () => {
   const formStepsTemplate = `
     <civ-repeater legend="Dependents" name="deps" item-label="dependent" mode="form-steps">
@@ -1041,16 +1116,34 @@ describe('civ-repeater route mode', () => {
     expect(el.rows.length).toBe(2);
   });
 
-  it('does not fire remove below min', async () => {
+  it('does not render Remove while the list is at the min floor', async () => {
+    // sampleRows has 2 rows and min=2, so the list is at its floor — every
+    // row's Remove affordance is omitted (route mode renders declaratively).
     const el = await mountRouted({ min: 2 });
+    expect(rowCount(el)).toBe(2);
+    expect(getRowRemoveButton(el, 0)).toBeNull();
+    expect(getRowRemoveButton(el, 1)).toBeNull();
+  });
+
+  it('renders Remove once the route-mode list is above the min floor', async () => {
+    const el = await mountRouted({
+      rows: [
+        { id: '1', firstName: 'Ada', lastName: 'Lovelace' },
+        { id: '2', firstName: 'Alan', lastName: 'Turing' },
+        { id: '3', firstName: 'Grace', lastName: 'Hopper' },
+      ],
+      min: 2,
+    });
+    expect(rowCount(el)).toBe(3); // 3 > min(2)
+    expect(getRowRemoveButton(el, 0)).not.toBeNull();
+
+    // And clicking it still fires civ-repeater-remove with the payload.
     let detail: any = null;
-    el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => {
-      detail = e.detail;
-    }) as EventListener);
-    const removeBtn = getRowRemoveButton(el, 0) as HTMLElement;
-    removeBtn.click();
+    el.addEventListener('civ-repeater-remove', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+    (getRowRemoveButton(el, 0) as HTMLElement).click();
     await elementUpdated(el);
-    expect(detail).toBeNull();
+    expect(detail).not.toBeNull();
+    expect(detail.index).toBe(0);
   });
 
   it('hides the Add affordance when at max', async () => {

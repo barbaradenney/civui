@@ -523,6 +523,17 @@ export interface CivLocaleStrings {
   genderLabel: string;
   languageLabel: string;
 
+  // Race & ethnicity compound (civ-race-ethnicity) — OMB standard categories.
+  // The three ethnicity options reuse the presetEthnicity* keys below.
+  raceEthnicityRaceLegend: string;       // "Race"
+  raceEthnicityEthnicityLegend: string;  // "Ethnicity"
+  raceEthnicityRaceHint: string;         // "Select one or more"
+  raceOptionAmericanIndianAlaskaNative: string;
+  raceOptionAsian: string;
+  raceOptionBlackAfricanAmerican: string;
+  raceOptionNativeHawaiianPacificIslander: string;
+  raceOptionWhite: string;
+
   // Task list
   taskStatusNotStarted: string;
   taskStatusInProgress: string;
@@ -1232,6 +1243,15 @@ const defaultStrings: CivLocaleStrings = {
   ethnicityLabel: 'Ethnicity',
   genderLabel: 'Gender',
   languageLabel: 'Preferred language',
+
+  raceEthnicityRaceLegend: 'Race',
+  raceEthnicityEthnicityLegend: 'Ethnicity',
+  raceEthnicityRaceHint: 'Select one or more',
+  raceOptionAmericanIndianAlaskaNative: 'American Indian or Alaska Native',
+  raceOptionAsian: 'Asian',
+  raceOptionBlackAfricanAmerican: 'Black or African American',
+  raceOptionNativeHawaiianPacificIslander: 'Native Hawaiian or Other Pacific Islander',
+  raceOptionWhite: 'White',
 
   taskStatusNotStarted: 'Not started',
   taskStatusInProgress: 'In progress',

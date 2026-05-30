@@ -449,13 +449,15 @@ export class CivRepeater extends CivBaseElement {
                 aria-label="${interpolate(t('repeaterEditAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"
               ></civ-action-button>
             ` : nothing}
-            <civ-action-button
-              emphasis="tertiary"
-              danger
-              label="${interpolate(t('repeaterRemoveLabel'), { item: this.itemLabel })}"
-              aria-label="${interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"
-              @click="${() => this._removeRoutedRow(index)}"
-            ></civ-action-button>
+            ${this.rows.length > this.min ? html`
+              <civ-action-button
+                emphasis="tertiary"
+                danger
+                label="${interpolate(t('repeaterRemoveLabel'), { item: this.itemLabel })}"
+                aria-label="${interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(index + 1) })}"
+                @click="${() => this._removeRoutedRow(index)}"
+              ></civ-action-button>
+            ` : nothing}
           </span>
         </div>
       </div>
@@ -605,6 +607,9 @@ export class CivRepeater extends CivBaseElement {
       this._rowData = reindexed;
     }
     this._reindexRows();
+    // Shrinking back to the floor must re-hide the Remove buttons; growing
+    // stays revealed. Single predicate, applied to every row.
+    this._syncRemoveButtonVisibility();
     dispatch(this, 'civ-repeater-remove', { index });
     announce(interpolate(t('repeaterItemRemoved'), { item: this.itemLabel, index: String(index + 1) }));
 
@@ -630,6 +635,9 @@ export class CivRepeater extends CivBaseElement {
     const index = this._rowCount;
     this._appendRow(index);
     this._rowCount++;
+    // Growing above the floor makes every existing row removable — reveal
+    // the Remove buttons that were hidden while the list sat at `min`.
+    this._syncRemoveButtonVisibility();
     dispatch(this, 'civ-repeater-add', { index });
     announce(interpolate(t('repeaterItemAdded'), { item: this.itemLabel, index: String(index + 1) }));
 
@@ -781,9 +789,14 @@ export class CivRepeater extends CivBaseElement {
           itemLabel: this.itemLabel,
           idPrefix: this._rowHeadingIdPrefix,
           legendLevel: this.headingLevel,
+          min: this.min,
+          // Count after this card is appended (this._rowCount is bumped
+          // just below). _syncRemoveButtonVisibility re-checks regardless.
+          rowCount: this._rowCount + 1,
         });
       }
       this._rowCount++;
+      this._syncRemoveButtonVisibility();
       dispatch(this, 'civ-repeater-add', { index });
       announce(interpolate(t('repeaterItemAdded'), { item: this.itemLabel, index: String(index + 1) }));
     } else {
@@ -854,6 +867,24 @@ export class CivRepeater extends CivBaseElement {
           interpolate(t('repeaterRemoveAriaLabel'), { item: this.itemLabel, index: String(i + 1) }));
       }
     });
+  }
+
+  /**
+   * Show or hide every row's Remove button from the single live predicate
+   * `_rowCount > min`. Called after every add / remove so a floor row's
+   * Remove affordance appears the instant the list grows above `min` and
+   * disappears again when it shrinks back — rather than being baked in at
+   * row-build time (which left floor rows showing a dead Remove button
+   * that only announced "minimum reached"). Toggles the `civ-hidden`
+   * class; the button stays in the DOM either way so aria-label reindexing
+   * and the delegated click handler keep working.
+   */
+  private _syncRemoveButtonVisibility(): void {
+    const removable = this._rowCount > this.min;
+    for (const row of this._getRows()) {
+      const removeBtn = row.querySelector('civ-action-button[danger]');
+      if (removeBtn) removeBtn.classList.toggle('civ-hidden', !removable);
+    }
   }
 }
 

@@ -124,7 +124,7 @@ describe('appendInlineRow', () => {
     expect(input.getAttribute('name')).toBe('items[0].val');
   });
 
-  it('appends a Remove button when row count is at or above min', () => {
+  it('appends a visible Remove button when the row count is above min', () => {
     appendInlineRow({
       container,
       template: buildTemplate(),
@@ -134,12 +134,16 @@ describe('appendInlineRow', () => {
       idPrefix: 'r',
       legendLevel: 2,
       min: 0,
-      rowCount: 0,
+      rowCount: 1, // 1 > min(0) → removable
     });
-    expect(container.querySelector('civ-action-button[danger]')).not.toBeNull();
+    const btn = container.querySelector('civ-action-button[danger]');
+    expect(btn).not.toBeNull();
+    expect(btn!.classList.contains('civ-hidden')).toBe(false);
   });
 
-  it('omits the Remove button while we are below min', () => {
+  it('builds the Remove button hidden (not omitted) while the list is at its floor', () => {
+    // The button must persist in the DOM so it can be revealed without
+    // rebuilding the row once the user grows the list above `min`.
     appendInlineRow({
       container,
       template: buildTemplate(),
@@ -149,9 +153,11 @@ describe('appendInlineRow', () => {
       idPrefix: 'r',
       legendLevel: 2,
       min: 2,
-      rowCount: 0,
+      rowCount: 2, // 2 <= min(2) → at the floor, hidden
     });
-    expect(container.querySelector('civ-action-button[danger]')).toBeNull();
+    const btn = container.querySelector('civ-action-button[danger]');
+    expect(btn).not.toBeNull();
+    expect(btn!.classList.contains('civ-hidden')).toBe(true);
   });
 
   it('renders Remove with data-civ-repeater-action="remove" for delegated click handling', () => {
@@ -199,6 +205,8 @@ describe('appendFormStepsSummaryCard', () => {
       itemLabel: 'dependent',
       idPrefix: 'r',
       legendLevel: 2,
+      min: 0,
+      rowCount: 1,
     });
     const row = container.querySelector('[data-civ-repeater-row]')!;
     expect(row.querySelector('.civ-list-item__content')).not.toBeNull();
@@ -213,6 +221,8 @@ describe('appendFormStepsSummaryCard', () => {
       itemLabel: 'dependent',
       idPrefix: 'r',
       legendLevel: 2,
+      min: 0,
+      rowCount: 1,
     });
     const content = container.querySelector('.civ-list-item__content')!;
     expect(content.textContent).toBe('Alex, Chen');
@@ -226,6 +236,8 @@ describe('appendFormStepsSummaryCard', () => {
       itemLabel: 'dependent',
       idPrefix: 'r',
       legendLevel: 2,
+      min: 0,
+      rowCount: 1,
     });
     const actions = container.querySelector('.civ-list-item__actions')!;
     const editBtn = actions.querySelector('civ-action-button[data-civ-repeater-action="edit"]')!;
@@ -246,6 +258,8 @@ describe('appendFormStepsSummaryCard', () => {
       itemLabel: 'dependent',
       idPrefix: 'row-xyz',
       legendLevel: 2,
+      min: 0,
+      rowCount: 1,
     });
     const row = container.querySelector('[data-civ-repeater-row]')!;
     expect(row.getAttribute('aria-labelledby')).toBe('row-xyz-4-heading');
@@ -263,6 +277,8 @@ describe('updateFormStepsSummaryText', () => {
       itemLabel: 'dependent',
       idPrefix: 'r',
       legendLevel: 2,
+      min: 0,
+      rowCount: 1,
     });
     const row = container.querySelector('[data-civ-repeater-row]')!;
     const removeBtnBefore = row.querySelector('civ-action-button[danger]');

@@ -50,8 +50,15 @@ export function buildRowHeading(opts: {
  * via the `data-civ-repeater-action="remove"` attribute — the
  * repeater's delegated click handler on the rows container dispatches
  * to `removeRow(index)` when this is clicked.
+ *
+ * `hidden` toggles the `civ-hidden` (display:none) class. The button is
+ * ALWAYS built so visibility can flip later without rebuilding the row:
+ * a floor row (count === min) has no Remove affordance, but the same row
+ * becomes removable the instant the user adds a row above the floor.
+ * `civ-repeater` re-evaluates this on every add / remove via
+ * `_syncRemoveButtonVisibility()`.
  */
-function buildRemoveButton(itemLabel: string, index: number): HTMLElement {
+function buildRemoveButton(itemLabel: string, index: number, hidden: boolean): HTMLElement {
   const btn = document.createElement('civ-action-button');
   btn.setAttribute('emphasis', 'tertiary');
   btn.setAttribute('danger', '');
@@ -59,6 +66,7 @@ function buildRemoveButton(itemLabel: string, index: number): HTMLElement {
   btn.setAttribute('data-civ-repeater-action', 'remove');
   btn.setAttribute('aria-label',
     interpolate(t('repeaterRemoveAriaLabel'), { item: itemLabel, index: String(index + 1) }));
+  if (hidden) btn.classList.add('civ-hidden');
   return btn;
 }
 
@@ -131,9 +139,16 @@ export interface AppendInlineRowOptions {
   idPrefix: string;
   /** Legend heading level (used to derive the row heading level). */
   legendLevel: number | undefined;
-  /** Minimum row count — removal isn't offered below this. */
+  /** Minimum row count — removal isn't offered while the count is at this floor. */
   min: number;
-  /** Current row count at the time of append (used with `min` to decide). */
+  /**
+   * Row count AFTER this append completes — i.e. the value the caller's
+   * `_rowCount` will hold once the row is added. The Remove button is
+   * hidden when `rowCount <= min` (the list is at its floor, nothing is
+   * removable) and shown otherwise. The button is always built either
+   * way; `civ-repeater._syncRemoveButtonVisibility()` re-evaluates the
+   * `civ-hidden` toggle on every subsequent add / remove.
+   */
   rowCount: number;
 }
 
@@ -141,8 +156,10 @@ export interface AppendInlineRowOptions {
  * Build and append a row for inline mode.
  *
  * Clones the captured template directly into the row, applies the
- * indexed-field-name rewriting, and conditionally appends a Remove
- * button when removal would still leave us at or above `min`.
+ * indexed-field-name rewriting, and appends a Remove button. The button
+ * is hidden (not omitted) while the list sits at its `min` floor, so it
+ * can be revealed without rebuilding the row once the user grows the list
+ * above the floor.
  */
 export function appendInlineRow(opts: AppendInlineRowOptions): void {
   const heading = buildRowHeading({
@@ -160,11 +177,9 @@ export function appendInlineRow(opts: AppendInlineRowOptions): void {
 
   indexInlineFieldNames(row, opts.index, opts.baseName || 'items');
 
-  if (opts.rowCount >= opts.min || opts.index >= opts.min) {
-    const removeBtn = buildRemoveButton(opts.itemLabel, opts.index);
-    removeBtn.classList.add('civ-mt-2');
-    row.appendChild(removeBtn);
-  }
+  const removeBtn = buildRemoveButton(opts.itemLabel, opts.index, opts.rowCount <= opts.min);
+  removeBtn.classList.add('civ-mt-2');
+  row.appendChild(removeBtn);
 
   opts.container.appendChild(row);
 }
@@ -177,6 +192,10 @@ export interface AppendFormStepsSummaryCardOptions {
   itemLabel: string;
   idPrefix: string;
   legendLevel: number | undefined;
+  /** Minimum row count — Remove is hidden while the count is at this floor. */
+  min: number;
+  /** Row count AFTER this card is appended. Remove is hidden when `<= min`. */
+  rowCount: number;
 }
 
 /**
@@ -207,7 +226,7 @@ export function appendFormStepsSummaryCard(opts: AppendFormStepsSummaryCardOptio
   const actions = document.createElement('span');
   actions.classList.add('civ-list-item__actions');
   actions.appendChild(buildEditButton(opts.itemLabel, opts.index));
-  actions.appendChild(buildRemoveButton(opts.itemLabel, opts.index));
+  actions.appendChild(buildRemoveButton(opts.itemLabel, opts.index, opts.rowCount <= opts.min));
   summary.appendChild(actions);
 
   row.appendChild(summary);

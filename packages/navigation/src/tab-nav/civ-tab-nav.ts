@@ -54,7 +54,7 @@ export class CivTabNav extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     return html`
       <nav class="civ-tab-nav" aria-label="${ifDefined(this.label || undefined)}">
-        <ul class="civ-tab-nav__list" data-civ-tab-nav-content></ul>
+        <ul role="list" class="civ-tab-nav__list" data-civ-tab-nav-content></ul>
       </nav>
     `;
   }

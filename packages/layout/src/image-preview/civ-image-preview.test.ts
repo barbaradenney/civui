@@ -121,14 +121,15 @@ describe('civ-image-preview', () => {
     expect(altWarnings.length).toBe(0);
   });
 
-  it('applies border and rounded classes to the inner civ-image host', async () => {
+  it('applies a flat border to the inner civ-image host (no rounded corners)', async () => {
     const el = await fixture<CivImagePreview>('<civ-image-preview src="test.jpg" alt="Test"></civ-image-preview>');
     const civImage = el.querySelector('civ-image')!;
-    expect(civImage.classList.contains('civ-rounded')).toBe(true);
     expect(civImage.classList.contains('civ-border')).toBe(true);
-    // `civ-overflow-hidden` ensures the inner <img> corners get clipped
-    // by the rounded host border.
     expect(civImage.classList.contains('civ-overflow-hidden')).toBe(true);
+    // Display-only upload-preview thumbnail — corners stay flat per
+    // design-rules.md "Only interactive elements get rounded corners"
+    // (same category as civ-file-preview).
+    expect(civImage.classList.contains('civ-rounded')).toBe(false);
   });
 
   it('forwards webp-src + avif-src to the inner civ-image for format negotiation', async () => {

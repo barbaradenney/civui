@@ -251,7 +251,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
         current="${idx}"
         total="${total}"
         step-title="${this.stepTitle || this._steps[idx]?.getAttribute('data-step-label') || ''}"
-        size="${this.headerSize}"
+        emphasis="${this.headerSize}"
         heading-level="${this.headingLevel}"
       ></civ-progress-header>
     `;
@@ -281,7 +281,7 @@ export class CivFormStep extends LightDomSlotMixin(CivBaseElement) {
           <civ-progress-percent
             value="${pct}"
             label="${interpolate(t('progressStepsCounter'), { current: String(idx + 1), total: String(total) })}"
-            .hidePercent="${false}"
+            .hidePercent="${true}"
           ></civ-progress-percent>
         `;
       }

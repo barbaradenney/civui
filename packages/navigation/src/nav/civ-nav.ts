@@ -68,7 +68,7 @@ export class CivNav extends LightDomSlotMixin(CivBaseElement) {
     ].filter(Boolean).join(' ');
     return html`
       <nav class="${classes}" aria-label="${ifDefined(this.label || undefined)}">
-        <ul class="civ-nav__list" data-civ-nav-content></ul>
+        <ul role="list" class="civ-nav__list" data-civ-nav-content></ul>
       </nav>
     `;
   }

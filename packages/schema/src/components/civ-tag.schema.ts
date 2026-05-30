@@ -44,7 +44,10 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'status',
+    // No host role. Tags are inline categorization labels — the host
+    // renders a plain <span> and sets no ARIA role. (Status semantics
+    // belong to civ-badge, which carries role="status"; see the
+    // component JSDoc.)
     requiredIndicator: 'none',
     errorAnnouncement: 'polite',
   },

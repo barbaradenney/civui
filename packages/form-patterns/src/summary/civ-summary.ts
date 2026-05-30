@@ -72,7 +72,7 @@ export class CivSummary extends CivBaseElement {
         @click="${this._onEditClick}"
       >
         ${this.heading ? html`<span class="civ-heading-xl civ-block" role="heading" aria-level="${this.headingLevel}">${this.heading}</span>` : nothing}
-        ${this.sections.map(section => this._renderSection(section))}
+        ${this.sections.map((section, i) => this._renderSection(section, i))}
       </div>
     `;
   }
@@ -120,8 +120,7 @@ export class CivSummary extends CivBaseElement {
     return /^(#|\/(?!\/)|https?:\/\/|tel:|mailto:|sms:)/.test(href);
   }
 
-  private _renderSection(section: SummarySection) {
-    const sectionIndex = this.sections.indexOf(section);
+  private _renderSection(section: SummarySection, sectionIndex: number) {
     const sectionEditHref = section.editHref && this._isSafeHref(section.editHref)
       ? section.editHref
       : undefined;

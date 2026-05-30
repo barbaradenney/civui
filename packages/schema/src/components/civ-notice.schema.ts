@@ -64,7 +64,11 @@ const schema: ComponentSchema = {
   events: {},
 
   a11y: {
-    role: 'group',
+    // No host role. The notice renders icon + text inside a plain
+    // <div> and sets no ARIA role on the host; the optional heading
+    // carries role="heading" + aria-level on its own <p> element. A
+    // host-level role="group" would be misleading to native
+    // implementers — there is no grouping semantic to mirror.
     requiredIndicator: 'none',
     errorAnnouncement: 'none',
     describedBy: [],

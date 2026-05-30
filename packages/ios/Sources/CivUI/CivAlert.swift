@@ -6,7 +6,7 @@ import SwiftUI
 
 /// Alert variant determines the header bar color and semantic role.
 public enum AlertIntent: String, CaseIterable {
-    case info, warning, error, success
+    case info, warning, error, success, neutral
 }
 
 /// Alert style controls the content area background treatment.
@@ -26,7 +26,7 @@ public enum AlertEmphasis: String, CaseIterable {
 /// Usage:
 /// ```swift
 /// CivAlert(
-///     variant: .warning,
+///     intent: .warning,
 ///     heading: "System maintenance",
 ///     label: "The system will be unavailable Saturday from 2-4 AM ET."
 /// )
@@ -61,7 +61,7 @@ public struct CivAlert: View {
     /// Heading level for accessibility (e.g., 2 = h2, 3 = h3).
     public var headingLevel: Int
 
-    /// Spacing variant ("default", "compact").
+    /// Spacing variant ("default", "sm").
     public var spacing: String
 
     /// Parity-only properties for the web-side `collapsible` /
@@ -137,9 +137,9 @@ public struct CivAlert: View {
             )
             .accessibilityElement(children: .combine)
             .accessibilityLabel(accessibilityDescription)
-            .accessibilityAddTraits(variant == .error ? .updatesFrequently : .isStaticText)
+            .accessibilityAddTraits(intent == .error ? .updatesFrequently : .isStaticText)
             .onAppear {
-                if variant == .error {
+                if intent == .error {
                     UIAccessibility.post(notification: .announcement, argument: label)
                 }
             }
@@ -226,7 +226,7 @@ public struct CivAlert: View {
 
     private func dismissButton(foreground: Color) -> some View {
         Button(action: {
-            onAnalytics?("dismiss", ["variant": variant.rawValue])
+            onAnalytics?("dismiss", ["variant": intent.rawValue])
             withAnimation(.easeOut(duration: CivTokens.Motion.Duration.normal)) {
                 isVisible = false
             }
@@ -244,7 +244,7 @@ public struct CivAlert: View {
     // MARK: - Color Helpers
 
     private var variantHeaderColor: Color {
-        switch variant {
+        switch intent {
         case .info:
             return adaptiveColor(light: CivTokens.Colors.Info.default_,
                                  dark: CivTokens.DarkColors.Info.default_)
@@ -257,11 +257,14 @@ public struct CivAlert: View {
         case .success:
             return adaptiveColor(light: CivTokens.Colors.Success.default_,
                                  dark: CivTokens.DarkColors.Success.default_)
+        case .neutral:
+            return adaptiveColor(light: CivTokens.Colors.Base.darker,
+                                 dark: CivTokens.DarkColors.Base.darker)
         }
     }
 
     private var variantBorderColor: Color {
-        switch variant {
+        switch intent {
         case .info:
             return adaptiveColor(light: CivTokens.Colors.Info.light,
                                  dark: CivTokens.DarkColors.Info.light)
@@ -274,6 +277,9 @@ public struct CivAlert: View {
         case .success:
             return adaptiveColor(light: CivTokens.Colors.Success.light,
                                  dark: CivTokens.DarkColors.Success.light)
+        case .neutral:
+            return adaptiveColor(light: CivTokens.Colors.Base.darker,
+                                 dark: CivTokens.DarkColors.Base.darker)
         }
     }
 
@@ -290,7 +296,7 @@ public struct CivAlert: View {
     }
 
     private var variantContentPrimaryColor: Color {
-        switch variant {
+        switch intent {
         case .info:
             return adaptiveColor(light: CivTokens.Colors.Info.lighter,
                                  dark: CivTokens.DarkColors.Info.lighter)
@@ -303,11 +309,14 @@ public struct CivAlert: View {
         case .success:
             return adaptiveColor(light: CivTokens.Colors.Success.lighter,
                                  dark: CivTokens.DarkColors.Success.lighter)
+        case .neutral:
+            return adaptiveColor(light: CivTokens.Colors.Base.darker,
+                                 dark: CivTokens.DarkColors.Base.darker)
         }
     }
 
     private var variantContentSecondaryColor: Color {
-        switch variant {
+        switch intent {
         case .info:
             return adaptiveColor(light: CivTokens.Colors.Info.lighter,
                                  dark: CivTokens.DarkColors.Info.lighter).opacity(0.5)
@@ -320,11 +329,14 @@ public struct CivAlert: View {
         case .success:
             return adaptiveColor(light: CivTokens.Colors.Success.lighter,
                                  dark: CivTokens.DarkColors.Success.lighter).opacity(0.5)
+        case .neutral:
+            return adaptiveColor(light: CivTokens.Colors.Base.lightest,
+                                 dark: CivTokens.DarkColors.Base.lightest)
         }
     }
 
     private var accessibilityDescription: String {
-        let typeLabel = "\(variant.rawValue) alert"
+        let typeLabel = "\(intent.rawValue) alert"
         if let heading, !heading.isEmpty {
             return "\(typeLabel): \(heading). \(label)"
         }
@@ -345,13 +357,13 @@ struct CivAlert_Previews: PreviewProvider {
             ScrollView {
                 VStack(alignment: .leading, spacing: CivTokens.Spacing._4) {
                     CivAlert(
-                        variant: .info,
+                        intent: .info,
                         heading: "Important information",
                         label: "Your application has been received and is being processed."
                     )
 
                     CivAlert(
-                        variant: .warning,
+                        intent: .warning,
                         emphasis: .primary,
                         heading: "Action required",
                         label: "Your session will expire in 5 minutes.",
@@ -359,25 +371,25 @@ struct CivAlert_Previews: PreviewProvider {
                     )
 
                     CivAlert(
-                        variant: .error,
+                        intent: .error,
                         heading: "Submission failed",
                         label: "Please correct the errors below and try again."
                     )
 
                     CivAlert(
-                        variant: .success,
+                        intent: .success,
                         heading: "Application submitted",
                         label: "You will receive a confirmation email shortly."
                     )
 
                     CivAlert(
-                        variant: .info,
+                        intent: .info,
                         label: "No heading variant with dismiss button.",
                         dismissible: true
                     )
 
                     CivAlert(
-                        variant: .warning,
+                        intent: .warning,
                         label: "Slim warning: scheduled maintenance tonight.",
                         slim: true
                     )

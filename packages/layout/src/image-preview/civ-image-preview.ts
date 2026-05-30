@@ -114,7 +114,7 @@ export class CivImagePreview extends CivBaseElement {
     return html`
       <figure class="civ-m-0 civ-p-0" style="max-width: ${this._maxWidth};">
         <civ-image
-          class="civ-block civ-rounded civ-border civ-border-base-lighter civ-overflow-hidden"
+          class="civ-block civ-border civ-border-base-lighter civ-overflow-hidden"
           src="${this.src}"
           webp-src="${this.webpSrc || nothing}"
           avif-src="${this.avifSrc || nothing}"

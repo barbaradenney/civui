@@ -203,7 +203,7 @@ export class CivOnThisPage extends LightDomSlotMixin(CivBaseElement) {
         ${this.label
           ? html`<p class="civ-on-this-page__heading">${this.label}</p>`
           : null}
-        <ul class="civ-on-this-page__list" data-civ-on-this-page-content></ul>
+        <ul role="list" class="civ-on-this-page__list" data-civ-on-this-page-content></ul>
       </nav>
     `;
   }

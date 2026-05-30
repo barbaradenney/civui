@@ -38,6 +38,13 @@ const schema: ComponentSchema = {
       description: 'Fires when this tab is activated. The parent `<civ-tabs>` listens for this and updates its own `value`',
       detail: { value: { type: 'string', description: 'This tab\'s `value`' } },
     },
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on interaction',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action that triggered the event' },
+      },
+    },
   },
 
   a11y: {

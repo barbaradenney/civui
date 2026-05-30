@@ -280,6 +280,29 @@ describe('civ-form', () => {
     expect(submitted).toBe(true);
   });
 
+  it('does NOT submit on Enter that an inner control already consumed (defaultPrevented)', async () => {
+    // Regression: a combobox / date-picker calls preventDefault() (no
+    // stopPropagation) when Enter selects an option, so the keydown
+    // still bubbles to the form. The form must treat a defaultPrevented
+    // Enter as already-handled, not an implicit submit.
+    const el = await fixture(`
+      <civ-form>
+        <civ-text-input label="Name" name="name" value="John"></civ-text-input>
+      </civ-form>
+    `) as any;
+    await waitForChildren(el);
+
+    let submitted = false;
+    el.addEventListener('civ-submit', () => { submitted = true; });
+
+    const input = el.querySelector('input');
+    const ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    ev.preventDefault(); // simulate an inner control having consumed it
+    input.dispatchEvent(ev);
+
+    expect(submitted).toBe(false);
+  });
+
   describe('analytics', () => {
     it('fires civ-analytics with submit action on valid submission', async () => {
       const el = await fixture(`

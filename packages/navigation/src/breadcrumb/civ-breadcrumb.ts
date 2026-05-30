@@ -44,7 +44,7 @@ export class CivBreadcrumb extends LightDomSlotMixin(CivBaseElement) {
   override render() {
     return html`
       <nav class="civ-breadcrumb" aria-label="${ifDefined(this.label || undefined)}">
-        <ol class="civ-breadcrumb__list" data-civ-breadcrumb-content></ol>
+        <ol role="list" class="civ-breadcrumb__list" data-civ-breadcrumb-content></ol>
       </nav>
     `;
   }

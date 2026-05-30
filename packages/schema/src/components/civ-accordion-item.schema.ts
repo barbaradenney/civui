@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     disabled: {
       type: 'boolean',
-      description: 'Disables interaction; the row is dimmed and not toggleable',
+      description: 'Disables interaction; the row is dimmed and rejects both user clicks and programmatic `open` changes. While disabled the trigger carries `aria-disabled="true"` and `tabindex="-1"` (removed from the tab order). A parent `<civ-accordion disabled>` cascades the same treatment to every direct-child item — the effective state is `this.disabled || parent.disabled`.',
       default: false,
       reflect: true,
     },

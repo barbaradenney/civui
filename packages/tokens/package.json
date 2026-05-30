@@ -20,9 +20,11 @@
   },
   "scripts": {
     "build": "node build/build-tokens.js",
-    "dev": "node build/build-tokens.js --watch"
+    "dev": "node build/build-tokens.js --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "style-dictionary": "^4.0.0"
+    "style-dictionary": "^4.0.0",
+    "vitest": "^2.0.0"
   }
 }

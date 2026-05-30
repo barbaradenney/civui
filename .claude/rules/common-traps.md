@@ -479,6 +479,42 @@ SDC enum constraints" rather than blocking CI.
 
 ---
 
+## Hardcoded option values must match across platforms
+
+When a component ships a fixed option vocabulary — the `value`
+strings behind a hardcoded radio/checkbox list, not consumer-
+provided options — those values are part of the cross-platform
+contract: the same answer must serialize to the same string on
+web, iOS, and Android. `parity:schema` (prop names),
+`lint:schema-enum-values` (enum *prop* value sets), and
+`lint:schema-default-values` (defaults) all miss this, because
+option vocabularies aren't a schema prop.
+
+```ts
+// ✗ silent data-integrity drift — civ-race-ethnicity shipped this
+// web:     { value: 'hispanic-latino', … }
+// iOS:     ("hispanic", "Hispanic or Latino")            // drifted
+// Android: CivRadioOption(value = "hispanic", …)         // drifted
+```
+
+A form submitted from each platform stored a different string for
+the same selection. The web Lit source is canonical (per CLAUDE.md);
+the natives must match it.
+
+**Caught by:** `pnpm lint:option-value-parity` — for every component
+in the curated `OPTION_COMPONENTS` registry (`tools/lint-option-value-parity.ts`),
+it extracts the canonical option values from the Lit source's inline
+`value: '...'` literals and asserts each appears as a quoted string
+literal in the iOS + Android counterparts (presence-check, since
+native option shapes vary — iOS positional tuples, Android
+`CivRadioOption(value = …)`). Wired into `pnpm validate:lints` and
+the drift-lints CI gate. Add a registry entry when a new component
+hardcodes an inline option list with real (non-stub) native
+counterparts; components that resolve options from the `@civui/core`
+preset registry or whose natives are EmptyView stubs are out of scope.
+
+---
+
 ## Schema must declare civ-analytics when the component fires it
 
 `civ-analytics` is the cross-cutting analytics event dispatched by

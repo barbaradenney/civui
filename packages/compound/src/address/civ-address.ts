@@ -27,6 +27,8 @@ export interface AddressValue {
   city: string;
   state: string;
   zip: string;
+  /** Free-text contact method — only used by the `contact` variant. */
+  contactMethod: string;
 }
 
 const US_STATES: Array<{ value: string; label: string }> = [
@@ -87,7 +89,7 @@ const NO_POSTAL_CODE_COUNTRIES = new Set([
   'TO', 'TT', 'TV', 'UG', 'AE', 'VU', 'YE', 'ZW',
 ]);
 
-const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '' };
+const EMPTY_ADDRESS: AddressValue = { country: 'US', street1: '', street2: '', street3: '', city: '', state: '', zip: '', contactMethod: '' };
 
 /**
  * CivUI Address
@@ -330,10 +332,13 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
           label="${t('housingContactMethod')}"
           hint="${t('housingContactMethodHint')}"
           name="${this.name ? `${this.name}.contactMethod` : ''}"
+          .value="${this._data.contactMethod ?? ''}"
           rows="3"
           ?required="${this.required}"
           ?disabled="${this.disabled}"
           ?readonly="${this.readonly}"
+          @civ-input="${(e: CustomEvent) => this._onSubInput('contactMethod', e)}"
+          @civ-change="${(e: CustomEvent) => this._onSubChange('contactMethod', e)}"
         ></civ-textarea>
       </fieldset>
     `;
@@ -502,11 +507,17 @@ export class CivAddress extends LegendHeadingMixin(CivCompoundElement) {
   }
 
   /**
-   * An address is considered complete when street1, city, state, and zip
-   * are all filled. street2/street3 are optional and country has a default.
+   * Completeness depends on the variant. The `contact` variant renders
+   * only city + contact-method (no street/zip), so requiring street/zip
+   * there would make a required contact address impossible to satisfy.
+   * The default / general-delivery variants need street1, city, state,
+   * and zip; street2/street3 are optional and country has a default.
    */
   private _isComplete(): boolean {
     const a = this._data;
+    if (this.variant === 'contact') {
+      return !!(a.city.trim() && (a.contactMethod ?? '').trim());
+    }
     return !!(a.street1.trim() && a.city.trim() && a.state.trim() && a.zip.trim());
   }
 

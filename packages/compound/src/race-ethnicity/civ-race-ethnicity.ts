@@ -74,9 +74,10 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
   @property({ type: String, attribute: 'race-error' }) raceError = '';
   /**
    * Tile rendering variant forwarded to both inner groups. Defaults to
-   * `auto` so each group picks `card` for ≤4 options and `list` for 5+
-   * — which matches the OMB shape (Race has 6, Ethnicity has 3) without
-   * the consumer having to set anything. Pass `card` or `list` to override.
+   * `auto`, which this compound resolves to `list` for BOTH groups so
+   * race (6 options) and ethnicity (3 options) share one visual
+   * treatment — otherwise they'd look like two different components.
+   * Pass `card` or `list` to override (applied to both groups).
    */
   @property({ type: String }) layout: 'card' | 'list' | 'auto' = 'auto';
 
@@ -138,7 +139,19 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
   }
 
   protected override _syncFormValue(): void {
-    this.updateFormValue(this.value || '');
+    // Participate in a native <form> with flat, prefixed fields —
+    // `${name}.race` repeated for the multi-select plus `${name}.ethnicity`
+    // once — matching how every other compound submits via
+    // `syncFormDataFromState`. The previous `updateFormValue(this.value)`
+    // emitted a single JSON blob under `name`, an outlier shape that also
+    // collided with the inner groups' own `${name}.race`/`.ethnicity`
+    // fields. The public `value` stays JSON (civ-form's getFormData reads
+    // that); this only governs raw ElementInternals submission.
+    const prefix = this.name || 'race-ethnicity';
+    const fd = new FormData();
+    for (const r of this._data.race) fd.append(`${prefix}.race`, r);
+    if (this._data.ethnicity) fd.append(`${prefix}.ethnicity`, this._data.ethnicity);
+    this.updateFormValue(fd);
   }
 
   override render() {

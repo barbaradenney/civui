@@ -80,7 +80,7 @@ public struct CivDataGrid: View {
         interactive: Bool = false,
         groupBy: String = "",
         stickyFooter: Bool = false,
-        showGroupSubtotals: Bool = false,
+        showGroupSubtotals: Bool = true,
         spacing: String = "default"
     ) {
         self.caption = caption

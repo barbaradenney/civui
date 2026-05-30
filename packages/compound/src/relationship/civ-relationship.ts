@@ -47,7 +47,7 @@ const EMPTY_RELATIONSHIP: RelationshipValue = {
  * @element civ-relationship
  *
  * @prop {string} legend - Fieldset legend text
- * @prop {RelationshipPreset} preset - Relationship type preset: 'general' | 'dependent' | 'survivor' | 'benefits-survivor' | 'immigration' | 'tax'
+ * @prop {RelationshipPreset} preset - Relationship type preset: 'general' | 'detailed' | 'dependent' | 'survivor' | 'benefits-survivor' | 'immigration' | 'tax'
  * @prop {RelationshipTypeConfig[]} options - Custom options (overrides preset)
  * @prop {boolean} hideName - Hide the inner name fields (default false — name fields render by default)
  * @prop {boolean} showDeceased - Include deceased yes/no + date of death (default false)

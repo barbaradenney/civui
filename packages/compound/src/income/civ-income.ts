@@ -164,6 +164,28 @@ export class CivIncome extends LegendHeadingMixin(CivCompoundElement) {
     `;
   }
 
+  /**
+   * An income entry is complete only when BOTH a dollar amount and a pay
+   * frequency are provided. Without this override the inherited base
+   * validity reports a `required` income valid as soon as either
+   * sub-field is touched (the JSON `value` becomes non-empty), letting a
+   * half-filled income pass submit — the same gap the sibling compounds
+   * close with `_setRequiredCompoundValidity(_isComplete())`.
+   */
+  private _isComplete(): boolean {
+    return !!(this._data.amount.trim() && this._data.frequency);
+  }
+
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
+  protected override _updateValidity(): void {
+    if (!this._setRequiredCompoundValidity(this._isComplete())) {
+      this._setValidity({});
+    }
+  }
+
   override formResetCallback(): void {
     this._data = { ...EMPTY_INCOME };
     this._resetCompound(['amountError', 'frequencyError']);

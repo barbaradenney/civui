@@ -466,6 +466,33 @@ describe('civ-address contact variant', () => {
     // The contact variant has its own city + contact-method textarea.
     expect(el.querySelector('civ-textarea[name="addr.contactMethod"]')).not.toBeNull();
   });
+
+  it('writes the contact method into the value', async () => {
+    const el = await fixture<CivAddress>(
+      '<civ-address legend="Mailing address" name="addr" variant="contact"></civ-address>'
+    ) as any;
+    await elementUpdated(el);
+    const ta = el.querySelector('civ-textarea[name="addr.contactMethod"]') as any;
+    ta.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'Care of John Doe' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el.addressValue.contactMethod).toBe('Care of John Doe');
+  });
+
+  it('required contact address is valid on city + contact method (not street/zip)', async () => {
+    const el = await fixture<CivAddress>(
+      '<civ-address legend="Mailing address" name="addr" variant="contact" required></civ-address>'
+    ) as any;
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false);
+
+    el.addressValue = { ...el.addressValue, city: 'Austin' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false); // contact method still missing
+
+    el.addressValue = { ...el.addressValue, contactMethod: 'General Delivery' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(true);
+  });
 });
 
 describe('civ-address country/state cascade', () => {

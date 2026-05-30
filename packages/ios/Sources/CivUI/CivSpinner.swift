@@ -24,8 +24,8 @@ public struct CivSpinner: View {
     public init(
         size: String = "md",
         label: String = "Loading",
-        delay: Int = 0,
-        minDuration: Int = 0,
+        delay: Int = 200,
+        minDuration: Int = 400,
         decorative: Bool = false
     ) {
         self.size = size

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivPagination(
     totalItems: Int = 0,
-    pageSize: Int = 10,
+    pageSize: Int = 25,
     page: Int = 1,
     pageSizeOptions: String = "",
     siblingCount: Int = 1,

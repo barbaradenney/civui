@@ -81,6 +81,8 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
         role="dialog"
         aria-modal="true"
         aria-label="${this.label || t('actionSheetLabel')}"
+        tabindex="-1"
+        data-civ-action-sheet-panel
         style="--civ-action-sheet-max-height: ${this.maxHeight}"
       >
         <div class="civ-action-sheet__mobile-close">
@@ -116,20 +118,22 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
       // moment after the sheet renders but before display:block lays
       // out the dimensions.
       const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const panel = this.querySelector<HTMLElement>('[data-civ-action-sheet-panel]');
       const content = this.querySelector('[data-civ-action-sheet-content]');
       const first = content?.querySelector<HTMLElement>(focusSelector);
       if (first) {
         first.focus();
       } else {
-        const closeBtn = this.querySelector('.civ-close-btn') as HTMLElement | null;
-        closeBtn?.focus();
+        // Fall back to the panel itself (tabindex=-1) rather than the
+        // close button — the close button lives in a `display:none`
+        // wrapper on desktop, so focusing it is a silent no-op there.
+        panel?.focus();
       }
 
-      if (this.trapFocus) {
-        const container = this.querySelector('[data-civ-action-sheet-content]');
-        if (container instanceof HTMLElement) {
-          this._cleanupTrap = runTrapFocus(container);
-        }
+      if (this.trapFocus && panel) {
+        // Trap the whole panel, not just the content slot, so the close
+        // button (a sibling of the content) stays inside the focus cycle.
+        this._cleanupTrap = runTrapFocus(panel);
       }
     } catch (err) {
       console.error('civ-action-sheet: failed to open', err);

@@ -201,6 +201,12 @@ export class CivMenu extends LightDomSlotMixin(CivBaseElement) {
 
   private _onItemKeydown(e: KeyboardEvent): void {
     if (!this.open) return;
+    // Only handle navigation keys when focus is actually inside this menu.
+    // The listener is document-level, so without this guard an open menu
+    // would preventDefault ArrowUp/Down/Home/End for the whole page —
+    // stealing those keys from any other widget the user is interacting
+    // with while the menu happens to be open.
+    if (!this.contains(e.target as Node)) return;
     const items = this._getItems();
     if (items.length === 0) return;
     const nextIndex = resolveGroupNavIndex(e.key, this._activeIndex, items.length);

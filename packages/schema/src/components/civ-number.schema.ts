@@ -53,7 +53,7 @@ const schema: ComponentSchema = {
       type: 'enum',
       description: 'Input width variant',
       default: 'default',
-      values: ['default', 'tiny', 'small', 'medium', 'large'],
+      values: ['default', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
       webOnly: true,
     },
     spacing: {

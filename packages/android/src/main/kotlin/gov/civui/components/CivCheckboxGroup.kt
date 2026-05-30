@@ -61,7 +61,7 @@ fun CivCheckboxGroup(
     modifier: Modifier = Modifier,
     hint: String? = null,
     error: String? = null,
-    tile: Boolean = false,
+    tile: Boolean = true,
     orientation: CivOrientation = CivOrientation.Vertical,
     required: Boolean = false,
     disabled: Boolean = false,

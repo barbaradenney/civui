@@ -117,6 +117,10 @@ export class CivFilterChipGroup extends LightDomSlotMixin(CivBaseElement) {
         const selected = this._chips.filter((c) => c.selected);
         if (selected.length > 1) {
           for (const chip of selected.slice(1)) chip.selected = false;
+          // The component just changed the selection (shrank it to one),
+          // so notify consumers — otherwise a listener bound to civ-change
+          // holds a stale multi-value selection.
+          dispatch(this, 'civ-change', { value: this.value, aggregated: true });
         }
       }
       this._syncTabindex();

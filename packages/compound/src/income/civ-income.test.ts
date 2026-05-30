@@ -35,7 +35,7 @@ describe('civ-income', () => {
     expect(legend!.textContent).toContain('Monthly gross income');
   });
 
-  it('defaults to all eight frequency options', async () => {
+  it('defaults to all seven frequency options', async () => {
     const el = await fixture<CivIncome>('<civ-income legend="Wages"></civ-income>');
     const select = el.querySelector('civ-select') as any;
     expect(select.options.length).toBe(7);
@@ -156,6 +156,24 @@ describe('civ-income', () => {
 
     const childMarks = el.querySelectorAll('civ-currency .civ-required-mark, civ-select .civ-required-mark');
     expect(childMarks.length).toBeGreaterThan(0);
+  });
+
+  it('required income is invalid until BOTH amount and frequency are set', async () => {
+    const el = await fixture<CivIncome>('<civ-income legend="Wages" name="wages" required></civ-income>');
+    await elementUpdated(el);
+    // Empty → invalid.
+    expect(el.checkValidity()).toBe(false);
+
+    // Only amount → still invalid (the gap this fix closes: a non-empty
+    // JSON value previously flipped it valid).
+    el.incomeValue = { amount: '1200', frequency: '' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false);
+
+    // Both set → valid.
+    el.incomeValue = { amount: '1200', frequency: 'monthly' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(true);
   });
 
   it('serializes _data into value as JSON on sub-field change', async () => {

@@ -18,7 +18,7 @@ props:
     preset:
       title: Preset
       type: string
-      enum: ['general', 'beneficiary', 'dependent', 'survivor']
+      enum: ['general', 'detailed', 'dependent', 'survivor', 'benefits-survivor', 'immigration', 'tax']
       description: 'Relationship type preset'
     show_deceased:
       title: Show deceased

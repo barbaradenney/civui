@@ -30,8 +30,8 @@ data class RaceEthnicityValue(
 )
 
 private val ETHNICITY_OPTIONS = listOf(
-    CivRadioOption(value = "hispanic", label = "Hispanic or Latino"),
-    CivRadioOption(value = "not-hispanic", label = "Not Hispanic or Latino"),
+    CivRadioOption(value = "hispanic-latino", label = "Hispanic or Latino"),
+    CivRadioOption(value = "not-hispanic-latino", label = "Not Hispanic or Latino"),
     CivRadioOption(value = "prefer-not-to-answer", label = "Prefer not to answer"),
 )
 
@@ -189,7 +189,7 @@ private fun CivRaceEthnicityPreview() {
 
         var prefilled by remember {
             mutableStateOf(RaceEthnicityValue(
-                ethnicity = "not-hispanic",
+                ethnicity = "not-hispanic-latino",
                 race = listOf("white"),
             ))
         }

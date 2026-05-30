@@ -16,7 +16,7 @@ public struct CivActionChip: View {
     /// Disabled state.
     public var disabled: Bool
 
-    /// Padding density. `default` | `sm`.
+    /// Padding density. `default` | `sm` | `lg`.
     public var spacing: String
 
     /// Leading icon name.

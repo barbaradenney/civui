@@ -79,7 +79,7 @@ fun CivRepeater(
     hint: String = "",
     error: String = "",
     disabled: Boolean = false,
-    min: Int = 1,
+    min: Int = 0,
     max: Int = 0,
     mode: String = "inline",
     headingLevel: Int = 2,

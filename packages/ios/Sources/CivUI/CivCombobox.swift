@@ -102,6 +102,7 @@ public struct CivCombobox: View {
     public var loadDebounce: Int
 
     /// Minimum query length before triggering option loading.
+    /// Defaults to `0` — load on first focus with an empty query (matches the web/schema default).
     public var minQueryLength: Int
 
     /// Text shown while options are loading.
@@ -146,7 +147,7 @@ public struct CivCombobox: View {
         isPii: Bool = false,
         width: String = "full",
         loadDebounce: Int = 300,
-        minQueryLength: Int = 1,
+        minQueryLength: Int = 0,
         loadingText: String = "",
         loadingErrorText: String = "",
         loadOptions: ((String) -> Void)? = nil

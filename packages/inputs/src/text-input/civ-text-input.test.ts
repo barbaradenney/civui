@@ -405,6 +405,20 @@ describe('text-input currency mask', () => {
     expect(el.formattedValue).toBe('$1,234.56');
   });
 
+  it('formattedValue respects decimals="0" (whole-dollar mode)', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency" decimals="0"></civ-text-input>');
+    el.value = '1234';
+    await elementUpdated(el);
+    expect(el.formattedValue).toBe('$1,234');
+  });
+
+  it('formattedValue places the sign for negative amounts', async () => {
+    const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency" allow-negative></civ-text-input>');
+    el.value = '-1234.56';
+    await elementUpdated(el);
+    expect(el.formattedValue).toBe('-$1,234.56');
+  });
+
   it('handles empty value on blur', async () => {
     const el = await fixture<CivTextInput>('<civ-text-input label="Amount" mask="currency"></civ-text-input>');
     el.value = '';

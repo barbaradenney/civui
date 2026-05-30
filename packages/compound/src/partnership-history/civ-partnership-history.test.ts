@@ -1,7 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
 import '@civui/inputs';
-import '@civui/inputs';
 import './civ-partnership-history.js';
 
 afterEach(cleanupFixtures);
@@ -418,8 +417,8 @@ describe('civ-partnership-history sub-component event handlers', () => {
     expect(changes[0].spouseSuffix).toBe('Jr');
   });
 
-  it('updates a date field via _onFieldInput / _onFieldChange (married status)', async () => {
-    const el = await fixture('<civ-partnership-history name="m" status-assumed="married" show-marriage-date></civ-partnership-history>') as any;
+  it('updates a date field via _onFieldInput / _onFieldChange (marriage ceremony date)', async () => {
+    const el = await fixture('<civ-partnership-history name="m" status-assumed="current"></civ-partnership-history>') as any;
     await elementUpdated(el);
 
     const date = el.querySelector('civ-memorable-date[name="m.marriageDate"]') as any;
@@ -431,5 +430,52 @@ describe('civ-partnership-history sub-component event handlers', () => {
     date.dispatchEvent(new CustomEvent('civ-change', { detail: { value: '2010-06-15' }, bubbles: true }));
     await elementUpdated(el);
     expect(el._data.marriageDate).toBe('2010-06-15');
+  });
+
+  it('clears a stale cross-vocabulary status when the partnership type flips', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    const typeSelect = el.querySelector('[data-marriage-type]');
+    typeSelect.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'legal' }, bubbles: true }));
+    await elementUpdated(el);
+    el.querySelector('[data-marriage-status]')
+      .dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'divorced' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._data.status).toBe('divorced');
+
+    // 'divorced' isn't a valid status in the partnership (common-law) vocabulary.
+    typeSelect.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'common-law' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._data.status).toBe('');
+    expect(el._data.endDate).toBe('');
+  });
+
+  it('preserves a status that is valid in both vocabularies across a same-vocab type flip', async () => {
+    const el = await fixture('<civ-partnership-history name="m" show-marriage-type></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    const typeSelect = el.querySelector('[data-marriage-type]');
+    typeSelect.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'civil-union' }, bubbles: true }));
+    await elementUpdated(el);
+    el.querySelector('[data-marriage-status]')
+      .dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'ended' }, bubbles: true }));
+    await elementUpdated(el);
+    // civil-union → common-law: both use the partnership vocabulary, so 'ended' survives.
+    typeSelect.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'common-law' }, bubbles: true }));
+    await elementUpdated(el);
+    expect(el._data.status).toBe('ended');
+  });
+
+  it('required partnership is invalid until partner last name and status are set', async () => {
+    const el = await fixture('<civ-partnership-history name="m" required></civ-partnership-history>') as any;
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false);
+
+    el.marriageValue = { ...el.marriageValue, spouseLast: 'Doe' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(false); // status still missing
+
+    el.marriageValue = { ...el.marriageValue, status: 'current' };
+    await elementUpdated(el);
+    expect(el.checkValidity()).toBe(true);
   });
 });

@@ -137,7 +137,7 @@ public struct CivLink: View {
 
     private var trailingIconName: String {
         if !iconEnd.isEmpty { return iconEnd }
-        if variant == .secondary { return "chevron-right" }
+        if variant == .primary { return "chevron-right" }
         return ""
     }
 

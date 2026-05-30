@@ -90,7 +90,7 @@ fun CivButton(
             // button label while loading is in flight, matching the
             // web's aria-label swap.
             contentDescription = if (loading) loadingLabel else label
-            role = if (href.isNotEmpty()) Role.Button else Role.Button
+            role = Role.Button // Compose has no Role.Link; the href conditional was a no-op
         }
 
     val handleClick: () -> Unit = {

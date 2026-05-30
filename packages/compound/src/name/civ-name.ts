@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CivCompoundElement, LegendHeadingMixin, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
-import type { LabelSize, SelectLike } from '@civui/core';
+import type { LabelSize } from '@civui/core';
 import { resolvePresetOptions } from '@civui/core';
 import '@civui/inputs/text-input';
 import '@civui/inputs/select';
@@ -80,24 +80,6 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
     this.value = JSON.stringify(this._data);
   }
 
-  override firstUpdated(): void {
-    super.firstUpdated();
-    this._syncSuffixOptions();
-  }
-
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
-    if (changed.has('_data') || changed.has('hideSuffix')) {
-      this._syncSuffixOptions();
-    }
-  }
-
-  /** Set suffix options on the select sub-component after render. */
-  private _syncSuffixOptions(): void {
-    const suffixSelect = this.querySelector('[data-name-suffix]') as SelectLike | null;
-    if (suffixSelect) suffixSelect.options = SUFFIX_OPTIONS;
-  }
-
   override render() {
     const describedBy = buildDescribedBy(this._hintId, this.hint, this._errorId, this.error);
     const firstLabel = t('nameFirst');
@@ -157,6 +139,7 @@ export class CivName extends LegendHeadingMixin(CivCompoundElement) {
             <civ-select
               label="${t('nameSuffix')}"
               name="${this.name ? `${this.name}.suffix` : ''}"
+              .options="${SUFFIX_OPTIONS}"
               value="${this._data.suffix}"
               autocomplete="honorific-suffix"
               ?disabled="${this.disabled}"

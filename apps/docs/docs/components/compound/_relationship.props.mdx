@@ -6,7 +6,7 @@
 | `legend` | `string` | `''` | Top-level legend rendered above the sub-fields |
 | `heading-level` | `number` | — | When set, promotes the legend to a heading via role="heading" + aria-level=N |
 | `size` | `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | — | Visual size of the legend |
-| `preset` | `'general'` \| `'beneficiary'` \| `'dependent'` \| `'survivor'` | `'general'` | Built-in relationship-type preset. Determines which options appear in the relationship selector and which date fields are conditionally rendered |
+| `preset` | `'general'` \| `'detailed'` \| `'dependent'` \| `'survivor'` \| `'benefits-survivor'` \| `'immigration'` \| `'tax'` | `'general'` | Built-in relationship-type preset. Determines which options appear in the relationship selector and which date fields are conditionally rendered |
 | `options` | `array` | — | Custom relationship-type configuration. When set, overrides the preset. Web: typed array of `{value, label, fields?}` objects (set as JS property, attribute: false). Native: passed as a JSON-encoded string for serialization. Conceptually the same data, different wire format per platform |
 | `hide-name` | `boolean` | `false` | Hide the inner name fields. Defaults to false (name fields render). Use when an enclosing repeater step already captures the name and you want to avoid duplicating it inside civ-relationship. |
 | `show-deceased` | `boolean` | `false` | Render the "Is this person deceased?" toggle. When true, shows the date-of-death input |

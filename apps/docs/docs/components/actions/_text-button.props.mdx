@@ -10,5 +10,5 @@
 | `icon-start` | `string` | `''` | Leading icon name. Rendered with `aria-hidden="true"` so the label remains the accessible name |
 | `icon-end` | `string` | `''` | Trailing icon name. Rendered with `aria-hidden="true"` |
 | `type` | `'button'` \| `'submit'` \| `'reset'` | `'button'` | HTML button type. Defaults to `button` so the text-button never accidentally submits a surrounding form when placed inside one |
-| `loading` | `boolean` | `false` | Async-in-flight state. Swaps the leading icon for a `civ-spinner` (xs size), disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network) |
+| `loading` | `boolean` | `false` | Async-in-flight state. Swaps the leading icon for a `civ-spinner` (sm size), disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network) |
 | `loading-label` | `string` | `''` | Accessible name applied as `aria-label` while `loading` is true, and announced once via `@civui/core`'s shared `announce()` queue on the loading transition. Empty default falls back to the locale's `buttonLoadingLabel` ("Loading…" in English). Pass an action-specific present-participle verb ("Generating…", "Scanning…") |

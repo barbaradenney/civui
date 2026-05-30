@@ -76,6 +76,21 @@ describe('civ-filter-chip-group', () => {
 
       for (const chip of chips) expect(chip.variant).toBe('radio');
     });
+
+    it('emits civ-change when switching multi→single shrinks the selection', async () => {
+      const el = await fixture<CivFilterChipGroup>(groupHtml('multi', ['health', 'education']));
+      await settle();
+      const handler = vi.fn();
+      el.addEventListener('civ-change', handler);
+
+      el.mode = 'single';
+      await elementUpdated(el);
+
+      // Selection shrank from two to one — consumers must be notified.
+      expect(handler).toHaveBeenCalledOnce();
+      expect(handler.mock.calls[0][0].detail).toEqual({ value: 'health', aggregated: true });
+      expect(el.value).toBe('health');
+    });
   });
 
   describe('roving tabindex', () => {

@@ -99,9 +99,9 @@ public struct CivRaceEthnicity: View {
     // MARK: - Constants
 
     private let ethnicityOptions = [
-        ("hispanic", "Hispanic or Latino"),
-        ("not-hispanic", "Not Hispanic or Latino"),
-        ("ethnicity-prefer-not", "Prefer not to answer")
+        ("hispanic-latino", "Hispanic or Latino"),
+        ("not-hispanic-latino", "Not Hispanic or Latino"),
+        ("prefer-not-to-answer", "Prefer not to answer")
     ]
 
     private let raceOptions = [
@@ -110,7 +110,7 @@ public struct CivRaceEthnicity: View {
         ("black-african-american", "Black or African American"),
         ("native-hawaiian-pacific-islander", "Native Hawaiian or Other Pacific Islander"),
         ("white", "White"),
-        ("race-prefer-not", "Prefer not to answer")
+        ("prefer-not-to-answer", "Prefer not to answer")
     ]
 
     // MARK: - Initializer
@@ -367,7 +367,7 @@ struct CivRaceEthnicity_Previews: PreviewProvider {
     struct PreviewWrapper: View {
         @State private var empty = RaceEthnicityValue()
         @State private var prefilled = RaceEthnicityValue(
-            ethnicity: "not-hispanic",
+            ethnicity: "not-hispanic-latino",
             race: ["white", "asian"]
         )
 

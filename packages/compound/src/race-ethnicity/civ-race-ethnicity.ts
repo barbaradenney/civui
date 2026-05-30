@@ -139,7 +139,19 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
   }
 
   protected override _syncFormValue(): void {
-    this.updateFormValue(this.value || '');
+    // Participate in a native <form> with flat, prefixed fields —
+    // `${name}.race` repeated for the multi-select plus `${name}.ethnicity`
+    // once — matching how every other compound submits via
+    // `syncFormDataFromState`. The previous `updateFormValue(this.value)`
+    // emitted a single JSON blob under `name`, an outlier shape that also
+    // collided with the inner groups' own `${name}.race`/`.ethnicity`
+    // fields. The public `value` stays JSON (civ-form's getFormData reads
+    // that); this only governs raw ElementInternals submission.
+    const prefix = this.name || 'race-ethnicity';
+    const fd = new FormData();
+    for (const r of this._data.race) fd.append(`${prefix}.race`, r);
+    if (this._data.ethnicity) fd.append(`${prefix}.ethnicity`, this._data.ethnicity);
+    this.updateFormValue(fd);
   }
 
   override render() {

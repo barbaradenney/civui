@@ -160,12 +160,12 @@ describe('civ-race-ethnicity', () => {
       el.addEventListener('civ-change', (e: any) => changes.push(e.detail.value));
 
       const radioGroup = el.querySelector('civ-radio-group')!;
-      radioGroup.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'hispanic' }, bubbles: true }));
+      radioGroup.dispatchEvent(new CustomEvent('civ-change', { detail: { value: 'hispanic-latino' }, bubbles: true }));
       await elementUpdated(el);
 
-      expect(JSON.parse(el.value).ethnicity).toBe('hispanic');
-      expect(inputs[0].ethnicity).toBe('hispanic');
-      expect(changes[0].ethnicity).toBe('hispanic');
+      expect(JSON.parse(el.value).ethnicity).toBe('hispanic-latino');
+      expect(inputs[0].ethnicity).toBe('hispanic-latino');
+      expect(changes[0].ethnicity).toBe('hispanic-latino');
     });
 
     it('updates `value` on race civ-input (multi-select) but does not fire civ-change', async () => {
@@ -219,10 +219,10 @@ describe('civ-race-ethnicity', () => {
 
     it('willUpdate re-parses value when set externally', async () => {
       const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>') as any;
-      el.value = JSON.stringify({ ethnicity: 'not-hispanic', race: ['asian'] });
+      el.value = JSON.stringify({ ethnicity: 'not-hispanic-latino', race: ['asian'] });
       await elementUpdated(el);
 
-      expect(el._data.ethnicity).toBe('not-hispanic');
+      expect(el._data.ethnicity).toBe('not-hispanic-latino');
       expect(el._data.race).toEqual(['asian']);
     });
 

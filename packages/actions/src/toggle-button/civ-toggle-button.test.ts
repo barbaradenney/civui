@@ -41,6 +41,31 @@ describe('civ-toggle-button', () => {
     expect(handler.mock.calls[1][0].detail).toEqual({ pressed: false });
   });
 
+  it('fires civ-toggle when `pressed` is set programmatically (controlled / two-way binding)', async () => {
+    const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide"></civ-toggle-button>') as any;
+    const handler = vi.fn();
+    el.addEventListener('civ-toggle', handler);
+
+    el.pressed = true;
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls[0][0].detail).toEqual({ pressed: true });
+
+    el.pressed = false;
+    expect(handler.mock.calls[1][0].detail).toEqual({ pressed: false });
+
+    // Idempotent set does not re-fire.
+    el.pressed = false;
+    expect(handler).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not fire civ-toggle for attribute-driven initial pressed state', async () => {
+    // Mounting in the pressed state must not emit a spurious toggle.
+    let fired = false;
+    document.addEventListener('civ-toggle', () => { fired = true; }, { once: true });
+    await fixture('<civ-toggle-button label="Show" pressed-label="Hide" pressed></civ-toggle-button>');
+    expect(fired).toBe(false);
+  });
+
   it('disabled buttons ignore clicks and do not fire civ-toggle', async () => {
     const el = await fixture('<civ-toggle-button label="Show" pressed-label="Hide" disabled></civ-toggle-button>') as any;
     const handler = vi.fn();

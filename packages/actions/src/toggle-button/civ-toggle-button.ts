@@ -61,7 +61,29 @@ export type ToggleButtonVariant = 'chip' | 'inline';
 export class CivToggleButton extends CivBaseElement {
   @property({ type: String }) label = '';
   @property({ type: String, attribute: 'pressed-label' }) pressedLabel = '';
-  @property({ type: Boolean, reflect: true }) pressed = false;
+  /**
+   * Reflected boolean toggle state. Two-way bindable. Backed by an
+   * accessor so `civ-toggle` fires on EVERY transition — user click,
+   * programmatic `el.pressed = …`, or lit-html `.pressed=${…}` binding —
+   * not just clicks (see `.claude/rules/common-traps.md` →
+   * "Open-state event dispatch must come from the property setter").
+   */
+  @property({ type: Boolean, reflect: true })
+  get pressed(): boolean { return this._pressed; }
+  set pressed(value: boolean) {
+    const old = this._pressed;
+    if (old === value) return;
+    this._pressed = value;
+    this.requestUpdate('pressed', old);
+    // Skip the dispatch during initial attribute hydration (before the
+    // first render) so mounting `<civ-toggle-button pressed>` doesn't
+    // emit a spurious toggle. Every post-mount transition dispatches.
+    if (this._initialized) {
+      dispatch(this, 'civ-toggle', { pressed: value });
+    }
+  }
+  private _pressed = false;
+  private _initialized = false;
   @property({ type: String }) emphasis: ToggleButtonEmphasis = 'secondary';
   /**
    * @deprecated Use `emphasis` instead. `variant="chip"` ≡ `emphasis="secondary"`;
@@ -98,10 +120,17 @@ export class CivToggleButton extends CivBaseElement {
     }
   }
 
+  override firstUpdated(): void {
+    // After the first render, the `pressed` setter starts dispatching
+    // `civ-toggle` (attribute-driven initial state stays event-free).
+    this._initialized = true;
+  }
+
   private _onClick(): void {
     if (this.disabled) return;
+    // The setter dispatches `civ-toggle`; analytics stays here so it
+    // tracks user interaction only, not programmatic state sync.
     this.pressed = !this.pressed;
-    dispatch(this, 'civ-toggle', { pressed: this.pressed });
     this.sendAnalytics('change', { pressed: this.pressed });
   }
 

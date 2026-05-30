@@ -40,6 +40,25 @@ export const Tertiary: Story = {
   `,
 };
 
+export const Emphasis: Story = {
+  name: 'Emphasis — secondary / primary / tertiary',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Three emphasis levels via the `emphasis` prop. `secondary` (default) is the gray pill — the common case. `primary` is the filled brand pill for a louder inline CTA. `tertiary` is the transparent text-link style. (The legacy `variant="chip|inline"` prop is deprecated — use `emphasis`.)',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
+      <civ-confirm-button emphasis="secondary" label="Copy" success-label="Copied" @civ-confirm=${() => {}}></civ-confirm-button>
+      <civ-confirm-button emphasis="primary" label="Generate token" success-label="Generated" @civ-confirm=${() => {}}></civ-confirm-button>
+      <civ-confirm-button emphasis="tertiary" label="Copy link" success-label="Copied" @civ-confirm=${() => {}}></civ-confirm-button>
+    </div>
+  `,
+};
+
 export const CustomDuration: Story = {
   name: 'Custom duration (3 s)',
   render: () => html`

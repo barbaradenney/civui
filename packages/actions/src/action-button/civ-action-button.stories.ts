@@ -85,6 +85,48 @@ export const Disabled: Story = {
   `,
 };
 
+export const IconOnly: Story = {
+  name: 'Icon only',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `icon-only` to render the `label` visually hidden so only the icon shows — the canonical compact toolbar / row-action shape. The `label` still provides the accessible name (always pass one). Requires `icon-start` or `icon-end`.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-2 civ-items-center">
+      <civ-action-button label="Edit" icon-start="edit" icon-only></civ-action-button>
+      <civ-action-button label="Copy" icon-start="copy" icon-only></civ-action-button>
+      <civ-action-button label="Print" icon-start="print" icon-only></civ-action-button>
+      <civ-action-button label="More actions" icon-start="more-vert" icon-only></civ-action-button>
+      <civ-action-button label="Delete" icon-start="trash" icon-only danger></civ-action-button>
+    </div>
+  `,
+};
+
+export const Current: Story = {
+  name: 'Current item (aria-current)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `current` to mark the active item in a navigation set — the current page in a pagination strip, the active step in a wizard. Renders `aria-current="page"` so AT users hear "current page". Distinct from `pressed` (toggle semantics via `aria-pressed`).',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-2 civ-items-center" role="group" aria-label="Pagination">
+      <civ-action-button label="1"></civ-action-button>
+      <civ-action-button label="2"></civ-action-button>
+      <civ-action-button label="3" current aria-label="Page 3, current page"></civ-action-button>
+      <civ-action-button label="4"></civ-action-button>
+      <civ-action-button label="5"></civ-action-button>
+    </div>
+  `,
+};
+
 export const ButtonGroup: Story = {
   name: 'Button Group (Toolbar)',
   render: () => html`

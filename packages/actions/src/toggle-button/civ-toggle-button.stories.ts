@@ -31,6 +31,44 @@ export const Secondary: Story = {
   `,
 };
 
+export const Emphasis: Story = {
+  name: 'Emphasis — secondary / primary / tertiary',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Three emphasis levels via the `emphasis` prop. `secondary` (default) is the gray pill — the common case. `primary` is the filled brand pill. `tertiary` is the transparent text-link style for a quiet toggle. (The legacy `variant="chip|inline"` prop is deprecated — use `emphasis`.)',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-gap-3 civ-flex-wrap civ-items-center">
+      <civ-toggle-button emphasis="secondary" label="Show details" pressed-label="Hide details"></civ-toggle-button>
+      <civ-toggle-button emphasis="primary" label="Show details" pressed-label="Hide details"></civ-toggle-button>
+      <civ-toggle-button emphasis="tertiary" label="Show details" pressed-label="Hide details"></civ-toggle-button>
+    </div>
+  `,
+};
+
+export const WithIcon: Story = {
+  name: 'With leading icon',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Pass `icon-start` for an optional leading glyph — e.g. a `chevron-down` on an "expand all / collapse all" toggle. The icon is `aria-hidden`, so the label / pressed-label remains the accessible name.',
+      },
+    },
+  },
+  render: () => html`
+    <civ-toggle-button
+      icon-start="chevron-down"
+      label="Expand all"
+      pressed-label="Collapse all"
+    ></civ-toggle-button>
+  `,
+};
+
 export const Pressed: Story = {
   name: 'Pre-pressed state',
   render: () => html`

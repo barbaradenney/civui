@@ -22,7 +22,7 @@ const schema: ComponentSchema = {
     },
     href: {
       type: 'string',
-      description: 'Link destination. When `type` is `phone` / `email` / `download`, the type-specific props build the href and this prop is ignored. Ignored when `as="button"`. Dangerous protocols (`javascript:`, `data:`, `vbscript:`) are stripped at render time',
+      description: 'Link destination. When `type` is `phone` / `email` / `download`, the type-specific props build the href and this prop is ignored. Ignored when `as="button"`. The `javascript:` protocol is stripped at render time (`sanitizeHref`)',
       default: '',
     },
     variant: {

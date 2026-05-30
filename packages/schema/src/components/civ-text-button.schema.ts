@@ -52,7 +52,7 @@ const schema: ComponentSchema = {
     },
     loading: {
       type: 'boolean',
-      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner` (xs size), disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network)',
+      description: 'Async-in-flight state. Swaps the leading icon for a `civ-spinner` (sm size), disables the button, and sets `aria-busy`. Use during in-flight async work (Generate / Scan / Copy that hits the network)',
       default: false,
       reflect: true,
     },
@@ -68,6 +68,13 @@ const schema: ComponentSchema = {
     'civ-click': {
       description: 'Fires on activation. Disabled buttons do not dispatch',
       detail: {},
+    },
+    'civ-analytics': {
+      description: 'Analytics tracking event fired on interaction',
+      detail: {
+        componentName: { type: 'string', description: 'Tag name of the dispatcher' },
+        action: { type: 'string', description: 'The user action that triggered the event' },
+      },
     },
   },
 

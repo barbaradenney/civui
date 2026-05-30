@@ -45,6 +45,7 @@ export type TextButtonSpacing = 'default' | 'sm';
  * @prop {string} loadingLabel - Accessible label announced once on the loading transition (default "Loading…"). Pass an action-specific present-participle verb ("Generating…", "Scanning…").
  *
  * @fires civ-click - On activation. detail: {}
+ * @fires civ-analytics - Analytics tracking event fired on click
  *
  * @example
  * ```html

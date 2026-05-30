@@ -255,11 +255,16 @@ export class CivTextInput extends LightDomSlotMixin(LegendHeadingMixin(CivFormEl
       if (!this.value) return '';
       const num = Number(this.value);
       if (isNaN(num)) return this.value;
-      const formatted = num.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+      // Respect `decimals` (0 = whole-dollar mode) and rely on the
+      // currency style for correct negative-sign placement ("-$1,234.56"),
+      // matching `_applyCurrencyDisplay` / `_formatCurrencyForError`.
+      const fractionDigits = this.decimals === 0 ? 0 : this.decimals;
+      return num.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
       });
-      return `$${formatted}`;
     }
     const pattern = this._activePattern;
     if (pattern) {

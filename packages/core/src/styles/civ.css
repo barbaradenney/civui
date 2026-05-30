@@ -134,6 +134,37 @@ summary:focus,
   box-shadow: 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-shadow-color);
 }
 
+/* Mobile (≤480px): `.civ-btn` flips to `width: 100%` (see components.css
+   "Button" + government-patterns.md "Primary buttons go full-width on
+   mobile"). The default focus ring above paints OUTWARD — a 3px dark
+   outline flush to the edge plus a 6px yellow halo extending past it.
+   On a full-width button that sits flush to the viewport edges (or to a
+   card / form body with no horizontal padding), that outward halo
+   overflows the viewport on the left and right. Two failure modes
+   result: the page gains a few px of horizontal scroll, and — far more
+   common — any ancestor with `overflow-x: hidden` (the near-universal
+   mobile horizontal-scroll guard) clips the left/right bands of the
+   ring, so the focus indicator reads as missing.
+
+   Fix: on mobile, render the same two-color ring INSET so it lives
+   entirely within the button's own border-box — it can't overflow and
+   can't be clipped by an ancestor. The visual order is preserved (dark
+   band flush at the edge, yellow just inside it), only mirrored inward.
+   Unlayered + element-qualified selectors so it outranks the unlayered
+   `button:focus` / `a[href]:focus` rules above on specificity. Icon-only
+   buttons stay `width: auto` on mobile, so they keep the outward ring
+   (an inset ring would eat into the icon). Verified at 390px against an
+   `overflow-x: hidden` wrapper. */
+@media (max-width: 480px) {
+  button.civ-btn:not(.civ-btn--icon-only):focus,
+  a[href].civ-btn:not(.civ-btn--icon-only):focus {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 var(--civ-focus-outline-width) var(--civ-focus-shadow-color),
+      inset 0 0 0 var(--civ-focus-shadow-radius) var(--civ-focus-outline-color);
+  }
+}
+
 /* Dark mode: ensure focus rings remain visible on dark backgrounds.
    Uses token palette values (primary-lighter, primary-darker) to stay
    in sync with the design token system. */

@@ -906,6 +906,11 @@ export class CivForm extends LightDomSlotMixin(CivBaseElement) {
 
   private _onKeydown(e: KeyboardEvent): void {
     if (e.key !== 'Enter') return;
+    // An inner control already consumed this Enter (combobox option
+    // select, date-picker dialog, etc. call preventDefault without
+    // stopPropagation, so the keydown still bubbles here). Don't treat
+    // it as an implicit form submit. Mirrors civ-form-step._onKeydown.
+    if (e.defaultPrevented) return;
     const target = e.target as HTMLElement;
     // Don't submit if user is in a textarea or a button
     if (target.tagName === 'TEXTAREA') return;

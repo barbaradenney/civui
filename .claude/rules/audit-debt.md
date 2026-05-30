@@ -331,6 +331,16 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 
 ---
 
+## Repeater floor-row Remove button is statically gated (should be dynamic)
+
+- **Surfaced:** form-patterns audit, 2026-05-30. Branch `claude/code-quality-components-FhUQi`.
+- **Files:** `packages/form-patterns/src/repeater/repeater-row-builder.ts:163` (`appendInlineRow` Remove-button gate), `packages/form-patterns/src/repeater/civ-repeater.ts` (`_appendRow` / `removeRow` / `addRow`).
+- **State:** Whether a row renders a Remove `<civ-action-button>` is decided **once, statically, when the row is built** (`rowCount >= min || index >= min`). But whether a row is actually *removable* is a function of the **live total count vs `min`** (`removeRow` refuses when `rowCount <= min`). At mount, `_rowCount` is seeded to `min` before the first-paint append loop, so the gate is always true for the first `min` rows — those floor rows show a Remove button that, while the repeater sits at the floor, only emits the "minimum reached" announcement when clicked. Once the user adds rows above the floor, those same buttons become functional, which is why a naive `index >= min` "fix" is wrong: it would permanently hide Remove on row 0 even when the repeater has grown to N > min rows and row 0 *is* removable (caught by the existing `remove button visible label includes the item label` test — `min="1"`, addRow → 2 rows, asserts row 0 has Remove).
+- **Why deferred:** The correct fix re-evaluates every row's Remove-button visibility on every add/remove/reorder against the current `_rowCount` (show iff `_rowCount > min`), rather than baking it in at build time — a behavioral refactor of the row lifecycle with its own test matrix (mount at floor, grow above floor, shrink back to floor, route-mode read-only), not the one-line gate change it first appears to be. The current behavior is a cosmetic dead-affordance at the floor only (the floor is correctly enforced; nothing breaks), so it's low-severity.
+- **What to watch for in the meantime:** Don't "simplify" the gate to `index >= min` — it breaks the grow-above-floor case. If you do the real fix, drive Remove-button visibility from a single `_rowCount > this.min` predicate applied to all rows on every mutation, and add the shrink-back-to-floor test.
+
+---
+
 ## Process
 
 Run `pnpm validate:drift` after each audit to confirm fixes don't introduce drift. Items in this file should be reviewed at the start of each audit round — if an entry is still here after three audits, escalate (file an issue or schedule the work).

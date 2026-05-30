@@ -150,6 +150,23 @@ describe('civ-tabs', () => {
       expect(el.value).toBe('profile');
     });
 
+    it('ignores ArrowDown / ArrowUp on the horizontal tablist (lets the page scroll)', async () => {
+      // WAI-ARIA APG: a horizontal tablist responds only to Left/Right
+      // (+ Home/End). Up/Down must fall through so the page can scroll
+      // while a tab has focus — and must not be preventDefault()'d.
+      const el = await fixture<CivTabs>(tabsHtml('profile'));
+      await settle();
+      const btns = el.querySelectorAll('button[role="tab"]') as NodeListOf<HTMLButtonElement>;
+      btns[0].focus();
+      for (const key of ['ArrowDown', 'ArrowUp']) {
+        const ev = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        btns[0].dispatchEvent(ev);
+        await elementUpdated(el);
+        expect(el.value).toBe('profile');
+        expect(ev.defaultPrevented).toBe(false);
+      }
+    });
+
     it('skips disabled tabs during keyboard navigation', async () => {
       const el = await fixture<CivTabs>(`
         <civ-tabs label="x" value="a">

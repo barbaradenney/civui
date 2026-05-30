@@ -32,6 +32,22 @@ describe('civ-form-step', () => {
     expect(counter!.textContent).toContain('3');
   });
 
+  it('forwards header-size to the progress header emphasis (not the dead size attr)', async () => {
+    // Regression: the template bound `size="${headerSize}"`, but
+    // civ-progress-header renamed that prop to `emphasis` and exposes
+    // no `size` alias — so header-size was entirely non-functional and
+    // the header always rendered at the default secondary emphasis.
+    const el = await fixture<CivFormStep>(`
+      <civ-form-step header-size="primary">
+        <div data-step-label="A"><p>a</p></div>
+        <div data-step-label="B"><p>b</p></div>
+      </civ-form-step>
+    `);
+    const header = el.querySelector('civ-progress-header')!;
+    expect(header.getAttribute('emphasis')).toBe('primary');
+    expect(header.querySelector('.civ-progress-header--primary')).not.toBeNull();
+  });
+
   it('renders civ-progress-steps when progress="steps"', async () => {
     const el = await fixture<CivFormStep>(`
       <civ-form-step progress="steps">

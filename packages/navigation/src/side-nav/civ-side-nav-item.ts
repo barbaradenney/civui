@@ -91,6 +91,16 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'listitem');
   }
 
+  /**
+   * One-shot suppression for the mount-time auto-expand below. Setting
+   * `this.open = true` inside `firstUpdated` schedules a SECOND update
+   * cycle whose `updated()` sees `changes.get('open') === false` (a real
+   * old value, not `undefined`) — so the first-render guard alone would
+   * mis-fire a phantom "user opened it" `civ-toggle` + analytics event
+   * on initial render. This flag swallows exactly that one transition.
+   */
+  private _suppressAutoExpandToggle = false;
+
   override firstUpdated(): void {
     this._relocateSlots();
     // Auto-expand if any descendant has `current` and the consumer
@@ -98,19 +108,27 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
     // querySelector descendant scan (current reflects to attr).
     if (this._hasChildren && !this.hasAttribute('open')) {
       const hasCurrentDescendant = this.querySelector('civ-side-nav-item[current]') !== null;
-      if (hasCurrentDescendant) this.open = true;
+      if (hasCurrentDescendant) {
+        this._suppressAutoExpandToggle = true;
+        this.open = true;
+      }
     }
   }
 
   override updated(changes: Map<PropertyKey, unknown>): void {
     super.updated(changes);
-    // Dispatch civ-toggle on every open transition after first paint.
-    // changes.get('open') === undefined indicates the initial set
-    // (Lit's first-update bookkeeping), so skip dispatch on mount.
-    if (changes.has('open') && changes.get('open') !== undefined) {
-      dispatch(this, 'civ-toggle', { open: this.open });
-      this.sendAnalytics('change', { open: this.open });
+    if (!changes.has('open')) return;
+    // Skip Lit's first-update bookkeeping entry (old value undefined)
+    // and the mount-time auto-expand transition (old value false, but
+    // not a user action). Every other open transition — user click,
+    // programmatic `el.open = …`, lit-html `.open` binding — dispatches.
+    if (changes.get('open') === undefined) return;
+    if (this._suppressAutoExpandToggle) {
+      this._suppressAutoExpandToggle = false;
+      return;
     }
+    dispatch(this, 'civ-toggle', { open: this.open });
+    this.sendAnalytics('change', { open: this.open });
   }
 
   private get _linkClasses(): string {
@@ -162,6 +180,7 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
           <span class="civ-side-nav__trigger-label">${this.label}</span>
         </button>
         <ul
+          role="list"
           class="civ-side-nav__sublist"
           data-civ-side-nav-item-children
           ?hidden="${!this.open}"
@@ -181,7 +200,7 @@ export class CivSideNavItem extends LightDomSlotMixin(CivBaseElement) {
 
     return html`
       ${link}
-      <ul class="civ-side-nav__sublist" data-civ-side-nav-item-children></ul>
+      <ul role="list" class="civ-side-nav__sublist" data-civ-side-nav-item-children></ul>
     `;
   }
 }

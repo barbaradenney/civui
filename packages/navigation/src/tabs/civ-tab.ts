@@ -19,6 +19,9 @@ import { CivBaseElement, LightDomTextMixin, dispatch } from '@civui/core';
  * @prop {string} label - Visible tab label. Falls back to initial child text
  * @prop {boolean} selected - Set by the parent `<civ-tabs>`. Don't set this directly — set `value` on `<civ-tabs>` instead
  * @prop {boolean} disabled - Disabled state — tab is skipped during keyboard navigation
+ *
+ * @fires civ-tab-select - When this tab is activated; the parent `<civ-tabs>` listens and updates its `value`
+ * @fires civ-analytics - Analytics tracking event fired on activation
  */
 @customElement('civ-tab')
 export class CivTab extends LightDomTextMixin(CivBaseElement) {

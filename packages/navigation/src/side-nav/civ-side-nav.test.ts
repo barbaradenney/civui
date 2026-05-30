@@ -198,6 +198,40 @@ describe('civ-side-nav-item — disclosure (parent with children)', () => {
     expect(parent.querySelector('ul.civ-side-nav__sublist')!.hasAttribute('hidden')).toBe(false);
   });
 
+  it('does NOT fire civ-toggle / analytics from the mount-time auto-expand', async () => {
+    // Regression: auto-expand sets `open` in firstUpdated, scheduling a
+    // second update where changes.get('open') === false (a real old
+    // value) — the old `!== undefined` guard mis-fired a phantom
+    // "user opened it" civ-toggle + analytics on initial render.
+    const toggleSpy = vi.fn();
+    const analyticsSpy = vi.fn();
+    document.addEventListener('civ-toggle', toggleSpy);
+    document.addEventListener('civ-analytics', analyticsSpy);
+    try {
+      const el = await fixture<CivSideNav>(sideNavHtml);
+      const parent = el.querySelector('civ-side-nav-item[label="Components"]') as CivSideNavItem;
+      await elementUpdated(parent);
+      expect(parent.open).toBe(true);
+      expect(toggleSpy).not.toHaveBeenCalled();
+      expect(analyticsSpy.mock.calls.filter((c) => c[0]?.detail?.action === 'change')).toHaveLength(0);
+    } finally {
+      document.removeEventListener('civ-toggle', toggleSpy);
+      document.removeEventListener('civ-analytics', analyticsSpy);
+    }
+  });
+
+  it('still fires civ-toggle on a genuine open transition after mount', async () => {
+    const el = await fixture<CivSideNav>(sideNavHtml);
+    const parent = el.querySelector('civ-side-nav-item[label="Components"]') as CivSideNavItem;
+    await elementUpdated(parent);
+    const toggleSpy = vi.fn();
+    parent.addEventListener('civ-toggle', toggleSpy);
+    parent.open = false;
+    await elementUpdated(parent);
+    expect(toggleSpy).toHaveBeenCalledOnce();
+    expect((toggleSpy.mock.calls[0][0] as CustomEvent).detail.open).toBe(false);
+  });
+
   it('starts collapsed when no descendant has current', async () => {
     const el = await fixture<CivSideNav>(`
       <civ-side-nav>

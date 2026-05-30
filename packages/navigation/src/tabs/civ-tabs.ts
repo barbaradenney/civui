@@ -152,6 +152,13 @@ export class CivTabs extends CivBaseElement {
     const currentIndex = enabled.findIndex((t) => t.contains(active));
     if (currentIndex === -1) return;
 
+    // This is a HORIZONTAL tablist — per WAI-ARIA APG only Left/Right
+    // (and Home/End) move between tabs. ArrowUp/ArrowDown must fall
+    // through so the page can scroll while a tab has focus. The shared
+    // resolveGroupNavIndex treats Up/Down as a vertical step, so filter
+    // them out before delegating.
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') return;
+
     const nextIndex = resolveGroupNavIndex(event.key, currentIndex, enabled.length, isRtl(this));
     if (nextIndex === undefined || nextIndex === currentIndex) return;
     event.preventDefault();

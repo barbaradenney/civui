@@ -441,9 +441,31 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
       }
     }
 
+    // The two categories use disjoint status vocabularies (marriage:
+    // current/divorced/widowed/annulled; partnership: current/ended/
+    // partner-deceased). If the type change flips the vocabulary and the
+    // current status isn't valid in the new one, clear it (and the
+    // conditional end-date) — otherwise a stale e.g. "divorced" survives
+    // into a common-law partnership, leaving the radio group with no
+    // matching selection while the serialized value carries a
+    // cross-vocabulary status.
+    if (!this._statusVocabFor(newCategory).includes(this._data.status)) {
+      this._data = { ...this._data, status: '', endDate: '' };
+      this.statusError = '';
+      this.endDateError = '';
+    }
+
     this.value = JSON.stringify(this._data);
     dispatch(this, 'civ-input', { value: { ...this._data } });
     dispatch(this, 'civ-change', { value: { ...this._data } });
+  }
+
+  /** Valid status values for the vocabulary a category uses. Empty string
+   * is always allowed (no status chosen yet). */
+  private _statusVocabFor(cat: PartnershipTypeCategory): readonly string[] {
+    return cat === 'marriage' || cat === 'none'
+      ? ['', 'current', 'divorced', 'widowed', 'annulled']
+      : ['', 'current', 'ended', 'partner-deceased'];
   }
 
   private _onNameInput(e: CustomEvent): void {
@@ -500,6 +522,30 @@ export class CivPartnershipHistory extends LegendHeadingMixin(CivCompoundElement
 
   protected override _syncFormValue(): void {
     this.syncFormDataFromState(this._data, this.name || 'marriage');
+  }
+
+  protected override get _fieldName(): string {
+    return this.legend || super._fieldName;
+  }
+
+  /**
+   * A partnership entry is minimally complete when the partner is
+   * identified (last name) and a current status is answered. Without this
+   * the inherited base validity reports a `required` partnership valid as
+   * soon as ANY single field is touched (the JSON `value` becomes
+   * non-empty) — e.g. a stray middle name. Date/location fields are
+   * intentionally not required here: which of them apply varies by
+   * category and by form, and several gov forms collect the partner +
+   * status without a precise ceremony date.
+   */
+  private _isComplete(): boolean {
+    return !!(this._data.spouseLast.trim() && this._data.status);
+  }
+
+  protected override _updateValidity(): void {
+    if (!this._setRequiredCompoundValidity(this._isComplete())) {
+      this._setValidity({});
+    }
   }
 
   override formResetCallback(): void {

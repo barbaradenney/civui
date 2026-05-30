@@ -155,13 +155,41 @@ describe('civ-menu', () => {
     el.open = true;
     await elementUpdated(el);
 
-    // ArrowDown twice → moves through enabled items only.
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    // ArrowDown twice → moves through enabled items only. Dispatched from a
+    // menu item (target inside the menu) the way a real keydown bubbles to
+    // the document listener.
+    const firstItem = el.querySelector('civ-menu-item') as HTMLElement;
+    firstItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    firstItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     await elementUpdated(el);
 
-    // The two enabled items are A and C — the active item should wrap back to A.
+    // The two enabled items are A and C — the active index stays within the
+    // enabled-only collection (length 2).
+    expect(el._activeIndex).toBeGreaterThanOrEqual(0);
     expect(el._activeIndex).toBeLessThan(2);
+  });
+
+  it('does not intercept navigation keys when focus is outside the menu', async () => {
+    const el = await fixture(`
+      <civ-menu label="m">
+        <button data-civ-menu-trigger type="button">Open</button>
+        <civ-menu-item value="a">A</civ-menu-item>
+        <civ-menu-item value="c">C</civ-menu-item>
+      </civ-menu>
+    `) as any;
+    el.open = true;
+    await elementUpdated(el);
+    const before = el._activeIndex;
+
+    // A keystroke from an unrelated element elsewhere on the page must not
+    // be hijacked by the open menu's document-level listener.
+    const outside = document.createElement('input');
+    document.body.appendChild(outside);
+    outside.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await elementUpdated(el);
+
+    expect(el._activeIndex).toBe(before);
+    outside.remove();
   });
 
   it('exposes role="menu" + aria-label on the panel', async () => {

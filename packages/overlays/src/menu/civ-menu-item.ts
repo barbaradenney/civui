@@ -94,7 +94,7 @@ export class CivMenuItem extends LightDomTextMixin(CivBaseElement) {
       return html`
         <a
           class="${classes}"
-          href="${safeHref}"
+          href="${this.disabled ? nothing : safeHref}"
           ?aria-disabled="${this.disabled}"
           tabindex="-1"
           @click="${this._onActivate}"

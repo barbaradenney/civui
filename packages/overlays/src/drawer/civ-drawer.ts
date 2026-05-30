@@ -101,6 +101,22 @@ export class CivDrawer extends LightDomSlotMixin(CivBaseElement) {
     }
   }
 
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    // If the drawer is removed from the DOM while still open — e.g. a
+    // parent unmounts it conditionally (`${open ? html\`<civ-drawer>\` :
+    // nothing}`) instead of toggling the `open` prop — `updated()` never
+    // runs the close path, so the body scroll lock set in `_onOpen`
+    // would leak `overflow: hidden` onto the page forever. Restore it
+    // (and drop the focus-restore ref) defensively here, mirroring
+    // civ-modal.
+    if (this.open) {
+      document.body.style.overflow = this._priorBodyOverflow;
+      this._priorBodyOverflow = '';
+      this._previouslyFocused = null;
+    }
+  }
+
   override render() {
     const hasHeader = this.heading || !this.noCloseButton;
     const headerClasses = `civ-drawer__header${this.noStickyHeader ? '' : ' civ-drawer__header--sticky'}`;

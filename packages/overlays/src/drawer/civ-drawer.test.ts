@@ -222,6 +222,19 @@ describe('civ-drawer body scroll lock', () => {
     await elementUpdated(el);
     expect(document.body.style.overflow).toBe('visible');
   });
+
+  it('restores body overflow when removed from the DOM while open', async () => {
+    // Parent unmounts the drawer conditionally instead of toggling `open`,
+    // so the close path in updated() never runs. disconnectedCallback must
+    // still release the scroll lock.
+    document.body.style.overflow = 'visible';
+    const el = await fixture('<civ-drawer heading="Test" open><p>Content</p></civ-drawer>') as any;
+    await elementUpdated(el);
+    expect(document.body.style.overflow).toBe('hidden');
+
+    el.remove();
+    expect(document.body.style.overflow).toBe('visible');
+  });
 });
 
 describe('civ-drawer slots', () => {

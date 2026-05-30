@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivBackToTop(
     label: String = "",
-    threshold: Int = 200,
-    hidden: Boolean = false,
+    threshold: Int = 400,
+    hidden: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {

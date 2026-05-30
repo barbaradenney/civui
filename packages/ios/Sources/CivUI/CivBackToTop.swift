@@ -18,8 +18,8 @@ public struct CivBackToTop: View {
 
     public init(
         label: String = "",
-        threshold: Int = 200,
-        hidden: Bool = false
+        threshold: Int = 400,
+        hidden: Bool = true
     ) {
         self.label = label
         self.threshold = threshold

@@ -94,7 +94,7 @@ public struct CivCheckbox: View {
         isReadonly: Bool = false,
         formName: String = "",
         isIndeterminate: Bool = false,
-        isTile: Bool = false,
+        isTile: Bool = true,
         spacing: String = "default",
         onChange: ((Bool, String) -> Void)? = nil,
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil

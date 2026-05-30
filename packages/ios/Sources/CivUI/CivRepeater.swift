@@ -127,7 +127,7 @@ public struct CivRepeater<Content: View>: View {
         hint: String? = nil,
         error: String? = nil,
         isDisabled: Bool = false,
-        min: Int = 1,
+        min: Int = 0,
         max: Int = 0,
         onAdd: ((Int) -> Void)? = nil,
         onRemove: ((Int) -> Void)? = nil,

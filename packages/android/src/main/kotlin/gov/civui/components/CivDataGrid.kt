@@ -27,7 +27,7 @@ fun CivDataGrid(
     interactive: Boolean = false,
     groupBy: String = "",
     stickyFooter: Boolean = false,
-    showGroupSubtotals: Boolean = false,
+    showGroupSubtotals: Boolean = true,
     spacing: String = "default",
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},

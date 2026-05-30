@@ -374,3 +374,21 @@ export const GovernmentContactSection: Story = {
     </div>
   `,
 };
+
+export const ComposedActionLinks: Story = {
+  name: 'Composed action links (calendar / directions)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The built-in `type` values (`phone` / `email` / `download`) exist because each maps to one universal, vendor-neutral scheme. "Add to calendar" and "Get directions" deliberately are NOT built-in types: a calendar link is an `.ics` file (which is just `download`) or a provider-specific URL, and a map/address link has no desktop-safe neutral scheme (`geo:` is mobile-only; a maps URL hardcodes a vendor). So the consumer composes them with a plain `civ-link` — they own the `href` (the `.ics` they generate, the maps provider they\'ve chosen) — plus a `calendar` / `location` icon. Use `new-tab` for external destinations so the external-link affordance is applied automatically.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3" style="max-width: 400px;">
+      <civ-link href="/events/town-hall.ics" icon-start="calendar">Add to your calendar</civ-link>
+      <civ-link href="https://maps.example.gov/?q=810+Vermont+Ave+NW+Washington+DC" icon-start="location" new-tab>Get directions to the regional office</civ-link>
+    </div>
+  `,
+};

@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -92,6 +93,7 @@ private val iconMap: Map<String, ImageVector> = mapOf(
 
     // Form
     "calendar_today" to Icons.Filled.CalendarToday,
+    "location_on" to Icons.Filled.LocationOn,
     "unfold_more" to Icons.Filled.UnfoldMore,
 
     // Media
@@ -147,6 +149,7 @@ private val civNameToAndroid: Map<String, String> = mapOf(
     "sort-desc" to "arrow_downward",
     "sort-none" to "unfold_more",
     "calendar" to "calendar_today",
+    "location" to "location_on",
     "upload" to "upload",
     "download" to "download",
     "filter" to "filter_list",

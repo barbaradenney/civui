@@ -755,7 +755,9 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     this._displayMonth = month;
     this._displayYear = year;
     this._focusedDate = new Date(year, month, day);
-    this.announce(`${this._monthNames[month]} ${year}`);
+    // The month/year heading is an aria-live="polite" region, so changing
+    // the displayed month is announced automatically — no explicit
+    // announce() here (a second call double-announces "March 2026").
   }
 
   private _prevMonth(): void {
@@ -842,7 +844,7 @@ export class CivDatePicker extends LegendHeadingMixin(CivFormElement) {
     this._displayMonth = month;
     this._displayYear = year;
     this._focusedDate = newFocus;
-    this.announce(`${this._monthNames[month]} ${year}`);
+    // Announced via the aria-live="polite" heading region (see _navigateMonth).
     void this._focusDayAfterUpdate(newFocus);
   }
 

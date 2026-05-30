@@ -170,4 +170,43 @@ describe('generateFormChain', () => {
     expect(simpleResult.features).not.toContain('data-carry-over');
     expect(simpleResult.features).not.toContain('locked-steps');
   });
+
+  describe('label escaping (XSS)', () => {
+    const evilSchema: FormSchema = {
+      formChain: {
+        forms: [{ schemaRef: 'a', label: '<img src=x onerror=alert(1)>' }],
+      },
+      sections: [],
+    };
+
+    it('escapes a hostile label in the static step list markup', () => {
+      const html = generateFormChain(evilSchema).html;
+      expect(html).not.toContain('<img src=x onerror=alert(1)>');
+      expect(html).toContain('&lt;img');
+    });
+
+    it('companion JS never assigns innerHTML (no label injection sink)', () => {
+      // updateStepIndicators() re-renders labels on every Back/Next click.
+      // step.label is injected raw via JSON.stringify(steps), so building
+      // innerHTML from it would execute markup the static path escaped.
+      const js = generateFormChain(evilSchema).javascript;
+      expect(js).not.toMatch(/innerHTML\s*=/);
+    });
+
+    it('companion JS writes the label via textContent / a text node', () => {
+      const js = generateFormChain(evilSchema).javascript;
+      // The label reaches the DOM only through safe sinks.
+      expect(js).toContain('.textContent = step.label');
+      expect(js).toContain('createTextNode(" " + step.label + " ")');
+      // Decorative icon + status spans are built as elements.
+      expect(js).toContain('createElement("span")');
+    });
+
+    it('embeds the raw label only inside the JSON steps blob, not in markup', () => {
+      const js = generateFormChain(evilSchema).javascript;
+      // The one place the raw string legitimately appears is the JSON
+      // data blob the JS reads from; it must be JSON-encoded there.
+      expect(js).toContain(JSON.stringify([{ ref: 'a', label: '<img src=x onerror=alert(1)>', dependsOn: [] }]));
+    });
+  });
 });

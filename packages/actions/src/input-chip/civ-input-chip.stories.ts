@@ -26,6 +26,15 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Input chips own the remove affordance but not the removal itself —
+// the consumer reacts to `civ-remove`. These list stories demonstrate
+// the real behavior: clicking × takes the chip out of the row. The
+// event bubbles, so one handler on the container removes whichever
+// chip dispatched it.
+const removeChip = (event: Event) => {
+  (event.target as HTMLElement)?.closest('civ-input-chip')?.remove();
+};
+
 export const Default: Story = {
   args: {
     label: 'alice@example.com',
@@ -64,7 +73,10 @@ export const RecipientList: Story = {
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;">
       <label style="font-weight: 600;">To</label>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border: 1px solid var(--civ-color-border); border-radius: 0.25rem;">
+      <div
+        @civ-remove="${removeChip}"
+        style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border: 1px solid var(--civ-color-border); border-radius: 0.25rem;"
+      >
         <civ-input-chip label="alice@example.com" value="alice@example.com"></civ-input-chip>
         <civ-input-chip label="bob@example.com" value="bob@example.com"></civ-input-chip>
         <civ-input-chip label="carol@example.com" value="carol@example.com"></civ-input-chip>
@@ -86,7 +98,7 @@ export const TagInput: Story = {
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;">
       <label style="font-weight: 600;">Tags</label>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+      <div @civ-remove="${removeChip}" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
         <civ-input-chip label="typescript" value="typescript"></civ-input-chip>
         <civ-input-chip label="accessibility" value="accessibility"></civ-input-chip>
         <civ-input-chip label="government" value="government"></civ-input-chip>
@@ -108,7 +120,7 @@ export const AppliedFilterReadout: Story = {
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 36rem;">
       <p style="margin: 0; font-weight: 600;">Active filters:</p>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+      <div @civ-remove="${removeChip}" style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
         <civ-input-chip label="Category: Healthcare" value="cat-healthcare"></civ-input-chip>
         <civ-input-chip label="State: California" value="state-CA"></civ-input-chip>
         <civ-input-chip label="Updated: Last 30 days" value="last-30"></civ-input-chip>

@@ -92,6 +92,41 @@ export const RichPanelContent: Story = {
   `,
 };
 
+export const HorizontalScroll: Story = {
+  name: 'Horizontal Scroll (overflow)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When a tab set is wider than its container, the tablist scrolls horizontally instead of wrapping to a second row — built into `civ-tabs`, no wrapper needed. Only the tab strip scrolls; the panel below stays put. The active tab scrolls into view automatically on arrow-key navigation. (The tablist owns its scroll on `.civ-tabs__list`, mirroring how `civ-data-grid` owns its scroll container, rather than the consumer wrapping the component.)',
+      },
+    },
+  },
+  render: () => html`
+    <div
+      style="max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);"
+    >
+      <civ-tabs label="Report sections" value="overview">
+        <civ-tab value="overview" label="Overview"></civ-tab>
+        <civ-tab value="eligibility" label="Eligibility"></civ-tab>
+        <civ-tab value="documents" label="Documents"></civ-tab>
+        <civ-tab value="payments" label="Payments"></civ-tab>
+        <civ-tab value="appeals" label="Appeals"></civ-tab>
+        <civ-tab value="correspondence" label="Correspondence"></civ-tab>
+        <civ-tab value="history" label="History"></civ-tab>
+
+        <civ-tab-panel value="overview">Overview of the claim.</civ-tab-panel>
+        <civ-tab-panel value="eligibility">Eligibility determination details.</civ-tab-panel>
+        <civ-tab-panel value="documents">Uploaded supporting documents.</civ-tab-panel>
+        <civ-tab-panel value="payments">Payment schedule and history.</civ-tab-panel>
+        <civ-tab-panel value="appeals">Open and resolved appeals.</civ-tab-panel>
+        <civ-tab-panel value="correspondence">Letters and messages.</civ-tab-panel>
+        <civ-tab-panel value="history">Full activity history.</civ-tab-panel>
+      </civ-tabs>
+    </div>
+  `,
+};
+
 export const Keyboard: Story = {
   render: () => html`
     <p class="civ-italic civ-mb-2">

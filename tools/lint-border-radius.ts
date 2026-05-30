@@ -119,6 +119,7 @@ const ALLOWLIST: string[] = [
   'civ-badge',
   'civ-count',
   'civ-chip',
+  'civ-chip__remove', // input-chip's circular × button (interactive)
 
   // 6. Date-picker cells + nav buttons
   'civ-datepicker-day',

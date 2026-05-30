@@ -14,7 +14,7 @@ fun CivBadge(
     max: Int = 99,
     dot: Boolean = false,
     intent: String = "neutral",
-    emphasis: String = "default",
+    emphasis: String = "secondary",
     spacing: String = "default",
     overlay: Boolean = false,
     withIcon: Boolean = false,

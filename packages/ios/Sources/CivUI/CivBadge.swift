@@ -60,7 +60,7 @@ public struct CivBadge: View {
         max: Int = 99,
         dot: Bool = false,
         intent: String = "neutral",
-        emphasis: String = "default",
+        emphasis: String = "secondary",
         spacing: String = "default",
         overlay: Bool = false,
         withIcon: Bool = false,

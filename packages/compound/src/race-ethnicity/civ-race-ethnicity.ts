@@ -1,23 +1,29 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy } from '@civui/core';
+import { CivFormElement, LegendHeadingMixin, dispatch, renderLegend, renderFormHeader, buildDescribedBy, t } from '@civui/core';
 import '@civui/inputs/checkbox';
 import '@civui/inputs/radio';
 
+// OMB-standard categories. `value`s are the cross-platform contract
+// (enforced by lint:option-value-parity) and must never change; only the
+// `labelKey` resolves through t() so a consumer's setLocaleStrings() (e.g.
+// Spanish content) translates the visible labels. The three ethnicity
+// options reuse the presetEthnicity* keys already used by the select
+// preset of the same name.
 const ETHNICITY_OPTIONS = [
-  { value: 'hispanic-latino', label: 'Hispanic or Latino' },
-  { value: 'not-hispanic-latino', label: 'Not Hispanic or Latino' },
-  { value: 'prefer-not-to-answer', label: 'Prefer not to answer' },
-];
+  { value: 'hispanic-latino', labelKey: 'presetEthnicityHispanicLatino' },
+  { value: 'not-hispanic-latino', labelKey: 'presetEthnicityNotHispanicLatino' },
+  { value: 'prefer-not-to-answer', labelKey: 'presetEthnicityPreferNotToAnswer' },
+] as const;
 
 const RACE_OPTIONS = [
-  { value: 'american-indian-alaska-native', label: 'American Indian or Alaska Native' },
-  { value: 'asian', label: 'Asian' },
-  { value: 'black-african-american', label: 'Black or African American' },
-  { value: 'native-hawaiian-pacific-islander', label: 'Native Hawaiian or Other Pacific Islander' },
-  { value: 'white', label: 'White' },
-  { value: 'prefer-not-to-answer', label: 'Prefer not to answer' },
-];
+  { value: 'american-indian-alaska-native', labelKey: 'raceOptionAmericanIndianAlaskaNative' },
+  { value: 'asian', labelKey: 'raceOptionAsian' },
+  { value: 'black-african-american', labelKey: 'raceOptionBlackAfricanAmerican' },
+  { value: 'native-hawaiian-pacific-islander', labelKey: 'raceOptionNativeHawaiianPacificIslander' },
+  { value: 'white', labelKey: 'raceOptionWhite' },
+  { value: 'prefer-not-to-answer', labelKey: 'presetEthnicityPreferNotToAnswer' },
+] as const;
 
 export interface RaceEthnicityValue {
   ethnicity: string;
@@ -174,8 +180,8 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
         ${renderFormHeader({ label: renderLegend({ legend: this.legend || this.label, required: this.required, showRequired: false, headingLevel: this.headingLevel, size: this.size }), hintId: this._hintId, hint: this.hint, errorId: this._errorId, error: this.error, fieldset: true })}
 
         <civ-checkbox-group
-          legend="${this.raceLegend || 'Race'}"
-          hint="Select one or more"
+          legend="${this.raceLegend || t('raceEthnicityRaceLegend')}"
+          hint="${t('raceEthnicityRaceHint')}"
           size="md"
           tight-hint
           name="${this.name ? `${this.name}.race` : 'race'}"
@@ -188,12 +194,12 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
           @civ-change="${this._onRaceChange}"
         >
           ${RACE_OPTIONS.map(
-            (opt) => html`<civ-checkbox value="${opt.value}" label="${opt.label}"></civ-checkbox>`,
+            (opt) => html`<civ-checkbox value="${opt.value}" label="${t(opt.labelKey)}"></civ-checkbox>`,
           )}
         </civ-checkbox-group>
 
         <civ-radio-group
-          legend="${this.ethnicityLegend || 'Ethnicity'}"
+          legend="${this.ethnicityLegend || t('raceEthnicityEthnicityLegend')}"
           size="md"
           name="${this.name ? `${this.name}.ethnicity` : 'ethnicity'}"
           value="${this._data.ethnicity}"
@@ -204,7 +210,7 @@ export class CivRaceEthnicity extends LegendHeadingMixin(CivFormElement) {
           @civ-change="${this._onEthnicityChange}"
         >
           ${ETHNICITY_OPTIONS.map(
-            (opt) => html`<civ-radio value="${opt.value}" label="${opt.label}"></civ-radio>`,
+            (opt) => html`<civ-radio value="${opt.value}" label="${t(opt.labelKey)}"></civ-radio>`,
           )}
         </civ-radio-group>
       </fieldset>

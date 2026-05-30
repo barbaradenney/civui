@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanupFixtures, elementUpdated } from '@civui/test-utils';
+import { setLocaleStrings, resetLocaleStrings } from '@civui/core';
 import './civ-race-ethnicity.js';
 import type { CivRaceEthnicity } from './civ-race-ethnicity.js';
 
@@ -232,6 +233,47 @@ describe('civ-race-ethnicity', () => {
 
       expect(el._data.ethnicity).toBe('');
       expect(el._data.race).toEqual([]);
+    });
+  });
+
+  describe('i18n', () => {
+    afterEach(() => resetLocaleStrings());
+
+    it('translates the race/ethnicity legends, hint, and option labels via setLocaleStrings', async () => {
+      setLocaleStrings({
+        raceEthnicityRaceLegend: 'Raza',
+        raceEthnicityEthnicityLegend: 'Origen étnico',
+        raceEthnicityRaceHint: 'Seleccione una o más',
+        raceOptionAsian: 'Asiático',
+        presetEthnicityHispanicLatino: 'Hispano o latino',
+      });
+
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>');
+      await elementUpdated(el);
+
+      const groupLegends = Array.from(el.querySelectorAll('civ-checkbox-group, civ-radio-group'))
+        .map((g) => g.getAttribute('legend'));
+      expect(groupLegends).toContain('Raza');
+      expect(groupLegends).toContain('Origen étnico');
+
+      expect(el.querySelector('civ-checkbox-group')!.getAttribute('hint')).toBe('Seleccione una o más');
+
+      const checkboxLabels = Array.from(el.querySelectorAll('civ-checkbox')).map((c) => c.getAttribute('label'));
+      expect(checkboxLabels).toContain('Asiático');
+
+      const radioLabels = Array.from(el.querySelectorAll('civ-radio')).map((r) => r.getAttribute('label'));
+      expect(radioLabels).toContain('Hispano o latino');
+    });
+
+    it('keeps option VALUES stable when labels are translated (cross-platform contract)', async () => {
+      setLocaleStrings({ raceOptionAsian: 'Asiático', presetEthnicityHispanicLatino: 'Hispano o latino' });
+      const el = await fixture<CivRaceEthnicity>('<civ-race-ethnicity legend="Demo" name="demo"></civ-race-ethnicity>');
+      await elementUpdated(el);
+
+      const checkboxValues = Array.from(el.querySelectorAll('civ-checkbox')).map((c) => c.getAttribute('value'));
+      expect(checkboxValues).toContain('asian');
+      const radioValues = Array.from(el.querySelectorAll('civ-radio')).map((r) => r.getAttribute('value'));
+      expect(radioValues).toContain('hispanic-latino');
     });
   });
 });

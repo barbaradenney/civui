@@ -33,6 +33,15 @@ import { CivBaseElement, LightDomTextMixin, dispatch, interpolate, renderCloseBu
  * Only the remove button is focusable; its native focus ring renders
  * after the wrapper's `overflow: hidden` is dropped via `:has()`.
  *
+ * **Removal is button-only by design.** The chip wrapper is not
+ * focusable and there is no Backspace/Delete-to-remove affordance:
+ * each chip's `×` is a real labelled `<button>` (one Tab stop per
+ * chip), which is fully keyboard- and screen-reader-operable. We
+ * deliberately do NOT make the wrapper itself focusable — that would
+ * add a second Tab stop per chip without a roving-tabindex scheme.
+ * Consumers building a full token-input with focus-chip + Backspace
+ * semantics own that focus management at the container level.
+ *
  * @element civ-input-chip
  *
  * @prop {string} label - Chip text (preferred over child text)

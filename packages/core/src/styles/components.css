@@ -4391,6 +4391,11 @@
   @media (hover: hover) {
     .civ-nav__link:hover {
       @apply civ-text-primary civ-underline;
+      /* Hover mirrors the active-page accent bar (same offset + thickness)
+         so hovering a link previews the current-page treatment rather than
+         showing a thinner, differently-positioned hyperlink underline. */
+      text-underline-offset: 4px;
+      text-decoration-thickness: 3px;
     }
   }
 
@@ -4398,16 +4403,16 @@
      page reads as visited even before keyboard focus. */
   .civ-nav__link--current {
     @apply civ-text-primary civ-underline;
-    /* Em-based thickness via typography token (same value as a hover-
-       state link). The 4px offset is intentionally larger than the
-       standard 3px underline-offset — this is a persistent state
-       indicator (active page), not a hover or rest-state link, and
-       the extra clearance reads as "accent line under the label"
-       rather than "this is hyperlinked". Kept as a hardcoded value
-       since there's only one consumer; promote to a token if a second
-       state-indicator surface appears. */
+    /* The 4px offset is intentionally larger than the standard 3px
+       underline-offset — this is a persistent state indicator (active
+       page), not a rest-state link, and the extra clearance reads as
+       "accent line under the label" rather than "this is hyperlinked".
+       The 3px thickness gives the active/hover accent bar a stronger
+       presence than a body-text link underline. Kept as hardcoded values
+       since the nav link (rest/hover/current) is the only consumer;
+       promote to tokens if a second state-indicator surface appears. */
     text-underline-offset: 4px;
-    text-decoration-thickness: var(--civ-typography-underline-thicknessHover);
+    text-decoration-thickness: 3px;
   }
 
   .civ-nav__link--disabled {

@@ -15,6 +15,14 @@ export type { LoadingMixinInterface } from './base/loading-mixin.js';
 export { announce, cancelAnnouncements, cleanupLiveRegions, SEARCH_ANNOUNCE_MS, COUNT_ANNOUNCE_MS } from './a11y/live-region.js';
 export { getFocusableElements, trapFocus, focusFirst } from './a11y/focus-manager.js';
 export { createKeyboardHandler, resolveGroupNavIndex, type KeyBinding } from './a11y/keyboard-handler.js';
+export {
+  pushOverlay,
+  removeOverlay,
+  isTopOverlay,
+  claimOverlayKey,
+  isOverlayKeyClaimed,
+  _resetOverlayStack,
+} from './a11y/overlay-stack.js';
 
 // Utilities
 export { generateId, resetIdCounter } from './utils/id-generator.js';

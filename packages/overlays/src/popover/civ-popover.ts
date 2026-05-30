@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, clickOutside, generateId } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, clickOutside, generateId, pushOverlay, removeOverlay, isTopOverlay, claimOverlayKey, isOverlayKeyClaimed } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -130,6 +130,7 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     document.removeEventListener('keydown', this._boundOnKeydown);
+    removeOverlay(this);
     this._clickOutside.remove();
     this._detachReflowListeners();
     this._unwireTrigger();
@@ -307,12 +308,20 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
 
   private _onKeydown(e: KeyboardEvent): void {
     if (!this.open) return;
-    if (e.key === 'Escape' && !this.noEscapeClose) {
+    // Only the topmost overlay responds to a dismiss key, and a single
+    // keypress is consumed once. This is what stops a popover nested inside
+    // another dismissable overlay (e.g. a civ-action-sheet) from closing
+    // BOTH layers on one Escape — see @civui/core overlay-stack.
+    const isDismissKey =
+      (e.key === 'Escape' && !this.noEscapeClose) ||
+      (e.key === 'Tab' && !this.noTabClose);
+    if (!isDismissKey) return;
+    if (isOverlayKeyClaimed(e) || !isTopOverlay(this)) return;
+    claimOverlayKey(e);
+    if (e.key === 'Escape') {
       e.preventDefault();
       this._requestClose(true);
-      return;
-    }
-    if (e.key === 'Tab' && !this.noTabClose) {
+    } else {
       this._requestClose();
     }
   }
@@ -342,11 +351,13 @@ export class CivPopover extends LightDomSlotMixin(CivBaseElement) {
     // in `updated()` after this method on every property change.
 
     if (this.open) {
+      pushOverlay(this);
       if (!this.noClickOutsideClose) this._clickOutside.add();
       await this.updateComplete;
       this._repositionPanel();
       this._attachReflowListeners();
     } else {
+      removeOverlay(this);
       this._clickOutside.remove();
       this._detachReflowListeners();
       this._clearPanelPlacement();

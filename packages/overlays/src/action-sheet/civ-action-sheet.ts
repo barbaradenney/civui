@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus as runTrapFocus, clickOutside, renderCloseButton, t } from '@civui/core';
+import { CivBaseElement, LightDomSlotMixin, dispatch, trapFocus as runTrapFocus, clickOutside, renderCloseButton, t, pushOverlay, removeOverlay, isTopOverlay, claimOverlayKey, isOverlayKeyClaimed } from '@civui/core';
 import type { SlotConfig } from '@civui/core';
 
 /**
@@ -99,6 +99,10 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   private async _onOpen(): Promise<void> {
     this._previouslyFocused = document.activeElement;
 
+    // Register on the shared overlay stack so a nested dismissable overlay
+    // (e.g. a civ-popover opened inside this sheet) consumes Escape first;
+    // only the topmost layer responds to a single keypress.
+    pushOverlay(this);
     if (!this.noClickOutsideClose) {
       this._clickOutside.add();
     }
@@ -156,6 +160,7 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _teardown(): void {
+    removeOverlay(this);
     this._clickOutside.remove();
     this._cleanupTrap?.();
     this._cleanupTrap = null;
@@ -163,10 +168,15 @@ export class CivActionSheet extends LightDomSlotMixin(CivBaseElement) {
   }
 
   private _onKeydown(e: KeyboardEvent): void {
-    if (e.key === 'Escape' && this.open) {
-      e.preventDefault();
-      this._requestClose();
-    }
+    if (e.key !== 'Escape' || !this.open) return;
+    // Only the topmost overlay handles a dismiss key, and each keypress is
+    // consumed once — so an Escape pressed while a civ-popover is open
+    // inside this sheet closes the popover only, not both layers. See
+    // @civui/core overlay-stack.
+    if (isOverlayKeyClaimed(e) || !isTopOverlay(this)) return;
+    claimOverlayKey(e);
+    e.preventDefault();
+    this._requestClose();
   }
 
   private _requestClose(): void {

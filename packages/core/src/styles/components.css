@@ -4731,6 +4731,13 @@
   .civ-side-nav--primary .civ-side-nav__link,
   .civ-side-nav--primary .civ-side-nav__trigger {
     @apply civ-font-bold civ-text-base;
+    /* Thicken the leading-edge rail to 3px (vs the 2px default) so the
+       primary side-nav's active "blue bar" matches the heavier accent
+       bar on the primary top nav (`.civ-nav__link`). Reserved on every
+       row — current and non-current — so widening it doesn't shift the
+       text column; the current item inherits this width and only
+       overrides the rail color, so its blue bar becomes 3px for free. */
+    border-inline-start-width: 3px;
   }
 
   /* ── On This Page (in-page anchor nav / table of contents) ─ */

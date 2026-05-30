@@ -101,7 +101,6 @@ fun CivFileUpload(
     required: Boolean = false,
     disabled: Boolean = false,
     readonly: Boolean = false,
-    value: String = "",
     showPreview: Boolean = false,
     capture: String = "",
     variant: String = "default",

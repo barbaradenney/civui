@@ -94,7 +94,7 @@ fun CivCombobox(
     width: String = "full",
     loadOptions: ((String) -> Unit)? = null,
     loadDebounce: Int = 300,
-    minQueryLength: Int = 1,
+    minQueryLength: Int = 0,
     loadingText: String = "",
     loadingErrorText: String = "",
     formState: CivFormState? = null,

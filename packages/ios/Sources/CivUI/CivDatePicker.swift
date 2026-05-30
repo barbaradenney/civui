@@ -84,7 +84,9 @@ public struct CivDatePicker: View {
     /// Day the week starts on (0 = Sunday, 1 = Monday).
     public var weekStartsOn: Int
 
-    /// Comma-separated list of disabled dates (YYYY-MM-DD).
+    /// JSON-encoded array of disabled dates, e.g. `["2026-07-04"]` (YYYY-MM-DD).
+    /// Note: SwiftUI's `DatePicker` can't disable arbitrary individual dates,
+    /// so this prop is part of the contract surface but not applied natively.
     public var disabledDates: String
 
     /// Label for the clear button.

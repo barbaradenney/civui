@@ -7,6 +7,12 @@ description: 'See @civui/schema civ-nav for the canonical contract.'
 props:
   type: object
   properties:
+    emphasis:
+      title: Emphasis
+      type: string
+      enum: ['primary', 'secondary']
+      default: 'primary'
+      description: 'Typographic weight of the nav links. `primary` (default) is the bold primary-site-navigation treatment with the heavier active/hover accent bar. `secondary` switches to normal-weight links and a thinner accent bar — the quiet treatment u...'
 
 libraryOverrides:
   dependencies:

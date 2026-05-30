@@ -22,6 +22,15 @@ import type { SlotConfig } from '@civui/core';
  *   page renders more than one `<nav>` so screen-reader landmark
  *   navigation can distinguish them.
  *
+ * @prop {string} emphasis - Typographic weight of the nav links.
+ *   `primary` (default) is the bold, primary-site-navigation treatment
+ *   with the heavier active/hover accent bar. `secondary` switches to
+ *   normal-weight links and a thinner accent bar — the quiet treatment
+ *   used for footer / utility navigation, mirroring `civ-side-nav`'s
+ *   `secondary` emphasis. The default is the inverse of `civ-side-nav`
+ *   (which defaults to `secondary`) because a top nav is usually the
+ *   primary surface while a side nav is usually a sub-nav.
+ *
  * @slot - `<civ-nav-item>` children.
  *
  * @example
@@ -37,6 +46,13 @@ import type { SlotConfig } from '@civui/core';
 export class CivNav extends LightDomSlotMixin(CivBaseElement) {
   @property({ type: String }) label = '';
 
+  /**
+   * Typographic weight. `primary` renders the bold, primary-site-nav
+   * treatment; `secondary` renders the quiet, normal-weight treatment
+   * used for footer / utility nav (mirrors `civ-side-nav`).
+   */
+  @property({ type: String, reflect: true }) emphasis: 'primary' | 'secondary' = 'primary';
+
   override _getSlotConfig(): SlotConfig {
     return { default: '[data-civ-nav-content]' };
   }
@@ -46,8 +62,12 @@ export class CivNav extends LightDomSlotMixin(CivBaseElement) {
   }
 
   override render() {
+    const classes = [
+      'civ-nav',
+      this.emphasis === 'secondary' ? 'civ-nav--secondary' : '',
+    ].filter(Boolean).join(' ');
     return html`
-      <nav class="civ-nav" aria-label="${ifDefined(this.label || undefined)}">
+      <nav class="${classes}" aria-label="${ifDefined(this.label || undefined)}">
         <ul class="civ-nav__list" data-civ-nav-content></ul>
       </nav>
     `;

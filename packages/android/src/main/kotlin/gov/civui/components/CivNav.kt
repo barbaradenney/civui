@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CivNav(
     label: String = "",
+    emphasis: String = "primary",
     modifier: Modifier = Modifier,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
     content: @Composable () -> Unit = {}

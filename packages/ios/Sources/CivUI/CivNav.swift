@@ -11,14 +11,19 @@ public struct CivNav: View {
     /// label
     public var label: String
 
+    /// emphasis — `primary` (default) bold treatment, `secondary` quiet.
+    public var emphasis: String
+
     /// Called for analytics tracking (parallels civ-analytics).
     public var onAnalytics: ((String, [String: Any]?) -> Void)?
 
     public init(
         label: String = "",
+        emphasis: String = "primary",
         onAnalytics: ((String, [String: Any]?) -> Void)? = nil
     ) {
         self.label = label
+        self.emphasis = emphasis
         self.onAnalytics = onAnalytics
     }
 

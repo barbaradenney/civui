@@ -4391,6 +4391,11 @@
   @media (hover: hover) {
     .civ-nav__link:hover {
       @apply civ-text-primary civ-underline;
+      /* Hover mirrors the active-page accent bar (same offset + thickness)
+         so hovering a link previews the current-page treatment rather than
+         showing a thinner, differently-positioned hyperlink underline. */
+      text-underline-offset: 4px;
+      text-decoration-thickness: 3px;
     }
   }
 
@@ -4398,16 +4403,16 @@
      page reads as visited even before keyboard focus. */
   .civ-nav__link--current {
     @apply civ-text-primary civ-underline;
-    /* Em-based thickness via typography token (same value as a hover-
-       state link). The 4px offset is intentionally larger than the
-       standard 3px underline-offset — this is a persistent state
-       indicator (active page), not a hover or rest-state link, and
-       the extra clearance reads as "accent line under the label"
-       rather than "this is hyperlinked". Kept as a hardcoded value
-       since there's only one consumer; promote to a token if a second
-       state-indicator surface appears. */
+    /* The 4px offset is intentionally larger than the standard 3px
+       underline-offset — this is a persistent state indicator (active
+       page), not a rest-state link, and the extra clearance reads as
+       "accent line under the label" rather than "this is hyperlinked".
+       The 3px thickness gives the active/hover accent bar a stronger
+       presence than a body-text link underline. Kept as hardcoded values
+       since the nav link (rest/hover/current) is the only consumer;
+       promote to tokens if a second state-indicator surface appears. */
     text-underline-offset: 4px;
-    text-decoration-thickness: var(--civ-typography-underline-thicknessHover);
+    text-decoration-thickness: 3px;
   }
 
   .civ-nav__link--disabled {
@@ -4417,6 +4422,28 @@
   .civ-nav__link--disabled:hover {
     @apply civ-no-underline;
     color: var(--civ-color-base-darkest);
+  }
+
+  /*
+   * Secondary emphasis — opt-in via `<civ-nav emphasis="secondary">`.
+   * Normal-weight links + a thinner 2px accent bar (vs the bold links +
+   * 3px bar of the default primary treatment), mirroring the quiet
+   * secondary treatment on `civ-side-nav`. Use for footer / utility nav
+   * where bold primary links would shout. The primary color on the
+   * active/hover bar is preserved — only the weight and bar thickness
+   * step down, so the family reads as a quieter sibling of the primary
+   * nav rather than a different component.
+   */
+  .civ-nav--secondary .civ-nav__link {
+    @apply civ-font-normal;
+  }
+  .civ-nav--secondary .civ-nav__link--current {
+    text-decoration-thickness: 2px;
+  }
+  @media (hover: hover) {
+    .civ-nav--secondary .civ-nav__link:hover {
+      text-decoration-thickness: 2px;
+    }
   }
 
   @media (max-width: 480px) {
@@ -4726,6 +4753,13 @@
   .civ-side-nav--primary .civ-side-nav__link,
   .civ-side-nav--primary .civ-side-nav__trigger {
     @apply civ-font-bold civ-text-base;
+    /* Thicken the leading-edge rail to 3px (vs the 2px default) so the
+       primary side-nav's active "blue bar" matches the heavier accent
+       bar on the primary top nav (`.civ-nav__link`). Reserved on every
+       row — current and non-current — so widening it doesn't shift the
+       text column; the current item inherits this width and only
+       overrides the rail color, so its blue bar becomes 3px for free. */
+    border-inline-start-width: 3px;
   }
 
   /* ── On This Page (in-page anchor nav / table of contents) ─ */

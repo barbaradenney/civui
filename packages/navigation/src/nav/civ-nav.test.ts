@@ -33,6 +33,22 @@ describe('civ-nav', () => {
     const ul = el.querySelector('ul')!;
     expect(ul.querySelectorAll('civ-nav-item').length).toBe(3);
   });
+
+  it('defaults to primary emphasis (no secondary modifier class)', async () => {
+    const el = await fixture<CivNav>(navHtml);
+    expect(el.emphasis).toBe('primary');
+    expect(el.querySelector('nav')!.classList.contains('civ-nav--secondary')).toBe(false);
+  });
+
+  it('applies the secondary modifier class when emphasis="secondary"', async () => {
+    const el = await fixture<CivNav>(
+      `<civ-nav emphasis="secondary">
+        <civ-nav-item href="/" label="Home" current></civ-nav-item>
+      </civ-nav>`
+    );
+    expect(el.emphasis).toBe('secondary');
+    expect(el.querySelector('nav')!.classList.contains('civ-nav--secondary')).toBe(true);
+  });
 });
 
 describe('civ-nav-item', () => {

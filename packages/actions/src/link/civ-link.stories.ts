@@ -129,6 +129,25 @@ export const WithCustomIcons: Story = {
   `,
 };
 
+export const External: Story = {
+  name: 'External (opens in new tab)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Set `new-tab` for an external link. It auto-applies `target="_blank"`, `rel="noopener noreferrer"`, a trailing `external-link` icon, and visually-hidden "(opens in new tab)" text for screen readers — so you don\'t hand-compose those (do NOT just add `icon-end="external-link"`, which gives the glyph without the target / rel / SR affordance). Pairs with any `variant`.',
+      },
+    },
+  },
+  render: () => html`
+    <div class="civ-flex civ-flex-col civ-gap-3">
+      <civ-link href="https://www.va.gov" new-tab>VA.gov</civ-link>
+      <civ-link href="https://www.benefits.va.gov" new-tab variant="primary">Explore your benefits</civ-link>
+      <civ-link href="https://www.federalregister.gov" new-tab variant="secondary">Read the federal rule</civ-link>
+    </div>
+  `,
+};
+
 export const DensityScale: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-6">

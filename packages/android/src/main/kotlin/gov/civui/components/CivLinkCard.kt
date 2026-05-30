@@ -15,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
@@ -56,6 +57,7 @@ fun CivLinkCard(
     iconStart: String = "",
     iconEnd: String = "",
     eyebrow: String = "",
+    disabled: Boolean = false,
     onTap: (() -> Unit)? = null,
     onAnalytics: ((event: String, data: Map<String, Any>?) -> Unit)? = null,
 ) {
@@ -106,7 +108,9 @@ fun CivLinkCard(
         border = border,
         modifier = modifier
             .fillMaxWidth()
+            .alpha(if (disabled) 0.6f else 1f)
             .clickable(
+                enabled = !disabled,
                 role = Role.Button,
                 onClick = handleClick,
             )

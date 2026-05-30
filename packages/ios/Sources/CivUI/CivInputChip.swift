@@ -15,7 +15,7 @@ public struct CivInputChip: View {
     /// Disabled state.
     public var disabled: Bool
 
-    /// Padding density. `default` | `sm`.
+    /// Padding density. `default` | `sm` | `lg`.
     public var spacing: String
 
     /// Remove handler.

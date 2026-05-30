@@ -59,6 +59,10 @@ public struct CivLinkCard: View {
     /// Small text label rendered above the heading (e.g. category, status).
     public var eyebrow: String
 
+    /// Disabled state — suppresses navigation/onTap, dims the card, and
+    /// marks it unavailable to assistive tech. Mirrors the web `disabled` prop.
+    public var disabled: Bool
+
     // MARK: - Internal State
 
     @Environment(\.colorScheme) private var colorScheme
@@ -76,7 +80,8 @@ public struct CivLinkCard: View {
         spacing: String = "default",
         iconStart: String = "",
         iconEnd: String = "",
-        eyebrow: String = ""
+        eyebrow: String = "",
+        disabled: Bool = false
     ) {
         self.href = href
         self.heading = heading
@@ -89,6 +94,7 @@ public struct CivLinkCard: View {
         self.iconStart = iconStart
         self.iconEnd = iconEnd
         self.eyebrow = eyebrow
+        self.disabled = disabled
     }
 
     // MARK: - Body
@@ -115,6 +121,8 @@ public struct CivLinkCard: View {
             .overlay(borderOverlay)
         }
         .buttonStyle(.plain)
+        .disabled(disabled)
+        .opacity(disabled ? 0.6 : 1)
         .accessibilityLabel(heading)
         .accessibilityHint(description)
         .accessibilityAddTraits(.isLink)
@@ -124,6 +132,7 @@ public struct CivLinkCard: View {
     // MARK: - Actions
 
     private func handleTap() {
+        guard !disabled else { return }
         onAnalytics?("click", ["heading": heading, "variant": variant.rawValue])
 
         if !href.isEmpty, let url = URL(string: href) {

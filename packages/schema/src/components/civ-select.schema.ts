@@ -45,7 +45,7 @@ const schema: ComponentSchema = {
     preset: {
       type: 'enum',
       description: 'Pre-built option list. Populates options when no consumer-provided options array is set',
-      values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status'],
+      values: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status', 'disability-type', 'citizenship-status', 'pay-frequency', 'contact-preference'],
     },
     presetVariant: {
       type: 'string',

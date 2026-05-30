@@ -30,7 +30,7 @@ props:
     preset:
       title: Preset
       type: string
-      enum: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status']
+      enum: ['us-state', 'service-branch', 'discharge-type', 'suffix', 'relationship-type', 'marital-status', 'ethnicity', 'gender', 'language', 'housing-status', 'education-level', 'employment-status', 'income-source', 'veteran-status', 'disability-type', 'citizenship-status', 'pay-frequency', 'contact-preference']
       description: 'Preset option list (e.g. us-states, countries)'
     preset_variant:
       title: Preset variant

@@ -496,6 +496,41 @@ function buildReactNative(tokens, scalesRn) {
   return lines.join('\n');
 }
 
+// Parse a shadow color string into native color expressions. The token
+// shadow colors are `transparent` or `rgba(r,g,b,a)`; previously the
+// Swift/Kotlin emitters hardcoded `.black.opacity(0.1)` for every
+// non-transparent shadow, so `sm` (real alpha 0.05) rendered twice as
+// dark on iOS/Android as on web. Parse the actual r/g/b/a so the native
+// shadow matches the CSS one.
+function parseShadowColor(colorStr) {
+  if (!colorStr || colorStr === 'transparent') {
+    return { swift: '.clear', kotlin: 'Color.Transparent' };
+  }
+  const m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)/.exec(colorStr);
+  if (!m) {
+    // Unknown format — fall back to the historical default rather than
+    // emitting an invalid native literal.
+    return { swift: '.black.opacity(0.1)', kotlin: 'Color.Black.copy(alpha = 0.1f)' };
+  }
+  const r = Number(m[1]);
+  const g = Number(m[2]);
+  const b = Number(m[3]);
+  const a = m[4] !== undefined ? Number(m[4]) : 1;
+  // Pure black (the common case) keeps the readable `.black.opacity(a)`
+  // form; any other channel uses an explicit Color(...) so the hue
+  // survives.
+  if (r === 0 && g === 0 && b === 0) {
+    return {
+      swift: `.black.opacity(${a})`,
+      kotlin: `Color.Black.copy(alpha = ${a}f)`,
+    };
+  }
+  return {
+    swift: `Color(red: ${round(r / 255, 3)}, green: ${round(g / 255, 3)}, blue: ${round(b / 255, 3)}).opacity(${a})`,
+    kotlin: `Color(red = ${round(r / 255, 3)}f, green = ${round(g / 255, 3)}f, blue = ${round(b / 255, 3)}f, alpha = ${a}f)`,
+  };
+}
+
 // Convert hex color string to Swift Color literal components
 function hexToSwiftComponents(hex) {
   const h = hex.replace('#', '');
@@ -664,8 +699,7 @@ function buildSwift(tokens, darkTokens, scalesRn) {
     const x = parseFloat(s.offsetX);
     const y = parseFloat(s.offsetY);
     const blur = parseFloat(s.blur);
-    // Parse rgba color for shadow
-    const colorStr = s.color === 'transparent' ? '.clear' : `.black.opacity(0.1)`;
+    const colorStr = parseShadowColor(s.color).swift;
     lines.push(`        public static let ${id} = ShadowValue(x: ${x}, y: ${y}, blur: ${blur}, color: ${colorStr})`);
   }
   lines.push('    }');
@@ -894,7 +928,7 @@ function buildKotlin(tokens, darkTokens, scalesRn) {
     const x = parseFloat(s.offsetX);
     const y = parseFloat(s.offsetY);
     const blur = parseFloat(s.blur);
-    const colorStr = s.color === 'transparent' ? 'Color.Transparent' : 'Color.Black.copy(alpha = 0.1f)';
+    const colorStr = parseShadowColor(s.color).kotlin;
     lines.push(`        val ${id} = ShadowValue(x = ${x}f, y = ${y}f, blur = ${blur}f, color = ${colorStr})`);
   }
   lines.push('    }');
@@ -1039,4 +1073,32 @@ function build() {
   console.log('  dist/kotlin/CivTokens.kt');
 }
 
-build();
+// Run the build only when executed directly (`node build-tokens.js`), not
+// when imported by the test suite. `process.argv[1]` is the entry script;
+// compare against this module's path so importing it for unit tests
+// doesn't write to dist/.
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMain) {
+  build();
+}
+
+// Exported for unit tests. These are the pure transforms every rendered
+// CSS / native / Tailwind value flows through.
+export {
+  fluidClamp,
+  modularScale,
+  round,
+  flattenTokens,
+  collectTokenPaths,
+  validateDarkTokenParity,
+  parseShadowColor,
+  hexToSwiftComponents,
+  toSwiftIdentifier,
+  toKotlinIdentifier,
+  formatShadow,
+  formatFontFamily,
+  formatCubicBezier,
+  toCSSValue,
+  buildScales,
+  buildCSS,
+};

@@ -79,7 +79,7 @@ public struct CivDrawer<Content: View>: View {
         @ViewBuilder content: () -> Content
     ) {
         self.open = open
-        self.align = position
+        self.align = align
         self.width = width
         self.heading = heading
         self.label = label

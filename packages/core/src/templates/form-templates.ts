@@ -1,5 +1,10 @@
 import { html, nothing } from 'lit';
 import { t } from '../i18n/locale.js';
+// renderError() renders `<civ-icon name="error">` as the non-color error
+// cue. Side-effect import guarantees the element is registered wherever
+// this template is used, instead of relying on the consuming component to
+// have imported civ-icon transitively (mirrors chrome-templates.ts).
+import '../icon/civ-icon.js';
 
 /**
  * Heading level for promoting a label / legend / group label to a heading

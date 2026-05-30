@@ -7,7 +7,8 @@
 let politeRegion: HTMLElement | null = null;
 let assertiveRegion: HTMLElement | null = null;
 
-const QUEUE_DELAY = 150;
+/** Delay between consecutive announcements in a burst (ms). Exported for tests. */
+export const QUEUE_DELAY = 150;
 const MAX_QUEUE_SIZE = 10;
 
 /**
@@ -88,28 +89,43 @@ function processQueue(priority: 'polite' | 'assertive'): void {
     } else {
       politeRafId = null;
     }
+    // Schedule the NEXT queued message only after this one has painted,
+    // spaced by QUEUE_DELAY. The previous implementation scheduled the
+    // next drain synchronously here in processQueue — but combined with
+    // announce()'s `!timer` re-entrancy (the queue drained to empty on
+    // every announce(), leaving timer null), every queued message landed
+    // a raf in the SAME frame and each region.textContent assignment
+    // overwrote the last before the screen reader could announce it. Only
+    // the final message survived and the MAX_QUEUE_SIZE cap never engaged.
+    scheduleNextDrain(priority);
   });
   if (priority === 'assertive') {
     assertiveRafId = rafId;
   } else {
     politeRafId = rafId;
   }
+}
 
-  // Schedule next message if queue has more
-  if (queue.length > 0) {
-    const timer = setTimeout(() => processQueue(priority), QUEUE_DELAY);
-    if (priority === 'assertive') {
-      assertiveTimer = timer;
-    } else {
-      politeTimer = timer;
-    }
-  } else {
-    if (priority === 'assertive') {
-      assertiveTimer = null;
-    } else {
-      politeTimer = null;
-    }
+/**
+ * Schedule the next queue drain QUEUE_DELAY after the current message
+ * painted, so a burst of announcements is read one at a time instead of
+ * collapsing into a single frame. Clears the timer handle when the queue
+ * is empty.
+ */
+function scheduleNextDrain(priority: 'polite' | 'assertive'): void {
+  const queue = priority === 'assertive' ? assertiveQueue : politeQueue;
+  if (queue.length === 0) {
+    if (priority === 'assertive') assertiveTimer = null;
+    else politeTimer = null;
+    return;
   }
+  const timer = setTimeout(() => {
+    if (priority === 'assertive') assertiveTimer = null;
+    else politeTimer = null;
+    processQueue(priority);
+  }, QUEUE_DELAY);
+  if (priority === 'assertive') assertiveTimer = timer;
+  else politeTimer = timer;
 }
 
 export function announce(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
@@ -117,13 +133,18 @@ export function announce(message: string, priority: 'polite' | 'assertive' = 'po
   if (priority === 'assertive') {
     if (assertiveQueue.length >= MAX_QUEUE_SIZE) assertiveQueue.shift();
     assertiveQueue.push(message);
-    if (!assertiveTimer) {
+    // Kick off processing only when nothing is already in flight. A pending
+    // raf (message about to paint) or timer (waiting out QUEUE_DELAY) means
+    // the existing drain chain will pick this message up — re-entering here
+    // would schedule a competing raf in the same frame and clobber the
+    // in-flight message.
+    if (!assertiveTimer && assertiveRafId == null) {
       processQueue('assertive');
     }
   } else {
     if (politeQueue.length >= MAX_QUEUE_SIZE) politeQueue.shift();
     politeQueue.push(message);
-    if (!politeTimer) {
+    if (!politeTimer && politeRafId == null) {
       processQueue('polite');
     }
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { announce, cleanupLiveRegions } from './live-region.js';
+import { announce, cleanupLiveRegions, QUEUE_DELAY } from './live-region.js';
 
 afterEach(() => {
   cleanupLiveRegions();
@@ -39,36 +39,56 @@ describe('live-region', () => {
     expect(document.querySelector('[aria-live="assertive"]')).toBeNull();
   });
 
-  it('caps queue at MAX_QUEUE_SIZE (10) and drops oldest messages', () => {
-    // Pause queue processing by making the first call start processing,
-    // then flood with more messages before the timer fires.
-    // The first announce() call processes immediately (shifts from queue),
-    // so we need 11 more to hit the cap of 10 in the queue.
-    announce('msg-0'); // processed immediately
-    for (let i = 1; i <= 11; i++) {
-      announce(`msg-${i}`);
-    }
-
-    // msg-1 was the oldest in the queue, should have been dropped when msg-11 was added.
-    // The queue should contain msg-2 through msg-11 (10 items).
-    // We can verify by draining the queue with timers.
-    // Fast-forward all timers to drain the queue.
+  it('announces a rapid burst one at a time, spaced by QUEUE_DELAY', () => {
     vi.useFakeTimers();
+    announce('alpha');
+    announce('bravo');
 
-    // Process remaining queue entries
-    for (let i = 0; i < 12; i++) {
-      vi.advanceTimersByTime(150);
-      // requestAnimationFrame callback
-      vi.runAllTimers();
-    }
+    const region = document.querySelector('[aria-live="polite"]') as HTMLElement;
+
+    // The first message paints on the next animation frame. The second is
+    // held in the queue (announce() does NOT drain it into the same frame).
+    vi.advanceTimersToNextTimer(); // run the first message's raf
+    expect(region.textContent).toBe('alpha');
+    // 'bravo' is still pending — a delay timer is scheduled, not painted yet.
+    expect(region.textContent).not.toBe('bravo');
+
+    // After the QUEUE_DELAY plus its own frame, the second message paints.
+    vi.advanceTimersByTime(QUEUE_DELAY);
+    vi.advanceTimersToNextTimer(); // run the second message's raf
+    expect(region.textContent).toBe('bravo');
 
     vi.useRealTimers();
+  });
 
-    // The region should have received the last message processed
+  it('caps queue at MAX_QUEUE_SIZE (10) and drops the oldest pending message', () => {
+    vi.useFakeTimers();
+    // The first announce drains immediately on the next frame; while it is
+    // in flight, the rest accumulate in the queue. 'drop-me' is the oldest
+    // pending entry, so once the queue fills to the cap it gets evicted and
+    // must never reach the live region.
+    announce('first');
+    announce('drop-me');
+    for (let i = 2; i <= 11; i++) {
+      announce(`keep-${i}`); // pushes the queue past the cap of 10
+    }
+
     const region = document.querySelector('[aria-live="polite"]') as HTMLElement;
-    // After full drain, the last message set is msg-11
-    // (msg-1 was dropped, so it should not appear)
-    expect(region).not.toBeNull();
+    const seen: string[] = [];
+    // Step through every scheduled raf / delay timer, recording what each
+    // one paints. Deterministic under fake timers (no microtask reliance).
+    for (let i = 0; i < 60 && vi.getTimerCount() > 0; i++) {
+      vi.advanceTimersToNextTimer();
+      if (region.textContent) seen.push(region.textContent);
+    }
+    vi.useRealTimers();
+
+    expect(seen).toContain('first');
+    expect(seen).toContain('keep-11');
+    // Evicted by the cap — would have been announced if the queue never
+    // accumulated (the pre-fix behaviour, where every announce drained
+    // immediately and the cap never engaged).
+    expect(seen).not.toContain('drop-me');
   });
 
   it('cleanupLiveRegions removes DOM elements and resets state', () => {
@@ -85,13 +105,18 @@ describe('live-region', () => {
   });
 
   it('re-creates region if removed from DOM between announcements', () => {
+    vi.useFakeTimers();
     announce('First');
+    vi.advanceTimersToNextTimer(); // flush 'First' so nothing is in flight
     const region = document.querySelector('[aria-live="polite"]') as HTMLElement;
     region.remove();
 
+    // With nothing in flight, the next announce processes immediately and
+    // ensureRegion() recreates the removed region.
     announce('Second');
     const newRegion = document.querySelector('[aria-live="polite"]');
     expect(newRegion).not.toBeNull();
     expect(newRegion).not.toBe(region);
+    vi.useRealTimers();
   });
 });

@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-timeline.js';
 import './civ-timeline-item.js';
+import '@civui/actions/button';
+import '@civui/actions/link';
 
 const meta: Meta = {
   title: 'Feedback/Timeline',
@@ -167,6 +169,58 @@ export const AllIntents: Story = {
           action="Error intent"
           intent="error"
         ></civ-timeline-item>
+      </civ-timeline>
+    </div>
+  `,
+};
+
+// ── Eyebrow + actions inside entry bodies ────────────────────
+
+export const WithActions: Story = {
+  name: 'With actions — eyebrow labels + buttons / links',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-timeline>
+        <civ-timeline-item
+          timestamp="${daysAgo(5)}"
+          actor="Benefits processing"
+          action="Documentation requested"
+          intent="warning"
+        >
+          <p class="civ-eyebrow civ-m-0 civ-mb-1">Action needed</p>
+          <p class="civ-mt-0">
+            We need a copy of your DD-214 to verify your service dates.
+          </p>
+          <civ-button label="Upload document"></civ-button>
+        </civ-timeline-item>
+
+        <civ-timeline-item
+          timestamp="${daysAgo(2)}"
+          actor="Sarah Chen"
+          action="DD-214 uploaded"
+          intent="info"
+        >
+          <p class="civ-mt-0 civ-mb-1">
+            We're reviewing your file now.
+          </p>
+          <civ-link href="#" label="Check status"></civ-link>
+        </civ-timeline-item>
+
+        <civ-timeline-item
+          timestamp="${daysAgo(1)}"
+          actor="J. Martinez (Reviewer)"
+          action="Claim approved"
+          intent="success"
+        >
+          <p class="civ-eyebrow civ-m-0 civ-mb-1">Ready to view</p>
+          <p class="civ-mt-0">
+            Your award letter is available now. Payments begin next cycle.
+          </p>
+          <div class="civ-button-row">
+            <civ-button label="Download award letter"></civ-button>
+            <civ-button emphasis="tertiary" href="#" label="View payment schedule"></civ-button>
+          </div>
+        </civ-timeline-item>
       </civ-timeline>
     </div>
   `,

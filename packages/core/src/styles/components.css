@@ -4424,6 +4424,28 @@
     color: var(--civ-color-base-darkest);
   }
 
+  /*
+   * Secondary emphasis — opt-in via `<civ-nav emphasis="secondary">`.
+   * Normal-weight links + a thinner 2px accent bar (vs the bold links +
+   * 3px bar of the default primary treatment), mirroring the quiet
+   * secondary treatment on `civ-side-nav`. Use for footer / utility nav
+   * where bold primary links would shout. The primary color on the
+   * active/hover bar is preserved — only the weight and bar thickness
+   * step down, so the family reads as a quieter sibling of the primary
+   * nav rather than a different component.
+   */
+  .civ-nav--secondary .civ-nav__link {
+    @apply civ-font-normal;
+  }
+  .civ-nav--secondary .civ-nav__link--current {
+    text-decoration-thickness: 2px;
+  }
+  @media (hover: hover) {
+    .civ-nav--secondary .civ-nav__link:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+
   @media (max-width: 480px) {
     .civ-nav__list {
       @apply civ-flex-col civ-items-stretch civ-gap-0;

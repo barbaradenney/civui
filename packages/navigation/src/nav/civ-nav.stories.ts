@@ -47,11 +47,37 @@ export const FooterNavigation: Story = {
   render: () => html`
     <p class="civ-italic civ-mb-2">
       Multiple navs on the same page each need a distinct <code>label</code>.
+      Footer / utility nav reads better with the quieter
+      <code>emphasis="secondary"</code> treatment.
     </p>
-    <civ-nav label="Footer navigation">
+    <civ-nav label="Footer navigation" emphasis="secondary">
       <civ-nav-item href="/privacy" label="Privacy"></civ-nav-item>
       <civ-nav-item href="/accessibility" label="Accessibility"></civ-nav-item>
       <civ-nav-item href="/foia" label="FOIA"></civ-nav-item>
+      <civ-nav-item href="/contact" label="Contact"></civ-nav-item>
+    </civ-nav>
+  `,
+};
+
+export const SecondaryEmphasis: Story = {
+  render: () => html`
+    <p class="civ-italic civ-mb-2">
+      <code>emphasis="primary"</code> (default) is bold with a 3px active
+      bar — the primary site nav. <code>emphasis="secondary"</code> is
+      normal-weight with a thinner 2px bar — the quiet treatment used for
+      footer / utility nav, mirroring <code>civ-side-nav</code>'s
+      <code>secondary</code> emphasis.
+    </p>
+    <p class="civ-font-bold civ-mb-1">Primary (default)</p>
+    <civ-nav label="Primary navigation">
+      <civ-nav-item href="/" label="Home" current></civ-nav-item>
+      <civ-nav-item href="/benefits" label="Benefits"></civ-nav-item>
+      <civ-nav-item href="/contact" label="Contact"></civ-nav-item>
+    </civ-nav>
+    <p class="civ-font-bold civ-mb-1 civ-mt-4">Secondary</p>
+    <civ-nav label="Utility navigation" emphasis="secondary">
+      <civ-nav-item href="/" label="Home" current></civ-nav-item>
+      <civ-nav-item href="/benefits" label="Benefits"></civ-nav-item>
       <civ-nav-item href="/contact" label="Contact"></civ-nav-item>
     </civ-nav>
   `,

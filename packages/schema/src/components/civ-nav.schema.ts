@@ -14,6 +14,12 @@ const schema: ComponentSchema = {
       description: 'Accessible name for the navigation landmark (e.g. "Primary navigation", "Footer navigation"). Set this when a page renders more than one `<nav>` so screen-reader landmark navigation can distinguish them',
       default: '',
     },
+    emphasis: {
+      type: 'enum',
+      description: 'Typographic weight of the nav links. `primary` (default) is the bold primary-site-navigation treatment with the heavier active/hover accent bar. `secondary` switches to normal-weight links and a thinner accent bar — the quiet treatment used for footer / utility navigation, mirroring `civ-side-nav`\'s `secondary` emphasis. The default is the inverse of `civ-side-nav` because a top nav is usually the primary surface while a side nav is usually a sub-nav',
+      default: 'primary',
+      values: ['primary', 'secondary'],
+    },
   },
 
   events: {},

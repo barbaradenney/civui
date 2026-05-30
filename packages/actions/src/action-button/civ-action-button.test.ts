@@ -251,6 +251,20 @@ describe('CivActionButton loading state', () => {
     expect(el.querySelector('civ-spinner')).toBeNull();
     expect(el.querySelector('a')).not.toBeNull();
   });
+
+  it('link-mode carries aria-current and aria-label (anchor pagination)', async () => {
+    const el = await fixture(
+      '<civ-action-button href="/page/3" label="3" current aria-label="Page 3"></civ-action-button>',
+    );
+    const a = el.querySelector('a')!;
+    expect(a.getAttribute('aria-current')).toBe('page');
+    expect(a.getAttribute('aria-label')).toBe('Page 3');
+  });
+
+  it('link-mode omits aria-current when not current', async () => {
+    const el = await fixture('<civ-action-button href="/page/4" label="4"></civ-action-button>');
+    expect(el.querySelector('a')!.hasAttribute('aria-current')).toBe(false);
+  });
 });
 
 describe('CivActionButton aria-label semantics', () => {

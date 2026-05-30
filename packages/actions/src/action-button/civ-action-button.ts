@@ -201,6 +201,8 @@ export class CivActionButton extends LoadingMixin(CivBaseElement) {
             class="${this._classes}"
             aria-disabled="true"
             tabindex="-1"
+            aria-current="${this.current ? 'page' : nothing}"
+            aria-label="${this.ariaLabel || nothing}"
             title="${t('linkDisabledTitle')}"
           >${inner}</a>
         `;
@@ -216,6 +218,8 @@ export class CivActionButton extends LoadingMixin(CivBaseElement) {
           target="${effectiveTarget || nothing}"
           rel="${effectiveRel || nothing}"
           download="${this.download || nothing}"
+          aria-current="${this.current ? 'page' : nothing}"
+          aria-label="${this.ariaLabel || nothing}"
           @click="${this._onClick}"
         >${inner}${this.newTab ? html`<span class="civ-sr-only">${t('externalLinkNewTab')}</span>` : nothing}</a>
       `;

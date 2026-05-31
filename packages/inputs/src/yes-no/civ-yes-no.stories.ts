@@ -169,7 +169,7 @@ export const GovernmentEligibilityScreening: Story = {
       <civ-yes-no legend="Are you a U.S. citizen or permanent resident?" hint="Select yes if you are a citizen by birth or naturalization" required name="citizen"></civ-yes-no>
       <civ-yes-no legend="Have you filed federal income taxes this year?" required name="taxes"></civ-yes-no>
       <civ-yes-no legend="Do you currently receive any government benefits?" hint="Including Social Security, Medicare, or disability compensation" name="benefits"></civ-yes-no>
-      <div class="civ-flex civ-gap-2 civ-mt-4">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Check eligibility</civ-button>
       </div>
     </civ-form>

@@ -98,6 +98,31 @@ The announcement queue is capped at 10 messages with oldest-drop strategy.
 
 <StoryEmbed id="foundations-accessibility--screen-reader-announcer" />
 
+## Visually hidden text (`.civ-sr-only`)
+
+`announce()` covers *dynamic* messages. For *static* text that should reach screen readers but not show on screen, use the `.civ-sr-only` utility — it's visually hidden (clipped to a 1px box) while staying in the accessibility tree. Reach for it when hand-writing markup; CivUI components already use it internally (e.g. the "(opens in new tab)" text on `<civ-link new-tab>`).
+
+Typical uses:
+
+- Give an **icon-only control** an accessible name.
+- Add context that's obvious visually but missing from the text alone.
+
+```html
+<!-- Icon-only button gets a real name -->
+<button class="civ-btn" type="button">
+  <civ-icon name="delete"></civ-icon>
+  <span class="civ-sr-only">Delete attachment</span>
+</button>
+
+<!-- Redundant-for-sighted, essential-for-AT context -->
+<a href="/report.pdf">
+  Download report
+  <span class="civ-sr-only">(PDF, 2.3 MB)</span>
+</a>
+```
+
+Use `.civ-sr-only` — **not** `display: none` or `visibility: hidden`, which remove the text from the accessibility tree entirely. If the hidden content is *focusable* (a skip link), it must become visible on focus; that's what the skip-link affordance above already handles.
+
 ## RTL Support
 
 Radio groups, segmented controls, and date pickers reverse arrow key behavior in RTL contexts. The `isRtl()` utility from `@civui/core` detects direction from CSS computed styles.

@@ -311,7 +311,6 @@ parseGroup(
     '1': { $type: 'dimension', $value: '4px' },
     '1.5': { $type: 'dimension', $value: '6px' },
     '2': { $type: 'dimension', $value: '8px' },
-    '2.5': { $type: 'dimension', $value: '10px' },
     '3': { $type: 'dimension', $value: '12px' },
     '4': { $type: 'dimension', $value: '16px' },
     '5': { $type: 'dimension', $value: '20px' },
@@ -319,7 +318,6 @@ parseGroup(
     '8': { $type: 'dimension', $value: '32px' },
     '10': { $type: 'dimension', $value: '40px' },
     '12': { $type: 'dimension', $value: '48px' },
-    '16': { $type: 'dimension', $value: '64px' },
     '20': { $type: 'dimension', $value: '80px' },
   },
   'spacing',
@@ -554,7 +552,7 @@ const scalesData: Array<{ name: string; value: unknown }> = [
   },
   {
     name: 'spacingTokens',
-    value: ['0.5', '1', '1.5', '2', '2.5', '3', '4', '5', '6', '8', '10', '12', '16', '20'],
+    value: ['0.5', '1', '1.5', '2', '3', '4', '5', '6', '8', '10', '12', '20'],
   },
 ];
 

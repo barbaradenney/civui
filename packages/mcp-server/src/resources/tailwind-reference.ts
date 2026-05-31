@@ -174,7 +174,6 @@ All spacing values are token-backed CSS variables that adjust with the density s
 | 1 | 5px | \`civ-p-1\` | \`civ-m-1\` | \`civ-gap-1\` |
 | 1.5 | 8px | \`civ-p-1.5\` | \`civ-m-1.5\` | \`civ-gap-1.5\` |
 | 2 | 10px | \`civ-p-2\` | \`civ-m-2\` | \`civ-gap-2\` |
-| 2.5 | 13px | \`civ-p-2.5\` | \`civ-m-2.5\` | \`civ-gap-2.5\` |
 | 3 | 15px | \`civ-p-3\` | \`civ-m-3\` | \`civ-gap-3\` |
 | 4 | 20px | \`civ-p-4\` | \`civ-m-4\` | \`civ-gap-4\` |
 | 5 | 25px | \`civ-p-5\` | \`civ-m-5\` | \`civ-gap-5\` |
@@ -182,7 +181,6 @@ All spacing values are token-backed CSS variables that adjust with the density s
 | 8 | 40px | \`civ-p-8\` | \`civ-m-8\` | \`civ-gap-8\` |
 | 10 | 50px | \`civ-p-10\` | \`civ-m-10\` | \`civ-gap-10\` |
 | 12 | 60px | \`civ-p-12\` | \`civ-m-12\` | \`civ-gap-12\` |
-| 16 | 80px | \`civ-p-16\` | \`civ-m-16\` | \`civ-gap-16\` |
 | 20 | 100px | \`civ-p-20\` | \`civ-m-20\` | \`civ-gap-20\` |
 
 Directional variants: \`civ-pt-*\`, \`civ-pb-*\`, \`civ-ps-*\`, \`civ-pe-*\`, \`civ-px-*\`, \`civ-py-*\`, \`civ-mt-*\`, \`civ-mb-*\`, \`civ-ms-*\`, \`civ-me-*\`, \`civ-mx-*\`, \`civ-my-*\`.

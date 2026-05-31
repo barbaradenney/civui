@@ -7,7 +7,6 @@
     "1": { "$type": "dimension", "$value": "5px" },
     "1.5": { "$type": "dimension", "$value": "8px" },
     "2": { "$type": "dimension", "$value": "10px" },
-    "2.5": { "$type": "dimension", "$value": "13px" },
     "3": { "$type": "dimension", "$value": "15px" },
     "4": { "$type": "dimension", "$value": "20px" },
     "5": { "$type": "dimension", "$value": "25px" },
@@ -15,7 +14,6 @@
     "8": { "$type": "dimension", "$value": "40px" },
     "10": { "$type": "dimension", "$value": "50px" },
     "12": { "$type": "dimension", "$value": "60px" },
-    "16": { "$type": "dimension", "$value": "80px" },
     "20": { "$type": "dimension", "$value": "100px" }
   }
 }

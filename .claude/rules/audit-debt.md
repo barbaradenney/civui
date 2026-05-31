@@ -21,15 +21,12 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 
 ---
 
-## Orphan spacing tokens (`spacing-px`, `spacing-2.5`, `spacing-16`)
+## Orphan spacing tokens (`spacing-2.5`, `spacing-16`) — ✅ shipped 2026-05-31
 
 - **Surfaced:** Spacing audit, 2026-05-27. Branch `claude/typography-system-design-RykOU` (filed during the typography → spacing follow-up).
-- **State:** Three tokens in `packages/tokens/src/spacing.tokens.json` are never used in production CSS (`packages/core/src/styles/components.css` / `civ.css`):
-  - `spacing-px` (1px) — zero hits. Most likely candidate for an eventual consumer (a `civ-border-px` divider, dense-row separator), so worth keeping; the others aren't.
-  - `spacing-2.5` (13px) — zero hits. Authors who need ~13px reach for `2` (10px) or `3` (15px). The intermediate step is redundant.
-  - `spacing-16` (80px) — zero hits in production CSS. The former indirect consumer (`civ-w-16`, the `xs` input width) was decoupled onto the dedicated `theme.extend.width` scale on 2026-05-31 (see the resolved "Input-width ladder web/native px mismatch" entry below), so `civ-w-16` no longer resolves through `--civ-spacing-16`. The token is now a true orphan and safe to remove in the next `@civui/tokens` major bump (alongside `2.5`).
-- **Why deferred:** Removing tokens from `spacing.tokens.json` is a breaking change at the `@civui/tokens` package level — the Tailwind preset loses `civ-p-16` / `civ-p-2.5` / `civ-p-px` utilities, and `var(--civ-spacing-16)` etc. stop resolving. Should land in the next `@civui/tokens` major bump with a release note. The audit-recommendation order is: remove `2.5` and `16` first (clear orphans); leave `px` (plausible future use).
-- **What to watch for in the meantime:** When proposing a new component that needs a "between 10px and 15px" or "between 60px and 100px" gap, push back — the workhorse cadence (`0/1/2/3/4/6`) is intentional, and reaching for an orphan step usually means the layout wants a non-standard rhythm. If it genuinely needs the in-between step, document why in a comment alongside the use, so the deletion candidate becomes a "first real use" instead.
+- **Was:** Three tokens in `packages/tokens/src/spacing.tokens.json` were never used in production CSS. `spacing-2.5` (13px) and `spacing-16` (80px) were pure scale-completeness artifacts (authors needing ~13px reached for `2`/`3`; 80px for `12`/`20`). `spacing-16`'s only indirect consumer was `civ-w-16` (the `xs` input width) — decoupled onto the dedicated `theme.extend.width` scale by the input-width-ladder fix, so it became a true orphan too.
+- **Removed (breaking `@civui/tokens` change):** Deleted `2.5` and `16` from `spacing.tokens.json`, the root `tailwind.config.ts` `spacing` block, `scales.tokens.json` `spacingTokens`, the MCP `query-tokens` spacing mirror + `tailwind-reference` table, and the docs Foundations table (`spacing-and-layout.mdx`). Regenerated tokens: `--civ-spacing-2_5` / `--civ-spacing-16` no longer emitted; `civ-p-2.5` / `civ-p-16` / `civ-m-16` / `civ-gap-16` Tailwind utilities are gone. `--civ-spacing-12` / `-20` and the `civ-w-16` width utility (64px, on the separate width scale) are unaffected. Verified no `civ-{p,m,gap}-{2.5,16}` consumers remain in components / stories. **Release note:** consumers using `civ-p-16` (80px) → `civ-p-20` (100px) or `civ-p-12` (60px); `civ-p-2.5` (13px) → `civ-p-2` (10px) or `civ-p-3` (15px).
+- **Kept:** `spacing-px` (1px) — plausible future `civ-border-px` consumer (dense-row divider, accordion separator).
 
 ---
 

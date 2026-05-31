@@ -214,7 +214,7 @@ export const GovernmentNotificationSettings: Story = {
         name="policy-alerts"
         description="Be notified when policies affecting your benefits change"
       ></civ-toggle>
-      <div class="civ-flex civ-gap-2 civ-mt-4">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Save preferences</civ-button>
       </div>
     </civ-form>

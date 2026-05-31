@@ -67,7 +67,7 @@ export const WithValidation: Story = {
       <civ-text-input label="Last name" name="lastName" required></civ-text-input>
       <civ-text-input label="Email address" name="email" required type="email" validate="email"></civ-text-input>
       <civ-text-input label="Phone number" name="phone" hint="For example: (555) 123-4567" type="tel"></civ-text-input>
-      <div class="civ-mt-4 civ-flex civ-gap-2">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Submit</civ-button>
       </div>
     </civ-form>
@@ -93,7 +93,7 @@ export const PersistDraft: Story = {
       <civ-text-input label="Full name" name="fullName"></civ-text-input>
       <civ-text-input label="Email address" name="email" type="email"></civ-text-input>
       <civ-textarea label="Additional comments" name="comments"></civ-textarea>
-      <div class="civ-mt-4 civ-flex civ-gap-2">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Submit</civ-button>
         <civ-button type="reset" emphasis="secondary">Clear saved draft</civ-button>
       </div>
@@ -314,7 +314,7 @@ export const SetServerErrors: Story = {
       <civ-text-input label="Email" name="email" type="email"></civ-text-input>
       <civ-text-input label="Phone" name="phone" type="tel"></civ-text-input>
       <civ-text-input label="ZIP" name="zip" inputmode="numeric"></civ-text-input>
-      <div class="civ-mt-4 civ-flex civ-gap-2">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Submit (will fail)</civ-button>
         <civ-button
           type="button"

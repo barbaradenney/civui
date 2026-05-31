@@ -199,7 +199,7 @@ export const GovernmentReportFilter: Story = {
         <civ-segment label="Year" value="year"></civ-segment>
         <civ-segment label="All time" value="all"></civ-segment>
       </civ-segmented-control>
-      <div class="civ-flex civ-gap-2 civ-mt-4">
+      <div class="civ-button-row civ-mt-4">
         <civ-button type="submit">Generate report</civ-button>
       </div>
     </form>

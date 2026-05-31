@@ -60,11 +60,15 @@ describe('input-width ladder web/native parity', () => {
     const config = (await import(join(repoRoot, 'tailwind.config.ts'))).default as {
       theme: { extend: { width: Record<string, string>; spacing: Record<string, string> } };
     };
-    // The collision cases: these two keys exist in BOTH scales. Width must
-    // be the literal 4px-based px; spacing stays the 5px-based var.
+    // `civ-w-16` must be the literal 4px-based px (64), NOT the former
+    // `--civ-spacing-16` (80px). The dedicated width scale is what keeps it
+    // decoupled — the `16` spacing token was removed entirely in the
+    // orphan-token cleanup (it was a true orphan once width-16 moved off it).
     expect(config.theme.extend.width['12']).toBe('48px');
     expect(config.theme.extend.width['16']).toBe('64px');
+    // `12` still lives on the 5px spacing scale (civ-p-12 = 60px); `16` no
+    // longer exists as a spacing token.
     expect(config.theme.extend.spacing['12']).toMatch(/var\(--civ-spacing-12\)/);
-    expect(config.theme.extend.spacing['16']).toMatch(/var\(--civ-spacing-16\)/);
+    expect(config.theme.extend.spacing['16']).toBeUndefined();
   });
 });

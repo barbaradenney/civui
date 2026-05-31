@@ -24,6 +24,10 @@ export const LINT_RULE_LINKS: Record<string, RuleLink> = {
     path: '.claude/rules/common-traps.md',
     anchor: 'group-components-are-self-contained--no-extra-fieldset',
   },
+  'button-row': {
+    path: '.claude/rules/common-traps.md',
+    anchor: 'civ-flex-civ-gap--button-rows-dont-go-full-width-on-mobile',
+  },
   'story-embeds': {
     path: '.claude/rules/common-traps.md',
     anchor: 'storybook-export-name--url-slug',

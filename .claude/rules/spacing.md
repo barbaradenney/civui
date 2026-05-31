@@ -31,7 +31,6 @@ What's NOT in place: a documented policy for which components own their own marg
 | `1` | 5px | heavy (80 hits) | hint-to-input, error-to-input, prose tightening |
 | `1.5` | 8px | low (4 hits) | between input and its inline action button |
 | `2` | 10px | heavy (93 hits) | heading-sm to body, alert internal gap, action-sheet close |
-| `2.5` | 13px | **unused** | between `2` and `3`; covered by either |
 | `3` | 15px | heavy (60 hits) | heading-md to body, modal body section gap |
 | `4` | 20px | heavy (64 hits) | **standard between-blocks cadence** (fieldset, card, alert) |
 | `5` | 25px | low (2 hits) | sparingly — only data-grid bulk-actions footer / spinner inset |
@@ -39,12 +38,11 @@ What's NOT in place: a documented policy for which components own their own marg
 | `8` | 40px | low (3 hits) | between major page sections (rare — most use `6`) |
 | `10` | 50px | low (4 hits) | hero/landing area inner padding |
 | `12` | 60px | very low (1 hit) | one-off in `civ-back-to-top` bottom offset |
-| `16` | 80px | **unused in components.css** | reserved; no current consumer |
 | `20` | 100px | very low (1 hit) | one-off in `civ-back-to-top` right offset |
 
 The "workhorses" (heavy use) are `0`, `1`, `2`, `3`, `4`, `6`. Authors should reach for these by default.
 
-**Three orphan tokens** never appear in production CSS: `px`, `2.5`, `16`. They're available via the Tailwind preset but no component composes them. Each is a candidate for removal in the next breaking release of `@civui/tokens` — captured in audit-debt below.
+**One orphan token remains:** `px` (1px) — available via the Tailwind preset but no component composes it; kept because a `civ-border-px` divider or dense-row separator is a plausible future consumer. The other two former orphans (`2.5` = 13px, `16` = 80px) were **removed 2026-05-31** in a breaking `@civui/tokens` change once `civ-w-16` (the last indirect `16` consumer) was decoupled onto the dedicated width scale.
 
 **Rare-use sub-ladder** (`5`, `8`, `10`, `12`, `20`) — these are "large-spacing" tokens used for hero / landing surfaces or for one-off pixel-precise positioning. Reach for `6` first for "section break" spacing.
 
@@ -195,7 +193,7 @@ This is the same story documented in `density-convention.md` + the typography ru
 ## What NOT to do
 
 - **Hardcoded `padding: 1rem` in components.css.** Always use `var(--civ-spacing-N)` or `@apply civ-p-N`. Caught by `lint:hardcoded-spacing`.
-- **Reach for `civ-p-2.5`, `civ-p-16`, or `civ-p-px` (the orphan tokens).** They don't appear in production CSS today; using one signals an unusual choice that should justify itself in a comment.
+- **Reach for `civ-p-px` (the one remaining orphan token).** It doesn't appear in production CSS today; using it signals an unusual choice that should justify itself in a comment. (`civ-p-2.5` / `civ-p-16` no longer exist — those tokens were removed 2026-05-31.)
 - **Add `civ-mb-4` to a Tier 3 component "for consistency."** It will double-space when the component is placed inside a `civ-flex civ-flex-col civ-gap-4` parent.
 - **Use Tailwind default 4px-base conversions** (`civ-p-4` to get 16px). It gets you 20px in CivUI.
 - **Cross-bridge to em-units for spacing** unless the spacing should scale with parent font-size (rare). Default to the spacing tokens.
@@ -205,19 +203,15 @@ This is the same story documented in `density-convention.md` + the typography ru
 
 ## Orphan tokens
 
-Three tokens are defined in `spacing.tokens.json` but never used in `components.css` or `civ.css`:
+One token is defined in `spacing.tokens.json` but never used in `components.css` or `civ.css`:
 
 | Token | Value | Status |
 |---|---:|---|
 | `spacing-px` | 1px | mentioned only in MCP tailwind-reference doc; available as `civ-{m|p}-px` Tailwind utility |
-| `spacing-2.5` | 13px | mentioned only in MCP tailwind-reference doc |
-| `spacing-16` | 80px | mentioned only in MCP tailwind-reference doc |
 
-These are the "reserved but unused" parts of the scale. Removing them would be a breaking change to `@civui/tokens` (the Tailwind preset and CSS custom properties go away), so the recommendation is **document as unused-but-reserved today, remove in the next major release** (audit-debt entry).
+The `px` token exists primarily to support Tailwind's `civ-border-px` width utility (which renders a 1px border). It's the most likely to find a consumer eventually — a divider between dense table rows, a separator inside an accordion. Keep it.
 
-The `px` token exists primarily to support Tailwind's `civ-border-px` width utility (which renders a 1px border). It's the most likely of the three to find a consumer eventually — a divider between dense table rows, a separator inside an accordion. Keep it.
-
-The `2.5` and `16` tokens are pure scale-completeness artifacts — the increments between adjacent workhorses. Authors who need 13px reach for either 10px (`spacing-2`) or 15px (`spacing-3`), not for 13px. Same for 80px: authors pick 100px (`spacing-20`) or 60px (`spacing-12`).
+The former orphans `spacing-2.5` (13px) and `spacing-16` (80px) were **removed 2026-05-31** (breaking `@civui/tokens` change) once `civ-w-16`, the last indirect consumer of `--civ-spacing-16`, was decoupled onto the dedicated `theme.extend.width` scale. They were pure scale-completeness artifacts — authors who needed 13px reached for 10px (`spacing-2`) or 15px (`spacing-3`); 80px went to 100px (`spacing-20`) or 60px (`spacing-12`).
 
 ---
 
@@ -228,7 +222,7 @@ These are the proposed work items from the spacing audit, ordered by leverage. S
 1. ~~**Fix the MCP reference doc spacing table**~~ — shipped 2026-05-27. `packages/mcp-server/src/resources/tailwind-reference.ts` was using default-Tailwind values (4 = 16px, 16 = 64px, etc.) — every row was wrong. Corrected to match `spacing.tokens.json`. AI agents reading the MCP reference now get accurate guidance.
 2. ~~**Add a Foundations/Spacing story**~~ — shipped 2026-05-27. New `packages/core/src/foundations/spacing.stories.ts` renders the three rhythm tiers side-by-side (top-of-page, block-stack, gap-controlled) and the heading inner-margin pattern. Designers see the cadence at a glance.
 3. ~~**`lint:between-block-cadence`**~~ — shipped 2026-05-27. Gates the Tier 2 / Tier 3 contract from `tools/lint-between-block-cadence.ts`: each Tier 2 component (fieldset, card, alert, form-error-summary, filterable-list__filters, page-header--sm — 6 entries today) MUST declare `civ-mb-N` at its expected step; each Tier 3 component (callout, notice, section-intro, link-card, metric-tile, metric-group, itemized-total, support-resources, process-list, timeline, data-grid, divider, data-field, list — 16 selector entries including bare-host duplicates) must NOT carry a top-level margin-bottom other than `civ-mb-0`. Catalogs are hand-maintained at the top of the lint file; moving a component between tiers is a deliberate PR edit. Wired into `pnpm validate:lints` and the drift-lints CI gate. 26 helper tests in `tools/__tests__/lint-between-block-cadence.test.ts` cover the CSS rule-body parser (respects the `@layer components` wrapper + nested `@media`), margin-bottom step extraction (ignores comments), and the failure-recording loop. The first run caught a real misclassification — `civ-input-group` was wrongly listed as Tier 2 in the original audit; it's actually a flex layout primitive that strips `mb-4` from its children. Removed from the catalog + clarified in this doc.
-4. **Remove orphan tokens (`spacing-px`, `spacing-2.5`, `spacing-16`)** — next major release of `@civui/tokens`. Breaking change (Tailwind preset removes utilities, CSS custom properties go away), so it requires a release-note callout. Audit-debt entry captured.
+4. ~~**Remove orphan tokens (`spacing-2.5`, `spacing-16`)**~~ — shipped 2026-05-31 (breaking `@civui/tokens` change). Removed the two confirmed-orphan tokens from `spacing.tokens.json`, the root Tailwind config `spacing` block, `scales.tokens.json` `spacingTokens`, the MCP `query-tokens` / `tailwind-reference` mirrors, and the docs Foundations table. `spacing-px` is kept (plausible future `civ-border-px` consumer). Unblocked by the input-width-ladder fix, which moved `civ-w-16` off `--civ-spacing-16` onto the dedicated width scale.
 5. **Consider removing `spacing-5` and `spacing-12`** — used 2 and 1 times respectively, both in one-off positioning (data-grid bulk-actions footer, back-to-top right offset). Could substitute `4` and `10` for 5px / 10px shifts that almost certainly don't matter visually. Lower priority — defer until the next palette pass.
 
 ---

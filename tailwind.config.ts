@@ -148,7 +148,6 @@ const config: Config = {
         '1': 'var(--civ-spacing-1)',
         '1.5': 'var(--civ-spacing-1_5)',
         '2': 'var(--civ-spacing-2)',
-        '2.5': 'var(--civ-spacing-2_5)',
         '3': 'var(--civ-spacing-3)',
         '4': 'var(--civ-spacing-4)',
         '5': 'var(--civ-spacing-5)',
@@ -156,7 +155,6 @@ const config: Config = {
         '8': 'var(--civ-spacing-8)',
         '10': 'var(--civ-spacing-10)',
         '12': 'var(--civ-spacing-12)',
-        '16': 'var(--civ-spacing-16)',
         '20': 'var(--civ-spacing-20)',
       },
       // Dedicated `width` scale for the fixed input-width ladder

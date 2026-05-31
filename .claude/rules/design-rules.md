@@ -64,6 +64,54 @@ shows up in code review.
 
 ---
 
+## Arrow icons navigate; carets expand/collapse in place
+
+**Rule.** Two icon families signal two different affordances, and
+they must not be swapped. A **directional arrow** (`arrow-right`,
+`arrow-back`) means *go somewhere* — it belongs on navigation
+affordances that take the user to a new place. A **caret /
+chevron** (`chevron-right`, `chevron-left`, `chevron-down`) means
+*expand or collapse this, right here* — it belongs on on-page
+disclosure affordances. The user reads "arrow" as "I'm leaving"
+and "caret" as "something unfolds in place"; using a caret for
+navigation (or an arrow for a disclosure) erodes that second,
+color-independent cue.
+
+**What gets directional arrows** (`arrow-right` / `arrow-back`):
+- `civ-link` `primary` variant — trailing `arrow-right`.
+- `civ-link` `back` variant — leading `arrow-back`.
+- Any future "next / previous" navigation affordance
+  (pagination next/prev, breadcrumb-style forward links,
+  wizard "continue to next step" links that actually navigate).
+
+**What gets carets / chevrons** (`chevron-*`):
+- `civ-disclosure`, `civ-accordion` / `civ-accordion-item` — the
+  rotating caret that opens the panel in place.
+- `civ-read-more` — the expand-in-place toggle.
+- `civ-select` / `civ-combobox` dropdown indicators — the listbox
+  opens anchored to the control, it doesn't navigate.
+- Any in-page expander whose content unfolds beneath the trigger.
+
+**Failure mode this prevents.** Before this rule, `civ-link`'s
+`primary` and `back` variants rendered `chevron-right` /
+`chevron-left`, visually identical to the accordion/disclosure
+carets. A user couldn't tell from the glyph whether activating the
+control would navigate away or expand something inline — the two
+affordances were only distinguishable by context. Switching the
+navigation variants to directional arrows restored the distinction
+(see `civ-link.ts` `_trailingIcon` / `_leadingIcon`, and the
+matching iOS / Android / schema / docs updates).
+
+**Caught by:** code review (no lint). The convention is documented
+here and in the `civ-link` JSDoc; a new navigation affordance that
+reaches for a caret, or a new disclosure that reaches for an arrow,
+should be flagged in review. If a third navigation component adopts
+the arrow pattern, consider a lint that asserts the
+navigation-variant icon getters resolve to `arrow-*` and the
+disclosure-trigger getters resolve to `chevron-*`.
+
+---
+
 ## Compose existing components before hand-rolling chrome
 
 **Rule.** When a CivUI primitive already exists for a visual pattern,

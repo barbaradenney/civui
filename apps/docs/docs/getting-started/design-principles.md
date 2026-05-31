@@ -61,6 +61,10 @@ Only clickable elements get rounded corners. Buttons, inputs, tiles. Static cont
 
 Text is only underlined when it navigates somewhere. Links get underlines; action buttons do not. This preserves the semantic distinction between navigation and action.
 
+## Arrows Navigate, Carets Expand
+
+Directional **arrow** icons (`arrow-right`, `arrow-back`) mean "go somewhere" — they live on navigation affordances like the `primary` and `back` link variants, pagination, and breadcrumbs. The **caret** (chevron) is reserved for on-page expand/collapse affordances: disclosures, accordions, in-page expanders, and select/combobox dropdowns. Keeping the two glyph families apart gives users a second, color-independent cue for "this takes me to a new place" versus "this opens something right here."
+
 ## Required Indicator Logic
 
 - If **all fields** in a fieldset are required → show "(required)" on the legend, hide on individual fields

@@ -85,6 +85,13 @@
       "source": "packages/core/src/foundations/destructive-actions.stories.ts"
     },
     {
+      "story": "Current",
+      "name": "Current item (aria-current)",
+      "category": "Actions/Action Button",
+      "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\" role=\"group\" aria-label=\"Pagination\">\n      <civ-action-button label=\"1\"></civ-action-button>\n      <civ-action-button label=\"2\"></civ-action-button>\n      <civ-action-button label=\"3\" current aria-label=\"Page 3, current page\"></civ-action-button>\n      <civ-action-button label=\"4\"></civ-action-button>\n      <civ-action-button label=\"5\"></civ-action-button>\n    </div>",
+      "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
+    },
+    {
       "story": "DangerVariants",
       "category": "Actions/Action Button",
       "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\">\n      <civ-action-button label=\"Delete\" emphasis=\"primary\" danger></civ-action-button>\n      <civ-action-button label=\"Remove\" emphasis=\"secondary\" danger></civ-action-button>\n      <civ-action-button label=\"Cancel\" emphasis=\"tertiary\" danger></civ-action-button>\n    </div>",
@@ -108,6 +115,13 @@
       "category": "Layout/Data Grid",
       "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n        <p class=\"civ-m-0\">\n          Select rows below, then preview an export. In production the\n          consumer would create a Blob URL and trigger a download instead\n          of printing — the utility is the same.\n        </p>\n        <div class=\"civ-flex civ-gap-2\">\n          <civ-action-button id=\"story-export-csv\" emphasis=\"secondary\" icon-start=\"download\" label=\"Export all (CSV)\"></civ-action-button>\n          <civ-action-button id=\"story-export-json\" emphasis=\"secondary\" icon-start=\"download\" label=\"Export all (JSON)\"></civ-action-button>\n          <civ-action-button id=\"story-export-selected\" emphasis=\"secondary\" icon-start=\"download\" label=\"Export selection (CSV)\"></civ-action-button>\n        </div>\n        <civ-data-grid class=\"story-export\" caption=\"Applications (export demo)\"></civ-data-grid>\n        <pre id=\"story-export-out\" style=\"background: var(--civ-color-base-lightest); padding: var(--civ-spacing-3); border-radius: 4px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 0.85em;\">Click an export button to preview the output.</pre>\n      </div>",
       "source": "packages/data/src/data-grid/civ-data-grid.stories.ts"
+    },
+    {
+      "story": "IconOnly",
+      "name": "Icon only",
+      "category": "Actions/Action Button",
+      "html": "<div class=\"civ-flex civ-gap-2 civ-items-center\">\n      <civ-action-button label=\"Edit\" icon-start=\"edit\" icon-only></civ-action-button>\n      <civ-action-button label=\"Copy\" icon-start=\"copy\" icon-only></civ-action-button>\n      <civ-action-button label=\"Print\" icon-start=\"print\" icon-only></civ-action-button>\n      <civ-action-button label=\"More actions\" icon-start=\"more-vert\" icon-only></civ-action-button>\n      <civ-action-button label=\"Delete\" icon-start=\"trash\" icon-only danger></civ-action-button>\n    </div>",
+      "source": "packages/actions/src/action-button/civ-action-button.stories.ts"
     },
     {
       "story": "Loading",
@@ -185,7 +199,7 @@
     {
       "story": "AllStates",
       "category": "Forms/Compound/Address",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"normal\"></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"hint\" hint=\"US addresses only\"></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"error\" error=\"Enter a complete address\" required></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"required\" required></civ-address>\n      <civ-address legend=\"\\1\" size=\"lg\" name=\"disabled\" disabled></civ-address>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-8\">\n      <civ-address legend=\"Mailing address\" size=\"lg\" name=\"normal\"></civ-address>\n      <civ-address legend=\"Mailing address\" size=\"lg\" name=\"hint\" hint=\"US addresses only\"></civ-address>\n      <civ-address legend=\"Mailing address\" size=\"lg\" name=\"error\" error=\"Enter a complete address\" required></civ-address>\n      <civ-address legend=\"Mailing address\" size=\"lg\" name=\"required\" required></civ-address>\n      <civ-address legend=\"Mailing address\" size=\"lg\" name=\"disabled\" disabled></civ-address>\n    </div>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
     },
     {
@@ -198,7 +212,7 @@
     {
       "story": "DensityScale",
       "category": "Forms/Compound/Address",
-      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"dense-addr\"></civ-address>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"default-addr\"></civ-address>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-address legend=\"\\1\" size=\"lg\" name=\"spacious-addr\"></civ-address>\n      </div>\n    </div>",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-6\">\n      <div data-civ-scale=\"dense\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Dense</p>\n        <civ-address legend=\"Mailing address\" size=\"lg\" name=\"dense-addr\"></civ-address>\n      </div>\n      <div>\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Default</p>\n        <civ-address legend=\"Mailing address\" size=\"lg\" name=\"default-addr\"></civ-address>\n      </div>\n      <div data-civ-scale=\"spacious\">\n        <p class=\"civ-m-0 civ-mb-2 civ-font-semibold\">Spacious</p>\n        <civ-address legend=\"Mailing address\" size=\"lg\" name=\"spacious-addr\"></civ-address>\n      </div>\n    </div>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
     },
     {
@@ -224,7 +238,7 @@
     {
       "story": "Prefilled",
       "category": "Forms/Compound/Address",
-      "html": "<civ-address legend=\"\\1\" size=\"lg\" name=\"mailing\"></civ-address>",
+      "html": "<civ-address legend=\"Mailing address\" size=\"lg\" name=\"mailing\"></civ-address>",
       "source": "packages/compound/src/address/civ-address.stories.ts"
     },
     {
@@ -690,6 +704,20 @@
       "name": "Form Actions (mobile)",
       "category": "Actions/Button",
       "html": "<p class=\"civ-mb-4 civ-text-sm\">\n      Below 481px viewports, <code>.civ-button-row</code> stacks the cluster vertically so\n      every button picks up the design system's full-width-on-mobile rule. Compare to plain\n      <code>civ-flex civ-gap-3</code>, which keeps the row horizontal at every width and\n      shrinks each button to its share of the row.\n    </p>\n    <div class=\"civ-button-row\">\n      <civ-button>Save and continue</civ-button>\n      <civ-button emphasis=\"tertiary\">Back</civ-button>\n    </div>",
+      "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "IconOnly",
+      "name": "Icon only",
+      "category": "Actions/Button",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n      <civ-button icon-only icon-start=\"edit\">Edit</civ-button>\n      <civ-button icon-only icon-start=\"share\" emphasis=\"secondary\">Share</civ-button>\n      <civ-button icon-only icon-start=\"more-vert\" emphasis=\"tertiary\">More options</civ-button>\n      <civ-button icon-only icon-start=\"trash\" emphasis=\"primary\" danger>Delete</civ-button>\n    </div>",
+      "source": "packages/actions/src/button/civ-button.stories.ts"
+    },
+    {
+      "story": "Loading",
+      "name": "Loading state",
+      "category": "Actions/Button",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n      <civ-button loading loading-label=\"Submitting…\">Submit application</civ-button>\n      <civ-button emphasis=\"secondary\" loading loading-label=\"Saving…\">Save and continue</civ-button>\n      <civ-button emphasis=\"primary\" danger loading loading-label=\"Deleting…\">Delete account</civ-button>\n    </div>",
       "source": "packages/actions/src/button/civ-button.stories.ts"
     },
     {
@@ -1372,6 +1400,13 @@
       "story": "Disabled",
       "category": "Actions/Confirm Button",
       "html": "<civ-confirm-button label=\"Copy\" disabled></civ-confirm-button>",
+      "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
+    },
+    {
+      "story": "Emphasis",
+      "name": "Emphasis — secondary / primary / tertiary",
+      "category": "Actions/Confirm Button",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n      <civ-confirm-button emphasis=\"secondary\" label=\"Copy\" success-label=\"Copied\" @civ-confirm=${() => {}}></civ-confirm-button>\n      <civ-confirm-button emphasis=\"primary\" label=\"Generate token\" success-label=\"Generated\" @civ-confirm=${() => {}}></civ-confirm-button>\n      <civ-confirm-button emphasis=\"tertiary\" label=\"Copy link\" success-label=\"Copied\" @civ-confirm=${() => {}}></civ-confirm-button>\n    </div>",
       "source": "packages/actions/src/confirm-button/civ-confirm-button.stories.ts"
     },
     {
@@ -2430,6 +2465,13 @@
       "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
     },
     {
+      "story": "HorizontalScroll",
+      "name": "Horizontal Scroll (overflow)",
+      "category": "Actions/Filter Chip",
+      "html": "<div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);\">\n      <div class=\"civ-scroll-x civ-scroll-x--fade\">\n        <div class=\"civ-flex civ-gap-2\" style=\"flex-wrap: nowrap;\">\n          <civ-filter-chip label=\"In review\" value=\"review\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Approved\" value=\"approved\"></civ-filter-chip>\n          <civ-filter-chip label=\"Denied\" value=\"denied\"></civ-filter-chip>\n          <civ-filter-chip label=\"Pending\" value=\"pending\"></civ-filter-chip>\n          <civ-filter-chip label=\"Returned\" value=\"returned\"></civ-filter-chip>\n          <civ-filter-chip label=\"Archived\" value=\"archived\"></civ-filter-chip>\n          <civ-filter-chip label=\"Withdrawn\" value=\"withdrawn\"></civ-filter-chip>\n          <civ-filter-chip label=\"Escalated\" value=\"escalated\"></civ-filter-chip>\n        </div>\n      </div>\n    </div>",
+      "source": "packages/actions/src/filter-chip/civ-filter-chip.stories.ts"
+    },
+    {
       "story": "InlineInChips",
       "category": "Feedback/Count",
       "html": "<div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap;\">\n      <civ-filter-chip label=\"Healthcare\" value=\"health\" count=\"24\"></civ-filter-chip>\n      <civ-filter-chip label=\"Education\" value=\"education\" count=\"12\" selected></civ-filter-chip>\n      <civ-filter-chip label=\"Housing\" value=\"housing\" count=\"8\"></civ-filter-chip>\n    </div>",
@@ -2512,6 +2554,13 @@
       "story": "Default",
       "category": "Actions/Filter Chip Group",
       "html": "<civ-filter-chip-group mode=\"${args.mode}\" label=\"${args.label}\">\n      <civ-filter-chip label=\"Healthcare\" value=\"health\"></civ-filter-chip>\n      <civ-filter-chip label=\"Education\" value=\"education\"></civ-filter-chip>\n      <civ-filter-chip label=\"Housing\" value=\"housing\"></civ-filter-chip>\n      <civ-filter-chip label=\"Employment\" value=\"employment\"></civ-filter-chip>\n    </civ-filter-chip-group>",
+      "source": "packages/actions/src/filter-chip-group/civ-filter-chip-group.stories.ts"
+    },
+    {
+      "story": "HorizontalScroll",
+      "name": "Horizontal Scroll (overflow)",
+      "category": "Actions/Filter Chip Group",
+      "html": "<style>\n      .civ-fcg-scroll-demo [data-civ-filter-chip-group-content] {\n        flex-wrap: nowrap;\n      }\n    </style>\n    <div\n      class=\"civ-fcg-scroll-demo\"\n      style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);\"\n    >\n      <div class=\"civ-scroll-x civ-scroll-x--fade\">\n        <civ-filter-chip-group mode=\"single\" label=\"Filter by status\">\n          <civ-filter-chip label=\"In review\" value=\"review\" selected></civ-filter-chip>\n          <civ-filter-chip label=\"Approved\" value=\"approved\"></civ-filter-chip>\n          <civ-filter-chip label=\"Denied\" value=\"denied\"></civ-filter-chip>\n          <civ-filter-chip label=\"Pending\" value=\"pending\"></civ-filter-chip>\n          <civ-filter-chip label=\"Returned\" value=\"returned\"></civ-filter-chip>\n          <civ-filter-chip label=\"Archived\" value=\"archived\"></civ-filter-chip>\n          <civ-filter-chip label=\"Withdrawn\" value=\"withdrawn\"></civ-filter-chip>\n          <civ-filter-chip label=\"Escalated\" value=\"escalated\"></civ-filter-chip>\n        </civ-filter-chip-group>\n      </div>\n    </div>",
       "source": "packages/actions/src/filter-chip-group/civ-filter-chip-group.stories.ts"
     },
     {
@@ -3173,7 +3222,7 @@
     {
       "story": "AppliedFilterReadout",
       "category": "Actions/Input Chip",
-      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 36rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Active filters:</p>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"Category: Healthcare\" value=\"cat-healthcare\"></civ-input-chip>\n        <civ-input-chip label=\"State: California\" value=\"state-CA\"></civ-input-chip>\n        <civ-input-chip label=\"Updated: Last 30 days\" value=\"last-30\"></civ-input-chip>\n      </div>\n    </div>",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 36rem;\">\n      <p style=\"margin: 0; font-weight: 600;\">Active filters:</p>\n      <div @civ-remove=\"${removeChip}\" style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"Category: Healthcare\" value=\"cat-healthcare\"></civ-input-chip>\n        <civ-input-chip label=\"State: California\" value=\"state-CA\"></civ-input-chip>\n        <civ-input-chip label=\"Updated: Last 30 days\" value=\"last-30\"></civ-input-chip>\n      </div>\n    </div>",
       "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
     },
     {
@@ -3191,7 +3240,7 @@
     {
       "story": "RecipientList",
       "category": "Actions/Input Chip",
-      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">To</label>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border: 1px solid var(--civ-color-border); border-radius: 0.25rem;\">\n        <civ-input-chip label=\"alice@example.com\" value=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" value=\"bob@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"carol@example.com\" value=\"carol@example.com\"></civ-input-chip>\n        <span style=\"color: var(--civ-color-base-dark); font-size: 0.875rem;\">Add more…</span>\n      </div>\n    </div>",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">To</label>\n      <div\n        @civ-remove=\"${removeChip}\"\n        style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; padding: 0.5rem; border: 1px solid var(--civ-color-border); border-radius: 0.25rem;\"\n      >\n        <civ-input-chip label=\"alice@example.com\" value=\"alice@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"bob@example.com\" value=\"bob@example.com\"></civ-input-chip>\n        <civ-input-chip label=\"carol@example.com\" value=\"carol@example.com\"></civ-input-chip>\n        <span style=\"color: var(--civ-color-base-dark); font-size: 0.875rem;\">Add more…</span>\n      </div>\n    </div>",
       "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
     },
     {
@@ -3209,7 +3258,7 @@
     {
       "story": "TagInput",
       "category": "Actions/Input Chip",
-      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">Tags</label>\n      <div style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"typescript\" value=\"typescript\"></civ-input-chip>\n        <civ-input-chip label=\"accessibility\" value=\"accessibility\"></civ-input-chip>\n        <civ-input-chip label=\"government\" value=\"government\"></civ-input-chip>\n        <civ-input-chip label=\"forms\" value=\"forms\"></civ-input-chip>\n      </div>\n    </div>",
+      "html": "<div style=\"display: flex; flex-direction: column; gap: 0.5rem; max-width: 32rem;\">\n      <label style=\"font-weight: 600;\">Tags</label>\n      <div @civ-remove=\"${removeChip}\" style=\"display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;\">\n        <civ-input-chip label=\"typescript\" value=\"typescript\"></civ-input-chip>\n        <civ-input-chip label=\"accessibility\" value=\"accessibility\"></civ-input-chip>\n        <civ-input-chip label=\"government\" value=\"government\"></civ-input-chip>\n        <civ-input-chip label=\"forms\" value=\"forms\"></civ-input-chip>\n      </div>\n    </div>",
       "source": "packages/actions/src/input-chip/civ-input-chip.stories.ts"
     }
   ],
@@ -3326,6 +3375,13 @@
       "source": "packages/actions/src/link/civ-link.stories.ts"
     },
     {
+      "story": "ComposedActionLinks",
+      "name": "Composed action links (calendar / directions)",
+      "category": "Navigation/Link",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\" style=\"max-width: 400px;\">\n      <civ-link href=\"/events/town-hall.ics\" icon-start=\"calendar\">Add to your calendar</civ-link>\n      <civ-link href=\"https://maps.example.gov/?q=810+Vermont+Ave+NW+Washington+DC\" icon-start=\"location\" new-tab>Get directions to the regional office</civ-link>\n    </div>",
+      "source": "packages/actions/src/link/civ-link.stories.ts"
+    },
+    {
       "story": "Danger",
       "category": "Navigation/Link",
       "html": "<div class=\"civ-flex civ-gap-4 civ-flex-wrap civ-items-center\">\n      <civ-link href=\"#\" variant=\"primary\" danger>Remove item</civ-link>\n      <civ-link href=\"#\" variant=\"secondary\" danger>Cancel request</civ-link>\n    </div>",
@@ -3380,6 +3436,13 @@
       "name": "Email with Subject",
       "category": "Navigation/Link",
       "html": "<civ-link type=\"email\" address=\"benefits@va.gov\" subject=\"Question about my claim\"></civ-link>",
+      "source": "packages/actions/src/link/civ-link.stories.ts"
+    },
+    {
+      "story": "External",
+      "name": "External (opens in new tab)",
+      "category": "Navigation/Link",
+      "html": "<div class=\"civ-flex civ-flex-col civ-gap-3\">\n      <civ-link href=\"https://www.va.gov\" new-tab>VA.gov</civ-link>\n      <civ-link href=\"https://www.benefits.va.gov\" new-tab variant=\"primary\">Explore your benefits</civ-link>\n      <civ-link href=\"https://www.federalregister.gov\" new-tab variant=\"secondary\">Read the federal rule</civ-link>\n    </div>",
       "source": "packages/actions/src/link/civ-link.stories.ts"
     },
     {
@@ -4042,7 +4105,7 @@
     {
       "story": "FooterNavigation",
       "category": "Navigation/Nav",
-      "html": "<p class=\"civ-italic civ-mb-2\">\n      Multiple navs on the same page each need a distinct <code>label</code>.\n    </p>\n    <civ-nav label=\"Footer navigation\">\n      <civ-nav-item href=\"/privacy\" label=\"Privacy\"></civ-nav-item>\n      <civ-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-nav-item>\n      <civ-nav-item href=\"/foia\" label=\"FOIA\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      Multiple navs on the same page each need a distinct <code>label</code>.\n      Footer / utility nav reads better with the quieter\n      <code>emphasis=\"secondary\"</code> treatment.\n    </p>\n    <civ-nav label=\"Footer navigation\" emphasis=\"secondary\">\n      <civ-nav-item href=\"/privacy\" label=\"Privacy\"></civ-nav-item>\n      <civ-nav-item href=\"/accessibility\" label=\"Accessibility\"></civ-nav-item>\n      <civ-nav-item href=\"/foia\" label=\"FOIA\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
       "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
@@ -4055,6 +4118,12 @@
       "story": "NoActivePage",
       "category": "Navigation/Nav",
       "html": "<civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\"></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
+      "source": "packages/navigation/src/nav/civ-nav.stories.ts"
+    },
+    {
+      "story": "SecondaryEmphasis",
+      "category": "Navigation/Nav",
+      "html": "<p class=\"civ-italic civ-mb-2\">\n      <code>emphasis=\"primary\"</code> (default) is bold with a 3px active\n      bar — the primary site nav. <code>emphasis=\"secondary\"</code> is\n      normal-weight with a thinner 2px bar — the quiet treatment used for\n      footer / utility nav, mirroring <code>civ-side-nav</code>'s\n      <code>secondary</code> emphasis.\n    </p>\n    <p class=\"civ-font-bold civ-mb-1\">Primary (default)</p>\n    <civ-nav label=\"Primary navigation\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>\n    <p class=\"civ-font-bold civ-mb-1 civ-mt-4\">Secondary</p>\n    <civ-nav label=\"Utility navigation\" emphasis=\"secondary\">\n      <civ-nav-item href=\"/\" label=\"Home\" current></civ-nav-item>\n      <civ-nav-item href=\"/benefits\" label=\"Benefits\"></civ-nav-item>\n      <civ-nav-item href=\"/contact\" label=\"Contact\"></civ-nav-item>\n    </civ-nav>",
       "source": "packages/navigation/src/nav/civ-nav.stories.ts"
     },
     {
@@ -4657,6 +4726,13 @@
       "name": "Rich body — nested lists and links",
       "category": "Feedback/Process List",
       "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Before you begin\">\n          <p>You'll need the following:</p>\n          <ul>\n            <li>Your Social Security number</li>\n            <li>Your most recent W-2 or pay stub</li>\n            <li>Bank routing and account numbers (for direct deposit)</li>\n          </ul>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Complete the application\">\n          <p>\n            The form takes about 20 minutes. Use the\n            <a href=\"#\">save-and-continue</a> button if you need a break.\n          </p>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Track your status\">\n          <p>\n            After submission, you can check the status of your application\n            in your <a href=\"#\">account dashboard</a>.\n          </p>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
+      "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
+    },
+    {
+      "story": "WithActions",
+      "name": "With actions — eyebrow labels + buttons / links",
+      "category": "Feedback/Process List",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-process-list>\n        <civ-process-list-item heading=\"Create your account\">\n          <p class=\"civ-eyebrow civ-m-0 civ-mb-1\">Takes about 2 minutes</p>\n          <p class=\"civ-mt-0\">\n            Sign in with Login.gov so your progress is saved as you go.\n          </p>\n          <civ-button href=\"#\" label=\"Create account\"></civ-button>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Verify your identity\">\n          <p class=\"civ-eyebrow civ-m-0 civ-mb-1\">Required</p>\n          <p class=\"civ-mt-0\">\n            We use ID.me to confirm who you are before processing benefits.\n          </p>\n          <civ-link href=\"#\" label=\"Why we ask for this\"></civ-link>\n        </civ-process-list-item>\n\n        <civ-process-list-item heading=\"Submit your application\">\n          <p class=\"civ-eyebrow civ-m-0 civ-mb-1\">Final step</p>\n          <p class=\"civ-mt-0\">\n            Review your answers, then file your claim. You'll get a\n            confirmation number right away.\n          </p>\n          <div class=\"civ-button-row\">\n            <civ-button label=\"Start application\"></civ-button>\n            <civ-button emphasis=\"tertiary\" href=\"#\" label=\"Preview the form\"></civ-button>\n          </div>\n        </civ-process-list-item>\n      </civ-process-list>\n    </div>",
       "source": "packages/feedback/src/process-list/civ-process-list.stories.ts"
     }
   ],
@@ -6104,6 +6180,13 @@
       "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
     },
     {
+      "story": "HorizontalScroll",
+      "name": "Horizontal Scroll (overflow)",
+      "category": "Navigation/Tab Nav",
+      "html": "<style>\n      .civ-tabnav-scroll-demo .civ-tab-nav__list {\n        flex-wrap: nowrap;\n      }\n    </style>\n    <div\n      class=\"civ-tabnav-scroll-demo\"\n      style=\"max-width: 420px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);\"\n    >\n      <div class=\"civ-scroll-x\">\n        <civ-tab-nav label=\"Repository sections\">\n          <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/actions\" label=\"Actions\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/projects\" label=\"Projects\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/wiki\" label=\"Wiki\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/security\" label=\"Security\"></civ-tab-nav-item>\n          <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n        </civ-tab-nav>\n      </div>\n    </div>",
+      "source": "packages/navigation/src/tab-nav/civ-tab-nav.stories.ts"
+    },
+    {
       "story": "MobileStacking",
       "category": "Navigation/Tab Nav",
       "html": "<p class=\"civ-italic civ-mb-2\">\n      At ≤480px the tabs stack vertically. Resize the viewport to see it.\n    </p>\n    <div style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: 8px;\">\n      <civ-tab-nav label=\"Repository sections\">\n        <civ-tab-nav-item href=\"/repo\" label=\"Code\" current></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/issues\" label=\"Issues\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/pulls\" label=\"Pull requests\"></civ-tab-nav-item>\n        <civ-tab-nav-item href=\"/repo/settings\" label=\"Settings\"></civ-tab-nav-item>\n      </civ-tab-nav>\n    </div>",
@@ -6133,6 +6216,13 @@
       "story": "Default",
       "category": "Navigation/Tabs",
       "html": "<civ-tabs label=\"Account settings\" value=\"profile\">\n      <civ-tab value=\"profile\" label=\"Profile\"></civ-tab>\n      <civ-tab value=\"security\" label=\"Security\"></civ-tab>\n      <civ-tab value=\"notifications\" label=\"Notifications\"></civ-tab>\n\n      <civ-tab-panel value=\"profile\">\n        <h3 class=\"civ-mt-0\">Profile</h3>\n        <p>Update your display name, photo, and contact preferences.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"security\">\n        <h3 class=\"civ-mt-0\">Security</h3>\n        <p>Change your password, manage sign-in devices, and review login history.</p>\n      </civ-tab-panel>\n      <civ-tab-panel value=\"notifications\">\n        <h3 class=\"civ-mt-0\">Notifications</h3>\n        <p>Choose which updates we send by email and text.</p>\n      </civ-tab-panel>\n    </civ-tabs>",
+      "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
+    },
+    {
+      "story": "HorizontalScroll",
+      "name": "Horizontal Scroll (overflow)",
+      "category": "Navigation/Tabs",
+      "html": "<div\n      style=\"max-width: 360px; border: 1px dashed var(--civ-color-base-light); padding: var(--civ-spacing-2);\"\n    >\n      <civ-tabs label=\"Report sections\" value=\"overview\">\n        <civ-tab value=\"overview\" label=\"Overview\"></civ-tab>\n        <civ-tab value=\"eligibility\" label=\"Eligibility\"></civ-tab>\n        <civ-tab value=\"documents\" label=\"Documents\"></civ-tab>\n        <civ-tab value=\"payments\" label=\"Payments\"></civ-tab>\n        <civ-tab value=\"appeals\" label=\"Appeals\"></civ-tab>\n        <civ-tab value=\"correspondence\" label=\"Correspondence\"></civ-tab>\n        <civ-tab value=\"history\" label=\"History\"></civ-tab>\n\n        <civ-tab-panel value=\"overview\">Overview of the claim.</civ-tab-panel>\n        <civ-tab-panel value=\"eligibility\">Eligibility determination details.</civ-tab-panel>\n        <civ-tab-panel value=\"documents\">Uploaded supporting documents.</civ-tab-panel>\n        <civ-tab-panel value=\"payments\">Payment schedule and history.</civ-tab-panel>\n        <civ-tab-panel value=\"appeals\">Open and resolved appeals.</civ-tab-panel>\n        <civ-tab-panel value=\"correspondence\">Letters and messages.</civ-tab-panel>\n        <civ-tab-panel value=\"history\">Full activity history.</civ-tab-panel>\n      </civ-tabs>\n    </div>",
       "source": "packages/navigation/src/tabs/civ-tabs.stories.ts"
     },
     {
@@ -6741,6 +6831,13 @@
       "category": "Feedback/Timeline",
       "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(0.5)}\"\n          actor=\"Sarah\"\n          action=\"Saved progress\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${hoursAgo(3)}\"\n          actor=\"Sarah\"\n          action=\"Uploaded passport scan\"\n          intent=\"info\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(2)}\"\n          actor=\"Sarah\"\n          action=\"Started application\"\n          intent=\"neutral\"\n          timestamp-format=\"relative\"\n        ></civ-timeline-item>\n      </civ-timeline>\n    </div>",
       "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
+    },
+    {
+      "story": "WithActions",
+      "name": "With actions — eyebrow labels + buttons / links",
+      "category": "Feedback/Timeline",
+      "html": "<div style=\"max-width: 540px;\">\n      <civ-timeline>\n        <civ-timeline-item\n          timestamp=\"${daysAgo(5)}\"\n          actor=\"Benefits processing\"\n          action=\"Documentation requested\"\n          intent=\"warning\"\n        >\n          <p class=\"civ-eyebrow civ-m-0 civ-mb-1\">Action needed</p>\n          <p class=\"civ-mt-0\">\n            We need a copy of your DD-214 to verify your service dates.\n          </p>\n          <civ-button label=\"Upload document\"></civ-button>\n        </civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(2)}\"\n          actor=\"Sarah Chen\"\n          action=\"DD-214 uploaded\"\n          intent=\"info\"\n        >\n          <p class=\"civ-mt-0 civ-mb-1\">\n            We're reviewing your file now.\n          </p>\n          <civ-link href=\"#\" label=\"Check status\"></civ-link>\n        </civ-timeline-item>\n\n        <civ-timeline-item\n          timestamp=\"${daysAgo(1)}\"\n          actor=\"J. Martinez (Reviewer)\"\n          action=\"Claim approved\"\n          intent=\"success\"\n        >\n          <p class=\"civ-eyebrow civ-m-0 civ-mb-1\">Ready to view</p>\n          <p class=\"civ-mt-0\">\n            Your award letter is available now. Payments begin next cycle.\n          </p>\n          <div class=\"civ-button-row\">\n            <civ-button label=\"Download award letter\"></civ-button>\n            <civ-button emphasis=\"tertiary\" href=\"#\" label=\"View payment schedule\"></civ-button>\n          </div>\n        </civ-timeline-item>\n      </civ-timeline>\n    </div>",
+      "source": "packages/feedback/src/timeline/civ-timeline.stories.ts"
     }
   ],
   "civ-toggle": [
@@ -6842,6 +6939,13 @@
       "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
     },
     {
+      "story": "Emphasis",
+      "name": "Emphasis — secondary / primary / tertiary",
+      "category": "Actions/Toggle Button",
+      "html": "<div class=\"civ-flex civ-gap-3 civ-flex-wrap civ-items-center\">\n      <civ-toggle-button emphasis=\"secondary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>\n      <civ-toggle-button emphasis=\"primary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>\n      <civ-toggle-button emphasis=\"tertiary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>\n    </div>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
       "story": "ExpandCollapseAll",
       "name": "Expand all / collapse all",
       "category": "Layout/Accordion",
@@ -6867,6 +6971,13 @@
       "name": "Secondary emphasis (prominent gray pill)",
       "category": "Actions/Toggle Button",
       "html": "<civ-toggle-button emphasis=\"secondary\" label=\"Show details\" pressed-label=\"Hide details\"></civ-toggle-button>",
+      "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
+    },
+    {
+      "story": "WithIcon",
+      "name": "With leading icon",
+      "category": "Actions/Toggle Button",
+      "html": "<civ-toggle-button\n      icon-start=\"chevron-down\"\n      label=\"Expand all\"\n      pressed-label=\"Collapse all\"\n    ></civ-toggle-button>",
       "source": "packages/actions/src/toggle-button/civ-toggle-button.stories.ts"
     }
   ],

@@ -85,7 +85,7 @@ export const ConfirmRemove: Story = {
         </div>
         <p
           data-status
-          class="civ-text-caption civ-text-success civ-mt-3"
+          class="civ-text-caption civ-text-success-dark civ-mt-3"
           role="status"
         ></p>
         <civ-modal
@@ -145,7 +145,7 @@ export const ConfirmDeleteFile: Story = {
         </ul>
         <p
           data-status
-          class="civ-text-caption civ-text-success civ-mt-3"
+          class="civ-text-caption civ-text-success-dark civ-mt-3"
           role="status"
         ></p>
         <civ-modal
@@ -234,7 +234,7 @@ export const TypeToConfirm: Story = {
         </div>
         <p
           data-status
-          class="civ-text-caption civ-text-success civ-mt-3"
+          class="civ-text-caption civ-text-success-dark civ-mt-3"
           role="status"
         ></p>
         <civ-modal

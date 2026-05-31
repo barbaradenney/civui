@@ -37,41 +37,30 @@ export const VADisabilityApplication: Story = {
 
       <h3 class="civ-heading-md civ-mb-2">Prepare</h3>
       <civ-list dividers>
-        <civ-list-item href="#/eligibility">
-          <span class="civ-block civ-font-bold">Check your eligibility</span>
+        <civ-list-item href="#/eligibility" heading="Check your eligibility">
           <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
       <h3 class="civ-heading-md civ-mb-2 civ-mt-6">Fill out your application</h3>
       <civ-list dividers>
-        <civ-list-item href="#/personal">
-          <span class="civ-block civ-font-bold">Personal information</span>
-          <span class="civ-block civ-text-sm civ-text-muted">Name, date of birth, Social Security number</span>
+        <civ-list-item href="#/personal" heading="Personal information" description="Name, date of birth, Social Security number">
           <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/contact">
-          <span class="civ-block civ-font-bold">Contact information</span>
-          <span class="civ-block civ-text-sm civ-text-muted">Address and phone number</span>
+        <civ-list-item href="#/contact" heading="Contact information" description="Address and phone number">
           <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">Service history</span>
-          <span class="civ-block civ-text-sm civ-text-muted">Branch, dates, and character of service</span>
+        <civ-list-item heading="Service history" description="Branch, dates, and character of service">
           <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">Disabilities and conditions</span>
-          <span class="civ-block civ-text-sm civ-text-muted">List each condition you are claiming</span>
+        <civ-list-item heading="Disabilities and conditions" description="List each condition you are claiming">
           <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
 
       <h3 class="civ-heading-md civ-mb-2 civ-mt-6">Review and submit</h3>
       <civ-list dividers>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">Review your application</span>
-          <span class="civ-block civ-text-sm civ-text-muted">Complete all sections first</span>
+        <civ-list-item heading="Review your application" description="Complete all sections first">
           <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>
@@ -85,28 +74,22 @@ export const AllStatuses: Story = {
     <div class="civ-max-w-2xl">
       <h3 class="civ-heading-md civ-mb-2">Status reference</h3>
       <civ-list dividers>
-        <civ-list-item href="#/a">
-          <span class="civ-block civ-font-bold">not-started</span>
+        <civ-list-item href="#/a" heading="not-started">
           <civ-badge data-list-item-end label="Not started" intent="info" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/b">
-          <span class="civ-block civ-font-bold">in-progress</span>
+        <civ-list-item href="#/b" heading="in-progress">
           <civ-badge data-list-item-end label="In progress" intent="info" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/c">
-          <span class="civ-block civ-font-bold">complete</span>
+        <civ-list-item href="#/c" heading="complete">
           <civ-badge data-list-item-end label="Complete" intent="success" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item>
-          <span class="civ-block civ-font-bold">cannot-start</span>
+        <civ-list-item heading="cannot-start">
           <civ-badge data-list-item-end label="Cannot start yet" intent="neutral" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/e">
-          <span class="civ-block civ-font-bold">error</span>
+        <civ-list-item href="#/e" heading="error">
           <civ-badge data-list-item-end label="Has errors" intent="error" emphasis="secondary" with-icon></civ-badge>
         </civ-list-item>
-        <civ-list-item href="#/f">
-          <span class="civ-block civ-font-bold">review</span>
+        <civ-list-item href="#/f" heading="review">
           <civ-badge data-list-item-end label="Needs review" intent="warning" emphasis="primary" with-icon></civ-badge>
         </civ-list-item>
       </civ-list>

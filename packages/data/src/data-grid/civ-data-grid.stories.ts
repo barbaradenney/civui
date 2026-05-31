@@ -471,6 +471,12 @@ export const MasterDetailDrawer: Story = {
       grid.columns = defaultColumns;
       grid.rows = toRows(SAMPLE_DATA);
       grid.interactive = true;
+      // civ-drawer is a controlled overlay: it dispatches `civ-close` on
+      // X / backdrop / Escape but leaves `open` for the parent to flip.
+      // Without this listener the drawer would never close.
+      drawer.addEventListener('civ-close', () => {
+        drawer.open = false;
+      });
       grid.addEventListener('civ-row-activate', (e: Event) => {
         const row = (e as CustomEvent).detail.row;
         drawer.heading = `Application ${row.id}`;

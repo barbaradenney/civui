@@ -6,6 +6,16 @@ interface StoryEmbedProps {
   minHeight?: number;
 }
 
+/** Breathing room above + below a centered modal when sizing the iframe to it. */
+const DIALOG_MARGIN = 96;
+/**
+ * Upper bound on the iframe height. Bounds the dialog-driven resize: a
+ * viewport-height panel (e.g. an open civ-drawer) is as tall as the iframe,
+ * so sizing the iframe to "fit" it would grow the frame, which grows the
+ * panel, ad infinitum. The cap makes that converge instead of running away.
+ */
+const MAX_EMBED_HEIGHT = 1200;
+
 /**
  * Storybook iframe embed with automatic height sizing and lazy loading.
  *
@@ -16,12 +26,20 @@ interface StoryEmbedProps {
  *   1. Same-origin (prod): ResizeObserver on iframe's contentDocument body
  *   2. Cross-origin (dev): postMessage from Storybook iframe sends height
  *
+ *   Both also account for an open top-layer `<dialog>` (civ-modal / drawer /
+ *   action-sheet via `showModal()`). Such dialogs are out of normal flow, so
+ *   they don't grow `scrollHeight` — without this, an opened modal would be
+ *   clipped by the short, `overflow:hidden` iframe. A MutationObserver on the
+ *   `open` attribute catches the open/close (a ResizeObserver alone won't fire,
+ *   since the body's size is unchanged).
+ *
  * - **Refresh-safe**: Checks if the iframe is already loaded on mount.
  */
 export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const observerRef = useRef<ResizeObserver | null>(null);
+  const mutationObserverRef = useRef<MutationObserver | null>(null);
   const [height, setHeight] = useState(minHeight);
   const [visible, setVisible] = useState(false);
 
@@ -53,15 +71,22 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       if (!doc?.body) return;
 
       observerRef.current?.disconnect();
+      mutationObserverRef.current?.disconnect();
 
       const syncHeight = () => {
-        const contentHeight = Math.max(
+        let contentHeight = Math.max(
           doc.body.scrollHeight,
           doc.documentElement.scrollHeight,
         );
-        if (contentHeight > minHeight) {
-          setHeight(contentHeight + 2);
+        // A top-layer <dialog> (showModal) is out of flow and doesn't grow
+        // scrollHeight — measure it so the iframe expands to show it. It's
+        // position:fixed, so it re-centers in the taller frame.
+        const openDialog = doc.querySelector('dialog[open]') as HTMLElement | null;
+        if (openDialog) {
+          contentHeight = Math.max(contentHeight, openDialog.scrollHeight + DIALOG_MARGIN);
         }
+        const target = Math.min(Math.max(contentHeight, minHeight), MAX_EMBED_HEIGHT);
+        setHeight(target + 2);
       };
 
       syncHeight();
@@ -70,6 +95,21 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       ro.observe(doc.body);
       ro.observe(doc.documentElement);
       observerRef.current = ro;
+
+      // ResizeObserver won't fire on showModal() (body size is unchanged), so
+      // watch the `open` attribute across the subtree to catch modal/drawer
+      // open + close. rAF re-measure lets the dialog finish laying out first.
+      const mo = new MutationObserver(() => {
+        syncHeight();
+        requestAnimationFrame(syncHeight);
+      });
+      mo.observe(doc.documentElement, {
+        attributes: true,
+        attributeFilter: ['open'],
+        subtree: true,
+        childList: true,
+      });
+      mutationObserverRef.current = mo;
     } catch {
       // Cross-origin — postMessage fallback handles this
     }
@@ -86,8 +126,9 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       const iframe = iframeRef.current;
       if (!iframe) return;
       // Match by checking the iframe's src contains the story id
-      if (e.data.storyId === id && e.data.height > minHeight) {
-        setHeight(e.data.height + 2);
+      if (e.data.storyId === id) {
+        const h = Math.min(Math.max(e.data.height, minHeight), MAX_EMBED_HEIGHT);
+        setHeight(h + 2);
       }
     };
 
@@ -109,7 +150,10 @@ export default function StoryEmbed({ id, title, minHeight = 100 }: StoryEmbedPro
       // Cross-origin — postMessage handles it
     }
 
-    return () => observerRef.current?.disconnect();
+    return () => {
+      observerRef.current?.disconnect();
+      mutationObserverRef.current?.disconnect();
+    };
   }, [visible, setupResizeObserver]);
 
   const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';

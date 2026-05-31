@@ -38,6 +38,16 @@
         document.body ? document.body.scrollHeight : 0,
         document.documentElement ? document.documentElement.scrollHeight : 0
       );
+      // A top-layer <dialog> (civ-modal / drawer / action-sheet via showModal())
+      // is out of normal flow and doesn't grow scrollHeight — measure it so the
+      // embedding iframe can expand to show it. Capped (1200) to bound the
+      // feedback loop with viewport-height panels (an open drawer is as tall as
+      // the frame, so sizing to fit it would grow the frame, ad infinitum).
+      var dlg = document.querySelector('dialog[open]');
+      if (dlg) {
+        h = Math.max(h, dlg.scrollHeight + 96);
+      }
+      h = Math.min(h, 1200);
       if (h !== lastHeight && h > 0) {
         lastHeight = h;
         try {
@@ -54,6 +64,14 @@
         new ResizeObserver(reportHeight).observe(document.body);
       } else {
         setInterval(reportHeight, 500);
+      }
+      // showModal() doesn't change body size, so ResizeObserver won't fire —
+      // watch the `open` attribute across the tree to catch modal/drawer
+      // open + close.
+      if (window.MutationObserver) {
+        new MutationObserver(reportHeight).observe(document.documentElement, {
+          attributes: true, attributeFilter: ['open'], subtree: true, childList: true
+        });
       }
     });
 

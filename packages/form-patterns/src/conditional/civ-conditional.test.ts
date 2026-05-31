@@ -273,4 +273,86 @@ describe('civ-conditional', () => {
 
     fakeField.remove();
   });
+
+  describe('repeater-indexed field names', () => {
+    function vis(el: Element): boolean {
+      return el
+        .querySelector('[data-civ-conditional-content]')!
+        .classList.contains('civ-conditional--visible');
+    }
+
+    it('matches a field whose name is the repeater-indexed suffix of `when`', async () => {
+      const el = await fixture('<civ-conditional when="docType" equals="other"><p>x</p></civ-conditional>');
+      await elementUpdated(el);
+
+      // The repeater rewrites <civ-select name="docType"> to this indexed name.
+      const field = document.createElement('div');
+      (field as any).name = 'documents[0].docType';
+      document.body.appendChild(field);
+      field.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'other' }, bubbles: true }));
+      await elementUpdated(el);
+
+      expect(vis(el)).toBe(true);
+      field.remove();
+    });
+
+    it('does NOT match a partial-token name (notDocType vs docType)', async () => {
+      const el = await fixture('<civ-conditional when="docType" has-value><p>x</p></civ-conditional>');
+      await elementUpdated(el);
+
+      const field = document.createElement('div');
+      (field as any).name = 'notDocType';
+      document.body.appendChild(field);
+      field.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'anything' }, bubbles: true }));
+      await elementUpdated(el);
+
+      expect(vis(el)).toBe(false);
+      field.remove();
+    });
+
+    it('scopes to its own repeater row — a sibling row does not cross-trigger', async () => {
+      // Two repeater rows, each with its own select + conditional, sharing
+      // the same `when="docType"`. Row 0's select must only toggle row 0's
+      // conditional.
+      const host = await fixture(`
+        <div>
+          <div data-civ-repeater-row="0">
+            <div data-r0-select></div>
+            <civ-conditional when="docType" equals="other"><p>row0</p></civ-conditional>
+          </div>
+          <div data-civ-repeater-row="1">
+            <div data-r1-select></div>
+            <civ-conditional when="docType" equals="other"><p>row1</p></civ-conditional>
+          </div>
+        </div>
+      `);
+      await elementUpdated(host);
+      const conds = host.querySelectorAll('civ-conditional');
+      const r0Select = host.querySelector('[data-r0-select]') as HTMLElement;
+      (r0Select as any).name = 'documents[0].docType';
+
+      r0Select.dispatchEvent(new CustomEvent('civ-input', { detail: { value: 'other' }, bubbles: true }));
+      await elementUpdated(host);
+
+      expect(vis(conds[0])).toBe(true);  // own row revealed
+      expect(vis(conds[1])).toBe(false); // sibling row untouched
+    });
+
+    it('reads the indexed field on initial mount (prefilled value)', async () => {
+      // Build the row with the indexed field (name via setAttribute, the
+      // real repeater path) and a value, THEN mount a fresh conditional so
+      // its connectedCallback → _checkInitialState runs with the value
+      // already present — the prefilled-repeater-row-on-load case.
+      const row = await fixture('<div data-civ-repeater-row="0"></div>') as HTMLElement;
+      const sel = document.createElement('div');
+      sel.setAttribute('name', 'documents[0].docType');
+      (sel as { value?: string }).value = 'other';
+      row.appendChild(sel);
+      row.insertAdjacentHTML('beforeend', '<civ-conditional when="docType" equals="other"><p>x</p></civ-conditional>');
+      const cond = row.querySelector('civ-conditional')!;
+      await elementUpdated(cond);
+
+      expect(vis(cond)).toBe(true);
+    });
+  });
 });

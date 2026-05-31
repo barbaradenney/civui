@@ -106,12 +106,14 @@ export const MultipleDocuments: Story = {
         <civ-text-input label="Describe the document" name="docDescription" required></civ-text-input>
       </civ-conditional>
 
-      <civ-file-upload
-        name="file"
-        accept=".pdf,.jpg,.png"
-        hint="Upload a PDF, JPG, or PNG file"
-        required
-      ></civ-file-upload>
+      <civ-conditional when="docType" has-value>
+        <civ-file-upload
+          name="file"
+          accept=".pdf,.jpg,.png"
+          hint="Upload a PDF, JPG, or PNG file"
+          required
+        ></civ-file-upload>
+      </civ-conditional>
     </civ-repeater>
   `,
 };

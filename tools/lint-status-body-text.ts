@@ -113,6 +113,32 @@ export function scanLine(line: string): string[] {
   return out;
 }
 
+/**
+ * Scan a whole file's text for `<p …>` openers carrying a forbidden class,
+ * tolerating openers that span multiple lines (the `class` attribute on a
+ * different line from `<p`). Stories frequently format the opener across
+ * lines, which a per-line scan (`scanLine`) misses — that gap let three
+ * `civ-text-success` status paragraphs in `destructive-actions.stories.ts`
+ * hide from CI for months. `[^>]*?` already spans newlines under the
+ * default (non-`s`) flag because `.` is never used; the `<p\b[^>]*?>` form
+ * matches across line breaks. Returns each hit with the 1-based line
+ * number of the `<p` opener so the report points at the right place.
+ */
+export function scanContent(text: string): Array<{ forbidden: string; line: number }> {
+  const out: Array<{ forbidden: string; line: number }> = [];
+  // Match a full `<p …>` opener (greedy up to the first `>`), capturing the
+  // class attribute value if present. `[^>]` spans newlines.
+  const opener = /<p\b[^>]*?\bclass\s*=\s*\\?["']([^"'\\]+)\\?["'][^>]*?>/g;
+  for (const m of text.matchAll(opener)) {
+    const classes = m[1].split(/\s+/);
+    const hits = FORBIDDEN_CLASSES.filter((f) => classes.includes(f));
+    if (hits.length === 0) continue;
+    const line = text.slice(0, m.index ?? 0).split('\n').length;
+    for (const forbidden of hits) out.push({ forbidden, line });
+  }
+  return out;
+}
+
 async function main(): Promise<void> {
   const files: string[] = [];
   for (const root of SCAN_ROOTS) files.push(...await walk(path.join(REPO_ROOT, root)));
@@ -121,17 +147,22 @@ async function main(): Promise<void> {
   for (const file of files) {
     const rel = path.relative(REPO_ROOT, file);
     if (ALLOWLIST.has(rel)) continue;
-    const lines = (await fs.readFile(file, 'utf8')).split('\n');
-    for (let i = 0; i < lines.length; i++) {
-      const hits = scanLine(lines[i]);
-      if (hits.length > 0) {
-        findings.push({
-          file: rel,
-          line: i + 1,
-          forbidden: Array.from(new Set(hits)),
-          context: lines[i].trim().slice(0, 140),
-        });
-      }
+    const text = await fs.readFile(file, 'utf8');
+    const lines = text.split('\n');
+    // Group multiline-aware hits by opener line so the report shows one
+    // finding per <p> with all its forbidden classes.
+    const byLine = new Map<number, Set<string>>();
+    for (const { forbidden, line } of scanContent(text)) {
+      if (!byLine.has(line)) byLine.set(line, new Set());
+      byLine.get(line)!.add(forbidden);
+    }
+    for (const [line, forbiddenSet] of byLine) {
+      findings.push({
+        file: rel,
+        line,
+        forbidden: Array.from(forbiddenSet),
+        context: (lines[line - 1] ?? '').trim().slice(0, 140),
+      });
     }
   }
 

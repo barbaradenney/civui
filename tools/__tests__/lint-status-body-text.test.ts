@@ -3,7 +3,7 @@
  * flags bare AA-failing semantic text classes on <p> body text.
  */
 import { describe, it, expect } from 'vitest';
-import { scanLine, FORBIDDEN_CLASSES } from '../lint-status-body-text.js';
+import { scanLine, scanContent, FORBIDDEN_CLASSES } from '../lint-status-body-text.js';
 
 describe('FORBIDDEN_CLASSES', () => {
   it('covers the three AA-failing DEFAULT shades and not error', () => {
@@ -42,5 +42,45 @@ describe('scanLine', () => {
 
   it('returns empty for an unrelated line', () => {
     expect(scanLine('<p class="civ-text-base-darkest">body</p>')).toEqual([]);
+  });
+});
+
+describe('scanContent (multiline-aware)', () => {
+  it('flags a forbidden class when the <p> opener spans multiple lines', () => {
+    // This is the exact shape that hid in destructive-actions.stories.ts:
+    // <p / data-status / class="…" / role="status"> across four lines.
+    const text = [
+      '        <p',
+      '          data-status',
+      '          class="civ-text-caption civ-text-success civ-mt-3"',
+      '          role="status"',
+      '        ></p>',
+    ].join('\n');
+    const hits = scanContent(text);
+    expect(hits).toHaveLength(1);
+    expect(hits[0].forbidden).toBe('civ-text-success');
+    // Line number points at the `<p` opener (line 1), not the class line.
+    expect(hits[0].line).toBe(1);
+  });
+
+  it('still flags a single-line <p> (parity with scanLine)', () => {
+    const hits = scanContent('<p class="civ-text-warning">x</p>');
+    expect(hits.map((h) => h.forbidden)).toEqual(['civ-text-warning']);
+  });
+
+  it('does NOT flag the AA-safe -dark shade across lines', () => {
+    const text = '<p\n  class="civ-text-success-dark"\n>ok</p>';
+    expect(scanContent(text)).toEqual([]);
+  });
+
+  it('reports the correct line number for a hit deeper in the file', () => {
+    const text = ['line1', 'line2', '<p class="civ-text-info">x</p>'].join('\n');
+    const hits = scanContent(text);
+    expect(hits[0].line).toBe(3);
+  });
+
+  it('does not match non-<p> elements across lines', () => {
+    const text = '<span\n  class="civ-text-success"\n>x</span>';
+    expect(scanContent(text)).toEqual([]);
   });
 });

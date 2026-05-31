@@ -27,9 +27,23 @@ When you finish an audit, the audit skill writes new findings here (see `.claude
 - **State:** Three tokens in `packages/tokens/src/spacing.tokens.json` are never used in production CSS (`packages/core/src/styles/components.css` / `civ.css`):
   - `spacing-px` (1px) — zero hits. Most likely candidate for an eventual consumer (a `civ-border-px` divider, dense-row separator), so worth keeping; the others aren't.
   - `spacing-2.5` (13px) — zero hits. Authors who need ~13px reach for `2` (10px) or `3` (15px). The intermediate step is redundant.
-  - `spacing-16` (80px) — zero hits. Authors who need 80px reach for `12` (60px) or `20` (100px); 80px is an awkward outlier in the workhorse cadence.
+  - `spacing-16` (80px) — zero hits **in production CSS**, BUT it is consumed indirectly: the Tailwind config maps `spacing.16 → var(--civ-spacing-16)`, and the `xs` input-width variant uses `civ-w-16` (`form-templates.ts` `INPUT_WIDTH_CLASSES`). So removing `spacing-16` would silently break that width class — it is NOT a free orphan removal. See the related entry "Input-width ladder web/native px mismatch (2xs, xs)" below, which must be resolved first (the `xs`/`2xs` widths should move off the spacing-token collision onto a dedicated width value). Until then, leave `spacing-16` in place.
 - **Why deferred:** Removing tokens from `spacing.tokens.json` is a breaking change at the `@civui/tokens` package level — the Tailwind preset loses `civ-p-16` / `civ-p-2.5` / `civ-p-px` utilities, and `var(--civ-spacing-16)` etc. stop resolving. Should land in the next `@civui/tokens` major bump with a release note. The audit-recommendation order is: remove `2.5` and `16` first (clear orphans); leave `px` (plausible future use).
 - **What to watch for in the meantime:** When proposing a new component that needs a "between 10px and 15px" or "between 60px and 100px" gap, push back — the workhorse cadence (`0/1/2/3/4/6`) is intentional, and reaching for an orphan step usually means the layout wants a non-standard rhythm. If it genuinely needs the in-between step, document why in a comment alongside the use, so the deletion candidate becomes a "first real use" instead.
+
+---
+
+## Input-width ladder web/native px mismatch (`2xs`, `xs`)
+
+- **Surfaced:** audit-debt low-item triage, 2026-05-31. Found while verifying the orphan-spacing-token entry above.
+- **Files:** `packages/core/src/templates/form-templates.ts` (`INPUT_WIDTH_CLASSES`), `packages/schema/src/components/civ-text-input.schema.ts:220-227` (`widths` map), `tailwind.config.ts:144-160` (`spacing` extend).
+- **State:** The `InputWidth` ladder maps each variant to a Tailwind width class (`civ-w-12`, `civ-w-16`, …) plus declared native sizes (`iosPoints` / `androidDp`). The native points assume Tailwind's **default 4px-base** scale (`w-16` = 16 × 4 = 64px = `iosPoints: 64`). But CivUI's `tailwind.config.ts` extends `spacing` with a **5px-base** override for the keys it defines — and Tailwind's `spacing` scale feeds `width`. So:
+  - `2xs` → `civ-w-12` → `--civ-spacing-12` = **60px** on web, but `iosPoints/androidDp: 48` → **mismatch** (web 25% wider).
+  - `xs` → `civ-w-16` → `--civ-spacing-16` = **80px** on web, but native `64` → **mismatch**.
+  - `sm`/`md`/`lg`/`xl`/`2xl` (`w-24`/`40`/`60`/`72`/`96`) use width KEYS that CivUI does NOT override, so they fall through to Tailwind's default 4px-base (96/160/240/288/384px) and **match** native exactly.
+  Only the two variants whose width key collides with a CivUI-defined spacing token are wrong. Nothing validates web-rendered px against `iosPoints`/`androidDp`, so it went undetected.
+- **Why deferred:** Needs a reconciliation decision, not a mechanical fix. Options: (a) change the web classes for `2xs`/`xs` to hit 48px/64px (e.g. a dedicated `width` extend in the Tailwind config, decoupled from the `spacing` token scale, so input widths don't inherit the 5px base); (b) update the native points to 60/80 to match web; or (c) accept the variance and mark the width sizes web-authoritative. (a) is the most correct (the native points are the deliberate values; the web collision is accidental) but means adding a `theme.extend.width` block and is a design-system change worth its own branch. Resolving this also unblocks the `spacing-16` orphan removal (see entry above).
+- **What to watch for in the meantime:** Don't "tidy up" by removing `spacing-16`/`spacing-12` — `civ-w-16`/`civ-w-12` depend on them. When picking an input width, know that `2xs`/`xs` render ~25% wider on web than the iOS/Android counterpart.
 
 ---
 
@@ -286,12 +300,11 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **What it caught (all fixed in the same branch, every drift native-side — Lit == schema):** civ-checkbox/civ-radio/civ-radio-group/civ-checkbox-group `tile` (false → true), civ-repeater `min` (1 → 0), civ-back-to-top `threshold` (200 → 400) + `hidden` (false → true), civ-pagination `pageSize` (10 → 25), civ-data-grid `showGroupSubtotals` (false → true), civ-spinner `delay`/`minDuration` (0 → 200/400). The earlier chip drifts (civ-filter-chip `emphasis`/`variant`, civ-action-chip `count`) were enum/optional defaults already fixed in the actions branch.
 - **Remaining gap (not blocking):** string-default drift and Drupal SDC `default:` drift are still un-gated for the reasons above. If a future audit wants string coverage, it needs to resolve the native body-level i18n fallback (parse `x.isEmpty ? t("k") : x` and treat `t("k")` as the effective default) — a meatier parser than this lint warrants today.
 
-### `lint:sdc-enum-values` for orphan removals in Drupal SDC
+### `lint:sdc-enum-values` for orphan removals in Drupal SDC — ✅ shipped
 
-- **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`.
-- **State (additive direction CLEARED):** `tools/sync-drupal-sdc.ts` now reconciles enum constraints on existing props — adds an `enum:` line when the schema declares values but the YAML doesn't, and updates the line when the values differ. 39 existing YAMLs were brought into alignment in the same branch. Sister branch (`claude/lint-sdc-enum-values`) adds the lint to catch future drift.
-- **State (subtractive direction REMAINS):** Sync deliberately does NOT remove an existing `enum:` line when the schema drops it (over-constraining is acceptable; accidentally widening lets bad authoring through). When a schema enum value is REMOVED (civ-link.variant `tertiary`, etc.), the Drupal SDC YAML still keeps the orphan silently. The lint (sister PR) is the catch.
-- **What to watch for in the meantime:** When removing an enum value from a schema, run `pnpm sync:drupal` then manually verify the SDC YAML doesn't still list it (or wait for the sister lint PR to merge so CI catches it).
+- **Files:** Drupal SDC `*.component.yml` under `packages/drupal/civui/components/`; schema `values:` arrays under `packages/schema/src/components/`; `tools/lint-sdc-enum-values.ts`.
+- **Additive direction:** `tools/sync-drupal-sdc.ts` reconciles enum constraints on existing props — adds an `enum:` line when the schema declares values but the YAML doesn't, and updates the line when the values differ. 39 existing YAMLs were brought into alignment.
+- **Subtractive direction (the orphan-removal catch) — shipped.** `tools/lint-sdc-enum-values.ts` now exists and is wired into `validate:lints` + the drift gate. It walks each `COVERED_COMPONENTS` entry's SDC YAML `enum:` arrays and compares against the schema `values:`, reporting orphan-in-drupal (YAML lists a value the schema rejects) and drupal-over-constrains (schema isn't enum but YAML has one). Verified 2026-05-31: passes across 113 components / 125 enum props. The "sister PR" the entry was waiting on has landed, so when a schema enum value is removed, CI catches a stale SDC orphan instead of it silently lingering. (See the corresponding `common-traps.md` entry "Orphan enum values in Drupal SDC YAMLs" for the consumer-facing rule.)
 
 ### `lint:schema-spec` should support integer enums
 
@@ -299,12 +312,11 @@ All five tiers + the lint shipped (each as an independent PR). What remains is f
 - **Files:** `packages/schema/src/schema.types.ts:N` (`values?: string[]`); `tools/sync-drupal-sdc.ts` (the `'${v}'` string quoting at line 222 would need to handle numbers); `tools/lint-schema-enum-values.ts` (the literal-union parser would need numeric-literal support); `tools/sync-doc-tables.ts` (the `\`'${v}'\`` rendering would need to skip quotes for numbers); civ-alert schema (would migrate from `type: 'number'` to `type: 'enum'` with `values: [2,3,4,5,6]`).
 - **Why deferred:** Coordinated change across 4–5 files for one current use case. When a second integer-enum case appears (likely candidates: line-clamp limits, max-step counts, level constraints), bundle the spec extension with the new component's landing.
 
-### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components
+### `disabled` invisible in auto-generated Props tables for `CivBaseElement` components — ✅ resolved (stale entry, 2026-05-31)
 
-- **Files:** `tools/sync-doc-tables.ts`, `tools/lib/inherited.ts:14` (`INHERITED_FORM_PROPS`).
-- **State:** The Props-table generator filters `INHERITED_FORM_PROPS` (including `disabled`) as inherited, but `CivBaseElement` does NOT define `disabled` — only `CivFormElement` does. Components extending `CivBaseElement` that declare their own `disabled` (`civ-link`, `civ-link-card`, `civ-button`, `civ-action-button`, `civ-tag`, and others) have their `disabled` silently dropped from the rendered Props tables. Consumers reading the docs see no on-page reference for a real public prop.
-- **Why deferred:** Fixing this requires the doc-tables generator to detect whether each component actually inherits from `CivFormElement` (in which case skip `disabled`) vs `CivBaseElement` (in which case keep it). The same logic applies to `label`, `value`, `readonly` and other "is this actually inherited?" props.
-- **What to watch for in the meantime:** When auditing a component that declares its own `disabled`, manually verify the docs page either lists it elsewhere or call it out in prose.
+- **Files:** `tools/sync-doc-tables.ts`, `tools/lib/inherited.ts`.
+- **Was:** Concern that the Props-table generator filtered `INHERITED_FORM_PROPS` (including `disabled`) for components extending `CivBaseElement` (`civ-button`, `civ-action-button`, `civ-link`, `civ-link-card`), silently dropping a real public prop from the rendered docs.
+- **Resolution:** No generator change was needed. `renderProps` in `sync-doc-tables.ts` does NOT filter `INHERITED_FORM_PROPS` — it renders every prop the schema's `props` block declares (the only filter, line 91, is a `webOnly` no-op). The actual fix was to **declare `disabled` explicitly in each schema** (`a2fff30` "document public props missing from action-cluster schemas"). Verified 2026-05-31: the generated `_button` / `_action-button` / `_link` / `_link-card` `.props.mdx` partials all contain a `disabled` row, sourced from the matching schema declaration. The proposed extends-detection logic was a more complex solution to a problem the explicit-declaration approach already solved.
 
 ### Native `loading` prop parity gap for confirm-button / toggle-button
 

@@ -159,6 +159,64 @@ Monospace (for code and masked inputs):
 "Roboto Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace
 ```
 
+## Using a custom font
+
+CivUI loads **no web fonts by default** — the system stack renders instantly with a native feel and zero network cost. If your agency requires a specific brand font (Public Sans for USWDS-aligned projects is the most common; SF Pro-as-webfont is another), you can swap it in without touching component CSS.
+
+### 1. Override the font-family token
+
+Every CivUI surface reads its font family from a single CSS custom property, `--civ-typography-fontFamily-sans`. Override it once on `:root` (after CivUI's stylesheet loads) and the new font flows through every heading, label, input, and body class:
+
+```css
+:root {
+  --civ-typography-fontFamily-sans: 'Public Sans', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+```
+
+Keep the system fonts as the fallback tail so text still renders if the brand font fails to load. There's a matching `--civ-typography-fontFamily-mono` for code and masked inputs.
+
+### 2. Load the font with `@font-face`
+
+```css
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/fonts/PublicSans-Variable.woff2') format('woff2');
+  font-weight: 100 900; /* variable font: declare the supported range */
+  font-display: swap;   /* render the fallback immediately, swap when loaded */
+}
+```
+
+`font-display: swap` eliminates the flash of invisible text (FOIT) — the system fallback shows immediately and is replaced when the brand font arrives. For connection-constrained government contexts, `font-display: optional` is more aggressive (it only swaps if the font loads within ~100ms, otherwise sticks with the fallback for that page view).
+
+### 3. Prevent layout shift (recommended)
+
+When the brand font swaps in, differing metrics from the fallback cause a reflow (CLS). Eliminate it with a metrics-matched fallback `@font-face` — tools like [`fontpie`](https://github.com/pixel-point/fontpie) or [`@capsizecss/core`](https://github.com/seek-oss/capsize) generate the override values from your font file:
+
+```css
+@font-face {
+  font-family: 'Public Sans Fallback';
+  src: local('Arial');
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 107%; /* tune so the fallback's x-height matches the brand font */
+}
+
+:root {
+  --civ-typography-fontFamily-sans: 'Public Sans', 'Public Sans Fallback', system-ui, sans-serif;
+}
+```
+
+With the override, the fallback renders at the brand font's metrics, so the swap is visually invisible — same line breaks, same heading sizes, same paragraph heights.
+
+### Production checklist
+
+- **Subset the font to the scripts you ship.** Latin (or Latin + Latin-Extended for Spanish content) takes a 500 KB variable font down to ~80 KB.
+- **Self-host the file** rather than linking a third-party CDN — government sites generally can't depend on external font hosts, and self-hosting avoids a render-blocking third-party request.
+- **Re-check the optical details.** A brand font with a different x-height may want a different [underline offset](#link-underline-geometry); `font-optical-sizing: auto` (applied by CivUI) only does anything when the font is variable.
+- A brand-font rollout is real engineering — plan it as its own task, not a one-line edit. The contributor guide's [_Extending for a brand font_](https://github.com/barbaradenney/civui/blob/main/.claude/rules/typography.md) section has the full rationale.
+
 ## Density scaling
 
 All heading and text sizes respond to the density system. Wrap content in a `data-civ-scale` container to scale proportionally:

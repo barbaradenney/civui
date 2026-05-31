@@ -1272,13 +1272,22 @@
 
   /* ── Checkbox / Radio ───────────────────────────────────────── */
 
-  /* Two-column grid that lays out: input | label, then description / hint /
-     error wrapped under the label in column 2. The input is anchored to the
-     first row only, so it stays vertically centered on the *first line of
-     the label* even when the description wraps to multiple lines. Without
-     this row anchoring, `align-items: center` would drift the input to the
-     midpoint of the entire label+description block, and `align-items: start`
-     would leave it floating above the visible label cap-top. */
+  /* Two-column grid that lays out: input | label, with description / hint /
+     error stacked under the label in column 2. The input is pinned to the
+     TOP of the first label line (`align-self: start`), so on a multi-line
+     label — or a label with a description — the control sits next to the
+     first line instead of drifting to the vertical center of the whole
+     block.
+
+     The label deliberately stays `align-self: center`: when the label is a
+     single line, the row's height is driven by the taller control, so
+     centering the text vertically balances it against the box (unchanged
+     from before). When the label is the taller element (wraps / has a
+     description), `center` fills the row and its first line lands at the
+     row top — exactly where the start-aligned control's top meets it. The
+     label's `text-box-trim` (below) trims the first line's half-leading, so
+     the control's top edge aligns to the visible cap-top rather than the
+     line-box top. */
   .civ-check-row {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -1288,7 +1297,7 @@
   .civ-check-row > .civ-check-input {
     grid-column: 1;
     grid-row: 1;
-    align-self: center;
+    align-self: start;
     margin-inline-end: 0; /* gap handles spacing — avoid double margin */
   }
 

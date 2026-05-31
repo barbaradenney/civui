@@ -1,6 +1,7 @@
 // CivUI — CivLink for SwiftUI
 // Accessible link component with variant styles.
-// Variants: primary (bold + caret), secondary (plain, default), back (with chevron-back)
+// Variants: primary (bold + trailing right-arrow), secondary (plain, default), back (with leading back-arrow)
+// Navigation links use arrow icons; carets are reserved for on-page expand/collapse.
 
 import SwiftUI
 
@@ -131,13 +132,13 @@ public struct CivLink: View {
 
     private var leadingIconName: String {
         if !iconStart.isEmpty { return iconStart }
-        if variant == .back { return "chevron-left" }
+        if variant == .back { return "arrow-back" }
         return ""
     }
 
     private var trailingIconName: String {
         if !iconEnd.isEmpty { return iconEnd }
-        if variant == .primary { return "chevron-right" }
+        if variant == .primary { return "arrow-right" }
         return ""
     }
 

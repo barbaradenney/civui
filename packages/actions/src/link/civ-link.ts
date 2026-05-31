@@ -16,9 +16,15 @@ export type LinkAs = 'link' | 'button';
  * callback). See "Button mode" below.
  *
  * **Variants** (visual style):
- * - `primary` — bold underlined link with trailing caret icon (most emphasis)
+ * - `primary` — bold underlined link with a trailing right-arrow icon (most emphasis)
  * - `secondary` (default) — plain underlined link
- * - `back` — back-navigation link with leading left chevron
+ * - `back` — back-navigation link with a leading back (left-arrow) icon
+ *
+ * Navigation links use directional **arrow** icons (`arrow-right` /
+ * `arrow-back`) rather than carets. The caret/chevron is reserved for
+ * on-page click affordances (disclosures, accordions, in-page expanders),
+ * so the two affordances stay visually distinguishable: arrow = "go
+ * somewhere", caret = "expand/collapse here".
  *
  * For a navigation affordance that should look like a button, use
  * `<civ-button href="…">` or `<civ-action-button href="…">` — those
@@ -150,12 +156,12 @@ export class CivLink extends LightDomTextMixin(CivBaseElement) {
   }
 
   private get _trailingIcon() {
-    const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'primary' ? 'chevron-right' : '');
+    const name = this.iconEnd || (this.newTab ? 'external-link' : '') || (this.variant === 'primary' ? 'arrow-right' : '');
     return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 
   private get _leadingIcon() {
-    const name = this.iconStart || this._typedIcon || (this.variant === 'back' ? 'chevron-left' : '');
+    const name = this.iconStart || this._typedIcon || (this.variant === 'back' ? 'arrow-back' : '');
     return name ? html`<civ-icon name="${name}"></civ-icon>` : '';
   }
 

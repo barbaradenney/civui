@@ -334,6 +334,24 @@
     @apply civ-text-xs;
   }
 
+  /* Mobile: drop the row's left/right padding so list content uses the
+     full viewport width. The 30px (civ-px-6) inset each side is
+     comfortable on desktop but eats ~60px of a narrow phone screen,
+     squeezing the content — especially data fields and long
+     government-form labels. The list's own container still supplies the
+     page gutter; vertical padding is kept for tap-target rhythm.
+
+     Placed AFTER the base `.civ-list-item__row` and the
+     `.civ-list--sm .civ-list-item__row` rules, and matching the `--sm`
+     selector's specificity, so it wins on both default and small lists
+     (an equal-specificity rule earlier in source would lose to `--sm`). */
+  @media (max-width: 480px) {
+    .civ-list-item__row,
+    .civ-list--sm .civ-list-item__row {
+      @apply civ-px-0;
+    }
+  }
+
   /* Nesting: indent nested civ-list inside civ-list-item */
   civ-list-item civ-list {
     @apply civ-ps-6;

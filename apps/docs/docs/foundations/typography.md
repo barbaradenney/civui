@@ -28,6 +28,10 @@ CivUI provides heading and body text classes built on design tokens. All classes
 
 <StoryEmbed id="foundations-typography--body-text" />
 
+### Eyebrow
+
+<StoryEmbed id="foundations-typography--eyebrow" />
+
 ### All Styles
 
 <StoryEmbed id="foundations-typography--all-styles" />
@@ -104,6 +108,35 @@ Regular weight for supporting context, sub-sections, or form step descriptions.
 <p class="civ-text-muted">You will receive a confirmation email within 24 hours.</p>
 <p class="civ-text-caption">Last updated: April 24, 2026</p>
 <p class="civ-text-small">OMB Control No. 2900-0747 | Estimated burden: 25 minutes</p>
+```
+
+## Eyebrow
+
+A small uppercase caption that sits **above** a heading or value to give it context — a section label, a card category, a metric name. The `.civ-eyebrow` recipe is:
+
+| Class | Recipe | Color |
+|-------|--------|-------|
+| `.civ-eyebrow` | `civ-text-sm` + `civ-font-semibold` + `uppercase` + `letter-spacing: 0.05em` | `base-dark` |
+
+The slight letter-spacing is the one place CivUI adds tracking — it's a display treatment for uppercase text, never applied to body copy.
+
+You rarely write `.civ-eyebrow` directly; three components compose it for you:
+
+- **`<civ-page-header>`** — the `data-eyebrow` slot (category / breadcrumb text above the page title)
+- **`<civ-link-card>`** — the `eyebrow` prop (category label above the card heading)
+- **`<civ-metric-tile>`** — the `label` prop (the metric name above its value)
+
+On a light surface the eyebrow renders in `base-dark` gray. Inside a dark-background variant (e.g. `<civ-link-card variant="primary">`), it resets to `color: inherit` so it picks up the variant's white foreground and stays legible — gray on a primary fill would be effectively invisible.
+
+```html
+<civ-page-header>
+  <span data-eyebrow>Disability</span>
+  <h1 data-heading>Apply for compensation</h1>
+  <p data-subheading>Tell us about your service-connected condition</p>
+</civ-page-header>
+
+<!-- Standalone, if you need the style outside those components -->
+<p class="civ-eyebrow">Healthcare</p>
 ```
 
 ## Font sizes

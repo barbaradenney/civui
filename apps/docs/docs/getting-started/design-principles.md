@@ -53,6 +53,18 @@ Government forms follow the "one thing per page" pattern:
 - Mobile-friendly. No scrolling through walls of fields
 - Screen reader friendly. Clear focus management
 
+## Self-Contained Controls
+
+Every input renders its own label, hint, error, and "(required)" text from its own props — there is no separate field-wrapper component to forget or mis-nest:
+
+```html
+<civ-text-input label="Email address" name="email" type="email" hint="Work email preferred" required></civ-text-input>
+```
+
+Group inputs (`civ-radio-group`, `civ-checkbox-group`, `civ-yes-no`, `civ-segmented-control`, `civ-memorable-date`) carry their own `<legend>` the same way — you never wrap them in a `civ-fieldset`. `civ-fieldset` is reserved for genuine multi-field grouping (an address with street / city / state). The payoff is that every control is accessible by construction: the label is bound to its input, errors carry `role="alert"`, and "(required)" lands in exactly one place.
+
+Enforced by `lint:missing-labels`, `lint:double-labels`, `lint:fieldsets`, `lint:stacked-required`, and `lint:required-cascade`.
+
 ## Border Radius Signals Interactivity
 
 Only clickable elements get rounded corners. Buttons, inputs, tiles. Static containers like alerts and cards use sharp edges. This visual convention helps users identify interactive elements at a glance.
@@ -64,6 +76,16 @@ Text is only underlined when it navigates somewhere. Links get underlines; actio
 ## Arrows Navigate, Carets Expand
 
 Directional **arrow** icons (`arrow-right`, `arrow-back`) mean "go somewhere" — they live on navigation affordances like the `primary` and `back` link variants, pagination, and breadcrumbs. The **caret** (chevron) is reserved for on-page expand/collapse affordances: disclosures, accordions, in-page expanders, and select/combobox dropdowns. Keeping the two glyph families apart gives users a second, color-independent cue for "this takes me to a new place" versus "this opens something right here."
+
+## Mobile Reshapes the UI
+
+Below 480px, CivUI changes affordances, not just widths:
+
+- Popups, dropdowns, and dialogs become **bottom sheets** — thumb-reachable, anchored to the bottom edge, no off-screen overflow
+- The primary button goes **full-width**; primary + secondary clusters stack vertically via `.civ-button-row`
+- Row-action clusters restack beneath their content, and list rows shed their side padding to reclaim the narrow viewport
+
+A small screen is a different interaction model, not a scaled-down desktop. The one documented exception is the `civ-combobox` listbox: its typing surface keeps the soft keyboard up, so it stays an anchored popover rather than a sheet that the keyboard would crush.
 
 ## Required Indicator Logic
 
@@ -88,6 +110,29 @@ When you add a prop, you update the schema first. The parity check then tells yo
 
 See [AI-Agent-Friendly](../foundations/ai-agent-friendly) for how this same property makes CivUI tractable for LLM coding agents, and [`packages/schema/README.md`](https://github.com/barbaradenney/civui/blob/main/packages/schema/README.md) for the naming-convention map and the "how to add a new schema" walkthrough.
 
+## Tokens, Not Magic Numbers
+
+Spacing, color, typography, motion, and z-index all flow through W3C design tokens — there are no hardcoded `px`, `rem`, or hex values in component styles. That single discipline is what makes the cross-cutting systems work for free:
+
+- **Density** — `[data-civ-scale="dense|spacious"]` retunes the spacing and type tokens, so every component shrinks or grows with no per-component code
+- **Dark mode** and **reduced motion** ride the same token swap
+- **Theming** a federal brand is a token edit, not a component rewrite
+
+One thing to know going in: the spacing scale is **5px-based**, not Tailwind's 4px default — `civ-p-4` is **20px**, not 16px. Enforced by `lint:hardcoded-spacing`, `lint:hardcoded-hex`, and `lint:color-classes`.
+
+## Dark Mode Is Built-In, Not Bolted-On
+
+Every light-mode token has a hand-authored dark counterpart with measured contrast, and the token build *fails* if any token is missing its dark value. Dark mode follows `prefers-color-scheme` by default, or a consumer can force it with `[data-color-mode="dark"]` for an in-app toggle. Because color flows through tokens, components inherit dark mode without a single dark-specific line of component code.
+
+## Semantic Intent vs Categorical Color
+
+Two different "colored" component families, two different vocabularies — and the prop name tells you which one you're holding:
+
+- **Semantic-intent** components (`civ-alert`, `civ-notice`, `civ-badge`, `civ-count`) take an `intent` of `info` / `success` / `warning` / `error` / `neutral`. The color *means* something, and the same intent renders with the same weight everywhere.
+- **Categorical** components (`civ-tag`, `civ-card`) take a `color` of `blue` / `red` / `green` / … . The color groups items visually but carries no status meaning.
+
+Don't reach for `color="red"` to signal an error, or `intent="error"` to color-code a category. ([`design-rules.md`](https://github.com/barbaradenney/civui/blob/main/.claude/rules/design-rules.md) has the full recipe.)
+
 ## CSS Over JavaScript
 
 Visual states are handled with CSS:
@@ -95,6 +140,10 @@ Visual states are handled with CSS:
 - Disabled opacity via `:disabled`
 - Selection highlights via `:has(:checked)`
 - Icons rendered as inline SVG paths. Zero external requests
+
+## Progressive Enhancement
+
+Modern CSS is used freely because each feature degrades to a plain, correct layout — never a regression. Headings use `text-wrap: balance` and body prose uses `text-wrap: pretty`; text at a container's edge trims its half-leading with `text-box-trim`; long-form prose hangs its punctuation. Browsers that don't yet support these fall back to ordinary wrapping with nothing broken. The baseline works everywhere; the polish appears where it's supported.
 
 ## Every Byte Is Earned
 

@@ -1,6 +1,7 @@
 // CivUI — CivLink for Jetpack Compose
 // Accessible link component with variant styles.
-// Variants: primary (bold + caret), secondary (plain, default), back (with chevron-back)
+// Variants: primary (bold + trailing right-arrow), secondary (plain, default), back (with leading back-arrow)
+// Navigation links use arrow icons (ArrowBack / ArrowForward); carets are reserved for on-page expand/collapse.
 
 package gov.civui.components
 

@@ -484,7 +484,7 @@ Action button. Always renders a \`<button>\` element. For links, use \`<civ-link
 
 Navigation link. Always renders an \`<a>\` element. For actions, use \`<civ-button>\`.
 
-**Variants:** \`primary\` (button-styled), \`secondary\` (underlined + trailing caret), \`tertiary\` (plain underlined, default), \`back\` (leading chevron-left)
+**Variants:** \`primary\` (bold underlined + trailing right-arrow), \`secondary\` (plain underlined, default), \`back\` (leading back-arrow). Navigation links use arrow icons; carets are reserved for on-page expand/collapse.
 **Props:** \`label\`, \`href\`, \`variant\`, \`danger\` (boolean), \`disabled\`
 
 \`\`\`html

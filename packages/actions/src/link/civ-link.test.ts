@@ -26,13 +26,13 @@ describe('civ-link', () => {
     expect(link.className).toContain('civ-link--secondary');
   });
 
-  it('applies primary variant class with trailing caret', async () => {
+  it('applies primary variant class with trailing right-arrow', async () => {
     const el = await fixture('<civ-link href="/next" variant="primary">Details</civ-link>');
     const link = el.querySelector('a')!;
     expect(link.className).toContain('civ-link--primary');
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
-    expect(icon!.getAttribute('name')).toBe('chevron-right');
+    expect(icon!.getAttribute('name')).toBe('arrow-right');
   });
 
   it('does not show caret on the secondary (default) variant', async () => {
@@ -82,7 +82,7 @@ describe('civ-link', () => {
     expect(link.className).toContain('civ-link--back');
     const icon = el.querySelector('civ-icon');
     expect(icon).not.toBeNull();
-    expect(icon!.getAttribute('name')).toBe('chevron-left');
+    expect(icon!.getAttribute('name')).toBe('arrow-back');
   });
 
   it('uses Light DOM', async () => {
@@ -292,16 +292,16 @@ describe('civ-link as="button" mode', () => {
     expect(btn.className).toContain('civ-link--primary');
   });
 
-  it('renders leading icon (back variant chevron) in button mode', async () => {
+  it('renders leading icon (back variant arrow) in button mode', async () => {
     const el = await fixture('<civ-link as="button" variant="back" label="Go back"></civ-link>');
     const icon = el.querySelector('button > civ-icon')!;
-    expect(icon.getAttribute('name')).toBe('chevron-left');
+    expect(icon.getAttribute('name')).toBe('arrow-back');
   });
 
-  it('renders trailing icon (primary variant caret) in button mode', async () => {
+  it('renders trailing icon (primary variant arrow) in button mode', async () => {
     const el = await fixture('<civ-link as="button" variant="primary" label="Continue"></civ-link>');
     const icons = el.querySelectorAll('button > civ-icon');
-    expect(icons[icons.length - 1].getAttribute('name')).toBe('chevron-right');
+    expect(icons[icons.length - 1].getAttribute('name')).toBe('arrow-right');
   });
 
   it('uses native disabled attribute (not aria-disabled) in button mode', async () => {

@@ -27,7 +27,7 @@ const schema: ComponentSchema = {
     },
     variant: {
       type: 'enum',
-      description: 'Visual emphasis. `primary` = bold underlined link with trailing caret (most prominent); `secondary` (default) = plain underlined link; `back` = back-navigation link with leading left chevron. For a navigation affordance that should look like a button, use `<civ-button href="…">` instead. That renders an `<a>` with button chrome plus an underline',
+      description: 'Visual emphasis. `primary` = bold underlined link with a trailing right-arrow (most prominent); `secondary` (default) = plain underlined link; `back` = back-navigation link with a leading back-arrow. Navigation links use directional arrow icons (carets are reserved for on-page expand/collapse affordances). For a navigation affordance that should look like a button, use `<civ-button href="…">` instead. That renders an `<a>` with button chrome plus an underline',
       default: 'secondary',
       values: ['primary', 'secondary', 'back'],
     },

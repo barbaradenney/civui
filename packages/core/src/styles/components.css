@@ -352,6 +352,23 @@
     }
   }
 
+  /* Mobile: when a row's trailing content is a status badge (the task-list
+     hub pattern), stack it ABOVE the row text instead of squeezing the
+     badge against the right edge of a narrow viewport. The status reads
+     first, then the task name / link below it (`order: -1` lifts the
+     end-slot above the content in the column). Scoped via :has() to
+     badge-trailing rows only — rows ending in an action button keep their
+     natural row-action layout (destructive labels shouldn't grow to fill
+     the screen). */
+  @media (max-width: 480px) {
+    .civ-list-item__row:has([data-civ-list-item-end-slot] civ-badge) {
+      @apply civ-flex-col civ-items-start civ-gap-2;
+    }
+    .civ-list-item__row:has([data-civ-list-item-end-slot] civ-badge) [data-civ-list-item-end-slot] {
+      order: -1;
+    }
+  }
+
   /* Nesting: indent nested civ-list inside civ-list-item */
   civ-list-item civ-list {
     @apply civ-ps-6;

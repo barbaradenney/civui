@@ -88,6 +88,47 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
     this._relocateSlots();
   }
 
+  /**
+   * The repeater row this conditional lives in, or null when it isn't
+   * inside a repeater. Used to scope field matching so a select in row 0
+   * doesn't toggle a conditional in row 1 — inside a repeater every row
+   * shares the same `when` value but different indexed field names.
+   */
+  private _ownRow(): Element | null {
+    return this.closest('[data-civ-repeater-row]');
+  }
+
+  /**
+   * Whether a field's `name` should be watched by this conditional.
+   * Matches when the name equals `when` exactly OR ends with the
+   * `…<sep>when` segment, where `<sep>` is `.` or `]` followed by `.` —
+   * i.e. the repeater's indexed `baseName[i].when` pattern. This lets a
+   * `when="docType"` conditional inside a repeater track the row's
+   * `documents[0].docType` select. Outside a repeater the exact match is
+   * the only one that fires.
+   */
+  private _nameMatches(name: string | null | undefined): boolean {
+    if (!name || !this.when) return false;
+    if (name === this.when) return true;
+    // Last dotted segment equals `when` (covers `base[0].docType` and
+    // `group.docType`). Guard against partial-token matches like
+    // `notDocType` by requiring a `.` boundary.
+    const lastSeg = name.slice(name.lastIndexOf('.') + 1);
+    return lastSeg === this.when && name.length > this.when.length;
+  }
+
+  /**
+   * When inside a repeater row, a candidate field must be in the SAME
+   * row as this conditional. Outside a repeater, any match in the scoped
+   * listen target qualifies.
+   */
+  private _fieldInScope(field: Element | null): boolean {
+    if (!field) return false;
+    const myRow = this._ownRow();
+    if (!myRow) return true;
+    return field.closest('[data-civ-repeater-row]') === myRow;
+  }
+
   override render() {
     const visibilityClass = this._visible ? 'civ-conditional--visible' : 'civ-conditional--hidden';
 
@@ -101,12 +142,22 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
 
   private _checkInitialState(): void {
     if (!this.when) return;
-    // Query within the scoped listen target rather than the whole document
+    // Query within the scoped listen target rather than the whole document.
+    // When inside a repeater row, prefer searching that row first so an
+    // indexed field (`documents[0].docType`) resolves to THIS row's field;
+    // fall back to the listen target for the non-repeater case.
     const root = this._listenTarget instanceof HTMLElement ? this._listenTarget : document;
-    const escapedName = typeof CSS !== 'undefined' && CSS.escape
-      ? CSS.escape(this.when)
-      : this.when.replace(/["\\]/g, '\\$&');
-    const field = root.querySelector(`[name="${escapedName}"]`) as HTMLElement & { value?: string; checked?: boolean; values?: string[]; getCheckedValues?(): string[]; type?: string } | null;
+    const searchRoot = this._ownRow() ?? root;
+    // Match either the exact `when` name or the repeater-indexed
+    // `…].when` / `….when` suffix. `[name$="..."]` covers the suffix; the
+    // exact name is a suffix of itself, so one attribute selector handles
+    // both, and `_nameMatches` re-validates the boundary.
+    const candidates = Array.from(
+      searchRoot.querySelectorAll<HTMLElement & { value?: string; checked?: boolean; values?: string[]; getCheckedValues?(): string[]; type?: string }>('[name]'),
+    );
+    const field = candidates.find(
+      (el) => this._nameMatches(el.getAttribute('name')) && this._fieldInScope(el),
+    ) ?? null;
     if (!field) return;
 
     // Checkbox group: prefer getCheckedValues() — the canonical multi-value
@@ -139,7 +190,11 @@ export class CivConditional extends LightDomSlotMixin(CivBaseElement) {
 
   private _onInput(e: Event): void {
     const target = e.target as HTMLElement & { name?: string };
-    if (target.name !== this.when) return;
+    // Match the field by exact name OR repeater-indexed suffix, and — when
+    // we're inside a repeater row — only react to a field in the SAME row
+    // (sibling rows share the same `when` but have different indexed names).
+    if (!this._nameMatches(target.name)) return;
+    if (!this._fieldInScope(target instanceof Element ? target : null)) return;
 
     const detail = (e as CustomEvent).detail;
 

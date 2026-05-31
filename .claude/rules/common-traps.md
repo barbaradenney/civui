@@ -165,6 +165,47 @@ and skip those fields.
 
 ---
 
+## `civ-conditional` inside a `civ-repeater` matches by name suffix, scoped to its row
+
+A `civ-repeater` rewrites each row child's `name` to an indexed form —
+`<civ-select name="docType">` in the `documents` repeater becomes
+`name="documents[0].docType"`. A `civ-conditional` placed in the same
+row keeps its authored `when="docType"` (the repeater does **not**
+rewrite `when`).
+
+`civ-conditional` resolves this by matching the watched field when the
+field's name **equals `when` exactly OR ends with the `…].when` /
+`….when` suffix** — so `when="docType"` tracks the row's
+`documents[0].docType` field. It also **scopes to its own row**: when the
+conditional is inside a `[data-civ-repeater-row]`, only a field in the
+*same* row can toggle it, so row 0's select never reveals row 1's
+conditional. Outside a repeater, the exact-name match is the only one
+that fires (a plain `notDocType` field never matches `when="docType"` —
+the suffix match requires a `.`/`]` boundary).
+
+```html
+<!-- ✓ works — upload is gated per-row by that row's docType select -->
+<civ-repeater legend="Documents" name="documents" item-label="document">
+  <civ-select name="docType" label="Document type">…</civ-select>
+  <civ-conditional when="docType" has-value>
+    <civ-file-upload name="file" accept=".pdf"></civ-file-upload>
+  </civ-conditional>
+</civ-repeater>
+```
+
+Before this was fixed, the exact-name match (`target.name === when`) never
+matched the indexed name, so every conditional inside a repeater stayed
+permanently hidden — silently. If you need a category-gated control inside
+a repeater (upload-after-type-selected, "Other" description field), this
+now works; place the dependency field and the conditional as siblings in
+the same row.
+
+**Caught by:** `civ-conditional.test.ts` "repeater-indexed field names"
+block (suffix match, partial-token guard, row scoping, initial-mount
+prefill). No lint — it's a runtime behavior locked by tests.
+
+---
+
 ## Group components are self-contained — no extra fieldset
 
 `civ-radio-group`, `civ-checkbox-group`, `civ-segmented-control`,

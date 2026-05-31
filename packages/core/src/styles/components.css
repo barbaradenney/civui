@@ -6228,6 +6228,32 @@
   .civ-card--purple-primary { background-color: var(--civ-color-tag-purple-bg); color: var(--civ-color-tag-purple-text); border-color: transparent; }
   .civ-card--gray-primary { background-color: var(--civ-color-tag-gray-bg); color: var(--civ-color-tag-gray-text); border-color: transparent; }
 
+  /* Interactive feedback for COLORED link-cards.
+   *
+   * `<civ-link-card color="…" variant="primary">` renders the static
+   * `.civ-card--{color}-primary` class (above) instead of the interactive
+   * `.civ-link-card--primary`, so it inherited no hover/active treatment
+   * even though it is a real clickable affordance. Scope the feedback to
+   * `.civ-link-card` so the static `civ-card` chrome stays flat.
+   *
+   * `filter: brightness()` darkens the rendered pixels uniformly across
+   * all eight categorical colors and works correctly in both light and
+   * dark mode (it operates on the composited output, not the token), so
+   * one rule covers every `tag-{color}-bg` pairing without 8 × 2 new
+   * hover-bg tokens. The transition uses the motion tokens; the global
+   * `prefers-reduced-motion` rule in civ.css disables it. */
+  .civ-link-card[class*='civ-card--'][class*='-primary'] {
+    transition: filter var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease);
+  }
+  @media (hover: hover) {
+    .civ-link-card[class*='civ-card--'][class*='-primary']:hover {
+      filter: brightness(0.95);
+    }
+  }
+  .civ-link-card[class*='civ-card--'][class*='-primary']:active {
+    filter: brightness(0.9);
+  }
+
   .civ-card--sm {
     @apply civ-p-3;
   }

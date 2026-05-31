@@ -159,6 +159,27 @@ const config: Config = {
         '16': 'var(--civ-spacing-16)',
         '20': 'var(--civ-spacing-20)',
       },
+      // Dedicated `width` scale for the fixed input-width ladder
+      // (form-templates.ts INPUT_WIDTH_CLASSES). Tailwind's `width`
+      // utilities normally inherit the `spacing` scale above — but CivUI's
+      // spacing is 5px-based, so `civ-w-12` would resolve to 60px and
+      // `civ-w-16` to 80px. The input-width ladder's declared native sizes
+      // (civ-text-input.schema.ts `widths`: iosPoints / androidDp) assume
+      // the conventional 4px-based step (w-12 = 48px, w-16 = 64px, …), so
+      // the spacing collision made `2xs`/`xs` inputs render ~25% wider on
+      // web than on iOS/Android. Re-assert these seven keys at their
+      // intended 4px-based px so `civ-w-N` matches the native points and
+      // the spacing-based `civ-p-N` / `civ-gap-N` (60px/80px) stay as-is.
+      // See audit-debt "Input-width ladder web/native px mismatch".
+      width: {
+        '12': '48px',
+        '16': '64px',
+        '24': '96px',
+        '40': '160px',
+        '60': '240px',
+        '72': '288px',
+        '96': '384px',
+      },
       lineHeight: {
         'none': 'var(--civ-typography-lineHeight-none)',
         'tight': 'var(--civ-typography-lineHeight-tight)',

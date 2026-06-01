@@ -57,26 +57,26 @@ Components that use CivUI tokens automatically respond to the active scale.
 The token build pipeline generates CSS for each scale:
 
 ```css
-/* Default — applied to :root */
+/* Default — applied to :root (standard 4px-based scale) */
 :root {
-  --civ-spacing-1: 5px;
-  --civ-spacing-2: 10px;
+  --civ-spacing-1: 4px;
+  --civ-spacing-2: 8px;
   --civ-typography-fontSize-base: 16px;
   /* ... */
 }
 
-/* Dense — tighter values */
+/* Dense — tighter values (spacingFactor 0.75) */
 [data-civ-scale="dense"] {
-  --civ-spacing-1: 4px;
-  --civ-spacing-2: 8px;
+  --civ-spacing-1: 3px;
+  --civ-spacing-2: 6px;
   --civ-typography-fontSize-base: 14px;
   /* ... */
 }
 
-/* Spacious — more generous */
+/* Spacious — more generous (spacingFactor 1.5) */
 [data-civ-scale="spacious"] {
-  --civ-spacing-1: 8px;
-  --civ-spacing-2: 15px;
+  --civ-spacing-1: 6px;
+  --civ-spacing-2: 12px;
   --civ-typography-fontSize-base: 18px;
   /* ... */
 }

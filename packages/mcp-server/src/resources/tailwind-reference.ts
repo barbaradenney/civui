@@ -164,24 +164,24 @@ Use semantic class names (e.g., \`civ-text-primary\`, \`civ-bg-error-lightest\`)
 
 All spacing values are token-backed CSS variables that adjust with the density system.
 
-**CivUI's spacing scale is 5px-based, NOT the default Tailwind 4px scale.** Reaching for \`civ-p-4\` gets you 20px, not 16px. The scale lands USWDS-aligned values at the workhorse steps (0/1/2/3/4/6 → 0/5/10/15/20/30 px). See \`.claude/rules/spacing.md\` for the three rhythm tiers (top-of-page → mb-6, block-stack → mb-4, gap-controlled → no mb).
+**CivUI's spacing scale is the standard 4px scale** — same as default Tailwind and CivUI's own iOS/Android native tokens. \`civ-p-4\` is 16px, \`civ-p-2\` is 8px, etc. (Re-based from the former 5px scale on 2026-06-01 so web matches the rest of the ecosystem.) See \`.claude/rules/spacing.md\` for the three rhythm tiers (top-of-page → mb-6, block-stack → mb-4, gap-controlled → no mb).
 
 | Token | CivUI value | Padding | Margin | Gap |
 |-------|-------------|---------|--------|-----|
 | 0 | 0px | \`civ-p-0\` | \`civ-m-0\` | \`civ-gap-0\` |
 | px | 1px | \`civ-p-px\` | \`civ-m-px\` | \`civ-gap-px\` |
-| 0.5 | 3px | \`civ-p-0.5\` | \`civ-m-0.5\` | \`civ-gap-0.5\` |
-| 1 | 5px | \`civ-p-1\` | \`civ-m-1\` | \`civ-gap-1\` |
-| 1.5 | 8px | \`civ-p-1.5\` | \`civ-m-1.5\` | \`civ-gap-1.5\` |
-| 2 | 10px | \`civ-p-2\` | \`civ-m-2\` | \`civ-gap-2\` |
-| 3 | 15px | \`civ-p-3\` | \`civ-m-3\` | \`civ-gap-3\` |
-| 4 | 20px | \`civ-p-4\` | \`civ-m-4\` | \`civ-gap-4\` |
-| 5 | 25px | \`civ-p-5\` | \`civ-m-5\` | \`civ-gap-5\` |
-| 6 | 30px | \`civ-p-6\` | \`civ-m-6\` | \`civ-gap-6\` |
-| 8 | 40px | \`civ-p-8\` | \`civ-m-8\` | \`civ-gap-8\` |
-| 10 | 50px | \`civ-p-10\` | \`civ-m-10\` | \`civ-gap-10\` |
-| 12 | 60px | \`civ-p-12\` | \`civ-m-12\` | \`civ-gap-12\` |
-| 20 | 100px | \`civ-p-20\` | \`civ-m-20\` | \`civ-gap-20\` |
+| 0.5 | 2px | \`civ-p-0.5\` | \`civ-m-0.5\` | \`civ-gap-0.5\` |
+| 1 | 4px | \`civ-p-1\` | \`civ-m-1\` | \`civ-gap-1\` |
+| 1.5 | 6px | \`civ-p-1.5\` | \`civ-m-1.5\` | \`civ-gap-1.5\` |
+| 2 | 8px | \`civ-p-2\` | \`civ-m-2\` | \`civ-gap-2\` |
+| 3 | 12px | \`civ-p-3\` | \`civ-m-3\` | \`civ-gap-3\` |
+| 4 | 16px | \`civ-p-4\` | \`civ-m-4\` | \`civ-gap-4\` |
+| 5 | 20px | \`civ-p-5\` | \`civ-m-5\` | \`civ-gap-5\` |
+| 6 | 24px | \`civ-p-6\` | \`civ-m-6\` | \`civ-gap-6\` |
+| 8 | 32px | \`civ-p-8\` | \`civ-m-8\` | \`civ-gap-8\` |
+| 10 | 40px | \`civ-p-10\` | \`civ-m-10\` | \`civ-gap-10\` |
+| 12 | 48px | \`civ-p-12\` | \`civ-m-12\` | \`civ-gap-12\` |
+| 20 | 80px | \`civ-p-20\` | \`civ-m-20\` | \`civ-gap-20\` |
 
 Directional variants: \`civ-pt-*\`, \`civ-pb-*\`, \`civ-ps-*\`, \`civ-pe-*\`, \`civ-px-*\`, \`civ-py-*\`, \`civ-mt-*\`, \`civ-mb-*\`, \`civ-ms-*\`, \`civ-me-*\`, \`civ-mx-*\`, \`civ-my-*\`.
 

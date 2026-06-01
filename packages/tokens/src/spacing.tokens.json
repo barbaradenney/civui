@@ -1,19 +1,19 @@
 {
   "spacing": {
-    "$description": "CivUI spacing scale — default is relaxed (formerly spacious)",
+    "$description": "CivUI spacing scale — standard 4px-based scale, matching Tailwind defaults and the iOS/Android native tokens (1=4px, 2=8px, 4=16px, 6=24px). Re-based from the former 5px scale 2026-06-01 so web stops being the outlier across the ecosystem and its own native platforms.",
     "0": { "$type": "dimension", "$value": "0px" },
     "px": { "$type": "dimension", "$value": "1px" },
-    "0.5": { "$type": "dimension", "$value": "3px" },
-    "1": { "$type": "dimension", "$value": "5px" },
-    "1.5": { "$type": "dimension", "$value": "8px" },
-    "2": { "$type": "dimension", "$value": "10px" },
-    "3": { "$type": "dimension", "$value": "15px" },
-    "4": { "$type": "dimension", "$value": "20px" },
-    "5": { "$type": "dimension", "$value": "25px" },
-    "6": { "$type": "dimension", "$value": "30px" },
-    "8": { "$type": "dimension", "$value": "40px" },
-    "10": { "$type": "dimension", "$value": "50px" },
-    "12": { "$type": "dimension", "$value": "60px" },
-    "20": { "$type": "dimension", "$value": "100px" }
+    "0.5": { "$type": "dimension", "$value": "2px" },
+    "1": { "$type": "dimension", "$value": "4px" },
+    "1.5": { "$type": "dimension", "$value": "6px" },
+    "2": { "$type": "dimension", "$value": "8px" },
+    "3": { "$type": "dimension", "$value": "12px" },
+    "4": { "$type": "dimension", "$value": "16px" },
+    "5": { "$type": "dimension", "$value": "20px" },
+    "6": { "$type": "dimension", "$value": "24px" },
+    "8": { "$type": "dimension", "$value": "32px" },
+    "10": { "$type": "dimension", "$value": "40px" },
+    "12": { "$type": "dimension", "$value": "48px" },
+    "20": { "$type": "dimension", "$value": "80px" }
   }
 }

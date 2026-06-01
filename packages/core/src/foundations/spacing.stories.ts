@@ -17,31 +17,33 @@ type Story = StoryObj;
 
 const SCALE_ROWS = [
   { token: '0', value: '0px', use: '— (margin-reset)' },
-  { token: '0.5', value: '3px', use: 'tightest inline gaps' },
-  { token: '1', value: '5px', use: 'hint→input, error→input' },
-  { token: '1.5', value: '8px', use: 'input→inline action button' },
-  { token: '2', value: '10px', use: 'heading-sm→body, alert internals' },
-  { token: '3', value: '15px', use: 'heading-md→body, modal sections' },
-  { token: '4', value: '20px', use: 'standard between-blocks cadence' },
-  { token: '5', value: '25px', use: 'rare — data-grid bulk actions' },
-  { token: '6', value: '30px', use: 'heading-xl→body, page-header bottom' },
-  { token: '8', value: '40px', use: 'rare — major page sections' },
-  { token: '10', value: '50px', use: 'rare — hero inner padding' },
-  { token: '12', value: '60px', use: 'rare — back-to-top offset' },
-  { token: '20', value: '100px', use: 'rare — back-to-top offset' },
+  { token: '0.5', value: '2px', use: 'tightest inline gaps' },
+  { token: '1', value: '4px', use: 'hint→input, error→input' },
+  { token: '1.5', value: '6px', use: 'input→inline action button' },
+  { token: '2', value: '8px', use: 'heading-sm→body, alert internals' },
+  { token: '3', value: '12px', use: 'heading-md→body, modal sections' },
+  { token: '4', value: '16px', use: 'standard between-blocks cadence' },
+  { token: '5', value: '20px', use: 'rare — data-grid bulk actions' },
+  { token: '6', value: '24px', use: 'heading-xl→body, page-header bottom' },
+  { token: '8', value: '32px', use: 'rare — major page sections' },
+  { token: '10', value: '40px', use: 'rare — hero inner padding' },
+  { token: '12', value: '48px', use: 'rare — back-to-top offset' },
+  { token: '20', value: '80px', use: 'rare — back-to-top offset' },
 ];
 
 export const Scale: Story = {
   render: () => html`
     <div class="civ-flex civ-flex-col civ-gap-4">
       <p class="civ-text-caption">
-        CivUI's spacing scale is <strong>5px-based</strong>, not the
-        default Tailwind 4px scale. <code>civ-p-4</code> renders 20px
-        of padding, not 16px. The workhorses are
+        CivUI's spacing scale is the <strong>standard 4px-based
+        scale</strong> — identical to default Tailwind, so
+        <code>civ-p-4</code> renders 16px of padding exactly as a
+        Tailwind user expects (re-based from a former 5px scale on
+        2026-06-01). The workhorses are
         <code>0 / 1 / 2 / 3 / 4 / 6</code> — reach for these by
         default. Larger steps (<code>5, 8, 10, 12, 20</code>) are
-        sparse-use; <code>2.5</code> and <code>16</code> are reserved
-        but currently unused in production CSS.
+        sparse-use; <code>px</code> (1px) is reserved but currently
+        unused in production CSS.
       </p>
 
       <table class="civ-table civ-table--bordered civ-table--sm">
@@ -90,7 +92,7 @@ export const RhythmTiers: Story = {
       <div class="civ-flex civ-flex-col civ-gap-8">
         <div>
           <p class="civ-text-caption civ-mb-2">
-            <strong>Tier 1 — top-of-page (mb-6, 30px).</strong>
+            <strong>Tier 1 — top-of-page (mb-6, 24px).</strong>
             <code>civ-page-header</code>, <code>civ-heading-xl</code>.
             Creates breathing room before the first content block.
           </p>
@@ -103,7 +105,7 @@ export const RhythmTiers: Story = {
               <p data-subheading>Step 1 of 4 — Personal information</p>
             </civ-page-header>
             <p class="civ-text-body">
-              First content block of the page. The 30px gap above
+              First content block of the page. The 24px gap above
               (set by civ-page-header's own civ-mb-6) is the cadence
               you should see between any page-header and its first
               real content.
@@ -113,7 +115,7 @@ export const RhythmTiers: Story = {
 
         <div>
           <p class="civ-text-caption civ-mb-2">
-            <strong>Tier 2 — block stack (mb-4, 20px).</strong>
+            <strong>Tier 2 — block stack (mb-4, 16px).</strong>
             <code>civ-fieldset</code>, <code>civ-card</code>,
             <code>civ-alert</code>, <code>civ-form-error-summary</code>,
             <code>civ-input-group</code>. Each owns its bottom margin so
@@ -126,11 +128,11 @@ export const RhythmTiers: Story = {
           >
             <civ-alert intent="info">
               <span slot="heading">Alert with its own mb-4</span>
-              <p>Followed by 20px of space before the card.</p>
+              <p>Followed by 16px of space before the card.</p>
             </civ-alert>
             <civ-card>
               <h3 slot="data-card-header">Card with its own mb-4</h3>
-              <p>Followed by 20px of space before the next block.</p>
+              <p>Followed by 16px of space before the next block.</p>
             </civ-card>
             <civ-card>
               <h3 slot="data-card-header">Another card</h3>
@@ -186,57 +188,20 @@ export const HeadingInnerMargin: Story = {
 
       <div class="civ-flex civ-flex-col civ-gap-6">
         <div style="border: 1px dashed var(--civ-color-base-light); padding: 1rem;">
-          <h1 class="civ-heading-xl">Heading XL → 30px below (mb-6)</h1>
+          <h1 class="civ-heading-xl">Heading XL → 24px below (mb-6)</h1>
           <p class="civ-text-body">Body text immediately below.</p>
         </div>
         <div style="border: 1px dashed var(--civ-color-base-light); padding: 1rem;">
-          <h2 class="civ-heading-lg">Heading LG → 20px below (mb-4)</h2>
+          <h2 class="civ-heading-lg">Heading LG → 16px below (mb-4)</h2>
           <p class="civ-text-body">Body text immediately below.</p>
         </div>
         <div style="border: 1px dashed var(--civ-color-base-light); padding: 1rem;">
-          <h3 class="civ-heading-md">Heading MD → 15px below (mb-3)</h3>
+          <h3 class="civ-heading-md">Heading MD → 12px below (mb-3)</h3>
           <p class="civ-text-body">Body text immediately below.</p>
         </div>
         <div style="border: 1px dashed var(--civ-color-base-light); padding: 1rem;">
-          <h4 class="civ-heading-sm">Heading SM → 10px below (mb-2)</h4>
+          <h4 class="civ-heading-sm">Heading SM → 8px below (mb-2)</h4>
           <p class="civ-text-body">Body text immediately below.</p>
-        </div>
-      </div>
-    </div>
-  `,
-};
-
-export const FourIsNotSixteenPx: Story = {
-  name: '4 Is Not 16px',
-  render: () => html`
-    <div class="civ-flex civ-flex-col civ-gap-4">
-      <p class="civ-text-caption">
-        The biggest spacing gotcha for anyone arriving from default
-        Tailwind: <code>civ-p-4</code> is <strong>20px</strong>, not
-        16px. CivUI's scale is 5px-based, so each step is 25% larger
-        than the equivalent default-Tailwind step. If your mockups
-        called for 16px padding, reach for <code>civ-p-3</code> (15px)
-        — the closest CivUI value.
-      </p>
-
-      <div class="civ-flex civ-flex-col civ-gap-3">
-        <div>
-          <p class="civ-text-caption civ-mb-1">civ-p-3 (15px)</p>
-          <div
-            class="civ-p-3 civ-bg-primary-lightest"
-            style="border: 1px solid var(--civ-color-primary-DEFAULT);"
-          >
-            What 16px-default-Tailwind looks like in CivUI (15px).
-          </div>
-        </div>
-        <div>
-          <p class="civ-text-caption civ-mb-1">civ-p-4 (20px) — the CivUI default for block padding</p>
-          <div
-            class="civ-p-4 civ-bg-primary-lightest"
-            style="border: 1px solid var(--civ-color-primary-DEFAULT);"
-          >
-            What you get when you write civ-p-4 (20px, not 16px).
-          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 How spacing decisions are made across the design system. This rule covers the rhythm primitives (block stack, inner heading rhythm, gap-controlled layouts), the policy for when each applies, and the relationship between the spacing token scale and the two density mechanisms. It does not redefine the scale itself — that lives in `packages/tokens/src/spacing.tokens.json` and the page-level scale system is documented in `.claude/rules/density-convention.md`.
 
-CivUI's spacing scale is **5px-based** (`1` = 5px, `2` = 10px, `3` = 15px, `4` = 20px, `6` = 30px). This is **NOT** the default Tailwind 4px-based scale (which would have `4` = 16px). If you reach for `civ-p-4` expecting 16px, you'll get 20px. The scale was chosen to land USWDS-aligned values at the workhorse steps without weirdly-named fractional tokens — the 5px base gives natural integer multiples at every step.
+CivUI's spacing scale is the **standard 4px-based scale** (`1` = 4px, `2` = 8px, `3` = 12px, `4` = 16px, `6` = 24px) — identical to default Tailwind and to CivUI's own iOS/Android native tokens, so `civ-p-4` is 16px exactly as a Tailwind user expects. It was **re-based from a former 5px scale on 2026-06-01**: web was the lone outlier (the native `CivTokens` were already 4px, as were the MCP mirrors), so a `civ-p-4` that meant 20px was a persistent footgun. Re-basing aligned web with the rest of the ecosystem and closed a hidden web↔native spacing parity gap.
 
 ---
 
@@ -27,18 +27,18 @@ What's NOT in place: a documented policy for which components own their own marg
 |---|---:|---:|---|
 | `0` | 0px | heavy | margin-reset on first/last children |
 | `px` | 1px | **unused in components.css** | reserved for `civ-border-px` Tailwind utility |
-| `0.5` | 3px | low (7 hits) | tightest gap between adjacent inline icons / text |
-| `1` | 5px | heavy (80 hits) | hint-to-input, error-to-input, prose tightening |
-| `1.5` | 8px | low (4 hits) | between input and its inline action button |
-| `2` | 10px | heavy (93 hits) | heading-sm to body, alert internal gap, action-sheet close |
-| `3` | 15px | heavy (60 hits) | heading-md to body, modal body section gap |
-| `4` | 20px | heavy (64 hits) | **standard between-blocks cadence** (fieldset, card, alert) |
-| `5` | 25px | low (2 hits) | sparingly — only data-grid bulk-actions footer / spinner inset |
-| `6` | 30px | medium (16 hits) | heading-xl to body, page-header bottom, section-intro |
-| `8` | 40px | low (3 hits) | between major page sections (rare — most use `6`) |
-| `10` | 50px | low (4 hits) | hero/landing area inner padding |
-| `12` | 60px | very low (1 hit) | one-off in `civ-back-to-top` bottom offset |
-| `20` | 100px | very low (1 hit) | one-off in `civ-back-to-top` right offset |
+| `0.5` | 2px | low (7 hits) | tightest gap between adjacent inline icons / text |
+| `1` | 4px | heavy (80 hits) | hint-to-input, error-to-input, prose tightening |
+| `1.5` | 6px | low (4 hits) | between input and its inline action button |
+| `2` | 8px | heavy (93 hits) | heading-sm to body, alert internal gap, action-sheet close |
+| `3` | 12px | heavy (60 hits) | heading-md to body, modal body section gap |
+| `4` | 16px | heavy (64 hits) | **standard between-blocks cadence** (fieldset, card, alert) |
+| `5` | 20px | low (2 hits) | sparingly — only data-grid bulk-actions footer / spinner inset |
+| `6` | 24px | medium (16 hits) | heading-xl to body, page-header bottom, section-intro |
+| `8` | 32px | low (3 hits) | between major page sections (rare — most use `6`) |
+| `10` | 40px | low (4 hits) | hero/landing area inner padding |
+| `12` | 48px | very low (1 hit) | one-off in `civ-back-to-top` bottom offset |
+| `20` | 80px | very low (1 hit) | one-off in `civ-back-to-top` right offset |
 
 The "workhorses" (heavy use) are `0`, `1`, `2`, `3`, `4`, `6`. Authors should reach for these by default.
 
@@ -52,27 +52,27 @@ The "workhorses" (heavy use) are `0`, `1`, `2`, `3`, `4`, `6`. Authors should re
 
 Top-level components fall into one of three tiers, determined by **whether the component owns its own vertical position in the page flow or is positioned by a parent layout**.
 
-### Tier 1 — Top-of-page heading (30px below)
+### Tier 1 — Top-of-page heading (24px below)
 
 Components that anchor the top of a page and create breathing room before the first content block.
 
-- `.civ-page-header` → `civ-mb-6` (30px)
+- `.civ-page-header` → `civ-mb-6` (24px)
 - `.civ-heading-xl` → `civ-mb-6`
 - `.civ-heading-xl-secondary` → `civ-mb-6`
 
 **Rule.** Only `civ-page-header` and the xl heading classes use `mb-6` as a "before the content starts" gesture. New components in this tier are rare — almost everything lives in Tier 2 or Tier 3.
 
-### Tier 2 — Block-stack (20px below)
+### Tier 2 — Block-stack (16px below)
 
-Components that sit in the normal page flow between other blocks. The 20px below is the **standard between-blocks cadence**.
+Components that sit in the normal page flow between other blocks. The 16px below is the **standard between-blocks cadence**.
 
 - `.civ-fieldset` → `civ-mb-4`
 - `.civ-card` → `civ-mb-4`
 - `.civ-alert` → `civ-mb-4`
 - `.civ-form-error-summary` → `civ-mb-4`
 - `.civ-filterable-list__filters` → `civ-mb-4`
-- `civ-checkbox` (standalone) → 20px via element-level rule (line 161)
-- `.civ-page-header--sm` → 15px (the smaller page-header variant pulls one step down)
+- `civ-checkbox` (standalone) → 16px via element-level rule (line 161)
+- `.civ-page-header--sm` → 12px (the smaller page-header variant pulls one step down)
 
 `.civ-input-group` is NOT in this list even though it sits between form blocks. It's a flex layout primitive that combines an input with an inline button on a single row; its own rule strips `civ-mb-4` from its children so the bottom-aligned button isn't pushed below the input. The "between input-group and the next field" cadence comes from the parent layout (typically a fieldset stack), not from the input-group itself.
 
@@ -108,17 +108,17 @@ A separate rhythm applies INSIDE a component or section: the gap between a headi
 
 | Heading | Inner margin-bottom |
 |---|---|
-| `civ-heading-xl` | 30px (mb-6) |
-| `civ-heading-lg` | 20px (mb-4) |
-| `civ-heading-md` | 15px (mb-3) |
-| `civ-heading-sm` | 10px (mb-2) |
+| `civ-heading-xl` | 24px (mb-6) |
+| `civ-heading-lg` | 16px (mb-4) |
+| `civ-heading-md` | 12px (mb-3) |
+| `civ-heading-sm` | 8px (mb-2) |
 
 **Rule.** Inner heading margin scales with the heading size (heading-xl gets more breathing room before its body than heading-sm does). This is a *recipe*, applied automatically by the heading classes. New headings shouldn't override.
 
 **Component internal-spacing exceptions** that follow related but distinct rules:
-- `.civ-alert__heading` → mb-1 (5px — tight inside the alert chrome)
+- `.civ-alert__heading` → mb-1 (4px — tight inside the alert chrome)
 - `.civ-section-intro__heading` → mb-1
-- `.civ-link-card__eyebrow` → mb-1 (5px between eyebrow and heading)
+- `.civ-link-card__eyebrow` → mb-1 (4px between eyebrow and heading)
 - `.civ-modal__header` → mb-4 (between header and body inside the modal)
 - `.civ-modal__body` → mb-3 (between body and footer inside the modal)
 
@@ -132,7 +132,7 @@ Sometimes a placement needs to override the default. Acceptable patterns:
 
 - **Last child margin reset.** `.civ-fieldset > :last-child` resets `mb-4` to `mb-0` to avoid double-margin at the end of a nested form. Same pattern for `.civ-input-group > * > [class~="civ-mb-4"]`.
 - **Per-instance override via consumer markup.** A consumer who wants tighter spacing on a specific instance writes `<civ-card class="civ-mb-2">`. The card's default `mb-4` is overridden by the more-specific class. Document the override in the consumer's code with a comment if it's not obvious.
-- **Density-scaled override.** `[data-civ-scale="dense"]` retunes `--civ-spacing-4` from 20px to 15px globally. No code change needed in the consuming component; the token does the work.
+- **Density-scaled override.** `[data-civ-scale="dense"]` retunes `--civ-spacing-4` from 16px to 12px globally. No code change needed in the consuming component; the token does the work.
 
 What's **not** acceptable:
 - **Hardcoded `margin-bottom: 24px;`** — bypasses both tokens and the scale system. Caught by `lint:hardcoded-spacing`.
@@ -141,23 +141,21 @@ What's **not** acceptable:
 
 ---
 
-## Common-trap: 4 doesn't mean 16px
+## `civ-p-N` matches Tailwind (the old 5px footgun is gone)
 
-The single biggest spacing gotcha: CivUI's `civ-{m|p|gap}-4` is **20px**, not the default Tailwind 16px. Designers and AI agents arriving from other Tailwind projects bring the 4px-base muscle memory and write `civ-p-4` expecting 16px chrome.
+CivUI's `civ-{m|p|gap}-N` now resolves to the **standard Tailwind value** — `civ-p-4` = 16px, `civ-p-2` = 8px, `civ-p-6` = 24px. There is no longer a mental `×5` conversion: muscle memory from any other Tailwind project transfers directly.
 
-Mappings between the two scales:
+| Token | Px (= Tailwind default) |
+|---:|---:|
+| `1` | 4px |
+| `2` | 8px |
+| `3` | 12px |
+| `4` | 16px |
+| `5` | 20px |
+| `6` | 24px |
+| `8` | 32px |
 
-| You expect (Tailwind default) | CivUI delivers | Closest CivUI |
-|---:|---:|---|
-| 4px | 5px (`civ-p-1`) | `1` |
-| 8px | 10px (`civ-p-2`) | `2` |
-| 12px | 15px (`civ-p-3`) | `3` |
-| 16px | 20px (`civ-p-4`) | `4` |
-| 20px | 25px (`civ-p-5`) | `5` |
-| 24px | 30px (`civ-p-6`) | `6` |
-| 32px | 40px (`civ-p-8`) | `8` |
-
-The 5px-base scale is what makes CivUI surfaces feel slightly more breathing-roomy than a default-Tailwind UI. The audit calls out the `civ-p-N → N×5` mental conversion as a documentation must-have.
+**Historical note (pre-2026-06-01):** the scale used to be 5px-based, so `civ-p-4` was 20px — the single biggest spacing gotcha, which warranted its own trap entry and the `civ-p-N → N×5` warning. That divergence was removed when the scale was re-based to 4px to match Tailwind and the native tokens. If you find any lingering "5px-based" / "`civ-p-4` is 20px" copy elsewhere, it's stale — fix it.
 
 The MCP reference doc (`packages/mcp-server/src/resources/tailwind-reference.ts`) was historically generated from default-Tailwind values — every row was wrong. Corrected in this audit. See "Recommendations" below.
 
@@ -195,7 +193,6 @@ This is the same story documented in `density-convention.md` + the typography ru
 - **Hardcoded `padding: 1rem` in components.css.** Always use `var(--civ-spacing-N)` or `@apply civ-p-N`. Caught by `lint:hardcoded-spacing`.
 - **Reach for `civ-p-px` (the one remaining orphan token).** It doesn't appear in production CSS today; using it signals an unusual choice that should justify itself in a comment. (`civ-p-2.5` / `civ-p-16` no longer exist — those tokens were removed 2026-05-31.)
 - **Add `civ-mb-4` to a Tier 3 component "for consistency."** It will double-space when the component is placed inside a `civ-flex civ-flex-col civ-gap-4` parent.
-- **Use Tailwind default 4px-base conversions** (`civ-p-4` to get 16px). It gets you 20px in CivUI.
 - **Cross-bridge to em-units for spacing** unless the spacing should scale with parent font-size (rare). Default to the spacing tokens.
 - **Add a `--lg` density modifier** to ratchet a component LARGER. The density convention documents `--sm` for ratchet-smaller; the opposite direction (`--full`, `--lg`, `--xl`) was renamed across the codebase to use variant-level naming instead.
 
@@ -246,5 +243,3 @@ These are the proposed work items from the spacing audit, ordered by leverage. S
 After tuning a spacing token: regenerate `pnpm --filter @civui/tokens build` and verify `packages/tokens/dist/css/tokens.css` reflects the new value. Run `pnpm validate:lints` to confirm no `lint:hardcoded-spacing` regressions. Run the Foundations/Spacing story in Storybook to eyeball the rhythm.
 
 When adding a new component: pick the tier first. Tier 1 / 2 components own `civ-mb-N`; Tier 3 components don't. Story coverage should show the component at home in its target placement (Tier 2 as a sole block in a vertical stack; Tier 3 inside a `civ-grid` or other layout parent).
-
-When seeing `civ-p-4` and expecting 16px: it's 20px. Convert via the table in "Common-trap: 4 doesn't mean 16px" above.

@@ -118,7 +118,7 @@ Spacing, color, typography, motion, and z-index all flow through W3C design toke
 - **Dark mode** and **reduced motion** ride the same token swap
 - **Theming** a federal brand is a token edit, not a component rewrite
 
-One thing to know going in: the spacing scale is **5px-based**, not Tailwind's 4px default — `civ-p-4` is **20px**, not 16px. Enforced by `lint:hardcoded-spacing`, `lint:hardcoded-hex`, and `lint:color-classes`.
+One thing to know going in: the spacing scale is the **standard 4px-based scale** — `civ-p-4` is **16px**, exactly as a Tailwind user expects (it was re-based from a former 5px scale on 2026-06-01 to match Tailwind and the iOS/Android native tokens). Enforced by `lint:hardcoded-spacing`, `lint:hardcoded-hex`, and `lint:color-classes`.
 
 ## Dark Mode Is Built-In, Not Bolted-On
 

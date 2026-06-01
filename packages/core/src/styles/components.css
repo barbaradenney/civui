@@ -5975,6 +5975,13 @@
     background-color: var(--civ-color-surface);
     color: var(--civ-color-base-darkest);
     border: 1px solid var(--civ-color-border);
+    /* A chip is a pill — its label must never wrap to a second line. In a
+       shrinking flex context (e.g. a `.civ-scroll-x` chip row), without this
+       the longest label wraps instead of holding its width and letting the
+       row overflow into the horizontal scroll. nowrap keeps min-content = the
+       full single-line label, so the chip holds its width and the row scrolls.
+       Inherits to .civ-chip__action / .civ-chip__label. */
+    white-space: nowrap;
     overflow: hidden;
     transition:
       background-color var(--civ-motion-duration-fast, 100ms) var(--civ-motion-easing-ease-out, ease),

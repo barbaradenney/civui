@@ -1,0 +1,80 @@
+---
+title: Choosing a Step Display
+sidebar_position: 10
+sidebar_label: Choosing a Step Display
+---
+
+import StoryEmbed from "@site/src/components/StoryEmbed";
+
+# Choosing a Step Display
+
+Several CivUI surfaces render "a list of stages," and they are easy to confuse — they all stack steps vertically (or as a bar) with labels and status. They serve different jobs, though, and reaching for the wrong one produces a screen that fights the user's mental model (a history log where they expected a to-do list, or a static preview where they expected to click in).
+
+The right choice falls out of three questions:
+
+1. **Tense** — is the user looking at the *past* (what happened), the *present* (what to do now / where they are), or the *future* (what's coming)?
+2. **Interactive?** — do they click into it to navigate, or is it display-only?
+3. **State** — does it track per-section status the user advances, or is it a fixed list?
+
+## Quick decision
+
+- **Navigate a long, multi-chapter form** the user works through in any order, each chapter carrying its own status (Complete / In progress / Not started / Locked) → **[Task List Hub](./task-list-hub)**
+- **Show "you are here — step 3 of 5"** inside a single linear flow the user is in right now → **[`civ-progress-steps`](../components/form/progress)** (or its `-header` / `-percent` siblings)
+- **Preview the steps the user hasn't started yet** ("here's how this process works") → **[Process List](../components/feedback/process-list)**
+- **Show a dated history of what already happened** (claim history, audit log) → **[Timeline](../components/feedback/timeline)**
+
+## At a glance
+
+| | **Task List Hub** | **Progress** (`steps` / `header` / `percent`) | **Process List** | **Timeline** |
+|---|---|---|---|---|
+| **Tense** | present — "what to do" | present — "where I am" | future — "what's coming" | past — "what happened" |
+| **Interactive?** | yes — links into each section | no (reflects flow state) | no (display-only) | no (display-only) |
+| **Tracks state?** | per-section status the user advances | current step within one flow | at most `complete` vs upcoming | immutable dated events |
+| **Shape** | list of sections + status badges | segmented bar / text / % bar | numbered vertical preview | dated vertical rail |
+| **Lives in** | Form Patterns (composed from `civ-list` + `civ-badge`) | `@civui/form-patterns` | `@civui/feedback` | `@civui/feedback` |
+
+## The options
+
+### Task List Hub
+
+The home base for a large application split into chapters. It lists every section with a completion badge and lets users tackle them in any order — the GOV.UK task-list pattern adapted for benefit forms. It's the only one of the four that's **interactive navigation**.
+
+<StoryEmbed id="forms-patterns-task-list-hub--va-disability-application" />
+
+Full pattern → **[Task List Hub](./task-list-hub)**
+
+### Progress indicators
+
+The active "you are here" family, for a linear flow the user is moving through *right now*. Three flavors of the same idea:
+
+- **`civ-progress-steps`** — a segmented bar, one rectangle per step (filled = done, highlighted = current, empty = upcoming).
+- **`civ-progress-header`** — a compact "Step X of Y: Title" text header.
+- **`civ-progress-percent`** — a percentage bar for flows without discrete steps.
+
+Unlike the hub, these don't let the user jump around — they *report* position in a flow the form controls.
+
+<StoryEmbed id="forms-form-progress--default" />
+
+Full docs → **[Progress](../components/form/progress)**
+
+### Process List
+
+A forward-looking **preview** of steps the user hasn't done yet — "submit → review → decision → appeal." Display-only; the `complete` state's check icon means "this step is finished," not "this happened at a point in time." Use it on intro and "before you begin" screens to set expectations.
+
+<StoryEmbed id="feedback-process-list--benefit-application" />
+
+Full docs → **[Process List](../components/feedback/process-list)**
+
+### Timeline
+
+A backward-looking, dated **history** — every status change in order, each entry stamped with a `<time>`. Claim histories, audit logs, document workflows, version histories. Display-only.
+
+<StoryEmbed id="feedback-timeline--claim-history" />
+
+Full docs → **[Timeline](../components/feedback/timeline)**
+
+## Common mix-ups
+
+- **Hub vs. progress-steps.** Both are present-tense, but the hub is a navigation *home* (jump to any chapter, in any order) while progress-steps is a *position indicator* inside one flow. If the user can't reorder the steps, you want progress, not a hub.
+- **Process List vs. Timeline.** Both are static vertical lists. Process List is the **future** ("you will do these"); Timeline is the **past** ("these happened"). A check in a Process List means "done"; a Timeline entry means "occurred at this time."
+- **Process List vs. progress-steps.** Process List *previews* steps before the flow starts; progress-steps tracks the user's *current position* during the flow. Same steps, different moment.

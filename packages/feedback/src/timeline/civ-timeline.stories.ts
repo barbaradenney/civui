@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-timeline.js';
 import './civ-timeline-item.js';
+import '../badge/civ-badge.js';
 import '@civui/actions/button';
 import '@civui/actions/link';
 
@@ -220,6 +221,56 @@ export const WithActions: Story = {
             <civ-button label="Download award letter"></civ-button>
             <civ-button emphasis="tertiary" href="#" label="View payment schedule"></civ-button>
           </div>
+        </civ-timeline-item>
+      </civ-timeline>
+    </div>
+  `,
+};
+
+// ── Status badges echoing the dot intent + actions ───────────
+
+export const WithStatusBadges: Story = {
+  name: 'With status badges — echoing the intent',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-timeline>
+        <civ-timeline-item
+          timestamp="${daysAgo(6)}"
+          actor="System"
+          action="Failed login attempt"
+          intent="error"
+        >
+          <civ-badge label="Blocked" intent="error" emphasis="primary" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-2">
+            Three consecutive failures from IP 198.51.100.42. The account
+            was temporarily locked.
+          </p>
+          <civ-link href="#" label="Reset your password"></civ-link>
+        </civ-timeline-item>
+
+        <civ-timeline-item
+          timestamp="${daysAgo(4)}"
+          actor="Benefits processing"
+          action="Documentation requested"
+          intent="warning"
+        >
+          <civ-badge label="Action needed" intent="warning" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-2">
+            We need a copy of your DD-214 to verify your service dates.
+          </p>
+          <civ-button label="Upload document"></civ-button>
+        </civ-timeline-item>
+
+        <civ-timeline-item
+          timestamp="${daysAgo(1)}"
+          actor="J. Martinez (Reviewer)"
+          action="Claim approved"
+          intent="success"
+        >
+          <civ-badge label="Approved" intent="success" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-0">
+            Your award letter is ready. Payments begin next cycle.
+          </p>
         </civ-timeline-item>
       </civ-timeline>
     </div>

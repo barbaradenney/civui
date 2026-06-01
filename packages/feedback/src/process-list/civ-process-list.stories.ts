@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import './civ-process-list.js';
 import './civ-process-list-item.js';
+import '../badge/civ-badge.js';
 import '@civui/actions/button';
 import '@civui/actions/link';
 
@@ -198,6 +199,48 @@ export const WithActions: Story = {
             <civ-button label="Start application"></civ-button>
             <civ-button emphasis="tertiary" href="#" label="Preview the form"></civ-button>
           </div>
+        </civ-process-list-item>
+      </civ-process-list>
+    </div>
+  `,
+};
+
+// ── Status badges per step + actions where needed ─────────────
+
+export const WithStatusBadges: Story = {
+  name: 'With status badges — per-step status + actions',
+  render: () => html`
+    <div style="max-width: 540px;">
+      <civ-process-list>
+        <civ-process-list-item heading="Identity verified" state="complete">
+          <civ-badge label="Verified" intent="success" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-0">
+            We confirmed your identity using ID.me.
+          </p>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Upload supporting documents">
+          <civ-badge label="Action needed" intent="warning" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-2">
+            We still need your DD-214 to verify your service dates.
+          </p>
+          <civ-button label="Upload documents"></civ-button>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Payment information">
+          <civ-badge label="Needs attention" intent="error" with-icon></civ-badge>
+          <p class="civ-mt-1 civ-mb-2">
+            Your bank rejected the last deposit. Update your account details
+            to avoid payment delays.
+          </p>
+          <civ-link href="#" label="Fix payment details"></civ-link>
+        </civ-process-list-item>
+
+        <civ-process-list-item heading="Submit your application">
+          <p class="civ-m-0">
+            Review everything, then file your claim. You'll get a
+            confirmation number right away.
+          </p>
         </civ-process-list-item>
       </civ-process-list>
     </div>

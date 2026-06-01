@@ -635,6 +635,22 @@ export class CivRepeater extends CivBaseElement {
     const index = this._rowCount;
     this._appendRow(index);
     this._rowCount++;
+    // Soften the entrance: fade/settle the new row in rather than flashing a
+    // fully-formed card. Only on user-initiated adds — initial `min` rows
+    // (seeded via _appendRow in firstUpdated) are intentionally not animated.
+    // The class self-removes on animationend so a later re-add re-triggers it;
+    // prefers-reduced-motion disables the animation (row just appears).
+    const container = this.querySelector('[data-civ-repeater-rows]');
+    const addedRows = container?.querySelectorAll(':scope > [data-civ-repeater-row]');
+    const addedRow = addedRows?.[index] as HTMLElement | undefined;
+    if (addedRow) {
+      addedRow.classList.add('civ-repeater-row--entering');
+      addedRow.addEventListener(
+        'animationend',
+        () => addedRow.classList.remove('civ-repeater-row--entering'),
+        { once: true },
+      );
+    }
     // Growing above the floor makes every existing row removable — reveal
     // the Remove buttons that were hidden while the list sat at `min`.
     this._syncRemoveButtonVisibility();

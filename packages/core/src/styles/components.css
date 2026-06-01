@@ -6551,6 +6551,25 @@
     text-transform: capitalize;
   }
 
+  /* Entrance for a row added via the "Add another" button. Softens the
+     hard flash of a fully-formed card appearing by fading + settling it
+     into place. Applied imperatively (the `--entering` class is added to
+     the new row in civ-repeater._addRow and removed on `animationend`),
+     and ONLY on user-initiated adds — initial `min` rows seeded on mount
+     don't get it. The global `prefers-reduced-motion: reduce` rule
+     disables the animation, in which case the row simply appears (its
+     resting opacity is 1, so there's no stuck-invisible state). */
+  @keyframes civ-repeater-row-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .civ-repeater-row--entering {
+    animation: civ-repeater-row-in
+      var(--civ-motion-duration-normal, 200ms)
+      var(--civ-motion-easing-ease-out, ease-out);
+  }
+
   /* Auto-generated hint shown in place of the "Add another" button when
      `max` has been reached. Same visual weight as `civ-hint--group` —
      small, gray, subordinate — so it reads as guidance not as an error. */

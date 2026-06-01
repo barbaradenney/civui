@@ -2748,7 +2748,7 @@
   }
 
   .civ-action-btn--tertiary.civ-action-btn--danger {
-    @apply civ-border-base civ-text-error;
+    @apply civ-border-error civ-text-error;
     background-color: var(--civ-color-surface);
   }
   @media (hover: hover) {
